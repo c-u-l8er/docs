@@ -97,3 +97,76 @@ export const FACT_SOURCES = {
   'wrl.version':          'WRL/package.json',
   'traaviis.version':     'TRAAVIIS/pyproject.toml',
 };
+
+// ---- dark-factory phase derivation -------------------------------------------------------
+// The dark factory (DOCTRINE.md) runs perceive → decide → act → measure. Each phase's
+// evidence-ladder rung is DERIVED from the file that actually owns the claim — never
+// hand-typed. A configured source that is missing, unreadable, or no longer matches its
+// expected pattern is a HARD build failure. A phase with no owning source is a named GAP.
+//
+// STACK_COMPLETION.md §4 is the authoritative dark-factory status table. It has 7 operational
+// steps, not the 4 DOCTRINE phases. The mapping below records which §4 row (if any) owns
+// each phase's claim. Phases without a clear owning row are GAPs — honest gaps, not
+// fabricated sources.
+
+const VALID_RUNGS = new Set(['spec', 'in_tree', 'live_local', 'live_deployed', 'external']);
+const DARK_FACTORY_SOURCE = 'STACK_COMPLETION.md';
+
+// Parse one step's evidence-ladder rung from the §4 table. The table rows look like:
+//   | N. Step name | `rung` | description... | needed... |
+// The rung is the backtick-quoted word in the Status column.
+function parseStepRung(text, stepNum, stepName) {
+  // Build a pattern that matches "| N. <stepName> | `<rung>` |"
+  const escaped = stepName.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&');
+  const re = new RegExp(`\\|\\s*${stepNum}\\.\\s*${escaped}\\s*\\|\\s*\`(\\w+)\`\\s*\\|`);
+  const m = text.match(re);
+  if (!m) return null;
+  return m[1];
+}
+
+// The four dark-factory phases and their §4 ownership.
+// perceive → step 1 "Machine perceives/acts" (explicitly named "perceives")
+// decide   → no step in §4 explicitly owns the decision phase
+// act      → step 1 "Machine perceives/acts" (explicitly named "acts")
+// measure  → step 7 "PRISM measures" (explicitly named "measures")
+const PHASE_CONFIG = [
+  { name: 'perceive', stepNum: 1, stepName: 'Machine perceives/acts' },
+  { name: 'decide',   stepNum: null, gap: 'No step in STACK_COMPLETION.md §4 owns a "decide" evidence rung. box-and-box governs individual verdicts but the dark-factory status table assigns no deployment rung to the decision phase as a distinct step.' },
+  { name: 'act',      stepNum: 1, stepName: 'Machine perceives/acts' },
+  { name: 'measure',  stepNum: 7, stepName: 'PRISM measures' },
+];
+
+function deriveDarkFactory() {
+  const steps = [];
+  // Only read the source file once; it is shared across all configured phases.
+  let sourceText = null;
+  const needsSource = PHASE_CONFIG.some(p => p.stepNum !== null);
+
+  if (needsSource) {
+    if (!existsSync(join(ROOT, DARK_FACTORY_SOURCE))) {
+      FAIL(`dark-factory source missing: ${DARK_FACTORY_SOURCE}`);
+    }
+    sourceText = read(DARK_FACTORY_SOURCE);
+  }
+
+  for (const phase of PHASE_CONFIG) {
+    if (phase.stepNum === null) {
+      // Named GAP — no owning source.
+      steps.push({ name: phase.name, status: 'GAP', gap: phase.gap });
+      continue;
+    }
+
+    const rung = parseStepRung(sourceText, phase.stepNum, phase.stepName);
+    if (!rung) {
+      FAIL(`dark-factory phase "${phase.name}": cannot parse rung from ${DARK_FACTORY_SOURCE} step ${phase.stepNum} "${phase.stepName}" — pattern changed or row missing`);
+    }
+    if (!VALID_RUNGS.has(rung)) {
+      FAIL(`dark-factory phase "${phase.name}": parsed rung "${rung}" from ${DARK_FACTORY_SOURCE} is not a valid evidence-ladder value (${[...VALID_RUNGS].join(', ')})`);
+    }
+    steps.push({ name: phase.name, rung, source: DARK_FACTORY_SOURCE });
+  }
+
+  return steps;
+}
+
+export const DARK_FACTORY_STEPS = deriveDarkFactory();

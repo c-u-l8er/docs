@@ -11,6 +11,7 @@ import { scan, treeToJSON, ROOT } from './tree.mjs';
 import { fileToBlocks } from './ingest.mjs';
 import { toBlocks, docHTML, plain } from './render.mjs';
 import { BANDS, REGISTRY, FALLBACK } from './home.mjs';
+import { DARK_FACTORY_STEPS } from './sources.mjs';
 
 const G = '\x1b[32m', D = '\x1b[2m', R = '\x1b[0m', C = '\x1b[36m', Y = '\x1b[33m';
 mkdirSync('dist/bend', { recursive: true });
@@ -147,6 +148,7 @@ const model = {
   count: pages.length, projects: [...new Set(pages.map(p => p.project))].sort(),
   tree: treeToJSON(tree),
   home,
+  darkFactory: { steps: DARK_FACTORY_STEPS },
   order: pages.map(p => p.route),
   pages: pages.map(p => ({ route: p.route, source: p.source, project: p.project, title: p.title,
     name: p.name, dir: p.dir, cid: p.cid, html: p.html, text: p.text, summary: p.summary,
@@ -190,6 +192,9 @@ console.log(`  ${G}✓${R} every page is a validated, content-addressed BendScri
 console.log(`  ${G}✓${R} round-trip CID fixpoint holds across the corpus: ${fixpointAll}`);
 console.log(`  ${fallbacks ? Y + '!' : G + '✓'}${R} ${fallbacks} doc(s) fell back to raw view (unparseable markdown)`);
 console.log(`  ${G}✓${R} synthesis layer: ${pages.filter(p => p.summary).length} leads · ${pages.reduce((n, p) => n + p.outline.length, 0)} outline anchors (source untouched)`);
+console.log(`  ${G}✓${R} dark-factory phases derived (${DARK_FACTORY_STEPS.length} steps):`);
+for (const s of DARK_FACTORY_STEPS)
+  console.log(`     ${D}${s.name}: ${s.rung ? s.rung + '  ←  ' + s.source : 'GAP — ' + s.gap}${R}`);
 console.log(`${D}────────────────────────────────────────${R}`);
 console.log(`  → dist/index.html   (self-contained filesystem atlas)`);
 console.log(`  → dist/atlas.json   (route⇄source map for agents)`);

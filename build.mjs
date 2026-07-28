@@ -5,7 +5,7 @@
 import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { parseAndNormalize, computeDocumentId, serializeCanonical, validate } from '@bendscript/core';
 import { REGISTRY, DOCS } from './content.mjs';
-import { FACT_SOURCES } from './sources.mjs';
+import { FACT_SOURCES, DARK_FACTORY_STEPS } from './sources.mjs';
 
 mkdirSync('dist/bend', { recursive: true });
 const DOC_IDS = new Set(DOCS.map(d => d.id));
@@ -153,7 +153,7 @@ for (const c of compiled) for (const e of c.edges)
 // ---- bake the site model -------------------------------------------------------------
 const STATUS = { live:{label:'live',c:'s-live'}, alpha:{label:'alpha',c:'s-alpha'},
   spec:{label:'spec',c:'s-spec'}, draft:{label:'draft',c:'s-draft'} };
-const LAYER_ORDER = ['protocol','faculty','provider','substrate','annex','ring0'];
+const LAYER_ORDER = ['protocol','faculty','provider','substrate','runtime','language','cortex','evaluator','annex','ring0'];
 
 const model = {
   brand: REGISTRY.brand, author: REGISTRY.author,
