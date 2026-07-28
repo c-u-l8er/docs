@@ -4,13 +4,29 @@
 // own law tuples, trial count from the harness constant. A missing/unreadable source is
 // a HARD build failure — there is no silent fallback to a stale literal, which is the
 // whole point: a number can't drift from its source because nothing else holds it.
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { dirname, join, parse } from 'node:path';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(HERE, '..'); // docs/ lives at the repo root; projects are one level up
 const FAIL = (m) => { console.error('\x1b[31m✗ sources failed:\x1b[0m ' + m); process.exit(1); };
+
+// Where the sibling projects live. This used to be `join(HERE, '..')` on the
+// assumption that docs/ always sits directly in the monorepo root. It does not:
+// docs/ is its own repo, and an agent working on it gets a git worktree several
+// levels below the monorepo, where `..` is a directory holding no projects at
+// all. Every read then failed, and because a missing source is deliberately a
+// HARD failure, the lane could not build itself under any circumstances.
+//
+// So find the root by asking for something only the root has, rather than by
+// counting directory levels. STACKDOCS_ROOT overrides for anything unusual.
+const MARKER = 'AmpersandBoxDesign/box-and-box/test/laws.mjs';
+const ROOT = process.env.STACKDOCS_ROOT || (() => {
+  for (let d = HERE; d !== parse(d).root; d = dirname(d)) {
+    if (existsSync(join(d, MARKER))) return d;
+  }
+  FAIL(`no project root above ${HERE} (looked for ${MARKER}); set STACKDOCS_ROOT`);
+})();
 
 function read(rel) {
   try { return readFileSync(join(ROOT, rel), 'utf8'); }
