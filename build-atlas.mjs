@@ -5,6 +5,7 @@
 // content-addressed BendScript document (a doc that won't parse degrades to a code block,
 // so one gnarly file can never fail the whole site).
 import { writeFileSync, mkdirSync, readFileSync, copyFileSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { posix } from 'node:path';
 import { validate, computeDocumentId, serializeCanonical, parseAndNormalize } from '@bendscript/core';
 import { scan, treeToJSON, ROOT } from './tree.mjs';
@@ -12,6 +13,22 @@ import { fileToBlocks } from './ingest.mjs';
 import { toBlocks, docHTML, plain } from './render.mjs';
 import { BANDS, REGISTRY, FALLBACK } from './home.mjs';
 import { DARK_FACTORY_STEPS } from './sources.mjs';
+
+// ---- build provenance: derived from git, never invented ---------------------------------
+// The commit hash is the immutable anchor that lets a deployment be traced back to its
+// exact source. If HEAD cannot be resolved, the build fails — a deployment without
+// provenance is worse than no deployment, because it looks traceable but isn't.
+let BUILD_COMMIT;
+try {
+  BUILD_COMMIT = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+} catch {
+  console.error('\x1b[31m✗ build failed:\x1b[0m cannot resolve git HEAD — build provenance requires a commit');
+  process.exit(1);
+}
+if (!/^[0-9a-f]{40}$/.test(BUILD_COMMIT)) {
+  console.error('\x1b[31m✗ build failed:\x1b[0m git HEAD is not a full commit hash: ' + BUILD_COMMIT);
+  process.exit(1);
+}
 
 const G = '\x1b[32m', D = '\x1b[2m', R = '\x1b[0m', C = '\x1b[36m', Y = '\x1b[33m';
 mkdirSync('dist/bend', { recursive: true });
@@ -145,6 +162,7 @@ const home = { bands, kernel: kernelRoom, meta };
 const model = {
   brand: 'Ampersand Box', author: 'Travis Burandt', subtitle: 'documentation for the [&] protocol stack',
   generatedAt: new Date().toISOString().slice(0, 10),
+  commit: BUILD_COMMIT,
   count: pages.length, projects: [...new Set(pages.map(p => p.project))].sort(),
   tree: treeToJSON(tree),
   home,
@@ -157,7 +175,7 @@ const model = {
 
 // ---- agent sidecar: the full route⇄source map + cross-links ---------------------------
 const atlas = {
-  generatedAt: model.generatedAt, count: pages.length,
+  generatedAt: model.generatedAt, commit: BUILD_COMMIT, count: pages.length,
   note: 'route === source path. To open a doc on disk from the site, read the route. To find a doc’s page from a file, use its path as the route.',
   pages: pages.map(p => ({ route: p.route, source: p.source, title: p.title, project: p.project, links: p.links, backlinks: p.back.map(b => b.route) })),
 };
@@ -168,6 +186,7 @@ const CSS = readFileSync('shell-atlas.css', 'utf8');
 const JS = readFileSync('shell-atlas.js', 'utf8');
 const page = `<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="${BUILD_COMMIT}">
 <title>${model.brand} — stack docs atlas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -185,6 +204,7 @@ copyFileSync('amp-nav.js', 'dist/amp-nav.js');   // shared portfolio nav web com
 // ---- report ---------------------------------------------------------------------------
 console.log(`\n${C}stack docs atlas · build report${R}`);
 console.log(`${D}────────────────────────────────────────${R}`);
+console.log(`  ${G}✓${R} build provenance: ${BUILD_COMMIT}`);
 console.log(`  ${G}✓${R} ${pages.length} real docs mirrored from ${model.projects.length} projects (no files moved)`);
 console.log(`  ${G}✓${R} route === source path for every page (lossless agent round-trip)`);
 console.log(`  ${G}✓${R} ${totalEdges} cross-doc links resolved to internal navigation`);
