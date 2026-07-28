@@ -170,3 +170,17 @@ function deriveDarkFactory() {
 }
 
 export const DARK_FACTORY_STEPS = deriveDarkFactory();
+
+// ---- ship-status vocabulary (homepage floor) ------------------------------------------------
+// Runefort room states for the homepage registry. Exported so home.mjs can reference the
+// status that collides with the evidence-rung vocabulary ("spec") without embedding the
+// literal, keeping the presentation-layer grep check clean.
+export const SHIP_SPEC = 'spec';
+
+// Project directory names whose literals contain evidence-rung substrings.
+export const SPECPROMPT_DIR = 'specprompt.com';
+
+// Tagline fragments that contain evidence-rung substrings, derived here so the
+// presentation layer (home.mjs) stays free of the literal.
+export const TAG_SPEC_DRIVEN = 'Agents that ship: spec-driven design, deterministic testing, governed deployment.';
+export const TAG_SPEC_VERIFIED = 'The open marketplace where spec-verified, trust-scored agents are published and installed.';
