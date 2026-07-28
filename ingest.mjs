@@ -5,11 +5,23 @@
 // validate → content-address → render pipeline as hand-authored pages. A missing file or a
 // renamed section is a HARD build failure (like a broken edge), so docs can't silently
 // drift from the spec they quote.
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+// Find the stack root by marker (DOCTRINE.md), not by counting directory levels.
+function findRoot() {
+  let dir = dirname(fileURLToPath(import.meta.url));
+  for (let i = 0; i < 10; i++) {
+    if (existsSync(join(dir, 'DOCTRINE.md'))) return dir;
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  console.error('\x1b[31m✗ cannot locate stack root (DOCTRINE.md not found)\x1b[0m');
+  process.exit(1);
+}
+const ROOT = findRoot();
 const FAIL = (m) => { console.error('\x1b[31m✗ ingest failed:\x1b[0m ' + m); process.exit(1); };
 
 export { mdToBlocks };

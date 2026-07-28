@@ -4,12 +4,24 @@
 // own law tuples, trial count from the harness constant. A missing/unreadable source is
 // a HARD build failure — there is no silent fallback to a stale literal, which is the
 // whole point: a number can't drift from its source because nothing else holds it.
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(HERE, '..'); // docs/ lives at the repo root; projects are one level up
+// Find the stack root by marker (DOCTRINE.md), not by counting directory levels.
+// This lets the build run from a worktree or any checkout location.
+function findRoot() {
+  let dir = dirname(fileURLToPath(import.meta.url));
+  for (let i = 0; i < 10; i++) {
+    if (existsSync(join(dir, 'DOCTRINE.md'))) return dir;
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  console.error('\x1b[31m✗ cannot locate stack root (DOCTRINE.md not found)\x1b[0m');
+  process.exit(1);
+}
+const ROOT = findRoot();
 const FAIL = (m) => { console.error('\x1b[31m✗ sources failed:\x1b[0m ' + m); process.exit(1); };
 
 function read(rel) {
@@ -66,6 +78,8 @@ export const FACTS = {
   'graphonomous.version': mixVersion('graphonomous/mix.exs'),
   'bendscript.version':   pkgVersion('docs/node_modules/@bendscript/core/package.json'),
   'runefort.version':     pkgVersion('runefort.com/packages/core/package.json'),
+  'wrl.version':          pkgVersion('WRL/package.json'),
+  'traaviis.version':     read('TRAAVIIS/pyproject.toml').match(/version\s*=\s*"([^"]+)"/)[1],
 };
 
 // where each derived fact came from — surfaced on the build report for auditability
@@ -80,4 +94,6 @@ export const FACT_SOURCES = {
   'graphonomous.version': 'graphonomous/mix.exs',
   'bendscript.version':   '@bendscript/core/package.json',
   'runefort.version':     'runefort.com/packages/core/package.json',
+  'wrl.version':          'WRL/package.json',
+  'traaviis.version':     'TRAAVIIS/pyproject.toml',
 };
