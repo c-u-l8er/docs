@@ -86,6 +86,13 @@
         <div class="smeta"><div class="sos">${esc(k.os)} · ${k.count} docs</div>
           <div class="sname">${esc(k.name)}</div><div class="stag">${esc(k.tagline)}</div></div>
         <span class="sgo">enter the kernel →</span></a></div>` : '';
+    // dark-factory phase display — derived from the baked model, never hard-coded
+    const df = M.darkFactory;
+    const dfHTML = df && df.steps ? `<div class="band dfband"><div class="band-h">dark factory · evidence ladder</div>
+      <div class="dfphases">${df.steps.map(s => {
+        if (s.status === ‘GAP’) return `<div class="dfp dfgap"><div class="dfn">${esc(s.name)}</div><div class="dfr">GAP</div><div class="dfg">${esc(s.gap)}</div></div>`;
+        return `<div class="dfp"><div class="dfn">${esc(s.name)}</div><div class="dfr">${esc(s.rung)}</div><div class="dfs">source: ${esc(s.source)}</div></div>`;
+      }).join(‘<div class="dfarr">→</div>’)}</div></div>` : ‘’;
     const body = `<div class="home">
       <div class="hero">
         <div class="eyebrow">${esc(M.brand)} · stack documentation</div>
@@ -102,6 +109,7 @@
           <span><i class="dot s-draft"></i> draft</span>
         </div>
       </div>
+      ${dfHTML}
       ${metaRow}
       <div class="floorbands">${bands}</div>
       ${slab}

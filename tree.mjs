@@ -23,7 +23,7 @@ export const ROOT = findRoot();
 
 // what counts as "the docs": markdown under any docs/ or prompts/ tree, plus the
 // top-level stack docs. Everything else (code, build output, archives) is excluded.
-const EXCLUDE_DIR = new Set(['node_modules', '_build', 'deps', '.git', 'dist',
+const EXCLUDE_DIR = new Set(['node_modules', '_build', 'deps', '.git', '.amp', 'dist',
   'old_scrap', 'old_scraps', '.elixir_ls', 'cover', '.svelte-kit']);
 const TOP_LEVEL_DOCS = ['README.md', 'ECOSYSTEM.md', 'AGENTS.md', 'CLAUDE.md',
   'STACK_COMPLETION.md', 'STACK_PLANNING.md', 'STACK_SITEMAP.md', 'STACK_ARCHITECTURE_GAP_REVIEW.md'];
