@@ -29,6 +29,15 @@ if (!/^[0-9a-f]{40}$/.test(BUILD_COMMIT)) {
   console.error('\x1b[31m✗ build failed:\x1b[0m git HEAD is not a full commit hash: ' + BUILD_COMMIT);
   process.exit(1);
 }
+// The build date is derived from the commit, not from the wall clock, so that repeated
+// builds of the same commit produce identical output regardless of when they run.
+let BUILD_DATE;
+try {
+  BUILD_DATE = execSync(`git log -1 --format=%ci ${BUILD_COMMIT}`, { encoding: 'utf8' }).trim().slice(0, 10);
+} catch {
+  console.error('\x1b[31m✗ build failed:\x1b[0m cannot read commit date for ' + BUILD_COMMIT);
+  process.exit(1);
+}
 
 const G = '\x1b[32m', D = '\x1b[2m', R = '\x1b[0m', C = '\x1b[36m', Y = '\x1b[33m';
 mkdirSync('dist/bend', { recursive: true });
@@ -161,7 +170,7 @@ const home = { bands, kernel: kernelRoom, meta };
 
 const model = {
   brand: 'Ampersand Box', author: 'Travis Burandt', subtitle: 'documentation for the [&] protocol stack',
-  generatedAt: new Date().toISOString().slice(0, 10),
+  generatedAt: BUILD_DATE,
   commit: BUILD_COMMIT,
   count: pages.length, projects: [...new Set(pages.map(p => p.project))].sort(),
   tree: treeToJSON(tree),
