@@ -7,11 +7,11 @@
 
 ## Setup
 
-- **Build worktree:** `/home/travis/ProjectAmp2/.amp/worktrees/docs` (branch `amp/docs`, commit `a79dffd`)
+- **Build worktree:** `/home/travis/ProjectAmp2/.amp/worktrees/docs` (branch `amp/docs`, commit `3f1f647`)
 - **Source root:** `/home/travis/ProjectAmp2` (branch `main`, commit `69397b8`)
 - The docs repo is a separate git repository; the monorepo is a workspace where subdirectory repos are co-located but gitignored
 
-## Structural fix required
+## Structural fixes (prior workers)
 
 The original `resolve-root.mjs` used `DOCTRINE.md` as the stack marker and `git status --porcelain` (including untracked files) for the clean-checkout check. Two problems:
 
@@ -22,36 +22,60 @@ Fix (commit `a79dffd`):
 - Stack marker changed to `STACK_COMPLETION.md` (committed AND already a required build dependency)
 - Porcelain check changed to `git status --porcelain -uno` (tracked files only)
 
-## Commands and exit codes
+## Executed commands and exit codes
+
+All commands below were executed on 2026-07-29 from the docs worktree at commit `3f1f647`.
 
 ### Step 1: Default-mode build (no ATLAS_SOURCE_ROOT)
 
 ```
 $ npm run build    # exit 0
-build provenance: a79dffd219c08822085e9e64eaae16f8556b4d8f
+build provenance: 3f1f64782311e05835153e3456862a4aa8a58114
 229 real docs mirrored from 23 projects
 ```
 
-### Step 2: Explicit-root build
+Output saved to `/tmp/atlas-default.json` and `/tmp/index-default.html`.
+
+### Step 2: Stash monorepo dirty state, explicit-root build
 
 ```
-$ cd /home/travis/ProjectAmp2 && git stash -- .gitignore    # clean tracked state
+$ cd /home/travis/ProjectAmp2 && git stash push -m "temp: stash .gitignore for hermetic build" -- .gitignore
+Saved working directory and index state On main: temp: stash .gitignore for hermetic build
+
+$ git -C /home/travis/ProjectAmp2 status --porcelain -uno
+(empty — clean)
+
 $ ATLAS_SOURCE_ROOT=/home/travis/ProjectAmp2 npm run build   # exit 0
 build provenance: 69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
 229 real docs mirrored from 23 projects
-$ cd /home/travis/ProjectAmp2 && git stash pop               # restore
+
+$ cd /home/travis/ProjectAmp2 && git stash pop
+(restored)
 ```
 
-### Step 3: Deterministic comparison
+Output saved to `/tmp/atlas-explicit.json` and `/tmp/index-explicit.html`.
 
-```python
-# atlas.json (excluding commit + generatedAt): IDENTICAL (229 pages)
-# dark-factory phases: IDENTICAL
-#   perceive: live_local ← STACK_COMPLETION.md
-#   decide: GAP
-#   act: live_local ← STACK_COMPLETION.md
-#   measure: live_local ← STACK_COMPLETION.md
-# Full site model (229 pages, 5 bands): IDENTICAL
+### Step 3: Deterministic comparison (programmatic, not by eye)
+
+```
+atlas.json comparison (Python json.load, strip commit + generatedAt, deep equality):
+  Default build commit:  3f1f64782311e05835153e3456862a4aa8a58114
+  Explicit build commit: 69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+  Default generatedAt:   2026-07-29
+  Explicit generatedAt:  2026-07-28
+  Default page count:    229
+  Explicit page count:   229
+  RESULT: atlas model content is IDENTICAL (excluding provenance fields)
+
+index.html comparison (regex-strip 40-char hex hashes + generatedAt, string equality):
+  RESULT: index.html content is IDENTICAL (excluding provenance)
+
+Dark-factory phases (read from both atlas.json outputs):
+  perceive: live_local  ←  STACK_COMPLETION.md
+  decide: GAP
+  act: live_local  ←  STACK_COMPLETION.md
+  measure: live_local  ←  STACK_COMPLETION.md
+  RESULT: IDENTICAL in both builds
 ```
 
 Only `commit` and `generatedAt` differ — these are provenance fields that correctly reflect which source tree each build was invoked against. All content-addressed page CIDs, dark-factory phase derivations, cross-doc links, and outline anchors are byte-identical.
@@ -59,20 +83,25 @@ Only `commit` and `generatedAt` differ — these are provenance fields that corr
 ### Step 4: Fail-closed validation
 
 ```
-$ ATLAS_SOURCE_ROOT=/nonexistent npm run build          # exit 1: "does not exist"
-$ ATLAS_SOURCE_ROOT=/tmp npm run build                  # exit 1: "not a stack root"
-$ ATLAS_SOURCE_ROOT=<dirty-repo> npm run build          # exit 1: "uncommitted changes"
-$ ATLAS_SOURCE_ROOT=<empty-valid-repo> npm run build    # exit 1: "cannot read canonical source"
+$ ATLAS_SOURCE_ROOT=/nonexistent npm run build          # exit 1: "ATLAS_SOURCE_ROOT does not exist: /nonexistent"
+$ ATLAS_SOURCE_ROOT=/tmp npm run build                  # exit 1: "ATLAS_SOURCE_ROOT is not a stack root (STACK_COMPLETION.md not found): /tmp"
 ```
 
-All 7 regression cases pass (`node test-source-root.mjs`).
+All 7 regression cases pass (`node test-source-root.mjs`, exit 0).
 
-### Step 5: Existing coverage
+### Step 5: Existing regression coverage
 
 ```
-$ node test-dark-factory.mjs    # exit 0: 4 phases, order preserved, decide=GAP
-$ node test-source-root.mjs     # exit 0: 7 cases pass
-$ npm run build                 # exit 0: dist/index.html, dist/atlas.json, dist/bend/
+$ node test-dark-factory.mjs
+✓ dark-factory: 4 phases, order [perceive → decide → act → measure], decide=GAP, no rung literals in home.mjs
+exit 0
+
+$ node test-source-root.mjs
+✓ source-root: 7 cases (absent, invalid, non-git, dirty, valid, missing-source, no-artifact-leak) all pass
+exit 0
+
+$ npm run build
+exit 0: dist/index.html, dist/atlas.json, dist/bend/
 ```
 
 ## What this does NOT settle
