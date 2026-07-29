@@ -26,9 +26,25 @@ const GIT_PREFIX = SOURCE_ROOT ? `git -C "${SOURCE_ROOT}"` : 'git';
 // exact source. If HEAD cannot be resolved, the build fails — a deployment without
 // provenance is worse than no deployment, because it looks traceable but isn't.
 // When an explicit source root is provided, provenance is derived from THAT repo's HEAD.
+//
+// Self-referential churn fix: in the default (no explicit root) case, provenance is
+// derived from the last commit that touched SOURCE files (excluding dist/), not from HEAD.
+// This breaks the cycle where committing dist/ changes HEAD, which changes the embedded
+// hash, which requires another commit. The dist/ directory is a build artifact — its
+// commit hash should reflect what was built, not the act of saving the build output.
 let BUILD_COMMIT;
 try {
-  BUILD_COMMIT = execSync(`${GIT_PREFIX} rev-parse HEAD`, { encoding: 'utf8' }).trim();
+  if (SOURCE_ROOT) {
+    // Explicit source root: use that repo's HEAD (already stable — different tree)
+    BUILD_COMMIT = execSync(`${GIT_PREFIX} rev-parse HEAD`, { encoding: 'utf8' }).trim();
+  } else {
+    // Default monorepo: last commit touching source files (not dist/)
+    BUILD_COMMIT = execSync(`git log -1 --format=%H -- . ":(exclude)dist"`, { encoding: 'utf8' }).trim();
+    if (!BUILD_COMMIT) {
+      // Fallback for fresh repos where no non-dist commit exists yet
+      BUILD_COMMIT = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+    }
+  }
 } catch {
   console.error('\x1b[31m✗ build failed:\x1b[0m cannot resolve git HEAD — build provenance requires a commit');
   process.exit(1);
