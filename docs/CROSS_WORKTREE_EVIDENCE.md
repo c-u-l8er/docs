@@ -241,6 +241,88 @@ $ node test-source-root.mjs    # exit 0
 
 All four checks pass against the committed revision.
 
+## Independent reproduction (2026-07-29, commit e2afa93)
+
+Fourth run, after the provenance churn fix (7617d0a: derive build provenance from source commit, not HEAD). This is the first run where the combined check — including post-build `git diff --exit-code HEAD` — passes without requiring a follow-up dist/ rebuild commit.
+
+- **Build worktree:** `/home/travis/ProjectAmp2/.amp/worktrees/docs` (branch `amp/docs`, commit `e2afa93`)
+- **Source root:** `/home/travis/ProjectAmp2` (branch `main`, commit `69397b8`)
+- **Provenance fix:** Default build now uses `git log -1 --format=%H -- . ":(exclude)dist"` to derive provenance from the last source-file commit (`7617d0a`), not HEAD. This breaks the self-referential churn cycle where committing dist/ changes HEAD, which changes the embedded hash.
+
+### Step 1: Pre-check (clean working tree at committed revision)
+
+```
+$ git diff --exit-code HEAD    # exit 0 (clean)
+$ git rev-parse HEAD
+e2afa9395aa6e9c56bdf7fd583e87888b3bfbd2b
+```
+
+### Step 2: Baseline build (no ATLAS_SOURCE_ROOT)
+
+```
+$ npm run build    # exit 0
+build provenance: 7617d0a2265cab2669765bc621634859e1229568
+229 real docs mirrored from 23 projects
+```
+
+Output saved to `/tmp/atlas-baseline-e2afa93.json` and `/tmp/index-baseline-e2afa93.html`.
+
+### Step 3: Stash monorepo dirty state, explicit-root build
+
+```
+$ cd /home/travis/ProjectAmp2 && git stash push -m "temp: stash .gitignore for hermetic cross-worktree build" -- .gitignore
+Saved working directory and index state On main: temp: stash .gitignore for hermetic cross-worktree build
+
+$ git -C /home/travis/ProjectAmp2 status --porcelain -uno
+(empty — clean)
+
+$ ATLAS_SOURCE_ROOT=/home/travis/ProjectAmp2 npm run build   # exit 0
+build provenance: 69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+229 real docs mirrored from 23 projects
+
+$ cd /home/travis/ProjectAmp2 && git stash pop    # exit 0, restored
+```
+
+Output saved to `/tmp/atlas-explicit-e2afa93.json` and `/tmp/index-explicit-e2afa93.html`.
+
+### Step 4: Deterministic comparison (Node.js, programmatic)
+
+```
+atlas.json comparison (JSON.parse, strip commit + generatedAt, string equality):
+  Baseline commit:  7617d0a2265cab2669765bc621634859e1229568
+  Explicit commit:  69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+  Baseline date:    2026-07-29
+  Explicit date:    2026-07-28
+  Baseline pages:   229
+  Explicit pages:   229
+  Content identical (excl. provenance): true
+  RESULT: atlas model content is IDENTICAL (excluding provenance fields)
+
+index.html comparison (regex-strip 40-char hex hashes + dates, string equality):
+  Baseline length: 6752713
+  Explicit length: 6752713
+  RESULT: index.html content is IDENTICAL (excluding provenance)
+
+Dark-factory phases (extracted from both atlas.json outputs):
+  perceive: live_local  ←  STACK_COMPLETION.md
+  decide: GAP
+  act: live_local  ←  STACK_COMPLETION.md
+  measure: live_local  ←  STACK_COMPLETION.md
+  RESULT: IDENTICAL in both builds (JSON.stringify equality)
+```
+
+### Step 5: Combined committed-revision check (authoritative)
+
+```
+$ git diff --exit-code HEAD    # exit 0 (pre-build clean)
+$ npm run build                # exit 0
+$ node test-dark-factory.mjs   # exit 0: 4 phases, order correct, decide=GAP
+$ node test-source-root.mjs    # exit 0: 7 cases all pass
+$ git diff --exit-code HEAD    # exit 0 (post-build clean — provenance churn resolved)
+```
+
+All five checks pass. This is the first run where the post-build cleanliness check passes without intervention — the provenance churn fix (deriving from source commit, not HEAD) eliminates the self-referential dist/ modification cycle.
+
 ## What this does NOT settle
 
 The monorepo workspace is not a single committed tree — sub-repos are co-located checkouts, not committed content. This means:
