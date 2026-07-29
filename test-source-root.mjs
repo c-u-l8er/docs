@@ -53,13 +53,13 @@ function mktmp(label) {
     `absent root: stderr should mention "does not exist", got: ${r.stderr.trim()}`);
 }
 
-// ---- 2. Invalid root: exists but no DOCTRINE.md ----
+// ---- 2. Invalid root: exists but no STACK_COMPLETION.md ----
 {
-  const tmp = mktmp('no-doctrine');
+  const tmp = mktmp('no-marker');
   try {
     const r = runResolve(tmp);
     assert(r.status !== 0,
-      `invalid root (no DOCTRINE.md): expected nonzero exit, got ${r.status}`);
+      `invalid root (no STACK_COMPLETION.md): expected nonzero exit, got ${r.status}`);
     assert(r.stderr.includes('not a stack root'),
       `invalid root: stderr should mention "not a stack root", got: ${r.stderr.trim()}`);
   } finally {
@@ -67,11 +67,11 @@ function mktmp(label) {
   }
 }
 
-// ---- 3. Invalid root: has DOCTRINE.md but is not a git repository ----
+// ---- 3. Invalid root: has STACK_COMPLETION.md but is not a git repository ----
 {
   const tmp = mktmp('no-git');
   try {
-    writeFileSync(join(tmp, 'DOCTRINE.md'), '# Doctrine\n');
+    writeFileSync(join(tmp, 'STACK_COMPLETION.md'), '# Doctrine\n');
     const r = runResolve(tmp);
     assert(r.status !== 0,
       `non-git root: expected nonzero exit, got ${r.status}`);
@@ -87,10 +87,10 @@ function mktmp(label) {
   const tmp = mktmp('dirty');
   try {
     execSync('git init', { cwd: tmp, stdio: 'pipe' });
-    writeFileSync(join(tmp, 'DOCTRINE.md'), '# Doctrine\n');
-    execSync('git add DOCTRINE.md && git commit -m "init"', { cwd: tmp, stdio: 'pipe' });
+    writeFileSync(join(tmp, 'STACK_COMPLETION.md'), '# Doctrine\n');
+    execSync('git add STACK_COMPLETION.md && git commit -m "init"', { cwd: tmp, stdio: 'pipe' });
     // Make it dirty by modifying a tracked file.
-    writeFileSync(join(tmp, 'DOCTRINE.md'), '# Doctrine\n\nDirty change.\n');
+    writeFileSync(join(tmp, 'STACK_COMPLETION.md'), '# Doctrine\n\nDirty change.\n');
     const r = runResolve(tmp);
     assert(r.status !== 0,
       `dirty root: expected nonzero exit, got ${r.status}`);
@@ -106,8 +106,8 @@ function mktmp(label) {
   const tmp = mktmp('valid');
   try {
     execSync('git init', { cwd: tmp, stdio: 'pipe' });
-    writeFileSync(join(tmp, 'DOCTRINE.md'), '# Doctrine\n');
-    execSync('git add DOCTRINE.md && git commit -m "init"', { cwd: tmp, stdio: 'pipe' });
+    writeFileSync(join(tmp, 'STACK_COMPLETION.md'), '# Doctrine\n');
+    execSync('git add STACK_COMPLETION.md && git commit -m "init"', { cwd: tmp, stdio: 'pipe' });
     const r = runResolve(tmp);
     assert(r.status === 0,
       `valid root: expected exit 0, got ${r.status}; stderr: ${r.stderr.trim()}`);
@@ -126,8 +126,8 @@ function mktmp(label) {
   const tmp = mktmp('missing-source');
   try {
     execSync('git init', { cwd: tmp, stdio: 'pipe' });
-    writeFileSync(join(tmp, 'DOCTRINE.md'), '# Doctrine\n');
-    execSync('git add DOCTRINE.md && git commit -m "init"', { cwd: tmp, stdio: 'pipe' });
+    writeFileSync(join(tmp, 'STACK_COMPLETION.md'), '# Doctrine\n');
+    execSync('git add STACK_COMPLETION.md && git commit -m "init"', { cwd: tmp, stdio: 'pipe' });
     const r = runBuild(tmp);
     assert(r.status !== 0,
       `missing authoritative source: expected nonzero exit, got ${r.status}`);
