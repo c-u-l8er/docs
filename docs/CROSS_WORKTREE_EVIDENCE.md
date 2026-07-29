@@ -173,6 +173,74 @@ $ node test-source-root.mjs    # exit 0
 ✓ source-root: 7 cases (absent, invalid, non-git, dirty, valid, missing-source, no-artifact-leak) all pass
 ```
 
+## Independent reproduction (2026-07-29, commit 277acac)
+
+Third independent run, completing the interrupted verification from a surviving worktree.
+
+- **Build worktree:** `/home/travis/ProjectAmp2/.amp/worktrees/docs` (branch `amp/docs`, commit `277acac`)
+- **Source root:** `/home/travis/ProjectAmp2` (branch `main`, commit `69397b8`)
+
+### Step 1: Baseline build (no ATLAS_SOURCE_ROOT)
+
+```
+$ npm run build    # exit 0
+build provenance: 277acacd27e27a0b9172283f7c746c7e0bc3582f
+229 real docs mirrored from 23 projects
+```
+
+### Step 2: Stash monorepo dirty state, explicit-root build
+
+```
+$ cd /home/travis/ProjectAmp2 && git stash push -m "temp: stash .gitignore for hermetic cross-worktree build" -- .gitignore
+Saved working directory and index state On main: temp: stash .gitignore for hermetic cross-worktree build
+
+$ git -C /home/travis/ProjectAmp2 status --porcelain -uno
+(empty — clean)
+
+$ ATLAS_SOURCE_ROOT=/home/travis/ProjectAmp2 npm run build   # exit 0
+build provenance: 69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+229 real docs mirrored from 23 projects
+
+$ cd /home/travis/ProjectAmp2 && git stash pop    # exit 0, restored
+```
+
+### Step 3: Deterministic comparison (Node.js, programmatic)
+
+```
+atlas.json comparison (JSON.parse, strip commit + generatedAt, string equality):
+  Baseline commit:  e7d7b502feb961978e2c011e2489fb84e4d633e6
+  Explicit commit:  69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+  Baseline date:    2026-07-29
+  Explicit date:    2026-07-28
+  Baseline pages:   229
+  Explicit pages:   229
+  All page routes/links/backlinks identical: true
+  RESULT: atlas model content is IDENTICAL (excluding provenance fields)
+
+index.html comparison (regex-strip 40-char hex hashes + dates, string equality):
+  Baseline length: 6752713
+  Explicit length: 6752713
+  RESULT: index.html content is IDENTICAL (excluding provenance)
+
+Dark-factory phases (extracted from embedded model JSON in both index.html outputs):
+  perceive: live_local  ←  STACK_COMPLETION.md
+  decide: GAP
+  act: live_local  ←  STACK_COMPLETION.md
+  measure: live_local  ←  STACK_COMPLETION.md
+  RESULT: IDENTICAL in both builds (JSON.stringify equality)
+```
+
+### Step 4: Committed-revision check
+
+```
+$ git diff --exit-code HEAD    # exit 0 (clean before build)
+$ npm run build                # exit 0
+$ node test-dark-factory.mjs   # exit 0
+$ node test-source-root.mjs    # exit 0
+```
+
+All four checks pass against the committed revision.
+
 ## What this does NOT settle
 
 The monorepo workspace is not a single committed tree — sub-repos are co-located checkouts, not committed content. This means:
