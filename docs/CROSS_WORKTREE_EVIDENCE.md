@@ -104,6 +104,75 @@ $ npm run build
 exit 0: dist/index.html, dist/atlas.json, dist/bend/
 ```
 
+## Independent reproduction (2026-07-29, commit 8d6f53a)
+
+A second independent run from the same worktree at a later commit, confirming identity still holds.
+
+- **Build worktree:** `/home/travis/ProjectAmp2/.amp/worktrees/docs` (branch `amp/docs`, commit `8d6f53a`)
+- **Source root:** `/home/travis/ProjectAmp2` (branch `main`, commit `69397b8`)
+
+### Step 1: Baseline build (no ATLAS_SOURCE_ROOT)
+
+```
+$ npm run build    # exit 0
+build provenance: 8d6f53acd78359ab5188074854bbc43cdd1e0216
+229 real docs mirrored from 23 projects
+```
+
+### Step 2: Stash monorepo dirty state, explicit-root build
+
+```
+$ cd /home/travis/ProjectAmp2 && git stash push -m "temp: stash .gitignore for hermetic build" -- .gitignore
+Saved working directory and index state On main: temp: stash .gitignore for hermetic build
+
+$ git -C /home/travis/ProjectAmp2 status --porcelain -uno
+(empty — clean)
+
+$ ATLAS_SOURCE_ROOT=/home/travis/ProjectAmp2 npm run build   # exit 0
+build provenance: 69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+229 real docs mirrored from 23 projects
+
+$ cd /home/travis/ProjectAmp2 && git stash pop    # exit 0, restored
+```
+
+### Step 3: Deterministic comparison (Node.js, programmatic)
+
+```
+atlas.json comparison (JSON.parse, strip commit + generatedAt, string equality):
+  Baseline commit:  8d6f53acd78359ab5188074854bbc43cdd1e0216
+  Explicit commit:  69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+  Baseline date:    2026-07-29
+  Explicit date:    2026-07-28
+  Baseline pages:   229
+  Explicit pages:   229
+  All page CIDs identical: true
+  RESULT: atlas model content is IDENTICAL (excluding provenance fields)
+
+index.html comparison (regex-strip 40-char hex hashes + generatedAt, string equality):
+  Baseline length: 6752713
+  Explicit length: 6752713
+  RESULT: index.html content is IDENTICAL (excluding provenance)
+
+Dark-factory phases (extracted from embedded model JSON in both index.html outputs):
+  perceive: live_local  ←  STACK_COMPLETION.md
+  decide: GAP
+  act: live_local  ←  STACK_COMPLETION.md
+  measure: live_local  ←  STACK_COMPLETION.md
+  RESULT: IDENTICAL in both builds (JSON.stringify equality)
+```
+
+Only `commit` and `generatedAt` differ — these are provenance fields that correctly reflect which source tree each build was invoked against.
+
+### Step 4: Regression tests
+
+```
+$ node test-dark-factory.mjs    # exit 0
+✓ dark-factory: 4 phases, order [perceive → decide → act → measure], decide=GAP, no rung literals in home.mjs
+
+$ node test-source-root.mjs    # exit 0
+✓ source-root: 7 cases (absent, invalid, non-git, dirty, valid, missing-source, no-artifact-leak) all pass
+```
+
 ## What this does NOT settle
 
 The monorepo workspace is not a single committed tree — sub-repos are co-located checkouts, not committed content. This means:
