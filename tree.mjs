@@ -3,23 +3,10 @@
 // #/<path> ⟺ <path> on disk with zero ambiguity, in both directions. We do NOT move any
 // files — every page records where it really lives (across submodule boundaries and all).
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join, relative, sep, basename } from 'node:path';
+import { join, relative, sep, basename } from 'node:path';
+import { findRoot } from './resolve-root.mjs';
 
-// Find the stack root by marker (DOCTRINE.md), not by counting directory levels.
-// This lets the build run from a worktree or any checkout location.
-function findRoot() {
-  let dir = dirname(fileURLToPath(import.meta.url));
-  for (let i = 0; i < 10; i++) {
-    if (existsSync(join(dir, 'DOCTRINE.md'))) return dir;
-    const parent = dirname(dir);
-    if (parent === dir) break;          // filesystem root
-    dir = parent;
-  }
-  console.error('\x1b[31m✗ cannot locate stack root (DOCTRINE.md not found)\x1b[0m');
-  process.exit(1);
-}
-export const ROOT = findRoot();
+export const ROOT = findRoot(import.meta.url);
 
 // what counts as "the docs": markdown under any docs/ or prompts/ tree, plus the
 // top-level stack docs. Everything else (code, build output, archives) is excluded.

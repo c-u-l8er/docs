@@ -5,23 +5,10 @@
 // a HARD build failure — there is no silent fallback to a stale literal, which is the
 // whole point: a number can't drift from its source because nothing else holds it.
 import { readFileSync, existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
+import { findRoot } from './resolve-root.mjs';
 
-// Find the stack root by marker (DOCTRINE.md), not by counting directory levels.
-// This lets the build run from a worktree or any checkout location.
-function findRoot() {
-  let dir = dirname(fileURLToPath(import.meta.url));
-  for (let i = 0; i < 10; i++) {
-    if (existsSync(join(dir, 'DOCTRINE.md'))) return dir;
-    const parent = dirname(dir);
-    if (parent === dir) break;
-    dir = parent;
-  }
-  console.error('\x1b[31m✗ cannot locate stack root (DOCTRINE.md not found)\x1b[0m');
-  process.exit(1);
-}
-const ROOT = findRoot();
+const ROOT = findRoot(import.meta.url);
 const FAIL = (m) => { console.error('\x1b[31m✗ sources failed:\x1b[0m ' + m); process.exit(1); };
 
 function read(rel) {
