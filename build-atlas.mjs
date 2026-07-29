@@ -14,36 +14,28 @@ import { toBlocks, docHTML, plain } from './render.mjs';
 import { BANDS, REGISTRY, FALLBACK } from './home.mjs';
 import { DARK_FACTORY_STEPS } from './sources.mjs';
 
-// ---- explicit source-workspace root: provenance routing ---------------------------------
-// When ATLAS_SOURCE_ROOT is set, resolve-root.mjs has already validated it (exists,
-// has DOCTRINE.md, is a git repo, clean working tree). Here we route all git provenance
-// commands through that root so HEAD and commit date come from the source tree.
-const SOURCE_ROOT = process.env.ATLAS_SOURCE_ROOT;
-const GIT_PREFIX = SOURCE_ROOT ? `git -C "${SOURCE_ROOT}"` : 'git';
-
 // ---- build provenance: derived from git, never invented ---------------------------------
 // The commit hash is the immutable anchor that lets a deployment be traced back to its
 // exact source. If HEAD cannot be resolved, the build fails — a deployment without
 // provenance is worse than no deployment, because it looks traceable but isn't.
-// When an explicit source root is provided, provenance is derived from THAT repo's HEAD.
 //
-// Self-referential churn fix: in the default (no explicit root) case, provenance is
-// derived from the last commit that touched SOURCE files (excluding dist/), not from HEAD.
-// This breaks the cycle where committing dist/ changes HEAD, which changes the embedded
-// hash, which requires another commit. The dist/ directory is a build artifact — its
-// commit hash should reflect what was built, not the act of saving the build output.
+// Provenance is ALWAYS derived from the build's own git context (the docs worktree CWD),
+// regardless of whether ATLAS_SOURCE_ROOT redirects source-file reads elsewhere.
+// ATLAS_SOURCE_ROOT controls WHERE authoritative content is read from; provenance tracks
+// WHICH version of the build pipeline (and its committed sources) produced the output.
+// Using the same derivation in both modes is what makes cross-worktree identity possible.
+//
+// Self-referential churn fix: provenance is derived from the last commit that touched
+// SOURCE files (excluding dist/), not from HEAD. This breaks the cycle where committing
+// dist/ changes HEAD, which changes the embedded hash, which requires another commit.
+// The dist/ directory is a build artifact — its commit hash should reflect what was
+// built, not the act of saving the build output.
 let BUILD_COMMIT;
 try {
-  if (SOURCE_ROOT) {
-    // Explicit source root: use that repo's HEAD (already stable — different tree)
-    BUILD_COMMIT = execSync(`${GIT_PREFIX} rev-parse HEAD`, { encoding: 'utf8' }).trim();
-  } else {
-    // Default monorepo: last commit touching source files (not dist/)
-    BUILD_COMMIT = execSync(`git log -1 --format=%H -- . ":(exclude)dist"`, { encoding: 'utf8' }).trim();
-    if (!BUILD_COMMIT) {
-      // Fallback for fresh repos where no non-dist commit exists yet
-      BUILD_COMMIT = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
-    }
+  BUILD_COMMIT = execSync(`git log -1 --format=%H -- . ":(exclude)dist"`, { encoding: 'utf8' }).trim();
+  if (!BUILD_COMMIT) {
+    // Fallback for fresh repos where no non-dist commit exists yet
+    BUILD_COMMIT = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
   }
 } catch {
   console.error('\x1b[31m✗ build failed:\x1b[0m cannot resolve git HEAD — build provenance requires a commit');
@@ -57,7 +49,7 @@ if (!/^[0-9a-f]{40}$/.test(BUILD_COMMIT)) {
 // builds of the same commit produce identical output regardless of when they run.
 let BUILD_DATE;
 try {
-  BUILD_DATE = execSync(`${GIT_PREFIX} log -1 --format=%ci ${BUILD_COMMIT}`, { encoding: 'utf8' }).trim().slice(0, 10);
+  BUILD_DATE = execSync(`git log -1 --format=%ci ${BUILD_COMMIT}`, { encoding: 'utf8' }).trim().slice(0, 10);
 } catch {
   console.error('\x1b[31m✗ build failed:\x1b[0m cannot read commit date for ' + BUILD_COMMIT);
   process.exit(1);
