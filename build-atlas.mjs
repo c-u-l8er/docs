@@ -209,6 +209,15 @@ writeFileSync('dist/atlas.json', JSON.stringify(atlas, null, 2));
 // ---- HTML shell -----------------------------------------------------------------------
 const CSS = readFileSync('shell-atlas.css', 'utf8');
 const JS = readFileSync('shell-atlas.js', 'utf8');
+// The shell is inlined into one <script>, so a single parse error silently blanks the whole
+// site: the page still serves 200 with every doc baked in, but #app is never filled. Refuse
+// to write a dist/ whose shell cannot parse.
+try {
+  execSync('node --check shell-atlas.js', { stdio: 'pipe' });
+} catch (e) {
+  console.error(`\nshell-atlas.js does not parse — refusing to build:\n${e.stderr.toString()}`);
+  process.exit(1);
+}
 const page = `<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="build-commit" content="${BUILD_COMMIT}">
