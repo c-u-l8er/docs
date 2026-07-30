@@ -183,7 +183,7 @@ if (FAIL.length) {
   for (const f of FAIL) console.error(`  ${X}-${R} ${f}`);
   process.exit(1);
 } else {
-  console.log(`  ${G}✓${R} production commit matches local HEAD`);
+  console.log(`  ${G}✓${R} production commit matches local source commit`);
   console.log(`  ${G}✓${R} dark-factory phases match: perceive → decide → act → measure`);
   console.log(`  ${G}✓${R} decide GAP: present, unexplained, no fabricated rung or source`);
   console.log(`  ${G}✓${R} sourced phases: evidence rungs and provenance paths match`);

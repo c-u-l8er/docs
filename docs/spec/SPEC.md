@@ -26,7 +26,9 @@ Every page is content-addressed (CIDv1). The round-trip `parse(serialize(parse(d
 
 ### 2.4 Build provenance
 
-Every build embeds the git commit hash of HEAD as both a `<meta name="build-commit">` tag and a field in the model JSON. If HEAD cannot be resolved to a 40-hex-char SHA, the build fails. The build date is derived from the commit timestamp, not the wall clock, so that repeated builds of the same commit produce byte-identical output.
+Every build embeds a git commit hash as both a `<meta name="build-commit">` tag and a field in the model JSON. The commit is derived from the latest non-`dist/` commit (`git log -1 --format=%H -- . ":(exclude)dist"`), not from HEAD. This is the "two-commit chain" strategy: source changes are committed first (the *source commit*), then `dist/` is rebuilt and committed on top (the *artifact commit*). The provenance always points to the source commit, breaking the self-referential cycle where committing `dist/` would change HEAD, which would change the embedded hash, which would require another commit.
+
+If no source commit can be resolved to a 40-hex-char SHA, the build fails. The build date is derived from the source commit's timestamp, not the wall clock, so that repeated builds of the same source commit produce byte-identical output regardless of when the artifact commit is made.
 
 ### 2.5 Derived facts, not literals
 
@@ -61,7 +63,7 @@ Each sourced phase carries an evidence-ladder rung parsed from the owning table 
 1. Fetches the production site at `https://docs.ampersandboxdesign.com`.
 2. Extracts the embedded commit hash and model JSON.
 3. Verifies internal consistency (meta tag commit === model commit).
-4. Checks that local HEAD matches the production commit.
+4. Checks that the local source commit (latest non-`dist/` commit) matches the production commit. Under the two-commit chain, this is the commit that produced the build, not HEAD.
 5. Rebuilds locally from the same source.
 6. Compares the dark-factory model field-by-field: phase order, rungs, sources, GAP status and text.
 7. Checks that the production HTML contains visible references to `darkFactory`, `GAP`, and `source`.
