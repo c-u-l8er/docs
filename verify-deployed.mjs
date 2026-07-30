@@ -74,24 +74,28 @@ console.log(`  ${G}✓${R} extracted production model (${prodModel.count} docs, 
 assert(prodModel.commit === prodCommit,
   `meta build-commit (${prodCommit}) !== model.commit (${prodModel.commit})`);
 
-// ---- 5. Verify local HEAD matches production commit -------------------------------------
-// The done-condition requires the *tested* commit to equal the *deployed* commit.
-// If they differ, the comparison is still meaningful but the claim cannot be live_deployed.
+// ---- 5. Verify local source commit matches production commit ----------------------------
+// Build provenance is derived from the last commit touching source files (excluding dist/),
+// not from HEAD — see build-atlas.mjs. The verify script must use the same derivation,
+// otherwise a dist-only rebuild commit causes a false parity failure.
 let localCommit;
 try {
-  localCommit = execSync('git rev-parse HEAD', { cwd: HERE, encoding: 'utf8' }).trim();
+  localCommit = execSync('git log -1 --format=%H -- . ":(exclude)dist"', { cwd: HERE, encoding: 'utf8' }).trim();
+  if (!localCommit) {
+    localCommit = execSync('git rev-parse HEAD', { cwd: HERE, encoding: 'utf8' }).trim();
+  }
 } catch {
-  console.error(`${X}✗ cannot resolve local HEAD${R}`);
+  console.error(`${X}✗ cannot resolve local source commit${R}`);
   process.exit(1);
 }
 
 const commitParity = localCommit === prodCommit;
 if (commitParity) {
-  console.log(`  ${G}✓${R} local HEAD matches production commit`);
+  console.log(`  ${G}✓${R} local source commit matches production commit`);
 } else {
-  console.log(`  ${D}  local HEAD:  ${localCommit}${R}`);
-  console.log(`  ${D}  production:  ${prodCommit}${R}`);
-  console.log(`  ${X}✗${R} local HEAD does not match production commit — building locally anyway for model comparison`);
+  console.log(`  ${D}  local source: ${localCommit}${R}`);
+  console.log(`  ${D}  production:   ${prodCommit}${R}`);
+  console.log(`  ${X}✗${R} local source commit does not match production commit — building locally anyway for model comparison`);
 }
 
 // ---- 6. Build locally and extract local model -------------------------------------------
@@ -168,7 +172,7 @@ assert(prodHTML.includes(`content="${prodCommit}"`),
 // This is the gate for the live_deployed claim: if commits don't match, the verification
 // is informative but the claim cannot advance.
 if (!commitParity) {
-  FAIL.push(`commit parity failed: local HEAD (${localCommit}) !== production (${prodCommit}). ` +
+  FAIL.push(`commit parity failed: local source commit (${localCommit}) !== production (${prodCommit}). ` +
     `Deploy the current commit first, or check out the production commit to verify.`);
 }
 
