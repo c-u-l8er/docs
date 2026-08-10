@@ -16,6 +16,7 @@ function toSpan(s) {
     marks: [{ kind: 'link', target: s.href, predicate: 'cites' }] };
   if (s.tt !== undefined) return { id: sid(), text: s.tt, marks: ['code'] };
   if (s.b !== undefined) return { id: sid(), text: s.b, marks: ['bold'] };
+  if (s.i !== undefined) return { id: sid(), text: s.i, marks: ['italic'] };
   return { id: sid(), text: '' };
 }
 const toSpans = (arr) => (arr && arr.length ? arr : ['']).map(toSpan);
@@ -27,6 +28,7 @@ export function toBlocks(blocks) {
     if (b.kind === 'code') return { id: bid(), kind: 'code', text: String(b.text ?? ''), language: b.language || 'text' };
     if (b.kind === 'quote') return { id: bid(), kind: 'quote', blocks: [{ id: bid(), kind: 'paragraph', spans: toSpans(b.spans) }] };
     if (b.kind === 'list') return { id: bid(), kind: 'list', ordered: !!b.ordered,
+      ...(b.ordered && b.start > 1 ? { start: b.start } : {}),
       items: (b.items.length ? b.items : [['']]).map(it => ({ id: bid(), kind: 'list-item',
         blocks: [{ id: bid(), kind: 'paragraph', spans: toSpans(it) }] })) };
     if (b.kind === 'table') { const cell = (spans) => ({ id: bid(), spans: toSpans(spans) });
@@ -115,6 +117,7 @@ function spanHTML(s) {
   if (!m) return t;
   if (m === 'code') return `<code>${t}</code>`;
   if (m === 'bold') return `<strong>${t}</strong>`;
+  if (m === 'italic') return `<em>${t}</em>`;
   if (m && m.kind === 'link') {
     const tgt = m.target || '';
     if (tgt.startsWith('#/')) return `<a href="${esc(tgt)}" data-link>${t}</a>`;
@@ -130,7 +133,9 @@ export function blockHTML(b) {
     case 'code': { const lang = (b.language && b.language !== 'text') ? b.language : '';
       return `<pre${lang ? ` data-lang="${esc(lang)}"` : ''}><code>${highlight(b.text, lang)}</code></pre>`; }
     case 'quote': return `<blockquote>${(b.blocks || []).map(blockHTML).join('')}</blockquote>`;
-    case 'list': return `<ul>${b.items.map(it => `<li>${(it.blocks || []).map(blockHTML).join('')}</li>`).join('')}</ul>`;
+    case 'list': { const t = b.ordered ? 'ol' : 'ul';   // ordered survived ingest → render it as one
+      const at = b.ordered && b.start > 1 ? ` start="${esc(b.start)}"` : '';
+      return `<${t}${at}>${b.items.map(it => `<li>${(it.blocks || []).map(blockHTML).join('')}</li>`).join('')}</${t}>`; }
     case 'table': { const row = (cells, tag) => `<tr>${cells.map(c => `<${tag}>${spansHTML(c.spans)}</${tag}>`).join('')}</tr>`;
       const head = (b.head && b.head.length) ? `<thead>${row(b.head, 'th')}</thead>` : '';
       return `<table>${head}<tbody>${(b.rows || []).map(r => row(r, 'td')).join('')}</tbody></table>`; }

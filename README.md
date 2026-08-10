@@ -1,9 +1,10 @@
 # stackdocs — the whole [&] stack, as a filesystem you can walk
 
 A single, navigable documentation site that **mirrors the live repository's
-filesystem**: every real `docs/` and `prompts/` markdown file across all 20
-projects becomes a page whose route *is* its source path. No files are moved.
-Open `dist/index.html` — single file, no server.
+filesystem**: every real `docs/` and `prompts/` markdown file across all 43
+projects — plus each project's own root-level markdown, where TRVM, TRAAVIIS and
+WRL keep nearly all of theirs — becomes a page whose route *is* its source path.
+No files are moved. Open `dist/index.html` — single file, no server.
 
 ## What it is
 
@@ -23,8 +24,10 @@ machine-readable route⇄source map for exactly this.
 `build-atlas.mjs` uses the real `@bendscript/core` npm package to:
 
 1. **Mirror the filesystem** — `tree.mjs` scans the repo (excluding
-   `node_modules`, `_build`, `deps`, `old_scrap`, etc.), collecting every
-   `docs/`+`prompts/` `.md` file plus top-level READMEs. 223 docs / 20 projects.
+   `node_modules`, `_build`, `deps`, `old_scrap`, and every dot-directory except
+   `.claude`, so gitignored local state like `.amp/` is never published),
+   collecting every `docs/`+`prompts/` `.md` file, each project's root-level
+   markdown, and the top-level stack docs. 350 docs / 43 projects.
 2. **Turn each file into a validated BendScript document** — `ingest.mjs` parses
    the markdown to blocks; `render.mjs` emits BendScript; each doc is validated
    against the protocol schema, normalized, and **content-addressed** (CIDv1).
@@ -57,9 +60,9 @@ npm run build:curated # the earlier 21-page curated proof (node build.mjs)
 Build report (actual output):
 
 ```
-  ✓ 223 real docs mirrored from 20 projects (no files moved)
+  ✓ 350 real docs mirrored from 43 projects (no files moved)
   ✓ route === source path for every page (lossless agent round-trip)
-  ✓ 9 cross-doc links resolved to internal navigation
+  ✓ 360 cross-doc links resolved to internal navigation
   ✓ every page is a validated, content-addressed BendScript document
   ✓ round-trip CID fixpoint holds across the corpus: true
   ✓ 0 doc(s) fell back to raw view (unparseable markdown)

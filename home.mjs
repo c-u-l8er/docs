@@ -14,7 +14,8 @@ import { SHIP_SPEC, SPECPROMPT_DIR, TAG_SPEC_DRIVEN, TAG_SPEC_VERIFIED } from '.
 
 // bands render top-to-bottom; first listed is closest to the foundation.
 export const BANDS = [
-  { key: 'protocol',  title: 'the protocol stack · structural · temporal · diagnostic · spatial' },
+  { key: 'protocol',  title: 'the protocol stack · structural · temporal · diagnostic · spatial · embodied' },
+  { key: 'runtime',   title: 'the verifiable runtime · calculus · language · terminal' },
   { key: 'product',   title: 'products · shipping now' },
   { key: 'primitive', title: 'compose · cognitive primitives' },
   { key: 'platform',  title: 'compose · agent platform & runtime' },
@@ -34,6 +35,18 @@ export const REGISTRY = {
     tagline: 'A self-improving continual-learning benchmark that refracts memory into nine dimensions.' },
   'SCOPE': { band: 'protocol', status: SHIP_SPEC, virtual: true, href: 'https://opensentience.org/scope.html', mark: '⬚', os: 'OS-012 · spatial',
     tagline: 'Spatial algebra: N-D regions + spatial claims as first-class governed objects — the structural bridge between GeoFleetic and RuneFort. v0.1 draft.' },
+  'body-os': { band: 'protocol', status: 'draft', mark: '◈', os: 'OS-011 · embodiment',
+    tagline: '`&body.os` reference implementation: the embodiment protocol’s forward model, grounded in the host machine.' },
+  'body-browser': { band: 'protocol', status: 'draft', mark: '◇', os: 'OS-011 · embodiment',
+    tagline: '`&body.browser` reference implementation: the same embodiment surface, with the browser as the body.' },
+
+  // ── the verifiable runtime (TRVM · WallRiderLang · TRAAVIIS) ──────────────────────────
+  'TRVM': { band: 'runtime', status: 'alpha', mark: '⇄', os: 'interaction-calculus runtime',
+    tagline: 'A packed-word WebAssembly reducer for the Interaction Calculus — and the evidence that its reduction distributes across machines with no locks and no consensus.' },
+  'WRL': { band: 'runtime', status: 'alpha', mark: '⌁', os: 'WallRiderLang',
+    tagline: 'An executable topology language whose meaning is a hash. Riders move along routes; walls gate, commit and seal what they do.' },
+  'TRAAVIIS': { band: 'runtime', status: 'alpha', mark: '⊢', os: 'trvs · evidence terminal',
+    tagline: 'Evidence-grade environments for evaluating agents. Write the wall, run the world, keep the proof — same world, same scenario, same hash, every time.' },
 
   // ── products · shipping now ───────────────────────────────────────────────────────────
   'graphonomous': { band: 'product', status: 'live', mark: '◉', os: '&memory',
@@ -72,6 +85,10 @@ export const REGISTRY = {
     tagline: 'Resource-rung static cost certificates: prove what a computation can afford before it runs.' },
   'workbench': { band: 'research', status: 'alpha', mark: '⊞', os: 'interactive academy',
     tagline: 'The hands-on workbench: the ladder’s rungs, wired up and playable in the browser.' },
+  'the-residency': { band: 'research', status: 'alpha', mark: '⌂', os: 'persistent residency',
+    tagline: 'Agents that live in a place: a single-file board where residents reason over a real corpus and measure reductions with TRVM in WebAssembly.' },
+  'code': { band: 'research', status: 'alpha', mark: '⟐', os: 'amp · orchestration harness',
+    tagline: 'The amp harness: budget-capped workers in isolated worktrees, a board that scores proposals, and an apply step that refuses to merge for you.' },
   'docs': { band: 'research', status: 'alpha', mark: '⌘', os: 'this atlas',
     tagline: 'The site you’re reading — the whole stack mirrored as a walkable filesystem.' },
 };

@@ -98,10 +98,11 @@
         <div class="eyebrow">${esc(M.brand)} · stack documentation</div>
         <h1>The [&amp;] stack, documented.</h1>
         <p>One home for the protocols, kernels, and engines behind governed machine cognition —
-          [&amp;] composition, PULSE timing, PRISM measurement, SCOPE space, and the Graphonomous
-          memory substrate. Every page is mirrored straight from its source file and content-addressed,
-          so the docs can’t drift from the code. Browse by topic below, or press <kbd>⌘K</kbd> to jump
-          to any page.</p>
+          [&amp;] composition, PULSE timing, PRISM measurement, SCOPE space, the Graphonomous
+          memory substrate, and the verifiable runtime line that executes it: TRVM’s interaction
+          calculus, WallRiderLang, and TRAAVIIS. Every page is mirrored straight from its source file
+          and content-addressed, so the docs can’t drift from the code. Browse by topic below, or
+          press <kbd>⌘K</kbd> to jump to any page.</p>
         <div class="legend">
           <span><i class="dot s-live"></i> live · on npm</span>
           <span><i class="dot s-alpha"></i> alpha</span>
@@ -119,10 +120,55 @@
     paint('', false, body, '', true);
   }
 
+  // ---- not found ----------------------------------------------------------------------
+  // An unresolvable route used to fall back to M.tree, which rendered the entire campus
+  // under the route's own name ("229 documents under `wrlm`"). That is a confidently wrong
+  // page, not a missing one — every dead link looked like a working floor. Routes are real
+  // filesystem paths and therefore case-sensitive, so the near-misses are worth offering.
+  function notFound(path) {
+    const lower = path.toLowerCase();
+    const near = [];
+    // Portfolio dirs carry their TLD (bendscript.com, opensentience.org) while links to them
+    // are usually written bare, so a bare name matches the stem too.
+    const stem = (s) => s.toLowerCase().replace(/\.(com|org|dev|io|net|ai)$/, '');
+    (function walk(n, base) {
+      for (const d of (n.dirs || [])) {
+        const p = base ? base + '/' + d.name : d.name;
+        if (stem(d.name) === lower || p.toLowerCase() === lower)
+          near.push({ route: p, name: d.name + '/', meta: kindOf(p) + ' · ' + countDocs(d) + ' docs', ic: '▣' });
+        walk(d, p);
+      }
+    })(M.tree, '');
+    // A doc is also a near-miss when the route names the SUBJECT its filename leads with —
+    // #/wrlm should reach TRVM/WRLM_RESEARCH_BRIEF.md. A bare `includes` would make a short
+    // route match half the corpus, so the loose match is anchored to a word boundary in the
+    // filename, needs three characters, and is ordered after every exact hit.
+    const word = new RegExp('(^|[^a-z0-9])' + lower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^a-z0-9])');
+    const loose = [];
+    for (const p of M.pages) {
+      const nm = p.name.toLowerCase();
+      if (p.route.toLowerCase() === lower || nm === lower)
+        near.push({ route: p.route, name: p.title, meta: p.route, ic: '⤳' });
+      else if (lower.length >= 3 && !lower.includes('/') && word.test(nm))
+        loose.push({ route: p.route, name: p.title, meta: p.route, ic: '⤳' });
+    }
+    near.push(...loose);
+    const tiles = near.slice(0, 12).map((n, i) => `<a class="tile dir" style="--i:${i}" href="#/${esc(n.route)}">
+        <div class="ic">${n.ic}</div><div class="nm">${esc(n.name)}</div><div class="meta">${esc(n.meta)}</div></a>`).join('');
+    const body = `<div class="floor-h"><div class="kind">no such route</div>
+        <h1>Not found</h1>
+        <div class="sub">Nothing in this atlas answers to <code>${esc(path)}</code>. Every route is a real
+          file or folder path, mirrored from the filesystem — <a href="#/">start at the campus</a> or press
+          <b>⌘K</b> to search all ${M.count} documents.</div></div>
+      ${tiles ? `<div class="section-l">did you mean</div><div class="grid reveal">${tiles}</div>` : ''}`;
+    paint('', false, body);
+  }
+
   // ---- floor (directory) --------------------------------------------------------------
   function floor(path) {
     if (!path) return home();
-    const node = findNode(path) || M.tree;
+    const node = findNode(path);
+    if (!node) return notFound(path);
     const kind = kindOf(path);
     const title = path ? path.split('/').pop() : 'The [&] stack, documented';
     const dirs = (node.dirs || []).slice().sort((a,b) => a.name.localeCompare(b.name));

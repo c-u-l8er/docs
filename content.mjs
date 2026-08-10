@@ -221,6 +221,131 @@ export const DOCS = [
   ],
 },
 
+// ───────────────────────────────────────────────── execution substrate chain
+{
+  id: 'wrl', name: 'WallRiderLang', mark: '⌬', os: 'world language',
+  status: 'alpha', layer: 'substrate', tagline: 'An executable topology language whose meaning is a hash.',
+  body: [
+    H(1, 'WallRiderLang'),
+    P('A content-addressed language for declaring networks of durable identities connected by ',
+      'textured routes and separated by boundaries. A WRL program seals to a ',
+      TT('SemanticArtifactID'), ' — the same hash on every host, every time.'),
+    CODE(`profile forge.world.core.v1
+
+[pulser:p0](every 2){sig_out}
+[relay:r0]{sig_in, sig_out}
+[spinner:sp](w=16, n=8, rotor=quarter_turn_z, configurable){sig_in, socket}
+[orb:ob]{pose}
+
+[p0] --sig--> [r0]
+[r0] --sig--> [sp]
+[sp] --socket--> [ob]`, 'text'),
+    P('seals to ', TT('sem-67e954cf…60ae'), ' on every host, forever.'),
+    H(2, 'Shipped state'),
+    P('Core 0.1.2 is frozen: five roles, one texture, the period cycle, canonicalization, ',
+      'and the document boundary. ', B('890 conformance checks'), ', 0 failures, ',
+      '128 identity-register rows, model debt 0. The V2 Semantic IR (Relation Identity Kernel, §D8) ',
+      'adds named relations as a second encoding over the same worlds — V1 seal ids are unmoved.'),
+    H(2, 'In the chain'),
+    P('WRL is authored by humans or by ', A('WRLM', 'wrlm'), '; lowered and reduced by ',
+      A('TRVM', 'trvm'), '; evaluated by ', A('TRAAVIIS', 'traaviis'),
+      '. A browser playground computes real ids in the browser.'),
+  ],
+  edges: [
+    ed('ampersand.docs:lowered-by', 'trvm'),
+    ed('ampersand.docs:evaluated-by', 'traaviis'),
+    edx('cites', 'WRL playground ↗', 'https://wrl.traaviis.com/playground.html'),
+    edx('cites', 'GitHub ↗', 'https://github.com/c-u-l8er/WRL'),
+  ],
+},
+
+{
+  id: 'trvm', name: 'TRVM', mark: 'λ', os: 'interaction-calculus VM',
+  status: 'alpha', layer: 'substrate', tagline: 'A packed-word interaction-calculus runtime with four implementations targeting one spec.',
+  body: [
+    H(1, 'TRVM'),
+    P('A correct, packed-word runtime for the Interaction Calculus. Interaction-net reduction is ',
+      'confluent by construction: the order redexes fire does not change the result. ',
+      TT('spec/SPEC.md'), ' plus language-agnostic conformance vectors define the contract; ',
+      'four implementations target it.'),
+    H(2, 'Implementations'),
+    UL(
+      'runtime/python — reference reducer (ic_ref) + oracle (ic_float) (shipped)',
+      'runtime/c — ic32.c, packed-word native, 13/13 conformance vectors (shipped)',
+      'runtime/zig — ic32.zig (in progress)',
+      'runtime/mojo — ic32.mojo (in progress)'),
+    H(2, 'The Forge'),
+    P('The ', TT('forge/'), ' directory is the WRL toolchain: compiler, lowering spine, ',
+      'and canonicalization pipeline. ', B('67 binding runs'), ' verify end-to-end correctness ',
+      'from WRL text to sealed ', TT('sem-'), ' ids.'),
+  ],
+  edges: [
+    ed('ampersand.docs:reduces', 'wrl'),
+    ed('ampersand.docs:verified-by', 'traaviis'),
+    edx('cites', 'GitHub ↗', 'https://github.com/c-u-l8er/TRVM'),
+  ],
+},
+
+{
+  id: 'wrlm', name: 'WRLM', mark: '🧠', os: 'generative cortex',
+  status: 'alpha', layer: 'substrate', tagline: 'A probabilistic proposer over deterministic sealed worlds.',
+  body: [
+    H(1, 'WRLM'),
+    P('WallRiderLang Model — a probabilistic proposer over WRL worlds. ',
+      'The model emits full WRL text; the host derives a typed ', TT('GraphEditV1'),
+      ' op sequence via ', TT('semantic_diff'), ' and applies it through the existing edit seam. ',
+      'Ops are derived, never generated.'),
+    H(2, 'Shipped state'),
+    P('Steps 1–2 closed: ', TT('GoalSpecV1'), ' (two-sorted closed AST), ',
+      TT('TaskBundleV1'), ', ', TT('WorldRecordV1'), ', coverage policy over a 320-cell domain ',
+      '(298 inhabited), deterministic corpus of 527 accepted items. Steps 3–10 remain paper.'),
+    H(2, 'In the chain'),
+    P('WRLM proposes candidate worlds to ', A('WRL', 'wrl'), '. ',
+      A('TRVM', 'trvm'), ' reduces them. ', A('TRAAVIIS', 'traaviis'),
+      ' admits the evidence. WRLM is the only statistical component in the chain; ',
+      'every other layer is total and deterministic.'),
+  ],
+  edges: [
+    ed('ampersand.docs:proposes-to', 'wrl'),
+    ed('ampersand.docs:reduced-by', 'trvm'),
+    ed('ampersand.docs:admitted-by', 'traaviis'),
+    edx('cites', 'research brief ↗', 'https://github.com/c-u-l8er/TRVM/blob/main/WRLM_RESEARCH_BRIEF.md'),
+  ],
+},
+
+{
+  id: 'traaviis', name: 'TRAAVIIS', mark: '▶', os: 'evaluation terminal',
+  status: 'alpha', layer: 'substrate', tagline: 'Evidence-grade environments for evaluating agents. Content-addressed, not just deterministic.',
+  body: [
+    H(1, 'TRAAVIIS'),
+    P('Evidence-grade environments for evaluating agents. ', TT('trvs'),
+      ' is a thin terminal over the Forge/TRVM engine — it carries no world semantics of its own ',
+      'and does not embed, select, or route a model. 532 tests across 28 files.'),
+    H(2, 'The command set'),
+    P('17 commands ship today, covering world identity, reduction, verification, ',
+      'evaluation, batching, comparison, packaging, and serving:'),
+    CODE(`trvs id / inspect / run / verify / replay / diff
+trvs eval-one / eval / verify-episode / compare / batch
+trvs init / pack / verify-bundle / archive-bundle
+trvs serve --ors
+trvs doctor`, 'bash'),
+    H(2, 'Two substrates'),
+    P('TRVM worlds (', TT('trvm.world.v1'), ') are the deterministic interaction-calculus substrate. ',
+      'Evidence Residency (', TT('residency.repository.v1'),
+      ') evaluates agents on real codebases via snapshot, finding, patch, and trace evidence.'),
+    H(2, 'Identity rungs'),
+    P('Six content-addressed rungs: ', TT('task-'), ' → ', TT('episode-'), ' → ',
+      TT('env-'), ' → ', TT('bundle-'), ' (shared ladder), plus substrate-specific ',
+      TT('sem-'), ' (world) and ', TT('film-'), ' (trajectory) for TRVM worlds.'),
+  ],
+  edges: [
+    ed('ampersand.docs:evaluates', 'trvm'),
+    ed('ampersand.docs:evaluates', 'wrl'),
+    ed('ampersand.docs:admits', 'wrlm'),
+    edx('cites', 'GitHub ↗', 'https://github.com/c-u-l8er/TRAAVIIS'),
+  ],
+},
+
 // ───────────────────────────────────────────────── document substrate
 {
   id: 'bendscript', name: 'BendScript', mark: '⤳', os: 'document protocol',

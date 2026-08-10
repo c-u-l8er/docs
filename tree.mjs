@@ -8,18 +8,25 @@ import { findRoot } from './resolve-root.mjs';
 
 export const ROOT = findRoot(import.meta.url);
 
-// what counts as "the docs": markdown under any docs/ or prompts/ tree, plus the
-// top-level stack docs. Everything else (code, build output, archives) is excluded.
-const EXCLUDE_DIR = new Set(['node_modules', '_build', 'deps', '.git', '.amp', 'dist',
-  'old_scrap', 'old_scraps', '.elixir_ls', 'cover', '.svelte-kit']);
+// what counts as "the docs": markdown under any docs/ or prompts/ tree, each project's
+// own root-level markdown (specs, memos and handoffs that never lived in a docs/ dir —
+// TRVM, TRAAVIIS and WRL keep nearly all of theirs there), plus the top-level stack docs.
+// Everything else (code, build output, archives) is excluded. Dot-directories are skipped
+// wholesale — they hold local, gitignored state (.amp harness runs, .git, editor caches)
+// that must never be published — except the committed ones that really do hold docs.
+const EXCLUDE_DIR = new Set(['node_modules', '_build', 'deps', 'dist',
+  'old_scrap', 'old_scraps', 'cover']);
+const INCLUDE_DOT_DIR = new Set(['.claude']);
 const TOP_LEVEL_DOCS = ['README.md', 'ECOSYSTEM.md', 'AGENTS.md', 'CLAUDE.md',
   'STACK_COMPLETION.md', 'STACK_PLANNING.md', 'STACK_SITEMAP.md', 'STACK_ARCHITECTURE_GAP_REVIEW.md'];
 
-const isDocPath = (rel) => /(^|\/)(docs|prompts)\//.test(rel) && rel.endsWith('.md');
+const isDocPath = (rel) => rel.endsWith('.md') &&
+  (/(^|\/)(docs|prompts)\//.test(rel) || rel.split('/').length === 2);
 
 function walk(absDir, acc) {
   for (const name of readdirSync(absDir)) {
     if (EXCLUDE_DIR.has(name)) continue;
+    if (name.startsWith('.') && !INCLUDE_DOT_DIR.has(name)) continue;
     const abs = join(absDir, name);
     let st; try { st = statSync(abs); } catch { continue; }
     if (st.isDirectory()) walk(abs, acc);
