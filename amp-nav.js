@@ -95,18 +95,23 @@ const LINKS = {
     status: "v0.1.0",
     tier: "shipped",
   },
+  // Tagline names the direction, status names what is actually serving. Both
+  // apps are deployed on Fly (app.fleetprompt.com / app.specprompt.com) and
+  // both are the design the landing pages now supersede — so the tier stays
+  // "shipped" (true: they run) while the status refuses to let "shipped" be
+  // read as "the replay-gated / content-addressed thing ships". It does not.
   fleetprompt: {
     label: "FleetPrompt",
-    tagline: "Agent marketplace + trust",
+    tagline: "Replay-gated agent registry",
     href: "https://fleetprompt.com",
-    status: "v0.1.0",
+    status: "live · prior design",
     tier: "shipped",
   },
   specprompt: {
     label: "SpecPrompt",
-    tagline: "Spec-driven dev standard",
+    tagline: "Content-addressed spec layer",
     href: "https://specprompt.com",
-    status: "v0.1.0",
+    status: "live · prior design",
     tier: "shipped",
   },
   delegatic: {
@@ -437,6 +442,15 @@ const LINKS = {
     status: "trvs · ORS v1",
     tier: "alpha",
   },
+  // Broader than the [&] stack -- it carries the non-portfolio domains too, so
+  // it sits under Company rather than in any product column. No status/tier for
+  // the same reason c-u-l8er.link and the home entry carry none: it is a
+  // property, not a versioned artifact.
+  wrand: {
+    label: "Wrand.cc",
+    tagline: "R&D domain graph — the whole portfolio, drawn",
+    href: "https://wrand.cc",
+  },
   contact: {
     label: "Talk to us",
     tagline: "hello@ampersandboxdesign.com",
@@ -502,6 +516,7 @@ const PROPERTY_MAP = {
   // highlight resolves to Company, the same way graphonomous resolves to
   // Products despite also appearing under Compose.
   traaviis: { category: "company", item: "traaviis" },
+  wrand: { category: "company", item: "wrand" },
   culler: { category: "company", item: "culler" },
   docs: { category: "docs", item: null },
 };
@@ -602,7 +617,7 @@ const CATEGORIES = [
   {
     id: "company",
     label: "Company",
-    items: ["culler", "home", "traaviis", "contact"],
+    items: ["culler", "home", "traaviis", "wrand", "contact"],
   },
   {
     id: "compose",
@@ -636,11 +651,18 @@ const CATEGORIES = [
   },
 ];
 
+// The subscribe list is a mailbox, not a service — there is no signup form and
+// no newsletter platform behind this. A mailto is the whole mechanism, which is
+// why the label promises a subscription and not a product. If a real list ever
+// exists, swap the href; do not swap the label ahead of it.
+// The qualifier is a span so it can drop out when the bar runs out of room —
+// the desktop bar is ~1270px of nowrap content and starts clipping under about
+// 1300px, which is most laptops. Wide screens get "Join ComputeDriven",
+// everything narrower gets "Join", and the mobile sheet always has room for the
+// full thing. Interpolated raw into innerHTML below, so markup is fine.
 const CTA = {
-  label: "Talk to us →",
-  href: "mailto:hello@ampersandboxdesign.com",
-  // When the Dark Factory demo ships in Q4 2026, swap to:
-  //   label: "Run the factory →", href: "https://runefort.com/factory"
+  label: 'Join<span class="cta-long"> ComputeDriven</span> →',
+  href: "https://computedriven.com",
 };
 
 const STYLE = /* css */ `
@@ -974,6 +996,12 @@ const STYLE = /* css */ `
   .cta:focus-visible {
     transform: translateY(-1px);
     outline: none;
+  }
+
+  @media (max-width: 1300px) {
+    .cta .cta-long {
+      display: none;
+    }
   }
 
   .burger {
