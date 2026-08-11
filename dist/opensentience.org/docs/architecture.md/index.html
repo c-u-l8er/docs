@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>Architecture · opensentience.org · Ampersand Box</title>
 <meta name="description" content="The open_sentience hex package is an OTP application that wraps arbitrary child_spec processes with governance: permissions, lifecycle management,…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/opensentience.org/docs/architecture.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Architecture","name":"Architecture","description":"The open_sentience hex package is an OTP application that wraps arbitrary child_spec processes with governance: permissions, lifecycle management,…","url":"https://docs.ampersandboxdesign.com/opensentience.org/docs/architecture.md/","identifier":"bagaaierajyc62na4k32ptdcosh6hxeo66i3xjqdf3fjk4mspsacfe4wdg6ya","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"Overview"},{"@type":"WebPageElement","name":"Supervision Tree"},{"@type":"WebPageElement","name":"Component Details"},{"@type":"WebPageElement","name":"PermissionEngine (GenServer + ETS)"},{"@type":"WebPageElement","name":"AgentLifecycle (GenStateMachine)"},{"@type":"WebPageElement","name":"AuditWriter (GenServer)"},{"@type":"WebPageElement","name":"AutonomyController (GenServer + ETS)"},{"@type":"WebPageElement","name":"AgentSupervisor (DynamicSupervisor)"},{"@type":"WebPageElement","name":"MCP Server (Hermes)"},{"@type":"WebPageElement","name":"Data Flow"},{"@type":"WebPageElement","name":"Permission Check (Hot Path)"},{"@type":"WebPageElement","name":"Agent Install Flow"},{"@type":"WebPageElement","name":"Autonomy Enforcement"},{"@type":"WebPageElement","name":"Integration Points"},{"@type":"WebPageElement","name":"Delegatic Policies"},{"@type":"WebPageElement","name":"Graphonomous Wrapping"},{"@type":"WebPageElement","name":"Agentelic Manifests"},{"@type":"WebPageElement","name":"FleetPrompt Marketplace"},{"@type":"WebPageElement","name":"Harness Components (OS-008)"},{"@type":"WebPageElement","name":"PipelineEnforcer (GenServer)"},{"@type":"WebPageElement","name":"QualityGate (GenServer)"},{"@type":"WebPageElement","name":"ContractValidator (GenServer + ETS)"},{"@type":"WebPageElement","name":"SprintController (GenStateMachine)"},{"@type":"WebPageElement","name":"ContextManager (GenServer)"},{"@type":"WebPageElement","name":"The Dual Enforcement Stack"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/"},{"@type":"ListItem","position":4,"name":"architecture.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/architecture.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Architecture","name":"Architecture","description":"The open_sentience hex package is an OTP application that wraps arbitrary child_spec processes with governance: permissions, lifecycle management,…","url":"https://docs.ampersandboxdesign.com/opensentience.org/docs/architecture.md/","identifier":"bagaaierafb4a4n5ai3i76hmvyszer22a3cqvrin6acibm7rbtz6r3lwsfj4q","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"Overview"},{"@type":"WebPageElement","name":"Supervision Tree"},{"@type":"WebPageElement","name":"Component Details"},{"@type":"WebPageElement","name":"PermissionEngine (GenServer + ETS)"},{"@type":"WebPageElement","name":"AgentLifecycle (GenStateMachine)"},{"@type":"WebPageElement","name":"AuditWriter (GenServer)"},{"@type":"WebPageElement","name":"AutonomyController (GenServer + ETS)"},{"@type":"WebPageElement","name":"AgentSupervisor (DynamicSupervisor)"},{"@type":"WebPageElement","name":"MCP Server (Hermes)"},{"@type":"WebPageElement","name":"Data Flow"},{"@type":"WebPageElement","name":"Permission Check (Hot Path)"},{"@type":"WebPageElement","name":"Agent Install Flow"},{"@type":"WebPageElement","name":"Autonomy Enforcement"},{"@type":"WebPageElement","name":"Integration Points"},{"@type":"WebPageElement","name":"Delegatic Policies"},{"@type":"WebPageElement","name":"Graphonomous Wrapping"},{"@type":"WebPageElement","name":"Agentelic Manifests"},{"@type":"WebPageElement","name":"FleetPrompt Marketplace"},{"@type":"WebPageElement","name":"Harness Components (OS-008)"},{"@type":"WebPageElement","name":"PipelineEnforcer (GenServer)"},{"@type":"WebPageElement","name":"QualityGate (GenServer)"},{"@type":"WebPageElement","name":"ContractValidator (GenServer + ETS)"},{"@type":"WebPageElement","name":"SprintController (GenStateMachine)"},{"@type":"WebPageElement","name":"ContextManager (GenServer)"},{"@type":"WebPageElement","name":"The Dual Enforcement Stack"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/"},{"@type":"ListItem","position":4,"name":"architecture.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/architecture.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,13 +22,13 @@
 
 </div></div>
 <div class="lead">The open_sentience hex package is an OTP application that wraps arbitrary child_spec processes with governance: permissions, lifecycle management, graduated autonomy, and append…</div>
-<div class="prose"><h1 id="blk-71931">Architecture</h1>
+<div class="prose"><h1 id="blk-72057">Architecture</h1>
 <blockquote><p>OTP supervision tree, GenServers, ETS caches, MCP server layout, and harness components for the <code>open_sentience</code> governance shim and agent harness.</p></blockquote>
-<h3 id="blk-71934">Overview</h3>
+<h3 id="blk-72060">Overview</h3>
 <p>The <code>open_sentience</code> hex package is an OTP application that wraps arbitrary <code>child_spec</code> processes with governance: permissions, lifecycle management, graduated autonomy, and append-only audit logging.</p>
 <p>It ships as a single supervision tree that can be added to any Elixir application. The shim interposes between the host supervisor and the governed agent processes, adding policy enforcement without modifying the agent code.</p>
 <p><strong>Design constraint:</strong> The shim must add less than 1% CPU overhead, less than 5 MB RSS, and less than 2 microseconds per permission check.</p>
-<h3 id="blk-71938">Supervision Tree</h3>
+<h3 id="blk-72064">Supervision Tree</h3>
 <pre><code>OpenSentience.Application
   |
   +-- OpenSentience.Supervisor (one_for_one)
@@ -57,11 +57,11 @@
                     +-- Harness.SprintController    (GenStateMachine)
                     +-- Harness.ContextManager      (GenServer)</code></pre>
 <p>Each component has a single responsibility. The supervision strategy is <code>one_for_one</code> — a crash in the AuditWriter does not take down the PermissionEngine, and vice versa. Harness sessions are supervised independently under a DynamicSupervisor — each task gets its own isolated session.</p>
-<h3 id="blk-71941">Component Details</h3>
-<h4 id="blk-71942">PermissionEngine (GenServer + ETS)</h4>
+<h3 id="blk-72067">Component Details</h3>
+<h4 id="blk-72068">PermissionEngine (GenServer + ETS)</h4>
 <p>Manages the permission taxonomy and evaluates permission checks.</p>
 <ul><li><p><strong>ETS table:</strong> <code>:os_permissions</code> — keyed by <code>{agent_id, permission_type, resource}</code></p></li><li><p><strong>Evaluation order:</strong> explicit deny &gt; explicit allow &gt; default deny</p></li><li><p><strong>Glob support:</strong> filesystem paths and network hosts support glob patterns</p></li><li><p><strong>Hot path:</strong> permission checks read directly from ETS (no GenServer call)</p></li><li><p><strong>Cold path:</strong> permission mutations go through the GenServer for serialization</p></li><li><p><strong>Integrates with:</strong> Delegatic policy PubSub for external policy updates</p></li></ul>
-<h4 id="blk-71957">AgentLifecycle (GenStateMachine)</h4>
+<h4 id="blk-72083">AgentLifecycle (GenStateMachine)</h4>
 <p>One instance per governed agent. Manages the lifecycle state machine:</p>
 <pre><code>installed --&gt; enabled --&gt; running
                 ^          |
@@ -71,63 +71,63 @@
                        v
                     disabled --&gt; removed</code></pre>
 <ul><li><p><strong>States:</strong> <code>installed</code>, <code>enabled</code>, <code>running</code>, <code>disabled</code>, <code>removed</code></p></li><li><p><strong>Transitions:</strong> validated by GenStateMachine callbacks</p></li><li><p><strong>On enable:</strong> starts the wrapped <code>child_spec</code> under AgentSupervisor</p></li><li><p><strong>On disable:</strong> graceful shutdown with configurable timeout, then force kill</p></li><li><p><strong>On remove:</strong> ensures disabled first, then cleans up ETS entries</p></li><li><p><strong>Audit:</strong> every transition emits an audit entry via AuditWriter</p></li></ul>
-<h4 id="blk-71973">AuditWriter (GenServer)</h4>
+<h4 id="blk-72099">AuditWriter (GenServer)</h4>
 <p>Append-only audit trail with batched writes.</p>
 <ul><li><p><strong>Batching:</strong> collects entries for a configurable interval (default 100ms),</p></li></ul>
 <p>then flushes as a single write</p>
 <ul><li><p><strong>Backends:</strong> ETS (default, in-memory), file (append-only log), Ecto (optional)</p></li><li><p><strong>Schema:</strong> each entry contains id, timestamp, agent_id, event_type,</p></li></ul>
 <p>operation, result, actor, reason, and metadata</p>
 <ul><li><p><strong>Immutability:</strong> entries can only be appended, never modified or deleted</p></li><li><p><strong>Query:</strong> supports filtering by agent_id, event_type, time range, and limit</p></li></ul>
-<h4 id="blk-71990">AutonomyController (GenServer + ETS)</h4>
+<h4 id="blk-72116">AutonomyController (GenServer + ETS)</h4>
 <p>Manages graduated autonomy levels per agent.</p>
 <ul><li><p><strong>ETS table:</strong> <code>:os_autonomy</code> — keyed by <code>agent_id</code></p></li><li><p><strong>Levels:</strong> <code>observe</code>, <code>advise</code>, <code>act</code></p></li><li><p><strong>Enforcement:</strong></p></li><li><p><code>observe</code> — agent generates recommendations, shim blocks execution</p></li><li><p><code>advise</code> — agent prepares actions, shim queues for human approval</p></li><li><p><code>act</code> — agent executes autonomously within granted permissions</p></li><li><p><strong>Transitions:</strong> every level change is audited</p></li><li><p><strong>Default:</strong> new agents start at <code>observe</code></p></li></ul>
-<h4 id="blk-72009">AgentSupervisor (DynamicSupervisor)</h4>
+<h4 id="blk-72135">AgentSupervisor (DynamicSupervisor)</h4>
 <p>Standard OTP DynamicSupervisor that hosts the per-agent AgentLifecycle processes. No custom logic — supervision is delegated to the per-agent GenStateMachine instances.</p>
-<h4 id="blk-72011">MCP Server (Hermes)</h4>
+<h4 id="blk-72137">MCP Server (Hermes)</h4>
 <p>Exposes the governance shim as MCP tools for LLM agents.</p>
 <ul><li><p><strong>Transport:</strong> stdio (default) or SSE</p></li><li><p><strong>Seven tools:</strong> <code>agent_install</code>, <code>agent_enable</code>, <code>agent_disable</code>,</p></li></ul>
 <p><code>agent_status</code>, <code>agent_audit</code>, <code>permission_check</code>, <code>autonomy_level</code></p>
 <ul><li><p><strong>Built on:</strong> Hermes MCP library</p></li><li><p><strong>Authentication:</strong> delegates to host application (not handled by shim)</p></li></ul>
-<h3 id="blk-72024">Data Flow</h3>
-<h4 id="blk-72025">Permission Check (Hot Path)</h4>
+<h3 id="blk-72150">Data Flow</h3>
+<h4 id="blk-72151">Permission Check (Hot Path)</h4>
 <pre><code>Agent action
   --&gt; PermissionEngine.check(agent_id, permission, resource)
   --&gt; ETS :os_permissions lookup (&lt; 2 microseconds)
   --&gt; {allow | deny, reason}
   --&gt; AuditWriter.append(permission_check entry)</code></pre>
-<h4 id="blk-72027">Agent Install Flow</h4>
+<h4 id="blk-72153">Agent Install Flow</h4>
 <pre><code>agent_install(manifest)
   --&gt; PermissionEngine: write grants/denials to ETS
   --&gt; AgentSupervisor: start_child(AgentLifecycle)
   --&gt; AgentLifecycle: initial state = :installed
   --&gt; AuditWriter: log install event</code></pre>
-<h4 id="blk-72029">Autonomy Enforcement</h4>
+<h4 id="blk-72155">Autonomy Enforcement</h4>
 <pre><code>Agent wants to execute action
   --&gt; AutonomyController.level(agent_id) --&gt; observe | advise | act
   --&gt; observe: log recommendation, block execution
   --&gt; advise:  queue action, notify human, await approval
   --&gt; act:     PermissionEngine.check() --&gt; allow? execute : block</code></pre>
-<h3 id="blk-72031">Integration Points</h3>
-<h4 id="blk-72032">Delegatic Policies</h4>
+<h3 id="blk-72157">Integration Points</h3>
+<h4 id="blk-72158">Delegatic Policies</h4>
 <p>Delegatic publishes governance policies via PubSub. The PermissionEngine subscribes and updates its ETS cache when policies change. This enables centralized policy authoring with distributed enforcement.</p>
-<h4 id="blk-72034">Graphonomous Wrapping</h4>
+<h4 id="blk-72160">Graphonomous Wrapping</h4>
 <p>The governance shim can wrap a Graphonomous instance, adding <code>graph_access</code> permissions (read/write) to control which agents can query or modify the knowledge graph.</p>
-<h4 id="blk-72036">Agentelic Manifests</h4>
+<h4 id="blk-72162">Agentelic Manifests</h4>
 <p>Agent manifests from Agentelic declare required permissions. The <code>agent_install</code> tool consumes these manifests, granting or denying permissions according to the current policy.</p>
-<h4 id="blk-72038">FleetPrompt Marketplace</h4>
+<h4 id="blk-72164">FleetPrompt Marketplace</h4>
 <p>Agents installed from the FleetPrompt marketplace enter the same governance flow — <code>agent_install</code> with the marketplace manifest, starting at <code>observe</code> autonomy.</p>
-<h3 id="blk-72040">Harness Components (OS-008)</h3>
+<h3 id="blk-72166">Harness Components (OS-008)</h3>
 <p>The harness layer sits above the governance shim components. It orchestrates agent pipelines, enforces prerequisite ordering, and manages quality gates.</p>
-<h4 id="blk-72042">PipelineEnforcer (GenServer)</h4>
+<h4 id="blk-72168">PipelineEnforcer (GenServer)</h4>
 <p>Ensures pipeline stages execute in order. Blocks tool calls that violate prerequisites.</p>
 <ul><li><p><strong>Prerequisite model:</strong> each tool call has a set of required prior stages</p></li><li><p><strong>Key rule:</strong> <code>retrieve_context</code> MUST complete before any write-class tool call</p></li><li><p><strong>Stage tracking:</strong> MapSet of completed <code>{stage, status}</code> tuples per session</p></li><li><p><strong>Integration:</strong> wraps above OS-006 permission checks — both must pass</p></li><li><p><strong>Violations:</strong> logged to audit trail with session_id and missing prerequisites</p></li></ul>
-<h4 id="blk-72055">QualityGate (GenServer)</h4>
+<h4 id="blk-72181">QualityGate (GenServer)</h4>
 <p>Evaluator orchestrator. Spawns evaluator agents in isolated contexts to grade generator output against acceptance criteria.</p>
 <ul><li><p><strong>Separate context:</strong> evaluator never sees generator reasoning (enforced)</p></li><li><p><strong>Adversarial tuning:</strong> system prompt emphasizes finding failures</p></li><li><p><strong>Evidence required:</strong> pass judgments must cite specific evidence</p></li><li><p><strong>Iteration loop:</strong> fail → feedback → generator iterates (up to max_iterations)</p></li><li><p><strong>Escalation:</strong> max iterations reached → escalate to human</p></li></ul>
-<h4 id="blk-72068">ContractValidator (GenServer + ETS)</h4>
+<h4 id="blk-72194">ContractValidator (GenServer + ETS)</h4>
 <p>Validates [&amp;] Protocol governance blocks at runtime.</p>
 <ul><li><p><strong>Hard constraints:</strong> inviolable — action blocked if violated</p></li><li><p><strong>Soft constraints:</strong> logged as warnings if overridden</p></li><li><p><strong>Escalation rules:</strong> <code>escalate_when.confidence_below</code>, <code>escalate_when.cost_exceeds_usd</code></p></li><li><p><strong>Confidence gating:</strong> coverage assessment must exceed threshold before dispatch</p></li></ul>
-<h4 id="blk-72079">SprintController (GenStateMachine)</h4>
+<h4 id="blk-72205">SprintController (GenStateMachine)</h4>
 <p>Manages the planner → generator → evaluator loop as a state machine.</p>
 <ul><li><p><strong>States:</strong> <code>planned</code>, <code>generating</code>, <code>evaluating</code>, <code>passed</code>, <code>feedback</code>,</p></li></ul>
 <p><code>committed</code>, <code>escalated</code>, <code>completed</code></p>
@@ -135,13 +135,13 @@
 <p>iteration limits, budget constraints, and provenance links</p>
 <ul><li><p><strong>Tier adaptation:</strong> local_small skips planner (single sprint), cloud_frontier</p></li></ul>
 <p>gets full adversarial evaluation</p>
-<h4 id="blk-72093">ContextManager (GenServer)</h4>
+<h4 id="blk-72219">ContextManager (GenServer)</h4>
 <p>Monitors context window utilization and prevents quality degradation.</p>
 <ul><li><p><strong>Compaction threshold:</strong> 55% (triggers before 60% degradation point)</p></li><li><p><strong>Overflow threshold:</strong> tool results &gt; 20K tokens offloaded to filesystem</p></li><li><p><strong>Compaction strategy:</strong> offload large results, summarize history, inject fresh</p></li></ul>
 <p>Graphonomous retrieval</p>
 <ul><li><p><strong>Subagent delegation:</strong> tasks exceeding context limits spawn subagents via OS-006,</p></li></ul>
 <p>sharing knowledge through Graphonomous (not parent context)</p>
-<h3 id="blk-72107">The Dual Enforcement Stack</h3>
+<h3 id="blk-72233">The Dual Enforcement Stack</h3>
 <p>OS-006 and OS-008 operate as a layered enforcement stack:</p>
 <pre><code>Agent requests tool call
   │
@@ -159,10 +159,10 @@ Tool executes
   ▼
 OS-008 PipelineEnforcer: Update stage state
 OS-006 AuditWriter: Log execution</code></pre>
-<h3 id="blk-72110">Performance Targets</h3>
+<h3 id="blk-72236">Performance Targets</h3>
 <table><thead><tr><th>Metric</th><th>Target</th><th>Mechanism</th></tr></thead><tbody><tr><td>Permission check latency</td><td>&lt; 2 microseconds</td><td>Direct ETS read</td></tr><tr><td>CPU overhead</td><td>&lt; 1%</td><td>No hot-path GenServer calls</td></tr><tr><td>Memory overhead</td><td>&lt; 5 MB RSS</td><td>ETS tables, no large state</td></tr><tr><td>Audit write latency</td><td>&lt; 1 ms (batched)</td><td>GenServer batching at 100ms intervals</td></tr><tr><td>Agent install latency</td><td>&lt; 10 ms</td><td>Single ETS write + DynamicSupervisor start</td></tr><tr><td>Pipeline prerequisite check</td><td>&lt; 5 microseconds</td><td>MapSet membership check</td></tr><tr><td>Context utilization tracking</td><td>&lt; 1 ms per tool result</td><td>Token counting + threshold check</td></tr></tbody></table></div>
 <p class="src"><a href="/#/opensentience.org/docs/architecture.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-71934" class="lvl2">Overview</a><a href="#blk-71938" class="lvl2">Supervision Tree</a><a href="#blk-71941" class="lvl2">Component Details</a><a href="#blk-71942" class="lvl3">PermissionEngine (GenServer + ETS)</a><a href="#blk-71957" class="lvl3">AgentLifecycle (GenStateMachine)</a><a href="#blk-71973" class="lvl3">AuditWriter (GenServer)</a><a href="#blk-71990" class="lvl3">AutonomyController (GenServer + ETS)</a><a href="#blk-72009" class="lvl3">AgentSupervisor (DynamicSupervisor)</a><a href="#blk-72011" class="lvl3">MCP Server (Hermes)</a><a href="#blk-72024" class="lvl2">Data Flow</a><a href="#blk-72025" class="lvl3">Permission Check (Hot Path)</a><a href="#blk-72027" class="lvl3">Agent Install Flow</a><a href="#blk-72029" class="lvl3">Autonomy Enforcement</a><a href="#blk-72031" class="lvl2">Integration Points</a><a href="#blk-72032" class="lvl3">Delegatic Policies</a><a href="#blk-72034" class="lvl3">Graphonomous Wrapping</a><a href="#blk-72036" class="lvl3">Agentelic Manifests</a><a href="#blk-72038" class="lvl3">FleetPrompt Marketplace</a><a href="#blk-72040" class="lvl2">Harness Components (OS-008)</a><a href="#blk-72042" class="lvl3">PipelineEnforcer (GenServer)</a><a href="#blk-72055" class="lvl3">QualityGate (GenServer)</a><a href="#blk-72068" class="lvl3">ContractValidator (GenServer + ETS)</a><a href="#blk-72079" class="lvl3">SprintController (GenStateMachine)</a><a href="#blk-72093" class="lvl3">ContextManager (GenServer)</a><a href="#blk-72107" class="lvl2">The Dual Enforcement Stack</a><a href="#blk-72110" class="lvl2">Performance Targets</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/opensentience.org/docs/quickstart.md/">Quickstart</a></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/docs/comparison-table.md/">OpenSentience vs. Alternatives</a><a href="/opensentience.org/docs/competitive-landscape.md/">Competitive Landscape: Agent Governance and Runtime Enforcement</a><a href="/opensentience.org/docs/ecosystem-overview.md/">OpenSentience Protocol Layer — How the 10 Protocols Connect Across the [&amp;] Ecosystem</a><a href="/opensentience.org/docs/faq.md/">Frequently Asked Questions</a><a href="/opensentience.org/docs/harness-engineering.md/">The Harness Is the Bottleneck: OS-008 and the Emerging Discipline of Harness Engineering</a><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/opensentience.org/docs/positioning.md/">The Missing Constraint: Runtime Governance in the Agent Stack</a><a href="/opensentience.org/docs/quickstart.md/">Quickstart</a><a href="/opensentience.org/docs/research.md/">Research Overview</a><a href="/opensentience.org/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajyc62na4k32ptdcosh6hxeo66i3xjqdf3fjk4mspsacfe4wdg6ya</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-72060" class="lvl2">Overview</a><a href="#blk-72064" class="lvl2">Supervision Tree</a><a href="#blk-72067" class="lvl2">Component Details</a><a href="#blk-72068" class="lvl3">PermissionEngine (GenServer + ETS)</a><a href="#blk-72083" class="lvl3">AgentLifecycle (GenStateMachine)</a><a href="#blk-72099" class="lvl3">AuditWriter (GenServer)</a><a href="#blk-72116" class="lvl3">AutonomyController (GenServer + ETS)</a><a href="#blk-72135" class="lvl3">AgentSupervisor (DynamicSupervisor)</a><a href="#blk-72137" class="lvl3">MCP Server (Hermes)</a><a href="#blk-72150" class="lvl2">Data Flow</a><a href="#blk-72151" class="lvl3">Permission Check (Hot Path)</a><a href="#blk-72153" class="lvl3">Agent Install Flow</a><a href="#blk-72155" class="lvl3">Autonomy Enforcement</a><a href="#blk-72157" class="lvl2">Integration Points</a><a href="#blk-72158" class="lvl3">Delegatic Policies</a><a href="#blk-72160" class="lvl3">Graphonomous Wrapping</a><a href="#blk-72162" class="lvl3">Agentelic Manifests</a><a href="#blk-72164" class="lvl3">FleetPrompt Marketplace</a><a href="#blk-72166" class="lvl2">Harness Components (OS-008)</a><a href="#blk-72168" class="lvl3">PipelineEnforcer (GenServer)</a><a href="#blk-72181" class="lvl3">QualityGate (GenServer)</a><a href="#blk-72194" class="lvl3">ContractValidator (GenServer + ETS)</a><a href="#blk-72205" class="lvl3">SprintController (GenStateMachine)</a><a href="#blk-72219" class="lvl3">ContextManager (GenServer)</a><a href="#blk-72233" class="lvl2">The Dual Enforcement Stack</a><a href="#blk-72236" class="lvl2">Performance Targets</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/opensentience.org/docs/quickstart.md/">Quickstart</a></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/docs/comparison-table.md/">OpenSentience vs. Alternatives</a><a href="/opensentience.org/docs/competitive-landscape.md/">Competitive Landscape: Agent Governance and Runtime Enforcement</a><a href="/opensentience.org/docs/ecosystem-overview.md/">OpenSentience Protocol Layer — How the 10 Protocols Connect Across the [&amp;] Ecosystem</a><a href="/opensentience.org/docs/faq.md/">Frequently Asked Questions</a><a href="/opensentience.org/docs/harness-engineering.md/">The Harness Is the Bottleneck: OS-008 and the Emerging Discipline of Harness Engineering</a><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/opensentience.org/docs/positioning.md/">The Missing Constraint: Runtime Governance in the Agent Stack</a><a href="/opensentience.org/docs/quickstart.md/">Quickstart</a><a href="/opensentience.org/docs/research.md/">Research Overview</a><a href="/opensentience.org/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierafb4a4n5ai3i76hmvyszer22a3cqvrin6acibm7rbtz6r3lwsfj4q</div></div></div>
 </div></div>
 </body></html>

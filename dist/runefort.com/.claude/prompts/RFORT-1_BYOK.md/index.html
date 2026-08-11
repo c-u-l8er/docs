@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>RFort-1: BYOK Modal + OpenRouter Key Storage · runefort.com · Ampersand Box</title>
 <meta name="description" content="Port BendScript&#39;s BYOK pattern to RuneFort. Users bring their own OpenRouter API key to power the chat and token flow features.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-1_BYOK.md/">
@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"RFort-1: BYOK Modal + OpenRouter Key Storage","name":"RFort-1: BYOK Modal + OpenRouter Key Storage","description":"Port BendScript's BYOK pattern to RuneFort. Users bring their own OpenRouter API key to power the chat and token flow features.","url":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-1_BYOK.md/","identifier":"bagaaieraqgpyc7xnx3hig5twqvlcdcxwdsrdfeofv2mvolicvzerk4knao2a","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"runefort.com","url":"https://docs.ampersandboxdesign.com/runefort.com/"},"articleSection":"runefort.com","hasPart":[{"@type":"WebPageElement","name":"Goal"},{"@type":"WebPageElement","name":"Reference Implementation"},{"@type":"WebPageElement","name":"Files to Create"},{"@type":"WebPageElement","name":"src/lib/play/storage.js"},{"@type":"WebPageElement","name":"src/components/app/ApiKeyModal.svelte"},{"@type":"WebPageElement","name":"src/lib/play/openrouter.js"},{"@type":"WebPageElement","name":"src/lib/stores/apikey.svelte.js"},{"@type":"WebPageElement","name":"Integration Point"},{"@type":"WebPageElement","name":"Constraints"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"runefort.com","item":"https://docs.ampersandboxdesign.com/runefort.com/"},{"@type":"ListItem","position":3,"name":".claude","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/"},{"@type":"ListItem","position":4,"name":"prompts","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/"},{"@type":"ListItem","position":5,"name":"RFORT-1_BYOK.md","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-1_BYOK.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"RFort-1: BYOK Modal + OpenRouter Key Storage","name":"RFort-1: BYOK Modal + OpenRouter Key Storage","description":"Port BendScript's BYOK pattern to RuneFort. Users bring their own OpenRouter API key to power the chat and token flow features.","url":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-1_BYOK.md/","identifier":"bagaaierari5djfs5zvvbzgfnadjbkqbtn2wbrpukwha2zxpj7u6k4w53hnqa","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"runefort.com","url":"https://docs.ampersandboxdesign.com/runefort.com/"},"articleSection":"runefort.com","hasPart":[{"@type":"WebPageElement","name":"Goal"},{"@type":"WebPageElement","name":"Reference Implementation"},{"@type":"WebPageElement","name":"Files to Create"},{"@type":"WebPageElement","name":"src/lib/play/storage.js"},{"@type":"WebPageElement","name":"src/components/app/ApiKeyModal.svelte"},{"@type":"WebPageElement","name":"src/lib/play/openrouter.js"},{"@type":"WebPageElement","name":"src/lib/stores/apikey.svelte.js"},{"@type":"WebPageElement","name":"Integration Point"},{"@type":"WebPageElement","name":"Constraints"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"runefort.com","item":"https://docs.ampersandboxdesign.com/runefort.com/"},{"@type":"ListItem","position":3,"name":".claude","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/"},{"@type":"ListItem","position":4,"name":"prompts","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/"},{"@type":"ListItem","position":5,"name":"RFORT-1_BYOK.md","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-1_BYOK.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -23,20 +23,20 @@
 
 </div></div>
 <div class="lead">Port BendScript&#39;s BYOK pattern to RuneFort. Users bring their own OpenRouter API key to power the chat and token flow features.</div>
-<div class="prose"><h1 id="blk-82757">RFort-1: BYOK Modal + OpenRouter Key Storage</h1>
-<h3 id="blk-82758">Goal</h3>
+<div class="prose"><h1 id="blk-82883">RFort-1: BYOK Modal + OpenRouter Key Storage</h1>
+<h3 id="blk-82884">Goal</h3>
 <p>Port BendScript's BYOK pattern to RuneFort. Users bring their own OpenRouter API key to power the chat and token flow features.</p>
-<h3 id="blk-82760">Reference Implementation</h3>
+<h3 id="blk-82886">Reference Implementation</h3>
 <p>Copy patterns from <code>bendscript.com/src/lib/play/storage.js</code> and <code>bendscript.com/src/components/play/ApiKeyModal.svelte</code>.</p>
-<h3 id="blk-82762">Files to Create</h3>
-<h4 id="blk-82763"><code>src/lib/play/storage.js</code></h4>
+<h3 id="blk-82888">Files to Create</h3>
+<h4 id="blk-82889"><code>src/lib/play/storage.js</code></h4>
 <p>localStorage persistence with 30-day TTL. Functions:</p>
 <ul><li><p><code>saveApiKey(key)</code> / <code>loadApiKey()</code> / <code>clearApiKey()</code></p></li><li><p><code>saveMcpConnections(conns)</code> / <code>loadMcpConnections()</code></p></li><li><p><code>savePlayState(state)</code> / <code>loadPlayState()</code></p></li></ul>
 <p>Key: <code>runefort_play_openrouter_key</code></p>
-<h4 id="blk-82773"><code>src/components/app/ApiKeyModal.svelte</code></h4>
+<h4 id="blk-82899"><code>src/components/app/ApiKeyModal.svelte</code></h4>
 <p>Svelte 5 runes. Props-based (<code>open</code>, <code>onclose</code>, <code>onsave</code>).</p>
 <ul><li><p>Password input for OpenRouter API key</p></li><li><p>&quot;Get a key&quot; link to <code>https://openrouter.ai/keys</code></p></li><li><p>Amber/dark theme matching existing RuneFort UI (see <code>AuthModal.svelte</code> for style reference)</p></li><li><p>On save: call <code>saveApiKey()</code>, emit <code>onsave</code> with the key</p></li></ul>
-<h4 id="blk-82784"><code>src/lib/play/openrouter.js</code></h4>
+<h4 id="blk-82910"><code>src/lib/play/openrouter.js</code></h4>
 <p>Client-side OpenRouter caller:</p>
 <pre data-lang="js"><code><span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">callOpenRouter</span>(apiKey, messages, tools, model) {
   <span class="t-kw">const</span> res = <span class="t-kw">await</span> <span class="t-fn">fetch</span>(<span class="t-string">'https://openrouter.ai/api/v1/chat/completions'</span>, {
@@ -52,7 +52,7 @@
   <span class="t-kw">return</span> res.<span class="t-fn">json</span>();
 }</code></pre>
 <p>Default model: <code>qwen/qwen3-235b-a22b</code> (free on OpenRouter).</p>
-<h4 id="blk-82788"><code>src/lib/stores/apikey.svelte.js</code></h4>
+<h4 id="blk-82914"><code>src/lib/stores/apikey.svelte.js</code></h4>
 <p>Svelte 5 rune store wrapping storage:</p>
 <pre data-lang="js"><code><span class="t-kw">let</span> _key = <span class="t-fn">$state</span>(<span class="t-kw">null</span>);
 <span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">getApiKey</span>() { <span class="t-kw">return</span> _key; }
@@ -60,12 +60,12 @@
 <span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">setApiKey</span>(k) { _key = k; <span class="t-fn">saveApiKey</span>(k); }
 <span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">removeApiKey</span>() { _key = <span class="t-kw">null</span>; <span class="t-fn">clearApiKey</span>(); }
 <span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">hasApiKey</span>() { <span class="t-kw">return</span> !!_key; }</code></pre>
-<h3 id="blk-82791">Integration Point</h3>
+<h3 id="blk-82917">Integration Point</h3>
 <p>Add a key icon button to the <code>/app</code> toolbar (next to save button). Opens <code>ApiKeyModal</code>. Show a green dot indicator when a key is set.</p>
-<h3 id="blk-82793">Constraints</h3>
+<h3 id="blk-82919">Constraints</h3>
 <ul><li><p>No server-side key storage — localStorage only</p></li><li><p>Svelte 5 runes (<code>$state</code>, <code>$props</code>, <code>$effect</code>) — no legacy stores</p></li><li><p>Match RuneFort's dark amber aesthetic (bg-zinc-900, amber-400 accents)</p></li><li><p><code>export const ssr = false</code> already set on <code>/app</code> route</p></li></ul></div>
 <p class="src"><a href="/#/runefort.com/.claude/prompts/RFORT-1_BYOK.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-82758" class="lvl2">Goal</a><a href="#blk-82760" class="lvl2">Reference Implementation</a><a href="#blk-82762" class="lvl2">Files to Create</a><a href="#blk-82763" class="lvl3">src/lib/play/storage.js</a><a href="#blk-82773" class="lvl3">src/components/app/ApiKeyModal.svelte</a><a href="#blk-82784" class="lvl3">src/lib/play/openrouter.js</a><a href="#blk-82788" class="lvl3">src/lib/stores/apikey.svelte.js</a><a href="#blk-82791" class="lvl2">Integration Point</a><a href="#blk-82793" class="lvl2">Constraints</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a></div><div class="card"><div class="lab">in this folder</div><a href="/runefort.com/.claude/prompts/RFORT-2_MCP.md/">RFort-2: MCP Proxy + Client + Connection Panel</a><a href="/runefort.com/.claude/prompts/RFORT-3_CHAT.md/">RFort-3: Chat Panel with Fort-Aware Navigation</a><a href="/runefort.com/.claude/prompts/RFORT-4_TOKENFLOWS.md/">RFort-4: Token Flow Animations on Edges</a><a href="/runefort.com/.claude/prompts/RFORT-5_REPO_IMPORT.md/">RFort-5: Repo Import → Fort Generator</a><a href="/runefort.com/.claude/prompts/RFORT-6_WORKSPACES.md/">RFort-6: Workspace Switcher + Supabase Persistence</a><a href="/runefort.com/.claude/prompts/RFORT-BUILD-ORDER.md/">RuneFort Interactive Layer — Build Order</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraqgpyc7xnx3hig5twqvlcdcxwdsrdfeofv2mvolicvzerk4knao2a</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-82884" class="lvl2">Goal</a><a href="#blk-82886" class="lvl2">Reference Implementation</a><a href="#blk-82888" class="lvl2">Files to Create</a><a href="#blk-82889" class="lvl3">src/lib/play/storage.js</a><a href="#blk-82899" class="lvl3">src/components/app/ApiKeyModal.svelte</a><a href="#blk-82910" class="lvl3">src/lib/play/openrouter.js</a><a href="#blk-82914" class="lvl3">src/lib/stores/apikey.svelte.js</a><a href="#blk-82917" class="lvl2">Integration Point</a><a href="#blk-82919" class="lvl2">Constraints</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a></div><div class="card"><div class="lab">in this folder</div><a href="/runefort.com/.claude/prompts/RFORT-2_MCP.md/">RFort-2: MCP Proxy + Client + Connection Panel</a><a href="/runefort.com/.claude/prompts/RFORT-3_CHAT.md/">RFort-3: Chat Panel with Fort-Aware Navigation</a><a href="/runefort.com/.claude/prompts/RFORT-4_TOKENFLOWS.md/">RFort-4: Token Flow Animations on Edges</a><a href="/runefort.com/.claude/prompts/RFORT-5_REPO_IMPORT.md/">RFort-5: Repo Import → Fort Generator</a><a href="/runefort.com/.claude/prompts/RFORT-6_WORKSPACES.md/">RFort-6: Workspace Switcher + Supabase Persistence</a><a href="/runefort.com/.claude/prompts/RFORT-BUILD-ORDER.md/">RuneFort Interactive Layer — Build Order</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierari5djfs5zvvbzgfnadjbkqbtn2wbrpukwha2zxpj7u6k4w53hnqa</div></div></div>
 </div></div>
 </body></html>

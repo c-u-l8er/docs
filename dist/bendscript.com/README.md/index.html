@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>@bendscript/core · bendscript.com · Ampersand Box</title>
 <meta name="description" content="Reference parser, validator, and round-trip harness for the BendScript Protocol v0.1 — a graph-first document format with typed inline link facets, for…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/bendscript.com/README.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"@bendscript/core","name":"@bendscript/core","description":"Reference parser, validator, and round-trip harness for the BendScript Protocol v0.1 — a graph-first document format with typed inline link facets, for…","url":"https://docs.ampersandboxdesign.com/bendscript.com/README.md/","identifier":"bagaaierao6rc5fyzhzpin7b2j6v5cr5v3dgdj7eke2icoibyc7tktmltwala","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"bendscript.com","url":"https://docs.ampersandboxdesign.com/bendscript.com/"},"articleSection":"bendscript.com","hasPart":[{"@type":"WebPageElement","name":"What is BendScript?"},{"@type":"WebPageElement","name":"Install"},{"@type":"WebPageElement","name":"Usage"},{"@type":"WebPageElement","name":"Round-trip / drift harness"},{"@type":"WebPageElement","name":"API surface"},{"@type":"WebPageElement","name":"License"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"bendscript.com","item":"https://docs.ampersandboxdesign.com/bendscript.com/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/bendscript.com/README.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"@bendscript/core","name":"@bendscript/core","description":"Reference parser, validator, and round-trip harness for the BendScript Protocol v0.1 — a graph-first document format with typed inline link facets, for…","url":"https://docs.ampersandboxdesign.com/bendscript.com/README.md/","identifier":"bagaaiera23sy4m6kyoc6f5muhybeaktgodv77tjgj6xu4kqbsdrlm7ryftya","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"bendscript.com","url":"https://docs.ampersandboxdesign.com/bendscript.com/"},"articleSection":"bendscript.com","hasPart":[{"@type":"WebPageElement","name":"What is BendScript?"},{"@type":"WebPageElement","name":"Install"},{"@type":"WebPageElement","name":"Usage"},{"@type":"WebPageElement","name":"Round-trip / drift harness"},{"@type":"WebPageElement","name":"API surface"},{"@type":"WebPageElement","name":"License"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"bendscript.com","item":"https://docs.ampersandboxdesign.com/bendscript.com/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/bendscript.com/README.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,17 +22,17 @@
 
 </div></div>
 <div class="lead">Reference parser, validator, and round-trip harness for the BendScript Protocol v0.1 — a graph-first document format with typed inline link facets, for agent-native systems.</div>
-<div class="prose"><h1 id="blk-56821">@bendscript/core</h1>
+<div class="prose"><h1 id="blk-56947">@bendscript/core</h1>
 <p>Reference parser, validator, and round-trip harness for the <strong>BendScript Protocol v0.1</strong> — a graph-first document format with typed inline link facets, for agent-native systems.</p>
 <blockquote><p>Status: <strong>v0.1 alpha (sections 0–6 of the spec).</strong> API may shift before <code>0.1.0</code> final.</p></blockquote>
-<h3 id="blk-56825">What is BendScript?</h3>
+<h3 id="blk-56951">What is BendScript?</h3>
 <p>BendScript is a JSON document format that treats prose, structure, and a knowledge graph as one thing. Every document is content-addressable, every inline link can carry a typed predicate, and every typed link expands into a deterministic graph edge.</p>
 <ul><li><p><strong>`bend:` URI scheme</strong> — content-addressable doc ids, span-addressable edges</p></li><li><p><strong>Five reserved vocabularies</strong> — core, memory, argument, spec, runefort</p></li><li><p><strong>§2.5.1 link-mark expansion</strong> — typed inline link facets become first-class graph edges</p></li><li><p><strong>§8.1.1 strict round-trip</strong> — <code>parse(serialize(parse(d))) === parse(d)</code> for every conforming document</p></li></ul>
 <p>The full spec lives at &lt;https://bendscript.com&gt; and in <a href="https://github.com/c-u-l8er/bendscript.com/blob/main/docs/spec/README.md" target="_blank" rel="noopener">docs/spec/</a>.</p>
-<h3 id="blk-56837">Install</h3>
+<h3 id="blk-56963">Install</h3>
 <pre data-lang="bash"><code>npm install @bendscript/core</code></pre>
 <p>Requires Node 20+.</p>
-<h3 id="blk-56840">Usage</h3>
+<h3 id="blk-56966">Usage</h3>
 <pre data-lang="ts"><code><span class="t-kw">import</span> {
   parse,
   parseAndNormalize,
@@ -57,7 +57,7 @@
 <span class="t-kw">const</span> id = <span class="t-kw">await</span> <span class="t-fn">computeDocumentId</span>(doc);
 <span class="t-kw">const</span> edges = <span class="t-fn">expandLinkMarks</span>(doc);    <span class="t-comment">// typed link marks → graph edges</span>
 <span class="t-kw">const</span> canonical = <span class="t-fn">serializeCanonical</span>(doc);</code></pre>
-<h4 id="blk-56842">Round-trip / drift harness</h4>
+<h4 id="blk-56968">Round-trip / drift harness</h4>
 <p>The harness used by the spec's §8 LLM round-trip evaluation is exposed as a subpath import:</p>
 <pre data-lang="ts"><code><span class="t-kw">import</span> {
   <span class="t-type">MockModel</span>,
@@ -68,15 +68,15 @@
   p95,
 } <span class="t-kw">from</span> <span class="t-string">&quot;@bendscript/core/harness&quot;</span>;</code></pre>
 <p>Bring your own <code>ModelClient</code> to evaluate any model against the BendScript corpus, or use <code>MockModel</code> for harness-mechanic tests with no API costs.</p>
-<h3 id="blk-56846">API surface</h3>
+<h3 id="blk-56972">API surface</h3>
 <p><strong>Main entry (`@bendscript/core`)</strong></p>
 <ul><li><p><code>parse(text)</code>, <code>normalize(doc)</code>, <code>parseAndNormalize(text)</code></p></li><li><p><code>serialize(doc)</code>, <code>serializeCanonical(doc)</code></p></li><li><p><code>canonicalize(value)</code> — RFC 8785 (JCS) wrapper</p></li><li><p><code>computeDocumentId(doc)</code>, <code>expectedDocumentId(doc)</code>, <code>canonicalHashInput(doc)</code></p></li><li><p><code>expandLinkMarks(doc)</code> — §2.5.1 link-mark → edge expansion (idempotent, dedup'd)</p></li><li><p><code>validate(doc)</code>, <code>ValidationError</code>, <code>isBendUri(s)</code></p></li><li><p>Types: <code>Document</code>, <code>NormalizedDocument</code>, <code>Block</code>, <code>Span</code>, <code>Edge</code>, <code>Mark</code>, <code>LinkMark</code>, <code>MarkKind</code>, <code>Predicate</code>, <code>ProtocolVersion</code></p></li></ul>
 <p><strong>Harness subpath (`@bendscript/core/harness`)</strong></p>
 <ul><li><p><code>runHarness({ corpus, models, classes })</code>, <code>runOne(...)</code></p></li><li><p><code>loadCorpus(dir)</code>, <code>buildPrompt(...)</code></p></li><li><p><code>computeDrift(before, after)</code>, <code>median(arr)</code>, <code>p95(arr)</code>, <code>aggregate(...)</code></p></li><li><p><code>MockModel(name, { mode })</code>, <code>MockMode</code></p></li><li><p><code>THRESHOLDS</code>, <code>DRIFT_WEIGHTS</code></p></li><li><p>Types: <code>CorpusEntry</code>, <code>DriftScore</code>, <code>DriftComponents</code>, <code>ModelClient</code>, <code>RunReport</code>, <code>Transcript</code>, <code>TaskClass</code></p></li></ul>
-<h3 id="blk-56877">License</h3>
+<h3 id="blk-57003">License</h3>
 <p>MIT © Travis Burandt — see <a href="./LICENSE" target="_blank" rel="noopener">LICENSE</a>.</p></div>
 <p class="src"><a href="/#/bendscript.com/README.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-56825" class="lvl2">What is BendScript?</a><a href="#blk-56837" class="lvl2">Install</a><a href="#blk-56840" class="lvl2">Usage</a><a href="#blk-56842" class="lvl3">Round-trip / drift harness</a><a href="#blk-56846" class="lvl2">API surface</a><a href="#blk-56877" class="lvl2">License</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/bendscript.com/CLAUDE.md/">BendScript Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierao6rc5fyzhzpin7b2j6v5cr5v3dgdj7eke2icoibyc7tktmltwala</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-56951" class="lvl2">What is BendScript?</a><a href="#blk-56963" class="lvl2">Install</a><a href="#blk-56966" class="lvl2">Usage</a><a href="#blk-56968" class="lvl3">Round-trip / drift harness</a><a href="#blk-56972" class="lvl2">API surface</a><a href="#blk-57003" class="lvl2">License</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/bendscript.com/CLAUDE.md/">BendScript Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera23sy4m6kyoc6f5muhybeaktgodv77tjgj6xu4kqbsdrlm7ryftya</div></div></div>
 </div></div>
 </body></html>

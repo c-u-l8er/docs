@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>note: bump version here, in mix.exs, and npm/package.json too · graphonomous · Ampersand Box</title>
 <meta name="description" content="BUILD ========">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/BUILD.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"note: bump version here, in mix.exs, and npm/package.json too","name":"note: bump version here, in mix.exs, and npm/package.json too","description":"BUILD ========","url":"https://docs.ampersandboxdesign.com/graphonomous/BUILD.md/","identifier":"bagaaieral4cgwhbhpgz6mkprkjpor2rlpfxhkwpl7ltvoycrvag4rdhbtb7q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"A) gh release create ... says tag is missing"},{"@type":"WebPageElement","name":"B) Permission error on release create/upload"},{"@type":"WebPageElement","name":"C) npm still fails with 404"},{"@type":"WebPageElement","name":"D) Zed shows \"context server request timeout\""}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"BUILD.md","item":"https://docs.ampersandboxdesign.com/graphonomous/BUILD.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"note: bump version here, in mix.exs, and npm/package.json too","name":"note: bump version here, in mix.exs, and npm/package.json too","description":"BUILD ========","url":"https://docs.ampersandboxdesign.com/graphonomous/BUILD.md/","identifier":"bagaaieraltphgch6hqhrxxkjbkao4plcnt4kw7tsoou25ewwr4zitt4lj23a","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"A) gh release create ... says tag is missing"},{"@type":"WebPageElement","name":"B) Permission error on release create/upload"},{"@type":"WebPageElement","name":"C) npm still fails with 404"},{"@type":"WebPageElement","name":"D) Zed shows \"context server request timeout\""}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"BUILD.md","item":"https://docs.ampersandboxdesign.com/graphonomous/BUILD.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -83,20 +83,20 @@ npm i<span class="t-flag"> -g</span> graphonomous</code></pre>
 graphonomous<span class="t-flag"> --db</span> ~/.graphonomous/knowledge.db<span class="t-flag"> --embedder-backend</span> fallback</code></pre>
 <p>(Stop with <code>Ctrl+C</code> after startup confirmation.)</p>
 <p>If release creation still fails -------------------------------</p>
-<h4 id="blk-62968">A) <code>gh release create ...</code> says tag is missing</h4>
+<h4 id="blk-63094">A) <code>gh release create ...</code> says tag is missing</h4>
 <p>Push the tag first:</p>
 <pre data-lang="bash"><code>git push origin <span class="t-string">&quot;${TAG}&quot;</span></code></pre>
-<h4 id="blk-62971">B) Permission error on release create/upload</h4>
+<h4 id="blk-63097">B) Permission error on release create/upload</h4>
 <p>Check GitHub auth/account:</p>
 <pre data-lang="bash"><code>gh auth status
 gh repo view</code></pre>
 <p>Ensure you have write access to <code>c-u-l8er/graphonomous</code>.</p>
-<h4 id="blk-62975">C) npm still fails with 404</h4>
+<h4 id="blk-63101">C) npm still fails with 404</h4>
 <p>Confirm asset naming exactly matches what installer expects:</p>
 <pre data-lang="bash"><code><span class="t-kw">echo</span> <span class="t-string">&quot;Expected: ${ASSET}&quot;</span>
 gh release view <span class="t-string">&quot;${TAG}&quot;</span><span class="t-flag"> --json</span> assets<span class="t-flag"> --jq</span> <span class="t-string">'.assets[].name'</span></code></pre>
 <p>Name must match exactly: <code>graphonomous-vX.Y.Z-linux-x64.tar.gz</code></p>
-<h4 id="blk-62979">D) Zed shows &quot;context server request timeout&quot;</h4>
+<h4 id="blk-63105">D) Zed shows &quot;context server request timeout&quot;</h4>
 <p>This can occur if your runtime is using older stdio transport behavior from upstream Anubis MCP (decoded message list handling / stdio response write issues).</p>
 <p>Graphonomous production path uses a vendored Anubis patch:</p>
 <ul><li><p>dependency is pinned to <code>vendor/anubis_mcp</code></p></li><li><p>stdio transport fixes are in:</p></li><li><p><code>vendor/anubis_mcp/lib/anubis/server/transport/stdio.ex</code></p></li></ul>
@@ -133,6 +133,6 @@ graphonomous<span class="t-flag"> --help</span>
 npm publish</code></pre></div>
 <p class="src"><a href="/#/graphonomous/BUILD.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-62968" class="lvl3">A) gh release create ... says tag is missing</a><a href="#blk-62971" class="lvl3">B) Permission error on release create/upload</a><a href="#blk-62975" class="lvl3">C) npm still fails with 404</a><a href="#blk-62979" class="lvl3">D) Zed shows &quot;context server request timeout&quot;</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/AGENTS.md/">Graphonomous — AGENTS Instructions</a><a href="/graphonomous/CHANGELOG.md/">Changelog</a><a href="/graphonomous/CLAUDE.md/">Graphonomous — CLAUDE Instructions</a><a href="/graphonomous/README.md/">Graphonomous</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieral4cgwhbhpgz6mkprkjpor2rlpfxhkwpl7ltvoycrvag4rdhbtb7q</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-63094" class="lvl3">A) gh release create ... says tag is missing</a><a href="#blk-63097" class="lvl3">B) Permission error on release create/upload</a><a href="#blk-63101" class="lvl3">C) npm still fails with 404</a><a href="#blk-63105" class="lvl3">D) Zed shows &quot;context server request timeout&quot;</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/AGENTS.md/">Graphonomous — AGENTS Instructions</a><a href="/graphonomous/CHANGELOG.md/">Changelog</a><a href="/graphonomous/CLAUDE.md/">Graphonomous — CLAUDE Instructions</a><a href="/graphonomous/README.md/">Graphonomous</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraltphgch6hqhrxxkjbkao4plcnt4kw7tsoou25ewwr4zitt4lj23a</div></div></div>
 </div></div>
 </body></html>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>T&amp;R — Travel &amp; RRABBIT · travel-and-rrabbit · Ampersand Box</title>
 <meta name="description" content="A FreeBSD distribution, assembled rather than installed.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/travel-and-rrabbit/README.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"T&R — Travel & RRABBIT","name":"T&R — Travel & RRABBIT","description":"A FreeBSD distribution, assembled rather than installed.","url":"https://docs.ampersandboxdesign.com/travel-and-rrabbit/README.md/","identifier":"bagaaieraoqvdmyumxd4762snggwjxuhxg32tl7cqyau2p3zpi7xmic4ho42q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"travel-and-rrabbit","url":"https://docs.ampersandboxdesign.com/travel-and-rrabbit/"},"articleSection":"travel-and-rrabbit","hasPart":[{"@type":"WebPageElement","name":"Build"},{"@type":"WebPageElement","name":"What is in the box"},{"@type":"WebPageElement","name":"Things that will cost you a day if you rediscover them"},{"@type":"WebPageElement","name":"Logging in"},{"@type":"WebPageElement","name":"Carrying the verifiable stack"},{"@type":"WebPageElement","name":"Two sessions, and which one you get"},{"@type":"WebPageElement","name":"Name"},{"@type":"WebPageElement","name":"The code does not make that split yet"},{"@type":"WebPageElement","name":"The ampersand is a display name only"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"travel-and-rrabbit","item":"https://docs.ampersandboxdesign.com/travel-and-rrabbit/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/travel-and-rrabbit/README.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"T&R — Travel & RRABBIT","name":"T&R — Travel & RRABBIT","description":"A FreeBSD distribution, assembled rather than installed.","url":"https://docs.ampersandboxdesign.com/travel-and-rrabbit/README.md/","identifier":"bagaaierafxviz7oukpljedt7dalgfoouhb4crakcqegpj3xaig4qq2mbfxgq","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"travel-and-rrabbit","url":"https://docs.ampersandboxdesign.com/travel-and-rrabbit/"},"articleSection":"travel-and-rrabbit","hasPart":[{"@type":"WebPageElement","name":"Build"},{"@type":"WebPageElement","name":"What is in the box"},{"@type":"WebPageElement","name":"Things that will cost you a day if you rediscover them"},{"@type":"WebPageElement","name":"Logging in"},{"@type":"WebPageElement","name":"Carrying the verifiable stack"},{"@type":"WebPageElement","name":"Two sessions, and which one you get"},{"@type":"WebPageElement","name":"Name"},{"@type":"WebPageElement","name":"The code does not make that split yet"},{"@type":"WebPageElement","name":"The ampersand is a display name only"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"travel-and-rrabbit","item":"https://docs.ampersandboxdesign.com/travel-and-rrabbit/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/travel-and-rrabbit/README.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,18 +22,18 @@
 
 </div></div>
 <div class="lead">A FreeBSD distribution, assembled rather than installed.</div>
-<div class="prose"><h1 id="blk-86543">T&amp;R — Travel &amp; RRABBIT</h1>
+<div class="prose"><h1 id="blk-86669">T&amp;R — Travel &amp; RRABBIT</h1>
 <p>A FreeBSD distribution, assembled rather than installed.</p>
 <p>T&amp;R is built from <strong>FreeBSD 15 pkgbase</strong> — the base system as ~509 packages — so making a root filesystem is <code>pkg -r &lt;dir&gt; install</code>. There is no source tree, no <code>buildworld</code> and no release tarballs. <code>tandr.conf</code> <em>is</em> the distro; <code>build-image.sh</code> is the mechanism and should not need editing to make a different flavour.</p>
 <p>Two flavours, the same system with and without a screen:</p>
 <table><thead><tr><th></th><th>server (<code>tandr.conf</code>)</th><th>desktop (<code>tandr-desktop.conf</code>)</th></tr></thead><tbody><tr><td>golden image</td><td><strong>364 MB</strong></td><td><strong>~5.2 GB</strong></td></tr><tr><td>packages</td><td>50</td><td>~350</td></tr><tr><td>what you get</td><td>sshd, cron, serial console</td><td>X.org, icewm + a vertical tint2 panel, Firefox, SDDM</td></tr></tbody></table>
 <p>For comparison, FreeBSD's own cloud image is 2.51 GB with 504 packages, and a VM spawned from it writes ~3 GB to its overlay on first boot. A T&amp;R server instance writes <strong>51 MB</strong>, because the image is already patched and does not re-download its own base every time it starts.</p>
-<h3 id="blk-86561">Build</h3>
+<h3 id="blk-86687">Build</h3>
 <p>The image must be assembled <strong>on FreeBSD</strong> (<code>makefs</code>, <code>mkimg</code> and <code>pkg -r</code> are FreeBSD-native), so the build pushes this tree to a FreeBSD 15 builder over ssh and streams the result back. Any reachable FreeBSD machine with ~8 GB free will do:</p>
 <pre data-lang="bash"><code>BUILDER_SSH=root@<span class="t-undefined">10</span>.<span class="t-undefined">0</span>.<span class="t-undefined">0</span>.<span class="t-undefined">5</span> ./make.sh tandr-desktop.conf</code></pre>
 <p>If <a href="https://github.com/c-u-l8er/PARKVPS" target="_blank" rel="noopener">PARKVPS</a> is alongside, name one of its instances instead and the ssh details are looked up for you:</p>
 <pre data-lang="bash"><code>./make.sh tandr-desktop.conf builder</code></pre>
-<h3 id="blk-86566">What is in the box</h3>
+<h3 id="blk-86692">What is in the box</h3>
 <ul><li><p><strong>Assembled from pkgbase.</strong> Deliberately absent: <code>FreeBSD-tests</code> (~200 MB of</p></li></ul>
 <p>test suites), every <code>-dbg</code> package, every <code>lib32</code> package.</p>
 <ul><li><p><strong>Serial console first.</strong> <code>comconsole,vidconsole</code> with <code>boot_multicons</code>,</p></li></ul>
@@ -44,7 +44,7 @@
 <p>instance re-downloads ~512 MiB of base packages on first boot, forever. Patching is a build-time job done once.</p>
 <ul><li><p><strong>The desktop is themed as a cockpit</strong> — the palette comes from</p></li></ul>
 <p><a href="https://github.com/c-u-l8er/RAVIO" target="_blank" rel="noopener">RAVIO</a>: amber <code>#F2C14E</code> for the focused window, cyan <code>#2DE2E6</code> for live readouts, bronze rims, on <code>#03040a</code>. SDDM's greeter is a QML theme of its own with an <strong>IGNITION</strong> button.</p>
-<h3 id="blk-86587">Things that will cost you a day if you rediscover them</h3>
+<h3 id="blk-86713">Things that will cost you a day if you rediscover them</h3>
 <p>Written down because each one presents as something other than what it is.</p>
 <ul><li><p>**<code>xorg-minimal</code> installs font <em>libraries</em> and zero font <em>files</em>.** A fontless</p></li></ul>
 <p>icewm does not merely draw blank labels — it <strong>stops moving windows</strong> (press, drag, release moves a window by exactly its decoration offset and no further), and fluxbox refuses to start at all. This reads as &quot;click and drag is broken&quot; and sends you through the whole input stack.</p>
@@ -64,34 +64,34 @@
 <p>has no signing keys and fails with &quot;Error opening the trusted directory&quot; — which reads like a network fault.</p>
 <ul><li><p><strong>Four base packages look optional and are not</strong>: <code>FreeBSD-rc</code> (no <code>/etc/rc</code></p></li></ul>
 <p>at all), <code>FreeBSD-ufs</code> (no <code>fsck_ufs</code>, boot aborts), <code>FreeBSD-geom</code> (<code>gpart</code>, needed by growfs), <code>FreeBSD-utilities</code> (<code>awk</code>). Plus <code>FreeBSD-pam</code> for sshd. The ssh package is <code>FreeBSD-ssh</code>, not <code>FreeBSD-openssh</code>.</p>
-<h3 id="blk-86625">Logging in</h3>
+<h3 id="blk-86751">Logging in</h3>
 <p>The desktop flavour ships a user for the greeter, because root is refused for graphical login and the cloud-init user's password is locked. <strong>The password is generated at build time</strong>, printed once when the build finishes, and written to <code>/root/DESKTOP-LOGIN</code> and the MOTD inside the image. Set <code>DESKTOP_PASSWORD</code> in the config to pin one instead.</p>
 <p>Note the serial console is marked <code>secure</code> and root has no password, so anyone who can reach the console is root. That is fine for a disposable local VM and wrong the moment one listens on a real address.</p>
-<h3 id="blk-86628">Carrying the verifiable stack</h3>
+<h3 id="blk-86754">Carrying the verifiable stack</h3>
 <p>Set <code>TRVM_DIST</code> and <code>TRVS_DIST</code> and the image ships TRVM and <code>trvs</code> — the runtime and the verifier that turns a run into a bundle somebody else can replay. Both are pure python against the standard library, so nothing is built on the target; <code>ic32</code>, the native runtime, is C and is compiled <strong>on the FreeBSD builder</strong>, so the image gets a <code>FreeBSD 15.1</code> binary and still needs no compiler of its own.</p>
 <pre data-lang="bash"><code>TRVM_DIST=../TRVM TRVS_DIST=../TRAAVIIS ./make.sh tandr.conf builder</code></pre>
 <p>Measured 2026-08-10, the same server config built both ways:</p>
 <table><thead><tr><th></th><th>bare</th><th>+ stack</th></tr></thead><tbody><tr><td>image</td><td>363 MiB</td><td>625 MiB</td></tr><tr><td>packages</td><td>50</td><td>56</td></tr><tr><td><code>trvs doctor</code></td><td>not installed</td><td><code>status ready</code></td></tr></tbody></table>
 <p>The stack is 14 MB of it. The rest is the interpreter, which is why <code>python3</code> lives in <code>STACK_PKGS</code> rather than <code>PORT_PKGS</code> — a bare server should not pay 260 MB to ship sshd and cron, and an image without the stack has no <code>trvs</code> at all rather than one that exits <code>python3: not found</code>.</p>
-<h3 id="blk-86646">Two sessions, and which one you get</h3>
+<h3 id="blk-86772">Two sessions, and which one you get</h3>
 <p>With <code>RRABBIT_DIST</code> set, the image ships <strong>two</strong> desktop sessions: the <strong>T&amp;R cockpit</strong> (icewm + the panel) and <strong>RRABBIT (the road)</strong>. The greeter names the one it will start in the bottom-right corner, and <strong>F2</strong> switches between them.</p>
 <p>The default is the cockpit, and that is a decision the build writes down rather than an accident. A greeter picks among sessions by sort order, <code>rrabbit.desktop</code> sorts before <code>tandr.desktop</code>, and measured on a fresh image SDDM duly preselected the 3D shell with no way to choose otherwise — which is the opposite of what <code>rrabbit-session</code> says it is for. The build now seeds SDDM's state file; set <code>DEFAULT_SESSION=rrabbit</code> in the config if you want the road on first login.</p>
-<h3 id="blk-86649">Name</h3>
+<h3 id="blk-86775">Name</h3>
 <p><strong>T&amp;R</strong> is <strong>Travel &amp; RRABBIT</strong> — two of them, with opposite appetites.</p>
 <p><strong>Travel</strong> wants to <em>navigate</em>. Travel is the one who drives: the road under you, the camera, the flight into a window and the chord back out, the districts you switch between. Travel's question is always <em>where am I, and how do I get to the other thing</em>.</p>
 <p><strong>RRABBIT</strong> wants to <em>be the windows</em>. Not to display them — to be them. RRABBIT is the signs standing on the road, the surface that flattens to pixel-exact 1:1 under you, the rect in the ledger that decides whether a click belongs to it. RRABBIT's question is <em>what am I, and where do I stand</em>.</p>
 <p>Neither is much use alone. A navigator with nothing to navigate is a camera in an empty scene; windows with nobody driving are a desktop. The ampersand is the whole idea: <strong>one likes going, the other likes being gone to.</strong></p>
-<h4 id="blk-86654">The code does not make that split yet</h4>
+<h4 id="blk-86780">The code does not make that split yet</h4>
 <p>Worth saying rather than implying otherwise. Today the two repositories are divided by <em>layer</em>, not by personality:</p>
 <ul><li><p><code>travel-and-rrabbit</code> (this repo) is the <strong>distribution</strong> — the image, the</p></li></ul>
 <p>boot path, the sessions. It carries Travel's name and is not Travel.</p>
 <ul><li><p><a href="https://github.com/c-u-l8er/RRABBIT" target="_blank" rel="noopener">`RRABBIT`</a> holds <strong>both halves</strong>: the</p></li></ul>
 <p>camera, flight and input that are Travel, and the surfaces, signs and ledger that are RRABBIT.</p>
 <p>So the name describes a separation the source has not made. That is a fair thing to notice and not obviously a fault — but anyone reading <code>m2/shell.js</code> looking for Travel will find them tangled, and should know that before going in.</p>
-<h4 id="blk-86665">The ampersand is a display name only</h4>
+<h4 id="blk-86791">The ampersand is a display name only</h4>
 <p><code>&amp;</code> is invalid in a hostname and needs quoting in every path that touches it, so <code>DISTRO_SLUG</code> (<code>tandr</code>) is what filenames, the GPT label and the hostname are built from. Only prose gets the ampersand.</p></div>
 <p class="src"><a href="/#/travel-and-rrabbit/README.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-86561" class="lvl2">Build</a><a href="#blk-86566" class="lvl2">What is in the box</a><a href="#blk-86587" class="lvl2">Things that will cost you a day if you rediscover them</a><a href="#blk-86625" class="lvl2">Logging in</a><a href="#blk-86628" class="lvl2">Carrying the verifiable stack</a><a href="#blk-86646" class="lvl2">Two sessions, and which one you get</a><a href="#blk-86649" class="lvl2">Name</a><a href="#blk-86654" class="lvl3">The code does not make that split yet</a><a href="#blk-86665" class="lvl3">The ampersand is a display name only</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraoqvdmyumxd4762snggwjxuhxg32tl7cqyau2p3zpi7xmic4ho42q</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-86687" class="lvl2">Build</a><a href="#blk-86692" class="lvl2">What is in the box</a><a href="#blk-86713" class="lvl2">Things that will cost you a day if you rediscover them</a><a href="#blk-86751" class="lvl2">Logging in</a><a href="#blk-86754" class="lvl2">Carrying the verifiable stack</a><a href="#blk-86772" class="lvl2">Two sessions, and which one you get</a><a href="#blk-86775" class="lvl2">Name</a><a href="#blk-86780" class="lvl3">The code does not make that split yet</a><a href="#blk-86791" class="lvl3">The ampersand is a display name only</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierafxviz7oukpljedt7dalgfoouhb4crakcqegpj3xaig4qq2mbfxgq</div></div></div>
 </div></div>
 </body></html>

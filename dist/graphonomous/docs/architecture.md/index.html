@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>Graphonomous Architecture · graphonomous · Ampersand Box</title>
 <meta name="description" content="Graphonomous is a continual-learning engine for AI agents, implemented in Elixir/OTP and exposed through an MCP server. Its design centers on a graph…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/architecture.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graphonomous Architecture","name":"Graphonomous Architecture","description":"Graphonomous is a continual-learning engine for AI agents, implemented in Elixir/OTP and exposed through an MCP server. Its design centers on a graph…","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/architecture.md/","identifier":"bagaaierav7xdmixo4e7exa5vmd5kq4mg7omxnjls2ugrewplleezzvkf4vga","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"System Overview"},{"@type":"WebPageElement","name":"Runtime Topology (Conceptual)"},{"@type":"WebPageElement","name":"Core Data Model"},{"@type":"WebPageElement","name":"Node Types"},{"@type":"WebPageElement","name":"Edge Types"},{"@type":"WebPageElement","name":"Persistence Layer"},{"@type":"WebPageElement","name":"Retrieval Pipeline"},{"@type":"WebPageElement","name":"Topology and Deliberation"},{"@type":"WebPageElement","name":"Learning Loop"},{"@type":"WebPageElement","name":"Goal and Epistemic Control Plane"},{"@type":"WebPageElement","name":"GoalGraph"},{"@type":"WebPageElement","name":"Coverage"},{"@type":"WebPageElement","name":"Attention"},{"@type":"WebPageElement","name":"Consolidation"},{"@type":"WebPageElement","name":"MCP Surface"},{"@type":"WebPageElement","name":"Architectural Properties"},{"@type":"WebPageElement","name":"Practical Mental Model"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"architecture.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/architecture.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graphonomous Architecture","name":"Graphonomous Architecture","description":"Graphonomous is a continual-learning engine for AI agents, implemented in Elixir/OTP and exposed through an MCP server. Its design centers on a graph…","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/architecture.md/","identifier":"bagaaieramo62jyi5ydpmkxvdrnv5i2wclweotghm4sfmf2skntjsc3wk7d4a","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"System Overview"},{"@type":"WebPageElement","name":"Runtime Topology (Conceptual)"},{"@type":"WebPageElement","name":"Core Data Model"},{"@type":"WebPageElement","name":"Node Types"},{"@type":"WebPageElement","name":"Edge Types"},{"@type":"WebPageElement","name":"Persistence Layer"},{"@type":"WebPageElement","name":"Retrieval Pipeline"},{"@type":"WebPageElement","name":"Topology and Deliberation"},{"@type":"WebPageElement","name":"Learning Loop"},{"@type":"WebPageElement","name":"Goal and Epistemic Control Plane"},{"@type":"WebPageElement","name":"GoalGraph"},{"@type":"WebPageElement","name":"Coverage"},{"@type":"WebPageElement","name":"Attention"},{"@type":"WebPageElement","name":"Consolidation"},{"@type":"WebPageElement","name":"MCP Surface"},{"@type":"WebPageElement","name":"Architectural Properties"},{"@type":"WebPageElement","name":"Practical Mental Model"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"architecture.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/architecture.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,12 +22,12 @@
 
 </div></div>
 <div class="lead">Graphonomous is a continual-learning engine for AI agents, implemented in Elixir/OTP and exposed through an MCP server. Its design centers on a graph memory model, confidence-up…</div>
-<div class="prose"><h1 id="blk-65091">Graphonomous Architecture</h1>
+<div class="prose"><h1 id="blk-65217">Graphonomous Architecture</h1>
 <p>Graphonomous is a continual-learning engine for AI agents, implemented in Elixir/OTP and exposed through an MCP server. Its design centers on a graph memory model, confidence-updating learning loops, and topology-aware reasoning.</p>
-<h3 id="blk-65093">System Overview</h3>
+<h3 id="blk-65219">System Overview</h3>
 <p>At runtime, Graphonomous is composed of supervised services that each own a distinct responsibility:</p>
 <ul><li><p><strong>Store</strong>: durable persistence and hot cache</p></li><li><p><strong>Embedder</strong>: embedding generation backend</p></li><li><p><strong>Graph</strong>: node/edge CRUD and similarity orchestration</p></li><li><p><strong>Retriever</strong>: context retrieval + neighborhood expansion + topology annotation</p></li><li><p><strong>Learner</strong>: outcome ingestion and confidence updates</p></li><li><p><strong>GoalGraph</strong>: durable goal lifecycle management</p></li><li><p><strong>Coverage</strong>: epistemic scoring (<code>act</code> / <code>learn</code> / <code>escalate</code>)</p></li><li><p><strong>Attention</strong>: proactive goal prioritization loop</p></li><li><p><strong>Consolidator</strong>: periodic memory maintenance</p></li><li><p><strong>MCP Server</strong>: tool/resource interface for external agents</p></li></ul>
-<h3 id="blk-65116">Runtime Topology (Conceptual)</h3>
+<h3 id="blk-65242">Runtime Topology (Conceptual)</h3>
 <pre><code>Agent / Client (MCP)
         |
         v
@@ -45,61 +45,61 @@
 
 Learner &lt;------------------ Outcomes (causal feedback)
 Consolidator -----------&gt; Decay / prune / maintain cycles</code></pre>
-<h3 id="blk-65118">Core Data Model</h3>
+<h3 id="blk-65244">Core Data Model</h3>
 <p>Graphonomous uses a directed knowledge graph with confidence-bearing nodes and weighted typed edges.</p>
-<h4 id="blk-65120">Node Types</h4>
+<h4 id="blk-65246">Node Types</h4>
 <ul><li><p><strong>semantic</strong>: facts, architecture truths, definitions</p></li><li><p><strong>procedural</strong>: workflows and operating instructions</p></li><li><p><strong>episodic</strong>: observed events and session outcomes</p></li><li><p><strong>temporal</strong>: time-indexed observations, monitoring events</p></li><li><p><strong>outcome</strong>: empirical results of actions (grounding)</p></li><li><p><strong>goal</strong>: durable intent, objectives, targets</p></li></ul>
-<h4 id="blk-65134">Edge Types</h4>
+<h4 id="blk-65260">Edge Types</h4>
 <p>Relationship types include:</p>
 <ul><li><p><code>causes</code>, <code>resolves</code> — causal attribution</p></li><li><p><code>supports</code>, <code>contradicts</code> — evidential</p></li><li><p><code>related_to</code>, <code>similar_to</code> — topical affinity</p></li><li><p><code>part_of</code>, <code>follows</code>, <code>supersedes</code>, <code>depends_on</code> — structural</p></li><li><p><code>temporal_before</code>, <code>temporal_after</code>, <code>co_occurs</code> — temporal ordering</p></li><li><p><code>derived_from</code> — provenance</p></li><li><p>Legacy aliases: <code>causal</code>, <code>related</code> (backward-compatible)</p></li></ul>
 <p>Each edge carries a weight (<code>0.0..1.0</code>, default 0.3), optional <code>co_activation_count</code>, and <code>decay_rate</code>.</p>
-<h3 id="blk-65152">Persistence Layer</h3>
+<h3 id="blk-65278">Persistence Layer</h3>
 <p><code>Store</code> provides:</p>
 <ul><li><p><strong>SQLite durability</strong> for nodes, edges, outcomes, and goals</p></li><li><p><strong>ETS hot cache</strong> for low-latency reads</p></li><li><p>schema bootstrap and migration application on startup</p></li><li><p>cache warm-up from durable state after boot</p></li></ul>
 <p>Design intent: keep memory local-first and lightweight while still durable across restarts.</p>
-<h3 id="blk-65164">Retrieval Pipeline</h3>
+<h3 id="blk-65290">Retrieval Pipeline</h3>
 <p><code>Retriever</code> executes a multi-step pipeline:</p>
 <ol><li><p>Semantic similarity search (seed candidates)</p></li><li><p>Graph neighborhood expansion (bounded hops)</p></li><li><p>Confidence-aware ranking</p></li><li><p>Topology analysis over the retrieved subgraph</p></li><li><p>Return context with:</p></li></ol>
 <ul><li><p>ranked results</p></li><li><p>causal context IDs</p></li><li><p>topology routing hint (<code>fast</code> or <code>deliberate</code>)</p></li></ul>
 <p>This provides both relevant memory and structural signal for downstream reasoning.</p>
-<h3 id="blk-65185">Topology and Deliberation</h3>
+<h3 id="blk-65311">Topology and Deliberation</h3>
 <p>Graphonomous computes SCC/topology properties and a κ-style complexity signal to identify cyclic reasoning regions.</p>
 <ul><li><p><strong>`fast` routing</strong>: low cycle complexity, proceed with normal retrieval flow</p></li><li><p><strong>`deliberate` routing</strong>: cyclic/entangled subgraph, invoke deeper structured deliberation</p></li></ul>
 <p><code>Deliberator</code> can decompose cyclic regions, analyze fault-line edges, reconcile conclusions, and optionally write conclusions back into the graph.</p>
-<h3 id="blk-65193">Learning Loop</h3>
+<h3 id="blk-65319">Learning Loop</h3>
 <p><code>Learner</code> closes the causal feedback loop:</p>
 <ol><li><p>Persist action outcome</p></li><li><p>Update confidence on causal source nodes</p></li></ol>
 <p>Status signals include:</p>
 <ul><li><p><code>success</code></p></li><li><p><code>partial_success</code></p></li><li><p><code>failure</code></p></li><li><p><code>timeout</code></p></li></ul>
 <p>Confidence updates are blended with a learning-rate rule, so the graph continuously calibrates itself over real outcomes instead of static assumptions.</p>
-<h3 id="blk-65211">Goal and Epistemic Control Plane</h3>
-<h4 id="blk-65212">GoalGraph</h4>
+<h3 id="blk-65337">Goal and Epistemic Control Plane</h3>
+<h4 id="blk-65338">GoalGraph</h4>
 <p>Durable multi-step intent with lifecycle states such as:</p>
 <ul><li><p><code>proposed</code></p></li><li><p><code>active</code></p></li><li><p><code>blocked</code></p></li><li><p><code>completed</code></p></li><li><p><code>abandoned</code></p></li></ul>
 <p>Goals can link to supporting node IDs, track progress, and persist across sessions.</p>
-<h4 id="blk-65226">Coverage</h4>
+<h4 id="blk-65352">Coverage</h4>
 <p>Before high-impact actions, Graphonomous can score epistemic readiness:</p>
 <ul><li><p><code>coverage_score</code></p></li><li><p><code>uncertainty_score</code></p></li><li><p><code>risk_score</code></p></li></ul>
 <p>Decision output:</p>
 <ul><li><p><strong>act</strong></p></li><li><p><strong>learn</strong></p></li><li><p><strong>escalate</strong></p></li></ul>
-<h4 id="blk-65243">Attention</h4>
+<h4 id="blk-65369">Attention</h4>
 <p>Attention continuously ranks work across goals using urgency, coverage gaps, and topology signals; it supports <code>observe</code>, <code>advise</code>, and <code>act</code> autonomy levels.</p>
-<h3 id="blk-65245">Consolidation</h3>
+<h3 id="blk-65371">Consolidation</h3>
 <p><code>Consolidator</code> runs periodic maintenance to protect graph quality over time:</p>
 <ol><li><p>Confidence decay</p></li><li><p>Prune weak nodes</p></li><li><p>Prune weak edges</p></li><li><p>Strengthen co-activated edges</p></li><li><p>Merge similar nodes</p></li><li><p>Promote timescale (fast → medium → slow → glacial)</p></li><li><p>Generate abstractions from episodic clusters</p></li></ol>
 <p>This prevents unbounded memory drift and keeps retrieval quality stable.</p>
-<h3 id="blk-65263">MCP Surface</h3>
+<h3 id="blk-65389">MCP Surface</h3>
 <p>Graphonomous is MCP-first, exposing tools/resources for:</p>
 <ul><li><p>storing memory</p></li><li><p>querying/retrieving context</p></li><li><p>reporting outcomes</p></li><li><p>managing goals</p></li><li><p>reviewing coverage</p></li><li><p>running consolidation</p></li><li><p>analyzing topology and running deliberation</p></li><li><p>surveying/running attention cycles</p></li></ul>
 <p>This makes Graphonomous interoperable with MCP-capable assistants, editors, and agent runtimes.</p>
-<h3 id="blk-65283">Architectural Properties</h3>
+<h3 id="blk-65409">Architectural Properties</h3>
 <ul><li><p><strong>Modular</strong>: clear boundaries between storage, retrieval, learning, and orchestration</p></li><li><p><strong>Causal</strong>: outcome feedback updates the exact nodes used for decisions</p></li><li><p><strong>Topology-aware</strong>: can detect when simple retrieval is insufficient</p></li><li><p><strong>Durable</strong>: goals and memory survive process and session boundaries</p></li><li><p><strong>Operationally practical</strong>: local DB + supervised services + MCP transport</p></li></ul>
-<h3 id="blk-65295">Practical Mental Model</h3>
+<h3 id="blk-65421">Practical Mental Model</h3>
 <p>You can think of Graphonomous as:</p>
 <ol><li><p>a <strong>memory graph</strong> (<code>Store</code> + <code>Graph</code>),</p></li><li><p>a <strong>reasoning front-end</strong> (<code>Retriever</code> + <code>Topology</code> + <code>Deliberator</code>),</p></li><li><p>a <strong>learning backend</strong> (<code>Learner</code> + <code>Consolidator</code>),</p></li><li><p>and a <strong>control plane</strong> (<code>GoalGraph</code> + <code>Coverage</code> + <code>Attention</code>),</p></li><li><p>all exposed through an <strong>MCP API</strong>.</p></li></ol>
 <p>That composition is what enables continual learning without retraining base model weights.</p></div>
 <p class="src"><a href="/#/graphonomous/docs/architecture.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-65093" class="lvl2">System Overview</a><a href="#blk-65116" class="lvl2">Runtime Topology (Conceptual)</a><a href="#blk-65118" class="lvl2">Core Data Model</a><a href="#blk-65120" class="lvl3">Node Types</a><a href="#blk-65134" class="lvl3">Edge Types</a><a href="#blk-65152" class="lvl2">Persistence Layer</a><a href="#blk-65164" class="lvl2">Retrieval Pipeline</a><a href="#blk-65185" class="lvl2">Topology and Deliberation</a><a href="#blk-65193" class="lvl2">Learning Loop</a><a href="#blk-65211" class="lvl2">Goal and Epistemic Control Plane</a><a href="#blk-65212" class="lvl3">GoalGraph</a><a href="#blk-65226" class="lvl3">Coverage</a><a href="#blk-65243" class="lvl3">Attention</a><a href="#blk-65245" class="lvl2">Consolidation</a><a href="#blk-65263" class="lvl2">MCP Surface</a><a href="#blk-65283" class="lvl2">Architectural Properties</a><a href="#blk-65295" class="lvl2">Practical Mental Model</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/ARITHMETIC_COMPLIANCE.md/">Graphonomous × box-and-box — Arithmetic Compliance Review</a><a href="/graphonomous/docs/BOOTSTRAP.md/">Graphonomous Local Bootstrap &amp; Verification Guide</a><a href="/graphonomous/docs/NPM_PACKAGE.md/">graphonomous — NPM Package Specification</a><a href="/graphonomous/docs/NPM_PUBLISH.md/">Graphonomous npm Publishing + Maintenance Runbook (Manual-First)</a><a href="/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/">Graphonomous Technical Documentation</a><a href="/graphonomous/docs/ZED.md/">Graphonomous + Zed MCP Setup Guide</a><a href="/graphonomous/docs/faq.md/">Graphonomous FAQ</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/mcp-tools.md/">Graphonomous MCP Tools Reference</a><a href="/graphonomous/docs/operations.md/">Operations &amp; Maintenance</a><a href="/graphonomous/docs/quickstart.md/">Graphonomous Quickstart</a><a href="/graphonomous/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierav7xdmixo4e7exa5vmd5kq4mg7omxnjls2ugrewplleezzvkf4vga</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-65219" class="lvl2">System Overview</a><a href="#blk-65242" class="lvl2">Runtime Topology (Conceptual)</a><a href="#blk-65244" class="lvl2">Core Data Model</a><a href="#blk-65246" class="lvl3">Node Types</a><a href="#blk-65260" class="lvl3">Edge Types</a><a href="#blk-65278" class="lvl2">Persistence Layer</a><a href="#blk-65290" class="lvl2">Retrieval Pipeline</a><a href="#blk-65311" class="lvl2">Topology and Deliberation</a><a href="#blk-65319" class="lvl2">Learning Loop</a><a href="#blk-65337" class="lvl2">Goal and Epistemic Control Plane</a><a href="#blk-65338" class="lvl3">GoalGraph</a><a href="#blk-65352" class="lvl3">Coverage</a><a href="#blk-65369" class="lvl3">Attention</a><a href="#blk-65371" class="lvl2">Consolidation</a><a href="#blk-65389" class="lvl2">MCP Surface</a><a href="#blk-65409" class="lvl2">Architectural Properties</a><a href="#blk-65421" class="lvl2">Practical Mental Model</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/ARITHMETIC_COMPLIANCE.md/">Graphonomous × box-and-box — Arithmetic Compliance Review</a><a href="/graphonomous/docs/BOOTSTRAP.md/">Graphonomous Local Bootstrap &amp; Verification Guide</a><a href="/graphonomous/docs/NPM_PACKAGE.md/">graphonomous — NPM Package Specification</a><a href="/graphonomous/docs/NPM_PUBLISH.md/">Graphonomous npm Publishing + Maintenance Runbook (Manual-First)</a><a href="/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/">Graphonomous Technical Documentation</a><a href="/graphonomous/docs/ZED.md/">Graphonomous + Zed MCP Setup Guide</a><a href="/graphonomous/docs/faq.md/">Graphonomous FAQ</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/mcp-tools.md/">Graphonomous MCP Tools Reference</a><a href="/graphonomous/docs/operations.md/">Operations &amp; Maintenance</a><a href="/graphonomous/docs/quickstart.md/">Graphonomous Quickstart</a><a href="/graphonomous/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieramo62jyi5ydpmkxvdrnv5i2wclweotghm4sfmf2skntjsc3wk7d4a</div></div></div>
 </div></div>
 </body></html>

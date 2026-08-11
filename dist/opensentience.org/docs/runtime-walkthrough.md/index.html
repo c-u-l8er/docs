@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>Runtime Walkthrough · opensentience.org · Ampersand Box</title>
 <meta name="description" content="This page follows a concrete agent through the full OpenSentience governance lifecycle (OS-006) and harness orchestration (OS-008), step by step.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/opensentience.org/docs/runtime-walkthrough.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Runtime Walkthrough","name":"Runtime Walkthrough","description":"This page follows a concrete agent through the full OpenSentience governance lifecycle (OS-006) and harness orchestration (OS-008), step by step.","url":"https://docs.ampersandboxdesign.com/opensentience.org/docs/runtime-walkthrough.md/","identifier":"bagaaieraqew3wpgbpt6qaur55rydmnyrkh4qd7x6rzzxj22ylqoot5l3y5tq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"1. What this walkthrough is"},{"@type":"WebPageElement","name":"2. The agent"},{"@type":"WebPageElement","name":"3. Part 1: Agent Installation (OS-006)"},{"@type":"WebPageElement","name":"What happens internally"},{"@type":"WebPageElement","name":"4. Part 2: Agent Enable and Start"},{"@type":"WebPageElement","name":"State machine transitions"},{"@type":"WebPageElement","name":"5. Part 3: Permission Check (Hot Path)"},{"@type":"WebPageElement","name":"Allowed permission check"},{"@type":"WebPageElement","name":"Denied permission check"},{"@type":"WebPageElement","name":"Permission evaluation order"},{"@type":"WebPageElement","name":"6. Part 4: Autonomy Enforcement"},{"@type":"WebPageElement","name":"Level: :observe (current)"},{"@type":"WebPageElement","name":"Level: :advise"},{"@type":"WebPageElement","name":"Level: :act"},{"@type":"WebPageElement","name":"Summary table"},{"@type":"WebPageElement","name":"7. Part 5: Harness Session (OS-008)"},{"@type":"WebPageElement","name":"Step 1: Task arrives"},{"@type":"WebPageElement","name":"Step 2: PipelineEnforcer -- retrieve MUST happen first"},{"@type":"WebPageElement","name":"Step 3: Planner decomposes into sprints"},{"@type":"WebPageElement","name":"Step 4: Generator implements sprint 1"},{"@type":"WebPageElement","name":"Step 5: PipelineEnforcer blocks sprint completion without store_node"},{"@type":"WebPageElement","name":"Step 6: QualityGate spawns evaluator in separate context"},{"@type":"WebPageElement","name":"Step 7: Evaluator fails sprint 1"},{"@type":"WebPageElement","name":"Step 8: Generator iterates with evaluator feedback"},{"@type":"WebPageElement","name":"Step 9: Evaluator passes sprint 1 on iteration 2"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/"},{"@type":"ListItem","position":4,"name":"runtime-walkthrough.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/runtime-walkthrough.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Runtime Walkthrough","name":"Runtime Walkthrough","description":"This page follows a concrete agent through the full OpenSentience governance lifecycle (OS-006) and harness orchestration (OS-008), step by step.","url":"https://docs.ampersandboxdesign.com/opensentience.org/docs/runtime-walkthrough.md/","identifier":"bagaaieraynewayvt64gp3acpkutqgwj46sw4y5jq6wzoki3lqyjnfbomup3q","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"1. What this walkthrough is"},{"@type":"WebPageElement","name":"2. The agent"},{"@type":"WebPageElement","name":"3. Part 1: Agent Installation (OS-006)"},{"@type":"WebPageElement","name":"What happens internally"},{"@type":"WebPageElement","name":"4. Part 2: Agent Enable and Start"},{"@type":"WebPageElement","name":"State machine transitions"},{"@type":"WebPageElement","name":"5. Part 3: Permission Check (Hot Path)"},{"@type":"WebPageElement","name":"Allowed permission check"},{"@type":"WebPageElement","name":"Denied permission check"},{"@type":"WebPageElement","name":"Permission evaluation order"},{"@type":"WebPageElement","name":"6. Part 4: Autonomy Enforcement"},{"@type":"WebPageElement","name":"Level: :observe (current)"},{"@type":"WebPageElement","name":"Level: :advise"},{"@type":"WebPageElement","name":"Level: :act"},{"@type":"WebPageElement","name":"Summary table"},{"@type":"WebPageElement","name":"7. Part 5: Harness Session (OS-008)"},{"@type":"WebPageElement","name":"Step 1: Task arrives"},{"@type":"WebPageElement","name":"Step 2: PipelineEnforcer -- retrieve MUST happen first"},{"@type":"WebPageElement","name":"Step 3: Planner decomposes into sprints"},{"@type":"WebPageElement","name":"Step 4: Generator implements sprint 1"},{"@type":"WebPageElement","name":"Step 5: PipelineEnforcer blocks sprint completion without store_node"},{"@type":"WebPageElement","name":"Step 6: QualityGate spawns evaluator in separate context"},{"@type":"WebPageElement","name":"Step 7: Evaluator fails sprint 1"},{"@type":"WebPageElement","name":"Step 8: Generator iterates with evaluator feedback"},{"@type":"WebPageElement","name":"Step 9: Evaluator passes sprint 1 on iteration 2"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/"},{"@type":"ListItem","position":4,"name":"runtime-walkthrough.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/runtime-walkthrough.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,20 +22,20 @@
 
 </div></div>
 <div class="lead">This page follows a concrete agent through the full OpenSentience governance lifecycle (OS-006) and harness orchestration (OS-008), step by step.</div>
-<div class="prose"><h1 id="blk-74350">Runtime Walkthrough</h1>
+<div class="prose"><h1 id="blk-74476">Runtime Walkthrough</h1>
 <p>This page follows a concrete agent through the full OpenSentience governance lifecycle (OS-006) and harness orchestration (OS-008), step by step.</p>
 <p>The goal is to make the runtime operational, not just conceptual. It answers practical questions such as:</p>
 <ul><li><p>what happens when an agent is installed, enabled, and started</p></li><li><p>how permission checks work on the hot path</p></li><li><p>how autonomy levels change agent behavior</p></li><li><p>how the harness enforces pipeline ordering and quality gates</p></li><li><p>how OS-006 and OS-008 work together as a dual enforcement stack</p></li><li><p>what the audit trail looks like at the end</p></li></ul>
-<h3 id="blk-74366">1. What this walkthrough is</h3>
+<h3 id="blk-74492">1. What this walkthrough is</h3>
 <p>This is a <strong>reference workflow</strong> for the OpenSentience governance shim and harness runtime.</p>
 <p>It follows a single agent -- <code>fleet-optimizer</code> -- through seven stages:</p>
 <ol><li><p>agent installation (OS-006)</p></li><li><p>agent enable and start (OS-006)</p></li><li><p>permission checks on the hot path (OS-006)</p></li><li><p>autonomy enforcement at each level (OS-006)</p></li><li><p>a full harness session with sprint decomposition and quality gates (OS-008)</p></li><li><p>the dual enforcement stack (OS-006 + OS-008 together)</p></li><li><p>audit trail query</p></li></ol>
 <p>The example is concrete and reproducible. The module names, function signatures, and ETS table names match the spec in <code>docs/spec/README.md</code> and <code>docs/spec/OS-008-HARNESS.md</code>.</p>
-<h3 id="blk-74385">2. The agent</h3>
+<h3 id="blk-74511">2. The agent</h3>
 <p>The agent under governance is a fleet route optimizer for the GeoFleetic product. It needs:</p>
 <ul><li><p>read access to fleet data files</p></li><li><p>outbound network access to the GeoFleetic API</p></li><li><p>four Graphonomous MCP tools</p></li><li><p>read/write access to a knowledge graph</p></li></ul>
 <p>It starts at the most restrictive autonomy level (<code>:observe</code>) and will be promoted as trust is established.</p>
-<h3 id="blk-74397">3. Part 1: Agent Installation (OS-006)</h3>
+<h3 id="blk-74523">3. Part 1: Agent Installation (OS-006)</h3>
 <p>An operator installs the agent by calling <code>OpenSentience.install_agent/1</code>:</p>
 <pre data-lang="elixir"><code><span class="t-type">OpenSentience</span>.install_agent(%{
   agent_id: <span class="t-string">&quot;fleet-optimizer&quot;</span>,
@@ -49,7 +49,7 @@
   },
   autonomy: <span class="t-atom">:observe</span>
 })</code></pre>
-<h4 id="blk-74400">What happens internally</h4>
+<h4 id="blk-74526">What happens internally</h4>
 <pre><code>install_agent/1 called
   |
   v
@@ -97,22 +97,22 @@ Return {:ok, &quot;fleet-optimizer&quot;}</code></pre>
 │       └── (child process NOT started)
 ├── OpenSentience.MCP.Server
 └── OpenSentience.Telemetry</code></pre>
-<h3 id="blk-74404">4. Part 2: Agent Enable and Start</h3>
+<h3 id="blk-74530">4. Part 2: Agent Enable and Start</h3>
 <p>The operator enables and starts the agent in two transitions:</p>
 <pre data-lang="elixir"><code><span class="t-comment"># Transition 1: installed -&gt; enabled</span>
 <span class="t-type">OpenSentience</span>.enable_agent(<span class="t-string">&quot;fleet-optimizer&quot;</span>, reason: <span class="t-string">&quot;manifest validated, permissions reviewed&quot;</span>)
 
 <span class="t-comment"># Transition 2: enabled -&gt; running</span>
 <span class="t-type">OpenSentience</span>.start_agent(<span class="t-string">&quot;fleet-optimizer&quot;</span>, reason: <span class="t-string">&quot;deployment approved by ops lead&quot;</span>)</code></pre>
-<h4 id="blk-74407">State machine transitions</h4>
+<h4 id="blk-74533">State machine transitions</h4>
 <pre><code>:installed ──enable──&gt; :enabled ──start──&gt; :running</code></pre>
 <p>Each transition produces an audit entry:</p>
 <table><thead><tr><th>Transition</th><th>Actor</th><th>Timestamp</th><th>Reason</th></tr></thead><tbody><tr><td><code>:installed</code> -&gt; <code>:enabled</code></td><td><code>operator:admin</code></td><td><code>2026-03-31T10:00:01Z</code></td><td>manifest validated, permissions reviewed</td></tr><tr><td><code>:enabled</code> -&gt; <code>:running</code></td><td><code>operator:admin</code></td><td><code>2026-03-31T10:00:02Z</code></td><td>deployment approved by ops lead</td></tr></tbody></table>
 <p>When the agent enters <code>:running</code>, the <code>AgentLifecycle</code> GenStateMachine starts the wrapped child spec (<code>FleetOptimizer.Worker</code>) under supervision. The worker process is now live.</p>
 <p>The autonomy level remains <code>:observe</code> -- the agent can generate recommendations but cannot execute actions.</p>
-<h3 id="blk-74425">5. Part 3: Permission Check (Hot Path)</h3>
+<h3 id="blk-74551">5. Part 3: Permission Check (Hot Path)</h3>
 <p>Every tool invocation by the agent passes through the <code>PermissionEngine</code> before execution. The engine uses ETS for microsecond-latency lookups.</p>
-<h4 id="blk-74427">Allowed permission check</h4>
+<h4 id="blk-74553">Allowed permission check</h4>
 <pre><code>fleet-optimizer wants to call retrieve_context
   |
   v
@@ -134,7 +134,7 @@ AuditWriter: log permission check
   v
 Tool call proceeds.
 Total time: &lt; 2 microseconds for ETS lookup.</code></pre>
-<h4 id="blk-74429">Denied permission check</h4>
+<h4 id="blk-74555">Denied permission check</h4>
 <pre><code>fleet-optimizer wants to write /etc/config
   |
   v
@@ -160,13 +160,13 @@ AuditWriter: log denied permission
   |
   v
 Tool call BLOCKED. Error returned to agent.</code></pre>
-<h4 id="blk-74431">Permission evaluation order</h4>
+<h4 id="blk-74557">Permission evaluation order</h4>
 <p>The evaluation follows a strict precedence:</p>
 <pre><code>explicit deny  &gt;  explicit allow  &gt;  default deny</code></pre>
 <p>There are no implicit permissions. If a grant does not exist in ETS, the answer is always <code>:denied</code>.</p>
-<h3 id="blk-74435">6. Part 4: Autonomy Enforcement</h3>
+<h3 id="blk-74561">6. Part 4: Autonomy Enforcement</h3>
 <p>The agent wants to perform an action: &quot;reroute delivery fleet through alternate corridor.&quot; Here is how the same action behaves at each autonomy level.</p>
-<h4 id="blk-74437">Level: :observe (current)</h4>
+<h4 id="blk-74563">Level: :observe (current)</h4>
 <pre><code>fleet-optimizer proposes: reroute fleet through corridor B
   |
   v
@@ -190,7 +190,7 @@ AuditWriter: log
   v
 Recommendation visible on operator dashboard.
 Agent receives: {:recommendation_logged, &quot;reroute_fleet&quot;}</code></pre>
-<h4 id="blk-74439">Level: :advise</h4>
+<h4 id="blk-74565">Level: :advise</h4>
 <pre><code>fleet-optimizer proposes: reroute fleet through corridor B
   |
   v
@@ -212,7 +212,7 @@ AuditWriter: log
 Operator reviews action plan + rationale.
   Operator approves -&gt; action forwarded to PermissionEngine -&gt; execute.
   Operator rejects -&gt; action discarded, audit logged.</code></pre>
-<h4 id="blk-74441">Level: :act</h4>
+<h4 id="blk-74567">Level: :act</h4>
 <pre><code>fleet-optimizer proposes: reroute fleet through corridor B
   |
   v
@@ -233,11 +233,11 @@ AuditWriter: log
     result: :allowed,
     reason: &quot;autonomy=act; permission check passed&quot;
   }</code></pre>
-<h4 id="blk-74443">Summary table</h4>
+<h4 id="blk-74569">Summary table</h4>
 <table><thead><tr><th>Level</th><th>What happens</th><th>Human involvement</th><th>Audit event type</th></tr></thead><tbody><tr><td><code>:observe</code></td><td>Logged as recommendation, not executed</td><td>Acts on recommendation manually</td><td><code>:action_recommended</code></td></tr><tr><td><code>:advise</code></td><td>Queued, awaits human approval</td><td>Approves or rejects each action</td><td><code>:action_blocked</code> (result: <code>:queued</code>)</td></tr><tr><td><code>:act</code></td><td>Permission check, then execute if allowed</td><td>Monitors dashboard and audit trail</td><td><code>:action_executed</code></td></tr></tbody></table>
-<h3 id="blk-74461">7. Part 5: Harness Session (OS-008)</h3>
+<h3 id="blk-74587">7. Part 5: Harness Session (OS-008)</h3>
 <p>The agent is now running at <code>:observe</code> autonomy. A task arrives that triggers a full harness session.</p>
-<h4 id="blk-74463">Step 1: Task arrives</h4>
+<h4 id="blk-74589">Step 1: Task arrives</h4>
 <pre><code>Task: &quot;Optimize delivery routes for Seattle region&quot;
 Source: operator:ops-lead
 Priority: high</code></pre>
@@ -256,7 +256,7 @@ Priority: high</code></pre>
     ├── OpenSentience.Harness.ContractValidator
     ├── OpenSentience.Harness.SprintController
     └── OpenSentience.Harness.ContextManager</code></pre>
-<h4 id="blk-74469">Step 2: PipelineEnforcer -- retrieve MUST happen first</h4>
+<h4 id="blk-74595">Step 2: PipelineEnforcer -- retrieve MUST happen first</h4>
 <p>The agent's first instinct might be to start optimizing routes immediately. The PipelineEnforcer prevents this.</p>
 <pre><code>fleet-optimizer attempts: store_node (write route data)
   |
@@ -295,7 +295,7 @@ Graphonomous returns prior context:
   v
 PipelineEnforcer: mark :retrieve_context as :completed
   completed_stages: MapSet&lt;[:retrieve_context]&gt;</code></pre>
-<h4 id="blk-74474">Step 3: Planner decomposes into sprints</h4>
+<h4 id="blk-74600">Step 3: Planner decomposes into sprints</h4>
 <p>The <code>SprintController</code> activates the planner role:</p>
 <pre data-lang="elixir"><code>%{
   sprints: [
@@ -321,11 +321,11 @@ PipelineEnforcer: mark :retrieve_context as :completed
   coverage_assessment: %{decision: <span class="t-atom">:act</span>, coverage_score: <span class="t-num">0.72</span>}
 }</code></pre>
 <p>The planner stores this plan in Graphonomous as procedural knowledge.</p>
-<h4 id="blk-74478">Step 4: Generator implements sprint 1</h4>
+<h4 id="blk-74604">Step 4: Generator implements sprint 1</h4>
 <p>The <code>SprintController</code> routes sprint-001 to the generator role. The generator:</p>
 <ol><li><p>Retrieves zone-specific route data (PipelineEnforcer allows -- <code>retrieve_context</code> already completed)</p></li><li><p>Calculates current costs across all 12 Seattle zones</p></li><li><p>Identifies the top 3 bottleneck corridors</p></li></ol>
 <p>Generator output: cost analysis with corridors ranked by inefficiency.</p>
-<h4 id="blk-74488">Step 5: PipelineEnforcer blocks sprint completion without store_node</h4>
+<h4 id="blk-74614">Step 5: PipelineEnforcer blocks sprint completion without store_node</h4>
 <p>The generator attempts to advance to sprint-002 without storing outcomes:</p>
 <pre><code>SprintController attempts: advance to sprint-002
   |
@@ -340,7 +340,7 @@ BLOCKED. Quality gate has not run yet.</code></pre>
 <pre><code>PipelineEnforcer prerequisite check:
   {:session, :complete} =&gt; [{:completed, :store_node}]</code></pre>
 <p>This is enforced at session end, not at sprint boundaries.</p>
-<h4 id="blk-74494">Step 6: QualityGate spawns evaluator in separate context</h4>
+<h4 id="blk-74620">Step 6: QualityGate spawns evaluator in separate context</h4>
 <p>The <code>QualityGate</code> engine creates an evaluator agent in an isolated context:</p>
 <pre><code>QualityGate: spawn evaluator for sprint-001
   |
@@ -353,7 +353,7 @@ Evaluator receives (fresh context, no generator reasoning):
   v
 Evaluator grades each criterion independently.</code></pre>
 <p>The evaluator operates in a <strong>separate context window</strong> from the generator. It does not see the generator's planning context, reasoning, or prior iterations. This separation prevents sunk-cost bias and self-evaluation over-praising.</p>
-<h4 id="blk-74498">Step 7: Evaluator fails sprint 1</h4>
+<h4 id="blk-74624">Step 7: Evaluator fails sprint 1</h4>
 <pre data-lang="elixir"><code>%{
   sprint_id: <span class="t-string">&quot;sprint-001&quot;</span>,
   overall: <span class="t-atom">:fail</span>,
@@ -370,7 +370,7 @@ Evaluator grades each criterion independently.</code></pre>
   evaluator_confidence: <span class="t-num">0.82</span>
 }</code></pre>
 <p>The <code>SprintController</code> routes the failure feedback back to the generator.</p>
-<h4 id="blk-74501">Step 8: Generator iterates with evaluator feedback</h4>
+<h4 id="blk-74627">Step 8: Generator iterates with evaluator feedback</h4>
 <p>The generator receives the specific feedback from the evaluator:</p>
 <pre><code>Generator iteration 2:
   - Feedback: &quot;Zone 7 (Ballard-Fremont) has the 2nd highest cost but was not analyzed&quot;
@@ -378,7 +378,7 @@ Evaluator grades each criterion independently.</code></pre>
   - Result: Correctly identifies Zone 7 ($341), Zone 3 ($387), Zone 11 ($312)
             as the top 3 bottleneck corridors</code></pre>
 <p>The revised output is sent back to the <code>QualityGate</code>.</p>
-<h4 id="blk-74505">Step 9: Evaluator passes sprint 1 on iteration 2</h4>
+<h4 id="blk-74631">Step 9: Evaluator passes sprint 1 on iteration 2</h4>
 <pre data-lang="elixir"><code>%{
   sprint_id: <span class="t-string">&quot;sprint-001&quot;</span>,
   overall: <span class="t-atom">:pass</span>,
@@ -399,12 +399,12 @@ Evaluator grades each criterion independently.</code></pre>
   required: [{:completed, :quality_gate, result: :pass}]
   completed: YES (sprint-001 passed on iteration 2)
   -&gt; :allow</code></pre>
-<h4 id="blk-74509">Step 10: Sprint 2 executes and passes</h4>
+<h4 id="blk-74635">Step 10: Sprint 2 executes and passes</h4>
 <p>Sprint-002 follows the same cycle:</p>
 <ol><li><p>Generator retrieves context (PipelineEnforcer allows)</p></li><li><p>Generator produces optimized routes for all 12 zones</p></li><li><p>QualityGate spawns evaluator in fresh context</p></li><li><p>Evaluator grades against acceptance criteria:</p></li></ol>
 <ul><li><p>ac-003: pass -- optimized routes generated for all 12 zones</p></li><li><p>ac-004: pass -- average cost is 11% below baseline (within 15% threshold)</p></li><li><p>ac-005: pass -- maximum delivery window is 42 minutes (under 45-minute limit)</p></li></ul>
 <ol start="5"><li><p>Sprint-002 passes on iteration 1</p></li></ol>
-<h4 id="blk-74530">Step 11: Session completes</h4>
+<h4 id="blk-74656">Step 11: Session completes</h4>
 <p>With both sprints passed, the harness enforces final pipeline stages:</p>
 <pre><code>Session completion sequence:
   |
@@ -437,9 +437,9 @@ AuditWriter: log session completion
       duration_seconds: 47
     }
   }</code></pre>
-<h3 id="blk-74533">8. Part 6: The Dual Enforcement Stack</h3>
+<h3 id="blk-74659">8. Part 6: The Dual Enforcement Stack</h3>
 <p>OS-006 and OS-008 are complementary layers. OS-006 asks &quot;is this agent allowed to do this?&quot; OS-008 asks &quot;has this agent done the prerequisite work?&quot; Both must pass for a tool call to proceed.</p>
-<h4 id="blk-74535">Example: store_node call</h4>
+<h4 id="blk-74661">Example: store_node call</h4>
 <pre><code>Agent requests tool call: store_node
   |
   v
@@ -472,7 +472,7 @@ OS-006 AuditWriter: Log execution
       session_id: &quot;session-20260331-001&quot;
     }
   }</code></pre>
-<h4 id="blk-74537">Example: blocked at OS-008 layer (pipeline)</h4>
+<h4 id="blk-74663">Example: blocked at OS-008 layer (pipeline)</h4>
 <pre><code>Agent requests tool call: store_node (before retrieval)
   |
   v
@@ -484,7 +484,7 @@ OS-008 PipelineEnforcer: Has retrieve_context completed?
   v
 OS-006 PermissionEngine: never reached.
 Tool: never reached.</code></pre>
-<h4 id="blk-74539">Example: blocked at OS-006 layer (permission)</h4>
+<h4 id="blk-74665">Example: blocked at OS-006 layer (permission)</h4>
 <pre><code>Agent requests tool call: store_node to graph &quot;admin-config&quot;
   |
   v
@@ -499,7 +499,7 @@ OS-006 PermissionEngine: Does agent have graph_access.write for &quot;admin-conf
   |
   v
 Tool: never reached.</code></pre>
-<h4 id="blk-74541">Enforcement stack diagram</h4>
+<h4 id="blk-74667">Enforcement stack diagram</h4>
 <pre><code>                ┌───────────────────────────────┐
                 │          Agent Request          │
                 └──────────────┬────────────────┘
@@ -543,10 +543,10 @@ Tool: never reached.</code></pre>
                 │  OS-008: Update pipeline state   │
                 │  OS-006: Audit log entry          │
                 └───────────────────────────────┘</code></pre>
-<h3 id="blk-74543">9. Part 7: Audit Trail Query</h3>
+<h3 id="blk-74669">9. Part 7: Audit Trail Query</h3>
 <p>After the session completes, the operator queries the full audit trail:</p>
 <pre data-lang="elixir"><code>entries = <span class="t-type">OpenSentience</span>.audit(<span class="t-string">&quot;fleet-optimizer&quot;</span>, limit: <span class="t-num">20</span>)</code></pre>
-<h4 id="blk-74546">Returned entries (abbreviated)</h4>
+<h4 id="blk-74672">Returned entries (abbreviated)</h4>
 <pre><code> # | Timestamp            | Event Type            | Operation                        | Result    | Reason
 ---+----------------------+-----------------------+----------------------------------+-----------+------------------------------------------
  1 | 2026-03-31T10:00:00Z | lifecycle_transition  | install                          | allowed   | initial installation
@@ -569,7 +569,7 @@ Tool: never reached.</code></pre>
 18 | 2026-03-31T10:01:42Z | action_executed       | run_consolidation                | allowed   | scope: fleet-knowledge
 19 | 2026-03-31T10:01:43Z | lifecycle_transition  | session_complete                 | allowed   | 2 sprints, 3 iterations, 47s
 20 | 2026-03-31T10:02:00Z | permission_check      | filesystem:write:/etc/config     | denied    | no matching grant</code></pre>
-<h4 id="blk-74548">Filtering by event type</h4>
+<h4 id="blk-74674">Filtering by event type</h4>
 <pre data-lang="elixir"><code><span class="t-comment"># Just lifecycle transitions</span>
 <span class="t-type">OpenSentience</span>.audit(<span class="t-string">&quot;fleet-optimizer&quot;</span>, event_type: <span class="t-atom">:lifecycle_transition</span>, limit: <span class="t-num">10</span>)
 
@@ -578,23 +578,23 @@ Tool: never reached.</code></pre>
 
 <span class="t-comment"># Just quality gate results</span>
 <span class="t-type">OpenSentience</span>.audit(<span class="t-string">&quot;fleet-optimizer&quot;</span>, operation: <span class="t-string">&quot;quality_gate*&quot;</span>, limit: <span class="t-num">10</span>)</code></pre>
-<h4 id="blk-74550">What the audit trail proves</h4>
+<h4 id="blk-74676">What the audit trail proves</h4>
 <p>The audit trail for this session demonstrates:</p>
 <ol><li><p><strong>Complete lifecycle provenance</strong> -- every state transition from install through session completion is recorded with actor, timestamp, and reason.</p></li><li><p><strong>Pipeline enforcement works</strong> -- the blocked <code>store_node</code> at entry 6 proves the PipelineEnforcer prevented a write before retrieval.</p></li><li><p><strong>Quality gates work</strong> -- the failed sprint at entry 10 and subsequent pass at entry 12 proves the evaluator caught a real deficiency and the generator corrected it.</p></li><li><p><strong>Permission enforcement works</strong> -- the denied filesystem write at entry 20 proves default-deny is active.</p></li><li><p><strong>No gaps</strong> -- there are no unlogged operations. Every tool call, every state transition, every quality gate result has a corresponding audit entry.</p></li></ol>
-<h3 id="blk-74563">10. What is normative and what is illustrative</h3>
-<h4 id="blk-74564">Normative at the protocol level</h4>
+<h3 id="blk-74689">10. What is normative and what is illustrative</h3>
+<h4 id="blk-74690">Normative at the protocol level</h4>
 <p>These ideas are central to the OpenSentience runtime model:</p>
 <ul><li><p>agents progress through lifecycle states (installed, enabled, running, disabled)</p></li><li><p>permissions are evaluated as explicit deny &gt; explicit allow &gt; default deny</p></li><li><p>every permission check, lifecycle transition, and autonomy change is audit-logged</p></li><li><p>autonomy levels (observe, advise, act) change agent behavior, not just logging</p></li><li><p>the harness enforces pipeline ordering -- retrieve before act, store before complete</p></li><li><p>quality gates use separate evaluator contexts, not self-evaluation</p></li><li><p>OS-006 and OS-008 are complementary enforcement layers</p></li></ul>
-<h4 id="blk-74581">Illustrative in this page</h4>
+<h4 id="blk-74707">Illustrative in this page</h4>
 <p>These details are examples rather than mandatory:</p>
 <ul><li><p>the specific agent name (&quot;fleet-optimizer&quot;) and its permissions</p></li><li><p>the exact task (&quot;optimize delivery routes for Seattle region&quot;)</p></li><li><p>the specific acceptance criteria and sprint decomposition</p></li><li><p>the exact ETS key formats</p></li><li><p>the exact audit entry field values and timestamps</p></li><li><p>the tabular audit trail format</p></li></ul>
 <p>That distinction matters. The protocol defines the enforcement model and lifecycle. Implementations choose the surface syntax.</p>
-<h3 id="blk-74597">11. Short summary</h3>
+<h3 id="blk-74723">11. Short summary</h3>
 <p>A runtime processing the OpenSentience governance and harness protocols should be understandable as:</p>
 <ol><li><p><strong>Install the agent</strong> -- register permissions in ETS, start lifecycle state machine, log to audit trail</p></li><li><p><strong>Enable and start</strong> -- transition lifecycle states, start the agent process under supervision</p></li><li><p><strong>Enforce permissions on every tool call</strong> -- ETS lookup, default deny, sub-microsecond latency</p></li><li><p><strong>Enforce autonomy levels</strong> -- observe (log only), advise (queue for approval), act (execute)</p></li><li><p><strong>Enforce pipeline ordering</strong> -- retrieve before write, topology before deliberate, store before complete</p></li><li><p><strong>Gate quality</strong> -- evaluator in separate context, iterate on failure, advance on pass</p></li><li><p><strong>Audit everything</strong> -- append-only, queryable, no gaps</p></li></ol>
 <p>That is how the OpenSentience runtime moves from governance specification to enforced agent behavior.</p></div>
 <p class="src"><a href="/#/opensentience.org/docs/runtime-walkthrough.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-74366" class="lvl2">1. What this walkthrough is</a><a href="#blk-74385" class="lvl2">2. The agent</a><a href="#blk-74397" class="lvl2">3. Part 1: Agent Installation (OS-006)</a><a href="#blk-74400" class="lvl3">What happens internally</a><a href="#blk-74404" class="lvl2">4. Part 2: Agent Enable and Start</a><a href="#blk-74407" class="lvl3">State machine transitions</a><a href="#blk-74425" class="lvl2">5. Part 3: Permission Check (Hot Path)</a><a href="#blk-74427" class="lvl3">Allowed permission check</a><a href="#blk-74429" class="lvl3">Denied permission check</a><a href="#blk-74431" class="lvl3">Permission evaluation order</a><a href="#blk-74435" class="lvl2">6. Part 4: Autonomy Enforcement</a><a href="#blk-74437" class="lvl3">Level: :observe (current)</a><a href="#blk-74439" class="lvl3">Level: :advise</a><a href="#blk-74441" class="lvl3">Level: :act</a><a href="#blk-74443" class="lvl3">Summary table</a><a href="#blk-74461" class="lvl2">7. Part 5: Harness Session (OS-008)</a><a href="#blk-74463" class="lvl3">Step 1: Task arrives</a><a href="#blk-74469" class="lvl3">Step 2: PipelineEnforcer -- retrieve MUST happen first</a><a href="#blk-74474" class="lvl3">Step 3: Planner decomposes into sprints</a><a href="#blk-74478" class="lvl3">Step 4: Generator implements sprint 1</a><a href="#blk-74488" class="lvl3">Step 5: PipelineEnforcer blocks sprint completion without store_node</a><a href="#blk-74494" class="lvl3">Step 6: QualityGate spawns evaluator in separate context</a><a href="#blk-74498" class="lvl3">Step 7: Evaluator fails sprint 1</a><a href="#blk-74501" class="lvl3">Step 8: Generator iterates with evaluator feedback</a><a href="#blk-74505" class="lvl3">Step 9: Evaluator passes sprint 1 on iteration 2</a><a href="#blk-74509" class="lvl3">Step 10: Sprint 2 executes and passes</a><a href="#blk-74530" class="lvl3">Step 11: Session completes</a><a href="#blk-74533" class="lvl2">8. Part 6: The Dual Enforcement Stack</a><a href="#blk-74535" class="lvl3">Example: store_node call</a><a href="#blk-74537" class="lvl3">Example: blocked at OS-008 layer (pipeline)</a><a href="#blk-74539" class="lvl3">Example: blocked at OS-006 layer (permission)</a><a href="#blk-74541" class="lvl3">Enforcement stack diagram</a><a href="#blk-74543" class="lvl2">9. Part 7: Audit Trail Query</a><a href="#blk-74546" class="lvl3">Returned entries (abbreviated)</a><a href="#blk-74548" class="lvl3">Filtering by event type</a><a href="#blk-74550" class="lvl3">What the audit trail proves</a><a href="#blk-74563" class="lvl2">10. What is normative and what is illustrative</a><a href="#blk-74564" class="lvl3">Normative at the protocol level</a><a href="#blk-74581" class="lvl3">Illustrative in this page</a><a href="#blk-74597" class="lvl2">11. Short summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/docs/architecture.md/">Architecture</a><a href="/opensentience.org/docs/comparison-table.md/">OpenSentience vs. Alternatives</a><a href="/opensentience.org/docs/competitive-landscape.md/">Competitive Landscape: Agent Governance and Runtime Enforcement</a><a href="/opensentience.org/docs/ecosystem-overview.md/">OpenSentience Protocol Layer — How the 10 Protocols Connect Across the [&amp;] Ecosystem</a><a href="/opensentience.org/docs/faq.md/">Frequently Asked Questions</a><a href="/opensentience.org/docs/harness-engineering.md/">The Harness Is the Bottleneck: OS-008 and the Emerging Discipline of Harness Engineering</a><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/opensentience.org/docs/positioning.md/">The Missing Constraint: Runtime Governance in the Agent Stack</a><a href="/opensentience.org/docs/quickstart.md/">Quickstart</a><a href="/opensentience.org/docs/research.md/">Research Overview</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraqew3wpgbpt6qaur55rydmnyrkh4qd7x6rzzxj22ylqoot5l3y5tq</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-74492" class="lvl2">1. What this walkthrough is</a><a href="#blk-74511" class="lvl2">2. The agent</a><a href="#blk-74523" class="lvl2">3. Part 1: Agent Installation (OS-006)</a><a href="#blk-74526" class="lvl3">What happens internally</a><a href="#blk-74530" class="lvl2">4. Part 2: Agent Enable and Start</a><a href="#blk-74533" class="lvl3">State machine transitions</a><a href="#blk-74551" class="lvl2">5. Part 3: Permission Check (Hot Path)</a><a href="#blk-74553" class="lvl3">Allowed permission check</a><a href="#blk-74555" class="lvl3">Denied permission check</a><a href="#blk-74557" class="lvl3">Permission evaluation order</a><a href="#blk-74561" class="lvl2">6. Part 4: Autonomy Enforcement</a><a href="#blk-74563" class="lvl3">Level: :observe (current)</a><a href="#blk-74565" class="lvl3">Level: :advise</a><a href="#blk-74567" class="lvl3">Level: :act</a><a href="#blk-74569" class="lvl3">Summary table</a><a href="#blk-74587" class="lvl2">7. Part 5: Harness Session (OS-008)</a><a href="#blk-74589" class="lvl3">Step 1: Task arrives</a><a href="#blk-74595" class="lvl3">Step 2: PipelineEnforcer -- retrieve MUST happen first</a><a href="#blk-74600" class="lvl3">Step 3: Planner decomposes into sprints</a><a href="#blk-74604" class="lvl3">Step 4: Generator implements sprint 1</a><a href="#blk-74614" class="lvl3">Step 5: PipelineEnforcer blocks sprint completion without store_node</a><a href="#blk-74620" class="lvl3">Step 6: QualityGate spawns evaluator in separate context</a><a href="#blk-74624" class="lvl3">Step 7: Evaluator fails sprint 1</a><a href="#blk-74627" class="lvl3">Step 8: Generator iterates with evaluator feedback</a><a href="#blk-74631" class="lvl3">Step 9: Evaluator passes sprint 1 on iteration 2</a><a href="#blk-74635" class="lvl3">Step 10: Sprint 2 executes and passes</a><a href="#blk-74656" class="lvl3">Step 11: Session completes</a><a href="#blk-74659" class="lvl2">8. Part 6: The Dual Enforcement Stack</a><a href="#blk-74661" class="lvl3">Example: store_node call</a><a href="#blk-74663" class="lvl3">Example: blocked at OS-008 layer (pipeline)</a><a href="#blk-74665" class="lvl3">Example: blocked at OS-006 layer (permission)</a><a href="#blk-74667" class="lvl3">Enforcement stack diagram</a><a href="#blk-74669" class="lvl2">9. Part 7: Audit Trail Query</a><a href="#blk-74672" class="lvl3">Returned entries (abbreviated)</a><a href="#blk-74674" class="lvl3">Filtering by event type</a><a href="#blk-74676" class="lvl3">What the audit trail proves</a><a href="#blk-74689" class="lvl2">10. What is normative and what is illustrative</a><a href="#blk-74690" class="lvl3">Normative at the protocol level</a><a href="#blk-74707" class="lvl3">Illustrative in this page</a><a href="#blk-74723" class="lvl2">11. Short summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/docs/architecture.md/">Architecture</a><a href="/opensentience.org/docs/comparison-table.md/">OpenSentience vs. Alternatives</a><a href="/opensentience.org/docs/competitive-landscape.md/">Competitive Landscape: Agent Governance and Runtime Enforcement</a><a href="/opensentience.org/docs/ecosystem-overview.md/">OpenSentience Protocol Layer — How the 10 Protocols Connect Across the [&amp;] Ecosystem</a><a href="/opensentience.org/docs/faq.md/">Frequently Asked Questions</a><a href="/opensentience.org/docs/harness-engineering.md/">The Harness Is the Bottleneck: OS-008 and the Emerging Discipline of Harness Engineering</a><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/opensentience.org/docs/positioning.md/">The Missing Constraint: Runtime Governance in the Agent Stack</a><a href="/opensentience.org/docs/quickstart.md/">Quickstart</a><a href="/opensentience.org/docs/research.md/">Research Overview</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraynewayvt64gp3acpkutqgwj46sw4y5jq6wzoki3lqyjnfbomup3q</div></div></div>
 </div></div>
 </body></html>

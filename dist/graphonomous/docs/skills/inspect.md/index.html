@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>Graph Inspection · graphonomous · Ampersand Box</title>
 <meta name="description" content="Read-only inspection of the knowledge graph — no side effects.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/inspect.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graph Inspection","name":"Graph Inspection","description":"Read-only inspection of the knowledge graph — no side effects.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/inspect.md/","identifier":"bagaaieraanmjsppn3hdmmznb6t3m4ucxub4y3nq7eckmdcods2oriyris2pa","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Arguments"},{"@type":"WebPageElement","name":"Operations"},{"@type":"WebPageElement","name":"List nodes"},{"@type":"WebPageElement","name":"Get a specific node"},{"@type":"WebPageElement","name":"Trace edges from a node"},{"@type":"WebPageElement","name":"Similarity search"},{"@type":"WebPageElement","name":"Graph traverse (BFS walk)"},{"@type":"WebPageElement","name":"Graph stats (aggregate health)"},{"@type":"WebPageElement","name":"Manage edges"},{"@type":"WebPageElement","name":"Delete a node"},{"@type":"WebPageElement","name":"Resources (Read-Only Snapshots)"},{"@type":"WebPageElement","name":"retrieve(action: \"context\") vs consolidate(action: \"query\", operation: \"similarity_search\")"},{"@type":"WebPageElement","name":"Common Patterns"},{"@type":"WebPageElement","name":"Duplicate prevention (check before storing)"},{"@type":"WebPageElement","name":"Audit weak knowledge"},{"@type":"WebPageElement","name":"Trace decision chains"},{"@type":"WebPageElement","name":"Anti-patterns to avoid"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/"},{"@type":"ListItem","position":5,"name":"inspect.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/inspect.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graph Inspection","name":"Graph Inspection","description":"Read-only inspection of the knowledge graph — no side effects.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/inspect.md/","identifier":"bagaaierajazm6b3jiykggideonrdmci7hi6nyovngzzmix4ya6to2h3miw5q","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Arguments"},{"@type":"WebPageElement","name":"Operations"},{"@type":"WebPageElement","name":"List nodes"},{"@type":"WebPageElement","name":"Get a specific node"},{"@type":"WebPageElement","name":"Trace edges from a node"},{"@type":"WebPageElement","name":"Similarity search"},{"@type":"WebPageElement","name":"Graph traverse (BFS walk)"},{"@type":"WebPageElement","name":"Graph stats (aggregate health)"},{"@type":"WebPageElement","name":"Manage edges"},{"@type":"WebPageElement","name":"Delete a node"},{"@type":"WebPageElement","name":"Resources (Read-Only Snapshots)"},{"@type":"WebPageElement","name":"retrieve(action: \"context\") vs consolidate(action: \"query\", operation: \"similarity_search\")"},{"@type":"WebPageElement","name":"Common Patterns"},{"@type":"WebPageElement","name":"Duplicate prevention (check before storing)"},{"@type":"WebPageElement","name":"Audit weak knowledge"},{"@type":"WebPageElement","name":"Trace decision chains"},{"@type":"WebPageElement","name":"Anti-patterns to avoid"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/"},{"@type":"ListItem","position":5,"name":"inspect.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/inspect.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,59 +22,59 @@
 
 </div></div>
 <div class="lead">Read-only inspection of the knowledge graph — no side effects.</div>
-<div class="prose"><h1 id="blk-67564">Graph Inspection</h1>
+<div class="prose"><h1 id="blk-67690">Graph Inspection</h1>
 <p>Read-only inspection of the knowledge graph — no side effects.</p>
-<h3 id="blk-67566">Arguments</h3>
+<h3 id="blk-67692">Arguments</h3>
 <p>Operation and target: $ARGUMENTS</p>
-<h3 id="blk-67568">Operations</h3>
-<h4 id="blk-67569">List nodes</h4>
+<h3 id="blk-67694">Operations</h3>
+<h4 id="blk-67695">List nodes</h4>
 <pre><code>consolidate(action: &quot;query&quot;, operation: &quot;list_nodes&quot;, node_type: &quot;semantic&quot;, min_confidence: 0.5, limit: 20)</code></pre>
 <p>Browse what's stored. Filter by <code>node_type</code> (semantic, procedural, episodic, temporal, outcome, goal), <code>min_confidence</code>, <code>max_confidence</code>, <code>limit</code>.</p>
-<h4 id="blk-67572">Get a specific node</h4>
+<h4 id="blk-67698">Get a specific node</h4>
 <pre><code>consolidate(action: &quot;query&quot;, operation: &quot;get_node&quot;, node_id: &quot;&lt;id&gt;&quot;)</code></pre>
 <p>Returns: <code>content</code>, <code>confidence</code>, <code>source</code>, <code>metadata</code>, <code>node_type</code>, <code>timescale</code> (fast/medium/slow/glacial), <code>access_count</code>, <code>created_at</code>, <code>updated_at</code>.</p>
-<h4 id="blk-67575">Trace edges from a node</h4>
+<h4 id="blk-67701">Trace edges from a node</h4>
 <pre><code>consolidate(action: &quot;query&quot;, operation: &quot;get_edges&quot;, node_id: &quot;&lt;id&gt;&quot;)</code></pre>
 <p>Returns both outgoing and incoming edges with types and weights. Useful for tracing causal chains, finding contradictions, and understanding provenance.</p>
-<h4 id="blk-67578">Similarity search</h4>
+<h4 id="blk-67704">Similarity search</h4>
 <pre><code>consolidate(action: &quot;query&quot;, operation: &quot;similarity_search&quot;, query: &quot;&lt;text&gt;&quot;, limit: 5)</code></pre>
 <p>Embedding-based search. Returns nodes with similarity scores.</p>
 <p><strong>Operation aliases:</strong> <code>&quot;get&quot;</code>, <code>&quot;edges&quot;</code>, <code>&quot;list&quot;</code> also work as shorthand.</p>
-<h4 id="blk-67582">Graph traverse (BFS walk)</h4>
+<h4 id="blk-67708">Graph traverse (BFS walk)</h4>
 <pre><code>consolidate(action: &quot;traverse&quot;, start_node_id: &quot;&lt;id&gt;&quot;, max_depth: 3, relationship_types: &quot;causal,supports&quot;)</code></pre>
 <p>BFS walk from a starting node. Returns visited nodes, edges, depth map, and traversal metadata. Optionally filter by relationship types (comma-separated).</p>
-<h4 id="blk-67585">Graph stats (aggregate health)</h4>
+<h4 id="blk-67711">Graph stats (aggregate health)</h4>
 <pre><code>consolidate(action: &quot;stats&quot;)</code></pre>
 <p>Returns node/edge counts, type distributions, confidence statistics (mean/min/max/std_dev), and orphan count (nodes with no edges). No parameters required.</p>
-<h4 id="blk-67588">Manage edges</h4>
+<h4 id="blk-67714">Manage edges</h4>
 <pre><code>act(action: &quot;manage_edge&quot;, operation: &quot;list_all&quot;)
 act(action: &quot;manage_edge&quot;, operation: &quot;list_for_node&quot;, node_id: &quot;&lt;id&gt;&quot;)
 act(action: &quot;manage_edge&quot;, operation: &quot;update&quot;, edge_id: &quot;&lt;id&gt;&quot;, weight: 0.9, co_activation_count: 5)
 act(action: &quot;manage_edge&quot;, operation: &quot;delete&quot;, edge_id: &quot;&lt;id&gt;&quot;)</code></pre>
 <p>Full edge lifecycle management: list, update weight/co_activation_count/decay_rate, or delete.</p>
-<h4 id="blk-67591">Delete a node</h4>
+<h4 id="blk-67717">Delete a node</h4>
 <pre><code>act(action: &quot;delete_node&quot;, node_id: &quot;&lt;id&gt;&quot;)</code></pre>
 <p>Remove a node and its connected edges from the graph.</p>
-<h3 id="blk-67594">Resources (Read-Only Snapshots)</h3>
+<h3 id="blk-67720">Resources (Read-Only Snapshots)</h3>
 <table><thead><tr><th>URI</th><th>What It Returns</th></tr></thead><tbody><tr><td><code>graphonomous://runtime/health</code></td><td>Runtime health, service status, lightweight counts</td></tr><tr><td><code>graphonomous://goals/snapshot</code></td><td>Goal totals, status breakdown, serialized goals</td></tr><tr><td><code>graphonomous://graph/node/{id}</code></td><td>Individual node details + connected edges</td></tr><tr><td><code>graphonomous://graph/recent</code></td><td>Recently added/accessed nodes, sorted by recency</td></tr><tr><td><code>graphonomous://consolidation/log</code></td><td>Consolidator state + orchestrator plasticity metrics</td></tr></tbody></table>
-<h3 id="blk-67608"><code>retrieve(action: &quot;context&quot;)</code> vs <code>consolidate(action: &quot;query&quot;, operation: &quot;similarity_search&quot;)</code></h3>
+<h3 id="blk-67734"><code>retrieve(action: &quot;context&quot;)</code> vs <code>consolidate(action: &quot;query&quot;, operation: &quot;similarity_search&quot;)</code></h3>
 <table><thead><tr><th></th><th><code>retrieve(action: &quot;context&quot;)</code></th><th><code>consolidate(action: &quot;query&quot;, operation: &quot;similarity_search&quot;)</code></th></tr></thead><tbody><tr><td><strong>Neighborhood expansion</strong></td><td>Yes (hops)</td><td>No</td></tr><tr><td><strong>Topology annotations</strong></td><td>Yes (routing, kappa)</td><td>No</td></tr><tr><td><strong>Causal context</strong></td><td>Yes (for outcome learning)</td><td>No</td></tr><tr><td><strong>Side effects</strong></td><td>Updates access counts</td><td>None</td></tr><tr><td><strong>Use when</strong></td><td>Acting on results (need causal tracking)</td><td>Checking duplicates, auditing, browsing</td></tr></tbody></table>
 <p><strong>Rule:</strong> Use <code>retrieve(action: &quot;context&quot;)</code> when you plan to act on results. Use <code>consolidate(action: &quot;query&quot;)</code> for read-only inspection.</p>
-<h3 id="blk-67629">Common Patterns</h3>
-<h4 id="blk-67630">Duplicate prevention (check before storing)</h4>
+<h3 id="blk-67755">Common Patterns</h3>
+<h4 id="blk-67756">Duplicate prevention (check before storing)</h4>
 <pre><code>consolidate(action: &quot;query&quot;, operation: &quot;similarity_search&quot;, query: &quot;the fact I want to store&quot;, limit: 3)</code></pre>
 <ul><li><p>similarity &gt; 0.90 — <strong>duplicate</strong> — update the existing node instead</p></li><li><p>similarity 0.70-0.90 — <strong>related</strong> — store new node + add <code>related</code> edge</p></li><li><p>similarity &lt; 0.70 — <strong>novel</strong> — safe to store as new node</p></li></ul>
-<h4 id="blk-67639">Audit weak knowledge</h4>
+<h4 id="blk-67765">Audit weak knowledge</h4>
 <pre><code>consolidate(action: &quot;query&quot;, operation: &quot;list_nodes&quot;, min_confidence: 0.0, max_confidence: 0.3)</code></pre>
 <p>Find speculative or likely-wrong nodes needing reinforcement or pruning.</p>
-<h4 id="blk-67642">Trace decision chains</h4>
+<h4 id="blk-67768">Trace decision chains</h4>
 <pre><code>consolidate(action: &quot;query&quot;, operation: &quot;get_node&quot;, node_id: &quot;&lt;id&gt;&quot;)
 consolidate(action: &quot;query&quot;, operation: &quot;get_edges&quot;, node_id: &quot;&lt;id&gt;&quot;)</code></pre>
 <p>Follow <code>causal</code> and <code>supports</code> edges to reconstruct reasoning. Check for <code>contradicts</code> edges that indicate unresolved conflicts.</p>
-<h3 id="blk-67645">Anti-patterns to avoid</h3>
+<h3 id="blk-67771">Anti-patterns to avoid</h3>
 <ul><li><p>Using <code>retrieve(action: &quot;context&quot;)</code> for browsing — it has side effects (updates access counts)</p></li><li><p>Forgetting to check for duplicates before storing new nodes</p></li><li><p>Running traversals with very high max_depth on large graphs — start with 2-3</p></li></ul></div>
 <p class="src"><a href="/#/graphonomous/docs/skills/inspect.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-67566" class="lvl2">Arguments</a><a href="#blk-67568" class="lvl2">Operations</a><a href="#blk-67569" class="lvl3">List nodes</a><a href="#blk-67572" class="lvl3">Get a specific node</a><a href="#blk-67575" class="lvl3">Trace edges from a node</a><a href="#blk-67578" class="lvl3">Similarity search</a><a href="#blk-67582" class="lvl3">Graph traverse (BFS walk)</a><a href="#blk-67585" class="lvl3">Graph stats (aggregate health)</a><a href="#blk-67588" class="lvl3">Manage edges</a><a href="#blk-67591" class="lvl3">Delete a node</a><a href="#blk-67594" class="lvl2">Resources (Read-Only Snapshots)</a><a href="#blk-67608" class="lvl2">retrieve(action: &quot;context&quot;) vs consolidate(action: &quot;query&quot;, operation: &quot;similarity_search&quot;)</a><a href="#blk-67629" class="lvl2">Common Patterns</a><a href="#blk-67630" class="lvl3">Duplicate prevention (check before storing)</a><a href="#blk-67639" class="lvl3">Audit weak knowledge</a><a href="#blk-67642" class="lvl3">Trace decision chains</a><a href="#blk-67645" class="lvl2">Anti-patterns to avoid</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a><a href="/graphonomous/docs/skills/attention.md/">Attention Engine</a><a href="/graphonomous/docs/skills/belief.md/">Belief Revision</a><a href="/graphonomous/docs/skills/bootstrap.md/">Graphonomous Bootstrap</a><a href="/graphonomous/docs/skills/consolidate.md/">Consolidation</a><a href="/graphonomous/docs/skills/deliberate.md/">Topology and Deliberation</a><a href="/graphonomous/docs/skills/epistemic-frontier.md/">Epistemic Frontier — Uncertainty-Guided Investigation</a><a href="/graphonomous/docs/skills/forgetting.md/">Intentional Forgetting — Structured Knowledge Removal</a><a href="/graphonomous/docs/skills/goals.md/">Goal Management</a><a href="/graphonomous/docs/skills/graph-health.md/">Graph Health Check</a><a href="/graphonomous/docs/skills/learn.md/">Learning Loop</a><a href="/graphonomous/docs/skills/retrieve.md/">Retrieve and Remember</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraanmjsppn3hdmmznb6t3m4ucxub4y3nq7eckmdcods2oriyris2pa</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-67692" class="lvl2">Arguments</a><a href="#blk-67694" class="lvl2">Operations</a><a href="#blk-67695" class="lvl3">List nodes</a><a href="#blk-67698" class="lvl3">Get a specific node</a><a href="#blk-67701" class="lvl3">Trace edges from a node</a><a href="#blk-67704" class="lvl3">Similarity search</a><a href="#blk-67708" class="lvl3">Graph traverse (BFS walk)</a><a href="#blk-67711" class="lvl3">Graph stats (aggregate health)</a><a href="#blk-67714" class="lvl3">Manage edges</a><a href="#blk-67717" class="lvl3">Delete a node</a><a href="#blk-67720" class="lvl2">Resources (Read-Only Snapshots)</a><a href="#blk-67734" class="lvl2">retrieve(action: &quot;context&quot;) vs consolidate(action: &quot;query&quot;, operation: &quot;similarity_search&quot;)</a><a href="#blk-67755" class="lvl2">Common Patterns</a><a href="#blk-67756" class="lvl3">Duplicate prevention (check before storing)</a><a href="#blk-67765" class="lvl3">Audit weak knowledge</a><a href="#blk-67768" class="lvl3">Trace decision chains</a><a href="#blk-67771" class="lvl2">Anti-patterns to avoid</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a><a href="/graphonomous/docs/skills/attention.md/">Attention Engine</a><a href="/graphonomous/docs/skills/belief.md/">Belief Revision</a><a href="/graphonomous/docs/skills/bootstrap.md/">Graphonomous Bootstrap</a><a href="/graphonomous/docs/skills/consolidate.md/">Consolidation</a><a href="/graphonomous/docs/skills/deliberate.md/">Topology and Deliberation</a><a href="/graphonomous/docs/skills/epistemic-frontier.md/">Epistemic Frontier — Uncertainty-Guided Investigation</a><a href="/graphonomous/docs/skills/forgetting.md/">Intentional Forgetting — Structured Knowledge Removal</a><a href="/graphonomous/docs/skills/goals.md/">Goal Management</a><a href="/graphonomous/docs/skills/graph-health.md/">Graph Health Check</a><a href="/graphonomous/docs/skills/learn.md/">Learning Loop</a><a href="/graphonomous/docs/skills/retrieve.md/">Retrieve and Remember</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajazm6b3jiykggideonrdmci7hi6nyovngzzmix4ya6to2h3miw5q</div></div></div>
 </div></div>
 </body></html>

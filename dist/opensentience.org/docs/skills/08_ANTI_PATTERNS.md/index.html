@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>Skill 08 — Anti-Patterns · opensentience.org · Ampersand Box</title>
 <meta name="description" content="The mistake: Granting * permissions across all types to avoid dealing with permission configuration.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/08_ANTI_PATTERNS.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 08 — Anti-Patterns","name":"Skill 08 — Anti-Patterns","description":"The mistake: Granting * permissions across all types to avoid dealing with permission configuration.","url":"https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/08_ANTI_PATTERNS.md/","identifier":"bagaaierayi3jwjlqoz2pzblh47bmxbu6qgiog6kdskonsin2cq7bkqwgec5a","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"Table of Anti-Patterns"},{"@type":"WebPageElement","name":"Critical Anti-Patterns"},{"@type":"WebPageElement","name":"1 — Permission Sprawl"},{"@type":"WebPageElement","name":"2 — Trust Skipping"},{"@type":"WebPageElement","name":"High-Severity Anti-Patterns"},{"@type":"WebPageElement","name":"3 — Audit Blindness"},{"@type":"WebPageElement","name":"4 — Island Governance"},{"@type":"WebPageElement","name":"5 — Shim Confusion"},{"@type":"WebPageElement","name":"6 — Unchecked Actions"},{"@type":"WebPageElement","name":"Medium-Severity Anti-Patterns"},{"@type":"WebPageElement","name":"7 — Telemetry Neglect"},{"@type":"WebPageElement","name":"8 — Lifecycle Shortcuts"},{"@type":"WebPageElement","name":"Self-Audit Checklist"},{"@type":"WebPageElement","name":"Permissions"},{"@type":"WebPageElement","name":"Autonomy"},{"@type":"WebPageElement","name":"Audit"},{"@type":"WebPageElement","name":"Integration"},{"@type":"WebPageElement","name":"Operations"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/"},{"@type":"ListItem","position":5,"name":"08_ANTI_PATTERNS.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/08_ANTI_PATTERNS.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 08 — Anti-Patterns","name":"Skill 08 — Anti-Patterns","description":"The mistake: Granting * permissions across all types to avoid dealing with permission configuration.","url":"https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/08_ANTI_PATTERNS.md/","identifier":"bagaaiera6w4ghzzx2wlul4t2eayvh3fy4s7ucxkp3g4mjim3i4zjqkl6qq7q","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"Table of Anti-Patterns"},{"@type":"WebPageElement","name":"Critical Anti-Patterns"},{"@type":"WebPageElement","name":"1 — Permission Sprawl"},{"@type":"WebPageElement","name":"2 — Trust Skipping"},{"@type":"WebPageElement","name":"High-Severity Anti-Patterns"},{"@type":"WebPageElement","name":"3 — Audit Blindness"},{"@type":"WebPageElement","name":"4 — Island Governance"},{"@type":"WebPageElement","name":"5 — Shim Confusion"},{"@type":"WebPageElement","name":"6 — Unchecked Actions"},{"@type":"WebPageElement","name":"Medium-Severity Anti-Patterns"},{"@type":"WebPageElement","name":"7 — Telemetry Neglect"},{"@type":"WebPageElement","name":"8 — Lifecycle Shortcuts"},{"@type":"WebPageElement","name":"Self-Audit Checklist"},{"@type":"WebPageElement","name":"Permissions"},{"@type":"WebPageElement","name":"Autonomy"},{"@type":"WebPageElement","name":"Audit"},{"@type":"WebPageElement","name":"Integration"},{"@type":"WebPageElement","name":"Operations"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/"},{"@type":"ListItem","position":5,"name":"08_ANTI_PATTERNS.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/08_ANTI_PATTERNS.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,12 +22,12 @@
 
 </div></div>
 <div class="lead">The mistake: Granting * permissions across all types to avoid dealing with permission configuration.</div>
-<div class="prose"><h1 id="blk-75789">Skill 08 — Anti-Patterns</h1>
+<div class="prose"><h1 id="blk-75915">Skill 08 — Anti-Patterns</h1>
 <blockquote><p>What NOT to do when using the OpenSentience governance shim — and how to fix it.  Every anti-pattern here comes from real failure modes: ungoverned agents, permission sprawl, false trust, missing audit evidence, and governance that exists on paper but not at runtime.</p></blockquote>
-<h3 id="blk-75792">Table of Anti-Patterns</h3>
+<h3 id="blk-75918">Table of Anti-Patterns</h3>
 <table><thead><tr><th>#</th><th>Name</th><th>Severity</th><th>Description</th></tr></thead><tbody><tr><td>1</td><td><a href="#1--permission-sprawl" target="_blank" rel="noopener">Permission Sprawl</a></td><td>Critical</td><td>Granting all permissions defeats governance</td></tr><tr><td>2</td><td><a href="#2--trust-skipping" target="_blank" rel="noopener">Trust Skipping</a></td><td>Critical</td><td>Jumping straight to Act autonomy</td></tr><tr><td>3</td><td><a href="#3--audit-blindness" target="_blank" rel="noopener">Audit Blindness</a></td><td>High</td><td>Ignoring the audit trail</td></tr><tr><td>4</td><td><a href="#4--island-governance" target="_blank" rel="noopener">Island Governance</a></td><td>High</td><td>Not integrating with Delegatic</td></tr><tr><td>5</td><td><a href="#5--shim-confusion" target="_blank" rel="noopener">Shim Confusion</a></td><td>High</td><td>Treating the shim as a runtime</td></tr><tr><td>6</td><td><a href="#6--unchecked-actions" target="_blank" rel="noopener">Unchecked Actions</a></td><td>High</td><td>Skipping permission_check before sensitive operations</td></tr><tr><td>7</td><td><a href="#7--telemetry-neglect" target="_blank" rel="noopener">Telemetry Neglect</a></td><td>Medium</td><td>Not monitoring shim overhead</td></tr><tr><td>8</td><td><a href="#8--lifecycle-shortcuts" target="_blank" rel="noopener">Lifecycle Shortcuts</a></td><td>Medium</td><td>Skipping lifecycle states</td></tr></tbody></table>
-<h3 id="blk-75830">Critical Anti-Patterns</h3>
-<h4 id="blk-75831">1 — Permission Sprawl</h4>
+<h3 id="blk-75956">Critical Anti-Patterns</h3>
+<h4 id="blk-75957">1 — Permission Sprawl</h4>
 <p><strong>The mistake:</strong> Granting <code>*</code> permissions across all types to avoid dealing with permission configuration.</p>
 <p><strong>Why it is harmful:</strong></p>
 <ul><li><p>The governance shim becomes a no-op — every permission check returns <code>allow</code></p></li><li><p>The audit trail fills with meaningless <code>ok</code> entries</p></li><li><p>No defense against agent scope creep or compromised agents</p></li><li><p>Compliance reviews have no evidence of access control</p></li></ul>
@@ -52,7 +52,7 @@
     %{type: <span class="t-atom">:filesystem</span>, access: <span class="t-atom">:write</span>, resource: <span class="t-string">&quot;/data/input/**&quot;</span>}
   ]
 }</code></pre>
-<h4 id="blk-75848">2 — Trust Skipping</h4>
+<h4 id="blk-75974">2 — Trust Skipping</h4>
 <p><strong>The mistake:</strong> Setting a new agent directly to <code>act</code> autonomy without any observation or advise period.</p>
 <p><strong>Why it is harmful:</strong></p>
 <ul><li><p>No evidence that the agent behaves as expected</p></li><li><p>If the agent misbehaves, the first indication is a production incident</p></li><li><p>The audit trail has no <code>action_recommended</code> or approval records to review</p></li><li><p>Trust is assumed, not earned</p></li></ul>
@@ -69,18 +69,18 @@ agent_enable(&quot;new-agent&quot;)
 autonomy_level(&quot;new-agent&quot;, &quot;advise&quot;)
 # ... review and approve queued actions ...
 autonomy_level(&quot;new-agent&quot;, &quot;act&quot;)</code></pre>
-<h3 id="blk-75865">High-Severity Anti-Patterns</h3>
-<h4 id="blk-75866">3 — Audit Blindness</h4>
+<h3 id="blk-75991">High-Severity Anti-Patterns</h3>
+<h4 id="blk-75992">3 — Audit Blindness</h4>
 <p><strong>The mistake:</strong> Never querying the audit trail. The entries accumulate but nobody reads them.</p>
 <p><strong>Why it is harmful:</strong></p>
 <ul><li><p>Permission denials go unnoticed (potential misconfiguration)</p></li><li><p>Blocked actions go unreviewed (the agent may need broader scope)</p></li><li><p>Autonomy changes go unmonitored (who promoted this agent?)</p></li><li><p>Compliance audits have the data but nobody has reviewed it</p></li><li><p>The audit system costs resources for zero value</p></li></ul>
 <p><strong>The fix:</strong> Build audit review into your operational workflow. Query the audit trail at least at session boundaries, after autonomy changes, and during periodic compliance reviews.</p>
-<h4 id="blk-75881">4 — Island Governance</h4>
+<h4 id="blk-76007">4 — Island Governance</h4>
 <p><strong>The mistake:</strong> Running OpenSentience without Delegatic, defining all permissions locally in code.</p>
 <p><strong>Why it is harmful:</strong></p>
 <ul><li><p>No centralized policy management across agents</p></li><li><p>Permission changes require code deploys instead of policy updates</p></li><li><p>Multiple governance instances cannot coordinate</p></li><li><p>Policy drift between environments (dev/staging/prod)</p></li><li><p>No policy versioning or rollback capability</p></li></ul>
 <p><strong>The fix:</strong> Connect to Delegatic for policy authoring. Use local permissions only as a fallback or for development. In production, Delegatic should be the source of truth for policy, with OpenSentience enforcing it.</p>
-<h4 id="blk-75896">5 — Shim Confusion</h4>
+<h4 id="blk-76022">5 — Shim Confusion</h4>
 <p><strong>The mistake:</strong> Treating the governance shim as a replacement for the agent runtime. Expecting OpenSentience to execute tasks, manage state, or provide business logic.</p>
 <p><strong>Why it is harmful:</strong></p>
 <ul><li><p>The shim wraps, it does not replace. It adds governance around an existing</p></li></ul>
@@ -89,38 +89,38 @@ autonomy_level(&quot;new-agent&quot;, &quot;act&quot;)</code></pre>
 <p>confused architecture, and misplaced responsibilities</p>
 <ul><li><p>The shim is intentionally thin — overhead under 1%</p></li></ul>
 <p><strong>The fix:</strong> Remember the separation of concerns. The agent process handles business logic. The governance shim handles permissions, lifecycle, autonomy, and audit. They compose through OTP supervision, not inheritance.</p>
-<h4 id="blk-75911">6 — Unchecked Actions</h4>
+<h4 id="blk-76037">6 — Unchecked Actions</h4>
 <p><strong>The mistake:</strong> Having an agent perform sensitive operations without calling <code>permission_check</code> first, relying on the autonomy controller alone.</p>
 <p><strong>Why it is harmful:</strong></p>
 <ul><li><p>Autonomy only controls whether actions need approval</p></li><li><p>Permissions control whether actions are allowed at all</p></li><li><p>An agent at <code>act</code> autonomy still needs permission to access a resource</p></li><li><p>Skipping permission checks means the audit trail has no record of what</p></li></ul>
 <p>resources were accessed</p>
 <p><strong>The fix:</strong> Always call <code>permission_check</code> before sensitive operations, regardless of autonomy level. The permission check is the enforcement point; autonomy is the approval workflow.</p>
-<h3 id="blk-75925">Medium-Severity Anti-Patterns</h3>
-<h4 id="blk-75926">7 — Telemetry Neglect</h4>
+<h3 id="blk-76051">Medium-Severity Anti-Patterns</h3>
+<h4 id="blk-76052">7 — Telemetry Neglect</h4>
 <p><strong>The mistake:</strong> Not monitoring the governance shim's own resource usage and performance.</p>
 <p><strong>Why it is harmful:</strong></p>
 <ul><li><p>Permission check latency could degrade without anyone noticing</p></li><li><p>ETS table growth could consume unexpected memory</p></li><li><p>AuditWriter batch sizes could grow unboundedly</p></li><li><p>The shim's overhead claim (&lt; 1% CPU, &lt; 5 MB RSS) is a target, not a guarantee</p></li></ul>
 <p><strong>The fix:</strong> Include shim health in your application's telemetry:</p>
 <ul><li><p>ETS table sizes for <code>:os_permissions</code> and <code>:os_autonomy</code></p></li><li><p>AuditWriter queue depth and flush latency</p></li><li><p>Permission check latency percentiles (p50, p99)</p></li><li><p>Agent count under AgentSupervisor</p></li></ul>
-<h4 id="blk-75948">8 — Lifecycle Shortcuts</h4>
+<h4 id="blk-76074">8 — Lifecycle Shortcuts</h4>
 <p><strong>The mistake:</strong> Attempting to jump from <code>installed</code> directly to <code>running</code>, or from <code>running</code> directly to <code>removed</code>, bypassing intermediate states.</p>
 <p><strong>Why it is harmful:</strong></p>
 <ul><li><p>The GenStateMachine will reject the transition, causing an error</p></li><li><p>The audit trail will record a failed transition attempt</p></li><li><p>Workarounds (direct state manipulation) bypass governance entirely</p></li></ul>
 <p><strong>The fix:</strong> Follow the state machine. Every transition must go through valid intermediate states. If you need to remove a running agent: <code>running -&gt; disabled -&gt; removed</code>. There are no shortcuts.</p>
-<h3 id="blk-75959">Self-Audit Checklist</h3>
+<h3 id="blk-76085">Self-Audit Checklist</h3>
 <p>Run through this periodically:</p>
-<h4 id="blk-75961">Permissions</h4>
+<h4 id="blk-76087">Permissions</h4>
 <ul><li><p>[ ] Are grants scoped to the minimum necessary resources?</p></li><li><p>[ ] Are explicit denials in place for sensitive paths?</p></li><li><p>[ ] Are permission denials in the audit trail reviewed?</p></li></ul>
-<h4 id="blk-75969">Autonomy</h4>
+<h4 id="blk-76095">Autonomy</h4>
 <ul><li><p>[ ] Do new agents start at <code>observe</code>?</p></li><li><p>[ ] Are promotions documented with reasons in the audit trail?</p></li><li><p>[ ] Is demotion used when behavior degrades?</p></li></ul>
-<h4 id="blk-75977">Audit</h4>
+<h4 id="blk-76103">Audit</h4>
 <ul><li><p>[ ] Is the audit trail queried regularly?</p></li><li><p>[ ] Are compliance reviews scheduled?</p></li><li><p>[ ] Is the audit backend appropriate for the deployment (ETS for dev, Ecto for prod)?</p></li></ul>
-<h4 id="blk-75985">Integration</h4>
+<h4 id="blk-76111">Integration</h4>
 <ul><li><p>[ ] Is Delegatic connected for policy management?</p></li><li><p>[ ] Are Agentelic manifests reviewed before install?</p></li><li><p>[ ] Are marketplace agents treated as untrusted by default?</p></li></ul>
-<h4 id="blk-75993">Operations</h4>
+<h4 id="blk-76119">Operations</h4>
 <ul><li><p>[ ] Is shim telemetry included in monitoring?</p></li><li><p>[ ] Are ETS table sizes tracked?</p></li><li><p>[ ] Is AuditWriter health monitored?</p></li></ul></div>
 <p class="src"><a href="/#/opensentience.org/docs/skills/08_ANTI_PATTERNS.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-75792" class="lvl2">Table of Anti-Patterns</a><a href="#blk-75830" class="lvl2">Critical Anti-Patterns</a><a href="#blk-75831" class="lvl3">1 — Permission Sprawl</a><a href="#blk-75848" class="lvl3">2 — Trust Skipping</a><a href="#blk-75865" class="lvl2">High-Severity Anti-Patterns</a><a href="#blk-75866" class="lvl3">3 — Audit Blindness</a><a href="#blk-75881" class="lvl3">4 — Island Governance</a><a href="#blk-75896" class="lvl3">5 — Shim Confusion</a><a href="#blk-75911" class="lvl3">6 — Unchecked Actions</a><a href="#blk-75925" class="lvl2">Medium-Severity Anti-Patterns</a><a href="#blk-75926" class="lvl3">7 — Telemetry Neglect</a><a href="#blk-75948" class="lvl3">8 — Lifecycle Shortcuts</a><a href="#blk-75959" class="lvl2">Self-Audit Checklist</a><a href="#blk-75961" class="lvl3">Permissions</a><a href="#blk-75969" class="lvl3">Autonomy</a><a href="#blk-75977" class="lvl3">Audit</a><a href="#blk-75985" class="lvl3">Integration</a><a href="#blk-75993" class="lvl3">Operations</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/opensentience.org/docs/skills/SKILLS.md/">OpenSentience — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/docs/skills/01_PROTOCOLS_OVERVIEW.md/">Skill 01 — The Ten Protocols</a><a href="/opensentience.org/docs/skills/02_AGENT_LIFECYCLE.md/">Skill 02 — Agent Lifecycle</a><a href="/opensentience.org/docs/skills/03_PERMISSIONS.md/">Skill 03 — Permissions</a><a href="/opensentience.org/docs/skills/04_AUTONOMY_LEVELS.md/">Skill 04 — Autonomy Levels</a><a href="/opensentience.org/docs/skills/05_AUDIT_TRAILS.md/">Skill 05 — Audit Trails</a><a href="/opensentience.org/docs/skills/06_INTEGRATION.md/">Skill 06 — Integration</a><a href="/opensentience.org/docs/skills/07_COGNITIVE_SCIENCE.md/">Skill 07 — Cognitive Science Foundations</a><a href="/opensentience.org/docs/skills/SKILLS.md/">OpenSentience — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierayi3jwjlqoz2pzblh47bmxbu6qgiog6kdskonsin2cq7bkqwgec5a</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-75918" class="lvl2">Table of Anti-Patterns</a><a href="#blk-75956" class="lvl2">Critical Anti-Patterns</a><a href="#blk-75957" class="lvl3">1 — Permission Sprawl</a><a href="#blk-75974" class="lvl3">2 — Trust Skipping</a><a href="#blk-75991" class="lvl2">High-Severity Anti-Patterns</a><a href="#blk-75992" class="lvl3">3 — Audit Blindness</a><a href="#blk-76007" class="lvl3">4 — Island Governance</a><a href="#blk-76022" class="lvl3">5 — Shim Confusion</a><a href="#blk-76037" class="lvl3">6 — Unchecked Actions</a><a href="#blk-76051" class="lvl2">Medium-Severity Anti-Patterns</a><a href="#blk-76052" class="lvl3">7 — Telemetry Neglect</a><a href="#blk-76074" class="lvl3">8 — Lifecycle Shortcuts</a><a href="#blk-76085" class="lvl2">Self-Audit Checklist</a><a href="#blk-76087" class="lvl3">Permissions</a><a href="#blk-76095" class="lvl3">Autonomy</a><a href="#blk-76103" class="lvl3">Audit</a><a href="#blk-76111" class="lvl3">Integration</a><a href="#blk-76119" class="lvl3">Operations</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/opensentience.org/docs/skills/SKILLS.md/">OpenSentience — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/docs/skills/01_PROTOCOLS_OVERVIEW.md/">Skill 01 — The Ten Protocols</a><a href="/opensentience.org/docs/skills/02_AGENT_LIFECYCLE.md/">Skill 02 — Agent Lifecycle</a><a href="/opensentience.org/docs/skills/03_PERMISSIONS.md/">Skill 03 — Permissions</a><a href="/opensentience.org/docs/skills/04_AUTONOMY_LEVELS.md/">Skill 04 — Autonomy Levels</a><a href="/opensentience.org/docs/skills/05_AUDIT_TRAILS.md/">Skill 05 — Audit Trails</a><a href="/opensentience.org/docs/skills/06_INTEGRATION.md/">Skill 06 — Integration</a><a href="/opensentience.org/docs/skills/07_COGNITIVE_SCIENCE.md/">Skill 07 — Cognitive Science Foundations</a><a href="/opensentience.org/docs/skills/SKILLS.md/">OpenSentience — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera6w4ghzzx2wlul4t2eayvh3fy4s7ucxkp3g4mjim3i4zjqkl6qq7q</div></div></div>
 </div></div>
 </body></html>

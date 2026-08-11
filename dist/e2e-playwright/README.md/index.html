@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>[&amp;] Playwright Showcase · e2e-playwright · Ampersand Box</title>
 <meta name="description" content="Marketing-quality proof that every [&amp;] Protocol product works through a real browser. Sibling to e2e-dashboard/ (which is the internal diagnostic/QA…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/e2e-playwright/README.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] Playwright Showcase","name":"[&] Playwright Showcase","description":"Marketing-quality proof that every [&] Protocol product works through a real browser. Sibling to e2e-dashboard/ (which is the internal diagnostic/QA…","url":"https://docs.ampersandboxdesign.com/e2e-playwright/README.md/","identifier":"bagaaieramuuzcghd4jifth4iuuhb4vim6damqyd6zw3r5wrkgfeqe4aqc7wq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"e2e-playwright","url":"https://docs.ampersandboxdesign.com/e2e-playwright/"},"articleSection":"e2e-playwright","hasPart":[{"@type":"WebPageElement","name":"Usage"},{"@type":"WebPageElement","name":"What each tier proves"},{"@type":"WebPageElement","name":"Key technical choices"},{"@type":"WebPageElement","name":"Fixtures"},{"@type":"WebPageElement","name":"Environment"},{"@type":"WebPageElement","name":"Debugging a red card"},{"@type":"WebPageElement","name":"Not in v1"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"e2e-playwright","item":"https://docs.ampersandboxdesign.com/e2e-playwright/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/e2e-playwright/README.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] Playwright Showcase","name":"[&] Playwright Showcase","description":"Marketing-quality proof that every [&] Protocol product works through a real browser. Sibling to e2e-dashboard/ (which is the internal diagnostic/QA…","url":"https://docs.ampersandboxdesign.com/e2e-playwright/README.md/","identifier":"bagaaieragr3ulfntsztyvuse3gmovfx73ofc6ddzmgzk4eum2rw4jzqmcqja","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"e2e-playwright","url":"https://docs.ampersandboxdesign.com/e2e-playwright/"},"articleSection":"e2e-playwright","hasPart":[{"@type":"WebPageElement","name":"Usage"},{"@type":"WebPageElement","name":"What each tier proves"},{"@type":"WebPageElement","name":"Key technical choices"},{"@type":"WebPageElement","name":"Fixtures"},{"@type":"WebPageElement","name":"Environment"},{"@type":"WebPageElement","name":"Debugging a red card"},{"@type":"WebPageElement","name":"Not in v1"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"e2e-playwright","item":"https://docs.ampersandboxdesign.com/e2e-playwright/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/e2e-playwright/README.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,9 +22,9 @@
 
 </div></div>
 <div class="lead">Marketing-quality proof that every [&amp;] Protocol product works through a real browser. Sibling to e2e-dashboard/ (which is the internal diagnostic/QA artifact).</div>
-<div class="prose"><h1 id="blk-60204">[&amp;] Playwright Showcase</h1>
+<div class="prose"><h1 id="blk-60330">[&amp;] Playwright Showcase</h1>
 <p>Marketing-quality proof that every [&amp;] Protocol product works through a real browser. Sibling to <code>e2e-dashboard/</code> (which is the internal diagnostic/QA artifact).</p>
-<h3 id="blk-60206">Usage</h3>
+<h3 id="blk-60332">Usage</h3>
 <pre data-lang="bash"><code><span class="t-kw">cd</span> /home/travis/ProjectAmp2/e2e-playwright
 npm install                       <span class="t-comment"># first time only</span>
 npx playwright install chromium   <span class="t-comment"># first time only</span>
@@ -33,22 +33,22 @@ npx playwright install chromium   <span class="t-comment"># first time only</spa
 ./run.sh<span class="t-flag"> --only</span> marketing-desktop <span class="t-comment"># run one project</span></code></pre>
 <p>Output:</p>
 <ul><li><p><code>out/&lt;ISO-timestamp&gt;/showcase.html</code> — the investor-facing artifact. Self-contained (relative image/video refs), dark marketing polish. Hero stats + 4 tier sections with embedded videos.</p></li><li><p><code>out/&lt;ISO-timestamp&gt;/results.json</code> — structured card data for programmatic consumers.</p></li><li><p><code>out/&lt;ISO-timestamp&gt;/media/&lt;tier&gt;/&lt;card&gt;/{video.webm,screenshot.png}</code> — curated media per card.</p></li><li><p><code>out/latest</code> → most recent run.</p></li><li><p><code>playwright-report/</code> — Playwright's native HTML report (with full trace viewer).</p></li></ul>
-<h3 id="blk-60220">What each tier proves</h3>
+<h3 id="blk-60346">What each tier proves</h3>
 <table><thead><tr><th>Tier</th><th>What it proves</th><th>Targets</th></tr></thead><tbody><tr><td><strong>A · marketing</strong></td><td>Static marketing sites render correctly in fresh browser contexts with scroll-triggered lazy-load</td><td>11 portfolio sites × desktop 1440×900 + iPhone 14 = 22 tests</td></tr><tr><td><strong>B · phoenix</strong></td><td>Production Phoenix LiveView apps respond to real user interaction</td><td>fleetprompt / prism-eval / specprompt (6 tests)</td></tr><tr><td><strong>C · mcp</strong></td><td>Every deployed MCP endpoint returns its real tool list over the Streamable HTTP handshake</td><td>10 Fly.io MCP endpoints</td></tr><tr><td><strong>D · spa</strong></td><td>Local SPAs hydrate and render</td><td>BendScript + WebHost.Systems (4 tests)</td></tr><tr><td><strong>E · user-stories</strong></td><td>End-to-end user journeys that transitively exercise dozens of unit tests per story. Includes the <strong>dark-factory loop</strong> that spans all 6 MCP products in a single video.</td><td>4 stories (fleetprompt discover · specprompt validate · graphonomous learn · dark-factory loop)</td></tr></tbody></table>
 <p><strong>Total:</strong> 46 tests, ~37 videos, ~40 screenshots per run.</p>
 <p>Each user-story spec has a header comment listing which <code>test/**</code> unit tests it transitively covers — source of truth for coverage claims.</p>
-<h3 id="blk-60242">Key technical choices</h3>
+<h3 id="blk-60368">Key technical choices</h3>
 <ul><li><p><strong>MCP handshake runs Node-side via `page.request`</strong> — not browser <code>fetch</code>. Verified: the Fly MCP servers set <code>access-control-allow-origin: *</code> but NOT <code>access-control-expose-headers: mcp-session-id</code>, so browser JS can't read the session ID. See <code>lib/mcp-handshake.ts</code>.</p></li><li><p><strong>No `waitForLoadState('networkidle')`</strong> on Phoenix LiveView pages. LiveSocket never idles.</p></li><li><p><strong>`page.evaluate` scroll loop</strong> for marketing lazy-load (not <code>page.mouse.wheel</code>, which is flaky).</p></li><li><p><strong>iPhone 14 preset forced to chromium</strong> — the preset defaults to webkit; we only install chromium.</p></li><li><p><strong>Single fixture server</strong> (port 7788) serves both the MCP inspector page and marketing sites, reducing the number of background processes.</p></li></ul>
-<h3 id="blk-60254">Fixtures</h3>
+<h3 id="blk-60380">Fixtures</h3>
 <ul><li><p><code>fixtures/inspector.html</code> + <code>fixtures/inspector.js</code> — rendering-only MCP inspector page. The test injects the already-resolved handshake data; the fixture doesn't make any network calls. This is the proof-by-screenshot that investors see.</p></li></ul>
-<h3 id="blk-60258">Environment</h3>
+<h3 id="blk-60384">Environment</h3>
 <ul><li><p>Node.js ≥ 18</p></li><li><p><code>@playwright/test</code> ^1.48 (single dev dep)</p></li><li><p>Chromium browser binary (via <code>npx playwright install chromium</code>)</p></li><li><p>For SPA tier: <code>bendscript.com</code> and <code>WebHost.Systems/apps/web</code> must have their deps installed (<code>npm install</code> in each)</p></li></ul>
-<h3 id="blk-60268">Debugging a red card</h3>
+<h3 id="blk-60394">Debugging a red card</h3>
 <ol><li><p>Open <code>out/latest/showcase.html</code> — red border = failure</p></li><li><p>Click the embedded video to see what Playwright saw</p></li><li><p>Open <code>playwright-report/index.html</code> for the full trace viewer + console log + network tab</p></li><li><p>Rerun one test: <code>npx playwright test --grep &quot;marketing: bendscript.com&quot;</code></p></li></ol>
-<h3 id="blk-60278">Not in v1</h3>
+<h3 id="blk-60404">Not in v1</h3>
 <ul><li><p>Auth-gated WebHost.Systems flows (Supabase auth against local supabase start)</p></li><li><p>Deploy to Fly.io / Cloudflare Pages</p></li><li><p>Lighthouse / SEO / a11y scoring</p></li><li><p>Firefox + WebKit cross-browser projects</p></li><li><p>Pixel-diff regression across runs</p></li></ul></div>
 <p class="src"><a href="/#/e2e-playwright/README.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-60206" class="lvl2">Usage</a><a href="#blk-60220" class="lvl2">What each tier proves</a><a href="#blk-60242" class="lvl2">Key technical choices</a><a href="#blk-60254" class="lvl2">Fixtures</a><a href="#blk-60258" class="lvl2">Environment</a><a href="#blk-60268" class="lvl2">Debugging a red card</a><a href="#blk-60278" class="lvl2">Not in v1</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieramuuzcghd4jifth4iuuhb4vim6damqyd6zw3r5wrkgfeqe4aqc7wq</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-60332" class="lvl2">Usage</a><a href="#blk-60346" class="lvl2">What each tier proves</a><a href="#blk-60368" class="lvl2">Key technical choices</a><a href="#blk-60380" class="lvl2">Fixtures</a><a href="#blk-60384" class="lvl2">Environment</a><a href="#blk-60394" class="lvl2">Debugging a red card</a><a href="#blk-60404" class="lvl2">Not in v1</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieragr3ulfntsztyvuse3gmovfx73ofc6ddzmgzk4eum2rw4jzqmcqja</div></div></div>
 </div></div>
 </body></html>

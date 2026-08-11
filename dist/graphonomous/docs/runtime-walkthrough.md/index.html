@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>Runtime Walkthrough · graphonomous · Ampersand Box</title>
 <meta name="description" content="This page walks through the Graphonomous runtime from process startup to closed-loop learning, goal review, and maintenance.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/runtime-walkthrough.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Runtime Walkthrough","name":"Runtime Walkthrough","description":"This page walks through the Graphonomous runtime from process startup to closed-loop learning, goal review, and maintenance.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/runtime-walkthrough.md/","identifier":"bagaaieraoqumgi5onwlinjslxv67n4ouxuopkv7clgni74racdvlaisfy6aq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"1) Boot and Supervision"},{"@type":"WebPageElement","name":"What happens at startup"},{"@type":"WebPageElement","name":"Why this matters"},{"@type":"WebPageElement","name":"2) MCP Session Entry"},{"@type":"WebPageElement","name":"3) Retrieval Path (Context Before Action)"},{"@type":"WebPageElement","name":"Retrieval output you should pay attention to"},{"@type":"WebPageElement","name":"Routing behavior"},{"@type":"WebPageElement","name":"4) Acting and Writing Memory"},{"@type":"WebPageElement","name":"Node types"},{"@type":"WebPageElement","name":"Good storage discipline"},{"@type":"WebPageElement","name":"5) Closed-Loop Learning (Outcome Feedback)"},{"@type":"WebPageElement","name":"Learning inputs"},{"@type":"WebPageElement","name":"Confidence update model"},{"@type":"WebPageElement","name":"Practical effect"},{"@type":"WebPageElement","name":"6) GoalGraph and Coverage Gate"},{"@type":"WebPageElement","name":"Goal lifecycle examples"},{"@type":"WebPageElement","name":"Coverage review"},{"@type":"WebPageElement","name":"7) Attention Loop (Prioritization Across Goals)"},{"@type":"WebPageElement","name":"8) Consolidation Cycle (Memory Maintenance)"},{"@type":"WebPageElement","name":"9) End-to-End Example Walkthrough"},{"@type":"WebPageElement","name":"10) Operational Checklist"},{"@type":"WebPageElement","name":"11) Common Failure Patterns to Avoid"},{"@type":"WebPageElement","name":"12) Suggested Next Reads"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"runtime-walkthrough.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/runtime-walkthrough.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Runtime Walkthrough","name":"Runtime Walkthrough","description":"This page walks through the Graphonomous runtime from process startup to closed-loop learning, goal review, and maintenance.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/runtime-walkthrough.md/","identifier":"bagaaieraukami4w5e6hwxx4zncwgqs2dss4mscqqgccif2dkfvhuuk2aduta","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"1) Boot and Supervision"},{"@type":"WebPageElement","name":"What happens at startup"},{"@type":"WebPageElement","name":"Why this matters"},{"@type":"WebPageElement","name":"2) MCP Session Entry"},{"@type":"WebPageElement","name":"3) Retrieval Path (Context Before Action)"},{"@type":"WebPageElement","name":"Retrieval output you should pay attention to"},{"@type":"WebPageElement","name":"Routing behavior"},{"@type":"WebPageElement","name":"4) Acting and Writing Memory"},{"@type":"WebPageElement","name":"Node types"},{"@type":"WebPageElement","name":"Good storage discipline"},{"@type":"WebPageElement","name":"5) Closed-Loop Learning (Outcome Feedback)"},{"@type":"WebPageElement","name":"Learning inputs"},{"@type":"WebPageElement","name":"Confidence update model"},{"@type":"WebPageElement","name":"Practical effect"},{"@type":"WebPageElement","name":"6) GoalGraph and Coverage Gate"},{"@type":"WebPageElement","name":"Goal lifecycle examples"},{"@type":"WebPageElement","name":"Coverage review"},{"@type":"WebPageElement","name":"7) Attention Loop (Prioritization Across Goals)"},{"@type":"WebPageElement","name":"8) Consolidation Cycle (Memory Maintenance)"},{"@type":"WebPageElement","name":"9) End-to-End Example Walkthrough"},{"@type":"WebPageElement","name":"10) Operational Checklist"},{"@type":"WebPageElement","name":"11) Common Failure Patterns to Avoid"},{"@type":"WebPageElement","name":"12) Suggested Next Reads"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"runtime-walkthrough.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/runtime-walkthrough.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,76 +22,76 @@
 
 </div></div>
 <div class="lead">This page walks through the Graphonomous runtime from process startup to closed-loop learning, goal review, and maintenance.</div>
-<div class="prose"><h1 id="blk-66321">Runtime Walkthrough</h1>
+<div class="prose"><h1 id="blk-66447">Runtime Walkthrough</h1>
 <p>This page walks through the Graphonomous runtime from process startup to closed-loop learning, goal review, and maintenance.</p>
 <p>If you want a practical mental model, think in this sequence:</p>
 <ol><li><p><strong>Boot services</strong></p></li><li><p><strong>Retrieve context</strong></p></li><li><p><strong>Act</strong></p></li><li><p><strong>Store durable knowledge</strong></p></li><li><p><strong>Learn from outcomes</strong></p></li><li><p><strong>Review goal coverage</strong></p></li><li><p><strong>Run consolidation</strong></p></li></ol>
-<h3 id="blk-66339">1) Boot and Supervision</h3>
+<h3 id="blk-66465">1) Boot and Supervision</h3>
 <p>Graphonomous runs as an OTP application with supervised runtime components:</p>
 <ul><li><p>Store</p></li><li><p>Embedder</p></li><li><p>Graph</p></li><li><p>Retriever</p></li><li><p>Learner</p></li><li><p>GoalGraph</p></li><li><p>Attention</p></li><li><p>Consolidator</p></li><li><p>MCP registry/server plumbing</p></li></ul>
-<h4 id="blk-66360">What happens at startup</h4>
+<h4 id="blk-66486">What happens at startup</h4>
 <ul><li><p>Store opens the SQLite database.</p></li><li><p>Schema/migrations are applied.</p></li><li><p>ETS hot cache is rebuilt from durable state.</p></li><li><p>Core services come online and MCP tools/resources are exposed.</p></li></ul>
-<h4 id="blk-66370">Why this matters</h4>
+<h4 id="blk-66496">Why this matters</h4>
 <p>You get:</p>
 <ul><li><p>fast reads (ETS)</p></li><li><p>durable writes (SQLite)</p></li><li><p>process-level fault isolation (OTP supervision)</p></li></ul>
-<h3 id="blk-66379">2) MCP Session Entry</h3>
+<h3 id="blk-66505">2) MCP Session Entry</h3>
 <p>Most integrations begin through MCP over stdio.</p>
 <p>Typical first checks:</p>
 <ul><li><p>Runtime health snapshot</p></li><li><p>Goal snapshot</p></li><li><p>Lightweight context retrieval for the current task</p></li></ul>
 <p>This gives the agent session orientation before making changes.</p>
-<h3 id="blk-66390">3) Retrieval Path (Context Before Action)</h3>
+<h3 id="blk-66516">3) Retrieval Path (Context Before Action)</h3>
 <p>Graphonomous retrieval is not only semantic similarity. It combines:</p>
 <ol><li><p>embedding similarity search</p></li><li><p>graph-neighbor expansion</p></li><li><p>confidence-aware ranking</p></li><li><p>topology analysis (SCC/κ routing metadata)</p></li></ol>
-<h4 id="blk-66401">Retrieval output you should pay attention to</h4>
+<h4 id="blk-66527">Retrieval output you should pay attention to</h4>
 <ul><li><p><code>results</code>: ranked candidate context nodes</p></li><li><p><code>causal_context</code>: node IDs used later for outcome learning</p></li><li><p><code>topology.routing</code>: <code>fast</code> or <code>deliberate</code></p></li><li><p><code>topology.max_kappa</code>: cycle complexity signal</p></li></ul>
-<h4 id="blk-66411">Routing behavior</h4>
+<h4 id="blk-66537">Routing behavior</h4>
 <ul><li><p><strong>fast</strong>: proceed with normal reasoning</p></li><li><p><strong>deliberate</strong>: use deeper deliberation for cyclic/conflicting regions</p></li></ul>
-<h3 id="blk-66417">4) Acting and Writing Memory</h3>
+<h3 id="blk-66543">4) Acting and Writing Memory</h3>
 <p>After retrieval, the agent reasons and executes work. New durable knowledge should be stored in atomic form.</p>
-<h4 id="blk-66419">Node types</h4>
+<h4 id="blk-66545">Node types</h4>
 <ul><li><p><code>semantic</code>: facts/architecture</p></li><li><p><code>procedural</code>: how-to/workflows</p></li><li><p><code>episodic</code>: observed events or session outcomes</p></li><li><p><code>temporal</code>: time-indexed observations, monitoring events</p></li><li><p><code>outcome</code>: empirical results of actions (grounding)</p></li><li><p><code>goal</code>: durable intent, objectives, targets</p></li></ul>
-<h4 id="blk-66433">Good storage discipline</h4>
+<h4 id="blk-66559">Good storage discipline</h4>
 <ul><li><p>one claim/procedure/event per node</p></li><li><p>realistic confidence values</p></li><li><p>source attribution when possible</p></li><li><p>edges only when relationship quality justifies it</p></li></ul>
-<h3 id="blk-66443">5) Closed-Loop Learning (Outcome Feedback)</h3>
+<h3 id="blk-66569">5) Closed-Loop Learning (Outcome Feedback)</h3>
 <p>After a meaningful action, Graphonomous can update confidence on the causal nodes that informed that action.</p>
-<h4 id="blk-66445">Learning inputs</h4>
+<h4 id="blk-66571">Learning inputs</h4>
 <ul><li><p><code>action_id</code></p></li><li><p><code>status</code> (<code>success</code>, <code>partial_success</code>, <code>failure</code>, <code>timeout</code>)</p></li><li><p>outcome <code>confidence</code></p></li><li><p><code>causal_node_ids</code> (from retrieval causal context)</p></li><li><p>optional evidence/trace metadata</p></li></ul>
-<h4 id="blk-66457">Confidence update model</h4>
+<h4 id="blk-66583">Confidence update model</h4>
 <p>Learner applies a bounded, learning-rate blend from prior confidence and status-scaled signal, so graph trust adapts over time.</p>
-<h4 id="blk-66459">Practical effect</h4>
+<h4 id="blk-66585">Practical effect</h4>
 <ul><li><p>useful nodes get reinforced</p></li><li><p>weak/wrong assumptions are down-weighted</p></li><li><p>retrieval quality improves across sessions</p></li></ul>
-<h3 id="blk-66467">6) GoalGraph and Coverage Gate</h3>
+<h3 id="blk-66593">6) GoalGraph and Coverage Gate</h3>
 <p>For multi-step work, goals provide durable intent and lifecycle management.</p>
-<h4 id="blk-66469">Goal lifecycle examples</h4>
+<h4 id="blk-66595">Goal lifecycle examples</h4>
 <ul><li><p><code>proposed</code> -&gt; <code>active</code> -&gt; <code>completed</code></p></li><li><p><code>active</code> -&gt; <code>blocked</code> (if escalation needed)</p></li><li><p>optional pause/abandon transitions as policy requires</p></li></ul>
-<h4 id="blk-66477">Coverage review</h4>
+<h4 id="blk-66603">Coverage review</h4>
 <p>Coverage computes:</p>
 <ul><li><p><code>coverage_score</code></p></li><li><p><code>uncertainty_score</code></p></li><li><p><code>risk_score</code></p></li><li><p>decision: <code>act</code> | <code>learn</code> | <code>escalate</code></p></li></ul>
 <p>This lets the runtime gate actions based on epistemic readiness, not just availability of any context.</p>
-<h3 id="blk-66489">7) Attention Loop (Prioritization Across Goals)</h3>
+<h3 id="blk-66615">7) Attention Loop (Prioritization Across Goals)</h3>
 <p>When many goals are in flight, attention can survey and rank what needs focus.</p>
 <p>Autonomy modes:</p>
 <ul><li><p><code>observe</code> (read-only prioritization)</p></li><li><p><code>advise</code> (recommend actions)</p></li><li><p><code>act</code> (dispatch bounded actions)</p></li></ul>
 <p>Attention combines urgency, coverage state, and topology complexity to prioritize execution.</p>
-<h3 id="blk-66500">8) Consolidation Cycle (Memory Maintenance)</h3>
+<h3 id="blk-66626">8) Consolidation Cycle (Memory Maintenance)</h3>
 <p>Consolidation keeps memory quality healthy over time.</p>
 <p>The 7-stage pipeline includes:</p>
 <ol><li><p>Confidence decay</p></li><li><p>Prune weak nodes</p></li><li><p>Prune weak edges</p></li><li><p>Strengthen co-activated edges</p></li><li><p>Merge similar nodes</p></li><li><p>Promote timescale (fast → medium → slow → glacial)</p></li><li><p>Generate abstractions from episodic clusters</p></li></ol>
 <p>Operationally, run consolidation:</p>
 <ul><li><p>at session boundaries</p></li><li><p>after heavy write bursts</p></li><li><p>periodically during long autonomous loops</p></li></ul>
-<h3 id="blk-66526">9) End-to-End Example Walkthrough</h3>
+<h3 id="blk-66652">9) End-to-End Example Walkthrough</h3>
 <p>A complete interaction often looks like this:</p>
 <ol><li><p>Agent retrieves context for user task.</p></li><li><p>Runtime returns ranked results + causal context + topology signal.</p></li><li><p>Agent performs work and returns output.</p></li><li><p>Agent stores key new semantic/procedural/episodic nodes.</p></li><li><p>Agent reports outcome against causal nodes.</p></li><li><p>Goal progress is updated.</p></li><li><p>Coverage is reviewed before next consequential step.</p></li><li><p>Consolidation runs to maintain graph quality.</p></li></ol>
-<h3 id="blk-66545">10) Operational Checklist</h3>
+<h3 id="blk-66671">10) Operational Checklist</h3>
 <p>Before ending a productive session:</p>
 <ul><li><p>[ ] Store key durable knowledge</p></li><li><p>[ ] Report outcomes for consequential actions</p></li><li><p>[ ] Update linked goals/progress/status</p></li><li><p>[ ] Trigger or verify consolidation</p></li><li><p>[ ] Confirm runtime remains healthy</p></li></ul>
-<h3 id="blk-66558">11) Common Failure Patterns to Avoid</h3>
+<h3 id="blk-66684">11) Common Failure Patterns to Avoid</h3>
 <ul><li><p>skipping retrieval on non-trivial tasks</p></li><li><p>losing causal context before outcome reporting</p></li><li><p>inflating confidence without evidence</p></li><li><p>storing kitchen-sink nodes</p></li><li><p>fabricating coverage or outcome signals</p></li><li><p>ignoring repeated <code>learn</code>/<code>escalate</code> routing</p></li></ul>
-<h3 id="blk-66572">12) Suggested Next Reads</h3>
+<h3 id="blk-66698">12) Suggested Next Reads</h3>
 <ul><li><p><code>quickstart</code></p></li><li><p><code>architecture</code></p></li><li><p><code>mcp-tools</code></p></li><li><p><code>operations</code></p></li><li><p><code>skills/SKILLS</code></p></li></ul>
 <p>If you are integrating an autonomous agent, treat this walkthrough as the runtime backbone and the skills docs as strict operating policy.</p></div>
 <p class="src"><a href="/#/graphonomous/docs/runtime-walkthrough.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-66339" class="lvl2">1) Boot and Supervision</a><a href="#blk-66360" class="lvl3">What happens at startup</a><a href="#blk-66370" class="lvl3">Why this matters</a><a href="#blk-66379" class="lvl2">2) MCP Session Entry</a><a href="#blk-66390" class="lvl2">3) Retrieval Path (Context Before Action)</a><a href="#blk-66401" class="lvl3">Retrieval output you should pay attention to</a><a href="#blk-66411" class="lvl3">Routing behavior</a><a href="#blk-66417" class="lvl2">4) Acting and Writing Memory</a><a href="#blk-66419" class="lvl3">Node types</a><a href="#blk-66433" class="lvl3">Good storage discipline</a><a href="#blk-66443" class="lvl2">5) Closed-Loop Learning (Outcome Feedback)</a><a href="#blk-66445" class="lvl3">Learning inputs</a><a href="#blk-66457" class="lvl3">Confidence update model</a><a href="#blk-66459" class="lvl3">Practical effect</a><a href="#blk-66467" class="lvl2">6) GoalGraph and Coverage Gate</a><a href="#blk-66469" class="lvl3">Goal lifecycle examples</a><a href="#blk-66477" class="lvl3">Coverage review</a><a href="#blk-66489" class="lvl2">7) Attention Loop (Prioritization Across Goals)</a><a href="#blk-66500" class="lvl2">8) Consolidation Cycle (Memory Maintenance)</a><a href="#blk-66526" class="lvl2">9) End-to-End Example Walkthrough</a><a href="#blk-66545" class="lvl2">10) Operational Checklist</a><a href="#blk-66558" class="lvl2">11) Common Failure Patterns to Avoid</a><a href="#blk-66572" class="lvl2">12) Suggested Next Reads</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/ARITHMETIC_COMPLIANCE.md/">Graphonomous × box-and-box — Arithmetic Compliance Review</a><a href="/graphonomous/docs/BOOTSTRAP.md/">Graphonomous Local Bootstrap &amp; Verification Guide</a><a href="/graphonomous/docs/NPM_PACKAGE.md/">graphonomous — NPM Package Specification</a><a href="/graphonomous/docs/NPM_PUBLISH.md/">Graphonomous npm Publishing + Maintenance Runbook (Manual-First)</a><a href="/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/">Graphonomous Technical Documentation</a><a href="/graphonomous/docs/ZED.md/">Graphonomous + Zed MCP Setup Guide</a><a href="/graphonomous/docs/architecture.md/">Graphonomous Architecture</a><a href="/graphonomous/docs/faq.md/">Graphonomous FAQ</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/mcp-tools.md/">Graphonomous MCP Tools Reference</a><a href="/graphonomous/docs/operations.md/">Operations &amp; Maintenance</a><a href="/graphonomous/docs/quickstart.md/">Graphonomous Quickstart</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraoqumgi5onwlinjslxv67n4ouxuopkv7clgni74racdvlaisfy6aq</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-66465" class="lvl2">1) Boot and Supervision</a><a href="#blk-66486" class="lvl3">What happens at startup</a><a href="#blk-66496" class="lvl3">Why this matters</a><a href="#blk-66505" class="lvl2">2) MCP Session Entry</a><a href="#blk-66516" class="lvl2">3) Retrieval Path (Context Before Action)</a><a href="#blk-66527" class="lvl3">Retrieval output you should pay attention to</a><a href="#blk-66537" class="lvl3">Routing behavior</a><a href="#blk-66543" class="lvl2">4) Acting and Writing Memory</a><a href="#blk-66545" class="lvl3">Node types</a><a href="#blk-66559" class="lvl3">Good storage discipline</a><a href="#blk-66569" class="lvl2">5) Closed-Loop Learning (Outcome Feedback)</a><a href="#blk-66571" class="lvl3">Learning inputs</a><a href="#blk-66583" class="lvl3">Confidence update model</a><a href="#blk-66585" class="lvl3">Practical effect</a><a href="#blk-66593" class="lvl2">6) GoalGraph and Coverage Gate</a><a href="#blk-66595" class="lvl3">Goal lifecycle examples</a><a href="#blk-66603" class="lvl3">Coverage review</a><a href="#blk-66615" class="lvl2">7) Attention Loop (Prioritization Across Goals)</a><a href="#blk-66626" class="lvl2">8) Consolidation Cycle (Memory Maintenance)</a><a href="#blk-66652" class="lvl2">9) End-to-End Example Walkthrough</a><a href="#blk-66671" class="lvl2">10) Operational Checklist</a><a href="#blk-66684" class="lvl2">11) Common Failure Patterns to Avoid</a><a href="#blk-66698" class="lvl2">12) Suggested Next Reads</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/ARITHMETIC_COMPLIANCE.md/">Graphonomous × box-and-box — Arithmetic Compliance Review</a><a href="/graphonomous/docs/BOOTSTRAP.md/">Graphonomous Local Bootstrap &amp; Verification Guide</a><a href="/graphonomous/docs/NPM_PACKAGE.md/">graphonomous — NPM Package Specification</a><a href="/graphonomous/docs/NPM_PUBLISH.md/">Graphonomous npm Publishing + Maintenance Runbook (Manual-First)</a><a href="/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/">Graphonomous Technical Documentation</a><a href="/graphonomous/docs/ZED.md/">Graphonomous + Zed MCP Setup Guide</a><a href="/graphonomous/docs/architecture.md/">Graphonomous Architecture</a><a href="/graphonomous/docs/faq.md/">Graphonomous FAQ</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/mcp-tools.md/">Graphonomous MCP Tools Reference</a><a href="/graphonomous/docs/operations.md/">Operations &amp; Maintenance</a><a href="/graphonomous/docs/quickstart.md/">Graphonomous Quickstart</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraukami4w5e6hwxx4zncwgqs2dss4mscqqgccif2dkfvhuuk2aduta</div></div></div>
 </div></div>
 </body></html>

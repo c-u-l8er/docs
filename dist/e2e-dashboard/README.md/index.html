@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>[&amp;] Stack E2E Dashboard · e2e-dashboard · Ampersand Box</title>
 <meta name="description" content="Single-command proof artifact for STACK_COMPLETION.md. Runs every test suite, hits every deployed endpoint, executes the 5 live smoke tests against…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/e2e-dashboard/README.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] Stack E2E Dashboard","name":"[&] Stack E2E Dashboard","description":"Single-command proof artifact for STACK_COMPLETION.md. Runs every test suite, hits every deployed endpoint, executes the 5 live smoke tests against…","url":"https://docs.ampersandboxdesign.com/e2e-dashboard/README.md/","identifier":"bagaaiera3mmvvwfv5lnbgzgzlrp4uajbuuuzudq72veqpqnhox6eqofiteha","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"e2e-dashboard","url":"https://docs.ampersandboxdesign.com/e2e-dashboard/"},"articleSection":"e2e-dashboard","hasPart":[{"@type":"WebPageElement","name":"Usage"},{"@type":"WebPageElement","name":"What it proves"},{"@type":"WebPageElement","name":"Environment variables"},{"@type":"WebPageElement","name":"Dependencies"},{"@type":"WebPageElement","name":"Exit codes"},{"@type":"WebPageElement","name":"Debugging a red card"},{"@type":"WebPageElement","name":"Not in v1"},{"@type":"WebPageElement","name":"Architecture"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"e2e-dashboard","item":"https://docs.ampersandboxdesign.com/e2e-dashboard/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/e2e-dashboard/README.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] Stack E2E Dashboard","name":"[&] Stack E2E Dashboard","description":"Single-command proof artifact for STACK_COMPLETION.md. Runs every test suite, hits every deployed endpoint, executes the 5 live smoke tests against…","url":"https://docs.ampersandboxdesign.com/e2e-dashboard/README.md/","identifier":"bagaaiera5qk5ln2lqa47m2uct4cxwdf4kwudyp4ur56mi6pfspfvbcrdbmua","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"e2e-dashboard","url":"https://docs.ampersandboxdesign.com/e2e-dashboard/"},"articleSection":"e2e-dashboard","hasPart":[{"@type":"WebPageElement","name":"Usage"},{"@type":"WebPageElement","name":"What it proves"},{"@type":"WebPageElement","name":"Environment variables"},{"@type":"WebPageElement","name":"Dependencies"},{"@type":"WebPageElement","name":"Exit codes"},{"@type":"WebPageElement","name":"Debugging a red card"},{"@type":"WebPageElement","name":"Not in v1"},{"@type":"WebPageElement","name":"Architecture"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"e2e-dashboard","item":"https://docs.ampersandboxdesign.com/e2e-dashboard/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/e2e-dashboard/README.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,9 +22,9 @@
 
 </div></div>
 <div class="lead">Single-command proof artifact for STACK_COMPLETION.md. Runs every test suite, hits every deployed endpoint, executes the 5 live smoke tests against production Graphonomous, scre…</div>
-<div class="prose"><h1 id="blk-60128">[&amp;] Stack E2E Dashboard</h1>
+<div class="prose"><h1 id="blk-60254">[&amp;] Stack E2E Dashboard</h1>
 <p>Single-command proof artifact for <code>STACK_COMPLETION.md</code>. Runs every test suite, hits every deployed endpoint, executes the 5 live smoke tests against production Graphonomous, screenshots every marketing site, and emits a self-contained <code>dashboard.html</code>.</p>
-<h3 id="blk-60130">Usage</h3>
+<h3 id="blk-60256">Usage</h3>
 <pre data-lang="bash"><code><span class="t-kw">cd</span> /home/travis/ProjectAmp2/e2e-dashboard
 ./run.sh                 <span class="t-comment"># full run (~15–30 min)</span>
 ./run.sh<span class="t-flag"> --fast</span>          <span class="t-comment"># skeleton check: suites + deploys only, no smokes or screenshots</span>
@@ -34,23 +34,23 @@
 <p>Output lands in <code>out/&lt;ISO-timestamp&gt;/</code>:</p>
 <ul><li><p><code>dashboard.html</code> — self-contained, portable (embeds CSS, references images relatively)</p></li><li><p><code>results.json</code> — structured results for programmatic consumers</p></li><li><p><code>logs/{suites,smokes,deploys}/&lt;name&gt;.{log,json}</code> — full captured output</p></li><li><p><code>screenshots/marketing/*.png</code> — full-page screenshots of every portfolio site</p></li></ul>
 <p><code>out/latest</code> symlinks to the most recent run.</p>
-<h3 id="blk-60143">What it proves</h3>
+<h3 id="blk-60269">What it proves</h3>
 <ul><li><p><strong>Test suites (12)</strong> — <code>graphonomous</code>, <code>PRISM</code>, <code>ampersand_core</code>, <code>specprompt</code>, <code>agentelic</code>, <code>fleetprompt</code>, <code>body-browser</code>, <code>body-os</code>, <code>delegatic</code>, <code>PULSE</code>, <code>WebHost.Systems</code>, <code>bendscript</code>. Each card shows <code>passed/total</code> vs the <code>claimedTests</code> number from STACK_COMPLETION.</p></li><li><p><strong>Live smoke tests (5)</strong> — <code>fleetprompt-crystallization</code>, <code>prism-os011</code>, <code>body-browser-cross-machine</code>, <code>body-browser-agent-browser</code>, <code>body-os-computer-use</code>. First three hit <code>$GRAPHONOMOUS_LIVE_URL</code> (defaults to <code>https://graphonomous-mcp.fly.dev/mcp</code>).</p></li><li><p><strong>Fly.io deployments (10)</strong> — HTTP probes for sites, full MCP Streamable HTTP handshake (initialize → notifications/initialized → tools/list) for MCP endpoints. Cold-start apps get a warm-up GET first.</p></li><li><p><strong>Marketing sites (11)</strong> — full-page screenshots via <code>agent-browser</code> against a local stdlib static server (port 7777).</p></li><li><p><strong>Dark-factory 7-step loop</strong> — aggregated from the above; each step shows its evidence cards.</p></li></ul>
-<h3 id="blk-60155">Environment variables</h3>
+<h3 id="blk-60281">Environment variables</h3>
 <table><thead><tr><th>Variable</th><th>Default</th><th>Purpose</th></tr></thead><tbody><tr><td><code>GRAPHONOMOUS_LIVE_URL</code></td><td><code>https://graphonomous-mcp.fly.dev/mcp</code></td><td>Target for the 3 Graphonomous-dependent live smokes</td></tr></tbody></table>
-<h3 id="blk-60163">Dependencies</h3>
+<h3 id="blk-60289">Dependencies</h3>
 <ul><li><p><strong>Node.js ≥ 18</strong> — uses stdlib <code>fetch</code>, <code>AbortController</code>, <code>node:http</code>, <code>child_process</code>. No <code>npm install</code> required.</p></li><li><p><strong>`agent-browser` in PATH</strong> — required for marketing screenshots (phase skipped gracefully if missing)</p></li><li><p><strong>`fly` CLI</strong> — optional, enriches deployment cards when present</p></li></ul>
-<h3 id="blk-60171">Exit codes</h3>
+<h3 id="blk-60297">Exit codes</h3>
 <ul><li><p><code>0</code> — <code>rollup.overall == &quot;pass&quot;</code></p></li><li><p><code>1</code> — any failure, timeout, or down deployment</p></li><li><p><code>2</code> — runner crash (partial <code>results.json</code> still written)</p></li></ul>
-<h3 id="blk-60179">Debugging a red card</h3>
+<h3 id="blk-60305">Debugging a red card</h3>
 <ol><li><p>Open <code>out/latest/dashboard.html</code> in a browser</p></li><li><p>Expand the failing card's <code>&lt;details&gt;</code> block</p></li><li><p>Copy the <code>rerun</code> command shown, paste into a terminal</p></li><li><p>Fix the underlying issue, re-run <code>./run.sh --only &lt;phase&gt;</code> to confirm</p></li></ol>
 <p>For failed MCP deploy probes, each card includes a <code>curl</code> reproducer under its details.</p>
-<h3 id="blk-60190">Not in v1</h3>
+<h3 id="blk-60316">Not in v1</h3>
 <ul><li><p>Video capture</p></li><li><p>Lighthouse / SEO / a11y scores</p></li><li><p>Historical diff across runs</p></li><li><p>CI wiring (the exit code is CI-friendly but no GHA is committed)</p></li><li><p>Automatic retry of flaky tests</p></li></ul>
-<h3 id="blk-60202">Architecture</h3>
+<h3 id="blk-60328">Architecture</h3>
 <p>Zero-runtime-dependency Node orchestrator. Five phases; 1–4 parallelize independently, 5 aggregates. Full spec lives in <code>/home/travis/.claude/plans/cheeky-wondering-metcalfe.md</code>.</p></div>
 <p class="src"><a href="/#/e2e-dashboard/README.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-60130" class="lvl2">Usage</a><a href="#blk-60143" class="lvl2">What it proves</a><a href="#blk-60155" class="lvl2">Environment variables</a><a href="#blk-60163" class="lvl2">Dependencies</a><a href="#blk-60171" class="lvl2">Exit codes</a><a href="#blk-60179" class="lvl2">Debugging a red card</a><a href="#blk-60190" class="lvl2">Not in v1</a><a href="#blk-60202" class="lvl2">Architecture</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera3mmvvwfv5lnbgzgzlrp4uajbuuuzudq72veqpqnhox6eqofiteha</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-60256" class="lvl2">Usage</a><a href="#blk-60269" class="lvl2">What it proves</a><a href="#blk-60281" class="lvl2">Environment variables</a><a href="#blk-60289" class="lvl2">Dependencies</a><a href="#blk-60297" class="lvl2">Exit codes</a><a href="#blk-60305" class="lvl2">Debugging a red card</a><a href="#blk-60316" class="lvl2">Not in v1</a><a href="#blk-60328" class="lvl2">Architecture</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera5qk5ln2lqa47m2uct4cxwdf4kwudyp4ur56mi6pfspfvbcrdbmua</div></div></div>
 </div></div>
 </body></html>

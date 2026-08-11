@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>body-browser · body-browser · Ampersand Box</title>
 <meta name="description" content="OS-011 &amp;body.browser reference implementation for the [&amp;] Protocol ecosystem.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/body-browser/README.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"body-browser","name":"body-browser","description":"OS-011 &body.browser reference implementation for the [&] Protocol ecosystem.","url":"https://docs.ampersandboxdesign.com/body-browser/README.md/","identifier":"bagaaieraavzxqdhflv732viamjjw3vhy7v3qgbxekigbuchxemgul2hiinla","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"body-browser","url":"https://docs.ampersandboxdesign.com/body-browser/"},"articleSection":"body-browser","hasPart":[{"@type":"WebPageElement","name":"Status"},{"@type":"WebPageElement","name":"MCP surface"},{"@type":"WebPageElement","name":"The contract (OS-011 §11)"},{"@type":"WebPageElement","name":"Five invariants (OS-011 §7, all enforced by BodyBrowser.Session)"},{"@type":"WebPageElement","name":"Quick start"},{"@type":"WebPageElement","name":"Wiring to Graphonomous"},{"@type":"WebPageElement","name":"Running the conformance suite"},{"@type":"WebPageElement","name":"References"},{"@type":"WebPageElement","name":"License"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"body-browser","item":"https://docs.ampersandboxdesign.com/body-browser/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/body-browser/README.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"body-browser","name":"body-browser","description":"OS-011 &body.browser reference implementation for the [&] Protocol ecosystem.","url":"https://docs.ampersandboxdesign.com/body-browser/README.md/","identifier":"bagaaieraxonek6detj7ejwyzmc5cjd4g42fdbw4psh76u4lbk2es6q66c5ba","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"body-browser","url":"https://docs.ampersandboxdesign.com/body-browser/"},"articleSection":"body-browser","hasPart":[{"@type":"WebPageElement","name":"Status"},{"@type":"WebPageElement","name":"MCP surface"},{"@type":"WebPageElement","name":"The contract (OS-011 §11)"},{"@type":"WebPageElement","name":"Five invariants (OS-011 §7, all enforced by BodyBrowser.Session)"},{"@type":"WebPageElement","name":"Quick start"},{"@type":"WebPageElement","name":"Wiring to Graphonomous"},{"@type":"WebPageElement","name":"Running the conformance suite"},{"@type":"WebPageElement","name":"References"},{"@type":"WebPageElement","name":"License"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"body-browser","item":"https://docs.ampersandboxdesign.com/body-browser/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/body-browser/README.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,12 +22,12 @@
 
 </div></div>
 <div class="lead">OS-011 &amp;body.browser reference implementation for the [&amp;] Protocol ecosystem.</div>
-<div class="prose"><h1 id="blk-57413">body-browser</h1>
+<div class="prose"><h1 id="blk-57539">body-browser</h1>
 <p>OS-011 <code>&amp;body.browser</code> reference implementation for the [&amp;] Protocol ecosystem.</p>
 <p>Provides the authoritative substrate for browser embodiment: typed perception, affordance enumeration, StateHash-anchored replay, and InteractionTrace recording — the missing half of Graphonomous's <code>&amp;memory.episodic.store/replay</code> loop.</p>
-<h3 id="blk-57416">Status</h3>
+<h3 id="blk-57542">Status</h3>
 <ul><li><p><strong>Library:</strong> production-ready</p></li><li><p><strong>Simulator backend:</strong> 12/12 OS-011 §9 conformance tests pass</p></li><li><p><strong>MCP server:</strong> shipped — 7 tools on the <code>body-browser</code> namespace (ensure_session + 6 OS-011 operations), 12 MCP unit tests</p></li><li><p><strong>AgentBrowser backend (real Chromium):</strong> skeleton — subprocess wiring documented, pending</p></li></ul>
-<h3 id="blk-57426">MCP surface</h3>
+<h3 id="blk-57552">MCP surface</h3>
 <pre><code>body_browser_ensure_session  — create or re-bind a session by id
 body_browser_perceive        — typed observation (EnvironmentObservation)
 body_browser_affordances     — policy-filtered AffordanceSet
@@ -36,12 +36,12 @@ body_browser_act             — execute one TypedAction
 body_browser_dry_run         — predicted outcome (no mutation)
 body_browser_replay          — fail-fast replay of an InteractionTrace</code></pre>
 <p>Every tool takes a <code>session_id</code> so multiple agents can drive independent browser sessions concurrently from the same server process. Sessions are supervised under <code>BodyBrowser.SessionSupervisor</code> and addressed through the <code>BodyBrowser.SessionRegistry</code>.</p>
-<h3 id="blk-57429">The contract (OS-011 §11)</h3>
+<h3 id="blk-57555">The contract (OS-011 §11)</h3>
 <p>A conforming <code>&amp;body.browser</code> provider exposes six operations:</p>
 <table><thead><tr><th>operation</th><th>input</th><th>output</th><th>deterministic</th></tr></thead><tbody><tr><td><code>perceive</code></td><td><code>PerceptionQuery</code></td><td><code>EnvironmentObservation</code></td><td>✅</td></tr><tr><td><code>affordances</code></td><td><code>ScopeQuery?</code></td><td><code>AffordanceSet</code></td><td>✅</td></tr><tr><td><code>encode_state</code></td><td><code>PerceptionQuery</code></td><td><code>StateHash</code></td><td>✅</td></tr><tr><td><code>act</code></td><td><code>TypedAction</code></td><td><code>ActionOutcome</code></td><td>❌ side-effecting</td></tr><tr><td><code>replay</code></td><td><code>InteractionTrace</code></td><td><code>ReplayResult</code></td><td>❌ side-effecting</td></tr><tr><td><code>dry_run</code></td><td><code>TypedAction</code></td><td><code>PredictedOutcome</code></td><td>✅</td></tr></tbody></table>
-<h3 id="blk-57460">Five invariants (OS-011 §7, all enforced by <code>BodyBrowser.Session</code>)</h3>
+<h3 id="blk-57586">Five invariants (OS-011 §7, all enforced by <code>BodyBrowser.Session</code>)</h3>
 <table><thead><tr><th>#</th><th>invariant</th><th>where enforced</th></tr></thead><tbody><tr><td>I1</td><td>perceive-before-act (stale refs rejected)</td><td><code>Session.check_ref_freshness/2</code></td></tr><tr><td>I2</td><td>affordance-bounded action</td><td><code>Session.check_affordance/4</code></td></tr><tr><td>I3</td><td>policy-filtered affordances</td><td><code>Session.apply_policy/2</code></td></tr><tr><td>I4</td><td>deterministic state encoding</td><td><code>BodyBrowser.StateHash.of/1</code></td></tr><tr><td>I5</td><td>replay fail-fast</td><td><code>BodyBrowser.Replay.execute/3</code></td></tr></tbody></table>
-<h3 id="blk-57480">Quick start</h3>
+<h3 id="blk-57606">Quick start</h3>
 <pre data-lang="elixir"><code><span class="t-kw">alias</span> <span class="t-type">BodyBrowser.Backend.Simulator</span>
 <span class="t-kw">alias</span> <span class="t-type">BodyBrowser.Backend.Simulator</span>.{<span class="t-type">Element</span>, <span class="t-type">Page</span>}
 <span class="t-kw">alias</span> <span class="t-type">BodyBrowser.Session</span>
@@ -72,19 +72,19 @@ pages = %{
 })
 
 trace = <span class="t-type">Session</span>.trace(s)  <span class="t-comment"># ready for Graphonomous act(store_trace)</span></code></pre>
-<h3 id="blk-57482">Wiring to Graphonomous</h3>
+<h3 id="blk-57608">Wiring to Graphonomous</h3>
 <p>The recorded trace is compatible with the Graphonomous <code>act(action: &quot;store_trace&quot;, interaction_trace: ...)</code> MCP tool (see <code>graphonomous/lib/graphonomous/mcp/store_trace.ex</code>). Finalize via <code>TraceRecorder.finalize/2</code> and pass the resulting map's JSON encoding as <code>interaction_trace</code>.</p>
 <p>Replay the other direction: call Graphonomous <code>retrieve(action: &quot;replay&quot;, trace_id: &quot;...&quot;)</code>, decode the returned manifest, and pass it to <code>BodyBrowser.Replay.execute/3</code>.</p>
-<h3 id="blk-57485">Running the conformance suite</h3>
+<h3 id="blk-57611">Running the conformance suite</h3>
 <pre><code>mix deps.get
 mix test</code></pre>
 <p>Twelve tests, 1:1 with OS-011 §9. Run against <code>Simulator</code>; an in-progress <code>AgentBrowser</code> backend is expected to pass the same suite once its CLI adapter lands.</p>
-<h3 id="blk-57488">References</h3>
+<h3 id="blk-57614">References</h3>
 <ul><li><p><code>opensentience.org/docs/spec/OS-011-EMBODIMENT.md</code> — normative spec</p></li><li><p><code>AmpersandBoxDesign/contracts/v0.1.0/body.browser.contract.json</code> — capability contract</p></li><li><p><code>AmpersandBoxDesign/docs/registry/body.browser.md</code> — registry entry</p></li><li><p><code>PULSE/manifests/body-browser.embodiment.json</code> — loop manifest</p></li></ul>
-<h3 id="blk-57498">License</h3>
+<h3 id="blk-57624">License</h3>
 <p>Apache-2.0</p></div>
 <p class="src"><a href="/#/body-browser/README.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-57416" class="lvl2">Status</a><a href="#blk-57426" class="lvl2">MCP surface</a><a href="#blk-57429" class="lvl2">The contract (OS-011 §11)</a><a href="#blk-57460" class="lvl2">Five invariants (OS-011 §7, all enforced by BodyBrowser.Session)</a><a href="#blk-57480" class="lvl2">Quick start</a><a href="#blk-57482" class="lvl2">Wiring to Graphonomous</a><a href="#blk-57485" class="lvl2">Running the conformance suite</a><a href="#blk-57488" class="lvl2">References</a><a href="#blk-57498" class="lvl2">License</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraavzxqdhflv732viamjjw3vhy7v3qgbxekigbuchxemgul2hiinla</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-57542" class="lvl2">Status</a><a href="#blk-57552" class="lvl2">MCP surface</a><a href="#blk-57555" class="lvl2">The contract (OS-011 §11)</a><a href="#blk-57586" class="lvl2">Five invariants (OS-011 §7, all enforced by BodyBrowser.Session)</a><a href="#blk-57606" class="lvl2">Quick start</a><a href="#blk-57608" class="lvl2">Wiring to Graphonomous</a><a href="#blk-57611" class="lvl2">Running the conformance suite</a><a href="#blk-57614" class="lvl2">References</a><a href="#blk-57624" class="lvl2">License</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraxonek6detj7ejwyzmc5cjd4g42fdbw4psh76u4lbk2es6q66c5ba</div></div></div>
 </div></div>
 </body></html>

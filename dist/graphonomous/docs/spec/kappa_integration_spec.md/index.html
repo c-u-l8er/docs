@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>κ Integration Spec: Product-Level Specification · graphonomous · Ampersand Box</title>
 <meta name="description" content="κ (kappa) is a graph-theoretic invariant that measures the minimum irreducible bidirectional information flow in a directed graph. It is the routing…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/spec/kappa_integration_spec.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"κ Integration Spec: Product-Level Specification","name":"κ Integration Spec: Product-Level Specification","description":"κ (kappa) is a graph-theoretic invariant that measures the minimum irreducible bidirectional information flow in a directed graph. It is the routing…","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/spec/kappa_integration_spec.md/","identifier":"bagaaieracis3fc7dbbdnbszfmtg3ylfvjg3v4lfzx2hkbe4it5t7hm5oxs6a","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Version 0.2.0 — Normalized"},{"@type":"WebPageElement","name":"1. Overview"},{"@type":"WebPageElement","name":"2. Computation"},{"@type":"WebPageElement","name":"2.1 Algorithm"},{"@type":"WebPageElement","name":"2.2 Complexity"},{"@type":"WebPageElement","name":"2.3 Incremental Updates"},{"@type":"WebPageElement","name":"2.4 Canonical Schema (NORMATIVE — all implementations must match)"},{"@type":"WebPageElement","name":"3. Routing Logic"},{"@type":"WebPageElement","name":"3.1 The κ Router"},{"@type":"WebPageElement","name":"3.2 Deliberation Budget Function"},{"@type":"WebPageElement","name":"3.3 The Fast Path vs. Deliberation Path"},{"@type":"WebPageElement","name":"4. Product Integration"},{"@type":"WebPageElement","name":"4.1 Graphonomous"},{"@type":"WebPageElement","name":"4.2 Deliberatic"},{"@type":"WebPageElement","name":"4.3 BendScript"},{"@type":"WebPageElement","name":"Directed-Edge Policy (NORMATIVE)"},{"@type":"WebPageElement","name":"Visual Layer"},{"@type":"WebPageElement","name":"Interaction Layer"},{"@type":"WebPageElement","name":"HUD"},{"@type":"WebPageElement","name":"4.4 The [&] Protocol"},{"@type":"WebPageElement","name":"4.5 TickTickClock"},{"@type":"WebPageElement","name":"4.6 OpenSentience"},{"@type":"WebPageElement","name":"5. Implementation Priority"},{"@type":"WebPageElement","name":"Phase 1: Core (ship first)"},{"@type":"WebPageElement","name":"Phase 2: Routing (ship second)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/spec/"},{"@type":"ListItem","position":5,"name":"kappa_integration_spec.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/spec/kappa_integration_spec.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"κ Integration Spec: Product-Level Specification","name":"κ Integration Spec: Product-Level Specification","description":"κ (kappa) is a graph-theoretic invariant that measures the minimum irreducible bidirectional information flow in a directed graph. It is the routing…","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/spec/kappa_integration_spec.md/","identifier":"bagaaieraj2dfjemdevbsogr2zsf5rsh7hw5vrm5uw5hsct2zivipkfblgfla","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Version 0.2.0 — Normalized"},{"@type":"WebPageElement","name":"1. Overview"},{"@type":"WebPageElement","name":"2. Computation"},{"@type":"WebPageElement","name":"2.1 Algorithm"},{"@type":"WebPageElement","name":"2.2 Complexity"},{"@type":"WebPageElement","name":"2.3 Incremental Updates"},{"@type":"WebPageElement","name":"2.4 Canonical Schema (NORMATIVE — all implementations must match)"},{"@type":"WebPageElement","name":"3. Routing Logic"},{"@type":"WebPageElement","name":"3.1 The κ Router"},{"@type":"WebPageElement","name":"3.2 Deliberation Budget Function"},{"@type":"WebPageElement","name":"3.3 The Fast Path vs. Deliberation Path"},{"@type":"WebPageElement","name":"4. Product Integration"},{"@type":"WebPageElement","name":"4.1 Graphonomous"},{"@type":"WebPageElement","name":"4.2 Deliberatic"},{"@type":"WebPageElement","name":"4.3 BendScript"},{"@type":"WebPageElement","name":"Directed-Edge Policy (NORMATIVE)"},{"@type":"WebPageElement","name":"Visual Layer"},{"@type":"WebPageElement","name":"Interaction Layer"},{"@type":"WebPageElement","name":"HUD"},{"@type":"WebPageElement","name":"4.4 The [&] Protocol"},{"@type":"WebPageElement","name":"4.5 TickTickClock"},{"@type":"WebPageElement","name":"4.6 OpenSentience"},{"@type":"WebPageElement","name":"5. Implementation Priority"},{"@type":"WebPageElement","name":"Phase 1: Core (ship first)"},{"@type":"WebPageElement","name":"Phase 2: Routing (ship second)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/spec/"},{"@type":"ListItem","position":5,"name":"kappa_integration_spec.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/spec/kappa_integration_spec.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,15 +22,15 @@
 
 </div></div>
 <div class="lead">κ (kappa) is a graph-theoretic invariant that measures the minimum irreducible bidirectional information flow in a directed graph. It is the routing primitive that determines wh…</div>
-<div class="prose"><h1 id="blk-69264">κ Integration Spec: Product-Level Specification</h1>
-<h3 id="blk-69265">Version 0.2.0 — Normalized</h3>
+<div class="prose"><h1 id="blk-69390">κ Integration Spec: Product-Level Specification</h1>
+<h3 id="blk-69391">Version 0.2.0 — Normalized</h3>
 <blockquote><p>How the cyclicity invariant κ is computed, surfaced, and used across Graphonomous, BendScript, Deliberatic, TickTickClock, and the [&amp;] Protocol.  <strong>v0.2.0 changes (from Codex review):</strong> - Normalized all field names to a single canonical schema (§2.4) - Resolved tool naming: <code>analyze_topology</code> is the standalone tool; <code>retrieve_context</code> gains a <code>topology</code> field — no <code>memory_recall_with_topology</code> tool - Fixed approximation representation: <code>kappa</code> is always an integer; large SCCs add <code>approximate: true</code> (no <code>exact</code> field) - Added instrumentation requirements (§7) - Clarified BendScript directed-edge policy (§4.3)</p></blockquote>
-<h3 id="blk-69268">1. Overview</h3>
+<h3 id="blk-69394">1. Overview</h3>
 <p>κ (kappa) is a graph-theoretic invariant that measures the minimum irreducible bidirectional information flow in a directed graph. It is the routing primitive that determines whether a query region of a knowledge graph requires single-pass retrieval (κ = 0) or iterative deliberation (κ &gt; 0).</p>
 <p>This spec defines:</p>
 <ul><li><p>How κ is computed</p></li><li><p>Where it is computed in the stack</p></li><li><p>How it routes inference</p></li><li><p>How it is surfaced to users</p></li><li><p>How it integrates with each product</p></li></ul>
-<h3 id="blk-69282">2. Computation</h3>
-<h4 id="blk-69283">2.1 Algorithm</h4>
+<h3 id="blk-69408">2. Computation</h3>
+<h4 id="blk-69409">2.1 Algorithm</h4>
 <pre><code>function compute_kappa(graph):
     # Pre-step: define node universe U from the analyzed subgraph/query result.
     # Ignore any edge where src ∉ U or dst ∉ U.
@@ -59,12 +59,12 @@
         })
 
     return results</code></pre>
-<h4 id="blk-69285">2.2 Complexity</h4>
+<h4 id="blk-69411">2.2 Complexity</h4>
 <ul><li><p><strong>SCC decomposition:</strong> O(V + E) via Tarjan's algorithm</p></li><li><p><strong>κ computation per SCC:</strong> O(2^|SCC| × |SCC|²) in the worst case (enumerating all bipartitions)</p></li><li><p><strong>Practical constraint:</strong> For SCCs up to ~20 nodes, bipartition enumeration is feasible in real time. For larger SCCs, use approximation:</p></li><li><p>Return SCC size as a proxy for κ, with <code>approximate: true</code> flag</p></li><li><p>κ field remains an integer (the estimate), never a symbol/atom/string</p></li><li><p><strong>Node-universe rule (NORMATIVE):</strong> Analyze only the node set supplied by retrieval/query scope (or explicit <code>node_ids</code> input). Do not pull in external nodes implicitly during κ analysis.</p></li><li><p><strong>Self-loop rule (NORMATIVE):</strong> Exclude self-loops (<code>source == target</code>) from κ adjacency and cut counts.</p></li></ul>
-<h4 id="blk-69301">2.3 Incremental Updates</h4>
+<h4 id="blk-69427">2.3 Incremental Updates</h4>
 <p>When an edge is added or removed from the knowledge graph:</p>
 <ol><li><p><strong>Edge addition:</strong> Can only merge SCCs or enlarge existing ones. Re-run Tarjan on the affected component. If a new nontrivial SCC is formed, compute κ for it.</p></li><li><p><strong>Edge removal:</strong> Can only split SCCs or shrink them. Re-run Tarjan on the affected component. Recompute κ for any remaining nontrivial SCCs.</p></li><li><p><strong>Optimization:</strong> Maintain an SCC index alongside the knowledge graph. Incremental SCC algorithms (e.g., Bender, Fineman &amp; Gilbert 2015) can update SCCs in O(V) amortized per edge change.</p></li></ol>
-<h4 id="blk-69310">2.4 Canonical Schema (NORMATIVE — all implementations must match)</h4>
+<h4 id="blk-69436">2.4 Canonical Schema (NORMATIVE — all implementations must match)</h4>
 <p>Every κ topology result — whether from Elixir, JavaScript, or MCP JSON — uses these exact field names:</p>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;sccs&quot;</span>: [
@@ -104,8 +104,8 @@
 
 <span class="t-comment">// MCP / wire payloads must remain canonical snake_case</span>
 { fault_line_edges, max_kappa, scc_count, routing }</code></pre>
-<h3 id="blk-69339">3. Routing Logic</h3>
-<h4 id="blk-69340">3.1 The κ Router</h4>
+<h3 id="blk-69465">3. Routing Logic</h3>
+<h4 id="blk-69466">3.1 The κ Router</h4>
 <p>The κ router sits between memory retrieval and reasoning. It inspects the topological structure of the retrieved subgraph and makes a routing decision.</p>
 <pre><code>function kappa_route(retrieved_subgraph):
     scc_analysis = compute_kappa(retrieved_subgraph)
@@ -131,7 +131,7 @@
         deliberation_tasks: deliberation_tasks,
         routing: &quot;fast&quot; if len(deliberation_tasks) == 0 else &quot;deliberate&quot;
     }</code></pre>
-<h4 id="blk-69343">3.2 Deliberation Budget Function</h4>
+<h4 id="blk-69469">3.2 Deliberation Budget Function</h4>
 <p>The deliberation budget maps κ to concrete inference parameters. This is an engineering heuristic (not proved — to be tuned empirically). Caps on <code>max_iterations</code> and <code>confidence_threshold</code> are required to prevent runaway values when <code>approximate: true</code> SCCs use size-based κ estimates:</p>
 <pre><code>function deliberation_budget(kappa):
     return {
@@ -140,7 +140,7 @@
         timeout_multiplier: min(1.0 + 0.5*kappa, 3.5),
         confidence_threshold: min(0.7 + 0.05*kappa, 0.95)
     }</code></pre>
-<h4 id="blk-69346">3.3 The Fast Path vs. Deliberation Path</h4>
+<h4 id="blk-69472">3.3 The Fast Path vs. Deliberation Path</h4>
 <pre><code>             ┌─────────────────┐
              │  Query arrives   │
              └────────┬────────┘
@@ -174,8 +174,8 @@
              ┌──────────────┐
              │  &amp;memory.learn │   Results feed back into graph
              └──────────────┘</code></pre>
-<h3 id="blk-69348">4. Product Integration</h3>
-<h4 id="blk-69349">4.1 Graphonomous</h4>
+<h3 id="blk-69474">4. Product Integration</h3>
+<h4 id="blk-69475">4.1 Graphonomous</h4>
 <p><strong>Where κ lives:</strong> Computed at query time on the retrieved subgraph. Cached per SCC in the knowledge graph index; invalidated on edge changes.</p>
 <p><strong>What changes:</strong></p>
 <ul><li><p><code>Retriever.retrieve/2</code> now returns a <code>topology</code> key alongside existing <code>results</code>, <code>causal_context</code>, <code>stats</code></p></li><li><p>New module <code>Graphonomous.Topology</code> computes and returns the full SCC analysis for a given subgraph</p></li><li><p>New function <code>Store.list_edges_between/1</code> fetches edges within a node set</p></li></ul>
@@ -232,7 +232,7 @@
     <span class="t-key">&quot;scc_count&quot;</span>: <span class="t-num">1</span>
   }
 }</code></pre>
-<h4 id="blk-69364">4.2 Deliberatic</h4>
+<h4 id="blk-69490">4.2 Deliberatic</h4>
 <p><strong>What changes:</strong></p>
 <ul><li><p>Accepts <code>kappa</code> and <code>fault_line_edges</code> as input parameters on its deliberation endpoint.</p></li><li><p>Uses <code>kappa</code> to set argumentation depth (number of rounds).</p></li><li><p>Uses <code>fault_line_edges</code> (minimum-cut edges) to generate the initial propositions that agents must argue about — these are the critical bidirectional dependencies.</p></li></ul>
 <p><strong>MCP tool additions:</strong></p>
@@ -251,21 +251,21 @@
   }
 }</code></pre>
 <p><strong>Key insight:</strong> Deliberatic doesn't need to know about graph theory. It receives a set of propositions (derived from fault lines), a budget (derived from κ), and it argues. The graph intelligence lives in Graphonomous; the argumentation intelligence lives in Deliberatic. κ is the handshake between them.</p>
-<h4 id="blk-69376">4.3 BendScript</h4>
+<h4 id="blk-69502">4.3 BendScript</h4>
 <p><strong>What changes:</strong></p>
-<h5 id="blk-69378">Directed-Edge Policy (NORMATIVE)</h5>
+<h5 id="blk-69504">Directed-Edge Policy (NORMATIVE)</h5>
 <p>BendScript edges have a <code>kind</code> property. For κ computation, edge directionality is determined by kind:</p>
 <table><thead><tr><th>Edge kind</th><th>Directionality for κ</th><th>Rationale</th></tr></thead><tbody><tr><td><code>causal</code></td><td><strong>Directed</strong> (a → b)</td><td>Cause precedes effect</td></tr><tr><td><code>temporal</code></td><td><strong>Directed</strong> (a → b)</td><td>Before precedes after</td></tr><tr><td><code>context</code></td><td><strong>Skip</strong> (excluded from κ graph)</td><td>Symmetric, no feedback</td></tr><tr><td><code>associative</code></td><td><strong>Skip</strong> (excluded from κ graph)</td><td>Symmetric, no feedback</td></tr><tr><td><code>user</code></td><td><strong>Skip</strong> (excluded from κ graph)</td><td>Ambiguous directionality</td></tr></tbody></table>
 <p>This is a <strong>hard rule</strong>, not a toggle. Only <code>causal</code> and <code>temporal</code> edges participate in SCC/κ computation. The filter constant:</p>
 <pre data-lang="javascript"><code><span class="t-kw">const</span> <span class="t-type">DIRECTED_KINDS</span> = [<span class="t-string">'causal'</span>, <span class="t-string">'temporal'</span>];</code></pre>
-<h5 id="blk-69401">Visual Layer</h5>
+<h5 id="blk-69527">Visual Layer</h5>
 <ul><li><p><strong>SCC clusters rendered visually:</strong> Nodes within a nontrivial SCC share a colored halo or background region. Color intensity scales with κ.</p></li><li><p><strong>Minimum-cut edges highlighted:</strong> Fault-line edges rendered in dashed style (<code>ctx.setLineDash([6, 4])</code>) with brighter color.</p></li><li><p><strong>κ badge on SCC clusters:</strong> Each SCC cluster shows its κ value as a small badge, e.g., &quot;κ=2&quot;.</p></li></ul>
-<h5 id="blk-69409">Interaction Layer</h5>
+<h5 id="blk-69535">Interaction Layer</h5>
 <ul><li><p><strong>Topology preview via context menu:</strong> When the user right-clicks a node and selects &quot;Connect to…&quot; (a new context menu item), BendScript shows candidate target nodes with topology impact annotations:</p></li><li><p>&quot;→ NodeX: creates feedback loop (κ: 0→1)&quot;</p></li><li><p>&quot;→ NodeY: strengthens loop (κ: 1→2)&quot;</p></li><li><p>&quot;→ NodeZ: no topological change&quot;</p></li><li><p><strong>&quot;Bend&quot; action:</strong> Right-click context menu on DAG nodes — automatically suggests the nearest edge that would create a feedback loop.</p></li><li><p><strong>&quot;Unbend&quot; action:</strong> Right-click context menu on SCC nodes — identifies the fault-line edge and offers to remove it.</p></li></ul>
 <p><strong>Note:</strong> BendScript does NOT currently have drag-to-connect edge creation. The topology preview is accessed via the context menu &quot;Connect to…&quot; flow. Do not implement drag-to-connect in this phase.</p>
-<h5 id="blk-69424">HUD</h5>
+<h5 id="blk-69550">HUD</h5>
 <ul><li><p><strong>Global κ display:</strong> The existing HUD gains a κ readout showing the maximum κ across all SCCs in the graph, and a count of SCCs.</p></li><li><p><strong>Routing indicator:</strong> &quot;mode: RETRIEVAL&quot; (all κ = 0) or &quot;mode: DELIBERATION&quot; (any κ &gt; 0).</p></li></ul>
-<h4 id="blk-69430">4.4 The [&amp;] Protocol</h4>
+<h4 id="blk-69556">4.4 The [&amp;] Protocol</h4>
 <p><strong>Grammar extension:</strong></p>
 <pre><code># Extended [&amp;] capability grammar — topology-aware routing
 TopologyOp      := &quot;&amp;topology&quot; &quot;.&quot; (&quot;analyze&quot; | &quot;route&quot; | &quot;kappa&quot;)
@@ -298,27 +298,27 @@ InferencePipeline :=
     }
   }
 }</code></pre>
-<h4 id="blk-69435">4.5 TickTickClock</h4>
+<h4 id="blk-69561">4.5 TickTickClock</h4>
 <p><strong>Connection:</strong> For discrete time-series dynamics, the transition graph of the system has κ &gt; 0 if and only if the system has a periodic orbit. TickTickClock can use this as a formal periodicity detector:</p>
 <ul><li><p>Discretize time-series data into state transitions</p></li><li><p>Build the transition graph</p></li><li><p>Compute κ</p></li><li><p>κ &gt; 0 → periodic pattern detected, flag for temporal reasoning</p></li><li><p>κ = 0 → pure drift, no recurrence</p></li></ul>
 <p>This is a secondary integration (TickTickClock already has Mamba SSM for pattern detection), but it provides a complementary structural signal.</p>
-<h4 id="blk-69449">4.6 OpenSentience</h4>
+<h4 id="blk-69575">4.6 OpenSentience</h4>
 <p><strong>Role:</strong> Research home for the theoretical foundations. Hosts:</p>
 <ul><li><p>The κ paper (theoretical background, proofs, categorical framework)</p></li><li><p>The proof code (runnable verification)</p></li><li><p>Interactive demos (live κ computation on user-constructed graphs)</p></li><li><p>The original Scale Topology Axis essay (broader theoretical context connecting κ to physics, cosmology, and consciousness science)</p></li></ul>
-<h3 id="blk-69460">5. Implementation Priority</h3>
-<h4 id="blk-69461">Phase 1: Core (ship first)</h4>
+<h3 id="blk-69586">5. Implementation Priority</h3>
+<h4 id="blk-69587">Phase 1: Core (ship first)</h4>
 <ul><li><p>[ ] Port κ computation to Elixir (Graphonomous server-side)</p></li><li><p>[ ] Port κ computation to JavaScript (BendScript client-side)</p></li><li><p>[ ] Integrate Tarjan's SCC into Graphonomous's graph index</p></li><li><p>[ ] Return topology annotations from <code>retrieve_context</code></p></li><li><p>[ ] Add SCC visualization to BendScript canvas</p></li></ul>
-<h4 id="blk-69473">Phase 2: Routing (ship second)</h4>
+<h4 id="blk-69599">Phase 2: Routing (ship second)</h4>
 <ul><li><p>[ ] Implement κ router in the [&amp;] pipeline</p></li><li><p>[ ] Connect κ router to Deliberatic trigger</p></li><li><p>[ ] Add deliberation budget function</p></li><li><p>[ ] Test on real knowledge graph queries: does κ-aware routing improve answer quality?</p></li></ul>
-<h4 id="blk-69483">Phase 3: Polish (ship third)</h4>
+<h4 id="blk-69609">Phase 3: Polish (ship third)</h4>
 <ul><li><p>[ ] BendScript topology preview via context menu</p></li><li><p>[ ] Bend/Unbend context menu actions</p></li><li><p>[ ] HUD κ display and routing indicator</p></li><li><p>[ ] TickTickClock periodicity detection via κ</p></li><li><p>[ ] OpenSentience publication of κ paper and demos</p></li></ul>
-<h4 id="blk-69495">Phase 4: Optimization</h4>
+<h4 id="blk-69621">Phase 4: Optimization</h4>
 <ul><li><p>[ ] Incremental SCC maintenance (avoid full recomputation on every edge change)</p></li><li><p>[ ] Approximate κ for large SCCs (&gt; 20 nodes)</p></li><li><p>[ ] Benchmark: latency impact of topology computation on query path</p></li><li><p>[ ] A/B test: κ-routed inference vs. uniform retrieval on quality metrics</p></li></ul>
-<h3 id="blk-69505">6. Success Metrics</h3>
+<h3 id="blk-69631">6. Success Metrics</h3>
 <table><thead><tr><th>Metric</th><th>Baseline (no κ)</th><th>Target (with κ)</th><th>How to Measure</th></tr></thead><tbody><tr><td>Answer coherence on circular topics</td><td>Human eval ~60%</td><td>Human eval ~80%</td><td>Blind eval on queries touching SCCs</td></tr><tr><td>Unnecessary deliberation calls</td><td>N/A (no routing)</td><td>&lt; 20% of queries</td><td>Track κ=0 queries that hit deliberation anyway</td></tr><tr><td>Deliberation convergence speed</td><td>Fixed rounds</td><td>κ+1 rounds avg</td><td>Measure rounds to convergence</td></tr><tr><td>User engagement in BendScript</td><td>Nodes/edges per session</td><td>+30%</td><td>Track topology actions (bend/unbend/stargate)</td></tr><tr><td>OpenSentience traffic</td><td>Baseline</td><td>Organic from dev community</td><td>Track referrals from product UIs</td></tr></tbody></table>
-<h3 id="blk-69531">7. Instrumentation Requirements (NEW in v0.2.0)</h3>
+<h3 id="blk-69657">7. Instrumentation Requirements (NEW in v0.2.0)</h3>
 <p>All κ computation must emit telemetry. This is required for Gate C (performance) and Gate D (product effect) validation.</p>
-<h4 id="blk-69533">7.1 Latency Counters (Elixir — <code>:telemetry</code>)</h4>
+<h4 id="blk-69659">7.1 Latency Counters (Elixir — <code>:telemetry</code>)</h4>
 <pre data-lang="elixir"><code><span class="t-comment"># Emit on every topology computation</span>
 <span class="t-comment"># REQUIRED UNIT: duration_ms (float milliseconds)</span>
 <span class="t-comment"># If measured via :timer.tc/1, convert with: duration_ms = duration_us / 1000.0</span>
@@ -329,7 +329,7 @@ InferencePipeline :=
 )</code></pre>
 <p>Track:</p>
 <ul><li><p><code>topology.analyze.duration_ms</code> — p50, p95, p99 (canonical latency metric)</p></li><li><p><code>topology.analyze.node_count</code> — distribution of subgraph sizes</p></li><li><p><code>topology.analyze.edge_count</code> — distribution of subgraph densities</p></li><li><p><code>topology.analyze.scc_count</code> — how often SCCs are found</p></li><li><p><code>topology.analyze.routing.deliberate_ratio</code> — deliberate / total analyzes</p></li><li><p><code>topology.analyze.self_loop_filtered_count</code> — number of self-loops ignored during adjacency construction</p></li></ul>
-<h4 id="blk-69549">7.2 Routing Decision Counters</h4>
+<h4 id="blk-69675">7.2 Routing Decision Counters</h4>
 <pre data-lang="elixir"><code><span class="t-atom">:telemetry</span>.execute(
   [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:topology</span>, <span class="t-atom">:route</span>],
   %{},
@@ -337,7 +337,7 @@ InferencePipeline :=
 )</code></pre>
 <p>Track:</p>
 <ul><li><p><code>topology.route.fast_count</code> — queries routed to fast path</p></li><li><p><code>topology.route.deliberate_count</code> — queries routed to deliberation</p></li><li><p><code>topology.route.deliberate_ratio</code> — deliberate / total (target: &lt; 30% on typical workloads)</p></li></ul>
-<h4 id="blk-69559">7.3 BendScript Performance (JavaScript — <code>performance.now()</code>)</h4>
+<h4 id="blk-69685">7.3 BendScript Performance (JavaScript — <code>performance.now()</code>)</h4>
 <pre data-lang="javascript"><code><span class="t-kw">const</span> t0 = performance.<span class="t-fn">now</span>();
 <span class="t-kw">const</span> topo = <span class="t-fn">analyzeTopology</span>(plane);
 <span class="t-kw">const</span> elapsed = performance.<span class="t-fn">now</span>() - t0;
@@ -346,6 +346,6 @@ console.<span class="t-fn">debug</span>(<span class="t-string">`[κ] topology: $
 <p><em>Spec version: 0.2.0. Status: Draft (normalized). Depends on: kappa_reference.py (computation), kappa_theory_applied.md (theoretical foundations). Products affected: Graphonomous, Deliberatic, BendScript, [&amp;] Protocol, TickTickClock, OpenSentience.</em></p></div>
 <p class="src"><a href="/#/graphonomous/docs/spec/kappa_integration_spec.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-69265" class="lvl2">Version 0.2.0 — Normalized</a><a href="#blk-69268" class="lvl2">1. Overview</a><a href="#blk-69282" class="lvl2">2. Computation</a><a href="#blk-69283" class="lvl3">2.1 Algorithm</a><a href="#blk-69285" class="lvl3">2.2 Complexity</a><a href="#blk-69301" class="lvl3">2.3 Incremental Updates</a><a href="#blk-69310" class="lvl3">2.4 Canonical Schema (NORMATIVE — all implementations must match)</a><a href="#blk-69339" class="lvl2">3. Routing Logic</a><a href="#blk-69340" class="lvl3">3.1 The κ Router</a><a href="#blk-69343" class="lvl3">3.2 Deliberation Budget Function</a><a href="#blk-69346" class="lvl3">3.3 The Fast Path vs. Deliberation Path</a><a href="#blk-69348" class="lvl2">4. Product Integration</a><a href="#blk-69349" class="lvl3">4.1 Graphonomous</a><a href="#blk-69364" class="lvl3">4.2 Deliberatic</a><a href="#blk-69376" class="lvl3">4.3 BendScript</a><a href="#blk-69378" class="lvl4">Directed-Edge Policy (NORMATIVE)</a><a href="#blk-69401" class="lvl4">Visual Layer</a><a href="#blk-69409" class="lvl4">Interaction Layer</a><a href="#blk-69424" class="lvl4">HUD</a><a href="#blk-69430" class="lvl3">4.4 The [&amp;] Protocol</a><a href="#blk-69435" class="lvl3">4.5 TickTickClock</a><a href="#blk-69449" class="lvl3">4.6 OpenSentience</a><a href="#blk-69460" class="lvl2">5. Implementation Priority</a><a href="#blk-69461" class="lvl3">Phase 1: Core (ship first)</a><a href="#blk-69473" class="lvl3">Phase 2: Routing (ship second)</a><a href="#blk-69483" class="lvl3">Phase 3: Polish (ship third)</a><a href="#blk-69495" class="lvl3">Phase 4: Optimization</a><a href="#blk-69505" class="lvl2">6. Success Metrics</a><a href="#blk-69531" class="lvl2">7. Instrumentation Requirements (NEW in v0.2.0)</a><a href="#blk-69533" class="lvl3">7.1 Latency Counters (Elixir — :telemetry)</a><a href="#blk-69549" class="lvl3">7.2 Routing Decision Counters</a><a href="#blk-69559" class="lvl3">7.3 BendScript Performance (JavaScript — performance.now())</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/spec/README.md/">Graphonomous — Continual Learning Engine</a><a href="/graphonomous/docs/spec/kappa_product_crosswalk.md/">κ × [&amp;] Product Crosswalk</a><a href="/graphonomous/docs/spec/kappa_theory_applied.md/">κ-Aware Graph Intelligence: The Theoretical Foundation for [&amp;] Adaptive Inference</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieracis3fc7dbbdnbszfmtg3ylfvjg3v4lfzx2hkbe4it5t7hm5oxs6a</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-69391" class="lvl2">Version 0.2.0 — Normalized</a><a href="#blk-69394" class="lvl2">1. Overview</a><a href="#blk-69408" class="lvl2">2. Computation</a><a href="#blk-69409" class="lvl3">2.1 Algorithm</a><a href="#blk-69411" class="lvl3">2.2 Complexity</a><a href="#blk-69427" class="lvl3">2.3 Incremental Updates</a><a href="#blk-69436" class="lvl3">2.4 Canonical Schema (NORMATIVE — all implementations must match)</a><a href="#blk-69465" class="lvl2">3. Routing Logic</a><a href="#blk-69466" class="lvl3">3.1 The κ Router</a><a href="#blk-69469" class="lvl3">3.2 Deliberation Budget Function</a><a href="#blk-69472" class="lvl3">3.3 The Fast Path vs. Deliberation Path</a><a href="#blk-69474" class="lvl2">4. Product Integration</a><a href="#blk-69475" class="lvl3">4.1 Graphonomous</a><a href="#blk-69490" class="lvl3">4.2 Deliberatic</a><a href="#blk-69502" class="lvl3">4.3 BendScript</a><a href="#blk-69504" class="lvl4">Directed-Edge Policy (NORMATIVE)</a><a href="#blk-69527" class="lvl4">Visual Layer</a><a href="#blk-69535" class="lvl4">Interaction Layer</a><a href="#blk-69550" class="lvl4">HUD</a><a href="#blk-69556" class="lvl3">4.4 The [&amp;] Protocol</a><a href="#blk-69561" class="lvl3">4.5 TickTickClock</a><a href="#blk-69575" class="lvl3">4.6 OpenSentience</a><a href="#blk-69586" class="lvl2">5. Implementation Priority</a><a href="#blk-69587" class="lvl3">Phase 1: Core (ship first)</a><a href="#blk-69599" class="lvl3">Phase 2: Routing (ship second)</a><a href="#blk-69609" class="lvl3">Phase 3: Polish (ship third)</a><a href="#blk-69621" class="lvl3">Phase 4: Optimization</a><a href="#blk-69631" class="lvl2">6. Success Metrics</a><a href="#blk-69657" class="lvl2">7. Instrumentation Requirements (NEW in v0.2.0)</a><a href="#blk-69659" class="lvl3">7.1 Latency Counters (Elixir — :telemetry)</a><a href="#blk-69675" class="lvl3">7.2 Routing Decision Counters</a><a href="#blk-69685" class="lvl3">7.3 BendScript Performance (JavaScript — performance.now())</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/spec/README.md/">Graphonomous — Continual Learning Engine</a><a href="/graphonomous/docs/spec/kappa_product_crosswalk.md/">κ × [&amp;] Product Crosswalk</a><a href="/graphonomous/docs/spec/kappa_theory_applied.md/">κ-Aware Graph Intelligence: The Theoretical Foundation for [&amp;] Adaptive Inference</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraj2dfjemdevbsogr2zsf5rsh7hw5vrm5uw5hsct2zivipkfblgfla</div></div></div>
 </div></div>
 </body></html>

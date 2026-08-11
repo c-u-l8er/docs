@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>FleetPrompt — Implementation Build Prompt · fleetprompt.com · Ampersand Box</title>
 <meta name="description" content="Version: 1.0 | Date: April 2026 | Type: Full Implementation (Phoenix + OTP + Supabase)">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/fleetprompt.com/prompts/BUILD.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"FleetPrompt — Implementation Build Prompt","name":"FleetPrompt — Implementation Build Prompt","description":"Version: 1.0 | Date: April 2026 | Type: Full Implementation (Phoenix + OTP + Supabase)","url":"https://docs.ampersandboxdesign.com/fleetprompt.com/prompts/BUILD.md/","identifier":"bagaaieratqt3sx7mahvpik5h6dszlt35qkmbjckvzyugapm7zslcme7kskha","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"fleetprompt.com","url":"https://docs.ampersandboxdesign.com/fleetprompt.com/"},"articleSection":"fleetprompt.com","hasPart":[{"@type":"WebPageElement","name":"Your Mission"},{"@type":"WebPageElement","name":"Target Stack"},{"@type":"WebPageElement","name":"Repository Structure"},{"@type":"WebPageElement","name":"Implementation Order"},{"@type":"WebPageElement","name":"Phase 1: Core Registry (weeks 1-6)"},{"@type":"WebPageElement","name":"Phase 2: Trust Engine (weeks 4-8)"},{"@type":"WebPageElement","name":"Phase 3: Search (weeks 6-10)"},{"@type":"WebPageElement","name":"Phase 4: Publish Pipeline (weeks 8-12)"},{"@type":"WebPageElement","name":"Phase 5: Install Pipeline (weeks 10-14)"},{"@type":"WebPageElement","name":"Phase 6: Dark Factory Pipeline Intake (weeks 12-16)"},{"@type":"WebPageElement","name":"Phase 7: MCP Server (weeks 14-18)"},{"@type":"WebPageElement","name":"Phase 8: Supabase Migration (weeks 14-18, parallel)"},{"@type":"WebPageElement","name":"Phase 9: LiveView UI (weeks 16-22)"},{"@type":"WebPageElement","name":"Key Constraints"},{"@type":"WebPageElement","name":"Integration Points"},{"@type":"WebPageElement","name":"Success Criteria"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"fleetprompt.com","item":"https://docs.ampersandboxdesign.com/fleetprompt.com/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/fleetprompt.com/prompts/"},{"@type":"ListItem","position":4,"name":"BUILD.md","item":"https://docs.ampersandboxdesign.com/fleetprompt.com/prompts/BUILD.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"FleetPrompt — Implementation Build Prompt","name":"FleetPrompt — Implementation Build Prompt","description":"Version: 1.0 | Date: April 2026 | Type: Full Implementation (Phoenix + OTP + Supabase)","url":"https://docs.ampersandboxdesign.com/fleetprompt.com/prompts/BUILD.md/","identifier":"bagaaierahstv7hrceg4ebrmdtbji4q5ejcpoh5jbyv56ivbol3iwtkbijpga","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"fleetprompt.com","url":"https://docs.ampersandboxdesign.com/fleetprompt.com/"},"articleSection":"fleetprompt.com","hasPart":[{"@type":"WebPageElement","name":"Your Mission"},{"@type":"WebPageElement","name":"Target Stack"},{"@type":"WebPageElement","name":"Repository Structure"},{"@type":"WebPageElement","name":"Implementation Order"},{"@type":"WebPageElement","name":"Phase 1: Core Registry (weeks 1-6)"},{"@type":"WebPageElement","name":"Phase 2: Trust Engine (weeks 4-8)"},{"@type":"WebPageElement","name":"Phase 3: Search (weeks 6-10)"},{"@type":"WebPageElement","name":"Phase 4: Publish Pipeline (weeks 8-12)"},{"@type":"WebPageElement","name":"Phase 5: Install Pipeline (weeks 10-14)"},{"@type":"WebPageElement","name":"Phase 6: Dark Factory Pipeline Intake (weeks 12-16)"},{"@type":"WebPageElement","name":"Phase 7: MCP Server (weeks 14-18)"},{"@type":"WebPageElement","name":"Phase 8: Supabase Migration (weeks 14-18, parallel)"},{"@type":"WebPageElement","name":"Phase 9: LiveView UI (weeks 16-22)"},{"@type":"WebPageElement","name":"Key Constraints"},{"@type":"WebPageElement","name":"Integration Points"},{"@type":"WebPageElement","name":"Success Criteria"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"fleetprompt.com","item":"https://docs.ampersandboxdesign.com/fleetprompt.com/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/fleetprompt.com/prompts/"},{"@type":"ListItem","position":4,"name":"BUILD.md","item":"https://docs.ampersandboxdesign.com/fleetprompt.com/prompts/BUILD.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,15 +22,15 @@
 
 </div></div>
 <div class="lead">Version: 1.0 | Date: April 2026 | Type: Full Implementation (Phoenix + OTP + Supabase)</div>
-<div class="prose"><h1 id="blk-61359">FleetPrompt — Implementation Build Prompt</h1>
+<div class="prose"><h1 id="blk-61485">FleetPrompt — Implementation Build Prompt</h1>
 <p><strong>Version:</strong> 1.0 | <strong>Date:</strong> April 2026 | <strong>Type:</strong> Full Implementation (Phoenix + OTP + Supabase)</p>
-<h3 id="blk-61361">Your Mission</h3>
+<h3 id="blk-61487">Your Mission</h3>
 <p>You are building <strong>FleetPrompt</strong> — the open agent marketplace for the [&amp;] Protocol ecosystem. FleetPrompt is the registry where production-ready AI agents are published, discovered, and deployed in one click. Every listed agent carries a versioned manifest, a computed trust score, declared permissions, and a linked SpecPrompt spec.</p>
 <p><strong>Read `docs/spec/README.md` fully before writing a single line.</strong> It is the authoritative spec.</p>
 <p>FleetPrompt is the <strong>distribution layer</strong> of the dark factory pipeline:</p>
 <pre><code>SpecPrompt (spec in) → Agentelic (build) → OS-008 (enforce) → FleetPrompt (distribute) → RuneFort (observe)</code></pre>
 <p>FleetPrompt is also the <strong>canonical trust broker</strong> of the [&amp;] ecosystem — it aggregates PRISM CL scores, test coverage, usage data, and audit quality into a single trust score.</p>
-<h3 id="blk-61367">Target Stack</h3>
+<h3 id="blk-61493">Target Stack</h3>
 <pre><code>Language:     Elixir 1.17+ / OTP 27
 Framework:    Phoenix 1.8+ (LiveView for real-time search, PubSub for trust broadcasts)
 Database:     PostgreSQL via shared Supabase (fleet.* schema, migration range 030-039)
@@ -41,7 +41,7 @@ Background:   Oban (trust recompute, webhook delivery, search index refresh)
 Auth:         Supabase Auth (shared [&amp;] ecosystem — amp.profiles, amp.workspaces)
 Telemetry:    :telemetry + Prometheus
 Deploy:       Mix release + Docker on Fly.io</code></pre>
-<h3 id="blk-61369">Repository Structure</h3>
+<h3 id="blk-61495">Repository Structure</h3>
 <p>Create this structure inside <code>fleetprompt.com/</code>:</p>
 <pre><code>fleetprompt.com/
 ├── lib/
@@ -96,55 +96,55 @@ Deploy:       Mix release + Docker on Fly.io</code></pre>
 ├── mix.exs
 ├── Dockerfile
 └── fly.toml</code></pre>
-<h3 id="blk-61372">Implementation Order</h3>
-<h4 id="blk-61373">Phase 1: Core Registry (weeks 1-6)</h4>
+<h3 id="blk-61498">Implementation Order</h3>
+<h4 id="blk-61499">Phase 1: Core Registry (weeks 1-6)</h4>
 <ol><li><p><strong>Set up Phoenix project</strong> with Ecto, Supabase config, LiveView</p></li><li><p><strong>Implement Ecto schemas</strong> (sections 3-4)</p></li></ol>
 <ul><li><p><code>FleetPrompt.Publishers.Publisher</code> with workspace_id, user_id (Supabase Auth)</p></li><li><p><code>FleetPrompt.Agents.Agent</code> with workspace_id, search_vector</p></li><li><p><code>FleetPrompt.Manifests.Manifest</code> with all fields from section 4.1</p></li><li><p><code>FleetPrompt.Installs.Install</code> with workspace_id</p></li><li><p>Audit events schema with workspace_id</p></li></ul>
 <ol start="3"><li><p><strong>Implement Registry</strong> (<code>registry.ex</code>)</p></li></ol>
 <ul><li><p>Manifest CRUD with version immutability</p></li><li><p>Version management (semver enforcement)</p></li><li><p>Status transitions: draft → published → deprecated → yanked</p></li></ul>
 <ol start="4"><li><p><strong>Implement ETS caches</strong></p></li></ol>
 <ul><li><p><code>:fp_manifests</code> — agent_id:version → manifest map</p></li><li><p><code>:fp_trust_scores</code> — agent_id → {score, computed_at}</p></li><li><p><code>:fp_search_index</code> — trigram → [agent_id]</p></li><li><p><code>:fp_categories</code> — category_slug → [agent_id]</p></li></ul>
-<h4 id="blk-61412">Phase 2: Trust Engine (weeks 4-8)</h4>
+<h4 id="blk-61538">Phase 2: Trust Engine (weeks 4-8)</h4>
 <ol><li><p><strong>Implement TrustEngine</strong> (<code>trust/engine.ex</code>)</p></li></ol>
 <ul><li><p>4 weighted signals: test_coverage (30%), spec_compliance (25%), usage_history (25%), audit_quality (20%)</p></li><li><p><code>compute/1</code> → integer 0-100</p></li><li><p>Individual signal computations from section 5.1</p></li></ul>
 <ol start="2"><li><p><strong>Implement TrustWorker</strong> (<code>trust/worker.ex</code>)</p></li></ol>
 <ul><li><p>GenServer per agent</p></li><li><p>Computes initial score on publish</p></li><li><p>Recomputes on new data (installs, test results, audits)</p></li><li><p>Caches in ETS</p></li><li><p>Broadcasts via PubSub</p></li><li><p>Hibernates after 5 minutes inactivity</p></li></ul>
 <ol start="3"><li><p><strong>Implement TrustSupervisor</strong> — DynamicSupervisor managing TrustWorkers</p></li></ol>
-<h4 id="blk-61442">Phase 3: Search (weeks 6-10)</h4>
+<h4 id="blk-61568">Phase 3: Search (weeks 6-10)</h4>
 <ol><li><p><strong>Implement full-text search</strong> (section 8)</p></li></ol>
 <ul><li><p>ts_vector generated column on agents (name A, description B, tags C)</p></li><li><p>pg_trgm fuzzy matching indexes</p></li><li><p><code>FleetPrompt.Search.search/2</code> with filters: min_trust, category, runtime, limit</p></li><li><p>Ranking: ts_rank descending, then trust_score descending</p></li></ul>
-<h4 id="blk-61455">Phase 4: Publish Pipeline (weeks 8-12)</h4>
+<h4 id="blk-61581">Phase 4: Publish Pipeline (weeks 8-12)</h4>
 <ol><li><p><strong>Implement publish flow</strong> (section 6)</p></li></ol>
 <ul><li><p>Manifest validation → spec validation → duplicate check → trust computation → index update → audit + notify</p></li><li><p>Version immutability enforcement</p></li><li><p>Yank support (hides from search, preserves record)</p></li></ul>
 <ol start="2"><li><p><strong>Implement AuditWriter</strong> — Broadway pipeline for batched audit writes</p></li><li><p><strong>Implement WebhookDispatcher</strong> — Oban worker for async webhook delivery with retry/backoff</p></li></ol>
-<h4 id="blk-61471">Phase 5: Install Pipeline (weeks 10-14)</h4>
+<h4 id="blk-61597">Phase 5: Install Pipeline (weeks 10-14)</h4>
 <ol><li><p><strong>Implement install flow</strong> (section 7)</p></li></ol>
 <ul><li><p>Permission review → Delegatic policy check → MCP dependency resolution → OpenSentience deploy → Graphonomous connect → audit + confirm</p></li></ul>
 <ol start="2"><li><p><strong>Implement InstallEngine</strong> (<code>install_engine.ex</code>)</p></li></ol>
 <ul><li><p>Permission sandboxing (section 7.2)</p></li><li><p>Delegatic org-level denylists</p></li></ul>
 <ol start="3"><li><p><strong>Implement Fork System</strong> (<code>forks.ex</code>) — section 9</p></li></ol>
 <ul><li><p>Fork creates new agent under forker's account</p></li><li><p><code>forked_from</code> provenance tracking</p></li><li><p>Trust score starts at 0 for forks</p></li></ul>
-<h4 id="blk-61496">Phase 6: Dark Factory Pipeline Intake (weeks 12-16)</h4>
+<h4 id="blk-61622">Phase 6: Dark Factory Pipeline Intake (weeks 12-16)</h4>
 <ol><li><p><strong>Implement PipelineIntake</strong> (<code>pipeline_intake.ex</code>) — section 10.2</p></li></ol>
 <ul><li><p>Accept <code>ConsolidationEvent</code> from Agentelic at <code>POST /api/pipeline/intake</code></p></li><li><p>Event validation: CloudEvents envelope, workspace_id, artifact_hash</p></li><li><p>Spec hash cross-check against <code>spec.specs</code> (SpecPrompt registry)</p></li><li><p>Reject with <code>SPEC_NOT_REGISTERED</code> if spec unknown</p></li><li><p>Initial trust score computation from build results</p></li><li><p>Atomic publish: <code>fleet.agents</code> + <code>fleet.manifests</code> + search index</p></li><li><p>Emit <code>ConsolidationEvent</code> to deploy target with <code>trust_score</code></p></li></ul>
 <ol start="2"><li><p><strong>Implement PULSE trust loop</strong> (section 10.1, Loop 2)</p></li></ol>
 <ul><li><p>Subscribe to <code>ReputationUpdate</code> from PRISM/AgenTroMatic</p></li><li><p>Re-broadcast recomputed reputation as canonical trust signal</p></li></ul>
-<h4 id="blk-61523">Phase 7: MCP Server (weeks 14-18)</h4>
+<h4 id="blk-61649">Phase 7: MCP Server (weeks 14-18)</h4>
 <ol><li><p><strong>Implement MCP server</strong> (<code>mcp/server.ex</code>)</p></li></ol>
 <ul><li><p>7 tools: <code>registry_search</code>, <code>registry_publish</code>, <code>registry_install</code>, <code>registry_inspect</code>, <code>registry_versions</code>, <code>registry_trust</code>, <code>registry_fork</code></p></li><li><p>JSON-RPC over HTTP, MCP protocol v2025-03-26</p></li></ul>
-<h4 id="blk-61532">Phase 8: Supabase Migration (weeks 14-18, parallel)</h4>
+<h4 id="blk-61658">Phase 8: Supabase Migration (weeks 14-18, parallel)</h4>
 <ol><li><p><strong>Create migration</strong> in <code>ampersand-supabase/migrations/</code> (range 030-039):</p></li></ol>
 <ul><li><p><code>030_fleet_schema.sql</code> — create schema + tables:</p></li><li><p><code>fleet.publishers</code> (workspace_id, user_id, name, slug, verified, api_key_hash)</p></li><li><p><code>fleet.agents</code> (workspace_id, publisher_id, name, slug, description, tags[], search_vector, status)</p></li><li><p><code>fleet.manifests</code> (agent_id, publisher_id, version, all manifest fields from 4.1)</p></li><li><p><code>fleet.installs</code> (workspace_id, agent_id, manifest_id, runtime_url, status)</p></li><li><p><code>fleet.audit_events</code> (workspace_id, event_type, actor_id, agent_id, metadata)</p></li><li><p><code>031_fleet_rls.sql</code> — workspace-based RLS policies</p></li><li><p><code>032_fleet_search.sql</code> — ts_vector, pg_trgm indexes</p></li></ul>
-<h4 id="blk-61553">Phase 9: LiveView UI (weeks 16-22)</h4>
+<h4 id="blk-61679">Phase 9: LiveView UI (weeks 16-22)</h4>
 <ol><li><p><strong>Agent search</strong> (⌘K) — real-time search with trust score display</p></li><li><p><strong>Agent detail</strong> — manifest, permissions, trust breakdown, version history, fork button</p></li><li><p><strong>Trust dashboard</strong> — publisher's agents with trust score trends</p></li><li><p><strong>Publisher profile</strong> — published agents, verification status</p></li></ol>
-<h3 id="blk-61563">Key Constraints</h3>
+<h3 id="blk-61689">Key Constraints</h3>
 <ul><li><p><strong>Trust scores are computed, never self-reported.</strong> 4-signal weighted computation only.</p></li><li><p><strong>Published versions are immutable.</strong> No modifications after publish. Fix via new version.</p></li><li><p><strong>FleetPrompt is the canonical trust broker.</strong> PRISM CL scores feed into trust as one input signal — they do not replace trust.</p></li><li><p><strong>Auth is Supabase Auth (shared ecosystem).</strong> NOT Clerk, NOT custom auth. Same identity as all [&amp;] products.</p></li><li><p>**All tables prefixed with <code>fleet.*</code>** and workspace-scoped with RLS.</p></li><li><p><strong>Fork trust starts at 0.</strong> Forks must earn trust independently.</p></li><li><p><strong>Pipeline intake validates spec_hash</strong> against SpecPrompt registry. Unknown specs rejected.</p></li><li><p><strong>FleetPrompt does NOT make LLM calls.</strong> Trust computation is deterministic.</p></li><li><p><strong>Install requires explicit permission acceptance.</strong> No silent permission grants.</p></li></ul>
-<h3 id="blk-61583">Integration Points</h3>
+<h3 id="blk-61709">Integration Points</h3>
 <table><thead><tr><th>System</th><th>Direction</th><th>Protocol</th><th>What</th></tr></thead><tbody><tr><td><strong>Agentelic</strong></td><td>Agentelic → FleetPrompt</td><td>ConsolidationEvent</td><td>Tested agents publish to registry</td></tr><tr><td><strong>SpecPrompt</strong></td><td>FleetPrompt → SpecPrompt</td><td>Spec validation</td><td>Validate spec hash on publish</td></tr><tr><td><strong>OpenSentience</strong></td><td>FleetPrompt → OpenSentience</td><td>Manifest deploy</td><td>One-click install to runtime</td></tr><tr><td><strong>Delegatic</strong></td><td>FleetPrompt → Delegatic</td><td>Policy check</td><td>Org-level install policy enforcement</td></tr><tr><td><strong>Graphonomous</strong></td><td>FleetPrompt → Graphonomous</td><td>MCP</td><td>Memory connection on deployment</td></tr><tr><td><strong>PRISM</strong></td><td>PRISM → FleetPrompt</td><td>ReputationUpdate</td><td>CL scores feed into trust recompute</td></tr><tr><td><strong>AgenTroMatic</strong></td><td>AgenTroMatic → FleetPrompt</td><td>ReputationUpdate</td><td>Reputation deltas from deliberation</td></tr></tbody></table>
-<h3 id="blk-61617">Success Criteria</h3>
+<h3 id="blk-61743">Success Criteria</h3>
 <ul><li><p>[x] Manifest publish validates spec hash, enforces version immutability, computes initial trust score</p></li><li><p>[x] TrustEngine computes correct 4-signal weighted scores (test fixtures)</p></li><li><p>[x] TrustWorker recomputes on new data, caches in ETS, broadcasts via PubSub</p></li><li><p>[x] Full-text search returns ranked results with trust score and category filters</p></li><li><p>[x] Fork system creates new agent with provenance tracking and zero trust</p></li><li><p>[x] Install pipeline enforces permission review, Delegatic policy check, deploy flow</p></li><li><p>[x] Dark factory intake accepts ConsolidationEvent, cross-checks spec hash, auto-publishes</p></li><li><p>[x] MCP server discovers tools via <code>tools/list</code> and executes all 7 tools</p></li><li><p>[x] Audit trail captures all publish, install, fork, trust change events</p></li><li><p>[x] Supabase migration applies cleanly alongside existing <code>amp.*</code>, <code>kag.*</code>, <code>rune.*</code> schemas</p></li><li><p>[x] LiveView search works in real-time with sub-second response</p></li></ul></div>
 <p class="src"><a href="/#/fleetprompt.com/prompts/BUILD.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-61361" class="lvl2">Your Mission</a><a href="#blk-61367" class="lvl2">Target Stack</a><a href="#blk-61369" class="lvl2">Repository Structure</a><a href="#blk-61372" class="lvl2">Implementation Order</a><a href="#blk-61373" class="lvl3">Phase 1: Core Registry (weeks 1-6)</a><a href="#blk-61412" class="lvl3">Phase 2: Trust Engine (weeks 4-8)</a><a href="#blk-61442" class="lvl3">Phase 3: Search (weeks 6-10)</a><a href="#blk-61455" class="lvl3">Phase 4: Publish Pipeline (weeks 8-12)</a><a href="#blk-61471" class="lvl3">Phase 5: Install Pipeline (weeks 10-14)</a><a href="#blk-61496" class="lvl3">Phase 6: Dark Factory Pipeline Intake (weeks 12-16)</a><a href="#blk-61523" class="lvl3">Phase 7: MCP Server (weeks 14-18)</a><a href="#blk-61532" class="lvl3">Phase 8: Supabase Migration (weeks 14-18, parallel)</a><a href="#blk-61553" class="lvl3">Phase 9: LiveView UI (weeks 16-22)</a><a href="#blk-61563" class="lvl2">Key Constraints</a><a href="#blk-61583" class="lvl2">Integration Points</a><a href="#blk-61617" class="lvl2">Success Criteria</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/fleetprompt.com/docs/index.md/">FleetPrompt Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieratqt3sx7mahvpik5h6dszlt35qkmbjckvzyugapm7zslcme7kskha</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-61487" class="lvl2">Your Mission</a><a href="#blk-61493" class="lvl2">Target Stack</a><a href="#blk-61495" class="lvl2">Repository Structure</a><a href="#blk-61498" class="lvl2">Implementation Order</a><a href="#blk-61499" class="lvl3">Phase 1: Core Registry (weeks 1-6)</a><a href="#blk-61538" class="lvl3">Phase 2: Trust Engine (weeks 4-8)</a><a href="#blk-61568" class="lvl3">Phase 3: Search (weeks 6-10)</a><a href="#blk-61581" class="lvl3">Phase 4: Publish Pipeline (weeks 8-12)</a><a href="#blk-61597" class="lvl3">Phase 5: Install Pipeline (weeks 10-14)</a><a href="#blk-61622" class="lvl3">Phase 6: Dark Factory Pipeline Intake (weeks 12-16)</a><a href="#blk-61649" class="lvl3">Phase 7: MCP Server (weeks 14-18)</a><a href="#blk-61658" class="lvl3">Phase 8: Supabase Migration (weeks 14-18, parallel)</a><a href="#blk-61679" class="lvl3">Phase 9: LiveView UI (weeks 16-22)</a><a href="#blk-61689" class="lvl2">Key Constraints</a><a href="#blk-61709" class="lvl2">Integration Points</a><a href="#blk-61743" class="lvl2">Success Criteria</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/fleetprompt.com/docs/index.md/">FleetPrompt Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierahstv7hrceg4ebrmdtbji4q5ejcpoh5jbyv56ivbol3iwtkbijpga</div></div></div>
 </div></div>
 </body></html>

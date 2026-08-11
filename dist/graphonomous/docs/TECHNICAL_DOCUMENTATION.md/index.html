@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
 <title>Graphonomous Technical Documentation · graphonomous · Ampersand Box</title>
 <meta name="description" content="Project: graphonomous Scope: Architecture, runtime model, MCP interface, and operational workflow Version Context: Repository state as inspected in this…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graphonomous Technical Documentation","name":"Graphonomous Technical Documentation","description":"Project: graphonomous Scope: Architecture, runtime model, MCP interface, and operational workflow Version Context: Repository state as inspected in this…","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/","identifier":"bagaaieray3hy3y63kz2hxuus4rqupmc77odsv46v6a6szeqxn2wdlppix2ma","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"1) What Graphonomous Is"},{"@type":"WebPageElement","name":"2) Core Design Principles"},{"@type":"WebPageElement","name":"3) Runtime Architecture"},{"@type":"WebPageElement","name":"Supervised children (from application.ex)"},{"@type":"WebPageElement","name":"4) Storage Model"},{"@type":"WebPageElement","name":"Core behaviors"},{"@type":"WebPageElement","name":"Primary logical entities"},{"@type":"WebPageElement","name":"Operational implication"},{"@type":"WebPageElement","name":"5) Knowledge and Learning Model"},{"@type":"WebPageElement","name":"5.1 Node semantics"},{"@type":"WebPageElement","name":"5.2 Learning from outcomes"},{"@type":"WebPageElement","name":"Status semantics"},{"@type":"WebPageElement","name":"6) Retrieval and Topology-Aware Routing"},{"@type":"WebPageElement","name":"6.1 Retrieval pipeline (Retriever)"},{"@type":"WebPageElement","name":"6.2 Topology analysis (Topology)"},{"@type":"WebPageElement","name":"6.3 Deliberation (Deliberator)"},{"@type":"WebPageElement","name":"7) GoalGraph and Coverage Control"},{"@type":"WebPageElement","name":"7.1 Goal lifecycle"},{"@type":"WebPageElement","name":"7.2 Coverage evaluation (Coverage)"},{"@type":"WebPageElement","name":"7.3 Review-driven transitions"},{"@type":"WebPageElement","name":"8) Attention Engine"},{"@type":"WebPageElement","name":"9) Consolidation"},{"@type":"WebPageElement","name":"10) MCP Interface"},{"@type":"WebPageElement","name":"v2 Machine Surface (Production Default — 5 machines, 29 actions)"},{"@type":"WebPageElement","name":"v1 Legacy Surface (29 individual tools)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"TECHNICAL_DOCUMENTATION.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graphonomous Technical Documentation","name":"Graphonomous Technical Documentation","description":"Project: graphonomous Scope: Architecture, runtime model, MCP interface, and operational workflow Version Context: Repository state as inspected in this…","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/","identifier":"bagaaiera2zwfltwfrb4zw2hmr7ml2xnk2ilww4byjgaarjf36ev5ujg4hbka","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"1) What Graphonomous Is"},{"@type":"WebPageElement","name":"2) Core Design Principles"},{"@type":"WebPageElement","name":"3) Runtime Architecture"},{"@type":"WebPageElement","name":"Supervised children (from application.ex)"},{"@type":"WebPageElement","name":"4) Storage Model"},{"@type":"WebPageElement","name":"Core behaviors"},{"@type":"WebPageElement","name":"Primary logical entities"},{"@type":"WebPageElement","name":"Operational implication"},{"@type":"WebPageElement","name":"5) Knowledge and Learning Model"},{"@type":"WebPageElement","name":"5.1 Node semantics"},{"@type":"WebPageElement","name":"5.2 Learning from outcomes"},{"@type":"WebPageElement","name":"Status semantics"},{"@type":"WebPageElement","name":"6) Retrieval and Topology-Aware Routing"},{"@type":"WebPageElement","name":"6.1 Retrieval pipeline (Retriever)"},{"@type":"WebPageElement","name":"6.2 Topology analysis (Topology)"},{"@type":"WebPageElement","name":"6.3 Deliberation (Deliberator)"},{"@type":"WebPageElement","name":"7) GoalGraph and Coverage Control"},{"@type":"WebPageElement","name":"7.1 Goal lifecycle"},{"@type":"WebPageElement","name":"7.2 Coverage evaluation (Coverage)"},{"@type":"WebPageElement","name":"7.3 Review-driven transitions"},{"@type":"WebPageElement","name":"8) Attention Engine"},{"@type":"WebPageElement","name":"9) Consolidation"},{"@type":"WebPageElement","name":"10) MCP Interface"},{"@type":"WebPageElement","name":"v2 Machine Surface (Production Default — 5 machines, 29 actions)"},{"@type":"WebPageElement","name":"v1 Legacy Surface (29 individual tools)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"TECHNICAL_DOCUMENTATION.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,13 +22,13 @@
 
 </div></div>
 <div class="lead">Project: graphonomous Scope: Architecture, runtime model, MCP interface, and operational workflow Version Context: Repository state as inspected in this session (March 2026)</div>
-<div class="prose"><h1 id="blk-64454">Graphonomous Technical Documentation</h1>
+<div class="prose"><h1 id="blk-64580">Graphonomous Technical Documentation</h1>
 <p><strong>Project:</strong> <code>graphonomous</code> <strong>Scope:</strong> Architecture, runtime model, MCP interface, and operational workflow <strong>Version Context:</strong> Repository state as inspected in this session (March 2026)</p>
-<h3 id="blk-64456">1) What Graphonomous Is</h3>
+<h3 id="blk-64582">1) What Graphonomous Is</h3>
 <p>Graphonomous is an Elixir/OTP continual-learning engine designed to provide persistent, evolving memory for LLM agents through an MCP server interface. Instead of retraining model weights, it learns by updating a graph of knowledge nodes and relationships over time.</p>
 <p>At a high level, Graphonomous provides:</p>
 <ul><li><p>Durable graph-backed memory (<code>semantic</code>, <code>procedural</code>, <code>episodic</code>)</p></li><li><p>Confidence-updating learning from outcomes</p></li><li><p>Goal lifecycle and coverage-based decision routing (<code>act</code>, <code>learn</code>, <code>escalate</code>)</p></li><li><p>κ-aware topology analysis for cyclic knowledge regions</p></li><li><p>Periodic consolidation to decay/prune weak memory and maintain graph quality</p></li><li><p>MCP-native integration for tool-based agents</p></li></ul>
-<h3 id="blk-64472">2) Core Design Principles</h3>
+<h3 id="blk-64598">2) Core Design Principles</h3>
 <ol><li><p><strong>Graph-first memory</strong></p></li></ol>
 <p>Knowledge is represented as nodes and typed edges, not flat logs.</p>
 <ol start="2"><li><p><strong>Outcome-grounded learning</strong></p></li></ol>
@@ -39,101 +39,101 @@
 <p>Multi-step work is persisted in a GoalGraph with explicit lifecycle transitions and progress.</p>
 <ol start="5"><li><p><strong>Operationally lightweight runtime</strong></p></li></ol>
 <p>Local SQLite + ETS hot cache + supervised Elixir processes.</p>
-<h3 id="blk-64493">3) Runtime Architecture</h3>
+<h3 id="blk-64619">3) Runtime Architecture</h3>
 <p>Graphonomous boots as an OTP application with supervised components.</p>
-<h4 id="blk-64495">Supervised children (from <code>application.ex</code>)</h4>
+<h4 id="blk-64621">Supervised children (from <code>application.ex</code>)</h4>
 <ul><li><p><code>Anubis.Server.Registry</code></p></li><li><p><code>Graphonomous.Store</code></p></li><li><p><code>Graphonomous.Embedder</code></p></li><li><p><code>Graphonomous.Graph</code></p></li><li><p><code>Graphonomous.Retriever</code></p></li><li><p><code>Graphonomous.Learner</code></p></li><li><p><code>Graphonomous.GoalGraph</code></p></li><li><p><code>Graphonomous.Attention</code></p></li><li><p><code>Graphonomous.Consolidator</code></p></li></ul>
 <p>This yields a clean separation:</p>
 <ul><li><p><strong>Store</strong>: persistence + cache</p></li><li><p><strong>Graph</strong>: CRUD and similarity retrieval orchestration</p></li><li><p><strong>Retriever</strong>: ranking + neighborhood expansion + topology annotation</p></li><li><p><strong>Learner</strong>: feedback-driven confidence updates</p></li><li><p><strong>GoalGraph/Coverage/Attention</strong>: planning and prioritization control loop</p></li><li><p><strong>Consolidator</strong>: long-term maintenance</p></li></ul>
-<h3 id="blk-64529">4) Storage Model</h3>
+<h3 id="blk-64655">4) Storage Model</h3>
 <p><code>Graphonomous.Store</code> owns durable SQLite persistence and ETS tables for hot reads.</p>
-<h4 id="blk-64531">Core behaviors</h4>
+<h4 id="blk-64657">Core behaviors</h4>
 <ul><li><p>Writes persist to SQLite and mirror into ETS.</p></li><li><p>Reads are served from ETS.</p></li><li><p>On startup: schema bootstrap + migrations + cache warm-up from DB.</p></li></ul>
-<h4 id="blk-64539">Primary logical entities</h4>
+<h4 id="blk-64665">Primary logical entities</h4>
 <ul><li><p>Nodes</p></li><li><p>Edges</p></li><li><p>Outcomes</p></li><li><p>Goals</p></li></ul>
-<h4 id="blk-64549">Operational implication</h4>
+<h4 id="blk-64675">Operational implication</h4>
 <p>This architecture gives low-latency reads with durable state continuity across restarts.</p>
-<h3 id="blk-64551">5) Knowledge and Learning Model</h3>
-<h3 id="blk-64552">5.1 Node semantics</h3>
+<h3 id="blk-64677">5) Knowledge and Learning Model</h3>
+<h3 id="blk-64678">5.1 Node semantics</h3>
 <p>Graphonomous uses node types aligned with usage intent:</p>
 <ul><li><p><code>semantic</code>: facts/architecture/domain knowledge</p></li><li><p><code>procedural</code>: workflows/how-to</p></li><li><p><code>episodic</code>: events/observations</p></li></ul>
-<h3 id="blk-64561">5.2 Learning from outcomes</h3>
+<h3 id="blk-64687">5.2 Learning from outcomes</h3>
 <p><code>Graphonomous.Learner</code>:</p>
 <ol><li><p>Persists an outcome record.</p></li><li><p>Updates confidence of <code>causal_node_ids</code>.</p></li></ol>
 <p>The confidence update formula is:</p>
 <p><code>new_confidence = old_confidence * (1 - learning_rate) + target_signal * learning_rate</code></p>
 <p>Where <code>target_signal</code> is derived from status and scaled by outcome confidence.</p>
-<h4 id="blk-64571">Status semantics</h4>
+<h4 id="blk-64697">Status semantics</h4>
 <ul><li><p><code>success</code>: positive reinforcement</p></li><li><p><code>partial_success</code>: mild positive reinforcement</p></li><li><p><code>failure</code>: confidence reduction</p></li><li><p><code>timeout</code>: weak/neutralized signal (not treated as hard failure)</p></li></ul>
-<h3 id="blk-64581">6) Retrieval and Topology-Aware Routing</h3>
-<h3 id="blk-64582">6.1 Retrieval pipeline (<code>Retriever</code>)</h3>
+<h3 id="blk-64707">6) Retrieval and Topology-Aware Routing</h3>
+<h3 id="blk-64708">6.1 Retrieval pipeline (<code>Retriever</code>)</h3>
 <p>For <code>retrieve_context</code>:</p>
 <ol><li><p>Similarity search over graph nodes</p></li><li><p>Neighbor expansion via edges (bounded hops)</p></li><li><p>Confidence-aware ranking</p></li><li><p>Topology analysis of retrieved subgraph</p></li><li><p>Return payload with <code>results</code>, <code>causal_context</code>, <code>stats</code>, <code>topology</code></p></li></ol>
-<h3 id="blk-64595">6.2 Topology analysis (<code>Topology</code>)</h3>
+<h3 id="blk-64721">6.2 Topology analysis (<code>Topology</code>)</h3>
 <p>Graphonomous computes SCCs and κ characteristics and emits routing guidance:</p>
 <ul><li><p><code>fast</code>: acyclic/low-risk structure</p></li><li><p><code>deliberate</code>: cyclic complexity requiring deeper reasoning</p></li></ul>
 <p>The retrieved response can include:</p>
 <ul><li><p><code>routing</code></p></li><li><p><code>max_kappa</code></p></li><li><p><code>scc_count</code></p></li><li><p>SCC details including fault-line edges and deliberation budget hints</p></li></ul>
-<h3 id="blk-64612">6.3 Deliberation (<code>Deliberator</code>)</h3>
+<h3 id="blk-64738">6.3 Deliberation (<code>Deliberator</code>)</h3>
 <p>For cyclic regions, Graphonomous can run a deliberate pass that:</p>
 <ul><li><p>decomposes SCCs</p></li><li><p>evaluates fault-line partitions</p></li><li><p>reconciles conclusions</p></li><li><p>optionally crystallizes conclusions back into the graph</p></li></ul>
-<h3 id="blk-64623">7) GoalGraph and Coverage Control</h3>
-<h3 id="blk-64624">7.1 Goal lifecycle</h3>
+<h3 id="blk-64749">7) GoalGraph and Coverage Control</h3>
+<h3 id="blk-64750">7.1 Goal lifecycle</h3>
 <p>Goal states include:</p>
 <ul><li><p><code>proposed</code></p></li><li><p><code>active</code></p></li><li><p><code>blocked</code></p></li><li><p><code>completed</code></p></li><li><p><code>abandoned</code></p></li></ul>
 <p>Transitions are policy-validated in <code>GoalGraph</code>.</p>
-<h3 id="blk-64638">7.2 Coverage evaluation (<code>Coverage</code>)</h3>
+<h3 id="blk-64764">7.2 Coverage evaluation (<code>Coverage</code>)</h3>
 <p>Graphonomous computes:</p>
 <ul><li><p><code>coverage_score</code></p></li><li><p><code>uncertainty_score</code></p></li><li><p><code>risk_score</code></p></li><li><p>decision: <code>act</code> | <code>learn</code> | <code>escalate</code></p></li></ul>
-<h3 id="blk-64649">7.3 Review-driven transitions</h3>
+<h3 id="blk-64775">7.3 Review-driven transitions</h3>
 <p><code>review_goal</code> can automatically map decisions to statuses:</p>
 <ul><li><p><code>act</code> -&gt; <code>active</code></p></li><li><p><code>learn</code> -&gt; <code>proposed</code></p></li><li><p><code>escalate</code> -&gt; <code>blocked</code></p></li></ul>
 <p>This creates an epistemic gate before high-impact execution.</p>
-<h3 id="blk-64659">8) Attention Engine</h3>
+<h3 id="blk-64785">8) Attention Engine</h3>
 <p><code>Graphonomous.Attention</code> is a proactive prioritization layer.</p>
 <p>It supports autonomy modes:</p>
 <ul><li><p><code>observe</code></p></li><li><p><code>advise</code></p></li><li><p><code>act</code></p></li></ul>
 <p>It periodically surveys active goals, combines urgency + coverage + topology, and may dispatch bounded actions depending on autonomy configuration.</p>
-<h3 id="blk-64670">9) Consolidation</h3>
+<h3 id="blk-64796">9) Consolidation</h3>
 <p><code>Graphonomous.Consolidator</code> performs periodic memory maintenance.</p>
 <p>Current implementation responsibilities include:</p>
 <ul><li><p>confidence decay</p></li><li><p>low-confidence pruning</p></li><li><p>telemetry emission for cycle/node events</p></li></ul>
 <p>Runtime controls include:</p>
 <ul><li><p>interval</p></li><li><p>decay rate</p></li><li><p>prune threshold</p></li><li><p>merge similarity (configured, with further strategy expansion expected over time)</p></li></ul>
-<h3 id="blk-64690">10) MCP Interface</h3>
+<h3 id="blk-64816">10) MCP Interface</h3>
 <p><code>Graphonomous.MCP.Server</code> registers machines via <code>lib/graphonomous/mcp/machines/server.ex</code>.</p>
-<h4 id="blk-64692">v2 Machine Surface (Production Default — 5 machines, 29 actions)</h4>
+<h4 id="blk-64818">v2 Machine Surface (Production Default — 5 machines, 29 actions)</h4>
 <p>Each machine is an <code>Anubis.Server.Component</code> with <code>schema do</code> parameter validation and <code>execute/2</code> dispatch.</p>
 <table><thead><tr><th>Machine</th><th>Actions</th></tr></thead><tbody><tr><td><code>retrieve</code></td><td>context, episodic, procedural, coverage, trace_evidence, frontier</td></tr><tr><td><code>route</code></td><td>topology, deliberate, attention_survey, attention_cycle, review_goal</td></tr><tr><td><code>act</code></td><td>store_node, store_edge, delete_node, manage_edge, manage_goal, belief_revise, forget_node, forget_policy, gdpr_erase</td></tr><tr><td><code>learn</code></td><td>from_outcome, from_feedback, detect_novelty, from_interaction, contradictions</td></tr><tr><td><code>consolidate</code></td><td>run, stats, query, traverse</td></tr></tbody></table>
-<h4 id="blk-64707">v1 Legacy Surface (29 individual tools)</h4>
+<h4 id="blk-64833">v1 Legacy Surface (29 individual tools)</h4>
 <p>All v1 tool names remain available for backward compatibility. Machines delegate to them internally.</p>
-<h4 id="blk-64709">Resources (5)</h4>
+<h4 id="blk-64835">Resources (5)</h4>
 <ul><li><p><code>graphonomous://runtime/health</code></p></li><li><p><code>graphonomous://goals/snapshot</code></p></li><li><p><code>graphonomous://graph/node/{id}</code></p></li><li><p><code>graphonomous://graph/recent</code></p></li><li><p><code>graphonomous://consolidation/log</code></p></li></ul>
 <p>See <code>docs/mcp-tools.md</code> for full parameter reference.</p>
-<h3 id="blk-64722">11) Public API Surface</h3>
+<h3 id="blk-64848">11) Public API Surface</h3>
 <p><code>lib/graphonomous.ex</code> provides façade functions that normalize inputs and delegate to internals, including:</p>
 <ul><li><p>node store/query/update/delete</p></li><li><p>context retrieval</p></li><li><p>learning from outcome</p></li><li><p>goal CRUD + transitions + progress + review</p></li><li><p>consolidation trigger/info</p></li><li><p>health status</p></li></ul>
 <p>This keeps MCP tools and direct module consumers aligned on one normalized API contract.</p>
-<h3 id="blk-64738">12) CLI and Operations</h3>
+<h3 id="blk-64864">12) CLI and Operations</h3>
 <p><code>Graphonomous.CLI</code> supports:</p>
 <ul><li><p>MCP stdio runtime mode</p></li><li><p><code>scan</code> mode</p></li><li><p><code>watch</code> mode</p></li><li><p><code>traverse</code> mode</p></li><li><p>extensive runtime/config flags</p></li></ul>
 <p>Operational safeguards include:</p>
 <ul><li><p>robust argument normalization/validation</p></li><li><p>configurable request timeout</p></li><li><p>stderr logging policy to keep stdio MCP frames clean</p></li><li><p>supervised MCP transport startup and monitoring</p></li></ul>
-<h3 id="blk-64761">13) Configuration Highlights</h3>
+<h3 id="blk-64887">13) Configuration Highlights</h3>
 <p>Key runtime configuration families include:</p>
 <ul><li><p>database path</p></li><li><p>embedding model/backend</p></li><li><p>consolidator cadence and thresholds</p></li><li><p>learning rate</p></li><li><p>logging level</p></li><li><p>request timeout</p></li><li><p>traversal controls (<code>scan</code>/<code>watch</code>)</p></li></ul>
 <p>Both CLI flags and environment-level configuration are supported.</p>
-<h3 id="blk-64779">14) Health, Observability, and Telemetry</h3>
+<h3 id="blk-64905">14) Health, Observability, and Telemetry</h3>
 <p>Observability is implemented through:</p>
 <ul><li><p>runtime process health summary (<code>Graphonomous.health/0</code>)</p></li><li><p>consolidator info snapshots</p></li><li><p>resource snapshots for runtime and goals</p></li><li><p>telemetry events (e.g., confidence decay/prune/outcome processing/topology routes)</p></li></ul>
 <p>This supports both human debugging and external monitoring.</p>
-<h3 id="blk-64791">15) Recommended Operating Loop for Agents</h3>
+<h3 id="blk-64917">15) Recommended Operating Loop for Agents</h3>
 <p>For non-trivial tasks, use this sequence:</p>
 <ol><li><p><code>retrieve_context</code></p></li><li><p>reason + act</p></li><li><p><code>store_node</code>/<code>store_edge</code> for durable learnings</p></li><li><p><code>learn_from_outcome</code> with real causal attribution</p></li><li><p>update goals/progress</p></li><li><p><code>run_consolidation</code> periodically (especially session boundaries)</p></li></ol>
 <p>This loop is also explicitly codified in the project skills docs under <code>docs/skills/</code>.</p>
-<h3 id="blk-64807">16) Research Trace (Proof of Under-the-Hood Exploration)</h3>
+<h3 id="blk-64933">16) Research Trace (Proof of Under-the-Hood Exploration)</h3>
 <p>This documentation was produced after directly inspecting code/spec/docs and running graph-oriented workflow actions.</p>
-<h4 id="blk-64809">What was validated in this session</h4>
+<h4 id="blk-64935">What was validated in this session</h4>
 <ol><li><p>Skills pack loaded from:</p></li></ol>
 <ul><li><p><code>docs/skills/SKILLS.md</code></p></li><li><p><code>docs/skills/bootstrap.md</code> through <code>docs/skills/workflows.md</code></p></li></ul>
 <ol start="2"><li><p>Spec and architecture references inspected:</p></li></ol>
@@ -142,29 +142,29 @@
 <ul><li><p><code>application.ex</code>, <code>store.ex</code>, <code>graph.ex</code>, <code>retriever.ex</code>, <code>topology.ex</code>, <code>deliberator.ex</code>, <code>learner.ex</code>, <code>goal_graph.ex</code>, <code>coverage.ex</code>, <code>attention.ex</code>, <code>consolidator.ex</code></p></li><li><p>MCP modules and resource handlers under <code>lib/graphonomous/mcp/</code></p></li></ul>
 <ol start="4"><li><p>Graph-oriented MCP behavior exercised:</p></li></ol>
 <ul><li><p>retrieval invoked (<code>retrieve_context</code>) and returned <code>ok</code> with empty result set (clean/empty context)</p></li><li><p>goals listed (none initially), then a documentation goal was created and transitioned to active</p></li><li><p>node storage attempts were made; initial writes succeeded, followed by context server shutdown/timeouts during additional writes</p></li></ul>
-<h4 id="blk-64848">Why this still proves under-the-hood flow</h4>
+<h4 id="blk-64974">Why this still proves under-the-hood flow</h4>
 <p>The key pipeline mechanics were observed live:</p>
 <ul><li><p>goal lifecycle operations were successfully persisted and transitioned</p></li><li><p>retrieval and goal query plumbing functioned</p></li><li><p>runtime interruption behavior was surfaced during write attempts (valuable operational signal)</p></li></ul>
 <p>This is consistent with real-world MCP runtime behavior under transport/server lifecycle instability and is useful for operational hardening.</p>
-<h3 id="blk-64858">17) Known Operational Failure Modes to Watch</h3>
+<h3 id="blk-64984">17) Known Operational Failure Modes to Watch</h3>
 <ol><li><p><strong>Context/MCP server shutdown during tool calls</strong></p></li></ol>
 <p>Symptom: timeout/shutdown on otherwise valid operations. Mitigation: verify runtime process health, restart MCP runtime, re-check client transport config.</p>
 <ol start="2"><li><p><strong>Write-path interruption mid-session</strong></p></li></ol>
 <p>Symptom: some store calls succeed, subsequent calls fail. Mitigation: treat writes as retryable, verify DB/cache health via resources and goal/runtime snapshots.</p>
 <ol start="3"><li><p><strong>Overconfident outcome feedback</strong></p></li></ol>
 <p>Symptom: distorted ranking and low epistemic reliability. Mitigation: calibrate outcome confidence and causal attribution strictly.</p>
-<h3 id="blk-64871">18) Suggested Next Documentation Enhancements</h3>
+<h3 id="blk-64997">18) Suggested Next Documentation Enhancements</h3>
 <ol><li><p>Add sequence diagrams for:</p></li></ol>
 <ul><li><p>retrieve -&gt; act -&gt; learn loop</p></li><li><p>review_goal decision routing</p></li><li><p>topology deliberate path</p></li></ul>
 <ol start="2"><li><p>Add schema appendix:</p></li></ol>
 <ul><li><p>node/goal/outcome metadata conventions</p></li><li><p>example payload contracts for each MCP tool</p></li></ul>
 <ol start="3"><li><p>Add production runbook:</p></li></ol>
 <ul><li><p>startup checks</p></li><li><p>health SLOs</p></li><li><p>recovery playbooks for transport/store failures</p></li></ul>
-<h3 id="blk-64900">19) Quick Reference Checklist</h3>
+<h3 id="blk-65026">19) Quick Reference Checklist</h3>
 <ul><li><p>[ ] Start runtime with stable DB path</p></li><li><p>[ ] Confirm health resource reachable</p></li><li><p>[ ] Retrieve before action</p></li><li><p>[ ] Preserve causal IDs for outcome learning</p></li><li><p>[ ] Use goal lifecycle for multi-step tasks</p></li><li><p>[ ] Run coverage review before consequential actions</p></li><li><p>[ ] Consolidate periodically</p></li><li><p>[ ] Monitor for transport instability and restart safely when needed</p></li></ul>
 <p><strong>End of Document</strong></p></div>
 <p class="src"><a href="/#/graphonomous/docs/TECHNICAL_DOCUMENTATION.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-64456" class="lvl2">1) What Graphonomous Is</a><a href="#blk-64472" class="lvl2">2) Core Design Principles</a><a href="#blk-64493" class="lvl2">3) Runtime Architecture</a><a href="#blk-64495" class="lvl3">Supervised children (from application.ex)</a><a href="#blk-64529" class="lvl2">4) Storage Model</a><a href="#blk-64531" class="lvl3">Core behaviors</a><a href="#blk-64539" class="lvl3">Primary logical entities</a><a href="#blk-64549" class="lvl3">Operational implication</a><a href="#blk-64551" class="lvl2">5) Knowledge and Learning Model</a><a href="#blk-64552" class="lvl2">5.1 Node semantics</a><a href="#blk-64561" class="lvl2">5.2 Learning from outcomes</a><a href="#blk-64571" class="lvl3">Status semantics</a><a href="#blk-64581" class="lvl2">6) Retrieval and Topology-Aware Routing</a><a href="#blk-64582" class="lvl2">6.1 Retrieval pipeline (Retriever)</a><a href="#blk-64595" class="lvl2">6.2 Topology analysis (Topology)</a><a href="#blk-64612" class="lvl2">6.3 Deliberation (Deliberator)</a><a href="#blk-64623" class="lvl2">7) GoalGraph and Coverage Control</a><a href="#blk-64624" class="lvl2">7.1 Goal lifecycle</a><a href="#blk-64638" class="lvl2">7.2 Coverage evaluation (Coverage)</a><a href="#blk-64649" class="lvl2">7.3 Review-driven transitions</a><a href="#blk-64659" class="lvl2">8) Attention Engine</a><a href="#blk-64670" class="lvl2">9) Consolidation</a><a href="#blk-64690" class="lvl2">10) MCP Interface</a><a href="#blk-64692" class="lvl3">v2 Machine Surface (Production Default — 5 machines, 29 actions)</a><a href="#blk-64707" class="lvl3">v1 Legacy Surface (29 individual tools)</a><a href="#blk-64709" class="lvl3">Resources (5)</a><a href="#blk-64722" class="lvl2">11) Public API Surface</a><a href="#blk-64738" class="lvl2">12) CLI and Operations</a><a href="#blk-64761" class="lvl2">13) Configuration Highlights</a><a href="#blk-64779" class="lvl2">14) Health, Observability, and Telemetry</a><a href="#blk-64791" class="lvl2">15) Recommended Operating Loop for Agents</a><a href="#blk-64807" class="lvl2">16) Research Trace (Proof of Under-the-Hood Exploration)</a><a href="#blk-64809" class="lvl3">What was validated in this session</a><a href="#blk-64848" class="lvl3">Why this still proves under-the-hood flow</a><a href="#blk-64858" class="lvl2">17) Known Operational Failure Modes to Watch</a><a href="#blk-64871" class="lvl2">18) Suggested Next Documentation Enhancements</a><a href="#blk-64900" class="lvl2">19) Quick Reference Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/ARITHMETIC_COMPLIANCE.md/">Graphonomous × box-and-box — Arithmetic Compliance Review</a><a href="/graphonomous/docs/BOOTSTRAP.md/">Graphonomous Local Bootstrap &amp; Verification Guide</a><a href="/graphonomous/docs/NPM_PACKAGE.md/">graphonomous — NPM Package Specification</a><a href="/graphonomous/docs/NPM_PUBLISH.md/">Graphonomous npm Publishing + Maintenance Runbook (Manual-First)</a><a href="/graphonomous/docs/ZED.md/">Graphonomous + Zed MCP Setup Guide</a><a href="/graphonomous/docs/architecture.md/">Graphonomous Architecture</a><a href="/graphonomous/docs/faq.md/">Graphonomous FAQ</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/mcp-tools.md/">Graphonomous MCP Tools Reference</a><a href="/graphonomous/docs/operations.md/">Operations &amp; Maintenance</a><a href="/graphonomous/docs/quickstart.md/">Graphonomous Quickstart</a><a href="/graphonomous/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieray3hy3y63kz2hxuus4rqupmc77odsv46v6a6szeqxn2wdlppix2ma</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-64582" class="lvl2">1) What Graphonomous Is</a><a href="#blk-64598" class="lvl2">2) Core Design Principles</a><a href="#blk-64619" class="lvl2">3) Runtime Architecture</a><a href="#blk-64621" class="lvl3">Supervised children (from application.ex)</a><a href="#blk-64655" class="lvl2">4) Storage Model</a><a href="#blk-64657" class="lvl3">Core behaviors</a><a href="#blk-64665" class="lvl3">Primary logical entities</a><a href="#blk-64675" class="lvl3">Operational implication</a><a href="#blk-64677" class="lvl2">5) Knowledge and Learning Model</a><a href="#blk-64678" class="lvl2">5.1 Node semantics</a><a href="#blk-64687" class="lvl2">5.2 Learning from outcomes</a><a href="#blk-64697" class="lvl3">Status semantics</a><a href="#blk-64707" class="lvl2">6) Retrieval and Topology-Aware Routing</a><a href="#blk-64708" class="lvl2">6.1 Retrieval pipeline (Retriever)</a><a href="#blk-64721" class="lvl2">6.2 Topology analysis (Topology)</a><a href="#blk-64738" class="lvl2">6.3 Deliberation (Deliberator)</a><a href="#blk-64749" class="lvl2">7) GoalGraph and Coverage Control</a><a href="#blk-64750" class="lvl2">7.1 Goal lifecycle</a><a href="#blk-64764" class="lvl2">7.2 Coverage evaluation (Coverage)</a><a href="#blk-64775" class="lvl2">7.3 Review-driven transitions</a><a href="#blk-64785" class="lvl2">8) Attention Engine</a><a href="#blk-64796" class="lvl2">9) Consolidation</a><a href="#blk-64816" class="lvl2">10) MCP Interface</a><a href="#blk-64818" class="lvl3">v2 Machine Surface (Production Default — 5 machines, 29 actions)</a><a href="#blk-64833" class="lvl3">v1 Legacy Surface (29 individual tools)</a><a href="#blk-64835" class="lvl3">Resources (5)</a><a href="#blk-64848" class="lvl2">11) Public API Surface</a><a href="#blk-64864" class="lvl2">12) CLI and Operations</a><a href="#blk-64887" class="lvl2">13) Configuration Highlights</a><a href="#blk-64905" class="lvl2">14) Health, Observability, and Telemetry</a><a href="#blk-64917" class="lvl2">15) Recommended Operating Loop for Agents</a><a href="#blk-64933" class="lvl2">16) Research Trace (Proof of Under-the-Hood Exploration)</a><a href="#blk-64935" class="lvl3">What was validated in this session</a><a href="#blk-64974" class="lvl3">Why this still proves under-the-hood flow</a><a href="#blk-64984" class="lvl2">17) Known Operational Failure Modes to Watch</a><a href="#blk-64997" class="lvl2">18) Suggested Next Documentation Enhancements</a><a href="#blk-65026" class="lvl2">19) Quick Reference Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/ARITHMETIC_COMPLIANCE.md/">Graphonomous × box-and-box — Arithmetic Compliance Review</a><a href="/graphonomous/docs/BOOTSTRAP.md/">Graphonomous Local Bootstrap &amp; Verification Guide</a><a href="/graphonomous/docs/NPM_PACKAGE.md/">graphonomous — NPM Package Specification</a><a href="/graphonomous/docs/NPM_PUBLISH.md/">Graphonomous npm Publishing + Maintenance Runbook (Manual-First)</a><a href="/graphonomous/docs/ZED.md/">Graphonomous + Zed MCP Setup Guide</a><a href="/graphonomous/docs/architecture.md/">Graphonomous Architecture</a><a href="/graphonomous/docs/faq.md/">Graphonomous FAQ</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/mcp-tools.md/">Graphonomous MCP Tools Reference</a><a href="/graphonomous/docs/operations.md/">Operations &amp; Maintenance</a><a href="/graphonomous/docs/quickstart.md/">Graphonomous Quickstart</a><a href="/graphonomous/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera2zwfltwfrb4zw2hmr7ml2xnk2ilww4byjgaarjf36ev5ujg4hbka</div></div></div>
 </div></div>
 </body></html>
