@@ -1,0 +1,520 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>SpecPrompt.com — Product Specification · specprompt.com · Ampersand Box</title>
+<meta name="description" content="Date: February 22, 2026 Status: v1.1 Author: [&amp;] Ampersand Box Design License: MIT (open standard)">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/specprompt.com/docs/spec/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpecPrompt.com — Product Specification">
+<meta property="og:description" content="Date: February 22, 2026 Status: v1.1 Author: [&amp;] Ampersand Box Design License: MIT (open standard)">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/specprompt.com/docs/spec/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"SpecPrompt.com — Product Specification","name":"SpecPrompt.com — Product Specification","description":"Date: February 22, 2026 Status: v1.1 Author: [&] Ampersand Box Design License: MIT (open standard)","url":"https://docs.ampersandboxdesign.com/specprompt.com/docs/spec/README.md/","identifier":"bagaaieradpfrnqzi7psri24q2bh77ob6mhyxxr6dauyddulcmaiqq2jhnaqa","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"specprompt.com","url":"https://docs.ampersandboxdesign.com/specprompt.com/"},"articleSection":"specprompt.com","hasPart":[{"@type":"WebPageElement","name":"Executive Summary"},{"@type":"WebPageElement","name":"1. The Problem"},{"@type":"WebPageElement","name":"2. Design Principles"},{"@type":"WebPageElement","name":"3. The SPEC.md Format"},{"@type":"WebPageElement","name":"3.1 Structure"},{"@type":"WebPageElement","name":"3.2 Parsing Rules"},{"@type":"WebPageElement","name":"3.3 Example: Complete Spec"},{"@type":"WebPageElement","name":"4. Toolchain"},{"@type":"WebPageElement","name":"4.1 CLI"},{"@type":"WebPageElement","name":"4.2 MCP Server"},{"@type":"WebPageElement","name":"4.3 Reference Parser"},{"@type":"WebPageElement","name":"4.4 Formal Grammar (PEG)"},{"@type":"WebPageElement","name":"4.5 Required Frontmatter Fields"},{"@type":"WebPageElement","name":"4.6 Parsed Spec Data Model (Ecto Schema)"},{"@type":"WebPageElement","name":"4.7 Validation Rules (Normative)"},{"@type":"WebPageElement","name":"4.8 Interoperability"},{"@type":"WebPageElement","name":"AGENTS.md Complementary Positioning"},{"@type":"WebPageElement","name":"ADL Interoperability"},{"@type":"WebPageElement","name":"ampersand.json Mapping"},{"@type":"WebPageElement","name":"5. Ecosystem Integration"},{"@type":"WebPageElement","name":"5.1 PULSE Loop Manifest"},{"@type":"WebPageElement","name":"5.2 Supabase Schema (Registry Mode)"},{"@type":"WebPageElement","name":"5.3 Dark Factory Pipeline Trigger Protocol"},{"@type":"WebPageElement","name":"6. Gap Analysis & Competitive Landscape"},{"@type":"WebPageElement","name":"6.1 Market Gap: No Standard Agent Spec Format"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"specprompt.com","item":"https://docs.ampersandboxdesign.com/specprompt.com/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/specprompt.com/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/specprompt.com/docs/spec/"},{"@type":"ListItem","position":5,"name":"README.md","item":"https://docs.ampersandboxdesign.com/specprompt.com/docs/spec/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">specprompt.com</span>
+<span class="path">specprompt.com/docs/spec/README.md</span>
+
+</div></div>
+<div class="lead">Date: February 22, 2026 Status: v1.1 Author: [&amp;] Ampersand Box Design License: MIT (open standard)</div>
+<div class="prose"><h1 id="blk-84187">SpecPrompt.com — Product Specification</h1>
+<p><strong>Date:</strong> February 22, 2026 <strong>Status:</strong> v1.1 <strong>Author:</strong> [&amp;] Ampersand Box Design <strong>License:</strong> MIT (open standard)</p>
+<h3 id="blk-84189">Executive Summary</h3>
+<p>SpecPrompt is an <strong>open standard and toolchain for spec-driven AI development</strong>. It defines a Markdown-based specification format (SPEC.md) that is both human-readable and machine-parseable, serving as the source of truth for agent behavior. Prompts are transient — specs persist.</p>
+<p>SpecPrompt is the <strong>standards layer</strong> of the [&amp;] Ampersand Box portfolio:</p>
+<pre><code>SpecPrompt (Standards)    → defines agent behavior as versioned specs  ← THIS
+    ↓
+Agentelic (Engineering)   → builds, tests, deploys agents against specs
+    ↓
+OpenSentience (Runtime)   → governs, executes, observes agents locally
+    ↓
+Graphonomous (Memory)     → continual learning knowledge graphs
+    ↓
+FleetPrompt (Distribution) · Delegatic (Orchestration)</code></pre>
+<h3 id="blk-84193">1. The Problem</h3>
+<p>Spec-Driven Development (SDD) has emerged as the industry consensus for AI-assisted development in 2026:</p>
+<ul><li><p><strong>Thoughtworks Technology Radar</strong> (Dec 2025): &quot;Spec-driven development remains an emerging practice... we're likely to see even more change in 2026.&quot;</p></li><li><p><strong>InfoQ</strong> (Feb 2026): &quot;Specifications become the shared interface where product, architecture, engineering, and quality collaborate.&quot;</p></li><li><p><strong>The New Stack</strong> (Feb 2026): &quot;Vibe coding got us here. Spec-driven development is what comes next.&quot;</p></li><li><p><strong>AWS Kiro</strong>: Amazon's new AI IDE centers entirely on spec-driven development.</p></li><li><p><strong>GitHub Spec Kit</strong>: Open-source toolkit for generating specs that guide coding agents.</p></li><li><p><strong>Next Moca ADL</strong> (Feb 2026): Agent Definition Language released as a vendor-neutral spec for <em>defining</em> agents (InfoQ). Uses JSON Schema. Focused on identity, permissions, tools, and governance metadata — comparable to OpenAPI for REST. However, ADL is definition-only; it doesn't address execution, testing, or deployment pipelines.</p></li></ul>
+<p>The convergence is clear: the industry needs a standard. GitHub Spec Kit uses one format, Kiro uses another, Cursor rules a third, ADL a fourth. Teams switching tools lose context. SpecPrompt defines the interoperable standard that bridges definition (like ADL) with execution (like Agentelic) — a Markdown-native format that is both human-readable and machine-parseable.</p>
+<h3 id="blk-84209">2. Design Principles</h3>
+<ol><li><p><strong>Markdown-native</strong> — Specs are .md files. No proprietary format.</p></li><li><p><strong>Human-first</strong> — Readable by any team member, parseable by any agent.</p></li><li><p><strong>Versioned</strong> — Lives in git alongside code. Branching, diffing, merging.</p></li><li><p><strong>Testable</strong> — Acceptance criteria are machine-executable.</p></li><li><p><strong>Composable</strong> — Specs can reference other specs (dependencies).</p></li><li><p><strong>Tool-agnostic</strong> — Works with any SDD-compatible tool, not just Agentelic.</p></li></ol>
+<h3 id="blk-84223">3. The SPEC.md Format</h3>
+<h4 id="blk-84224">3.1 Structure</h4>
+<pre data-lang="markdown"><code>---
+# YAML frontmatter (machine-parsed)
+name: agent-name
+version: semver
+runtime: opensentience | any
+author: team-or-person
+created: ISO-8601
+updated: ISO-8601
+tags: [category, domain]
+dependencies:
+  - graphonomous
+  - inventory-api
+---
+
+## Purpose
+&lt;Free-form description of what this agent does and why&gt;
+
+## Capabilities
+&lt;List of MCP tools/resources the agent requires&gt;
+- permission:scope (description)
+- permission:scope (description)
+
+## Constraints
+&lt;Behavioral boundaries the agent must never violate&gt;
+- Hard constraints (e.g., &quot;never process orders &gt; $10K&quot;)
+- Soft constraints (e.g., &quot;prefer concise responses&quot;)
+
+## Acceptance Tests
+&lt;Testable scenarios in Given/When/Then or equivalent&gt;
+- Given [precondition] → [expected behavior]
+- Given [edge case] → [expected handling]
+
+## Architecture
+&lt;Optional: system design notes for the implementing agent&gt;
+
+## Dependencies
+&lt;MCP servers, APIs, or other specs this agent requires&gt;
+
+## Changelog
+&lt;Version history with semantic versioning&gt;</code></pre>
+<h4 id="blk-84226">3.2 Parsing Rules</h4>
+<ol><li><p><strong>Frontmatter</strong> is required. YAML between <code>---</code> delimiters.</p></li><li><p><strong>Sections</strong> are identified by <code>## Heading</code> (H2 level).</p></li><li><p><strong>Required sections</strong>: Purpose, Capabilities, Constraints, Acceptance Tests.</p></li><li><p><strong>Optional sections</strong>: Architecture, Dependencies, Changelog, Notes.</p></li><li><p><strong>Capabilities</strong> format: <code>- capability:scope (description)</code></p></li><li><p><strong>Acceptance Tests</strong> format: <code>- Given [X] → [Y]</code> or <code>- When [X], then [Y]</code></p></li><li><p><strong>Constraints</strong> are free-text but parseable by LLMs for enforcement.</p></li></ol>
+<h4 id="blk-84242">3.3 Example: Complete Spec</h4>
+<pre data-lang="markdown"><code>---
+name: customer-support-v2
+version: 2.1.0
+runtime: opensentience
+author: ops-team
+created: 2026-02-15
+updated: 2026-02-22
+tags: [support, customer-facing, e-commerce]
+dependencies:
+  - graphonomous
+  - orders-api
+  - notifications-service
+---
+
+## Purpose
+
+Handle customer inquiries about order status, process refunds
+within policy limits, and escalate complex issues to human agents.
+Maintains conversational context via Graphonomous for returning
+customers.
+
+## Capabilities
+
+- orders:read (look up order status, tracking, history)
+- refunds:create (process refunds up to $500)
+- notifications:send (email confirmations to customers)
+- graphonomous:retrieve_context (recall customer history)
+- graphonomous:learn_from_interaction (record new knowledge)
+
+## Constraints
+
+- Never disclose internal pricing, margins, or supplier information
+- Never process refunds exceeding $500 without human approval
+- Never share one customer's data with another customer
+- Always confirm refund amount before processing
+- Rate limit: max 50 interactions per hour per customer
+- Response time: &lt; 5 seconds for status queries
+
+## Acceptance Tests
+
+- Given valid order #123 → return current status and tracking link
+- Given order not found → respond with helpful alternatives
+- Given refund request for $200 → process and confirm via email
+- Given refund request for $750 → escalate to human with context
+- Given repeat customer → greet by name using Graphonomous context
+- Given abusive language → maintain professional tone, offer escalation
+- Given system outage → inform customer, provide ticket number
+- Given request for internal pricing → decline politely
+
+## Architecture
+
+Uses Graphonomous for long-term customer memory. Each interaction
+is recorded via learn_from_interaction. Customer history is
+retrieved at conversation start via retrieve_context.
+
+Refund workflow: validate order → confirm amount with customer →
+check $500 limit → process via refunds:create → notify via email.
+
+## Dependencies
+
+- graphonomous (MCP server, local)
+- orders-api (MCP server, remote: orders.internal.company.com)
+- notifications-service (MCP server, remote: notify.internal.company.com)
+
+## Changelog
+
+- 2.1.0 (2026-02-22): Added Graphonomous integration for customer memory
+- 2.0.0 (2026-02-01): Rewrote from prompt-based to spec-driven
+- 1.0.0 (2026-01-15): Initial release (vibe-coded, deprecated)</code></pre>
+<h3 id="blk-84244">4. Toolchain</h3>
+<h4 id="blk-84245">4.1 CLI</h4>
+<pre data-lang="bash"><code><span class="t-comment"># Validate a spec</span>
+specprompt validate SPEC.md
+
+<span class="t-comment"># Lint for best practices</span>
+specprompt lint SPEC.md
+
+<span class="t-comment"># Generate test scaffolding (natural language → code skeleton)</span>
+specprompt test-gen SPEC.md<span class="t-flag"> --output</span> tests/
+
+<span class="t-comment"># Compile acceptance tests into executable assertions (bridges to Agentelic DSL)</span>
+<span class="t-comment"># LLM-assisted on first pass, cached by {source_hash, test_index}</span>
+<span class="t-comment"># Requires human approval before use in dark factory pipeline</span>
+specprompt test-compile SPEC.md<span class="t-flag"> --output</span> tests/compiled.json
+specprompt test-compile SPEC.md<span class="t-flag"> --approve</span>          <span class="t-comment"># mark compiled tests as reviewed</span>
+specprompt test-compile SPEC.md<span class="t-flag"> --status</span>            <span class="t-comment"># show compilation + approval status</span>
+
+<span class="t-comment"># Diff two spec versions</span>
+specprompt diff SPEC.md@v1.<span class="t-undefined">0</span> SPEC.md@v2.<span class="t-undefined">0</span>
+
+<span class="t-comment"># Publish to FleetPrompt registry</span>
+specprompt publish SPEC.md<span class="t-flag"> --registry</span> fleetprompt</code></pre>
+<h4 id="blk-84247">4.2 MCP Server</h4>
+<p>SpecPrompt exposes itself as an MCP server for AI-assisted spec authoring:</p>
+<table><thead><tr><th>Tool</th><th>Description</th></tr></thead><tbody><tr><td><code>spec_validate</code></td><td>Validate a SPEC.md against the format standard</td></tr><tr><td><code>spec_lint</code></td><td>Check for best practices and common issues</td></tr><tr><td><code>spec_generate</code></td><td>Generate a SPEC.md from a natural language description</td></tr><tr><td><code>spec_test_gen</code></td><td>Generate test cases from acceptance criteria</td></tr><tr><td><code>spec_diff</code></td><td>Compare two spec versions</td></tr><tr><td><code>spec_test_compile</code></td><td>Compile acceptance tests into executable Agentelic DSL assertions (LLM-assisted)</td></tr><tr><td><code>spec_test_approve</code></td><td>Mark compiled tests as human-reviewed and approved for dark factory use</td></tr><tr><td><code>spec_search</code></td><td>Search FleetPrompt registry for similar specs</td></tr></tbody></table>
+<h4 id="blk-84268">4.3 Reference Parser</h4>
+<p>Available in Elixir and TypeScript:</p>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">SpecPrompt.Parser</span> <span class="t-kw">do</span>
+  <span class="t-attr">@type</span> spec :: %{
+    frontmatter: map(),
+    purpose: <span class="t-type">String</span>.t(),
+    capabilities: [%{capability: <span class="t-type">String</span>.t(), scope: <span class="t-type">String</span>.t(), description: <span class="t-type">String</span>.t()}],
+    constraints: [<span class="t-type">String</span>.t()],
+    acceptance_tests: [%{given: <span class="t-type">String</span>.t(), expected: <span class="t-type">String</span>.t()}],
+    architecture: <span class="t-type">String</span>.t() | <span class="t-lit">nil</span>,
+    dependencies: [<span class="t-type">String</span>.t()],
+    changelog: [%{version: <span class="t-type">String</span>.t(), date: <span class="t-type">String</span>.t(), description: <span class="t-type">String</span>.t()}]
+  }
+
+  <span class="t-attr">@spec</span> parse(<span class="t-type">String</span>.t()) :: {<span class="t-atom">:ok</span>, spec()} | {<span class="t-atom">:error</span>, [<span class="t-type">String</span>.t()]}
+  <span class="t-kw">def</span> parse(markdown) <span class="t-kw">do</span>
+    <span class="t-comment"># 1. Extract YAML frontmatter</span>
+    <span class="t-comment"># 2. Parse H2 sections</span>
+    <span class="t-comment"># 3. Extract structured data from each section</span>
+    <span class="t-comment"># 4. Validate required sections present</span>
+    <span class="t-comment"># 5. Return structured spec or validation errors</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-84271">4.4 Formal Grammar (PEG)</h4>
+<p>The SPEC.md format is defined by a Parsing Expression Grammar. Conforming parsers MUST accept documents matching this grammar:</p>
+<pre data-lang="peg"><code>SpecDocument  &lt;- Frontmatter Section+ EOF
+Frontmatter   &lt;- '---' NEWLINE YamlBlock '---' NEWLINE
+YamlBlock     &lt;- (!('---' NEWLINE) .)*
+
+Section       &lt;- RequiredSection / OptionalSection
+RequiredSection &lt;- PurposeSection / CapabilitiesSection / ConstraintsSection / AcceptanceSection
+OptionalSection &lt;- ArchitectureSection / DependenciesSection / ChangelogSection / CustomSection
+
+PurposeSection       &lt;- '## Purpose' NEWLINE FreeText
+CapabilitiesSection  &lt;- '## Capabilities' NEWLINE CapabilityLine+
+ConstraintsSection   &lt;- '## Constraints' NEWLINE ConstraintLine+
+AcceptanceSection    &lt;- '## Acceptance Tests' NEWLINE TestLine+
+ArchitectureSection  &lt;- '## Architecture' NEWLINE FreeText
+DependenciesSection  &lt;- '## Dependencies' NEWLINE DependencyLine+
+ChangelogSection     &lt;- '## Changelog' NEWLINE ChangelogEntry+
+CustomSection        &lt;- '## ' SectionName NEWLINE FreeText
+
+CapabilityLine  &lt;- '- ' CapabilityId ':' Scope ' (' Description ')' NEWLINE
+CapabilityId    &lt;- [a-z_]+
+Scope           &lt;- [a-z_]+
+Description     &lt;- (!NEWLINE .)+
+
+ConstraintLine  &lt;- '- ' ConstraintText NEWLINE
+ConstraintText  &lt;- 'Hard: ' (!NEWLINE .)+ / 'Soft: ' (!NEWLINE .)+ / (!NEWLINE .)+
+
+TestLine        &lt;- '- Given ' Condition ' → ' Expected NEWLINE
+                 / '- When ' Condition ', then ' Expected NEWLINE
+Condition       &lt;- (!(' → ' / ', then ') .)+
+Expected        &lt;- (!NEWLINE .)+
+
+DependencyLine  &lt;- '- ' DependencyName ' (' DependencyDetail ')' NEWLINE
+ChangelogEntry  &lt;- '- ' Version ' (' Date '): ' ChangeDescription NEWLINE
+
+FreeText        &lt;- (!('## ') .)+
+SectionName     &lt;- (!NEWLINE .)+
+NEWLINE         &lt;- '\r\n' / '\n'</code></pre>
+<h4 id="blk-84274">4.5 Required Frontmatter Fields</h4>
+<table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>name</code></td><td>string</td><td>YES</td><td>Agent name, lowercase-hyphenated</td></tr><tr><td><code>version</code></td><td>semver</td><td>YES</td><td>Semantic version (major.minor.patch)</td></tr><tr><td><code>runtime</code></td><td>string</td><td>NO</td><td>Target runtime (opensentience, any, custom)</td></tr><tr><td><code>author</code></td><td>string</td><td>YES</td><td>Team or person</td></tr><tr><td><code>created</code></td><td>ISO-8601</td><td>YES</td><td>Creation date</td></tr><tr><td><code>updated</code></td><td>ISO-8601</td><td>YES</td><td>Last modification date</td></tr><tr><td><code>tags</code></td><td>string[]</td><td>NO</td><td>Categorization tags</td></tr><tr><td><code>dependencies</code></td><td>string[]</td><td>NO</td><td>Named dependencies (MCP servers, APIs)</td></tr><tr><td><code>ampersand_ref</code></td><td>string</td><td>NO</td><td>Path or URL to corresponding ampersand.json declaration</td></tr><tr><td><code>adl_ref</code></td><td>string</td><td>NO</td><td>Path or URL to corresponding ADL agent definition (interop)</td></tr><tr><td><code>governance</code></td><td>object</td><td>NO</td><td>Inline governance hints (maps to ampersand.json governance)</td></tr><tr><td><code>workspace_id</code></td><td>binary_id</td><td>NO</td><td>Workspace scope (registry mode only — for multi-tenant Supabase storage)</td></tr><tr><td><code>visibility</code></td><td>enum</td><td>NO</td><td><code>private</code> \</td><td><code>workspace</code> \</td><td><code>public</code> (registry mode only, default: <code>workspace</code>)</td></tr><tr><td><code>source_hash</code></td><td>string</td><td>NO</td><td>SHA-256 of raw SPEC.md content (auto-computed, used for compiled test caching)</td></tr></tbody></table>
+<h4 id="blk-84338">4.6 Parsed Spec Data Model (Ecto Schema)</h4>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">SpecPrompt.Spec</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
+
+  <span class="t-attr">@primary_key</span> {<span class="t-atom">:id</span>, <span class="t-atom">:binary_id</span>, autogenerate: <span class="t-lit">true</span>}
+
+  schema <span class="t-string">&quot;spec.specs&quot;</span> <span class="t-kw">do</span>
+    <span class="t-comment"># Multi-tenancy (shared Supabase ecosystem)</span>
+    belongs_to <span class="t-atom">:workspace</span>, <span class="t-type">Amp.Workspaces.Workspace</span>, type: <span class="t-atom">:binary_id</span>  <span class="t-comment"># amp.workspaces</span>
+    field <span class="t-atom">:user_id</span>, <span class="t-atom">:binary_id</span>                <span class="t-comment"># amp.profiles (Supabase Auth) — spec author</span>
+
+    <span class="t-comment"># Frontmatter</span>
+    field <span class="t-atom">:name</span>, <span class="t-atom">:string</span>
+    field <span class="t-atom">:version</span>, <span class="t-atom">:string</span>
+    field <span class="t-atom">:runtime</span>, <span class="t-atom">:string</span>, default: <span class="t-string">&quot;any&quot;</span>
+    field <span class="t-atom">:author</span>, <span class="t-atom">:string</span>
+    field <span class="t-atom">:created</span>, <span class="t-atom">:date</span>
+    field <span class="t-atom">:updated</span>, <span class="t-atom">:date</span>
+    field <span class="t-atom">:tags</span>, {<span class="t-atom">:array</span>, <span class="t-atom">:string</span>}, default: []
+    field <span class="t-atom">:dependency_names</span>, {<span class="t-atom">:array</span>, <span class="t-atom">:string</span>}, default: []
+    field <span class="t-atom">:ampersand_ref</span>, <span class="t-atom">:string</span>
+    field <span class="t-atom">:adl_ref</span>, <span class="t-atom">:string</span>
+
+    <span class="t-comment"># Source</span>
+    field <span class="t-atom">:source_path</span>, <span class="t-atom">:string</span>               <span class="t-comment"># git-relative path to SPEC.md (for filesystem mode)</span>
+    field <span class="t-atom">:source_hash</span>, <span class="t-atom">:string</span>               <span class="t-comment"># SHA-256 of raw SPEC.md content</span>
+    field <span class="t-atom">:repo_url</span>, <span class="t-atom">:string</span>                  <span class="t-comment"># GitHub/GitLab repo URL (for registry mode)</span>
+
+    <span class="t-comment"># Parsed sections</span>
+    field <span class="t-atom">:purpose</span>, <span class="t-atom">:string</span>
+    embeds_many <span class="t-atom">:capabilities</span>, <span class="t-type">SpecPrompt.Capability</span>
+    embeds_many <span class="t-atom">:constraints</span>, <span class="t-type">SpecPrompt.Constraint</span>
+    embeds_many <span class="t-atom">:acceptance_tests</span>, <span class="t-type">SpecPrompt.AcceptanceTest</span>
+    embeds_many <span class="t-atom">:compiled_tests</span>, <span class="t-type">SpecPrompt.CompiledTest</span>  <span class="t-comment"># machine-executable test compilation</span>
+    field <span class="t-atom">:architecture</span>, <span class="t-atom">:string</span>
+    embeds_many <span class="t-atom">:dependencies</span>, <span class="t-type">SpecPrompt.Dependency</span>
+    embeds_many <span class="t-atom">:changelog_entries</span>, <span class="t-type">SpecPrompt.ChangelogEntry</span>
+
+    <span class="t-comment"># Validation metadata</span>
+    field <span class="t-atom">:parse_errors</span>, {<span class="t-atom">:array</span>, <span class="t-atom">:string</span>}, default: []
+    field <span class="t-atom">:parsed_at</span>, <span class="t-atom">:utc_datetime_usec</span>
+    field <span class="t-atom">:visibility</span>, <span class="t-type">Ecto.Enum</span>, values: [<span class="t-atom">:private</span>, <span class="t-atom">:workspace</span>, <span class="t-atom">:public</span>], default: <span class="t-atom">:workspace</span>
+
+    timestamps()
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span>
+
+<span class="t-kw">defmodule</span> <span class="t-type">SpecPrompt.Capability</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
+  embedded_schema <span class="t-kw">do</span>
+    field <span class="t-atom">:capability</span>, <span class="t-atom">:string</span>    <span class="t-comment"># e.g. &quot;orders&quot;</span>
+    field <span class="t-atom">:scope</span>, <span class="t-atom">:string</span>         <span class="t-comment"># e.g. &quot;read&quot;</span>
+    field <span class="t-atom">:description</span>, <span class="t-atom">:string</span>   <span class="t-comment"># e.g. &quot;look up order status&quot;</span>
+    field <span class="t-atom">:maps_to</span>, <span class="t-atom">:string</span>       <span class="t-comment"># optional: &amp;-prefixed capability key (e.g. &quot;&amp;memory.graph&quot;)</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span>
+
+<span class="t-kw">defmodule</span> <span class="t-type">SpecPrompt.Constraint</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
+  embedded_schema <span class="t-kw">do</span>
+    field <span class="t-atom">:text</span>, <span class="t-atom">:string</span>
+    field <span class="t-atom">:type</span>, <span class="t-type">Ecto.Enum</span>, values: [<span class="t-atom">:hard</span>, <span class="t-atom">:soft</span>, <span class="t-atom">:unclassified</span>]
+    field <span class="t-atom">:maps_to_governance</span>, <span class="t-atom">:string</span>  <span class="t-comment"># optional: maps to ampersand.json governance.hard or governance.soft</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span>
+
+<span class="t-kw">defmodule</span> <span class="t-type">SpecPrompt.AcceptanceTest</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
+  embedded_schema <span class="t-kw">do</span>
+    field <span class="t-atom">:given</span>, <span class="t-atom">:string</span>        <span class="t-comment"># precondition (natural language)</span>
+    field <span class="t-atom">:expected</span>, <span class="t-atom">:string</span>     <span class="t-comment"># expected behavior (natural language)</span>
+    field <span class="t-atom">:format</span>, <span class="t-type">Ecto.Enum</span>, values: [<span class="t-atom">:given_then</span>, <span class="t-atom">:when_then</span>]
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span>
+
+<span class="t-attr">@doc</span> <span class="t-string">&quot;&quot;&quot;
+CompiledTest is the machine-executable form of an AcceptanceTest.
+Generated by `specprompt test-compile` or the `spec_test_compile` MCP tool.
+
+The compilation step bridges natural-language acceptance criteria and
+Agentelic's deterministic testing DSL. Compilation is LLM-assisted on
+first pass, then cached by `{source_hash, test_index}`. Human review
+is required for the first compilation of each test; subsequent
+recompilations of unchanged tests reuse the approved mapping.
+&quot;&quot;&quot;</span>
+<span class="t-kw">defmodule</span> <span class="t-type">SpecPrompt.CompiledTest</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
+  embedded_schema <span class="t-kw">do</span>
+    field <span class="t-atom">:test_index</span>, <span class="t-atom">:integer</span>               <span class="t-comment"># index into acceptance_tests[]</span>
+    field <span class="t-atom">:setup</span>, <span class="t-atom">:map</span>                        <span class="t-comment"># precondition fixture: mocked tool states, input data</span>
+    field <span class="t-atom">:input</span>, <span class="t-atom">:string</span>                     <span class="t-comment"># agent input (derived from `given`)</span>
+    field <span class="t-atom">:assertions</span>, {<span class="t-atom">:array</span>, <span class="t-atom">:map</span>}         <span class="t-comment"># list of Agentelic.Test.DSL assertions:</span>
+    <span class="t-comment">#   %{type: :contains, value: &quot;tracking link&quot;}</span>
+    <span class="t-comment">#   %{type: :tool_called, tool: &quot;get_order&quot;, args: %{id: 123}}</span>
+    <span class="t-comment">#   %{type: :tool_not_called, tool: &quot;process_refund&quot;}</span>
+    <span class="t-comment">#   %{type: :escalated, value: true}</span>
+    <span class="t-comment">#   %{type: :constraint_respected, constraint_index: 3}</span>
+    field <span class="t-atom">:approved</span>, <span class="t-atom">:boolean</span>, default: <span class="t-lit">false</span>  <span class="t-comment"># human-reviewed?</span>
+    field <span class="t-atom">:approved_by</span>, <span class="t-atom">:string</span>               <span class="t-comment"># reviewer identity</span>
+    field <span class="t-atom">:compiled_at</span>, <span class="t-atom">:utc_datetime_usec</span>
+    field <span class="t-atom">:compiler_model</span>, <span class="t-atom">:string</span>            <span class="t-comment"># LLM model used for compilation (provenance)</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span>
+
+<span class="t-kw">defmodule</span> <span class="t-type">SpecPrompt.Dependency</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
+  embedded_schema <span class="t-kw">do</span>
+    field <span class="t-atom">:name</span>, <span class="t-atom">:string</span>
+    field <span class="t-atom">:type</span>, <span class="t-atom">:string</span>         <span class="t-comment"># &quot;MCP server&quot;, &quot;API&quot;, &quot;spec&quot;</span>
+    field <span class="t-atom">:location</span>, <span class="t-atom">:string</span>     <span class="t-comment"># URL, local path, or &quot;remote: host&quot;</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span>
+
+<span class="t-kw">defmodule</span> <span class="t-type">SpecPrompt.ChangelogEntry</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
+  embedded_schema <span class="t-kw">do</span>
+    field <span class="t-atom">:version</span>, <span class="t-atom">:string</span>
+    field <span class="t-atom">:date</span>, <span class="t-atom">:date</span>
+    field <span class="t-atom">:description</span>, <span class="t-atom">:string</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-84340">4.7 Validation Rules (Normative)</h4>
+<p>Parsers MUST enforce:</p>
+<ol><li><p>Frontmatter present and valid YAML</p></li><li><p><code>name</code>, <code>version</code>, <code>author</code>, <code>created</code>, <code>updated</code> fields present</p></li><li><p><code>version</code> is valid semver</p></li><li><p>All four required sections present: Purpose, Capabilities, Constraints, Acceptance Tests</p></li><li><p>At least one capability, one constraint, and one acceptance test</p></li><li><p>Capability lines match the <code>capability:scope (description)</code> format</p></li><li><p>Acceptance test lines match <code>Given X → Y</code> or <code>When X, then Y</code> format</p></li><li><p>If <code>ampersand_ref</code> is present, the referenced file must be valid ampersand.json</p></li></ol>
+<p>Parsers SHOULD warn on:</p>
+<ol><li><p>Empty sections (present but no content)</p></li><li><p>Acceptance tests that don't reference any declared capability</p></li><li><p>Constraints that use ambiguous language (&quot;try to&quot;, &quot;usually&quot;, &quot;sometimes&quot;)</p></li><li><p>Missing changelog for versions &gt; 1.0.0</p></li><li><p>Compiled tests present but <code>approved</code> is false (unapproved tests will not be used in dark factory pipeline)</p></li><li><p>Compiled test <code>test_index</code> does not correspond to an acceptance test in the spec</p></li><li><p>Compiled test <code>source_hash</code> does not match current SPEC.md <code>source_hash</code> (tests may be stale — re-approve after spec change)</p></li></ol>
+<h4 id="blk-84375">4.8 Interoperability</h4>
+<h5 id="blk-84376">AGENTS.md Complementary Positioning</h5>
+<p>SpecPrompt and AGENTS.md serve complementary roles:</p>
+<table><thead><tr><th>Concern</th><th>AGENTS.md</th><th>SpecPrompt SPEC.md</th></tr></thead><tbody><tr><td><strong>What it tells</strong></td><td>How to work in this codebase (commands, conventions, boundaries)</td><td>What this agent does and how to verify it works</td></tr><tr><td><strong>Audience</strong></td><td>Coding agents (Copilot, Codex, Cursor)</td><td>Build pipelines, test frameworks, governance systems</td></tr><tr><td><strong>Scope</strong></td><td>Per-project conventions</td><td>Per-agent behavioral specification</td></tr><tr><td><strong>Testing</strong></td><td>No</td><td>Built-in acceptance criteria</td></tr><tr><td><strong>Governance</strong></td><td>Boundaries only</td><td>Constraints + escalation + capability permissions</td></tr><tr><td><strong>Versioning</strong></td><td>Implicit (git)</td><td>Explicit (semver in frontmatter)</td></tr></tbody></table>
+<p><strong>Integration pattern:</strong> A project contains AGENTS.md (how to work here) + one or more SPEC.md files (what each agent does). Agentelic reads both: AGENTS.md for build conventions, SPEC.md for agent behavior specification.</p>
+<h5 id="blk-84401">ADL Interoperability</h5>
+<p>SpecPrompt can export to and import from Next Moca's Agent Definition Language:</p>
+<pre data-lang="bash"><code><span class="t-comment"># Export SpecPrompt → ADL</span>
+specprompt <span class="t-kw">export</span><span class="t-flag"> --format</span> adl SPEC.md &gt; agent.adl.json
+
+<span class="t-comment"># Import ADL → SpecPrompt (generates scaffold SPEC.md from ADL definition)</span>
+specprompt import<span class="t-flag"> --from</span> adl agent.adl.json &gt; SPEC.md</code></pre>
+<p>Mapping:</p>
+<table><thead><tr><th>SpecPrompt</th><th>ADL</th></tr></thead><tbody><tr><td><code>name</code></td><td><code>agent.name</code></td></tr><tr><td><code>capabilities</code></td><td><code>tools</code> + <code>permissions</code></td></tr><tr><td><code>constraints.hard</code></td><td><code>governance.constraints</code></td></tr><tr><td><code>dependencies</code></td><td><code>dependencies</code></td></tr><tr><td><code>version</code></td><td><code>version</code></td></tr></tbody></table>
+<p>ADL covers agent <em>definition</em> (identity, tools, permissions). SpecPrompt adds <em>behavioral specification</em> (purpose, acceptance tests, architecture). Together they provide the complete agent description layer.</p>
+<h5 id="blk-84419">ampersand.json Mapping</h5>
+<p>SpecPrompt specs map bidirectionally to ampersand.json declarations:</p>
+<pre data-lang="bash"><code><span class="t-comment"># Generate ampersand.json from SPEC.md</span>
+specprompt <span class="t-kw">export</span><span class="t-flag"> --format</span> ampersand SPEC.md &gt; agent.ampersand.json
+
+<span class="t-comment"># Validate SPEC.md against its linked ampersand.json</span>
+specprompt validate<span class="t-flag"> --check-ampersand</span> SPEC.md</code></pre>
+<p>The <code>ampersand_ref</code> frontmatter field links a spec to its [&amp;] Protocol declaration. The validator checks that:</p>
+<ul><li><p>Every capability in SPEC.md has a corresponding <code>&amp;</code>-prefixed binding in ampersand.json</p></li><li><p>Every hard constraint in SPEC.md appears in ampersand.json <code>governance.hard</code></p></li><li><p>Every escalation condition in SPEC.md maps to ampersand.json <code>governance.escalate_when</code></p></li></ul>
+<h3 id="blk-84430">5. Ecosystem Integration</h3>
+<table><thead><tr><th>Product</th><th>How It Uses SpecPrompt</th></tr></thead><tbody><tr><td><strong>Agentelic</strong></td><td>Specs are the primary input to the build pipeline</td></tr><tr><td><strong>OpenSentience</strong></td><td>Agent manifests reference SPEC.md for permission derivation</td></tr><tr><td><strong>Graphonomous</strong></td><td>Learning happens within spec-defined boundaries</td></tr><tr><td><strong>FleetPrompt</strong></td><td>Specs are published as discoverable templates</td></tr><tr><td><strong>Delegatic</strong></td><td>Multi-agent orchestration specs define agent roles and handoffs</td></tr></tbody></table>
+<h3 id="blk-84444">5.1 PULSE Loop Manifest</h3>
+<p>SpecPrompt is a <strong>PULSE-conforming loop</strong> under OS-010. As the standards layer it has the simplest loop in the portfolio: it does not host runtime cycles — its loop is the <strong>spec lifecycle</strong> (author → validate → test-gen → diff → publish). This makes SpecPrompt the easiest case study for PULSE adoption: a loop with no concurrency, no consensus, and no streaming.</p>
+<p><strong>Loop ID:</strong> <code>specprompt.spec_lifecycle</code> <strong>Loop name:</strong> SpecPrompt Spec Lifecycle Loop <strong>Version:</strong> 0.1.0 <strong>Owner:</strong> specprompt.com <strong>Workspace scope:</strong> optional</p>
+<p><strong>Phases (5 canonical kinds):</strong></p>
+<table><thead><tr><th>Phase ID</th><th>Kind</th><th>Description</th></tr></thead><tbody><tr><td><code>retrieve_spec</code></td><td><code>retrieve</code></td><td>Load SPEC.md from filesystem or git ref; resolve linked <code>ampersand.json</code></td></tr><tr><td><code>route_action</code></td><td><code>route</code></td><td>Choose next action: <code>validate</code>, <code>lint</code>, <code>test-gen</code>, <code>diff</code>, <code>publish</code></td></tr><tr><td><code>act_transform</code></td><td><code>act</code></td><td>Run the chosen toolchain command; emit derived artifact (test scaffold, diff report, manifest)</td></tr><tr><td><code>learn_lint</code></td><td><code>learn</code></td><td>Update lint heuristics from author accept/reject of suggestions</td></tr><tr><td><code>consolidate_versions</code></td><td><code>consolidate</code></td><td>Archive old SPEC.md versions, run version diff against ADL/ampersand.json siblings</td></tr></tbody></table>
+<p><strong>Closure:</strong> <code>consolidate_versions → retrieve_spec</code> via git, guarantee <code>eventual</code>.</p>
+<p><strong>Cadence:</strong> <code>manual</code> (CLI/MCP invocation). Fallback <code>event</code> (git pre-commit hook, CI trigger).</p>
+<p><strong>Substrates:</strong></p>
+<ul><li><p><code>memory</code>: <code>graphonomous://workspace/{ws_id}</code> (lint heuristics, test compilation cache)</p></li><li><p><code>policy</code>: <code>delegatic://workspace/{ws_id}</code> (spec visibility, publish permissions)</p></li><li><p><code>audit</code>: git history + <code>supabase://spec.specs</code> (dual: git for filesystem mode, Supabase for registry mode)</p></li><li><p><code>auth</code>: <code>supabase://auth</code> (Supabase Auth — shared [&amp;] ecosystem identity. Filesystem mode remains auth-optional for local CLI use, but registry mode and dark factory pipeline require auth.)</p></li><li><p><code>transport</code>: <code>mcp</code> + <code>cli</code></p></li><li><p><code>time</code>: optional</p></li></ul>
+<p><strong>Invariants enabled:</strong> <code>phase_atomicity</code>, <code>feedback_immutability</code> (git enforces), <code>outcome_grounding</code>, <code>trace_id_propagation</code> (CLI run id).</p>
+<p><strong>Cross-loop connections:</strong></p>
+<ul><li><p><code>spec_to_agentelic</code> — emits <code>ConsolidationEvent</code> (spec published) from <code>consolidate_versions</code> to <code>agentelic.build_pipeline.retrieve_spec</code></p></li></ul>
+<p><strong>Why this matters:</strong> SpecPrompt demonstrates that PULSE conformance has <strong>zero infrastructure cost</strong> for simple tools. A CLI that reads files, runs transforms, and writes git commits can declare a valid PULSE manifest with no runtime, no message bus, and no consensus engine. PULSE scales <strong>down</strong> as well as up.</p>
+<h4 id="blk-84489">5.2 Supabase Schema (Registry Mode)</h4>
+<p>When running in registry mode (not filesystem-only), SpecPrompt uses the shared Supabase instance. No dedicated schema range is allocated because specs are lightweight — they share the <code>amp.*</code> core schema for identity and use a single <code>spec</code> schema for storage.</p>
+<pre data-lang="sql"><code>-- Schema: spec.*
+-- Migration range: not yet allocated (candidate: 100-109, or extend amp.*)
+
+CREATE TABLE spec.specs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  workspace_id UUID REFERENCES amp.workspaces(id),
+  user_id UUID REFERENCES auth.users(id),
+  name TEXT NOT NULL,
+  version TEXT NOT NULL,
+  source_hash TEXT NOT NULL,          -- SHA-256 of raw SPEC.md
+  source_path TEXT,                   -- git-relative path (filesystem mode)
+  repo_url TEXT,                      -- GitHub/GitLab URL (registry mode)
+  parsed JSONB NOT NULL,              -- full parsed spec as JSON
+  compiled_tests JSONB DEFAULT '[]',  -- compiled test assertions (approved)
+  visibility TEXT DEFAULT 'workspace' CHECK (visibility IN ('private', 'workspace', 'public')),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(workspace_id, name, version)
+);
+
+ALTER TABLE spec.specs ENABLE ROW LEVEL SECURITY;
+-- RLS: workspace-based multi-tenancy (same pattern as all [&amp;] products)</code></pre>
+<p><strong>Dual-mode operation:</strong> SpecPrompt supports two modes:</p>
+<ul><li><p><strong>Filesystem mode</strong> (default): Specs live as <code>.md</code> files in git. CLI tools operate on local files. No auth required. This is the zero-cost mode described above.</p></li><li><p><strong>Registry mode</strong>: Specs are stored in Supabase for discovery, sharing, and dark factory pipeline integration. Requires Supabase Auth. Workspace-scoped. This is required for multi-tenant dark factory operation.</p></li></ul>
+<p>Filesystem-mode specs can be promoted to registry-mode via <code>specprompt publish --registry supabase</code>.</p>
+<h4 id="blk-84499">5.3 Dark Factory Pipeline Trigger Protocol</h4>
+<p>SpecPrompt is the entry point of the dark factory pipeline. When a spec changes, the pipeline must trigger automatically. This section defines the trigger protocol shared across all [&amp;] pipeline stages.</p>
+<p><strong>Event format:</strong> CloudEvents v1 envelope (consistent with PULSE cross-loop signals)</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;specversion&quot;</span>: <span class="t-string">&quot;1.0&quot;</span>,
+  <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;org.pulse.consolidation_event&quot;</span>,
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;specprompt.spec_lifecycle/consolidate_versions&quot;</span>,
+  <span class="t-key">&quot;subject&quot;</span>: <span class="t-string">&quot;spec/{workspace_id}/{spec_name}/{version}&quot;</span>,
+  <span class="t-key">&quot;data&quot;</span>: {
+    <span class="t-key">&quot;workspace_id&quot;</span>: <span class="t-string">&quot;uuid&quot;</span>,
+    <span class="t-key">&quot;spec_name&quot;</span>: <span class="t-string">&quot;customer-support&quot;</span>,
+    <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;2.1.0&quot;</span>,
+    <span class="t-key">&quot;source_hash&quot;</span>: <span class="t-string">&quot;sha256:...&quot;</span>,
+    <span class="t-key">&quot;compiled_tests_hash&quot;</span>: <span class="t-string">&quot;sha256:...&quot;</span>,
+    <span class="t-key">&quot;trigger&quot;</span>: <span class="t-string">&quot;git_push | manual | ci_webhook&quot;</span>
+  }
+}</code></pre>
+<p><strong>Trigger chain (dark factory conveyor belt):</strong></p>
+<pre><code>1. Spec change detected (git push, manual CLI, or CI webhook)
+   → SpecPrompt emits ConsolidationEvent to Agentelic
+
+2. Agentelic receives ConsolidationEvent
+   → retrieve_spec phase pulls updated spec
+   → 4-stage pipeline runs (parse → generate → compile → test)
+   → On test pass: emits ConsolidationEvent to FleetPrompt
+
+3. FleetPrompt receives ConsolidationEvent
+   → retrieve_artifact phase pulls tested artifact
+   → Validation + trust scoring
+   → Publish to registry
+   → On publish: emits ConsolidationEvent to deploy target
+
+4. Deploy target (OpenSentience/WebHost) receives ConsolidationEvent
+   → Staged deployment (staging → canary → production)
+   → On deploy: emits OutcomeSignal back to Agentelic + PRISM
+
+5. PRISM observes OutcomeSignal
+   → Benchmarks the deployed agent
+   → Emits ReputationUpdate to FleetPrompt</code></pre>
+<p><strong>Transport options (ordered by complexity):</strong></p>
+<ol><li><p><strong>Supabase Realtime</strong> (recommended for MVP): Listen on <code>spec.specs</code> inserts/updates. Zero infrastructure. All [&amp;] products already share the Supabase instance.</p></li><li><p><strong>GitHub webhooks</strong>: Push events on spec repos trigger Agentelic builds. Requires webhook endpoint.</p></li><li><p><strong>PULSE event bus</strong> (future): Full CloudEvents HTTP endpoint. Required for cross-organization dark factories.</p></li></ol>
+<p><strong>GitHub Actions integration:</strong></p>
+<pre data-lang="yaml"><code># .github/workflows/dark-factory.yml
+name: Dark Factory Pipeline
+on:
+  push:
+    paths: ['**/SPEC.md', '**/*.ampersand.json']
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate spec
+        run: specprompt validate SPEC.md
+      - name: Compile tests
+        run: specprompt test-compile SPEC.md --require-approved
+      - name: Trigger Agentelic build
+        run: |
+          curl -X POST $AGENTELIC_WEBHOOK_URL \
+            -H &quot;Authorization: Bearer $AGENTELIC_API_KEY&quot; \
+            -d '{&quot;spec_path&quot;: &quot;SPEC.md&quot;, &quot;source_hash&quot;: &quot;'$(sha256sum SPEC.md | cut -d' ' -f1)'&quot;}'</code></pre>
+<h3 id="blk-84515">6. Gap Analysis &amp; Competitive Landscape</h3>
+<h4 id="blk-84516">6.1 Market Gap: No Standard Agent Spec Format</h4>
+<p>GitHub Spec Kit, AWS Kiro, and various community efforts all use different specification formats. <strong>Next Moca's Agent Definition Language (ADL)</strong> was released in Feb 2026 under Apache 2.0 — validating the thesis that a standard definition layer is needed (InfoQ, Feb 2026). ADL focuses on declarative agent definitions but doesn't address execution or testing. SpecPrompt fills the complete gap — from definition to testing to deployment. The opportunity mirrors how OpenAPI standardized REST API descriptions.</p>
+<h4 id="blk-84518">6.2 SDD Tools</h4>
+<table><thead><tr><th>Tool</th><th>Focus</th><th>Gap SpecPrompt Fills</th></tr></thead><tbody><tr><td><strong>Next Moca ADL</strong> (Feb 2026)</td><td>Declarative agent definitions</td><td>Definition-only, no execution/testing/deployment pipeline</td></tr><tr><td>GitHub Spec Kit</td><td>Spec generation</td><td>Proprietary format, no registry</td></tr><tr><td>AWS Kiro</td><td>AI IDE</td><td>Amazon-specific, not interoperable</td></tr><tr><td>Cursor rules</td><td>IDE context</td><td>No formal spec format</td></tr><tr><td>AGENTS.md</td><td>Convention</td><td>No toolchain, no testing</td></tr></tbody></table>
+<h4 id="blk-84538">6.3 Industry Validation</h4>
+<ol><li><p><strong>InfoQ on SDD</strong> (Feb 19, 2026): &quot;Specifications become the shared interface where product, architecture, engineering, and quality collaborate.&quot;</p></li><li><p><strong>The New Stack</strong> (Feb 18, 2026): &quot;Vibe coding got us here. Spec-driven development is what comes next.&quot;</p></li><li><p><strong>Thoughtworks Technology Radar</strong> (Dec 2025): SDD as emerging practice with &quot;even more change in 2026.&quot;</p></li><li><p><strong>Next Moca ADL</strong> (Feb 2026): Agent Definition Language released under Apache 2.0 — validates the need for a standard, but ADL is definition-only.</p></li><li><p><strong>AWS Kiro</strong>: Amazon's AI IDE centers on spec-driven development — major vendor validation.</p></li><li><p><strong>GitHub Spec Kit</strong>: Open-source toolkit for spec generation — community validation.</p></li></ol>
+<h3 id="blk-84552">7. Revenue Model</h3>
+<table><thead><tr><th>Stream</th><th>Price</th><th>Target</th></tr></thead><tbody><tr><td>Open Standard + CLI</td><td>Free (MIT)</td><td>Community adoption, ecosystem growth</td></tr><tr><td>Hosted Registry</td><td>$19/mo</td><td>Teams publishing/discovering specs</td></tr><tr><td>Enterprise Features</td><td>$99/mo/team</td><td>Private registries, compliance templates, SSO</td></tr><tr><td>Agentelic Bundle</td><td>Included</td><td>Integrated spec editing and testing</td></tr></tbody></table>
+<h3 id="blk-84569">8. Implementation Roadmap</h3>
+<table><thead><tr><th>Phase</th><th>Timeline</th><th>Deliverables</th></tr></thead><tbody><tr><td>0: Format</td><td>Q1 2026</td><td>SPEC.md format v1.0, reference parser (Elixir + TypeScript)</td></tr><tr><td>1: Toolchain</td><td>Q2 2026</td><td>CLI (validate, lint, test-gen, test-compile, test-approve), MCP server, Supabase schema + RLS</td></tr><tr><td>2: Integration</td><td>Q3 2026</td><td>Agentelic build pipeline integration, OpenSentience manifest integration</td></tr><tr><td>3: Registry</td><td>Q4 2026</td><td>FleetPrompt spec registry, publishing, discovery, forking</td></tr><tr><td>4: Evolution</td><td>Q1 2027</td><td>Graphonomous feedback loop, spec auto-refinement suggestions</td></tr></tbody></table>
+<h3 id="blk-84589">9. Success Criteria</h3>
+<table><thead><tr><th>Metric</th><th>MVP (6 months)</th><th>PMF (18 months)</th></tr></thead><tbody><tr><td>Specs published</td><td>100+</td><td>2,000+</td></tr><tr><td>Parser downloads</td><td>500+</td><td>5,000+</td></tr><tr><td>Tool integrations</td><td>3+ (Agentelic, Cursor, Claude)</td><td>10+</td></tr><tr><td>Community contributors</td><td>20+</td><td>100+</td></tr><tr><td>Industry mentions</td><td>3+</td><td>10+</td></tr></tbody></table>
+<p><em>[&amp;] Ampersand Box Design — specprompt.com</em></p></div>
+<p class="src"><a href="/#/specprompt.com/docs/spec/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-84189" class="lvl2">Executive Summary</a><a href="#blk-84193" class="lvl2">1. The Problem</a><a href="#blk-84209" class="lvl2">2. Design Principles</a><a href="#blk-84223" class="lvl2">3. The SPEC.md Format</a><a href="#blk-84224" class="lvl3">3.1 Structure</a><a href="#blk-84226" class="lvl3">3.2 Parsing Rules</a><a href="#blk-84242" class="lvl3">3.3 Example: Complete Spec</a><a href="#blk-84244" class="lvl2">4. Toolchain</a><a href="#blk-84245" class="lvl3">4.1 CLI</a><a href="#blk-84247" class="lvl3">4.2 MCP Server</a><a href="#blk-84268" class="lvl3">4.3 Reference Parser</a><a href="#blk-84271" class="lvl3">4.4 Formal Grammar (PEG)</a><a href="#blk-84274" class="lvl3">4.5 Required Frontmatter Fields</a><a href="#blk-84338" class="lvl3">4.6 Parsed Spec Data Model (Ecto Schema)</a><a href="#blk-84340" class="lvl3">4.7 Validation Rules (Normative)</a><a href="#blk-84375" class="lvl3">4.8 Interoperability</a><a href="#blk-84376" class="lvl4">AGENTS.md Complementary Positioning</a><a href="#blk-84401" class="lvl4">ADL Interoperability</a><a href="#blk-84419" class="lvl4">ampersand.json Mapping</a><a href="#blk-84430" class="lvl2">5. Ecosystem Integration</a><a href="#blk-84444" class="lvl2">5.1 PULSE Loop Manifest</a><a href="#blk-84489" class="lvl3">5.2 Supabase Schema (Registry Mode)</a><a href="#blk-84499" class="lvl3">5.3 Dark Factory Pipeline Trigger Protocol</a><a href="#blk-84515" class="lvl2">6. Gap Analysis &amp; Competitive Landscape</a><a href="#blk-84516" class="lvl3">6.1 Market Gap: No Standard Agent Spec Format</a><a href="#blk-84518" class="lvl3">6.2 SDD Tools</a><a href="#blk-84538" class="lvl3">6.3 Industry Validation</a><a href="#blk-84552" class="lvl2">7. Revenue Model</a><a href="#blk-84569" class="lvl2">8. Implementation Roadmap</a><a href="#blk-84589" class="lvl2">9. Success Criteria</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/specprompt.com/docs/index.md/">SpecPrompt Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieradpfrnqzi7psri24q2bh77ob6mhyxxr6dauyddulcmaiqq2jhnaqa</div></div></div>
+</div></div>
+</body></html>

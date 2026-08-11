@@ -1,0 +1,57 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>SpecPrompt — Open Standard for Spec-Driven AI Development · specprompt.com · Ampersand Box</title>
+<meta name="description" content="Open standard and toolchain for spec-driven AI development. Defines a Markdown-based specification format (SPEC.md) that is human-readable and…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/specprompt.com/CLAUDE.md/">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpecPrompt — Open Standard for Spec-Driven AI Development">
+<meta property="og:description" content="Open standard and toolchain for spec-driven AI development. Defines a Markdown-based specification format (SPEC.md) that is human-readable and…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/specprompt.com/CLAUDE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"SpecPrompt — Open Standard for Spec-Driven AI Development","name":"SpecPrompt — Open Standard for Spec-Driven AI Development","description":"Open standard and toolchain for spec-driven AI development. Defines a Markdown-based specification format (SPEC.md) that is human-readable and…","url":"https://docs.ampersandboxdesign.com/specprompt.com/CLAUDE.md/","identifier":"bagaaieraz5glav22rji6ixto4jv6ctyhaggsoaf5w5oymr4rlpkejzsohtjq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"specprompt.com","url":"https://docs.ampersandboxdesign.com/specprompt.com/"},"articleSection":"specprompt.com","hasPart":[{"@type":"WebPageElement","name":"Source-of-truth spec"},{"@type":"WebPageElement","name":"Role in [&] Ecosystem"},{"@type":"WebPageElement","name":"The SPEC.md format"},{"@type":"WebPageElement","name":"Toolchain"},{"@type":"WebPageElement","name":"Interoperability"},{"@type":"WebPageElement","name":"Build commands"},{"@type":"WebPageElement","name":"Status"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"specprompt.com","item":"https://docs.ampersandboxdesign.com/specprompt.com/"},{"@type":"ListItem","position":3,"name":"CLAUDE.md","item":"https://docs.ampersandboxdesign.com/specprompt.com/CLAUDE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">specprompt.com</span>
+<span class="path">specprompt.com/CLAUDE.md</span>
+
+</div></div>
+<div class="lead">Open standard and toolchain for spec-driven AI development. Defines a Markdown-based specification format (SPEC.md) that is human-readable and machine-parseable.</div>
+<div class="prose"><h1 id="blk-83994">SpecPrompt — Open Standard for Spec-Driven AI Development</h1>
+<p>Open standard and toolchain for spec-driven AI development. Defines a Markdown-based specification format (SPEC.md) that is human-readable and machine-parseable.</p>
+<h3 id="blk-83996">Source-of-truth spec</h3>
+<ul><li><p><code>docs/spec/README.md</code> — SpecPrompt product specification</p></li></ul>
+<h3 id="blk-84000">Role in [&amp;] Ecosystem</h3>
+<p>SpecPrompt is the <strong>standards layer</strong>:</p>
+<pre><code>SpecPrompt (Standards) → Agentelic (Engineering) → OpenSentience (Runtime) → Graphonomous (Memory)</code></pre>
+<p>SpecPrompt defines the interoperable format that bridges agent definition with execution, testing, and deployment.</p>
+<h3 id="blk-84004">The SPEC.md format</h3>
+<p>Markdown files with YAML frontmatter. Required sections: Purpose, Capabilities, Constraints, Acceptance Tests. Human-readable, machine-parseable, git-versioned.</p>
+<h3 id="blk-84006">Toolchain</h3>
+<ul><li><p>CLI: validate, lint, test-gen, test-compile (--output/--approve/--status), diff, publish</p></li><li><p>MCP server: 8 tools (spec_validate, spec_lint, spec_generate, spec_test_gen, spec_test_compile, spec_test_approve, spec_diff, spec_search)</p></li><li><p>Reference parser in Elixir (TypeScript parser planned)</p></li><li><p>Formal PEG grammar for conformant parser development</p></li></ul>
+<h3 id="blk-84016">Interoperability</h3>
+<ul><li><p>Bidirectional with Next Moca ADL (<code>lib/specprompt/interop/adl.ex</code>)</p></li><li><p>Bidirectional with ampersand.json (<code>lib/specprompt/interop/ampersand.ex</code>)</p></li><li><p>Complementary to AGENTS.md</p></li></ul>
+<h3 id="blk-84024">Build commands</h3>
+<pre><code># Elixir
+mix deps.get
+mix compile --warnings-as-errors
+mix test
+mix format --check-formatted
+mix escript.build    # produces ./specprompt CLI
+
+# TypeScript parser
+cd npm &amp;&amp; npm install &amp;&amp; npm test</code></pre>
+<h3 id="blk-84026">Status</h3>
+<p>All 6 BUILD.md phases implemented. 93 tests (71 Elixir + 22 TypeScript), 0 failures.</p>
+<ul><li><p>Phase 1: Parser + Validator + Linter + Differ + CLI (validate, lint, diff)</p></li><li><p>Phase 2: Test Compiler (compile prompts, approve, status) + Test Generator</p></li><li><p>Phase 3: MCP Server (all 8 tools) + Publisher (CloudEvents)</p></li><li><p>Phase 4: Supabase migration (<code>ampersand-supabase/migrations/100_spec_schema.sql</code>, <code>101_spec_rls.sql</code>)</p></li><li><p>Phase 5: Registry CRUD (<code>lib/specprompt/registry.ex</code> — Supabase client via :httpc)</p></li><li><p>Phase 6: TypeScript parser (<code>npm/</code> — @specprompt/parser, identical output to Elixir parser)</p></li><li><p>Interop: ampersand.json + ADL bidirectional mapping</p></li><li><p>Deploy: Dockerfile + fly.toml</p></li></ul></div>
+<p class="src"><a href="/#/specprompt.com/CLAUDE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-83996" class="lvl2">Source-of-truth spec</a><a href="#blk-84000" class="lvl2">Role in [&amp;] Ecosystem</a><a href="#blk-84004" class="lvl2">The SPEC.md format</a><a href="#blk-84006" class="lvl2">Toolchain</a><a href="#blk-84016" class="lvl2">Interoperability</a><a href="#blk-84024" class="lvl2">Build commands</a><a href="#blk-84026" class="lvl2">Status</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/specprompt.com/AGENTS.md/">SpecPrompt — Agent Interface</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraz5glav22rji6ixto4jv6ctyhaggsoaf5w5oymr4rlpkejzsohtjq</div></div></div>
+</div></div>
+</body></html>

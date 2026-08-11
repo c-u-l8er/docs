@@ -1,0 +1,593 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>κ-Aware Routing — Build Prompt v2 for Graphonomous + BendScript · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="κ detects irreducible feedback loops in a knowledge graph. When κ = 0, the subgraph is a DAG — retrieve context in one pass. When κ &gt; 0, the subgraph has…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/KAPPA_BUILD_PROMPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="κ-Aware Routing — Build Prompt v2 for Graphonomous + BendScript">
+<meta property="og:description" content="κ detects irreducible feedback loops in a knowledge graph. When κ = 0, the subgraph is a DAG — retrieve context in one pass. When κ &gt; 0, the subgraph has…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/KAPPA_BUILD_PROMPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"κ-Aware Routing — Build Prompt v2 for Graphonomous + BendScript","name":"κ-Aware Routing — Build Prompt v2 for Graphonomous + BendScript","description":"κ detects irreducible feedback loops in a knowledge graph. When κ = 0, the subgraph is a DAG — retrieve context in one pass. When κ > 0, the subgraph has…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/KAPPA_BUILD_PROMPT.md/","identifier":"bagaaierayhkwwwbnxcum7qaramtxlqctbqtbrmeley5xokekdh6zl2ydjs6a","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"v2 Changelog (what changed from v1 and why)"},{"@type":"WebPageElement","name":"0. The One-Sentence Idea"},{"@type":"WebPageElement","name":"A. Canonical Schema (READ THIS FIRST)"},{"@type":"WebPageElement","name":"A.1 The Single Source of Truth"},{"@type":"WebPageElement","name":"A.2 Field Name Rules"},{"@type":"WebPageElement","name":"A.3 Language-Specific Conventions"},{"@type":"WebPageElement","name":"A.4 Approximation (Large SCCs)"},{"@type":"WebPageElement","name":"1. What Exists Today"},{"@type":"WebPageElement","name":"1.1 Graphonomous (Elixir/OTP) — graphonomous/"},{"@type":"WebPageElement","name":"1.2 BendScript Prototype — bendscript.com/index.html"},{"@type":"WebPageElement","name":"1.3 κ Reference Implementation — graphonomous.com/project_spec/kappa_reference.py"},{"@type":"WebPageElement","name":"2. What to Build"},{"@type":"WebPageElement","name":"Path 1: κ in Graphonomous (Elixir) — Agent Automation"},{"@type":"WebPageElement","name":"Task 1.1: Create Graphonomous.Topology module"},{"@type":"WebPageElement","name":"Task 1.2: Wire topology into Retriever"},{"@type":"WebPageElement","name":"Task 1.3: Add Store.list_edges_between/1"},{"@type":"WebPageElement","name":"Task 1.4: Add MCP tool TopologyAnalyze"},{"@type":"WebPageElement","name":"Task 1.5: Update RetrieveContext MCP tool response"},{"@type":"WebPageElement","name":"Task 1.6: Tests"},{"@type":"WebPageElement","name":"Task 1.7: Instrumentation (NEW in v2)"},{"@type":"WebPageElement","name":"Path 2: κ Visualization in BendScript (JavaScript) — Visual Demo"},{"@type":"WebPageElement","name":"Task 2.1: Port Tarjan + κ to JavaScript"},{"@type":"WebPageElement","name":"Task 2.2: SCC Visualization on Canvas"},{"@type":"WebPageElement","name":"Task 2.3: HUD Extension"},{"@type":"WebPageElement","name":"Task 2.4: Edge Creation Topology Preview"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/"},{"@type":"ListItem","position":4,"name":"KAPPA_BUILD_PROMPT.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/KAPPA_BUILD_PROMPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/prompts/KAPPA_BUILD_PROMPT.md</span>
+
+</div></div>
+<div class="lead">κ detects irreducible feedback loops in a knowledge graph. When κ = 0, the subgraph is a DAG — retrieve context in one pass. When κ &gt; 0, the subgraph has circular dependencies —…</div>
+<div class="prose"><h1 id="blk-19451">κ-Aware Routing — Build Prompt v2 for Graphonomous + BendScript</h1>
+<blockquote><p><strong>Purpose:</strong> Implementation prompt for adding the cyclicity invariant κ as the routing primitive that tells an LLM agent <em>when to think</em> vs. <em>when to retrieve</em>. Two parallel workstreams, one integration.  <strong>Target agent:</strong> ChatGPT-5.3-Codex (or any coding agent with file access)  <strong>Author:</strong> Travis / [&amp;] Ampersand Box Design  <strong>Date:</strong> 2026-03-21  <strong>Version:</strong> 2.0 — Execution-safe. All schema drift, tool naming, and UI reality issues from v1 review resolved.</p></blockquote>
+<h3 id="blk-19454">v2 Changelog (what changed from v1 and why)</h3>
+<table><thead><tr><th>Issue (from Codex review)</th><th>v1 Problem</th><th>v2 Fix</th></tr></thead><tbody><tr><td><strong>Tool naming drift</strong></td><td>Spec said <code>memory_recall_with_topology</code>; prompt said <code>analyze_topology</code> + augment <code>retrieve_context</code></td><td><strong>Resolved:</strong> <code>analyze_topology</code> = standalone tool. <code>retrieve_context</code> = existing tool, augmented with <code>topology</code> field. No <code>memory_recall_with_topology</code>.</td></tr><tr><td><strong>Routing key drift</strong></td><td>Reference used <code>overall_routing</code>; prompt used <code>routing</code></td><td><strong>Resolved:</strong> <code>routing</code> everywhere. See §A.1 canonical schema.</td></tr><tr><td><strong>Approximate κ typing</strong></td><td>Prompt suggested <code>kappa: :approximate</code> atom</td><td><strong>Resolved:</strong> <code>kappa</code> is always an integer. Large SCCs add <code>&quot;approximate&quot;: true</code> boolean.</td></tr><tr><td><strong>BendScript edge-preview assumes drag-to-connect</strong></td><td>Prompt said &quot;during drag-to-connect&quot;; BendScript has no drag-to-connect</td><td><strong>Resolved:</strong> Edge preview via right-click &quot;Connect to…&quot; context menu item. No drag-to-connect in this phase.</td></tr><tr><td><strong>Missing instrumentation</strong></td><td>No telemetry tasks</td><td><strong>Resolved:</strong> Task 1.7 adds <code>:telemetry</code> events for latency + routing counters.</td></tr><tr><td><strong>Undirected edge ambiguity</strong></td><td>&quot;bidirectional or skip — see design note&quot;</td><td><strong>Resolved:</strong> Hard rule: only <code>causal</code> + <code>temporal</code> are directed for κ. <code>context</code>/<code>associative</code>/<code>user</code> are excluded. No toggle.</td></tr></tbody></table>
+<h3 id="blk-19477">0. The One-Sentence Idea</h3>
+<p><strong>κ detects irreducible feedback loops in a knowledge graph. When κ = 0, the subgraph is a DAG — retrieve context in one pass. When κ &gt; 0, the subgraph has circular dependencies — iterate/deliberate before answering.</strong></p>
+<p>This is proved (1,926,351 finite systems, zero counterexamples). The proof and reference implementation live at <code>graphonomous.com/project_spec/kappa_reference.py</code>. The full theory is at <code>graphonomous.com/project_spec/kappa_theory_applied.md</code>. The product integration spec is at <code>graphonomous.com/project_spec/kappa_integration_spec.md</code>.</p>
+<h3 id="blk-19480">A. Canonical Schema (READ THIS FIRST)</h3>
+<h4 id="blk-19481">A.1 The Single Source of Truth</h4>
+<p>Every κ topology result — Elixir struct, JavaScript object, MCP JSON response — MUST use these exact field names:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;sccs&quot;</span>: [
+    {
+      <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;scc-0&quot;</span>,
+      <span class="t-key">&quot;nodes&quot;</span>: [<span class="t-string">&quot;node-a&quot;</span>, <span class="t-string">&quot;node-b&quot;</span>, <span class="t-string">&quot;node-c&quot;</span>],
+      <span class="t-key">&quot;kappa&quot;</span>: <span class="t-num">2</span>,
+      <span class="t-key">&quot;approximate&quot;</span>: <span class="t-lit">false</span>,
+      <span class="t-key">&quot;fault_line_edges&quot;</span>: [
+        {<span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;node-a&quot;</span>, <span class="t-key">&quot;target&quot;</span>: <span class="t-string">&quot;node-b&quot;</span>}
+      ],
+      <span class="t-key">&quot;routing&quot;</span>: <span class="t-string">&quot;deliberate&quot;</span>,
+      <span class="t-key">&quot;deliberation_budget&quot;</span>: {
+        <span class="t-key">&quot;max_iterations&quot;</span>: <span class="t-num">3</span>,
+        <span class="t-key">&quot;agent_count&quot;</span>: <span class="t-num">2</span>,
+        <span class="t-key">&quot;timeout_multiplier&quot;</span>: <span class="t-num">2.0</span>,
+        <span class="t-key">&quot;confidence_threshold&quot;</span>: <span class="t-num">0.80</span>
+      }
+    }
+  ],
+  <span class="t-key">&quot;dag_nodes&quot;</span>: [<span class="t-string">&quot;node-x&quot;</span>, <span class="t-string">&quot;node-y&quot;</span>],
+  <span class="t-key">&quot;routing&quot;</span>: <span class="t-string">&quot;fast&quot;</span>,
+  <span class="t-key">&quot;max_kappa&quot;</span>: <span class="t-num">2</span>,
+  <span class="t-key">&quot;scc_count&quot;</span>: <span class="t-num">1</span>
+}</code></pre>
+<h4 id="blk-19484">A.2 Field Name Rules</h4>
+<table><thead><tr><th>Field</th><th>Canonical Name</th><th>NOT this</th><th>Type</th></tr></thead><tbody><tr><td>Top-level routing</td><td><code>routing</code></td><td>~~overall_routing~~</td><td><code>&quot;fast&quot;</code> \</td><td><code>&quot;deliberate&quot;</code></td></tr><tr><td>Per-SCC routing</td><td><code>routing</code></td><td>—</td><td><code>&quot;fast&quot;</code> \</td><td><code>&quot;deliberate&quot;</code></td></tr><tr><td>Edge source</td><td><code>source</code></td><td>~~from~~, ~~a~~</td><td>string (node ID)</td></tr><tr><td>Edge target</td><td><code>target</code></td><td>~~to~~, ~~b~~</td><td>string (node ID)</td></tr><tr><td>Fault lines</td><td><code>fault_line_edges</code></td><td>~~min_cut_edges~~</td><td>array of <code>{source, target}</code></td></tr><tr><td>κ value</td><td><code>kappa</code></td><td>—</td><td>integer (always, never atom/string)</td></tr><tr><td>Approximation flag</td><td><code>approximate</code></td><td>—</td><td>boolean</td></tr><tr><td>SCC identifier</td><td><code>id</code></td><td>—</td><td>string <code>&quot;scc-N&quot;</code></td></tr><tr><td>Max κ</td><td><code>max_kappa</code></td><td>—</td><td>integer</td></tr><tr><td>SCC count</td><td><code>scc_count</code></td><td>—</td><td>integer</td></tr></tbody></table>
+<h4 id="blk-19532">A.3 Language-Specific Conventions</h4>
+<p><strong>Elixir:</strong></p>
+<pre data-lang="elixir"><code><span class="t-comment"># Internal: atoms for routing values</span>
+%{routing: <span class="t-atom">:fast</span>}   <span class="t-comment"># or :deliberate</span>
+
+<span class="t-comment"># MCP JSON output: convert atoms to strings</span>
+<span class="t-type">Jason</span>.encode!(%{routing: <span class="t-string">&quot;fast&quot;</span>})</code></pre>
+<p><strong>JavaScript (schema boundary mapping):</strong></p>
+<pre data-lang="javascript"><code><span class="t-comment">// Local UI objects may use camelCase for ergonomics</span>
+{ routing: <span class="t-string">'fast'</span>, maxKappa: <span class="t-num">0</span>, sccCount: <span class="t-num">0</span>, faultLineEdges: [] }
+
+<span class="t-comment">// Any MCP/network payload must use canonical snake_case keys</span>
+{ routing: <span class="t-string">'fast'</span>, max_kappa: <span class="t-num">0</span>, scc_count: <span class="t-num">0</span>, fault_line_edges: [] }</code></pre>
+<h4 id="blk-19537">A.4 Approximation (Large SCCs)</h4>
+<p>When SCC size &gt; 20 nodes, exact bipartition enumeration is infeasible. Return:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;scc-0&quot;</span>,
+  <span class="t-key">&quot;nodes&quot;</span>: [<span class="t-string">&quot;...25 nodes...&quot;</span>],
+  <span class="t-key">&quot;kappa&quot;</span>: <span class="t-num">25</span>,
+  <span class="t-key">&quot;approximate&quot;</span>: <span class="t-lit">true</span>,
+  <span class="t-key">&quot;fault_line_edges&quot;</span>: [],
+  <span class="t-key">&quot;routing&quot;</span>: <span class="t-string">&quot;deliberate&quot;</span>,
+  <span class="t-key">&quot;deliberation_budget&quot;</span>: { <span class="t-key">&quot;max_iterations&quot;</span>: <span class="t-num">4</span>, <span class="t-key">&quot;agent_count&quot;</span>: <span class="t-num">3</span>, <span class="t-key">&quot;timeout_multiplier&quot;</span>: <span class="t-num">3.5</span>, <span class="t-key">&quot;confidence_threshold&quot;</span>: <span class="t-num">0.95</span> }
+}</code></pre>
+<p>Rules:</p>
+<ul><li><p><code>kappa</code> = SCC size (integer, used as upper-bound proxy)</p></li><li><p><code>approximate</code> = <code>true</code></p></li><li><p><code>fault_line_edges</code> = empty array (can't compute without exact bipartition)</p></li><li><p><code>deliberation_budget</code> still computed from the <code>kappa</code> value, capped:</p></li><li><p><code>max_iterations: min(kappa + 1, 4)</code></p></li><li><p><code>agent_count: min(kappa, 3)</code></p></li><li><p><code>timeout_multiplier: min(1.0 + 0.5 * kappa, 3.5)</code></p></li><li><p><code>confidence_threshold: min(0.7 + 0.05 * kappa, 0.95)</code></p></li></ul>
+<h3 id="blk-19558">1. What Exists Today</h3>
+<h4 id="blk-19559">1.1 Graphonomous (Elixir/OTP) — <code>graphonomous/</code></h4>
+<p>A continual learning knowledge graph engine with an MCP server. Ships as an escript binary + npm package.</p>
+<p><strong>Stack:</strong> Elixir 1.17+, OTP 27, SQLite via exqlite, Bumblebee embeddings, ETS cache, vendored <code>anubis_mcp</code> for MCP stdio transport.</p>
+<p><strong>Key modules and their current state:</strong></p>
+<table><thead><tr><th>Module</th><th>File</th><th>Role</th><th>κ-Relevant State</th></tr></thead><tbody><tr><td><code>Store</code></td><td><code>lib/graphonomous/store.ex</code> (~1293 lines)</td><td>SQLite persistence + ETS cache</td><td>Has <code>list_edges_for_node/1</code>. Missing <code>list_edges_between/1</code>.</td></tr><tr><td><code>Graph</code></td><td><code>lib/graphonomous/graph.ex</code> (~493 lines)</td><td>GenServer. Node/edge CRUD, embedding, cosine similarity, <code>query/1</code>.</td><td>Has <code>get_edges_for_node/1</code>.</td></tr><tr><td><code>Retriever</code></td><td><code>lib/graphonomous/retriever.ex</code></td><td>Similarity → BFS expansion → ranking. Returns <code>{results, causal_context, stats}</code>.</td><td>No topology field. No edge structure in response.</td></tr><tr><td><code>Learner</code></td><td><code>lib/graphonomous/learner.ex</code></td><td>Outcome → confidence updates.</td><td>No κ interaction.</td></tr><tr><td><code>Consolidator</code></td><td><code>lib/graphonomous/consolidator.ex</code></td><td>Periodic decay/prune/merge.</td><td>Future: κ-aware pruning (don't break SCCs). Not in scope for v1.</td></tr><tr><td><code>MCP.Server</code></td><td><code>lib/graphonomous/mcp/server.ex</code></td><td>Anubis.Server with 7 tool + 2 resource components.</td><td>No topology tool registered.</td></tr><tr><td><code>MCP.RetrieveContext</code></td><td><code>lib/graphonomous/mcp/retrieve_context.ex</code></td><td>MCP wrapper for Retriever. Returns <code>{status, query, count, results, causal_context, stats}</code>.</td><td>No topology in response.</td></tr></tbody></table>
+<p><strong>Data types:</strong></p>
+<pre data-lang="elixir"><code><span class="t-comment"># lib/graphonomous/types/node.ex</span>
+%<span class="t-type">Node</span>{
+  id: binary(),
+  content: binary(),
+  node_type: <span class="t-atom">:episodic</span> | <span class="t-atom">:semantic</span> | <span class="t-atom">:procedural</span>,
+  confidence: float(),
+  embedding: binary(),
+  metadata: map(),
+  source: binary(),
+  access_count: non_neg_integer(),
+  created_at: <span class="t-type">DateTime</span>.t(),
+  updated_at: <span class="t-type">DateTime</span>.t(),
+  last_accessed_at: <span class="t-type">DateTime</span>.t()
+}
+
+<span class="t-comment"># lib/graphonomous/types/edge.ex</span>
+%<span class="t-type">Edge</span>{
+  id: binary(),
+  source_id: binary(),
+  target_id: binary(),
+  edge_type: <span class="t-atom">:causal</span> | <span class="t-atom">:related</span> | <span class="t-atom">:contradicts</span> | <span class="t-atom">:supports</span> | <span class="t-atom">:derived_from</span>,
+  weight: float(),
+  metadata: map(),
+  created_at: <span class="t-type">DateTime</span>.t(),
+  last_activated_at: <span class="t-type">DateTime</span>.t()
+}</code></pre>
+<p><strong>MCP tools (7 registered):</strong></p>
+<ol><li><p><code>StoreNode</code> — persist knowledge nodes</p></li><li><p><code>RetrieveContext</code> — semantic search + neighborhood expansion</p></li><li><p><code>LearnFromOutcome</code> — confidence updates from grounding</p></li><li><p><code>QueryGraph</code> — list/filter/similarity</p></li><li><p><code>ManageGoal</code> — goal lifecycle</p></li><li><p><code>ReviewGoal</code> — goal inspection</p></li><li><p><code>RunConsolidation</code> — trigger decay/prune</p></li></ol>
+<p><strong>What does NOT exist (confirmed by codebase audit 2026-03-21):</strong></p>
+<ul><li><p>No <code>Graphonomous.Topology</code> module</p></li><li><p>No SCC decomposition (no Tarjan, no Kosaraju)</p></li><li><p>No cycle detection</p></li><li><p>No topological sorting</p></li><li><p>No κ computation</p></li><li><p>No topology annotations on retrieval results</p></li><li><p>No routing decision based on graph structure</p></li><li><p>No <code>Store.list_edges_between/1</code></p></li><li><p>No <code>StoreEdge</code> or <code>QueryEdges</code> MCP tool</p></li><li><p>No <code>:telemetry</code> events for topology</p></li></ul>
+<p><strong>Retriever flow (current):</strong></p>
+<ol><li><p><code>Graph.retrieve_similar(text)</code> → top-K by embedding cosine similarity</p></li><li><p>BFS expand neighbors via edges (hop decay 0.85x per level, max 1 hop default)</p></li><li><p>Rank by <code>similarity × confidence</code>, take limit</p></li><li><p>Return <code>%{results: [...], causal_context: [node_ids], stats: %{...}}</code></p></li></ol>
+<p><strong>Build/test commands:</strong></p>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> graphonomous
+mix deps.get
+mix compile<span class="t-flag"> --warnings-as-errors</span>
+mix test
+mix format<span class="t-flag"> --check-formatted</span></code></pre>
+<h4 id="blk-19648">1.2 BendScript Prototype — <code>bendscript.com/index.html</code></h4>
+<p>A ~4,068-line single-file HTML/CSS/JS canvas-based graph editor. Vanilla JavaScript, no framework.</p>
+<p><strong>Graph data model (JavaScript):</strong></p>
+<pre data-lang="javascript"><code><span class="t-comment">// Node</span>
+{
+  id: <span class="t-string">&quot;uid-string&quot;</span>,
+  text: <span class="t-string">&quot;node content (markdown)&quot;</span>,
+  <span class="t-kw">type</span>: <span class="t-string">&quot;normal&quot;</span> | <span class="t-string">&quot;stargate&quot;</span>,
+  x: <span class="t-num">0.0</span>, y: <span class="t-num">0.0</span>,
+  vx: <span class="t-num">0.0</span>, vy: <span class="t-num">0.0</span>,
+  fx: <span class="t-num">0.0</span>, fy: <span class="t-num">0.0</span>,
+  pinned: <span class="t-lit">false</span>,
+  portalPlaneId: <span class="t-string">&quot;uid&quot;</span> | <span class="t-kw">null</span>,
+  pulse: <span class="t-num">0.0</span>,
+  width: <span class="t-num">180</span>, height: <span class="t-num">60</span>,
+  scrollY: <span class="t-num">0</span>,
+  createdAt: <span class="t-type">Date</span>.<span class="t-fn">now</span>()
+}
+
+<span class="t-comment">// Edge</span>
+{
+  id: <span class="t-string">&quot;uid-string&quot;</span>,
+  a: <span class="t-string">&quot;node-id&quot;</span>,   <span class="t-comment">// source</span>
+  b: <span class="t-string">&quot;node-id&quot;</span>,   <span class="t-comment">// target</span>
+  props: {
+    label: <span class="t-string">&quot;causes&quot;</span>,
+    kind: <span class="t-string">&quot;context&quot;</span> | <span class="t-string">&quot;causal&quot;</span> | <span class="t-string">&quot;temporal&quot;</span> | <span class="t-string">&quot;associative&quot;</span> | <span class="t-string">&quot;user&quot;</span>,
+    strength: <span class="t-num">1</span>-<span class="t-num">5</span>
+  }
+}
+
+<span class="t-comment">// Plane (multi-level graph)</span>
+{
+  id: <span class="t-string">&quot;uid-string&quot;</span>,
+  name: <span class="t-string">&quot;Main&quot;</span>,
+  parentPlaneId: <span class="t-kw">null</span> | <span class="t-string">&quot;uid&quot;</span>,
+  parentNodeId: <span class="t-kw">null</span> | <span class="t-string">&quot;uid&quot;</span>,
+  nodes: [],
+  edges: [],
+  camera: { x: <span class="t-num">0</span>, y: <span class="t-num">0</span>, zoom: <span class="t-num">1</span> },
+  tick: <span class="t-num">0</span>
+}</code></pre>
+<p><strong>Key functions in index.html:</strong></p>
+<ul><li><p><code>addNode(plane, text, x, y, type)</code> (~L1510) — creates node object</p></li><li><p><code>addEdge(plane, a, b, props)</code> (~L1559) — creates edge object</p></li><li><p><code>activePlane()</code> (~L1590) — returns current plane</p></li><li><p><code>nodeAtPoint(px, py)</code> (~L1755) — hit testing</p></li><li><p><code>simulate(dt)</code> (~L3142) — physics step</p></li><li><p><code>tick()</code> (~L3903) — main render loop (rAF)</p></li></ul>
+<p><strong>HUD (existing):</strong> <code>nodes: N | edges: N | depth: N | zoom: N</code> — Bottom-left overlay.</p>
+<p><strong>What does NOT exist (confirmed by codebase audit 2026-03-21):</strong></p>
+<ul><li><p>No SCC computation</p></li><li><p>No κ computation</p></li><li><p>No topology visualization</p></li><li><p>No routing indicator in HUD</p></li><li><p>No &quot;bend/unbend&quot; actions</p></li><li><p>No edge impact preview</p></li><li><p><strong>No drag-to-connect edge creation</strong> — edges are created programmatically (during merge, portal creation, clone) or via seed setup, NOT by user dragging between nodes</p></li></ul>
+<p><strong>Edge types recognized:</strong> <code>context</code>, <code>causal</code>, <code>temporal</code>, <code>associative</code>, <code>user</code></p>
+<p><strong>Important data model notes:</strong></p>
+<ul><li><p>BendScript edges use <code>a</code>/<code>b</code> (not <code>source_id</code>/<code>target_id</code>)</p></li><li><p>Edges use <code>props.kind</code> (not <code>edge_type</code>)</p></li><li><p>The κ engine must map: <code>edge.a</code> → <code>source</code>, <code>edge.b</code> → <code>target</code>, <code>edge.props.kind</code> → kind filter</p></li></ul>
+<h4 id="blk-19692">1.3 κ Reference Implementation — <code>graphonomous.com/project_spec/kappa_reference.py</code></h4>
+<p>Python reference code (~629 lines). Contains:</p>
+<ul><li><p><code>DirectedGraph</code> class</p></li><li><p><code>tarjan_scc_matrix(adj, n)</code> → list of SCCs</p></li><li><p><code>compute_kappa_matrix(adj, n, scc_nodes)</code> → <code>{kappa, min_cut_partition, ...}</code></p></li><li><p><code>analyze_topology(graph)</code> → full routing analysis</p></li><li><p><code>deliberation_budget(kappa)</code> → <code>{max_iterations, agent_count, timeout_multiplier, confidence_threshold}</code></p></li><li><p><code>preview_edge_impact(graph, src, dst)</code> → topology change preview</p></li><li><p>Exhaustive verification functions (1,926,351 objects)</p></li></ul>
+<p><strong>Use this as the porting reference for both Elixir and JavaScript.</strong></p>
+<h3 id="blk-19710">2. What to Build</h3>
+<h4 id="blk-19711">Path 1: κ in Graphonomous (Elixir) — Agent Automation</h4>
+<p><strong>Goal:</strong> When an LLM agent calls <code>retrieve_context</code> via MCP, the response includes topology annotations that tell the agent whether to think or retrieve.</p>
+<h5 id="blk-19713">Task 1.1: Create <code>Graphonomous.Topology</code> module</h5>
+<p><strong>File:</strong> <code>lib/graphonomous/topology.ex</code></p>
+<p>Port the following from <code>kappa_reference.py</code> to Elixir:</p>
+<ol><li><p><strong>`tarjan_scc/1`</strong> — Tarjan's algorithm on an adjacency map.</p></li></ol>
+<ul><li><p>Input: <code>%{node_id =&gt; MapSet.new([neighbor_ids])}</code> (directed adjacency)</p></li><li><p>Output: <code>[MapSet.new([node_ids_in_scc]), ...]</code> — list of SCCs</p></li><li><p>Use iterative (stack-based) implementation to avoid deep recursion on large graphs</p></li></ul>
+<ol start="2"><li><p><strong>`compute_kappa/2`</strong> — κ for a single SCC.</p></li></ol>
+<ul><li><p>Input: adjacency map, <code>MapSet.t()</code> of SCC node IDs</p></li><li><p>Output: <code>%{kappa: integer, approximate: boolean, min_cut_partition: {list, list} | nil, fault_line_edges: [{source, target}]}</code></p></li><li><p>Enumerate bipartitions via bitmask (for SCC size ≤ 20)</p></li><li><p>For SCC size &gt; 20: return <code>%{kappa: MapSet.size(scc), approximate: true, fault_line_edges: []}</code></p></li><li><p>Early exit when κ = 0 found</p></li></ul>
+<ol start="3"><li><p><strong>`analyze/1`</strong> — Full topology analysis.</p></li></ol>
+<ul><li><p>Input: list of <code>{source_id, target_id}</code> edge tuples, or adjacency map</p></li><li><p>Output (must match canonical schema §A.1):</p></li></ul>
+<p>``<code>elixir %{ sccs: [ %{ id: &quot;scc-0&quot;, nodes: [&quot;node-a&quot;, &quot;node-b&quot;], kappa: 2, approximate: false, fault_line_edges: [%{source: &quot;node-a&quot;, target: &quot;node-b&quot;}], routing: :deliberate, deliberation_budget: %{ max_iterations: 3, agent_count: 2, timeout_multiplier: 2.0, confidence_threshold: 0.80 } } ], dag_nodes: [&quot;node-x&quot;, &quot;node-y&quot;], routing: :deliberate, max_kappa: 2, scc_count: 1 } </code>``</p>
+<ol start="4"><li><p><strong>`deliberation_budget/1`</strong> — Map κ to inference parameters.</p></li></ol>
+<ul><li><p><code>max_iterations: min(kappa + 1, 4)</code> — capped at 4 for approximated SCCs</p></li><li><p><code>agent_count: min(kappa, 3)</code></p></li><li><p><code>timeout_multiplier: min(1.0 + 0.5 * kappa, 3.5)</code> — capped for large approximate SCCs</p></li><li><p><code>confidence_threshold: min(0.7 + 0.05 * kappa, 0.95)</code> — capped at 0.95</p></li></ul>
+<ol start="5"><li><p><strong>`build_adjacency/2`</strong> — Build adjacency using an explicit node universe.</p></li></ol>
+<p>```elixir @spec build_adjacency(node_ids :: [binary()], edges :: [Edge.t()]) :: %{binary() =&gt; MapSet.t(binary())} def build_adjacency(node_ids, edges) do node_set = MapSet.new(node_ids)</p>
+<p>base = Enum.reduce(node_ids, %{}, fn node_id, acc -&gt; Map.put(acc, node_id, MapSet.new()) end)</p>
+<p>Enum.reduce(edges, base, fn edge, acc -&gt; cond do edge.source_id == edge.target_id -&gt; acc</p>
+<p>not MapSet.member?(node_set, edge.source_id) or not MapSet.member?(node_set, edge.target_id) -&gt; acc</p>
+<p>true -&gt; Map.update(acc, edge.source_id, MapSet.new([edge.target_id]), &amp;MapSet.put(&amp;1, edge.target_id)) end end) end ```</p>
+<ol start="6"><li><p><strong>`preview_edge_impact/3`</strong> — Preview adding an edge.</p></li></ol>
+<ul><li><p>Input: adjacency map, source_id, target_id</p></li><li><p>Output: <code>%{creates_new_scc: boolean, kappa_before: integer, kappa_after: integer, kappa_delta: integer, description: binary()}</code></p></li></ul>
+<p><strong>Style:</strong> Follow <code>mix format</code> conventions. Use <code>@moduledoc</code>, <code>@doc</code>, <code>@spec</code> on all public functions. Pattern match aggressively. Use <code>Enum</code> and <code>MapSet</code> — no mutable state.</p>
+<h5 id="blk-19778">Task 1.2: Wire topology into <code>Retriever</code></h5>
+<p><strong>File:</strong> <code>lib/graphonomous/retriever.ex</code></p>
+<p>After the existing retrieval flow (similarity search → BFS expansion → ranking), add a topology analysis step:</p>
+<ol><li><p>Collect all unique node IDs from the retrieval results (this is the node universe for analysis)</p></li><li><p>Fetch all edges between those nodes via <code>Store.list_edges_between(node_ids)</code></p></li><li><p>Build adjacency map via <code>Topology.build_adjacency(node_ids, edges)</code> so isolated/sink nodes are preserved</p></li><li><p>Exclude self-loops (<code>source_id == target_id</code>) during adjacency construction</p></li><li><p>Call <code>Topology.analyze(adjacency)</code></p></li><li><p>Merge the topology result into the return value</p></li></ol>
+<p><strong>Updated return shape:</strong></p>
+<pre data-lang="elixir"><code>%{
+  query: <span class="t-string">&quot;...&quot;</span>,
+  results: [...],              <span class="t-comment"># existing — unchanged</span>
+  causal_context: [...],       <span class="t-comment"># existing — unchanged</span>
+  stats: %{...},               <span class="t-comment"># existing — unchanged</span>
+  topology: %{                 <span class="t-comment"># NEW</span>
+    sccs: [...],
+    dag_nodes: [...],
+    routing: <span class="t-atom">:fast</span> | <span class="t-atom">:deliberate</span>,
+    max_kappa: <span class="t-num">0</span>,
+    scc_count: <span class="t-num">0</span>
+  }
+}</code></pre>
+<h5 id="blk-19796">Task 1.3: Add <code>Store.list_edges_between/1</code></h5>
+<p><strong>File:</strong> <code>lib/graphonomous/store.ex</code></p>
+<p>Add a function that returns all edges where both <code>source_id</code> and <code>target_id</code> are in the given set of node IDs:</p>
+<pre data-lang="elixir"><code><span class="t-attr">@spec</span> list_edges_between(node_ids :: [binary()]) :: {<span class="t-atom">:ok</span>, [<span class="t-type">Edge</span>.t()]}
+<span class="t-kw">def</span> list_edges_between(node_ids) <span class="t-kw">when</span> is_list(node_ids) <span class="t-kw">do</span>
+  <span class="t-comment"># Query SQLite: SELECT * FROM edges</span>
+  <span class="t-comment"># WHERE source_id IN (?, ?, ...) AND target_id IN (?, ?, ...)</span>
+  <span class="t-comment"># Use parameterized query with the node_ids list</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># If ETS cache has all edges, filter from ETS instead of hitting SQLite.</span>
+<span class="t-kw">end</span></code></pre>
+<h5 id="blk-19800">Task 1.4: Add MCP tool <code>TopologyAnalyze</code></h5>
+<p><strong>File:</strong> <code>lib/graphonomous/mcp/topology_analyze.ex</code></p>
+<p>Register a new MCP tool that exposes topology analysis directly:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;analyze_topology&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Compute topological structure (SCCs, κ values, routing decision) for a set of nodes in the knowledge graph. Use this to determine whether a knowledge region requires iterative deliberation (κ &gt; 0) or can be answered with simple retrieval (κ = 0).&quot;</span>,
+  <span class="t-key">&quot;inputSchema&quot;</span>: {
+    <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;object&quot;</span>,
+    <span class="t-key">&quot;properties&quot;</span>: {
+      <span class="t-key">&quot;node_ids&quot;</span>: {
+        <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;array&quot;</span>,
+        <span class="t-key">&quot;items&quot;</span>: { <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;string&quot;</span> },
+        <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Node IDs to analyze. If omitted, analyzes the full graph.&quot;</span>
+      },
+      <span class="t-key">&quot;query&quot;</span>: {
+        <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;string&quot;</span>,
+        <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Optional query text. If provided, retrieves relevant nodes first, then analyzes their topology.&quot;</span>
+      }
+    }
+  }
+}</code></pre>
+<p><strong>Response (must match canonical schema §A.1):</strong></p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;routing&quot;</span>: <span class="t-string">&quot;deliberate&quot;</span>,
+  <span class="t-key">&quot;max_kappa&quot;</span>: <span class="t-num">1</span>,
+  <span class="t-key">&quot;scc_count&quot;</span>: <span class="t-num">1</span>,
+  <span class="t-key">&quot;sccs&quot;</span>: [
+    {
+      <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;scc-0&quot;</span>,
+      <span class="t-key">&quot;nodes&quot;</span>: [<span class="t-string">&quot;market-share&quot;</span>, <span class="t-string">&quot;revenue&quot;</span>, <span class="t-string">&quot;r-and-d&quot;</span>, <span class="t-string">&quot;product-quality&quot;</span>, <span class="t-string">&quot;customer-retention&quot;</span>],
+      <span class="t-key">&quot;kappa&quot;</span>: <span class="t-num">1</span>,
+      <span class="t-key">&quot;approximate&quot;</span>: <span class="t-lit">false</span>,
+      <span class="t-key">&quot;fault_line_edges&quot;</span>: [
+        {<span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;product-quality&quot;</span>, <span class="t-key">&quot;target&quot;</span>: <span class="t-string">&quot;market-share&quot;</span>}
+      ],
+      <span class="t-key">&quot;routing&quot;</span>: <span class="t-string">&quot;deliberate&quot;</span>,
+      <span class="t-key">&quot;deliberation_budget&quot;</span>: {
+        <span class="t-key">&quot;max_iterations&quot;</span>: <span class="t-num">2</span>,
+        <span class="t-key">&quot;agent_count&quot;</span>: <span class="t-num">1</span>,
+        <span class="t-key">&quot;timeout_multiplier&quot;</span>: <span class="t-num">1.5</span>,
+        <span class="t-key">&quot;confidence_threshold&quot;</span>: <span class="t-num">0.75</span>
+      }
+    }
+  ],
+  <span class="t-key">&quot;dag_nodes&quot;</span>: [<span class="t-string">&quot;founding-date&quot;</span>, <span class="t-string">&quot;ceo-name&quot;</span>],
+  <span class="t-key">&quot;recommendation&quot;</span>: <span class="t-string">&quot;This knowledge region contains 1 strongly connected component with κ=1. The concepts [market-share, revenue, r-and-d, product-quality, customer-retention] are mutually dependent. Deliberate on the fault line before answering: product-quality→market-share.&quot;</span>
+}</code></pre>
+<p>Register the new tool in <code>lib/graphonomous/mcp/server.ex</code>:</p>
+<pre data-lang="elixir"><code>component(<span class="t-type">Graphonomous.MCP.TopologyAnalyze</span>)</code></pre>
+<h5 id="blk-19808">Task 1.5: Update <code>RetrieveContext</code> MCP tool response</h5>
+<p><strong>File:</strong> <code>lib/graphonomous/mcp/retrieve_context.ex</code></p>
+<p>The existing <code>RetrieveContext</code> tool should include topology annotations in its response. After retrieving context, the topology data from the Retriever flows through:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;status&quot;</span>: <span class="t-string">&quot;ok&quot;</span>,
+  <span class="t-key">&quot;query&quot;</span>: <span class="t-string">&quot;...&quot;</span>,
+  <span class="t-key">&quot;count&quot;</span>: <span class="t-num">5</span>,
+  <span class="t-key">&quot;results&quot;</span>: [<span class="t-string">&quot;...existing...&quot;</span>],
+  <span class="t-key">&quot;causal_context&quot;</span>: [<span class="t-string">&quot;...existing...&quot;</span>],
+  <span class="t-key">&quot;stats&quot;</span>: {<span class="t-string">&quot;...existing...&quot;</span>},
+  <span class="t-key">&quot;topology&quot;</span>: {
+    <span class="t-key">&quot;routing&quot;</span>: <span class="t-string">&quot;fast&quot;</span>,
+    <span class="t-key">&quot;max_kappa&quot;</span>: <span class="t-num">0</span>,
+    <span class="t-key">&quot;scc_count&quot;</span>: <span class="t-num">0</span>,
+    <span class="t-key">&quot;sccs&quot;</span>: [],
+    <span class="t-key">&quot;dag_nodes&quot;</span>: [<span class="t-string">&quot;node-1&quot;</span>, <span class="t-string">&quot;node-2&quot;</span>]
+  }
+}</code></pre>
+<p><strong>This is the key integration: every retrieval call now tells the LLM agent whether to think or just answer.</strong></p>
+<h5 id="blk-19813">Task 1.6: Tests</h5>
+<p><strong>File:</strong> <code>test/graphonomous/topology_test.exs</code></p>
+<p>Write tests for:</p>
+<ol><li><p><strong>Empty graph → κ = 0, routing = :fast</strong></p></li><li><p><strong>Linear chain (A→B→C) → κ = 0, routing = :fast</strong></p></li><li><p><strong>Simple cycle (A→B→C→A) → κ = 1, routing = :deliberate</strong></p></li><li><p><strong>Two independent cycles → two SCCs, each with κ &gt; 0</strong></p></li><li><p><strong>Mixed DAG + cycle → DAG nodes listed separately, SCC identified</strong></p></li><li><p><strong>Business example from the spec:</strong> market-share → revenue → r-and-d → product-quality → market-share, plus customer-retention loop → κ = 1 (verified against kappa_reference.py: the 5-node SCC has a bipartition with only 1 edge crossing in the smaller direction)</p></li><li><p><strong>Single node → κ = 0</strong></p></li><li><p><strong>Self-loop only → κ = 0 (self-loops excluded from adjacency)</strong></p></li><li><p><strong>Bipartite complete graph K₂,₂ with both directions → κ = 2</strong></p></li><li><p><strong>Large SCC (&gt; 20 nodes) → returns `approximate: true`, `kappa` = SCC size</strong></p></li><li><p><strong>Schema compliance:</strong> All output maps use canonical field names from §A.1</p></li><li><p><strong>`build_adjacency/2`</strong> converts Edge structs correctly</p></li><li><p><strong>`preview_edge_impact/3`</strong> correctly detects new SCC creation</p></li></ol>
+<p><strong>File:</strong> <code>test/graphonomous/retriever_topology_test.exs</code></p>
+<p>Integration test:</p>
+<ol><li><p>Store nodes and edges forming a mixed DAG+cycle graph</p></li><li><p>Call <code>Retriever.retrieve/2</code></p></li><li><p>Assert response includes <code>topology</code> key with correct <code>routing</code> decision</p></li><li><p>Assert <code>topology.sccs</code> contains expected SCC with correct <code>kappa</code></p></li><li><p>Assert all field names match canonical schema</p></li></ol>
+<h5 id="blk-19856">Task 1.7: Instrumentation (NEW in v2)</h5>
+<p><strong>File:</strong> <code>lib/graphonomous/topology.ex</code> (add to existing module)</p>
+<p>Emit <strong>both</strong> topology analysis telemetry and routing decision telemetry.</p>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> emit_analyze_telemetry(result, duration_us, node_count, edge_count) <span class="t-kw">do</span>
+  <span class="t-atom">:telemetry</span>.execute(
+    [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:topology</span>, <span class="t-atom">:analyze</span>],
+    %{
+      duration_ms: duration_us / <span class="t-num">1000.0</span>,
+      node_count: node_count,
+      edge_count: edge_count
+    },
+    %{
+      scc_count: result.scc_count,
+      max_kappa: result.max_kappa,
+      routing: result.routing
+    }
+  )
+<span class="t-kw">end</span>
+
+<span class="t-kw">defp</span> emit_route_telemetry(result, trigger) <span class="t-kw">do</span>
+  <span class="t-atom">:telemetry</span>.execute(
+    [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:topology</span>, <span class="t-atom">:route</span>],
+    %{},
+    %{
+      decision: result.routing,
+      max_kappa: result.max_kappa,
+      trigger: trigger
+    }
+  )
+<span class="t-kw">end</span></code></pre>
+<p>Wrap <code>analyze/1</code> to measure and emit both events:</p>
+<pre data-lang="elixir"><code><span class="t-kw">def</span> analyze(edges_or_adjacency) <span class="t-kw">do</span>
+  {duration_us, result} = <span class="t-atom">:timer</span>.tc(<span class="t-kw">fn</span> -&gt; do_analyze(edges_or_adjacency) <span class="t-kw">end</span>)
+  {node_count, edge_count} = graph_size(edges_or_adjacency)
+  emit_analyze_telemetry(result, duration_us, node_count, edge_count)
+  emit_route_telemetry(result, <span class="t-atom">:analyze_topology</span>)
+  result
+<span class="t-kw">end</span></code></pre>
+<p><strong>Retriever integration requirement:</strong> after topology is computed during retrieval, emit route telemetry with <code>trigger: :retrieve_context</code> so routing counters cover both entry points.</p>
+<h4 id="blk-19863">Path 2: κ Visualization in BendScript (JavaScript) — Visual Demo</h4>
+<p><strong>Goal:</strong> Users build graphs on the canvas and see κ in real time — SCC clusters glow, κ badges appear, HUD shows routing mode.</p>
+<p><strong>Prerequisites:</strong> BendScript has been migrated to SvelteKit per <code>bendscript.com/prompts/MIGRATION_PROMPT.md</code>. The engine is modular. Directed edge creation (&quot;Connect to…&quot;) and arrowheads already work.</p>
+<p><strong>Primary file:</strong> <code>bendscript/src/lib/engine/topology.js</code> (NEW — the κ engine module)</p>
+<p><strong>Other files modified:</strong> <code>renderer.js</code>, <code>graph.js</code>, <code>input.js</code>, plus Svelte components <code>HUD.svelte</code>, <code>ContextMenu.svelte</code>.</p>
+<p><strong>If SvelteKit migration has NOT been done yet:</strong> Fall back to adding all κ code directly to <code>bendscript.com/index.html</code> instead. The logic is identical — only file paths change.</p>
+<h5 id="blk-19869">Task 2.1: Port Tarjan + κ to JavaScript</h5>
+<p>Create <code>src/lib/engine/topology.js</code> with a comment banner:</p>
+<pre data-lang="javascript"><code><span class="t-comment">// ═══════════════════════════════════════════════════════════════</span>
+<span class="t-comment">// κ TOPOLOGY ENGINE</span>
+<span class="t-comment">// Canonical schema: see kappa_integration_spec.md §2.4</span>
+<span class="t-comment">// DOM-free — no window/document/canvas references</span>
+<span class="t-comment">// ═══════════════════════════════════════════════════════════════</span></code></pre>
+<p><strong>Edge directionality rule (HARD — no toggle):</strong></p>
+<pre data-lang="javascript"><code><span class="t-kw">const</span> <span class="t-type">DIRECTED_KINDS</span> = [<span class="t-string">'causal'</span>, <span class="t-string">'temporal'</span>];
+<span class="t-comment">// Only edges with these kinds participate in SCC/κ computation.</span>
+<span class="t-comment">// All other edge kinds are excluded entirely from the directed graph.</span></code></pre>
+<p><strong>Functions to implement:</strong></p>
+<ol><li><p><strong>`tarjanSCC(nodes, edges)`</strong></p></li></ol>
+<ul><li><p>Input: arrays of node objects and edge objects (from <code>activePlane().nodes</code> / <code>.edges</code>)</p></li><li><p>Output: array of arrays (each inner array = node IDs in one SCC, only nontrivial SCCs with size &gt; 1)</p></li><li><p>Filter edges: <code>edges.filter(e =&gt; DIRECTED_KINDS.includes(e.props?.kind))</code></p></li><li><p>Map edge endpoints: <code>e.a</code> → source, <code>e.b</code> → target</p></li><li><p>Recursive implementation is fine (BendScript graphs are &lt; 1000 nodes)</p></li></ul>
+<ol start="2"><li><p><strong>`computeKappa(adjMap, sccNodeIds)`</strong></p></li></ol>
+<ul><li><p>Input: adjacency Map (nodeId → Set of neighbor IDs), array of node IDs in one SCC</p></li><li><p>Output: <code>{ kappa: number, approximate: false, minCutPartition: [arrayA, arrayB] | null, faultLineEdges: [{source, target}] }</code></p></li><li><p>Bipartition enumeration via bitmask (SCC size ≤ 20)</p></li><li><p>For SCC &gt; 20: return <code>{ kappa: sccNodeIds.length, approximate: true, faultLineEdges: [] }</code></p></li></ul>
+<ol start="3"><li><p><strong>`analyzeTopology(plane)`</strong></p></li></ol>
+<ul><li><p>Input: a plane object (has <code>.nodes</code> and <code>.edges</code>)</p></li><li><p>Output (matches canonical schema §A.1, camelCase for JS):</p></li></ul>
+<p>``<code>javascript { sccs: [{ id, nodes, kappa, approximate, faultLineEdges, routing, deliberationBudget }], dagNodes: [...], routing: 'fast' | 'deliberate', maxKappa: number, sccCount: number } </code>``</p>
+<ul><li><p><strong>Cache:</strong> Store result on <code>plane._topologyCache</code>. Set <code>plane._topologyDirty = true</code> in <code>addEdge()</code> and when edges are removed. Only recompute when dirty.</p></li><li><p><strong>Timing:</strong> Log computation time via <code>performance.now()</code>: <code>console.debug(\</code>[κ] topology: ${ms}ms\<code>)</code></p></li></ul>
+<ol start="4"><li><p><strong>`previewEdgeImpact(plane, srcId, dstId)`</strong></p></li></ol>
+<ul><li><p>Temporarily add the edge to a copied adjacency map, recompute topology, diff against cached result</p></li><li><p>Return <code>{ createsNewSCC: bool, kappaBefore: number, kappaAfter: number, kappaDelta: number, description: string }</code></p></li><li><p><strong>Do NOT mutate the actual plane</strong> — work on a copy of the adjacency map</p></li></ul>
+<h5 id="blk-19925">Task 2.2: SCC Visualization on Canvas</h5>
+<p>In <code>src/lib/engine/renderer.js</code>, add a new <code>drawTopology(ctx, plane, W, H, t)</code> function. Call it from <code>GraphCanvas.svelte</code>'s tick loop <strong>after</strong> <code>drawBackground</code> and <strong>before</strong> <code>drawEdges</code>:</p>
+<pre data-lang="javascript"><code><span class="t-comment">// In GraphCanvas.svelte tick():</span>
+<span class="t-fn">drawBackground</span>(ctx, <span class="t-type">W</span>, <span class="t-type">H</span>, t);
+<span class="t-fn">drawTopology</span>(ctx, plane, <span class="t-type">W</span>, <span class="t-type">H</span>, t);  <span class="t-comment">// NEW — SCC halos + κ badges</span>
+<span class="t-fn">drawEdges</span>(ctx, plane, <span class="t-type">W</span>, <span class="t-type">H</span>, t);
+<span class="t-fn">drawNodes</span>(ctx, plane, <span class="t-type">W</span>, <span class="t-type">H</span>, t);</code></pre>
+<p><code>drawTopology</code> reads from <code>plane._topologyCache</code> (computed by <code>analyzeTopology</code> in topology.js). Implementation:</p>
+<ol><li><p><strong>Cluster halos:</strong> For each SCC with κ &gt; 0, compute the convex bounding box of its member nodes (with 30px padding). Draw a rounded-rect background fill:</p></li></ol>
+<ul><li><p>κ = 1: <code>rgba(0, 255, 200, 0.06)</code> (subtle cyan-green)</p></li><li><p>κ = 2: <code>rgba(0, 200, 255, 0.08)</code> (cyan)</p></li><li><p>κ ≥ 3: <code>rgba(180, 100, 255, 0.10)</code> (purple)</p></li><li><p>Corner radius: 16px. Use <code>ctx.roundRect()</code> or manual arc path.</p></li></ul>
+<ol start="2"><li><p><strong>κ badge:</strong> Draw a small label at the top-right corner of each SCC bounding box: <code>κ=2</code> in monospace font, 10px, white text on dark pill background (<code>rgba(0,0,0,0.6)</code> with border-radius). Use <code>ctx.fillText()</code> + manual background rect.</p></li></ol>
+<ol start="3"><li><p><strong>Fault-line edge highlight:</strong> Edges that are fault lines get a dashed stroke (<code>ctx.setLineDash([6, 4])</code>) and a brighter color (e.g., <code>rgba(0, 255, 200, 0.6)</code>) than normal edges. Reset dash after drawing: <code>ctx.setLineDash([])</code>.</p></li></ol>
+<ol start="4"><li><p><strong>Pulse animation for SCC nodes:</strong> Nodes inside an SCC with κ &gt; 0 get a subtle pulse on their border. The <code>node.pulse</code> property already exists — modulate it: <code>node.pulse = Math.sin(Date.now() / 1000) * 0.3 + 0.7</code>. Use this to modulate border opacity or width.</p></li></ol>
+<h5 id="blk-19950">Task 2.3: HUD Extension</h5>
+<p>In <code>src/components/canvas/HUD.svelte</code>, extend the existing stat pills. The HUD currently shows: <code>nodes: N | edges: N | depth: N | zoom: N</code></p>
+<p>Extend it to show:</p>
+<pre><code>nodes: N | edges: N | depth: N | zoom: N | κ: N | SCCs: N | mode: RETRIEVAL</code></pre>
+<p>Or when κ &gt; 0:</p>
+<pre><code>nodes: N | edges: N | depth: N | zoom: N | κ: 2 | SCCs: 1 | mode: DELIBERATION</code></pre>
+<ul><li><p><code>κ</code> = max κ across all SCCs in the active plane</p></li><li><p><code>SCCs</code> = count of nontrivial SCCs</p></li><li><p><code>mode</code> = <code>RETRIEVAL</code> when all κ = 0, <code>DELIBERATION</code> when any κ &gt; 0</p></li><li><p>Color the mode label: green (#00ff88) for RETRIEVAL, cyan (#00ccff) for DELIBERATION</p></li></ul>
+<h5 id="blk-19965">Task 2.4: Edge Creation Topology Preview</h5>
+<p><strong>Note:</strong> After the SvelteKit migration, BendScript has a &quot;Connect to…&quot; context menu item that creates directed edges. This task adds <strong>topology impact annotations</strong> to that existing flow.</p>
+<p>In <code>src/components/canvas/ContextMenu.svelte</code>, update the &quot;Connect to…&quot; submenu. When the submenu opens:</p>
+<ol><li><p>Show a submenu listing nearby nodes (within 500px world distance) as connection targets</p></li><li><p>For each candidate, compute <code>previewEdgeImpact(plane, thisNodeId, candidateId)</code> with <code>kind: 'causal'</code></p></li><li><p>Display each candidate with its topology impact:</p></li></ol>
+<ul><li><p>&quot;→ NodeX (κ: 0→1 — creates feedback loop)&quot; in cyan</p></li><li><p>&quot;→ NodeY (κ: 2→2 — no change)&quot; in gray</p></li><li><p>&quot;→ NodeZ (κ: 0→0 — no change)&quot; in gray</p></li></ul>
+<ol start="4"><li><p>When the user clicks a candidate, call <code>addEdge(plane, thisNodeId, candidateId, { kind: 'causal' })</code></p></li><li><p>Set <code>plane._topologyDirty = true</code></p></li></ol>
+<p><strong>Throttling:</strong> Compute previews lazily — only when the submenu opens, not on every right-click.</p>
+<h5 id="blk-19988">Task 2.5: Context Menu — Bend / Unbend</h5>
+<p>In <code>src/components/canvas/ContextMenu.svelte</code>, add to the existing right-click context menu (which has fork/merge/connect/pin/stargate/delete):</p>
+<p><strong>On DAG nodes (nodes NOT in any SCC):</strong></p>
+<ul><li><p><strong>&quot;Bend — Create Feedback Loop&quot;</strong> — When clicked, finds the nearest node that would create a cycle if connected (via <code>previewEdgeImpact</code> on nearby candidates), and adds that edge. If no cycle-creating candidate exists within 500px, show &quot;No feedback loop possible nearby&quot; (grayed out).</p></li></ul>
+<p><strong>On SCC nodes (nodes IN an SCC with κ &gt; 0):</strong></p>
+<ul><li><p><strong>&quot;Unbend — Break Feedback Loop&quot;</strong> — When clicked, identifies the fault-line edge in this node's SCC and removes it, reducing κ. Show a confirmation: &quot;Remove edge X→Y? This breaks the feedback loop (κ: 2→1).&quot;</p></li></ul>
+<h4 id="blk-19998">Path 3: Integration (After Paths 1 &amp; 2)</h4>
+<p>Path 3 is documented here for context but should NOT be built until Paths 1 and 2 are working.</p>
+<ul><li><p>BendScript backend (Supabase + auth + AI) — see <code>bendscript.com/prompts/BUILD.md</code> Phases 2–5</p></li><li><p>BendScript backend connects to Graphonomous via MCP</p></li><li><p>κ computed server-side by Graphonomous, visualized client-side by BendScript</p></li><li><p>Real-time κ updates when graph mutations arrive via Supabase broadcast</p></li><li><p><code>&amp;topology.analyze</code> and <code>&amp;topology.route</code> registered as [&amp;] Protocol capabilities</p></li></ul>
+<h3 id="blk-20011">3. The κ Algorithm — Detailed Reference</h3>
+<p>This section provides everything needed to implement without reading the full theory paper.</p>
+<h4 id="blk-20013">3.1 Tarjan's SCC Algorithm</h4>
+<p><strong>Input:</strong> Directed graph as adjacency map/list. <strong>Output:</strong> List of strongly connected components (each SCC = set of node IDs).</p>
+<p>A strongly connected component is a maximal set of nodes where every node can reach every other node following directed edges.</p>
+<pre><code>function tarjan(graph):
+    index = 0
+    stack = []
+    result = []
+
+    for each node v:
+        v.index = undefined
+        v.lowlink = undefined
+        v.onStack = false
+
+    function strongconnect(v):
+        v.index = index
+        v.lowlink = index
+        index += 1
+        stack.push(v)
+        v.onStack = true
+
+        for each edge (v → w):
+            if w.index is undefined:
+                strongconnect(w)
+                v.lowlink = min(v.lowlink, w.lowlink)
+            elif w.onStack:
+                v.lowlink = min(v.lowlink, w.index)
+
+        if v.lowlink == v.index:
+            component = []
+            repeat:
+                w = stack.pop()
+                w.onStack = false
+                component.push(w)
+            until w == v
+            result.push(component)
+
+    for each node v:
+        if v.index is undefined:
+            strongconnect(v)
+
+    return result</code></pre>
+<p><strong>Complexity:</strong> O(V + E)</p>
+<p><strong>Elixir note:</strong> Use an iterative (explicit stack) version to avoid stack overflow on large graphs. Elixir's immutable data structures mean you'll pass state through function arguments or use a <code>Map</code> accumulator.</p>
+<p><strong>JavaScript note:</strong> Recursive is fine for graphs under ~1000 nodes (BendScript's typical scale).</p>
+<h4 id="blk-20020">3.2 κ Computation</h4>
+<p><strong>Input:</strong> Adjacency data + list of node IDs forming one SCC. <strong>Output:</strong> κ value (integer ≥ 0) + minimum-cut partition + fault-line edges.</p>
+<pre><code>function compute_kappa(adjacency, scc_node_ids):
+    n = len(scc_node_ids)
+    if n &lt;= 1: return { kappa: 0, approximate: false }
+    if n &gt; 20: return { kappa: n, approximate: true, faultLineEdges: [] }
+
+    min_kappa = infinity
+    best_partition = null
+
+    # Enumerate all nontrivial bipartitions via bitmask
+    for mask in 1 to (2^n - 2):
+        A = [scc_node_ids[i] for i where bit i of mask is set]
+        B = [scc_node_ids[i] for i where bit i of mask is unset]
+
+        edges_A_to_B = count edges from any node in A to any node in B
+        edges_B_to_A = count edges from any node in B to any node in A
+        cut = min(edges_A_to_B, edges_B_to_A)
+
+        if cut &lt; min_kappa:
+            min_kappa = cut
+            best_partition = (A, B)
+            if min_kappa == 0: break  # can't go lower
+
+    # Identify fault-line edges (edges in the minimum-direction crossing)
+    fault_lines = edges in the direction with fewer crossings
+
+    return { kappa: min_kappa, approximate: false, partition: best_partition, faultLineEdges: fault_lines }</code></pre>
+<p><strong>Complexity:</strong> O(2^n × n²) where n = SCC size. Practical for n ≤ 20.</p>
+<p><strong>Optimization (both languages):</strong> Use bitwise operations for the mask loop. Pre-compute edge presence in a matrix/map for O(1) lookup during bipartition evaluation.</p>
+<h4 id="blk-20025">3.3 Deliberation Budget</h4>
+<pre><code>function deliberation_budget(kappa):
+    return {
+        max_iterations: min(kappa + 1, 4),
+        agent_count: min(kappa, 3),
+        timeout_multiplier: min(1.0 + 0.5 * kappa, 3.5),
+        confidence_threshold: min(0.7 + 0.05 * kappa, 0.95)
+    }</code></pre>
+<p>This is an engineering heuristic, not proved. Tune empirically. The <code>min()</code> caps prevent runaway values on approximated large SCCs.</p>
+<h4 id="blk-20028">3.4 Routing Decision</h4>
+<pre><code>function route(topology_result):
+    if topology_result.max_kappa == 0:
+        return &quot;fast&quot;
+    else:
+        return &quot;deliberate&quot;</code></pre>
+<h3 id="blk-20030">4. Testing Checklist</h3>
+<h4 id="blk-20031">Elixir (Path 1)</h4>
+<pre><code>[ ] tarjan_scc on empty graph → []
+[ ] tarjan_scc on linear chain → all trivial SCCs (size 1)
+[ ] tarjan_scc on simple cycle → one SCC with all cycle nodes
+[ ] tarjan_scc on disconnected graph → separate SCCs
+[ ] compute_kappa on trivial SCC → 0
+[ ] compute_kappa on simple 3-cycle → 1
+[ ] compute_kappa on business example (5-node SCC: market-share/revenue/r-and-d/product-quality/customer-retention) → 1
+[ ] compute_kappa on K₂,₂ (complete bipartite with both directions, 4 nodes) → 2
+[x] analyze on mixed DAG+SCC graph → correct routing, dag_nodes, sccs
+[x] analyze output uses canonical field names (§A.1)
+[x] approximate: false for SCC ≤ 20
+[x] approximate: true + kappa = SCC size for SCC &gt; 20
+[x] build_adjacency correctly maps Edge structs
+[x] preview_edge_impact detects new SCC creation
+[x] Retriever returns topology key in results
+[x] MCP tool analyze_topology returns valid JSON matching §A.1
+[x] MCP tool retrieve_context includes topology field
+[x] :telemetry events emitted from analyze/1
+[x] mix test passes
+[x] mix format --check-formatted passes
+[x] mix compile --warnings-as-errors passes</code></pre>
+<h4 id="blk-20033">JavaScript (Path 2)</h4>
+<pre><code>[x] tarjanSCC on simple cycle → correct SCC
+[x] computeKappa on 3-cycle → kappa: 1, approximate: false
+[x] computeKappa on &gt; 20 node SCC → approximate: true
+[x] analyzeTopology on active plane → correct routing
+[ ] analyzeTopology uses internal camelCase, plus explicit mapper to canonical snake_case for any network/persisted payload
+[ ] SCC clusters render as background halos
+[ ] κ badges appear on SCC clusters
+[ ] Fault-line edges render dashed
+[x] HUD shows κ, SCC count, routing mode
+[x] &quot;Connect to…&quot; context menu shows topology preview
+[x] Bend context menu creates feedback loop
+[x] Unbend context menu breaks feedback loop
+[ ] performance.now() logging shows &lt; 50ms on 100-node graph
+[ ] No visual regression on existing graph rendering
+[ ] Topology cache invalidated on edge add/remove
+[ ] DIRECTED_KINDS filter only includes causal + temporal</code></pre>
+<h3 id="blk-20035">5. File Manifest</h3>
+<h4 id="blk-20036">New files to create:</h4>
+<table><thead><tr><th>File</th><th>Language</th><th>Purpose</th></tr></thead><tbody><tr><td><code>graphonomous/lib/graphonomous/topology.ex</code></td><td>Elixir</td><td>SCC + κ computation + telemetry</td></tr><tr><td><code>graphonomous/lib/graphonomous/mcp/topology_analyze.ex</code></td><td>Elixir</td><td>MCP tool for topology</td></tr><tr><td><code>graphonomous/test/graphonomous/topology_test.exs</code></td><td>Elixir</td><td>Unit tests</td></tr><tr><td><code>graphonomous/test/graphonomous/retriever_topology_test.exs</code></td><td>Elixir</td><td>Integration tests</td></tr></tbody></table>
+<h4 id="blk-20053">Files to modify:</h4>
+<table><thead><tr><th>File</th><th>Change</th></tr></thead><tbody><tr><td><code>graphonomous/lib/graphonomous/retriever.ex</code></td><td>Add topology analysis after retrieval</td></tr><tr><td><code>graphonomous/lib/graphonomous/store.ex</code></td><td>Add <code>list_edges_between/1</code></td></tr><tr><td><code>graphonomous/lib/graphonomous/mcp/server.ex</code></td><td>Register <code>TopologyAnalyze</code> component</td></tr><tr><td><code>graphonomous/lib/graphonomous/mcp/retrieve_context.ex</code></td><td>Include topology in response</td></tr><tr><td><code>bendscript/src/lib/engine/topology.js</code></td><td>κ topology engine (NEW)</td></tr><tr><td><code>bendscript/src/lib/engine/renderer.js</code></td><td>Add <code>drawTopology()</code>, fault-line edge dashing</td></tr><tr><td><code>bendscript/src/lib/engine/graph.js</code></td><td>Add <code>_topologyDirty</code> flag on edge add/remove</td></tr><tr><td><code>bendscript/src/components/canvas/HUD.svelte</code></td><td>Add κ, SCC count, routing mode pills</td></tr><tr><td><code>bendscript/src/components/canvas/ContextMenu.svelte</code></td><td>Add topology preview to &quot;Connect to…&quot;, add Bend/Unbend</td></tr><tr><td><code>bendscript/src/components/canvas/GraphCanvas.svelte</code></td><td>Call <code>drawTopology()</code> in render loop</td></tr></tbody></table>
+<h4 id="blk-20077">Reference files (read-only, do not modify):</h4>
+<table><thead><tr><th>File</th><th>Purpose</th></tr></thead><tbody><tr><td><code>graphonomous.com/project_spec/kappa_reference.py</code></td><td>Python reference implementation</td></tr><tr><td><code>graphonomous.com/project_spec/kappa_theory_applied.md</code></td><td>Theoretical foundations</td></tr><tr><td><code>graphonomous.com/project_spec/kappa_integration_spec.md</code></td><td>Product integration spec (v0.2.0 — canonical schema)</td></tr><tr><td><code>graphonomous.com/project_spec/kappa_product_crosswalk.md</code></td><td>Per-product mapping</td></tr></tbody></table>
+<h3 id="blk-20089">6. Success Criteria</h3>
+<h4 id="blk-20090">Gate A — Algorithm Correctness (MUST PASS)</h4>
+<ol><li><p>Elixir SCC outputs match Python reference on shared fixtures</p></li><li><p>κ values match Python reference for all nontrivial SCC fixtures up to size 10</p></li><li><p>Self-loop behavior: self-loop-only → κ = 0</p></li><li><p>All output maps use canonical field names from §A.1</p></li></ol>
+<p><strong>Pass threshold:</strong> 100% fixture parity.</p>
+<h4 id="blk-20101">Gate B — Contract Correctness (MUST PASS)</h4>
+<ol><li><p><code>retrieve_context</code> MCP includes <code>topology</code> with stable schema matching §A.1</p></li><li><p><code>analyze_topology</code> MCP tool schema and output are deterministic</p></li><li><p>Field naming consistency at boundaries: canonical snake_case (<code>routing</code>, <code>max_kappa</code>, <code>scc_count</code>, <code>fault_line_edges</code>, <code>approximate</code>) is enforced for MCP JSON; JS may use camelCase internally with a deterministic mapper</p></li></ol>
+<p><strong>Pass threshold:</strong> Zero schema drift in contract tests.</p>
+<h4 id="blk-20110">Gate C — Performance &amp; UX (MUST PASS)</h4>
+<ol><li><p>Graphonomous topology overhead:</p></li></ol>
+<ul><li><p>p50 &lt; 10ms</p></li><li><p>p95 &lt; 25ms</p></li></ul>
+<p>on typical retrieved subgraphs (&lt; 50 nodes)</p>
+<ol start="2"><li><p>BendScript recompute time:</p></li></ol>
+<ul><li><p>&lt; 50ms at 100 nodes</p></li></ul>
+<ol start="3"><li><p>Visual:</p></li></ol>
+<ul><li><p>SCC halo, κ badge, mode toggle all update correctly after edge mutations</p></li></ul>
+<p><strong>Pass threshold:</strong> All three met. Measured via <code>:telemetry</code> (Elixir) and <code>performance.now()</code> (JS).</p>
+<h4 id="blk-20133">Gate D — Product Effect (SHOULD PASS)</h4>
+<ol><li><p>Deliberation calls only when κ &gt; 0</p></li><li><p>Reduced unnecessary deliberation on DAG-only queries</p></li><li><p>Better coherence on circular-topic eval set</p></li></ol>
+<p><strong>Pass threshold (v1):</strong> Directional improvement with logged evidence.</p>
+<h3 id="blk-20142">7. Architectural Notes</h3>
+<h4 id="blk-20143">Why κ and not just &quot;detect cycles&quot;?</h4>
+<p>A simple cycle detector (DFS back-edge check) tells you <em>whether</em> cycles exist. κ tells you <em>how entangled</em> they are. A graph with κ = 1 has one irreducible feedback loop — one extra reasoning pass probably suffices. A graph with κ = 3 has three independent feedback paths — the agent needs more iterations and possibly parallel reasoning threads. The magnitude matters for budgeting inference compute.</p>
+<h4 id="blk-20145">Why Tarjan and not Kosaraju?</h4>
+<p>Tarjan's runs in a single DFS pass. Kosaraju's requires two passes (one on G, one on G^T). For real-time computation on every query, the constant factor matters. Both are O(V+E).</p>
+<h4 id="blk-20147">Why bipartition enumeration and not min-cut algorithms?</h4>
+<p>For small SCCs (≤ 20 nodes, which covers ~99% of real knowledge graph clusters), exhaustive bipartition is simpler to implement and verify. The exponential blowup only matters for large SCCs, which are rare in practice. For those, we fall back to SCC size as a proxy — good enough for routing decisions.</p>
+<h4 id="blk-20149">Directed vs. undirected edges in BendScript</h4>
+<p>BendScript's data model stores edges as <code>{a, b}</code> pairs with a <code>kind</code>. For κ computation, <strong>only `causal` and `temporal` edges are used</strong> (see §A and Task 2.1). All other edge kinds are excluded. This is a hard design decision, not configurable:</p>
+<ul><li><p><code>causal</code> edges: directed (a → b = cause → effect)</p></li><li><p><code>temporal</code> edges: directed (a → b = before → after)</p></li><li><p><code>context</code>, <code>associative</code>, <code>user</code>: <strong>excluded</strong> from κ graph — symmetric relationships don't create feedback loops</p></li></ul>
+<h4 id="blk-20158">Performance budget</h4>
+<ul><li><p><strong>Graphonomous:</strong> Topology adds to every <code>retrieve_context</code> call. Target: &lt; 10ms for &lt; 50 nodes. SCC is O(V+E) ≈ microseconds. κ bipartition is the bottleneck — but only runs on nontrivial SCCs, which are rare and small.</p></li><li><p><strong>BendScript:</strong> Topology recomputed only when <code>_topologyDirty</code> flag is set. Target: &lt; 50ms for ≤ 100 nodes. Cache on <code>plane._topologyCache</code>.</p></li></ul>
+<h4 id="blk-20164">Tool naming rationale</h4>
+<ul><li><p><code>analyze_topology</code> = standalone MCP tool for explicit topology queries</p></li><li><p><code>retrieve_context</code> = existing tool, augmented with <code>topology</code> field in response</p></li><li><p>No <code>memory_recall_with_topology</code> — that would be a redundant parallel endpoint. The existing <code>retrieve_context</code> already does retrieval; adding topology to its response is cleaner than creating a second retrieval tool.</p></li></ul>
+<p><em>Reference documents: `graphonomous.com/project_spec/kappa_reference.py`, `graphonomous.com/project_spec/kappa_theory_applied.md`, `graphonomous.com/project_spec/kappa_integration_spec.md` (v0.2.0), `graphonomous.com/project_spec/kappa_product_crosswalk.md`. Graphonomous spec: `graphonomous.com/project_spec/README.md`. BendScript prototype: `bendscript.com/index.html`. BendScript build plan: `bendscript.com/prompts/BUILD.md`.</em></p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/prompts/KAPPA_BUILD_PROMPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-19454" class="lvl2">v2 Changelog (what changed from v1 and why)</a><a href="#blk-19477" class="lvl2">0. The One-Sentence Idea</a><a href="#blk-19480" class="lvl2">A. Canonical Schema (READ THIS FIRST)</a><a href="#blk-19481" class="lvl3">A.1 The Single Source of Truth</a><a href="#blk-19484" class="lvl3">A.2 Field Name Rules</a><a href="#blk-19532" class="lvl3">A.3 Language-Specific Conventions</a><a href="#blk-19537" class="lvl3">A.4 Approximation (Large SCCs)</a><a href="#blk-19558" class="lvl2">1. What Exists Today</a><a href="#blk-19559" class="lvl3">1.1 Graphonomous (Elixir/OTP) — graphonomous/</a><a href="#blk-19648" class="lvl3">1.2 BendScript Prototype — bendscript.com/index.html</a><a href="#blk-19692" class="lvl3">1.3 κ Reference Implementation — graphonomous.com/project_spec/kappa_reference.py</a><a href="#blk-19710" class="lvl2">2. What to Build</a><a href="#blk-19711" class="lvl3">Path 1: κ in Graphonomous (Elixir) — Agent Automation</a><a href="#blk-19713" class="lvl4">Task 1.1: Create Graphonomous.Topology module</a><a href="#blk-19778" class="lvl4">Task 1.2: Wire topology into Retriever</a><a href="#blk-19796" class="lvl4">Task 1.3: Add Store.list_edges_between/1</a><a href="#blk-19800" class="lvl4">Task 1.4: Add MCP tool TopologyAnalyze</a><a href="#blk-19808" class="lvl4">Task 1.5: Update RetrieveContext MCP tool response</a><a href="#blk-19813" class="lvl4">Task 1.6: Tests</a><a href="#blk-19856" class="lvl4">Task 1.7: Instrumentation (NEW in v2)</a><a href="#blk-19863" class="lvl3">Path 2: κ Visualization in BendScript (JavaScript) — Visual Demo</a><a href="#blk-19869" class="lvl4">Task 2.1: Port Tarjan + κ to JavaScript</a><a href="#blk-19925" class="lvl4">Task 2.2: SCC Visualization on Canvas</a><a href="#blk-19950" class="lvl4">Task 2.3: HUD Extension</a><a href="#blk-19965" class="lvl4">Task 2.4: Edge Creation Topology Preview</a><a href="#blk-19988" class="lvl4">Task 2.5: Context Menu — Bend / Unbend</a><a href="#blk-19998" class="lvl3">Path 3: Integration (After Paths 1 &amp; 2)</a><a href="#blk-20011" class="lvl2">3. The κ Algorithm — Detailed Reference</a><a href="#blk-20013" class="lvl3">3.1 Tarjan&#39;s SCC Algorithm</a><a href="#blk-20020" class="lvl3">3.2 κ Computation</a><a href="#blk-20025" class="lvl3">3.3 Deliberation Budget</a><a href="#blk-20028" class="lvl3">3.4 Routing Decision</a><a href="#blk-20030" class="lvl2">4. Testing Checklist</a><a href="#blk-20031" class="lvl3">Elixir (Path 1)</a><a href="#blk-20033" class="lvl3">JavaScript (Path 2)</a><a href="#blk-20035" class="lvl2">5. File Manifest</a><a href="#blk-20036" class="lvl3">New files to create:</a><a href="#blk-20053" class="lvl3">Files to modify:</a><a href="#blk-20077" class="lvl3">Reference files (read-only, do not modify):</a><a href="#blk-20089" class="lvl2">6. Success Criteria</a><a href="#blk-20090" class="lvl3">Gate A — Algorithm Correctness (MUST PASS)</a><a href="#blk-20101" class="lvl3">Gate B — Contract Correctness (MUST PASS)</a><a href="#blk-20110" class="lvl3">Gate C — Performance &amp; UX (MUST PASS)</a><a href="#blk-20133" class="lvl3">Gate D — Product Effect (SHOULD PASS)</a><a href="#blk-20142" class="lvl2">7. Architectural Notes</a><a href="#blk-20143" class="lvl3">Why κ and not just &quot;detect cycles&quot;?</a><a href="#blk-20145" class="lvl3">Why Tarjan and not Kosaraju?</a><a href="#blk-20147" class="lvl3">Why bipartition enumeration and not min-cut algorithms?</a><a href="#blk-20149" class="lvl3">Directed vs. undirected edges in BendScript</a><a href="#blk-20158" class="lvl3">Performance budget</a><a href="#blk-20164" class="lvl3">Tool naming rationale</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/prompts/ATTENTION_ENGINE_PROMPT.md/">Attention Engine — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/CODEX_GUIDE.md/">[&amp;] Ecosystem — Codex Prompt Guide</a><a href="/AmpersandBoxDesign/prompts/DUAL_LOOP_MACHINES.md/">Dual- and Triple-Loop Machine Architecture</a><a href="/AmpersandBoxDesign/prompts/GRAPHONOMOUS_PROMPT.md/">GRAPHONOMOUS_PROMPT</a><a href="/AmpersandBoxDesign/prompts/KAPPA_DELIBERATOR_PROMPT.md/">κ-Driven Deliberation Orchestrator — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/MODEL_TIER_PROMPT.md/">Model Tier Adaptation — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md/">[&amp;] Protocol — Zed AI Coder Prompt</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierayhkwwwbnxcum7qaramtxlqctbqtbrmeley5xokekdh6zl2ydjs6a</div></div></div>
+</div></div>
+</body></html>

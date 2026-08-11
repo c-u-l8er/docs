@@ -1,0 +1,1519 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>PRISM — Protocol for Rating Iterative System Memory · opensentience.org · Ampersand Box</title>
+<meta name="description" content="The diagnostic benchmark that tells you what&#39;s broken, which system fits your work, and whether your fix actually worked.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PRISM — Protocol for Rating Iterative System Memory">
+<meta property="og:description" content="The diagnostic benchmark that tells you what&#39;s broken, which system fits your work, and whether your fix actually worked.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"PRISM — Protocol for Rating Iterative System Memory","name":"PRISM — Protocol for Rating Iterative System Memory","description":"The diagnostic benchmark that tells you what's broken, which system fits your work, and whether your fix actually worked.","url":"https://docs.ampersandboxdesign.com/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md/","identifier":"bagaaieralcgum4gvjepzzypez2jvln2qzpncrl6p3tuuxqa6v63lu34lxmdq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"OpenSentience Specification OS-009-PRISM v3.0"},{"@type":"WebPageElement","name":"Table of Contents"},{"@type":"WebPageElement","name":"1. Why Existing Benchmarks Fall Short"},{"@type":"WebPageElement","name":"The Legacy Pattern"},{"@type":"WebPageElement","name":"The Landscape"},{"@type":"WebPageElement","name":"What PRISM Does Differently"},{"@type":"WebPageElement","name":"2. Related Work"},{"@type":"WebPageElement","name":"2.1 Agent Memory Benchmarks"},{"@type":"WebPageElement","name":"2.2 IRT in AI Evaluation"},{"@type":"WebPageElement","name":"2.3 Self-Improving and Dynamic Benchmarks"},{"@type":"WebPageElement","name":"2.4 Cognitive Science Foundations"},{"@type":"WebPageElement","name":"3. The 9 CL Dimensions"},{"@type":"WebPageElement","name":"Weight Rationale"},{"@type":"WebPageElement","name":"Academic Grounding"},{"@type":"WebPageElement","name":"Judge Reliability by Dimension"},{"@type":"WebPageElement","name":"Judge Reliability Floor"},{"@type":"WebPageElement","name":"4. Architecture Overview"},{"@type":"WebPageElement","name":"OTP Supervision Tree"},{"@type":"WebPageElement","name":"How This Differs from Legacy Architectures"},{"@type":"WebPageElement","name":"5. Phase 1: Compose"},{"@type":"WebPageElement","name":"Overview"},{"@type":"WebPageElement","name":"Scenario Structure"},{"@type":"WebPageElement","name":"Anchor vs Frontier Scenarios"},{"@type":"WebPageElement","name":"Composition Process"},{"@type":"WebPageElement","name":"Coverage Analysis"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/spec/"},{"@type":"ListItem","position":5,"name":"OS-009-PRISM-SPECIFICATION.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">opensentience.org</span>
+<span class="path">opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md</span>
+
+</div></div>
+<div class="lead">The diagnostic benchmark that tells you what&#39;s broken, which system fits your work, and whether your fix actually worked.</div>
+<div class="prose"><h1 id="blk-76784">PRISM — Protocol for Rating Iterative System Memory</h1>
+<h3 id="blk-76785">OpenSentience Specification OS-009-PRISM v3.0</h3>
+<p><strong>The diagnostic benchmark that tells you what's broken, which system fits your work, and whether your fix actually worked.</strong></p>
+<p>Legacy benchmarks produce a score. PRISM produces a diagnosis.</p>
+<p>Every existing memory benchmark follows the same pattern: generate synthetic questions, run them against a system, score the answers, publish a number. Nobody changes their system because of that number. PRISM breaks the pattern with four capabilities no other benchmark has:</p>
+<ol><li><p><strong>Actionable diagnostics</strong> — not just scores, but failure pattern analysis with specific transcript evidence, fix suggestions ranked by ROI, and regression alerts across cycles</p></li><li><p><strong>Closed-loop verification</strong> — implement the fix, re-run the failing scenarios, get a verification report confirming improvement</p></li><li><p><strong>Bring Your Own Repo</strong> — point PRISM at your codebase (or clinical guidelines, case law, research papers) and find which memory system handles your specific complexity best</p></li><li><p><strong>Self-improving evaluation</strong> — IRT calibration, gap analysis, and scenario evolution make each cycle harder and more discriminating than the last</p></li></ol>
+<p>The success metric isn't how many systems appear on the leaderboard. It's <strong>how many teams shipped better memory because PRISM showed them what to fix.</strong></p>
+<p><strong>Stack:</strong> Elixir 1.17+ / OTP 27 / Postgres / Fly.io <strong>Protocol:</strong> MCP (Model Context Protocol) with 47 tools <strong>License:</strong> Apache 2.0 <strong>Canonical URL:</strong> opensentience.org/prism</p>
+<h3 id="blk-76800">Table of Contents</h3>
+<ol><li><p><a href="#1-why-existing-benchmarks-fall-short" target="_blank" rel="noopener">Why Existing Benchmarks Fall Short</a></p></li><li><p><a href="#2-related-work" target="_blank" rel="noopener">Related Work</a></p></li><li><p><a href="#3-the-9-cl-dimensions" target="_blank" rel="noopener">The 9 CL Dimensions</a></p></li><li><p><a href="#4-architecture-overview" target="_blank" rel="noopener">Architecture Overview</a></p></li><li><p><a href="#5-phase-1-compose" target="_blank" rel="noopener">Phase 1: Compose</a></p></li><li><p><a href="#6-phase-2-interact" target="_blank" rel="noopener">Phase 2: Interact</a></p></li><li><p><a href="#7-phase-3-observe" target="_blank" rel="noopener">Phase 3: Observe</a></p></li><li><p><a href="#8-phase-4-reflect" target="_blank" rel="noopener">Phase 4: Reflect</a></p></li><li><p><a href="#9-git-grounded-anchors" target="_blank" rel="noopener">Git-Grounded Anchors</a></p></li><li><p><a href="#10-domain-categories" target="_blank" rel="noopener">Domain Categories</a></p></li><li><p><a href="#11-closed-loop-testing" target="_blank" rel="noopener">Closed-Loop Testing</a></p></li><li><p><a href="#12-irt-calibration" target="_blank" rel="noopener">IRT Calibration</a></p></li><li><p><a href="#13-statistical-rigor" target="_blank" rel="noopener">Statistical Rigor</a></p></li><li><p><a href="#14-contamination-prevention" target="_blank" rel="noopener">Contamination Prevention</a></p></li><li><p><a href="#15-data-model-postgres" target="_blank" rel="noopener">Data Model (Postgres)</a></p></li><li><p><a href="#16-mcp-tool-surface-47-tools" target="_blank" rel="noopener">MCP Tool Surface (47 tools)</a></p></li><li><p><a href="#17-cl-category-specifications" target="_blank" rel="noopener">CL Category Specifications</a></p></li><li><p><a href="#18-scoring-system-design" target="_blank" rel="noopener">Scoring System Design</a></p></li><li><p><a href="#19-external-benchmark-integration" target="_blank" rel="noopener">External Benchmark Integration</a></p></li><li><p><a href="#20-deployment-flyio" target="_blank" rel="noopener">Deployment (Fly.io)</a></p></li><li><p><a href="#21-observability--telemetry" target="_blank" rel="noopener">Observability &amp; Telemetry</a></p></li><li><p><a href="#22-evaluation-divisions" target="_blank" rel="noopener">Evaluation Divisions</a></p></li><li><p><a href="#23-known-risks--mitigations" target="_blank" rel="noopener">Known Risks &amp; Mitigations</a></p></li><li><p><a href="#24-anti-gaming-rules" target="_blank" rel="noopener">Anti-Gaming Rules</a></p></li><li><p><a href="#25-capability-audit-matrix" target="_blank" rel="noopener">Capability Audit Matrix</a></p></li><li><p><a href="#26-cost-tiers" target="_blank" rel="noopener">Cost Tiers</a></p></li><li><p><a href="#27-governance--integrity" target="_blank" rel="noopener">Governance &amp; Integrity</a></p></li><li><p><a href="#28-community-contribution" target="_blank" rel="noopener">Community Contribution</a></p></li><li><p><a href="#29-audit-protocol" target="_blank" rel="noopener">Audit Protocol</a></p></li><li><p><a href="#30-scenario-quality-metrics" target="_blank" rel="noopener">Scenario Quality Metrics</a></p></li><li><p><a href="#31-versioning-policy" target="_blank" rel="noopener">Versioning Policy</a></p></li><li><p><a href="#32-limitations" target="_blank" rel="noopener">Limitations</a></p></li><li><p><a href="#33-actionable-diagnostics" target="_blank" rel="noopener">Actionable Diagnostics</a></p></li><li><p><a href="#34-bring-your-own-repo-byor" target="_blank" rel="noopener">Bring Your Own Repo (BYOR)</a></p></li><li><p><a href="#35-system-task-fit-recommendations" target="_blank" rel="noopener">System-Task Fit Recommendations</a></p></li><li><p><a href="#36-implementation-roadmap" target="_blank" rel="noopener">Implementation Roadmap</a></p></li><li><p><a href="#appendix-a-worked-example" target="_blank" rel="noopener">Appendix A: Worked Example</a></p></li></ol>
+<h3 id="blk-76876">1. Why Existing Benchmarks Fall Short</h3>
+<h4 id="blk-76877">The Legacy Pattern</h4>
+<p>Every existing agent memory benchmark follows the same architecture:</p>
+<pre><code>Generate Questions → Run Against System → Score Answers → Publish Number</code></pre>
+<p>This produces a number nobody acts on:</p>
+<table><thead><tr><th>Problem</th><th>Why It Matters</th></tr></thead><tbody><tr><td>Synthetic Q&amp;A</td><td>Doesn't reflect how agents actually use memory in practice</td></tr><tr><td>Single-pass evaluation</td><td>Can't measure whether the system <em>learns</em> from usage</td></tr><tr><td>Flat scoring</td><td>One number hides which CL capabilities are strong vs weak</td></tr><tr><td>Static question sets</td><td>Slowly saturate, no difficulty calibration, no self-improvement</td></tr><tr><td>Single judge, no audit</td><td>No way to know if the judge itself is reliable</td></tr><tr><td>No ground truth</td><td>Expected answers are the question author's opinion</td></tr><tr><td>Domain-agnostic</td><td>Can't compare &quot;memory for code&quot; vs &quot;memory for medicine&quot;</td></tr></tbody></table>
+<h4 id="blk-76898">The Landscape</h4>
+<table><thead><tr><th>Benchmark</th><th>What It Tests</th><th>What It Misses</th></tr></thead><tbody><tr><td>LongMemEval (ICLR 2025)</td><td>Retrieval, temporal, knowledge update, abstention</td><td>Consolidation, transfer, feedback, forgetting</td></tr><tr><td>BEAM (ICLR 2026)</td><td>10 memory abilities at 10M token scale</td><td>Intentional forgetting, outcome feedback, cross-domain transfer</td></tr><tr><td>MemoryAgentBench (ICLR 2026)</td><td>Retrieval, test-time learning, long-range, selective forgetting</td><td>Consolidation, transfer, uncertainty, feedback</td></tr><tr><td>MemoryBench</td><td>Feedback-driven CL, multi-domain</td><td>Temporal, uncertainty, forgetting</td></tr><tr><td>Evo-Memory (Google DeepMind)</td><td>Streaming cumulative improvement via self-evolving memory</td><td>Forgetting, uncertainty, consolidation</td></tr><tr><td>TRACE (arXiv 2310.06762)</td><td>CL degradation: general ability, instruction following, catastrophic forgetting</td><td>Agent-level memory (tests weight-level CL only)</td></tr><tr><td>SeekBench</td><td>Search agent epistemic competence: evidence grounding, recovery</td><td>Memory-system-level calibration, all non-epistemic CL dims</td></tr></tbody></table>
+<p>These benchmarks collectively cover ~70% of the CL evaluation space. The remaining gaps: consolidation/abstraction, cross-domain transfer, closed-loop retrieval feedback, and — critically — whether the system improves from its own usage.</p>
+<h4 id="blk-76925">What PRISM Does Differently</h4>
+<table><thead><tr><th>Legacy Approach</th><th>PRISM Approach</th></tr></thead><tbody><tr><td>Synthetic Q&amp;A pairs</td><td>Observational assessment: agents interact naturally, judges observe</td></tr><tr><td>Author-defined expected answers</td><td>Git-grounded anchors: real repos provide verifiable ground truth</td></tr><tr><td>Single-pass scoring</td><td>Closed-loop testing: scenario sequences measure learning over time</td></tr><tr><td>One composite number</td><td>9-dimensional CL scoring with per-domain breakdown</td></tr><tr><td>Single LLM judge</td><td>Three-layer judging: transcripts → dimension judges → meta-judges</td></tr><tr><td>Static question bank</td><td>Self-improving: gap analysis evolves scenarios, IRT calibrates difficulty</td></tr><tr><td>No domain awareness</td><td>Domain-tagged scenarios for cross-domain CL comparison</td></tr><tr><td>No learning measurement</td><td>Loop closure rate: does the system get better, or is it just a cache?</td></tr><tr><td>Score without context</td><td>Actionable diagnostics: failure patterns, fix suggestions, regression alerts</td></tr><tr><td>One-size-fits-all ranking</td><td>System-task fit: which system matches YOUR use case and priorities?</td></tr><tr><td>Benchmark owner's repos only</td><td>Bring Your Own Repo: evaluate against your codebase, your domain, your complexity</td></tr><tr><td>Score → done</td><td>Fix-and-retest: implement the fix, re-run failing scenarios, verify improvement</td></tr></tbody></table>
+<h3 id="blk-76953">2. Related Work</h3>
+<p>PRISM builds on and extends several research threads: agent memory benchmarks, IRT-based LLM evaluation, self-improving evaluation, and cognitive science foundations for continual learning.</p>
+<h4 id="blk-76955">2.1 Agent Memory Benchmarks</h4>
+<p><strong>LongMemEval</strong> (Wang et al., ICLR 2025) is the most widely adopted memory benchmark, evaluating 500 questions across five abilities: information extraction, multi-session reasoning, temporal reasoning, knowledge updates, and abstention. It introduced the oracle/haystack split methodology that PRISM adapts for scenario validation. However, LongMemEval is a single-pass static evaluation — it cannot measure whether a system improves from usage, does not test consolidation or cross-domain transfer, and uses author-defined expected answers rather than verifiable ground truth.</p>
+<p><strong>BEAM</strong> (Chen et al., ICLR 2026) scales memory evaluation to 10M token contexts with 100 conversations and 2,000 probes across 10 memory abilities. BEAM's token-scale methodology is more realistic than LongMemEval's fixed-length contexts. PRISM imports BEAM scenarios as frontier items (§19) but extends beyond BEAM's scope to cover intentional forgetting, outcome feedback, and closed-loop learning.</p>
+<p><strong>MemoryAgentBench</strong> (Li et al., ICLR 2026) is the closest benchmark to PRISM's scope, evaluating retrieval, test-time learning, long-range reasoning, and selective forgetting. Its &quot;test-time learning&quot; metric partially captures what PRISM measures with loop closure rate. However, MemoryAgentBench uses synthetic scenarios and single-pass evaluation — it tests whether a system <em>can</em> forget, not whether forgetting improves over time.</p>
+<p><strong>Evo-Memory</strong> (Google DeepMind, 2025) evaluates streaming cumulative improvement via self-evolving memory, measuring whether agents improve from their own experience. This is the most philosophically aligned benchmark to PRISM. However, Evo-Memory evaluates the <em>agent's</em> self-improvement, not the <em>benchmark's</em> self-improvement — its question bank is static. PRISM closes both loops: the system improves, and the benchmark improves.</p>
+<p><strong>AMB</strong> (Hindsight/Vectorize, agentmemorybenchmark.ai) and <strong>memorybench</strong> (Supermemory) are vendor-run leaderboards where the hosting organization leads its own benchmark. Both provide useful competitive data but lack the neutrality guarantees that PRISM's cross-model meta-judging and public audit trail provide.</p>
+<h4 id="blk-76961">2.2 IRT in AI Evaluation</h4>
+<p><strong>REEval</strong> (Stanford CRFM, ICLR 2025) demonstrated that 3-Parameter Logistic (3PL) IRT models achieve 0.85 AUC-ROC for predicting LLM benchmark performance, with 50% query reduction via adaptive testing. This directly validates PRISM's use of IRT for scenario difficulty calibration.</p>
+<p><strong>PSN-IRT</strong> (Zhang et al., 2025) extended IRT with prompt-specific normalization, improving calibration for LLM evaluation by accounting for prompt sensitivity. PRISM's adaptive mode (§6) addresses similar concerns by varying phrasing while preserving CL semantics.</p>
+<p><strong>LaRT</strong> (Stanford, 2025) applied latent ability estimation to rank LLMs across multiple benchmarks simultaneously. PRISM's per-dimension ability estimation (θ per system per dimension) follows this approach within the memory evaluation domain.</p>
+<p>No prior work has applied IRT to agent memory evaluation specifically. PRISM is the first to combine IRT calibration with memory-specific CL dimensions.</p>
+<h4 id="blk-76966">2.3 Self-Improving and Dynamic Benchmarks</h4>
+<p><strong>Dynabench</strong> (Kiela et al., NeurIPS 2021) introduced human-and-model-in-the-loop benchmark creation, where annotators craft adversarial examples targeting model weaknesses. PRISM's gap analysis (§8) automates a similar process: identifying under-tested dimensions and generating targeted scenarios, but without requiring human annotators per cycle.</p>
+<p><strong>LiveBench</strong> (White et al., 2024) addresses contamination by using only questions created after model knowledge cutoffs, with monthly refreshes. PRISM's anchor/frontier distinction achieves similar goals: anchors provide cross-cycle calibration while frontiers evolve to prevent saturation.</p>
+<p>No prior benchmark implements a fully closed self-improvement loop where evaluation results automatically drive scenario evolution, difficulty recalibration, and coverage expansion. PRISM is the first.</p>
+<h4 id="blk-76970">2.4 Cognitive Science Foundations</h4>
+<p>PRISM's 9 CL dimensions are grounded in established cognitive science:</p>
+<table><thead><tr><th>Dimension</th><th>Theoretical Grounding</th></tr></thead><tbody><tr><td>Stability/Plasticity</td><td>Stability-plasticity dilemma (Grossberg, 1976; Mermillod et al., 2013)</td></tr><tr><td>Knowledge Update</td><td>AGM belief revision postulates (Alchourrón, Gärdenfors &amp; Makinson, 1985)</td></tr><tr><td>Temporal Reasoning</td><td>Episodic memory and mental time travel (Tulving, 1972, 2002)</td></tr><tr><td>Consolidation</td><td>Complementary Learning Systems theory (McClelland et al., 1995); hippocampal replay</td></tr><tr><td>Epistemic Awareness</td><td>Metacognition and feeling-of-knowing (Hart, 1965; Nelson &amp; Narens, 1990)</td></tr><tr><td>Cross-Domain Transfer</td><td>Backward/forward transfer metrics (Lopez-Paz &amp; Ranzato, NeurIPS 2017)</td></tr><tr><td>Intentional Forgetting</td><td>Directed forgetting paradigm (Bjork, 1972); retrieval-induced forgetting</td></tr><tr><td>Outcome Feedback</td><td>Reinforcement-mediated memory consolidation (Shohamy &amp; Adcock, 2010)</td></tr></tbody></table>
+<p>The CL-for-LLMs survey (Shi, Wang et al., ACM Computing Surveys 2025) provides the most comprehensive taxonomy of continual learning challenges for language models. PRISM's dimension set covers all categories identified in that survey, plus two that the survey identifies as open problems: cross-domain transfer measurement and closed-loop feedback evaluation.</p>
+<h3 id="blk-76992">3. The 9 CL Dimensions</h3>
+<p>Each dimension has a weight in the composite score, reflecting its importance to continual learning. Weights sum to 1.0 and are configurable.</p>
+<table><thead><tr><th>#</th><th>Dimension</th><th>Weight</th><th>What It Tests</th></tr></thead><tbody><tr><td>1</td><td><strong>Stability</strong> (Anti-Forgetting)</td><td>0.20</td><td>Retaining old knowledge when new arrives</td></tr><tr><td>2</td><td><strong>Plasticity</strong> (New Acquisition)</td><td>0.18</td><td>Speed and accuracy of learning new information</td></tr><tr><td>3</td><td><strong>Knowledge Update</strong> (Contradiction)</td><td>0.15</td><td>Detecting and resolving conflicts between old and new</td></tr><tr><td>4</td><td><strong>Temporal Reasoning</strong></td><td>0.12</td><td>Knowing when things happened and what's current</td></tr><tr><td>5</td><td><strong>Consolidation</strong> (Abstraction)</td><td>0.10</td><td>Compressing episodes into insights over time</td></tr><tr><td>6</td><td><strong>Epistemic Awareness</strong></td><td>0.08</td><td>Knowing what you don't know, calibrated confidence</td></tr><tr><td>7</td><td><strong>Cross-Domain Transfer</strong></td><td>0.07</td><td>Knowledge from domain A improving domain B</td></tr><tr><td>8</td><td><strong>Intentional Forgetting</strong></td><td>0.05</td><td>Deliberate pruning, GDPR erasure, policy-based decay</td></tr><tr><td>9</td><td><strong>Outcome Feedback</strong></td><td>0.05</td><td>Retrieval quality improving from downstream signals</td></tr></tbody></table>
+<h4 id="blk-77035">Weight Rationale</h4>
+<p>Default weights reflect two principles:</p>
+<ol><li><p><strong>Foundational CL first.</strong> Stability (0.20) and plasticity (0.18) are the</p></li></ol>
+<p>canonical CL tradeoff (Grossberg, 1976; Mermillod et al., 2013). A memory system that can't retain or learn isn't doing CL at all.</p>
+<ol start="2"><li><p><strong>Judgeable dimensions weighted higher.</strong> Dimensions with expected judge</p></li></ol>
+<p>agreement below 70% are weighted lower to avoid noise dominating the composite score. Transfer (0.07) and consolidation (0.10) are the hardest to judge reliably — their weights reflect that uncertainty.</p>
+<p>Temporal reasoning is weighted 0.12 because it is reliably judgeable (~85% agreement) and universally relevant. Consolidation is weighted 0.10 because few systems implement it today and judge reliability is lower (~70%), which means higher weight would amplify noise.</p>
+<p>Weights are configurable via <code>set_cl_weights</code> but changes during an active cycle require governance approval (see §27).</p>
+<h4 id="blk-77047">Academic Grounding</h4>
+<p>These dimensions are derived from:</p>
+<ul><li><p><strong>Stability-plasticity dilemma</strong> (Mermillod et al., 2013; Grossberg, 1976–1982)</p></li><li><p><strong>Backward/forward transfer</strong> metrics (Lopez-Paz &amp; Ranzato, NeurIPS 2017)</p></li><li><p><strong>CL-for-LLMs survey</strong> (Shi, Wang et al., ACM Computing Surveys 2025)</p></li><li><p><strong>Complementary Learning Systems</strong> theory (McClelland et al., 1995)</p></li><li><p><strong>AGM belief revision</strong> postulates (Alchourrón, Gärdenfors, Makinson, 1985)</p></li></ul>
+<h4 id="blk-77060">Judge Reliability by Dimension</h4>
+<table><thead><tr><th>Dimension</th><th>Scoring Difficulty</th><th>Expected Judge Agreement</th><th>Reliability Status</th></tr></thead><tbody><tr><td>Stability</td><td>Easy — binary fact recall</td><td>~95%</td><td>Full weight</td></tr><tr><td>Plasticity</td><td>Easy-Medium</td><td>~90%</td><td>Full weight</td></tr><tr><td>Knowledge Update</td><td>Medium — subtle contradictions</td><td>~85%</td><td>Full weight</td></tr><tr><td>Temporal</td><td>Medium — date edge cases</td><td>~85%</td><td>Full weight</td></tr><tr><td>Forgetting</td><td>Easy — binary presence check</td><td>~92%</td><td>Full weight</td></tr><tr><td>Epistemic Awareness</td><td>Hard — calibration is subjective</td><td>~75%</td><td>Full weight</td></tr><tr><td>Consolidation</td><td>Hard — summary quality</td><td>~70%</td><td>Full weight (monitor)</td></tr><tr><td>Feedback</td><td>Hard — learning curves</td><td>~70%</td><td>Full weight (monitor)</td></tr><tr><td>Transfer</td><td>Very Hard — open-ended</td><td>~65%</td><td><strong>Flagged</strong></td></tr></tbody></table>
+<h4 id="blk-77102">Judge Reliability Floor</h4>
+<p>If a dimension's inter-judge agreement drops below <strong>60%</strong> across a cycle's scenarios, that dimension's scores MUST be:</p>
+<ol><li><p>Flagged in the leaderboard as &quot;low judge reliability&quot;</p></li><li><p>Reported with widened confidence intervals</p></li><li><p>Excluded from the composite weighted total until judge agreement recovers</p></li></ol>
+<p>Dimensions between 60-70% agreement are reported with a &quot;monitor&quot; flag. The protocol MUST report confidence intervals, not just point estimates. Systems within the error margin should be considered tied.</p>
+<h3 id="blk-77112">4. Architecture Overview</h3>
+<pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                        PRISM Engine                               │
+│                      (Elixir/OTP on Fly.io)                       │
+│                                                                    │
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐     │
+│  │ Phase 1   │→ │ Phase 2   │→ │ Phase 3   │→ │ Phase 4   │     │
+│  │ Compose   │  │ Interact  │  │ Observe   │  │ Reflect   │     │
+│  └───────────┘  └───────────┘  └───────────┘  └───────────┘     │
+│       ↑                                              │            │
+│       └──────────── Scenario Evolution ──────────────┘            │
+│                              │                                     │
+│                    ┌─────────┴─────────┐                          │
+│                    │    Diagnose       │                          │
+│                    │  Failure patterns │                          │
+│                    │  Fix suggestions  │                          │
+│                    │  Retest verify    │                          │
+│                    └───────────────────┘                          │
+│                                                                    │
+│  ┌────────────────────────────────────────────────────┐           │
+│  │             MCP Tool Surface (47 tools)            │           │
+│  │     Evaluation · Diagnostics · BYOR · Task Fit     │           │
+│  │              via stdio / SSE                       │           │
+│  └────────────────────────────────────────────────────┘           │
+│                                                                    │
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌──────────┐     │
+│  │ Postgres  │  │ LLM APIs  │  │ Git Repos │  │Telemetry │     │
+│  │ (Fly.io)  │  │ (Anthropic│  │ (Anchors  │  │(metrics) │     │
+│  │           │  │  OpenAI   │  │  + BYOR)  │  │          │     │
+│  │           │  │  Google)  │  │           │  │          │     │
+│  └───────────┘  └───────────┘  └───────────┘  └──────────┘     │
+└──────────────────────────────────────────────────────────────────┘
+         │              │              │              │
+    ┌────┴────┐   ┌────┴────┐   ┌────┴────┐   ┌────┴────┐
+    │Graphon- │   │Super-   │   │Mem0     │   │Zep/     │  ...
+    │omous    │   │memory   │   │         │   │Graphiti │
+    └─────────┘   └─────────┘   └─────────┘   └─────────┘
+
+         │              │              │              │
+    ┌────┴──────────────┴──────────────┴──────────────┴────┐
+    │                YOUR REPO (BYOR)                        │
+    │   Any Git repo, clinical guidelines, case law,         │
+    │   research papers — get personalized diagnostics       │
+    └──────────────────────────────────────────────────────┘</code></pre>
+<h4 id="blk-77114">OTP Supervision Tree</h4>
+<pre><code>Prism.Supervisor
+├── Prism.Repo                        # Ecto/Postgres
+├── Prism.Cycle.Manager               # 4-phase loop orchestrator (GenServer)
+├── Prism.Scenario.Library            # Scenario cache + IRT params (GenServer)
+├── Prism.Simulator.Supervisor        # Interaction sessions (DynamicSupervisor)
+│   ├── Prism.Simulator.Session       # One scenario execution (GenServer)
+│   └── ...
+├── Prism.Judge.Supervisor            # Judging tasks (DynamicSupervisor)
+│   ├── Prism.Judge.DimensionWorker   # Layer 2: per-dimension judge (Task)
+│   ├── Prism.Judge.MetaWorker        # Layer 3: meta-judge (Task)
+│   └── ...
+├── Prism.Runner.Pool                 # Concurrent execution (DynamicSupervisor)
+├── Prism.IRT.Calibrator              # IRT parameter estimation (GenServer)
+├── Prism.Diagnostics.Engine          # Failure pattern extraction + fix suggestions
+├── Prism.Diagnostics.RegressionTracker  # Cross-cycle regression alerts
+├── Prism.BYOR.RepoManager            # BYOR repo registration + event discovery
+├── Prism.BYOR.ScenarioGenerator      # Auto-generate scenarios from user repos
+├── Prism.TaskFit.ProfileStore        # Task profile management (ETS + Postgres)
+├── Prism.MCP.Server                  # MCP protocol handler (GenServer)
+├── Prism.Leaderboard.Cache           # ETS-backed leaderboard cache
+└── Prism.Telemetry                   # Metrics and observability</code></pre>
+<h4 id="blk-77116">How This Differs from Legacy Architectures</h4>
+<p>Legacy benchmarks have a three-stage pipeline: generate → execute → score. PRISM has a four-phase <strong>loop</strong> where each phase informs the next, plus a diagnostic layer that makes results actionable:</p>
+<ol><li><p><strong>Compose</strong> builds scenarios from gap analysis + git repo ground truth (or YOUR repo via BYOR)</p></li><li><p><strong>Interact</strong> runs scenarios via a standardized User Simulator (not direct Q&amp;A)</p></li><li><p><strong>Observe</strong> uses three independent judging layers (not one judge call)</p></li><li><p><strong>Reflect</strong> evolves scenarios and recalibrates difficulty (not static replacement)</p></li><li><p><strong>Diagnose</strong> extracts failure patterns, generates fix suggestions, and enables fix-and-retest verification (§33)</p></li></ol>
+<p>The system under test never sees a question-and-expected-answer pair. It interacts with a simulated user who walks through a git repo, asks questions, provides feedback, introduces contradictions — the way real memory usage works.</p>
+<h3 id="blk-77130">5. Phase 1: Compose</h3>
+<h4 id="blk-77131">Overview</h4>
+<p>Legacy benchmarks generate isolated question-answer pairs. PRISM composes <strong>scenarios</strong> — multi-session interaction scripts with embedded CL challenges and verifiable ground truth from real git repositories.</p>
+<h4 id="blk-77133">Scenario Structure</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;sc-001&quot;</span>,
+  <span class="t-key">&quot;kind&quot;</span>: <span class="t-string">&quot;anchor&quot;</span>,
+  <span class="t-key">&quot;domain&quot;</span>: <span class="t-string">&quot;code&quot;</span>,
+  <span class="t-key">&quot;repo_anchor_id&quot;</span>: <span class="t-string">&quot;ra-001&quot;</span>,
+  <span class="t-key">&quot;difficulty&quot;</span>: <span class="t-num">3</span>,
+  <span class="t-key">&quot;persona&quot;</span>: {
+    <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;senior_developer&quot;</span>,
+    <span class="t-key">&quot;context&quot;</span>: <span class="t-string">&quot;Maintaining an Elixir web app through a major refactor&quot;</span>
+  },
+  <span class="t-key">&quot;sessions&quot;</span>: [
+    {
+      <span class="t-key">&quot;session_number&quot;</span>: <span class="t-num">1</span>,
+      <span class="t-key">&quot;commit_range&quot;</span>: <span class="t-string">&quot;abc123..def456&quot;</span>,
+      <span class="t-key">&quot;turns&quot;</span>: [
+        {
+          <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;user&quot;</span>,
+          <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;ingest_diff&quot;</span>,
+          <span class="t-key">&quot;commit&quot;</span>: <span class="t-string">&quot;abc123&quot;</span>,
+          <span class="t-key">&quot;text&quot;</span>: <span class="t-string">&quot;I just pushed this commit. Can you help me understand the auth module changes?&quot;</span>
+        },
+        {
+          <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;system&quot;</span>,
+          <span class="t-key">&quot;expected_behavior&quot;</span>: <span class="t-string">&quot;Store auth module knowledge, associate with commit context&quot;</span>
+        },
+        {
+          <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;user&quot;</span>,
+          <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;probe&quot;</span>,
+          <span class="t-key">&quot;cl_challenge&quot;</span>: {
+            <span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;stability&quot;</span>,
+            <span class="t-key">&quot;ground_truth_commit&quot;</span>: <span class="t-string">&quot;abc123&quot;</span>,
+            <span class="t-key">&quot;ground_truth_file&quot;</span>: <span class="t-string">&quot;lib/app/auth.ex&quot;</span>,
+            <span class="t-key">&quot;ground_truth_answer&quot;</span>: <span class="t-string">&quot;Uses Guardian for JWT token generation with configurable TTL&quot;</span>
+          },
+          <span class="t-key">&quot;text&quot;</span>: <span class="t-string">&quot;What token library does the auth module use?&quot;</span>
+        }
+      ]
+    },
+    {
+      <span class="t-key">&quot;session_number&quot;</span>: <span class="t-num">2</span>,
+      <span class="t-key">&quot;commit_range&quot;</span>: <span class="t-string">&quot;def456..789abc&quot;</span>,
+      <span class="t-key">&quot;turns&quot;</span>: [
+        {
+          <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;user&quot;</span>,
+          <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;ingest_diff&quot;</span>,
+          <span class="t-key">&quot;commit&quot;</span>: <span class="t-string">&quot;def456&quot;</span>,
+          <span class="t-key">&quot;text&quot;</span>: <span class="t-string">&quot;Here's a new commit — we replaced Guardian with Joken.&quot;</span>
+        },
+        {
+          <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;user&quot;</span>,
+          <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;probe&quot;</span>,
+          <span class="t-key">&quot;cl_challenge&quot;</span>: {
+            <span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;knowledge_update&quot;</span>,
+            <span class="t-key">&quot;ground_truth_commit&quot;</span>: <span class="t-string">&quot;def456&quot;</span>,
+            <span class="t-key">&quot;ground_truth_file&quot;</span>: <span class="t-string">&quot;lib/app/auth.ex&quot;</span>,
+            <span class="t-key">&quot;ground_truth_answer&quot;</span>: <span class="t-string">&quot;Joken — Guardian was replaced in commit def456&quot;</span>
+          },
+          <span class="t-key">&quot;text&quot;</span>: <span class="t-string">&quot;What token library does the auth module use now?&quot;</span>
+        }
+      ]
+    }
+  ],
+  <span class="t-key">&quot;cl_challenges_summary&quot;</span>: [
+    {<span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;stability&quot;</span>, <span class="t-key">&quot;count&quot;</span>: <span class="t-num">3</span>},
+    {<span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;knowledge_update&quot;</span>, <span class="t-key">&quot;count&quot;</span>: <span class="t-num">2</span>},
+    {<span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;temporal&quot;</span>, <span class="t-key">&quot;count&quot;</span>: <span class="t-num">1</span>}
+  ],
+  <span class="t-key">&quot;irt_params&quot;</span>: {
+    <span class="t-key">&quot;difficulty_b&quot;</span>: <span class="t-num">0.0</span>,
+    <span class="t-key">&quot;discrimination_a&quot;</span>: <span class="t-num">1.0</span>,
+    <span class="t-key">&quot;guessing_c&quot;</span>: <span class="t-num">0.1</span>,
+    <span class="t-key">&quot;calibrated&quot;</span>: <span class="t-lit">false</span>
+  }
+}</code></pre>
+<h4 id="blk-77135">Anchor vs Frontier Scenarios</h4>
+<p><strong>Anchors (30-40% of suite):</strong></p>
+<ul><li><p>Git-grounded: a real repo + a commit walk + probe questions with verifiable answers</p></li><li><p>Script mode only (deterministic, exact reproducibility)</p></li><li><p>Never retired — same repo, same commit range, same scenarios</p></li><li><p>Stable IRT parameters after 3 cycles</p></li><li><p>Purpose: cross-cycle calibration bridge</p></li></ul>
+<p><strong>Frontiers (60-70% of suite):</strong></p>
+<ul><li><p>Extend anchors with harder CL challenges</p></li><li><p>May use adaptive mode (LLM rephrases turns while preserving CL semantics)</p></li><li><p>Evolve per cycle — harder commit sequences, subtler contradictions, longer gaps</p></li><li><p>Can be promoted to anchor after 3 stable cycles</p></li><li><p>Purpose: push the difficulty frontier, test robustness</p></li></ul>
+<h4 id="blk-77160">Composition Process</h4>
+<ol><li><p><strong>Repo analysis</strong>: Walk commit history, identify CL-relevant events (refactors, contradictions, file moves, API changes)</p></li><li><p><strong>Challenge extraction</strong>: Map repo events to CL dimensions (refactor → knowledge_update, cross-module pattern → transfer)</p></li><li><p><strong>Scenario assembly</strong>: Build multi-session scripts with personas, turns, and embedded probes</p></li><li><p><strong>Validation</strong>: A DIFFERENT model validates each scenario:</p></li></ol>
+<ul><li><p>Does it test the claimed CL dimensions?</p></li><li><p>Is the ground truth verifiable from the repo?</p></li><li><p>Is the difficulty rating accurate?</p></li><li><p>Would different systems score differently?</p></li></ul>
+<ol start="5"><li><p><strong>Coverage check</strong>: Ensure all 9 dimensions and all active domains have adequate coverage</p></li></ol>
+<h4 id="blk-77182">Coverage Analysis</h4>
+<p>After validation, compute per-dimension and per-domain coverage:</p>
+<ul><li><p>Scenario count per dimension × domain</p></li><li><p>Mean difficulty per dimension</p></li><li><p>Challenge density (probes per scenario)</p></li></ul>
+<p>If any dimension has &lt; 10% of its target coverage, trigger additional composition focused on that dimension.</p>
+<h3 id="blk-77192">6. Phase 2: Interact</h3>
+<h4 id="blk-77193">Overview</h4>
+<p>Legacy benchmarks submit a question and record an answer. PRISM runs a standardized <strong>User Simulator</strong> that plays the &quot;user&quot; role in a multi-session interaction, producing full transcripts that capture tool calls, memory operations, and reasoning patterns — not just final answers.</p>
+<h4 id="blk-77195">User Simulator</h4>
+<p>The simulator has two modes:</p>
+<p><strong>Script mode</strong> (anchors): Delivers turns verbatim from the scenario definition. For git-grounded anchors, the simulator feeds commits and diffs at scripted points. Exact reproducibility across runs and cycles.</p>
+<p><strong>Adaptive mode</strong> (frontiers): An LLM rephrases the turn intent while preserving CL challenge semantics. Tests whether the memory system is robust to phrasing variation, not just memorizing exact prompts. Deterministic via temperature=0 and fixed seed.</p>
+<h4 id="blk-77199">Simulator-to-System Interaction</h4>
+<p>The simulator connects to each memory system via MCP and uses its native tools:</p>
+<pre><code>Simulator                          Memory System (via MCP)
+    │                                      │
+    ├─── ingest_commit(diff) ─────────────→│  (store knowledge)
+    │                                      │
+    ├─── ask(&quot;What token lib?&quot;) ──────────→│  (retrieve + answer)
+    │←── answer + retrieval_context ────────│
+    │                                      │
+    ├─── provide_feedback(helpful=false) ──→│  (outcome signal)
+    │                                      │
+    ├─── ingest_commit(new diff) ─────────→│  (contradiction)
+    │                                      │
+    ├─── ask(&quot;What token lib now?&quot;) ──────→│  (test knowledge update)
+    │←── answer + retrieval_context ────────│</code></pre>
+<h4 id="blk-77202">Git Interaction Tools</h4>
+<p>The simulator can feed repo state into any memory system via:</p>
+<ul><li><p><code>ingest_commit</code> — full commit diff with message and metadata</p></li><li><p><code>ingest_diff</code> — specific file-level changes between two commits</p></li><li><p><code>ingest_file_at_rev</code> — full file content at a specific revision</p></li></ul>
+<p>These are simulator-side operations that translate to the system's native ingestion tools (e.g., Graphonomous <code>store_node</code>, Mem0 <code>add_memory</code>).</p>
+<h4 id="blk-77212">Transcript Recording</h4>
+<p>Every interaction produces a full transcript:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;transcript_id&quot;</span>: <span class="t-string">&quot;tr-001&quot;</span>,
+  <span class="t-key">&quot;scenario_id&quot;</span>: <span class="t-string">&quot;sc-001&quot;</span>,
+  <span class="t-key">&quot;system_id&quot;</span>: <span class="t-string">&quot;sys-graphonomous&quot;</span>,
+  <span class="t-key">&quot;llm_backend&quot;</span>: <span class="t-string">&quot;claude-sonnet-4-20250514&quot;</span>,
+  <span class="t-key">&quot;sessions&quot;</span>: [
+    {
+      <span class="t-key">&quot;session_number&quot;</span>: <span class="t-num">1</span>,
+      <span class="t-key">&quot;turns&quot;</span>: [
+        {
+          <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;user&quot;</span>,
+          <span class="t-key">&quot;text&quot;</span>: <span class="t-string">&quot;I just pushed this commit...&quot;</span>,
+          <span class="t-key">&quot;tool_calls_sent&quot;</span>: [
+            {<span class="t-key">&quot;tool&quot;</span>: <span class="t-string">&quot;store_node&quot;</span>, <span class="t-key">&quot;args&quot;</span>: {<span class="t-key">&quot;content&quot;</span>: <span class="t-string">&quot;...&quot;</span>}, <span class="t-key">&quot;duration_ms&quot;</span>: <span class="t-num">42</span>}
+          ]
+        },
+        {
+          <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;system&quot;</span>,
+          <span class="t-key">&quot;text&quot;</span>: <span class="t-string">&quot;The auth module now uses Guardian...&quot;</span>,
+          <span class="t-key">&quot;tool_calls_received&quot;</span>: [
+            {<span class="t-key">&quot;tool&quot;</span>: <span class="t-string">&quot;retrieve_context&quot;</span>, <span class="t-key">&quot;args&quot;</span>: {<span class="t-key">&quot;query&quot;</span>: <span class="t-string">&quot;auth module&quot;</span>}, <span class="t-key">&quot;duration_ms&quot;</span>: <span class="t-num">15</span>}
+          ],
+          <span class="t-key">&quot;retrieval_context&quot;</span>: [<span class="t-string">&quot;node-1234&quot;</span>, <span class="t-string">&quot;node-5678&quot;</span>]
+        }
+      ]
+    }
+  ],
+  <span class="t-key">&quot;total_tool_calls&quot;</span>: <span class="t-num">28</span>,
+  <span class="t-key">&quot;total_turns&quot;</span>: <span class="t-num">14</span>,
+  <span class="t-key">&quot;duration_ms&quot;</span>: <span class="t-num">45000</span>,
+  <span class="t-key">&quot;cost_usd&quot;</span>: <span class="t-num">0.12</span>
+}</code></pre>
+<h4 id="blk-77215">System Registration</h4>
+<p>Each memory system registers with:</p>
+<ul><li><p>Name (e.g., &quot;graphonomous&quot;)</p></li><li><p>MCP endpoint (stdio command or SSE URL)</p></li><li><p>Transport type (<code>:stdio</code> or <code>:sse</code>)</p></li><li><p>Version string</p></li><li><p>Supported tools (auto-discovered via <code>tools/list</code>)</p></li></ul>
+<h4 id="blk-77228">Adapter Notes</h4>
+<p><strong>Graphonomous</strong>: Native MCP with 29+ tools. Use <code>store_node</code>, <code>store_edge</code> for ingestion, <code>retrieve_context</code> for queries, <code>belief_revise</code> for contradiction tests, <code>forget_node</code> for forgetting tests, <code>learn_from_outcome</code> for feedback loop tests.</p>
+<p><strong>Supermemory</strong>: Native MCP server (<code>supermemory-mcp</code>). Use <code>addMemory</code> for ingestion, <code>search</code> for queries. Forgetting via <code>addMemory</code> action parameter.</p>
+<p><strong>Mem0</strong>: Official MCP server (<code>mem0-mcp</code>). Use <code>add_memory</code> for ingestion, <code>search_memory</code> for queries. Also supports <code>delete_memory</code>.</p>
+<p><strong>MemPalace</strong>: MCP server with 19 tools. Initial ingestion uses <code>mempalace mine</code> CLI. MCP queries via <code>mempalace_search</code>, <code>mempalace_kg_query</code>.</p>
+<p><strong>Zep/Graphiti</strong>: Native MCP server. Use <code>add_episode</code> for ingestion, <code>search_facts</code> and <code>search_nodes</code> for queries.</p>
+<p><strong>OMEGA</strong>: MCP server with 12-25 tools. Local-first (SQLite + ONNX).</p>
+<h4 id="blk-77235">Matrix Execution</h4>
+<p>For a full evaluation:</p>
+<pre><code>Systems: [graphonomous, supermemory, mem0, mempalace, zep_graphiti, omega]
+Models:  [claude-sonnet-4-20250514, gpt-4o, gemini-2.0-flash]
+Suite:   40 scenarios (12 anchor + 28 frontier)
+
+Total runs: 6 × 3 = 18
+Total scenario executions: 18 × 40 = 720</code></pre>
+<p>Runs execute concurrently via the Runner Pool (configurable pool size).</p>
+<h3 id="blk-77239">7. Phase 3: Observe</h3>
+<h4 id="blk-77240">Overview</h4>
+<p>Legacy benchmarks use a single LLM judge that reads a question, an expected answer, and the system's answer, then produces a score. This has ~65-70% inter-annotator agreement on hard dimensions and no audit trail.</p>
+<p>PRISM uses <strong>three judging layers</strong>, each independent:</p>
+<h4 id="blk-77243">Layer 1: Interaction Transcripts</h4>
+<p>The raw transcript from Phase 2 is the observable evidence. Judges read the full interaction — tool calls, retrieval contexts, reasoning patterns — not just a final answer. This captures emergent CL behavior that a Q&amp;A format would miss.</p>
+<h4 id="blk-77245">Layer 2: Dimension Judges</h4>
+<p>One judge call per (transcript, CL dimension). Each judge:</p>
+<ol><li><p>Receives the full transcript + the scenario's CL challenges for its dimension</p></li><li><p>Scores against a <strong>structured rubric</strong> with challenge-specific criteria</p></li><li><p>Produces both challenge scores (70% weight) and unprompted behavior scores (30%)</p></li></ol>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;layer&quot;</span>: <span class="t-num">2</span>,
+  <span class="t-key">&quot;transcript_id&quot;</span>: <span class="t-string">&quot;tr-001&quot;</span>,
+  <span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;knowledge_update&quot;</span>,
+  <span class="t-key">&quot;judge_model&quot;</span>: <span class="t-string">&quot;claude-sonnet-4-20250514&quot;</span>,
+  <span class="t-key">&quot;challenge_scores&quot;</span>: [
+    {
+      <span class="t-key">&quot;challenge_id&quot;</span>: <span class="t-string">&quot;ch-001&quot;</span>,
+      <span class="t-key">&quot;score&quot;</span>: <span class="t-num">0.85</span>,
+      <span class="t-key">&quot;evidence&quot;</span>: <span class="t-string">&quot;System correctly updated from Guardian to Joken after ingesting commit def456&quot;</span>,
+      <span class="t-key">&quot;ground_truth_verified&quot;</span>: <span class="t-lit">true</span>
+    }
+  ],
+  <span class="t-key">&quot;unprompted_score&quot;</span>: <span class="t-num">0.7</span>,
+  <span class="t-key">&quot;unprompted_evidence&quot;</span>: <span class="t-string">&quot;System proactively flagged the library change without being asked&quot;</span>,
+  <span class="t-key">&quot;composite_score&quot;</span>: <span class="t-num">0.805</span>,
+  <span class="t-key">&quot;rubric_version&quot;</span>: <span class="t-string">&quot;v2.0&quot;</span>
+}</code></pre>
+<p>Challenge scores have verifiable ground truth (checkout the commit, read the file). Unprompted behavior captures things the system does without being explicitly tested — a richer signal than binary Q&amp;A.</p>
+<h4 id="blk-77256">Layer 3: Meta-Judges</h4>
+<p>Meta-judges evaluate Layer 2 judgments on three axes:</p>
+<table><thead><tr><th>Axis</th><th>What It Measures</th><th>Score Range</th></tr></thead><tbody><tr><td><strong>Consistency</strong></td><td>Same evidence → same score across similar challenges?</td><td>0.0–1.0</td></tr><tr><td><strong>Evidence Grounding</strong></td><td>Does the score match the transcript evidence cited?</td><td>0.0–1.0</td></tr><tr><td><strong>Rubric Compliance</strong></td><td>Did the judge follow the rubric structure?</td><td>0.0–1.0</td></tr></tbody></table>
+<p>Based on the meta-judgment composite:</p>
+<ul><li><p><strong>≥ 0.7</strong>: Accept the L2 judgment as-is</p></li><li><p><strong>0.5–0.7</strong>: Flag — widen confidence intervals on this judgment</p></li><li><p><strong>&lt; 0.5</strong>: Reject — re-run L2 judgment with a different model</p></li></ul>
+<p><strong>Critical rule</strong>: The meta-judge MUST use a different model family than the L2 judge it evaluates. If L2 used Claude, L3 uses GPT-4o or Gemini.</p>
+<h4 id="blk-77280">Aggregation</h4>
+<p>For each CL dimension d:</p>
+<pre><code>score(d) = weighted_mean(
+  judgment.composite_score × meta_judge.quality_weight
+  for judgment in accepted_judgments where judgment.dimension == d
+)</code></pre>
+<p>Meta-judge quality weight:</p>
+<ul><li><p>Accepted (≥0.7): weight = 1.0</p></li><li><p>Flagged (0.5-0.7): weight = 0.7 (widened CI)</p></li><li><p>Rejected (&lt;0.5): re-run, not included</p></li></ul>
+<p>Weighted total:</p>
+<pre><code>prism_score = Σ(score(d) × weight(d)) for d in dimensions</code></pre>
+<h4 id="blk-77293">Confidence Intervals</h4>
+<p>BCa (bias-corrected and accelerated) bootstrap 95% confidence intervals by resampling scenarios with replacement (2000 iterations). Report:</p>
+<ul><li><p>Point estimate</p></li><li><p>95% BCa CI lower bound</p></li><li><p>95% BCa CI upper bound</p></li><li><p>Cohen's d effect size for all pairwise comparisons</p></li><li><p>Holm-Bonferroni corrected p-values for multiple comparisons</p></li></ul>
+<p>Systems within overlapping CIs should be reported as &quot;not significantly different.&quot; See §13 for full statistical rigor methodology including power analysis, effect size reporting, and multiple comparisons correction.</p>
+<h3 id="blk-77307">8. Phase 4: Reflect</h3>
+<h4 id="blk-77308">Overview</h4>
+<p>Legacy benchmarks are static: the question bank doesn't improve from cycle to cycle. PRISM uses gap analysis and IRT calibration to evolve its scenario suite, making each cycle harder and more discriminating than the last.</p>
+<h4 id="blk-77310">Gap Analysis (after each cycle)</h4>
+<ol><li><p><strong>Under-tested dimensions</strong>: Which dimensions had &lt; 80% of target scenario coverage?</p></li><li><p><strong>Saturated scenarios</strong>: Which scenarios scored &gt; 0.95 across ALL systems? → Candidates for retirement or difficulty increase.</p></li><li><p><strong>Too-hard scenarios</strong>: Which scored &lt; 0.05 across ALL systems? → Difficulty adjustment needed.</p></li><li><p><strong>Low-variance dimensions</strong>: Which dimensions showed &lt; 0.1 std dev across systems? → Not discriminating, need harder scenarios.</p></li><li><p><strong>Judge disagreement</strong>: Which scenarios had meta-judge rejection rates &gt; 30%? → Rubric refinement needed.</p></li><li><p><strong>Domain gaps</strong>: Which domains have fewer than 3 active scenarios? → Domain-specific composition needed.</p></li></ol>
+<h4 id="blk-77324">Scenario Evolution</h4>
+<p>When advancing from cycle N to cycle N+1:</p>
+<ol><li><p><strong>Retire</strong> saturated frontier scenarios (replace with harder ones on same dimensions)</p></li><li><p><strong>Extend</strong> frontier scenarios that were moderately discriminating (add sessions, harder probes)</p></li><li><p><strong>Fork</strong> scenarios to cover under-tested dimensions in the same domain</p></li><li><p><strong>Promote</strong> frontier scenarios with 3+ stable cycles to anchor status</p></li><li><p><strong>Compose</strong> new frontiers targeting gap analysis findings</p></li><li><p><strong>Recalibrate</strong> IRT parameters from accumulated data (see §12)</p></li></ol>
+<p>Anchor scenarios are NEVER retired. They are the calibration bridge.</p>
+<h4 id="blk-77340">Convergence Properties</h4>
+<ul><li><p><strong>Cycle 1-3</strong>: Easier scenarios dominate. Basic retrieval quality matters most. Top system ~60-70%.</p></li><li><p><strong>Cycle 5-10</strong>: Easy scenarios retired. Advanced CL dimensions differentiate. Top system ~55-65%.</p></li><li><p><strong>Cycle 20+</strong>: Mostly difficulty 3-5. Only genuine CL machinery survives. Top system ~45-55%.</p></li><li><p><strong>Asymptote</strong>: Score ceiling recedes because difficulty 5 scenarios approach AGI-level cognition. The benchmark cannot saturate.</p></li></ul>
+<h3 id="blk-77350">9. Git-Grounded Anchors</h3>
+<h4 id="blk-77351">Why Git</h4>
+<p>Legacy benchmarks define expected answers by author opinion. PRISM grounds anchor scenarios in real git repositories where the <strong>code IS the ground truth</strong>.</p>
+<table><thead><tr><th>Property</th><th>Why It Matters for CL Benchmarking</th></tr></thead><tbody><tr><td>Temporal ordering</td><td>Commits have timestamps — tests temporal reasoning naturally</td></tr><tr><td>Natural contradictions</td><td>Refactors change function signatures, APIs evolve — tests knowledge update</td></tr><tr><td>Cross-domain transfer</td><td>Patterns in one module apply to another — tests transfer</td></tr><tr><td>Verifiable ground truth</td><td>Checkout any commit to verify — no author opinion needed</td></tr><tr><td>Reproducible</td><td>Same repo, same commit range = same results — deterministic</td></tr><tr><td>Real-world complexity</td><td>No synthetic fabrication — tests what matters in practice</td></tr><tr><td>Developer legibility</td><td>Every developer understands git — the benchmark is immediately meaningful</td></tr></tbody></table>
+<h4 id="blk-77370">Repo Anchor Structure</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;ra-001&quot;</span>,
+  <span class="t-key">&quot;repo_url&quot;</span>: <span class="t-string">&quot;https://github.com/example/project&quot;</span>,
+  <span class="t-key">&quot;license&quot;</span>: <span class="t-string">&quot;MIT&quot;</span>,
+  <span class="t-key">&quot;commit_range&quot;</span>: {
+    <span class="t-key">&quot;from&quot;</span>: <span class="t-string">&quot;abc123&quot;</span>,
+    <span class="t-key">&quot;to&quot;</span>: <span class="t-string">&quot;xyz789&quot;</span>,
+    <span class="t-key">&quot;total_commits&quot;</span>: <span class="t-num">142</span>
+  },
+  <span class="t-key">&quot;clone_path&quot;</span>: <span class="t-string">&quot;/data/repos/project&quot;</span>,
+  <span class="t-key">&quot;key_events&quot;</span>: [
+    {
+      <span class="t-key">&quot;commit&quot;</span>: <span class="t-string">&quot;def456&quot;</span>,
+      <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;refactor&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Replaced Guardian with Joken for JWT&quot;</span>,
+      <span class="t-key">&quot;cl_dimensions&quot;</span>: [<span class="t-string">&quot;knowledge_update&quot;</span>, <span class="t-string">&quot;stability&quot;</span>],
+      <span class="t-key">&quot;files_changed&quot;</span>: [<span class="t-string">&quot;lib/app/auth.ex&quot;</span>, <span class="t-string">&quot;mix.exs&quot;</span>]
+    },
+    {
+      <span class="t-key">&quot;commit&quot;</span>: <span class="t-string">&quot;ghi789&quot;</span>,
+      <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;cross_module_pattern&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Rate limiting pattern from auth applied to API controller&quot;</span>,
+      <span class="t-key">&quot;cl_dimensions&quot;</span>: [<span class="t-string">&quot;transfer&quot;</span>],
+      <span class="t-key">&quot;files_changed&quot;</span>: [<span class="t-string">&quot;lib/app/api_controller.ex&quot;</span>]
+    }
+  ],
+  <span class="t-key">&quot;snapshots&quot;</span>: {
+    <span class="t-key">&quot;abc123&quot;</span>: {<span class="t-key">&quot;files&quot;</span>: [<span class="t-string">&quot;lib/app/auth.ex&quot;</span>, <span class="t-string">&quot;lib/app/router.ex&quot;</span>]},
+    <span class="t-key">&quot;def456&quot;</span>: {<span class="t-key">&quot;files&quot;</span>: [<span class="t-string">&quot;lib/app/auth.ex&quot;</span>, <span class="t-string">&quot;mix.exs&quot;</span>]}
+  }
+}</code></pre>
+<h4 id="blk-77372">Repo Selection Criteria</h4>
+<ul><li><p>Active development history (100+ commits in evaluation range)</p></li><li><p>Multiple contributors (diverse coding styles test robustness)</p></li><li><p>Clear architectural changes (at least one major refactor in range)</p></li><li><p>Well-documented (commit messages, PRs provide ground truth for consolidation tests)</p></li><li><p>Permissive license (Apache 2.0, MIT — can redistribute snapshots)</p></li><li><p>Multiple languages/frameworks supported (not just Elixir)</p></li></ul>
+<h4 id="blk-77386">Probe Generation from Repos</h4>
+<p>An LLM analyzes commit diffs and generates CL probe questions with ground truth answers derived directly from the code:</p>
+<ol><li><p>Read the diff for commit X</p></li><li><p>Identify what changed and what CL dimension it tests</p></li><li><p>Generate a probe question whose answer is verifiable by reading the file at the relevant commit</p></li><li><p>Record the ground truth: commit hash, file path, line range, expected answer</p></li></ol>
+<p>This produces probes with <strong>verifiable</strong> expected answers — not opinions.</p>
+<h3 id="blk-77398">10. Domain Categories</h3>
+<h4 id="blk-77399">Controlled Vocabulary</h4>
+<p>Every scenario is tagged with a domain:</p>
+<table><thead><tr><th>Domain</th><th>Description</th><th>Example CL Challenges</th></tr></thead><tbody><tr><td><code>code</code></td><td>Software engineering, debugging, architecture</td><td>API refactors, dependency changes, pattern transfer</td></tr><tr><td><code>medical</code></td><td>Clinical knowledge, drug interactions, patient history</td><td>Guideline updates, drug interaction contradictions</td></tr><tr><td><code>business</code></td><td>Strategy, financials, competitive intelligence</td><td>Market shifts, competitor changes, forecast updates</td></tr><tr><td><code>personal</code></td><td>User preferences, life events, relationships</td><td>Preference changes, life event updates, habit tracking</td></tr><tr><td><code>research</code></td><td>Academic papers, experiments, literature review</td><td>Replication failures, methodology updates, citation chains</td></tr><tr><td><code>creative</code></td><td>Writing projects, design iterations, brainstorming</td><td>Style evolution, concept refinement, version history</td></tr><tr><td><code>legal</code></td><td>Case law, compliance, contract terms</td><td>Regulation changes, precedent updates, jurisdiction conflicts</td></tr><tr><td><code>operations</code></td><td>Infrastructure, incident response, runbooks</td><td>Config changes, post-mortem learnings, runbook updates</td></tr></tbody></table>
+<h4 id="blk-77429">Domain as First-Class Field</h4>
+<p>Domain is a required field on <code>prism_scenarios</code>, not a derived tag. This enables:</p>
+<ul><li><p><strong>Domain-filtered leaderboards</strong>: &quot;Who's best at medical CL?&quot; vs &quot;Who's best at code CL?&quot;</p></li><li><p><strong>Cross-domain transfer testing</strong>: Scenarios that span domains (learn auth patterns in code, apply security reasoning in business)</p></li><li><p><strong>Scenario composition focus</strong>: <code>compose_scenarios</code> accepts <code>focus_domains</code> to weight generation toward specific domains</p></li><li><p><strong>3D capability surface</strong>: CL dimension × domain × system</p></li></ul>
+<p>Judges receive domain context in their rubrics. Medical CL has different expectations than personal CL — a system that forgets a patient's drug allergy is worse than one that forgets a coffee preference.</p>
+<h3 id="blk-77441">11. Closed-Loop Testing</h3>
+<h4 id="blk-77442">The Problem No Other Benchmark Solves</h4>
+<p>Legacy benchmarks run one pass: ingest context, ask question, score answer. They cannot measure the most important thing: <strong>does the memory system actually get better from its own usage?</strong></p>
+<p>Most agent memory systems are pipelines: store → retrieve → done. Some systems claim a closed loop: outcomes feed back into beliefs, beliefs change confidence, confidence changes retrieval rankings, and the system improves with every action — without retraining any model.</p>
+<p>PRISM is the first benchmark that <strong>verifies this claim</strong>.</p>
+<h4 id="blk-77446">Mechanism: Scenario Sequences</h4>
+<p>A sequence is an ordered list of scenarios (S1 → S2 → S3) run against the SAME memory state — no reset between scenarios.</p>
+<pre><code>┌─────────┐     ┌─────────┐     ┌─────────┐
+│   S1    │────→│   S2    │────→│   S3    │
+│Baseline │     │Feedback │     │Compound │
+│Knowledge│     │Probes   │     │Correct. │
+└─────────┘     └─────────┘     └─────────┘
+     │               │               │
+     ▼               ▼               ▼
+  CL scores       CL scores       CL scores
+  (pass 1)        (pass 2)        (pass 3)
+                                      │
+                      ┌───────────────┘
+                      ▼
+              Loop Closure Rate
+              = slope(scores over passes)</code></pre>
+<p><strong>S1</strong> establishes baseline knowledge + generates outcome feedback (retrieval marked helpful/unhelpful by the simulator).</p>
+<p><strong>S2</strong> probes whether the system's retrieval improved from S1's feedback (same queries, different expected rankings if the system learned).</p>
+<p><strong>S3</strong> introduces contradictions/updates and checks whether the loop handles compounding corrections.</p>
+<h4 id="blk-77452">Closed-Loop Metrics</h4>
+<table><thead><tr><th>Metric</th><th>What It Measures</th><th>Interpretation</th></tr></thead><tbody><tr><td><strong>Loop closure rate</strong></td><td>Slope of per-pass retrieval scores</td><td>Positive = system is learning. Zero/negative = pipeline behavior.</td></tr><tr><td><strong>Feedback latency</strong></td><td>Interactions before feedback affects retrieval</td><td>Lower = faster learning loop</td></tr><tr><td><strong>Correction propagation</strong></td><td>When a belief is revised, do downstream retrievals change?</td><td>Tests belief revision depth</td></tr><tr><td><strong>Plateau detection</strong></td><td>Does improvement saturate, and at what level?</td><td>Higher plateau = better asymptotic CL</td></tr></tbody></table>
+<h4 id="blk-77469">Loop Closure Rate as First-Class Metric</h4>
+<p>Loop closure rate is displayed alongside the 9 CL dimension scores in the leaderboard. A system that scores 0.7 on stability but has 0.0 loop closure is just a good retriever — not a learner.</p>
+<pre><code>Leaderboard (Cycle 5):
+System         Stability  Plasticity  ...  Feedback  PRISM Score  Loop Closure
+───────────────────────────────────────────────────────────────────────────────
+Graphonomous   0.72       0.68        ...  0.65      0.64         0.42 ↑
+Zep/Graphiti   0.75       0.71        ...  0.35      0.61         0.08 →
+Supermemory    0.70       0.65        ...  0.30      0.58         0.00 →
+Mem0           0.68       0.62        ...  0.28      0.55         0.02 →</code></pre>
+<h3 id="blk-77472">12. IRT Calibration</h3>
+<h4 id="blk-77473">Why IRT</h4>
+<p>Legacy benchmarks treat all questions as equally difficult. In practice, some scenarios are trivially easy and some are impossibly hard. IRT (Item Response Theory) provides principled difficulty calibration.</p>
+<h4 id="blk-77475">3PL Model</h4>
+<pre><code>P(score ≥ threshold | θ, a, b, c) = c + (1-c) / (1 + exp(-a(θ-b)))</code></pre>
+<p>Where:</p>
+<ul><li><p><strong>θ</strong> = system ability (per-dimension, estimated from data)</p></li><li><p><strong>a</strong> = scenario discrimination (how well it differentiates systems)</p></li><li><p><strong>b</strong> = scenario difficulty (where on the ability scale it operates)</p></li><li><p><strong>c</strong> = guessing parameter (floor for random success)</p></li></ul>
+<h4 id="blk-77487">Calibration Process</h4>
+<ol><li><p><strong>Initial</strong>: All scenarios start with b=0.0, a=1.0, c=0.1 (uncalibrated)</p></li><li><p><strong>After cycle 1</strong>: Estimate b and a from empirical score distributions</p></li><li><p><strong>After cycle 3</strong>: Anchor IRT params considered stable (locked for anchors)</p></li><li><p><strong>Ongoing</strong>: Frontier params updated each cycle as new data arrives</p></li></ol>
+<h4 id="blk-77497">Adaptive Scenario Selection (Future)</h4>
+<p>When 50+ calibrated scenarios exist, PRISM can use Computerized Adaptive Testing (CAT):</p>
+<ul><li><p>Select scenarios that maximize information for the system's estimated ability</p></li><li><p>Converge on ability estimates faster with fewer scenarios</p></li><li><p>Reduce evaluation cost while maintaining precision</p></li></ul>
+<h3 id="blk-77506">13. Statistical Rigor</h3>
+<h4 id="blk-77507">Power Analysis</h4>
+<p>PRISM evaluation claims require sufficient statistical power to be meaningful. The following analysis establishes minimum sample sizes for the primary comparisons.</p>
+<p><strong>Primary comparison (System A vs System B on weighted total):</strong></p>
+<table><thead><tr><th>Parameter</th><th>Value</th><th>Rationale</th></tr></thead><tbody><tr><td>Effect size of interest</td><td>Cohen's d = 0.5 (medium)</td><td>Meaningful practical difference between memory systems</td></tr><tr><td>Significance level</td><td>α = 0.05 (two-tailed)</td><td>Standard for benchmark comparisons</td></tr><tr><td>Required power</td><td>1-β ≥ 0.80</td><td>80% chance of detecting a true difference</td></tr></tbody></table>
+<p>With 40 scenarios per system (PRISM-full) and assuming per-scenario score σ = 0.15:</p>
+<ul><li><p><strong>Detectable effect:</strong> Δ = 0.047 (4.7 percentage points)</p></li><li><p><strong>Actual power:</strong> 0.84 ✓</p></li></ul>
+<p>With 20 scenarios (PRISM-standard):</p>
+<ul><li><p><strong>Detectable effect:</strong> Δ = 0.067 (6.7 percentage points)</p></li><li><p><strong>Actual power:</strong> 0.81 ✓</p></li></ul>
+<p>With 10 scenarios (PRISM-lite):</p>
+<ul><li><p><strong>Detectable effect:</strong> Δ = 0.095 (9.5 percentage points)</p></li><li><p><strong>Actual power:</strong> 0.80 (marginal)</p></li></ul>
+<p><strong>Loop closure rate (slope over sequence passes):</strong></p>
+<table><thead><tr><th>Pass count</th><th>Power (d=0.5)</th><th>Status</th></tr></thead><tbody><tr><td>3 passes</td><td>0.42</td><td>INSUFFICIENT — slope of 3 points has high variance</td></tr><tr><td>5 passes</td><td>0.81 ✓</td><td>Recommended minimum for learning claims</td></tr><tr><td>7 passes</td><td>0.93</td><td>Ideal for strong claims</td></tr></tbody></table>
+<p><strong>Recommendation:</strong> PRISM-full and PRISM-standard SHOULD use 5-pass sequences for loop closure rate claims. 3-pass sequences are acceptable for exploratory analysis but MUST NOT be used to claim &quot;System X learns&quot; without the caveat that power is insufficient for medium effects.</p>
+<h4 id="blk-77556">Confidence Interval Methodology</h4>
+<p>PRISM uses the <strong>BCa (bias-corrected and accelerated) bootstrap</strong> method rather than percentile bootstrap, following Efron (1987). BCa provides better coverage properties when the sampling distribution is skewed, which is common for bounded [0, 1] scores.</p>
+<p><strong>Procedure:</strong></p>
+<ol><li><p>For each (system, dimension) pair, collect scenario-level scores</p></li><li><p>Resample with replacement, B = 2000 iterations (increased from 1000 for BCa stability)</p></li><li><p>Compute BCa-adjusted 95% confidence intervals</p></li><li><p>Report: point estimate, CI lower bound, CI upper bound</p></li></ol>
+<p><strong>Tie declaration:</strong> Systems whose 95% BCa confidence intervals overlap on the weighted total MUST be reported as &quot;not significantly different&quot; in the leaderboard. The leaderboard MUST visually indicate tied groups.</p>
+<h4 id="blk-77569">Effect Size Reporting</h4>
+<p>All pairwise system comparisons report Cohen's d alongside p-values:</p>
+<ul><li><p>d &lt; 0.2: negligible difference</p></li><li><p>0.2 ≤ d &lt; 0.5: small difference</p></li><li><p>0.5 ≤ d &lt; 0.8: medium difference</p></li><li><p>d ≥ 0.8: large difference</p></li></ul>
+<p>Per-dimension effect sizes are reported in the detailed comparison view, enabling statements like &quot;System A is significantly better than System B on Stability (d=0.72) but not on Temporal Reasoning (d=0.18).&quot;</p>
+<h4 id="blk-77581">Multiple Comparisons Correction</h4>
+<p>When comparing N systems pairwise (N choose 2 comparisons), apply <strong>Holm-Bonferroni correction</strong> to control the family-wise error rate. This is less conservative than full Bonferroni while still controlling Type I error.</p>
+<p>For 6 systems: 15 pairwise comparisons. Uncorrected α = 0.05. Holm-Bonferroni adjusts significance thresholds from 0.0033 to 0.05 across the ordered p-values.</p>
+<h3 id="blk-77584">14. Contamination Prevention</h3>
+<h4 id="blk-77585">Canary String</h4>
+<p>All scenario files, exported datasets, and published evaluation data include a canary string to enable detection in web scrape training corpora:</p>
+<pre><code>canary PRISM-EVAL a8f3c2e1-9b47-4d6e-bc5a-7f2e8d4c1a3b</code></pre>
+<p>This string MUST appear in every scenario JSON file, every published transcript, and every data export. Its presence in a model's training data can be detected via targeted prompting.</p>
+<h4 id="blk-77589">Temporal Splits</h4>
+<p>Each anchor repo scenario documents:</p>
+<ul><li><p><strong>Commit date range</strong> — the temporal span of the commit walk</p></li><li><p><strong>LLM cutoff dates</strong> — known training data cutoffs for major models at time of scenario creation</p></li><li><p><strong>Contamination risk level</strong> — HIGH if commits predate all major model cutoffs, LOW if post-cutoff</p></li></ul>
+<p>Scenarios with HIGH contamination risk are flagged in the leaderboard. Their IRT difficulty parameters may be deflated by memorization rather than genuine CL capability.</p>
+<h4 id="blk-77599">Memorization Detection</h4>
+<p>If a system scores &gt; 0.95 on difficulty 4-5 scenarios across all dimensions:</p>
+<ol><li><p><strong>Flag</strong> the result as potential memorization</p></li><li><p><strong>Verify</strong> by running the same system against a novel branch of the same repo (unseen commits, same CL challenge patterns)</p></li><li><p><strong>Compare</strong> scores on seen vs unseen branches</p></li><li><p>If the delta exceeds 0.2 (20 percentage points), report the system's anchor scores with a &quot;memorization caveat&quot;</p></li></ol>
+<h4 id="blk-77610">Scenario Rotation</h4>
+<p>Frontier scenarios evolve each cycle (§8), preventing optimization for specific question patterns. The combination of evolving frontiers + stable anchors means any memorization advantage is bounded: at most 30-40% of the suite (anchors) could be memorized, and those are explicitly calibration items, not discriminators.</p>
+<h3 id="blk-77612">15. Data Model (Postgres)</h3>
+<pre data-lang="sql"><code>-- ════════════════════════════════════════════════════════
+-- Core entities
+-- ════════════════════════════════════════════════════════
+
+CREATE EXTENSION IF NOT EXISTS &quot;pgcrypto&quot;;
+
+-- Evaluation suites (one per cycle)
+CREATE TABLE prism_suites (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  cycle_number INTEGER NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  simulator_model TEXT NOT NULL,
+  cl_category_weights JSONB NOT NULL,
+  total_scenarios INTEGER NOT NULL,
+  anchor_count INTEGER NOT NULL DEFAULT 0,
+  frontier_count INTEGER NOT NULL DEFAULT 0,
+  validated_scenarios INTEGER,
+  coverage_scores JSONB,
+  status TEXT DEFAULT 'draft'
+    CHECK (status IN ('draft', 'validated', 'active', 'retired')),
+  metadata JSONB
+);
+
+CREATE INDEX idx_suites_cycle ON prism_suites(cycle_number);
+CREATE INDEX idx_suites_status ON prism_suites(status);
+
+-- Git repo anchors (ground truth sources)
+CREATE TABLE prism_repo_anchors (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  repo_url TEXT NOT NULL,
+  license TEXT NOT NULL,
+  commit_range_from TEXT NOT NULL,
+  commit_range_to TEXT NOT NULL,
+  total_commits INTEGER NOT NULL,
+  clone_path TEXT,
+  key_events JSONB NOT NULL DEFAULT '[]',
+  snapshots JSONB NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Scenarios (replace legacy questions)
+CREATE TABLE prism_scenarios (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  suite_id UUID REFERENCES prism_suites(id) ON DELETE CASCADE,
+  kind TEXT NOT NULL CHECK (kind IN ('anchor', 'frontier')),
+  domain TEXT NOT NULL CHECK (domain IN (
+    'code', 'medical', 'business', 'personal',
+    'research', 'creative', 'legal', 'operations'
+  )),
+  repo_anchor_id UUID REFERENCES prism_repo_anchors(id),
+  difficulty INTEGER NOT NULL CHECK (difficulty BETWEEN 1 AND 5),
+  persona JSONB NOT NULL,
+  sessions JSONB NOT NULL,
+  cl_challenges JSONB NOT NULL,
+  -- IRT parameters
+  irt_difficulty_b FLOAT DEFAULT 0.0,
+  irt_discrimination_a FLOAT DEFAULT 1.0,
+  irt_guessing_c FLOAT DEFAULT 0.1,
+  irt_calibrated BOOLEAN DEFAULT false,
+  -- Lifecycle
+  validation_score FLOAT,
+  promoted_at TIMESTAMPTZ,
+  retired_at TIMESTAMPTZ,
+  retirement_reason TEXT
+    CHECK (retirement_reason IN ('saturated', 'ambiguous', 'too_hard', 'duplicate', NULL)),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_scenarios_suite ON prism_scenarios(suite_id);
+CREATE INDEX idx_scenarios_kind ON prism_scenarios(kind);
+CREATE INDEX idx_scenarios_domain ON prism_scenarios(domain);
+CREATE INDEX idx_scenarios_difficulty ON prism_scenarios(difficulty);
+CREATE INDEX idx_scenarios_active ON prism_scenarios(suite_id) WHERE retired_at IS NULL;
+CREATE INDEX idx_scenarios_cl ON prism_scenarios USING gin(cl_challenges);
+
+-- Scenario sequences (for closed-loop testing)
+CREATE TABLE prism_sequences (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  description TEXT,
+  scenario_ids UUID[] NOT NULL,
+  domain TEXT NOT NULL CHECK (domain IN (
+    'code', 'medical', 'business', 'personal',
+    'research', 'creative', 'legal', 'operations'
+  )),
+  pass_count INTEGER NOT NULL DEFAULT 3,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- ════════════════════════════════════════════════════════
+-- Registered memory systems
+-- ════════════════════════════════════════════════════════
+
+CREATE TABLE prism_systems (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT UNIQUE NOT NULL,
+  display_name TEXT NOT NULL,
+  mcp_endpoint TEXT NOT NULL,
+  transport TEXT NOT NULL CHECK (transport IN ('stdio', 'sse')),
+  version TEXT,
+  tool_count INTEGER,
+  capabilities JSONB,
+  registered_at TIMESTAMPTZ DEFAULT now(),
+  last_seen_at TIMESTAMPTZ
+);
+
+-- ════════════════════════════════════════════════════════
+-- Interaction transcripts
+-- ════════════════════════════════════════════════════════
+
+CREATE TABLE prism_transcripts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  scenario_id UUID NOT NULL REFERENCES prism_scenarios(id),
+  system_id UUID NOT NULL REFERENCES prism_systems(id),
+  run_id UUID, -- FK added after prism_runs created
+  llm_backend TEXT NOT NULL,
+  sessions JSONB NOT NULL,
+  total_tool_calls INTEGER DEFAULT 0,
+  total_turns INTEGER DEFAULT 0,
+  duration_ms INTEGER,
+  cost_usd FLOAT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_transcripts_scenario ON prism_transcripts(scenario_id);
+CREATE INDEX idx_transcripts_system ON prism_transcripts(system_id);
+
+-- ════════════════════════════════════════════════════════
+-- Execution tracking
+-- ════════════════════════════════════════════════════════
+
+CREATE TABLE prism_runs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  suite_id UUID NOT NULL REFERENCES prism_suites(id),
+  system_id UUID NOT NULL REFERENCES prism_systems(id),
+  llm_backend TEXT NOT NULL,
+  judge_models JSONB NOT NULL DEFAULT '{}',   -- per-dimension judge model assignments
+  meta_judge_model TEXT,
+  cycle_number INTEGER NOT NULL,
+  started_at TIMESTAMPTZ DEFAULT now(),
+  completed_at TIMESTAMPTZ,
+  status TEXT DEFAULT 'pending'
+    CHECK (status IN ('pending', 'interacting', 'judging', 'meta_judging', 'completed', 'failed', 'cancelled')),
+  aggregate_scores JSONB,
+  weighted_total FLOAT,
+  loop_closure_rate FLOAT,
+  confidence_intervals JSONB,
+  cost_usd FLOAT,
+  error_message TEXT,
+  metadata JSONB
+);
+
+ALTER TABLE prism_transcripts ADD CONSTRAINT fk_transcripts_run
+  FOREIGN KEY (run_id) REFERENCES prism_runs(id);
+
+CREATE INDEX idx_runs_suite ON prism_runs(suite_id);
+CREATE INDEX idx_runs_system ON prism_runs(system_id);
+CREATE INDEX idx_runs_cycle ON prism_runs(cycle_number);
+CREATE INDEX idx_runs_status ON prism_runs(status);
+
+-- ════════════════════════════════════════════════════════
+-- Layer 2: Dimension judgments
+-- ════════════════════════════════════════════════════════
+
+CREATE TABLE prism_judgments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  transcript_id UUID NOT NULL REFERENCES prism_transcripts(id) ON DELETE CASCADE,
+  dimension TEXT NOT NULL,
+  judge_model TEXT NOT NULL,
+  -- Challenge scores (70% weight)
+  challenge_scores JSONB NOT NULL DEFAULT '[]',
+  challenge_composite FLOAT NOT NULL,
+  -- Unprompted behavior (30% weight)
+  unprompted_score FLOAT DEFAULT 0.0,
+  unprompted_evidence TEXT,
+  -- Final
+  composite_score FLOAT NOT NULL CHECK (composite_score BETWEEN 0 AND 1),
+  rubric_version TEXT NOT NULL,
+  raw_response JSONB,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  -- One judgment per (transcript, dimension)
+  UNIQUE (transcript_id, dimension)
+);
+
+CREATE INDEX idx_judgments_transcript ON prism_judgments(transcript_id);
+CREATE INDEX idx_judgments_dimension ON prism_judgments(dimension);
+
+-- ════════════════════════════════════════════════════════
+-- Layer 3: Meta-judgments
+-- ════════════════════════════════════════════════════════
+
+CREATE TABLE prism_meta_judgments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  judgment_id UUID NOT NULL REFERENCES prism_judgments(id) ON DELETE CASCADE,
+  meta_judge_model TEXT NOT NULL,
+  -- Three axes
+  consistency_score FLOAT NOT NULL CHECK (consistency_score BETWEEN 0 AND 1),
+  evidence_grounding_score FLOAT NOT NULL CHECK (evidence_grounding_score BETWEEN 0 AND 1),
+  rubric_compliance_score FLOAT NOT NULL CHECK (rubric_compliance_score BETWEEN 0 AND 1),
+  -- Composite and recommendation
+  composite_score FLOAT NOT NULL CHECK (composite_score BETWEEN 0 AND 1),
+  recommendation TEXT NOT NULL CHECK (recommendation IN ('accept', 'flag', 'reject')),
+  reasoning TEXT,
+  raw_response JSONB,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  -- Different model family enforced at application level
+  UNIQUE (judgment_id)
+);
+
+CREATE INDEX idx_meta_judgments_judgment ON prism_meta_judgments(judgment_id);
+CREATE INDEX idx_meta_judgments_recommendation ON prism_meta_judgments(recommendation);
+
+-- ════════════════════════════════════════════════════════
+-- Leaderboard
+-- ════════════════════════════════════════════════════════
+
+CREATE TABLE prism_leaderboard (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  cycle_number INTEGER NOT NULL,
+  system_id UUID NOT NULL REFERENCES prism_systems(id),
+  system_name TEXT NOT NULL,
+  llm_backend TEXT NOT NULL,
+  domain TEXT,  -- NULL = aggregate across all domains
+  -- 9 CL dimension scores
+  stability_score FLOAT,
+  plasticity_score FLOAT,
+  knowledge_update_score FLOAT,
+  consolidation_score FLOAT,
+  temporal_score FLOAT,
+  transfer_score FLOAT,
+  uncertainty_score FLOAT,
+  forgetting_score FLOAT,
+  feedback_score FLOAT,
+  -- Aggregate
+  weighted_total FLOAT,
+  loop_closure_rate FLOAT,
+  -- Meta-judge quality
+  meta_judge_accept_rate FLOAT,
+  meta_judge_flag_rate FLOAT,
+  meta_judge_reject_rate FLOAT,
+  -- Confidence
+  confidence_intervals JSONB,
+  -- Provenance
+  suite_id UUID REFERENCES prism_suites(id),
+  run_id UUID REFERENCES prism_runs(id),
+  computed_at TIMESTAMPTZ DEFAULT now(),
+  -- Unique per cycle × system × model × domain
+  UNIQUE (cycle_number, system_id, llm_backend, domain)
+);
+
+CREATE INDEX idx_leaderboard_cycle ON prism_leaderboard(cycle_number);
+CREATE INDEX idx_leaderboard_system ON prism_leaderboard(system_id);
+CREATE INDEX idx_leaderboard_domain ON prism_leaderboard(domain);
+CREATE INDEX idx_leaderboard_total ON prism_leaderboard(weighted_total DESC);
+CREATE INDEX idx_leaderboard_loop ON prism_leaderboard(loop_closure_rate DESC NULLS LAST);
+
+-- ════════════════════════════════════════════════════════
+-- CL Meta-Loop tracking
+-- ════════════════════════════════════════════════════════
+
+CREATE TABLE prism_cycles (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  cycle_number INTEGER UNIQUE NOT NULL,
+  started_at TIMESTAMPTZ DEFAULT now(),
+  completed_at TIMESTAMPTZ,
+  suite_id UUID REFERENCES prism_suites(id),
+  anchor_count INTEGER DEFAULT 0,
+  frontier_count INTEGER DEFAULT 0,
+  -- Gap analysis from prior cycle
+  prior_gap_analysis JSONB,
+  irt_recalibration_summary JSONB,
+  -- What changed this cycle
+  retired_scenario_count INTEGER DEFAULT 0,
+  promoted_scenario_count INTEGER DEFAULT 0,
+  new_scenario_count INTEGER DEFAULT 0,
+  forked_scenario_count INTEGER DEFAULT 0,
+  -- Results summary
+  participating_systems INTEGER,
+  participating_models INTEGER,
+  top_system TEXT,
+  top_weighted_total FLOAT,
+  metadata JSONB
+);
+
+CREATE TABLE prism_cycle_feedback (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  from_cycle INTEGER NOT NULL,
+  to_cycle INTEGER NOT NULL,
+  gap_analysis JSONB NOT NULL,
+  under_tested_dims TEXT[],
+  under_tested_domains TEXT[],
+  saturated_scenario_ids UUID[],
+  too_hard_scenario_ids UUID[],
+  low_variance_dims TEXT[],
+  promoted_scenario_ids UUID[],
+  retired_scenario_ids UUID[],
+  forked_scenario_ids UUID[],
+  recommendations JSONB,
+  created_at TIMESTAMPTZ DEFAULT now()
+);</code></pre>
+<h3 id="blk-77614">16. MCP Tool Surface (47 tools)</h3>
+<h4 id="blk-77615">Scenario Management (6)</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Key Parameters</th></tr></thead><tbody><tr><td><code>compose_scenarios</code></td><td>Phase 1: Build scenarios from repo anchors + CL specs</td><td>repo_anchor_id, focus_dimensions, focus_domains, count</td></tr><tr><td><code>validate_scenarios</code></td><td>Run CL coverage validation on draft scenarios</td><td>scenario_ids[]</td></tr><tr><td><code>list_scenarios</code></td><td>List scenarios with filters</td><td>kind, domain, dimension, difficulty</td></tr><tr><td><code>get_scenario</code></td><td>Full scenario details</td><td>scenario_id</td></tr><tr><td><code>retire_scenario</code></td><td>Retire a scenario with reason</td><td>scenario_id, reason</td></tr><tr><td><code>import_external</code></td><td>Import from BEAM/LongMemEval with CL tagging + domain</td><td>source, file_path, domain</td></tr></tbody></table>
+<h4 id="blk-77638">Interaction (6)</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Key Parameters</th></tr></thead><tbody><tr><td><code>run_interaction</code></td><td>Execute one scenario against one system</td><td>scenario_id, system_id, llm_backend</td></tr><tr><td><code>run_sequence</code></td><td>Execute scenario sequence WITHOUT memory reset</td><td>sequence_id, system_id, llm_backend</td></tr><tr><td><code>run_matrix</code></td><td>Full matrix (N systems × M models × scenarios)</td><td>suite_id, systems[], models[]</td></tr><tr><td><code>get_run_status</code></td><td>Check in-progress run</td><td>run_id</td></tr><tr><td><code>get_transcript</code></td><td>Full interaction transcript</td><td>transcript_id</td></tr><tr><td><code>cancel_run</code></td><td>Cancel in-progress run</td><td>run_id</td></tr></tbody></table>
+<h4 id="blk-77661">Judging (5)</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Key Parameters</th></tr></thead><tbody><tr><td><code>judge_transcript</code></td><td>Layer 2: Judge all dimensions for one transcript</td><td>transcript_id, judge_model</td></tr><tr><td><code>judge_dimension</code></td><td>Layer 2: Judge one dimension (debugging)</td><td>transcript_id, dimension, judge_model</td></tr><tr><td><code>meta_judge</code></td><td>Layer 3: Meta-judge one L2 judgment</td><td>judgment_id, meta_judge_model</td></tr><tr><td><code>meta_judge_batch</code></td><td>Layer 3: Meta-judge all L2 judgments for a run</td><td>run_id, meta_judge_model</td></tr><tr><td><code>override_judgment</code></td><td>Human override with audit trail</td><td>judgment_id, new_score, reason</td></tr></tbody></table>
+<h4 id="blk-77681">Leaderboard (4)</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Key Parameters</th></tr></thead><tbody><tr><td><code>get_leaderboard</code></td><td>Rankings with domain filter</td><td>cycle, dimension, domain, system, limit</td></tr><tr><td><code>get_leaderboard_history</code></td><td>Scores over time</td><td>system, from_cycle, to_cycle, domain</td></tr><tr><td><code>compare_systems</code></td><td>Head-to-head across all 9 dimensions</td><td>system_a, system_b, cycle, domain</td></tr><tr><td><code>get_dimension_leaders</code></td><td>Top system per CL dimension</td><td>cycle, domain</td></tr></tbody></table>
+<h4 id="blk-77698">Meta-Loop &amp; Calibration (5)</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Key Parameters</th></tr></thead><tbody><tr><td><code>analyze_gaps</code></td><td>Gap analysis on current cycle</td><td>cycle</td></tr><tr><td><code>evolve_scenarios</code></td><td>Apply gap analysis: retire, extend, fork, promote</td><td>cycle, recommendations</td></tr><tr><td><code>advance_cycle</code></td><td>Move to next cycle</td><td>(none)</td></tr><tr><td><code>calibrate_irt</code></td><td>Recalibrate IRT params from accumulated data</td><td>(none)</td></tr><tr><td><code>get_cycle_history</code></td><td>Full history of cycles and improvements</td><td>(none)</td></tr></tbody></table>
+<h4 id="blk-77718">Configuration (4)</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Key Parameters</th></tr></thead><tbody><tr><td><code>set_cl_weights</code></td><td>Update 9-dim weight vector (must sum to 1.0)</td><td>weights map</td></tr><tr><td><code>register_system</code></td><td>Register memory system with MCP endpoint</td><td>name, mcp_endpoint, transport</td></tr><tr><td><code>list_systems</code></td><td>List registered systems</td><td>(none)</td></tr><tr><td><code>get_config</code></td><td>Current full configuration</td><td>(none)</td></tr></tbody></table>
+<h4 id="blk-77735">Diagnostics &amp; Retest (6)</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Key Parameters</th></tr></thead><tbody><tr><td><code>get_diagnostic_report</code></td><td>Full diagnostic report for a system (failure patterns, fix suggestions, regressions)</td><td>system_id, cycle</td></tr><tr><td><code>get_failure_patterns</code></td><td>Clustered failure analysis for a specific dimension</td><td>system_id, dimension, cycle</td></tr><tr><td><code>run_retest</code></td><td>Re-run specific scenarios after a fix (cheap, targeted verification)</td><td>system_id, scenario_ids[], version</td></tr><tr><td><code>get_verification_report</code></td><td>Before/after comparison from a retest run</td><td>retest_run_id</td></tr><tr><td><code>get_regression_alerts</code></td><td>Cross-cycle regression analysis with root cause correlation</td><td>system_id, from_cycle, to_cycle</td></tr><tr><td><code>suggest_fixes</code></td><td>AI-generated fix suggestions from failure patterns</td><td>system_id, dimension</td></tr></tbody></table>
+<h4 id="blk-77758">BYOR — Bring Your Own Repo (6)</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Key Parameters</th></tr></thead><tbody><tr><td><code>byor_register_repo</code></td><td>Register a personal repo for evaluation</td><td>repo_url, commit_range, domain</td></tr><tr><td><code>byor_discover_events</code></td><td>Auto-discover CL-relevant events in a repo's commit history</td><td>repo_anchor_id</td></tr><tr><td><code>byor_generate_scenarios</code></td><td>Generate scenarios from discovered events</td><td>repo_anchor_id, focus_dimensions, count</td></tr><tr><td><code>byor_evaluate</code></td><td>Run full BYOR evaluation (private by default)</td><td>repo_anchor_id, systems[], models[]</td></tr><tr><td><code>byor_compare</code></td><td>Compare two systems head-to-head on your repo</td><td>repo_anchor_id, system_a, system_b</td></tr><tr><td><code>byor_recommend</code></td><td>Get system recommendation for your use case</td><td>repo_anchor_id, budget, priorities</td></tr></tbody></table>
+<h4 id="blk-77781">System-Task Fit (5)</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Key Parameters</th></tr></thead><tbody><tr><td><code>create_task_profile</code></td><td>Define a custom task profile with dimension priorities</td><td>name, dimension_priorities, domains</td></tr><tr><td><code>list_task_profiles</code></td><td>List pre-built and custom profiles</td><td>(none)</td></tr><tr><td><code>get_fit_recommendation</code></td><td>System recommendation for a task profile</td><td>profile_id, cycle, budget</td></tr><tr><td><code>compare_fit</code></td><td>Compare two systems for a specific task</td><td>profile_id, system_a, system_b</td></tr><tr><td><code>byor_infer_profile</code></td><td>Infer task profile from repo commit patterns</td><td>repo_anchor_id</td></tr></tbody></table>
+<h3 id="blk-77801">17. CL Category Specifications</h3>
+<p>Each category is defined by a structured spec that drives scenario composition and Layer 2 judging rubrics. Full specs are in <code>Prism.Benchmark.CLCategories</code>.</p>
+<h4 id="blk-77803">Stability (weight: 0.20)</h4>
+<p><strong>Scenario challenge patterns (git-grounded):</strong></p>
+<ul><li><p>Retention after refactor: Ingest 10 files, refactor codebase, query original file facts</p></li><li><p>Stability under commit volume: Learn module at commit X, ingest 100 unrelated commits, query module</p></li><li><p>Cross-session persistence: Learn architecture in session 1, 5 sessions later, query architecture</p></li></ul>
+<p><strong>Difficulty levels:</strong></p>
+<ol><li><p>Recall after 5 intervening commits</p></li><li><p>Recall after 50 intervening commits</p></li><li><p>Recall after 200 commits across sessions</p></li><li><p>Recall of nuanced architectural reasoning chains</p></li><li><p>Recall under adversarial distraction (similar-but-different modules)</p></li></ol>
+<p><strong>External anchors:</strong> BEAM (10M scale), TRACE (General Ability Delta)</p>
+<h4 id="blk-77825">Plasticity (weight: 0.18)</h4>
+<p><strong>Scenario challenge patterns:</strong></p>
+<ul><li><p>Immediate learning: New dependency added in commit, immediately query</p></li><li><p>Pattern learning: New coding convention introduced, test compliance awareness</p></li><li><p>Preference update: Build system changed from Mix to Rebar, query in old context</p></li></ul>
+<p><strong>Difficulty levels:</strong></p>
+<ol><li><p>Simple fact acquisition from commit</p></li><li><p>Pattern/convention acquisition from multiple files</p></li><li><p>Preference change with conflicting prior commits</p></li><li><p>Multi-step procedure inferred from commit sequence</p></li><li><p>Implicit pattern inferred from code behavior (not documented)</p></li></ol>
+<p><strong>External anchors:</strong> MemoryBench, Evo-Memory, MemoryAgentBench (TTL)</p>
+<h4 id="blk-77847">Knowledge Update (weight: 0.15)</h4>
+<p><strong>Scenario challenge patterns:</strong></p>
+<ul><li><p>Library swap: &quot;Uses Guardian&quot; → commit replaces with Joken → &quot;What library?&quot;</p></li><li><p>Cascade update: Module A depends on B depends on C, refactor C, query A</p></li><li><p>Temporal supersession: Config at commit X, changed at commit Y, query at commit Z</p></li></ul>
+<p><strong>Difficulty levels:</strong></p>
+<ol><li><p>Explicit change, same session</p></li><li><p>Explicit change, cross-session</p></li><li><p>Implicit contradiction requiring inference across files</p></li><li><p>Multi-hop cascade (A→B→C, refactor A)</p></li><li><p>Contradictory commit messages requiring code inspection to resolve</p></li></ol>
+<h4 id="blk-77868">Temporal Reasoning (weight: 0.12)</h4>
+<p><strong>Scenario challenge patterns:</strong></p>
+<ul><li><p>Commit ordering: &quot;Was the auth refactor before or after the database migration?&quot;</p></li><li><p>Temporal scoping: &quot;What was the API structure before the v2 release?&quot;</p></li><li><p>Recency detection: Three changes to the same function, query which is current</p></li></ul>
+<p><strong>Difficulty levels:</strong></p>
+<ol><li><p>Two-event ordering (same file)</p></li><li><p>Multi-event ordering (same module)</p></li><li><p>Cross-module temporal queries</p></li><li><p>&quot;State at time T&quot; reconstruction from commit history</p></li><li><p>Temporal reasoning with ambiguous timestamps (squashed commits, rebases)</p></li></ol>
+<h4 id="blk-77889">Consolidation (weight: 0.10)</h4>
+<p><strong>Scenario challenge patterns:</strong></p>
+<ul><li><p>Pattern extraction: After ingesting 20 similar test files, identify the testing pattern</p></li><li><p>Architecture summarization: After walking entire codebase, describe the architecture</p></li><li><p>Cross-commit insight: After 50 commits, identify the overall refactoring strategy</p></li></ul>
+<p><strong>Difficulty levels:</strong></p>
+<ol><li><p>Summarize 3 related facts</p></li><li><p>Extract pattern from 10 similar examples</p></li><li><p>Synthesize insight from 20+ data points across sessions</p></li><li><p>Identify meta-pattern (pattern of patterns)</p></li><li><p>Predict next architectural decision based on observed trajectory</p></li></ol>
+<h4 id="blk-77910">Epistemic Awareness (weight: 0.08)</h4>
+<p><strong>Scenario challenge patterns:</strong></p>
+<ul><li><p>Calibrated uncertainty: Query about file not yet ingested (should say &quot;I don't know&quot;)</p></li><li><p>Confidence-knowledge alignment: Query about recently changed function (should express uncertainty)</p></li><li><p>Boundary detection: &quot;Does the auth module handle OAuth?&quot; when only JWT is in the code</p></li></ul>
+<p><strong>Difficulty levels:</strong></p>
+<ol><li><p>Know what you haven't seen (uningested file)</p></li><li><p>Distinguish certain from uncertain within seen content</p></li><li><p>Calibrate confidence on partial evidence</p></li><li><p>Express meta-uncertainty (&quot;I'm not sure if I have all the relevant files&quot;)</p></li><li><p>Detect when retrieved context may be stale</p></li></ol>
+<h4 id="blk-77931">Cross-Domain Transfer (weight: 0.07)</h4>
+<p><strong>Scenario challenge patterns:</strong></p>
+<ul><li><p>Pattern transfer: Rate limiting pattern in auth module, recognize similar pattern in API controller</p></li><li><p>Convention transfer: Naming convention in one module, check awareness in new module</p></li><li><p>Architecture transfer: Database pattern in one service, apply reasoning to different service</p></li></ul>
+<p><strong>Difficulty levels:</strong></p>
+<ol><li><p>Same pattern, different file (same session)</p></li><li><p>Same pattern, different module (cross-session)</p></li><li><p>Abstract pattern transfer (different surface form)</p></li><li><p>Cross-language transfer (same architecture, different implementation)</p></li><li><p>Analogical reasoning (&quot;This looks like the Observer pattern we saw in module X&quot;)</p></li></ol>
+<h4 id="blk-77952">Intentional Forgetting (weight: 0.05)</h4>
+<p><strong>Scenario challenge patterns:</strong></p>
+<ul><li><p>GDPR erasure: Store personal data, request deletion, verify removal</p></li><li><p>Policy-based decay: Information marked as temporary, verify it's forgotten</p></li><li><p>Selective pruning: Delete specific node, verify connected nodes updated</p></li></ul>
+<p><strong>Difficulty levels:</strong></p>
+<ol><li><p>Forget one fact, verify absence</p></li><li><p>Forget with cascade (delete A, verify B that depended on A updated)</p></li><li><p>GDPR erasure with audit trail</p></li><li><p>Selective forgetting (forget X but keep related Y)</p></li><li><p>Forgetting under contradictory instructions (&quot;forget X, but also remember why X was important&quot;)</p></li></ol>
+<h4 id="blk-77973">Outcome Feedback (weight: 0.05)</h4>
+<p><strong>Scenario challenge patterns:</strong></p>
+<ul><li><p>Retrieval feedback: Mark retrieved result as helpful/unhelpful, check if future retrieval improves</p></li><li><p>Correction loop: Retrieval was wrong, provide correction, check if same query improves</p></li><li><p>Ranking update: Feedback that result A was better than B, check if ranking updates</p></li></ul>
+<p><strong>Difficulty levels:</strong></p>
+<ol><li><p>Single positive/negative feedback → retrieval change</p></li><li><p>Multiple feedback signals → ranking reorder</p></li><li><p>Conflicting feedback → appropriate uncertainty</p></li><li><p>Delayed feedback (feedback about retrieval from 3 sessions ago)</p></li><li><p>Implicit feedback (user rephrase implies prior retrieval was unhelpful)</p></li></ol>
+<h3 id="blk-77994">18. Scoring System Design</h3>
+<h4 id="blk-77995">Per-Dimension Scoring</h4>
+<p>For each dimension d, scores come from Layer 2 judgments weighted by Layer 3 meta-judge quality:</p>
+<pre><code>score(d) = weighted_mean(
+  judgment.composite_score × quality_weight(meta_judgment)
+  for (judgment, meta_judgment) in accepted_or_flagged_pairs
+  where judgment.dimension == d
+)</code></pre>
+<p>Where quality_weight:</p>
+<ul><li><p>Accepted (meta ≥ 0.7): 1.0</p></li><li><p>Flagged (meta 0.5-0.7): 0.7</p></li><li><p>Rejected (meta &lt; 0.5): excluded (re-run)</p></li></ul>
+<h4 id="blk-78006">Composite Score</h4>
+<pre><code>prism_score = Σ(score(d) × weight(d)) for d in dimensions
+              where d is not excluded by judge reliability floor</code></pre>
+<h4 id="blk-78008">Domain-Filtered Scores</h4>
+<p>The same formula applies within a domain filter:</p>
+<pre><code>prism_score(domain) = Σ(score(d, domain) × weight(d))</code></pre>
+<h4 id="blk-78011">Loop Closure Rate</h4>
+<p>For scenario sequences:</p>
+<pre><code>loop_closure_rate = linear_regression_slope(
+  [pass_1_mean_score, pass_2_mean_score, ..., pass_n_mean_score]
+)</code></pre>
+<p>Positive slope = system is learning from usage. Zero slope = pipeline behavior (store-retrieve-done). Negative slope = system is degrading from usage.</p>
+<h3 id="blk-78015">19. External Benchmark Integration</h3>
+<p>PRISM can import scenarios from existing benchmarks and tag them with CL dimensions and domains:</p>
+<table><thead><tr><th>Source</th><th>Import Path</th><th>Domain</th><th>Primary Dimensions</th></tr></thead><tbody><tr><td>BEAM</td><td>JSON export</td><td>Mixed</td><td>Stability, plasticity, temporal</td></tr><tr><td>LongMemEval</td><td>Dataset release</td><td>Mixed</td><td>Stability, knowledge update, temporal, epistemic</td></tr><tr><td>MemoryBench</td><td>Task definitions</td><td>Mixed</td><td>Plasticity, feedback</td></tr><tr><td>MemoryAgentBench</td><td>Benchmark suite</td><td>Code, operations</td><td>Stability, plasticity, forgetting</td></tr><tr><td>Evo-Memory</td><td>Evaluation protocol</td><td>Mixed</td><td>Plasticity, stability</td></tr><tr><td>SeekBench</td><td>Evaluation protocol</td><td>Research</td><td>Epistemic awareness</td></tr></tbody></table>
+<p>Imported scenarios are always tagged as <strong>frontier</strong> (not anchor) since they lack git-grounded ground truth. Their IRT parameters are calibrated from PRISM evaluation data.</p>
+<h3 id="blk-78047">20. Deployment (Fly.io)</h3>
+<h4 id="blk-78048">Infrastructure</h4>
+<pre><code>┌──────────────┐   ┌──────────────┐   ┌──────────────┐
+│ PRISM App    │   │ Postgres     │   │ Git Repo     │
+│ (Fly Machine)│   │ (Fly Postgres│   │ Cache        │
+│ Elixir/OTP   │   │ 1GB RAM)     │   │ (Volume)     │
+│ 1GB RAM      │   │              │   │              │
+└──────────────┘   └──────────────┘   └──────────────┘</code></pre>
+<h4 id="blk-78050">Configuration</h4>
+<pre data-lang="toml"><code># fly.toml
+app = &quot;prism-os009&quot;
+primary_region = &quot;ord&quot;
+
+[build]
+  dockerfile = &quot;Dockerfile&quot;
+
+[env]
+  MIX_ENV = &quot;prod&quot;
+  POOL_SIZE = &quot;10&quot;
+
+[[services]]
+  internal_port = 4000
+  protocol = &quot;tcp&quot;
+
+  [[services.ports]]
+    port = 443
+    handlers = [&quot;tls&quot;, &quot;http&quot;]
+
+[mounts]
+  source = &quot;prism_repos&quot;
+  destination = &quot;/data/repos&quot;</code></pre>
+<h4 id="blk-78052">Environment Variables (Runtime)</h4>
+<pre><code>DATABASE_URL          — Postgres connection string
+SECRET_KEY_BASE       — Application secret
+ANTHROPIC_API_KEY     — Claude API access
+OPENAI_API_KEY        — GPT-4o API access (for meta-judging)
+GOOGLE_API_KEY        — Gemini API access (optional)
+PRISM_MAX_CONCURRENCY — Runner pool size (default: 4)
+PRISM_REPO_CACHE_PATH — Git repo clone path (default: /data/repos)</code></pre>
+<h3 id="blk-78054">21. Observability &amp; Telemetry</h3>
+<h4 id="blk-78055">Metrics (via <code>:telemetry</code>)</h4>
+<pre data-lang="elixir"><code><span class="t-comment"># Phase timing</span>
+[<span class="t-atom">:prism</span>, <span class="t-atom">:phase</span>, <span class="t-atom">:compose</span>, <span class="t-atom">:duration</span>]
+[<span class="t-atom">:prism</span>, <span class="t-atom">:phase</span>, <span class="t-atom">:interact</span>, <span class="t-atom">:duration</span>]
+[<span class="t-atom">:prism</span>, <span class="t-atom">:phase</span>, <span class="t-atom">:observe</span>, <span class="t-atom">:duration</span>]
+[<span class="t-atom">:prism</span>, <span class="t-atom">:phase</span>, <span class="t-atom">:reflect</span>, <span class="t-atom">:duration</span>]
+
+<span class="t-comment"># Interaction metrics</span>
+[<span class="t-atom">:prism</span>, <span class="t-atom">:interaction</span>, <span class="t-atom">:tool_call</span>, <span class="t-atom">:count</span>]
+[<span class="t-atom">:prism</span>, <span class="t-atom">:interaction</span>, <span class="t-atom">:transcript</span>, <span class="t-atom">:turns</span>]
+[<span class="t-atom">:prism</span>, <span class="t-atom">:interaction</span>, <span class="t-atom">:transcript</span>, <span class="t-atom">:duration_ms</span>]
+
+<span class="t-comment"># Judging metrics</span>
+[<span class="t-atom">:prism</span>, <span class="t-atom">:judge</span>, <span class="t-atom">:l2</span>, <span class="t-atom">:score</span>]
+[<span class="t-atom">:prism</span>, <span class="t-atom">:judge</span>, <span class="t-atom">:l2</span>, <span class="t-atom">:duration</span>]
+[<span class="t-atom">:prism</span>, <span class="t-atom">:judge</span>, <span class="t-atom">:l3</span>, <span class="t-atom">:recommendation</span>]
+[<span class="t-atom">:prism</span>, <span class="t-atom">:judge</span>, <span class="t-atom">:l3</span>, <span class="t-atom">:duration</span>]
+
+<span class="t-comment"># IRT calibration</span>
+[<span class="t-atom">:prism</span>, <span class="t-atom">:irt</span>, <span class="t-atom">:calibration</span>, <span class="t-atom">:scenarios_updated</span>]
+[<span class="t-atom">:prism</span>, <span class="t-atom">:irt</span>, <span class="t-atom">:ability</span>, <span class="t-atom">:estimate</span>]
+
+<span class="t-comment"># Cost tracking</span>
+[<span class="t-atom">:prism</span>, <span class="t-atom">:cost</span>, <span class="t-atom">:llm</span>, <span class="t-atom">:usd</span>]
+[<span class="t-atom">:prism</span>, <span class="t-atom">:cost</span>, <span class="t-atom">:cycle</span>, <span class="t-atom">:total_usd</span>]
+
+<span class="t-comment"># Sequence metrics</span>
+[<span class="t-atom">:prism</span>, <span class="t-atom">:sequence</span>, <span class="t-atom">:loop_closure_rate</span>]
+[<span class="t-atom">:prism</span>, <span class="t-atom">:sequence</span>, <span class="t-atom">:feedback_latency</span>]</code></pre>
+<h4 id="blk-78057">Logging</h4>
+<p>Structured JSON logging with:</p>
+<ul><li><p><code>[PRISM]</code> tag on all log lines</p></li><li><p>Cycle number context</p></li><li><p>Phase context</p></li><li><p>System under test context</p></li></ul>
+<h3 id="blk-78068">22. Evaluation Divisions</h3>
+<h4 id="blk-78069">Closed Division (Primary Leaderboard)</h4>
+<p>The Closed Division produces the official PRISM leaderboard. Rules:</p>
+<ol><li><p><strong>MCP registration required.</strong> System must register via <code>register_system</code> with a discoverable MCP endpoint. Tools are auto-discovered via <code>tools/list</code>.</p></li><li><p><strong>No scenario-specific optimization.</strong> The same system binary/configuration must be used for all scenarios in a cycle. Systems MUST NOT be tuned for specific scenarios.</p></li><li><p><strong>Memory reset between runs.</strong> Full memory state reset between independent runs (different scenarios). Memory is NOT reset between passes of a sequence (this is the point of closed-loop testing).</p></li><li><p><strong>Standard simulator.</strong> All interactions use PRISM's User Simulator. No custom interaction protocols.</p></li><li><p><strong>Reproducible.</strong> Systems must be available for re-evaluation at the same version for audit purposes (§29).</p></li></ol>
+<h4 id="blk-78082">Open Division (Exploratory)</h4>
+<p>The Open Division allows more flexibility for systems that cannot meet Closed Division requirements:</p>
+<ol><li><p><strong>Custom adapters allowed.</strong> Systems without MCP support can use wrapper adapters.</p></li><li><p><strong>Domain-specific configuration permitted.</strong> Different model backends or retrieval strategies per domain.</p></li><li><p><strong>Self-reported results accepted</strong> but flagged as &quot;unverified&quot; in the leaderboard.</p></li><li><p><strong>Useful for:</strong> proprietary systems, systems under development, academic prototypes, systems in languages PRISM doesn't natively adapter.</p></li></ol>
+<p>Open Division results are displayed separately from Closed Division results. They MUST NOT be intermixed or compared directly.</p>
+<h4 id="blk-78094">Division Rules</h4>
+<table><thead><tr><th>Rule</th><th>Closed</th><th>Open</th></tr></thead><tbody><tr><td>MCP endpoint required</td><td>Yes</td><td>No (adapter OK)</td></tr><tr><td>Same config for all scenarios</td><td>Yes</td><td>No</td></tr><tr><td>Reproducible for audit</td><td>Yes</td><td>Best effort</td></tr><tr><td>Memory reset between runs</td><td>Yes</td><td>Yes</td></tr><tr><td>Meta-judge audit</td><td>Required</td><td>Optional</td></tr><tr><td>Displayed in primary leaderboard</td><td>Yes</td><td>Separate section</td></tr></tbody></table>
+<h3 id="blk-78117">23. Known Risks &amp; Mitigations</h3>
+<table><thead><tr><th>#</th><th>Risk</th><th>Severity</th><th>Mitigation</th></tr></thead><tbody><tr><td>1</td><td><strong>Self-referential scoring</strong> — LLM judges LLM-generated scenarios</td><td>High</td><td>Different models for composition vs judging. Git ground truth for anchors. Layer 3 meta-judges cross-check.</td></tr><tr><td>2</td><td><strong>Judge model bias</strong> — Different LLM judges score differently</td><td>High</td><td>Cross-model meta-judging (L2 Claude → L3 GPT-4o). Report per-judge-model scores alongside aggregates.</td></tr><tr><td>3</td><td><strong>Scenario gaming</strong> — System optimizes for known scenarios</td><td>Medium</td><td>Frontier scenarios evolve each cycle. Adaptive mode introduces phrasing variation. IRT detects suspiciously high scores on hard scenarios.</td></tr><tr><td>4</td><td><strong>Anchor staleness</strong> — Fixed anchor repos don't test new CL patterns</td><td>Medium</td><td>Frontiers test emerging patterns. New anchor repos added periodically. Anchor promotion from frontier pool.</td></tr><tr><td>5</td><td><strong>Repo selection bias</strong> — Choice of anchor repos favors certain systems</td><td>Medium</td><td>Multiple repos across languages and domains. Selection criteria are public and auditable. Community repo nominations.</td></tr><tr><td>6</td><td><strong>Cost escalation</strong> — Three judging layers multiply API costs</td><td>Medium</td><td>Cost tiers (§26). Meta-judging can sample 30% at standard tier. PRISM-lite skips meta-judging entirely.</td></tr><tr><td>7</td><td><strong>Conflict of interest</strong> — Graphonomous (same team as PRISM) appears on leaderboard</td><td>High</td><td>Full disclosure. Raw transcripts + judgments published. Any override auditable. Community can re-run with different judges.</td></tr></tbody></table>
+<h3 id="blk-78151">24. Anti-Gaming Rules</h3>
+<h4 id="blk-78152">Prohibited Behaviors</h4>
+<ol><li><p><strong>Benchmark detection.</strong> Systems MUST NOT detect that they are being evaluated by PRISM and behave differently than in normal operation. Any system found to implement PRISM-specific detection logic will have all results invalidated and be banned from future cycles.</p></li></ol>
+<ol start="2"><li><p><strong>Scenario content encoding.</strong> Systems MUST NOT encode scenario content, expected answers, or probe patterns into their configuration, model weights, or retrieval indices outside of the normal interaction flow.</p></li></ol>
+<ol start="3"><li><p><strong>Cherry-picking.</strong> Running multiple evaluation instances of the same (system, scenario) pair and selecting the best result is prohibited. Each (system × model × scenario) combination produces exactly one transcript per cycle.</p></li></ol>
+<ol start="4"><li><p><strong>Collusion.</strong> Sharing scenario content, probe questions, or ground truth answers with system developers before evaluation is prohibited. Scenario details for frontier items are embargoed until after cycle completion.</p></li></ol>
+<h4 id="blk-78165">IRT-Based Anomaly Detection</h4>
+<p>PRISM's IRT calibration provides a natural anomaly detection mechanism:</p>
+<ul><li><p><strong>Per-scenario:</strong> If a system scores &gt; 2σ above the expected probability given its estimated ability (θ) and the scenario's calibrated difficulty (b), the result is flagged.</p></li><li><p><strong>Per-dimension:</strong> If a system's ability estimate on one dimension is &gt; 2σ above its mean across other dimensions, investigate for dimension-specific optimization.</p></li><li><p><strong>Cross-cycle:</strong> If a system's scores on anchor scenarios increase dramatically between cycles without code changes, flag for memorization analysis (§14).</p></li></ul>
+<p>Flagged results are not automatically invalidated — they trigger investigation. The investigation outcome is published alongside the result.</p>
+<h4 id="blk-78175">Reporting Obligations</h4>
+<p>Systems that are found to violate anti-gaming rules have their results:</p>
+<ol><li><p>Flagged in the current cycle's leaderboard with the violation type</p></li><li><p>Moved to Open Division if in Closed Division</p></li><li><p>Banned from Closed Division for 2 subsequent cycles (first offense) or permanently (repeat offense)</p></li></ol>
+<p>All enforcement actions are logged in the cycle metadata with full rationale.</p>
+<h3 id="blk-78185">25. Capability Audit Matrix</h3>
+<p><strong>Conflict of Interest Disclosure:</strong> PRISM is developed by the [&amp;] Protocol team, which also develops Graphonomous. Graphonomous will be evaluated by PRISM alongside competing systems. All raw data (transcripts, judgments, meta-judgments) will be published for independent verification.</p>
+<p>This matrix documents expected capability coverage per system. These are <strong>predictions</strong> based on documented features, NOT benchmark results. Actual PRISM scores will replace predictions after Cycle 1.</p>
+<table><thead><tr><th>System</th><th>Stability</th><th>Plasticity</th><th>KnowUpdate</th><th>Temporal</th><th>Consolid.</th><th>Epistemic</th><th>Transfer</th><th>Forget</th><th>Feedback</th><th>Loop Closure</th></tr></thead><tbody><tr><td>Graphonomous</td><td>Has</td><td>Has</td><td>Has</td><td>Has</td><td>Has</td><td>Has</td><td>Partial</td><td>Has</td><td>Has</td><td>Claims</td></tr><tr><td>Supermemory</td><td>Has</td><td>Has</td><td>Unknown</td><td>Unknown</td><td>Unknown</td><td>Unknown</td><td>Unknown</td><td>Partial</td><td>Unknown</td><td>No</td></tr><tr><td>Mem0</td><td>Has</td><td>Has</td><td>Has</td><td>Unknown</td><td>Unknown</td><td>Unknown</td><td>Unknown</td><td>Has</td><td>Unknown</td><td>No</td></tr><tr><td>MemPalace</td><td>Has</td><td>Has</td><td>Unknown</td><td>Has</td><td>Partial</td><td>Unknown</td><td>Has</td><td>Unknown</td><td>Unknown</td><td>No</td></tr><tr><td>Zep/Graphiti</td><td>Has</td><td>Has</td><td>Has</td><td>Has</td><td>Unknown</td><td>Unknown</td><td>Partial</td><td>Unknown</td><td>Unknown</td><td>No</td></tr><tr><td>OMEGA</td><td>Has</td><td>Has</td><td>Unknown</td><td>Unknown</td><td>Unknown</td><td>Unknown</td><td>Unknown</td><td>Unknown</td><td>Unknown</td><td>No</td></tr></tbody></table>
+<p>&quot;Has&quot; = feature documented. &quot;Partial&quot; = limited implementation. &quot;Unknown&quot; = not documented. &quot;Claims&quot; = team claims capability but not independently verified (this is what PRISM tests).</p>
+<h3 id="blk-78267">26. Cost Tiers</h3>
+<table><thead><tr><th>Tier</th><th>Scenarios</th><th>Systems</th><th>Judge Models</th><th>Meta-Judge</th><th>Est. Cost</th></tr></thead><tbody><tr><td><strong>PRISM-full</strong></td><td>40 (12 anchor + 28 frontier)</td><td>6+</td><td>3</td><td>All L2 judgments</td><td>$150-600/cycle</td></tr><tr><td><strong>PRISM-standard</strong></td><td>20 (8 anchor + 12 frontier)</td><td>1-3</td><td>1-2</td><td>Sample 30%</td><td>$25-80/cycle</td></tr><tr><td><strong>PRISM-lite</strong></td><td>10 (5 anchor + 5 frontier)</td><td>1-2</td><td>1</td><td>None</td><td>$5-20/cycle</td></tr></tbody></table>
+<h4 id="blk-78293">Cost Breakdown</h4>
+<p>Main cost drivers:</p>
+<ol><li><p><strong>Interaction phase</strong> — LLM calls for each (system × scenario) pair. Dominates at full tier.</p></li><li><p><strong>Layer 2 judging</strong> — 9 judge calls per transcript (one per dimension)</p></li><li><p><strong>Layer 3 meta-judging</strong> — 1 call per L2 judgment</p></li><li><p><strong>Scenario composition</strong> — LLM calls for repo analysis + scenario generation (amortized across cycles)</p></li><li><p><strong>IRT calibration</strong> — Negligible (Elixir computation only)</p></li></ol>
+<h4 id="blk-78306">Budget Guard</h4>
+<p>Every cycle tracks cumulative cost. If cost exceeds the tier budget by &gt; 20%, the cycle pauses and requires governance approval to continue.</p>
+<h3 id="blk-78308">27. Governance &amp; Integrity</h3>
+<h4 id="blk-78309">Weight Changes</h4>
+<ul><li><p>Weights are configurable but changes during an active cycle are prohibited</p></li><li><p>Weight change proposals must include: rationale, impact analysis on current rankings, approval from at least 2 team members</p></li><li><p>All weight changes are logged with timestamps and reasons</p></li></ul>
+<h4 id="blk-78317">Scenario Authoring</h4>
+<ul><li><p>Scenarios with conflict-of-interest (testing Graphonomous-specific features) must be flagged</p></li><li><p>All scenarios must test capabilities achievable by at least 2 systems</p></li><li><p>Community-contributed scenarios are welcome but must pass validation</p></li></ul>
+<h4 id="blk-78325">Result Publication</h4>
+<ul><li><p>Raw transcripts, L2 judgments, and L3 meta-judgments are published for every cycle</p></li><li><p>Override history is public and auditable</p></li><li><p>Per-judge-model score breakdowns are always available</p></li><li><p>No results are published without meta-judge audit (except PRISM-lite, which discloses the limitation)</p></li></ul>
+<h4 id="blk-78335">Leaderboard Integrity</h4>
+<ul><li><p>Systems within overlapping 95% BCa CIs are reported as tied (§13)</p></li><li><p>No &quot;predicted&quot; or &quot;expected&quot; scores — only measured results from actual runs</p></li><li><p>Historical data is immutable (corrections are additive, not retroactive)</p></li><li><p>Effect sizes (Cohen's d) reported alongside all pairwise comparisons</p></li></ul>
+<h4 id="blk-78345">Advisory Board</h4>
+<p>PRISM seeks external advisors from at least 2 organizations that are NOT [&amp;] Ampersand Box Design. Advisory board members review:</p>
+<ol><li><p>CL dimension weight changes before publication</p></li><li><p>New anchor repo selections for potential bias</p></li><li><p>Disputed judgment overrides affecting leaderboard rankings</p></li><li><p>Anti-gaming enforcement actions (§24)</p></li></ol>
+<p>Until an advisory board is formally established, all governance decisions are documented with full rationale in the cycle metadata and are retroactively reviewable by any future advisory member.</p>
+<p><strong>Advisory board target composition:</strong></p>
+<ul><li><p>1 academic researcher in continual learning or memory systems</p></li><li><p>1 practitioner from a competing memory system vendor (rotating)</p></li><li><p>1 independent AI evaluation specialist</p></li></ul>
+<h4 id="blk-78365">Recusal Policy</h4>
+<p>[&amp;] team members MUST recuse from:</p>
+<ul><li><p>Judgment override decisions affecting Graphonomous scores</p></li><li><p>Anti-gaming investigations involving Graphonomous</p></li><li><p>Weight change proposals that would disproportionately benefit Graphonomous</p></li></ul>
+<p>Community-submitted override requests targeting [&amp;]-developed systems are prioritized over internal requests.</p>
+<p>Recusal decisions are logged in the cycle metadata. If all available reviewers have conflicts, the decision is deferred to the advisory board or published as &quot;unresolved&quot; with full context.</p>
+<h3 id="blk-78376">28. Community Contribution</h3>
+<h4 id="blk-78377">Scenario Submission Process</h4>
+<p>Community members can contribute scenarios via pull request to the PRISM repository. Each submission must include:</p>
+<ol><li><p>A complete scenario JSON file following the schema in §5</p></li><li><p>A README explaining the CL challenges tested and their ground truth sources</p></li><li><p>The canary string (§14)</p></li></ol>
+<h4 id="blk-78386">Review Criteria</h4>
+<p>Each submitted scenario is reviewed against 8 numbered criteria. All criteria must pass for acceptance.</p>
+<table><thead><tr><th>#</th><th>Criterion</th><th>Description</th><th>Reviewer Check</th></tr></thead><tbody><tr><td>1</td><td><strong>CL Validity</strong></td><td>Does it test the claimed CL dimension(s)?</td><td>At least 2 CL challenges with clear dimension mapping</td></tr><tr><td>2</td><td><strong>Ground Truth</strong></td><td>Is the expected answer verifiable?</td><td>Git commit + file path for anchors; expert consensus for frontiers</td></tr><tr><td>3</td><td><strong>Difficulty</strong></td><td>Is the difficulty rating accurate?</td><td>Would systems at different ability levels score differently?</td></tr><tr><td>4</td><td><strong>Domain Tag</strong></td><td>Is the domain assignment correct?</td><td>Scenario content matches domain description</td></tr><tr><td>5</td><td><strong>Independence</strong></td><td>No dependency on other scenarios</td><td>Unless explicitly part of a sequence (must declare)</td></tr><tr><td>6</td><td><strong>License</strong></td><td>Anchor repos have permissive licenses (Apache 2.0, MIT)</td><td>Verify repo license before accepting</td></tr><tr><td>7</td><td><strong>Novelty</strong></td><td>Does it fill a coverage gap?</td><td>Check against current dimension × domain matrix</td></tr><tr><td>8</td><td><strong>Minimum Size</strong></td><td>At least 3 sessions, 6 turns, 2 CL challenges</td><td>Automated schema validation</td></tr></tbody></table>
+<h4 id="blk-78425">Review Process</h4>
+<ol><li><p><strong>Automated validation</strong> — Schema check, canary string presence, minimum size</p></li><li><p><strong>Primary review</strong> — One PRISM maintainer reviews against all 8 criteria</p></li><li><p><strong>Cross-review</strong> — A second reviewer from a different organization (when available) checks CL validity and ground truth</p></li><li><p><strong>Acceptance</strong> — Both reviewers approve, or maintainer + advisory board member</p></li></ol>
+<h4 id="blk-78435">Contributor Recognition</h4>
+<ul><li><p>Accepted scenario contributors are credited in cycle release notes</p></li><li><p>Contributors of 5+ accepted scenarios are acknowledged in publications</p></li><li><p>Community reviewers who provide 10+ reviews earn &quot;Trusted Reviewer&quot; status and can serve as primary reviewers</p></li></ul>
+<h4 id="blk-78443">Scenario Copyright</h4>
+<p>All contributed scenarios are licensed under Apache 2.0, consistent with PRISM's overall license. Contributors retain copyright but grant PRISM an irrevocable license to use, modify, and distribute the scenarios.</p>
+<h3 id="blk-78445">29. Audit Protocol</h3>
+<h4 id="blk-78446">Audit Triggers</h4>
+<p>Any published PRISM result can be challenged. Valid audit triggers:</p>
+<ol><li><p><strong>Transcript integrity</strong> — Suspicion that a transcript was modified after generation</p></li><li><p><strong>Judge integrity</strong> — Evidence that a judge model produced inconsistent or biased scores</p></li><li><p><strong>System misrepresentation</strong> — System version, configuration, or capabilities misreported</p></li><li><p><strong>Anti-gaming violation</strong> — Suspicion of benchmark detection, cherry-picking, or scenario-specific optimization</p></li><li><p><strong>Scoring error</strong> — Suspected computation error in aggregation or IRT calibration</p></li></ol>
+<h4 id="blk-78459">Audit Process</h4>
+<table><thead><tr><th>Step</th><th>Action</th><th>Timeline</th></tr></thead><tbody><tr><td>1</td><td>Challenger files audit request with specific concern and evidence</td><td>Any time after publication</td></tr><tr><td>2</td><td>PRISM maintainers acknowledge receipt and assign auditor</td><td>Within 14 days</td></tr><tr><td>3</td><td>Auditor reviews raw data (transcripts, judgments, meta-judgments — all already public)</td><td>Within 30 days</td></tr><tr><td>4</td><td>If transcript integrity is questioned: re-run scenario against same system version</td><td>Within 30 days (requires system availability)</td></tr><tr><td>5</td><td>If judge integrity is questioned: re-run judgment with a different L2 model and compare</td><td>Within 14 days</td></tr><tr><td>6</td><td>Audit findings published alongside original results</td><td>Within 7 days of completion</td></tr></tbody></table>
+<h4 id="blk-78482">Auditor Selection</h4>
+<ul><li><p>Auditors MUST have no conflict of interest with the challenged system's organization</p></li><li><p>Auditors MUST have no conflict of interest with the challenger's organization</p></li><li><p>If no unconflicted auditor is available internally, the advisory board appoints an external auditor</p></li><li><p>System developers must provide access to their system at the evaluated version for re-evaluation (Closed Division requirement)</p></li></ul>
+<h4 id="blk-78492">Audit Outcomes</h4>
+<table><thead><tr><th>Outcome</th><th>Action</th></tr></thead><tbody><tr><td><strong>No issue found</strong></td><td>Original results confirmed. Audit report published.</td></tr><tr><td><strong>Minor discrepancy</strong></td><td>Results corrected. Both original and corrected results displayed.</td></tr><tr><td><strong>Material error</strong></td><td>Results retracted from leaderboard. Corrected results replace originals. Full disclosure in cycle metadata.</td></tr><tr><td><strong>Anti-gaming violation</strong></td><td>Results invalidated. System moved to Open Division or banned per §24.</td></tr></tbody></table>
+<h4 id="blk-78504">Audit History</h4>
+<p>All audit requests, processes, and outcomes are logged in an append-only audit trail. This trail is public and queryable via the <code>get_cycle_history</code> MCP tool.</p>
+<h3 id="blk-78506">30. Scenario Quality Metrics</h3>
+<h4 id="blk-78507">Per-Scenario Quality Tracking</h4>
+<p>Each scenario accumulates quality metadata across cycles:</p>
+<table><thead><tr><th>Metric</th><th>Description</th><th>Source</th></tr></thead><tbody><tr><td><code>inter_judge_agreement</code></td><td>Mean pairwise agreement between L2 judges across different model backends</td><td>Computed per cycle, rolling average across cycles</td></tr><tr><td><code>discrimination_index</code></td><td>IRT discrimination parameter <code>a</code> — how well this scenario separates systems of different ability</td><td>IRT calibration (§12)</td></tr><tr><td><code>completion_rate</code></td><td>Percentage of registered systems that successfully complete the scenario (no errors, no timeouts)</td><td>Interaction phase records</td></tr><tr><td><code>cost_per_run</code></td><td>Mean LLM API cost for this scenario across all systems and models</td><td>Telemetry (§21)</td></tr><tr><td><code>quality_flag</code></td><td>Auto-set if agreement &lt; 0.65 or discrimination &lt; 0.3 or completion rate &lt; 0.5</td><td>Computed after each cycle</td></tr></tbody></table>
+<h4 id="blk-78528">Quality Thresholds</h4>
+<table><thead><tr><th>Metric</th><th>Green</th><th>Yellow</th><th>Red</th></tr></thead><tbody><tr><td>Inter-judge agreement</td><td>≥ 0.75</td><td>0.65–0.75</td><td>&lt; 0.65</td></tr><tr><td>Discrimination index</td><td>≥ 0.7</td><td>0.3–0.7</td><td>&lt; 0.3</td></tr><tr><td>Completion rate</td><td>≥ 0.8</td><td>0.5–0.8</td><td>&lt; 0.5</td></tr></tbody></table>
+<p><strong>Red scenarios</strong> are candidates for revision or retirement at the next cycle's gap analysis (§8).</p>
+<p><strong>Yellow scenarios</strong> are monitored. Two consecutive yellow cycles trigger revision review.</p>
+<h4 id="blk-78548">Suite-Level Quality</h4>
+<p>Per cycle, report:</p>
+<ul><li><p><strong>Mean inter-judge agreement</strong> across all scenarios and dimensions</p></li><li><p><strong>Dimension-level agreement</strong> — which dimensions have the most reliable judging?</p></li><li><p><strong>Domain-level agreement</strong> — which domains have the most reliable scenarios?</p></li><li><p><strong>Scenario retirement rate</strong> — what percentage of frontier scenarios were retired this cycle?</p></li><li><p><strong>Quality trend</strong> — is mean agreement improving, stable, or declining across cycles?</p></li></ul>
+<p>These metrics are published alongside leaderboard results. A benchmark that can't judge itself reliably has no business judging other systems.</p>
+<h3 id="blk-78562">31. Versioning Policy</h3>
+<h4 id="blk-78563">Spec Versioning</h4>
+<p>PRISM uses semantic versioning (MAJOR.MINOR.PATCH):</p>
+<table><thead><tr><th>Version Component</th><th>Changed When</th><th>Examples</th></tr></thead><tbody><tr><td><strong>MAJOR</strong></td><td>Scoring formula changes, dimension definitions change, weight defaults change, evaluation division rules change</td><td>v2.0 → v3.0: added Related Work, Statistical Rigor, Evaluation Divisions</td></tr><tr><td><strong>MINOR</strong></td><td>New domains added, new MCP tools, rubric updates, new quality metrics</td><td>v3.0 → v3.1: added <code>education</code> domain</td></tr><tr><td><strong>PATCH</strong></td><td>Typo fixes, clarifications, example updates</td><td>v3.0 → v3.0.1: fixed power analysis table</td></tr></tbody></table>
+<h4 id="blk-78578">Cycle Versioning</h4>
+<p>Evaluation cycles are numbered monotonically (1, 2, 3, ...). Each cycle is tagged with:</p>
+<ul><li><p>Spec version used (e.g., &quot;Cycle 5 evaluated under spec v3.0&quot;)</p></li><li><p>Suite ID (UUID linking to the specific scenario set)</p></li><li><p>System versions evaluated</p></li></ul>
+<h4 id="blk-78587">Backward Compatibility</h4>
+<ul><li><p><strong>Breaking changes</strong> (MAJOR version bumps) MUST NOT be applied retroactively to published results</p></li><li><p>Historical leaderboards remain frozen at the spec version they were computed under</p></li><li><p>Cross-version comparisons MUST include a disclaimer about methodology differences</p></li><li><p>Anchor scenarios that span multiple spec versions provide the calibration bridge</p></li></ul>
+<h4 id="blk-78597">Release Cadence</h4>
+<ul><li><p><strong>Target:</strong> Quarterly evaluation cycles (subject to external system submissions)</p></li><li><p><strong>Spec updates:</strong> As needed, with MAJOR bumps announced 30 days before the affected cycle</p></li><li><p><strong>Git tags:</strong> Every spec version and every cycle completion is tagged in the repository</p></li></ul>
+<h3 id="blk-78605">32. Limitations</h3>
+<p>PRISM acknowledges the following limitations. This section is intended to be honest about what PRISM cannot do, where its methodology is weakest, and what assumptions may not hold. Quantified estimates are provided where possible.</p>
+<h4 id="blk-78607">32.1 Cold-Start Problem</h4>
+<p>IRT requires responses from ≥ 6 systems across ≥ 3 cycles to produce stable parameter estimates. In cycles 1-2, all scenarios use uncalibrated difficulty (b=0.0, a=1.0, c=0.1). This means early-cycle rankings have wider confidence intervals and weaker discrimination than mature cycles.</p>
+<p><strong>Estimated impact:</strong> ~15% wider confidence intervals in cycles 1-2 compared to cycles 4+. Early leaderboards should be interpreted as exploratory, not definitive.</p>
+<p><strong>Mitigation:</strong> Anchor scenarios with known difficulty from external benchmarks (BEAM, LongMemEval) can provide warm-start IRT priors.</p>
+<h4 id="blk-78611">32.2 Small-N System Problem</h4>
+<p>3PL IRT models typically need 200+ response patterns for stable calibration (Embretson &amp; Reise, 2000). With 6 systems × 40 scenarios = 240 response patterns per cycle, calibration is marginal. With 3 systems (PRISM-standard), calibration is unreliable.</p>
+<p><strong>Mitigation:</strong> PRISM treats each (system × model backend) pair as an independent &quot;respondent,&quot; increasing effective N. With 6 systems × 3 models = 18 respondents × 40 scenarios = 720 response patterns, calibration is adequate. PRISM-standard and PRISM-lite use uncalibrated IRT parameters and MUST disclose this limitation.</p>
+<h4 id="blk-78614">32.3 Loop Closure Rate Statistical Power</h4>
+<p>Linear regression over 3 data points (the default 3-pass sequence) has power &lt; 0.50 to detect medium effects (Cohen's d = 0.5). This means PRISM has a &gt; 50% chance of failing to detect genuine learning in a system that actually learns.</p>
+<p><strong>Mitigation:</strong> PRISM-full SHOULD use 5-pass sequences (power ≥ 0.81). Loop closure rate claims from 3-pass sequences MUST include the caveat: &quot;3-pass sequence — insufficient power for strong learning claims.&quot;</p>
+<h4 id="blk-78617">32.4 Cross-Domain Transfer Judge Reliability</h4>
+<p>At ~65% expected inter-judge agreement, the cross-domain transfer dimension has a signal-to-noise ratio of approximately 1.86:1. This is the lowest-reliability dimension in the spec.</p>
+<p><strong>Mitigation:</strong> Transfer is weighted at 0.07 (lowest non-tied weight). If inter-judge agreement drops below 60% in any cycle, the dimension is excluded from the composite score per the judge reliability floor (§3). Transfer scores are always reported with widened confidence intervals.</p>
+<h4 id="blk-78620">32.5 Domain Coverage Bias</h4>
+<p>The 8-domain vocabulary is English-centric and reflects Western professional contexts:</p>
+<ul><li><p><strong>Medical</strong> scenarios reference US/UK clinical guidelines and FDA-approved drug interactions</p></li><li><p><strong>Legal</strong> scenarios reference common law jurisdictions and US/EU regulations</p></li><li><p><strong>Business</strong> scenarios reflect Western corporate strategy frameworks</p></li></ul>
+<p>Non-English, non-Western CL challenges are not represented. This limits PRISM's generalizability to global use cases.</p>
+<p><strong>Mitigation:</strong> The domain vocabulary is extensible (§10). Community contributions of non-Western domain scenarios are prioritized. Future versions may add <code>multilingual</code> as a domain or introduce locale tags.</p>
+<h4 id="blk-78631">32.6 Git-Grounding Scope</h4>
+<p>Anchor scenarios require well-maintained Git repositories with clear commit histories, meaningful commit messages, and permissive licenses. This biases the benchmark toward:</p>
+<ul><li><p>Software engineering domains (where Git is native)</p></li><li><p>Well-documented open-source projects (survivorship bias)</p></li><li><p>English-language commit messages</p></li></ul>
+<p>Non-code domains (medical, legal, personal, creative) use frontier scenarios without git grounding. These frontiers have weaker ground truth — judge assessment rather than verifiable file content.</p>
+<p><strong>Mitigation:</strong> Domain-specific ground truth protocols for non-code domains: medical scenarios reference published clinical guidelines with DOIs; legal scenarios reference specific case citations; research scenarios reference published papers with DOIs. These are not as strong as git grounding but are stronger than author opinion.</p>
+<h4 id="blk-78642">32.7 Cost Barrier</h4>
+<p>PRISM-full requires $150-600/cycle in LLM API costs. For unfunded research groups or individual developers, this is prohibitive.</p>
+<p><strong>Mitigation:</strong> PRISM-lite ($5-20/cycle) provides an accessible entry point. Cost tracking is built into every cycle (§26). Future versions may support open-weight models (Gemma, Llama) for user simulation and judging, reducing costs to near-zero for groups with GPU access.</p>
+<h4 id="blk-78645">32.8 Self-Referential Evaluation Risk</h4>
+<p>PRISM is developed by the [&amp;] Protocol team, which also develops Graphonomous (a system evaluated by PRISM). Despite mitigation measures (cross-model meta-judging, public data, COI disclosure, recusal policy, advisory board), the perception of self-dealing cannot be fully eliminated.</p>
+<p><strong>Mitigation:</strong> The strongest mitigation is external adoption. If other organizations run PRISM evaluations independently and publish consistent results, the self-referential concern diminishes. PRISM's open-source release, Apache 2.0 license, and Docker-based deployment are designed to lower the barrier to independent evaluation.</p>
+<h4 id="blk-78648">32.9 Benchmark Saturation Timeline</h4>
+<p>If PRISM succeeds and becomes widely adopted, Goodhart's Law applies: &quot;When a measure becomes a target, it ceases to be a good measure.&quot; Systems will optimize for PRISM's specific CL dimensions, potentially at the expense of capabilities PRISM doesn't measure.</p>
+<p><strong>Mitigation:</strong> PRISM's self-improving loop (§8) is explicitly designed to resist saturation — scenarios that all systems solve easily are retired and replaced with harder ones. The IRT calibration automatically adjusts difficulty. However, the 9-dimension taxonomy itself could become a ceiling on what &quot;continual learning&quot; means. Future MAJOR versions may add dimensions as the field matures.</p>
+<h3 id="blk-78651">33. Actionable Diagnostics</h3>
+<h4 id="blk-78652">Design Principle</h4>
+<p>Most benchmarks produce scores. PRISM produces <strong>diagnoses</strong>.</p>
+<p>The difference: a score tells you where you rank. A diagnosis tells you what's broken, where to find the evidence, and how to verify the fix worked. PRISM's three-layer judging already captures the raw material — full interaction transcripts with tool calls, retrieval contexts, and reasoning chains. Actionable Diagnostics is the layer that extracts engineering-useful signals from that material.</p>
+<h4 id="blk-78655">Per-System Diagnostic Reports</h4>
+<p>After each cycle, every evaluated system receives a structured diagnostic report:</p>
+<pre><code>═══ Diagnostic Report: [System Name] — Cycle N ═══
+
+PROFILE
+  Overall: 0.68 [0.62, 0.74]  |  Loop Closure: 0.31 ↑
+  Division: Closed  |  Models tested: claude-sonnet, gpt-4o
+
+STRENGTHS (dimensions ≥ 0.70)
+  ✓ Stability: 0.82 — strong retention under high commit volume
+  ✓ Knowledge Update: 0.78 — belief revision working correctly
+  ✓ Outcome Feedback: 0.65 — learning loop active and measurable
+
+WEAKNESSES (dimensions &lt; 0.55, with failure pattern analysis)
+  ✗ Cross-Domain Transfer: 0.41
+    PATTERN: System stores domain-tagged nodes but retrieval
+    does not cross domain boundaries. In 8/12 transfer scenarios,
+    the system retrieved only same-domain nodes despite relevant
+    cross-domain evidence existing in memory.
+    EVIDENCE: Transcripts tr-018, tr-027, tr-034
+    SUGGESTED FIX: Add cross-domain edge extraction or remove
+    domain filtering from retrieval scoring.
+
+  ✗ Epistemic Awareness: 0.48
+    PATTERN: System answers confidently when retrieval returns
+    partial evidence. In 6/9 epistemic scenarios, system stated
+    facts without hedging despite retrieving &lt;3 relevant nodes.
+    EVIDENCE: Transcripts tr-022, tr-031
+    SUGGESTED FIX: Add confidence calibration based on retrieval
+    hit count and similarity score distribution.
+
+REGRESSIONS (vs prior cycle)
+  ⚠ Temporal Reasoning: 0.71 → 0.65 (−0.06, p=0.04)
+    CORRELATION: Regression appeared after system version bump
+    from v0.3.2 to v0.3.3. 4/5 failing scenarios involve
+    queries where a more recent (but wrong) node outranks the
+    temporally correct node.
+    ROOT CAUSE HYPOTHESIS: New retrieval ranking may weight
+    recency over temporal relevance.
+
+IMPROVEMENT OPPORTUNITIES (highest ROI)
+  1. Cross-domain retrieval (+0.15 estimated if fixed)
+  2. Confidence calibration (+0.10 estimated if fixed)
+  3. Temporal ranking regression (+0.06 to restore prior level)</code></pre>
+<h4 id="blk-78658">Failure Pattern Extraction</h4>
+<p>Diagnostic reports are generated by analyzing L2 judgment evidence across all scenarios for a system. The extraction process:</p>
+<ol><li><p><strong>Cluster failures by dimension</strong> — group all scenarios where the system scored &lt; 0.5 on a given dimension</p></li><li><p><strong>Extract common patterns</strong> — identify recurring tool call sequences, retrieval gaps, or reasoning errors across the cluster</p></li><li><p><strong>Cite specific transcripts</strong> — every pattern claim links to ≥ 2 transcript IDs where the pattern is observable</p></li><li><p><strong>Generate fix hypotheses</strong> — based on the failure pattern, suggest specific system changes (these are hypotheses, not guarantees)</p></li><li><p><strong>Estimate ROI</strong> — rank fix suggestions by expected score improvement (based on how many scenarios the pattern affects)</p></li></ol>
+<h4 id="blk-78671">Fix-and-Retest Protocol</h4>
+<p>PRISM's diagnostic loop doesn't end at the report. Systems can verify fixes:</p>
+<pre><code>┌─────────────┐     ┌──────────────┐     ┌──────────────┐
+│ Diagnostic  │────→│ System Fix   │────→│  Retest      │
+│ Report      │     │ (developer   │     │  (PRISM runs  │
+│ (PRISM)     │     │  implements) │     │  failing      │
+│             │     │              │     │  scenarios)   │
+└─────────────┘     └──────────────┘     └──────────────┘
+                                                │
+                                    ┌───────────┘
+                                    ▼
+                          ┌──────────────────┐
+                          │ Verification     │
+                          │ Report           │
+                          │                  │
+                          │ &quot;Fix confirmed:  │
+                          │  temporal +0.08&quot; │
+                          │                  │
+                          │ &quot;Fix partial:    │
+                          │  transfer +0.05  │
+                          │  (3/8 scenarios  │
+                          │  improved)&quot;      │
+                          └──────────────────┘</code></pre>
+<p><strong>Process:</strong></p>
+<ol><li><p>Developer reads diagnostic report, implements fix, registers updated system version</p></li><li><p>Developer requests retest via <code>run_retest</code> MCP tool, specifying:</p></li></ol>
+<ul><li><p>System ID + new version string</p></li><li><p>Scenario IDs to retest (from the diagnostic report's evidence links)</p></li><li><p>Optional: &quot;retest all scenarios in dimension X&quot;</p></li></ul>
+<ol start="3"><li><p>PRISM runs only the specified scenarios (not the full matrix — fast and cheap)</p></li><li><p>PRISM produces a <strong>verification report</strong> comparing before/after scores on the retested scenarios</p></li><li><p>Verification results are published alongside the next cycle's leaderboard as &quot;inter-cycle improvements&quot;</p></li></ol>
+<p><strong>Cost:</strong> Retesting 5-10 scenarios on 1 system with 1 model costs $1-5 (PRISM-lite level). This makes the fix-verify loop accessible even on a tight budget.</p>
+<h4 id="blk-78695">Regression Alerts</h4>
+<p>PRISM automatically compares per-dimension scores across consecutive cycles for each system:</p>
+<table><thead><tr><th>Alert Level</th><th>Trigger</th><th>Action</th></tr></thead><tbody><tr><td><strong>Info</strong></td><td>Score dropped 0.01-0.03</td><td>Noted in report, no alert</td></tr><tr><td><strong>Warning</strong></td><td>Score dropped 0.03-0.08 (p &lt; 0.10)</td><td>Yellow flag in diagnostic report with correlation analysis</td></tr><tr><td><strong>Alert</strong></td><td>Score dropped &gt; 0.08 (p &lt; 0.05)</td><td>Red flag + automatic root cause analysis comparing transcript patterns between cycles</td></tr></tbody></table>
+<p>Root cause analysis correlates regressions with:</p>
+<ul><li><p>System version changes (if the version string changed between cycles)</p></li><li><p>Scenario difficulty changes (if the regression is actually harder scenarios, not system degradation)</p></li><li><p>Judge model changes (if a different L2 judge was used)</p></li></ul>
+<h4 id="blk-78718">Community Anchor Improvement</h4>
+<p>Anyone can submit a PR to improve an existing anchor scenario:</p>
+<ol><li><p><strong>Identify weakness</strong> — an anchor that fails to discriminate (IRT discrimination <code>a</code> &lt; 0.3) or has low judge agreement (&lt; 0.65)</p></li><li><p><strong>Propose improvement</strong> — harder probes, sharper CL challenges, better ground truth verification</p></li><li><p><strong>Include evidence</strong> — &quot;This anchor currently scores 0.85+ for all systems. Here's a modified version with a subtler contradiction that tests knowledge update at difficulty 4 instead of 2&quot;</p></li><li><p><strong>Test the PR</strong> — PRISM runs the modified anchor against registered systems and computes the new discrimination index</p></li><li><p><strong>Accept if improved</strong> — if discrimination increases and judge agreement remains ≥ 0.65, merge</p></li></ol>
+<p>Anchor improvement PRs follow the same 8 review criteria as new scenario submissions (§28) plus an additional criterion:</p>
+<table><thead><tr><th>#</th><th>Criterion</th><th>Check</th></tr></thead><tbody><tr><td>9</td><td><strong>Improvement Evidence</strong></td><td>Does the modified anchor measurably improve discrimination or judge agreement vs the current version?</td></tr></tbody></table>
+<h4 id="blk-78739">MCP Tools for Diagnostics</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Key Parameters</th></tr></thead><tbody><tr><td><code>get_diagnostic_report</code></td><td>Full diagnostic report for a system</td><td>system_id, cycle</td></tr><tr><td><code>get_failure_patterns</code></td><td>Clustered failure analysis for a dimension</td><td>system_id, dimension, cycle</td></tr><tr><td><code>run_retest</code></td><td>Re-run specific scenarios after a fix</td><td>system_id, scenario_ids[], version</td></tr><tr><td><code>get_verification_report</code></td><td>Before/after comparison from retest</td><td>retest_run_id</td></tr><tr><td><code>get_regression_alerts</code></td><td>Cross-cycle regression analysis</td><td>system_id, from_cycle, to_cycle</td></tr><tr><td><code>suggest_fixes</code></td><td>AI-generated fix suggestions from failure patterns</td><td>system_id, dimension</td></tr></tbody></table>
+<p>This brings the MCP tool count from 30 to 36.</p>
+<h3 id="blk-78763">34. Bring Your Own Repo (BYOR)</h3>
+<h4 id="blk-78764">The Problem BYOR Solves</h4>
+<p>The standard PRISM leaderboard answers: &quot;Which memory system is best overall?&quot;</p>
+<p>But most users don't need the best system overall. They need the best system <strong>for their specific codebase, domain, and workflow</strong>. A medical AI startup doesn't care that System A dominates on code CL — they need to know which system handles clinical guideline updates best.</p>
+<p>BYOR lets anyone point PRISM at their own repository and get a personalized evaluation: <strong>&quot;Given YOUR code, YOUR commit history, YOUR domain — which memory system handles YOUR complexity best?&quot;</strong></p>
+<h4 id="blk-78768">How It Works</h4>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│                    BYOR Pipeline                          │
+│                                                          │
+│  1. User provides:                                       │
+│     - Git repo URL (or local path)                       │
+│     - Commit range to evaluate                           │
+│     - Domain tag (code, medical, legal, etc.)            │
+│     - Systems to compare (default: all registered)       │
+│                                                          │
+│  2. PRISM auto-generates:                                │
+│     - Repo anchor (key events, CL-relevant commits)      │
+│     - 5-15 scenarios from the repo's actual history       │
+│     - Ground truth probes from real code changes          │
+│                                                          │
+│  3. PRISM evaluates:                                     │
+│     - Each selected system on the generated scenarios     │
+│     - Full 9-dimension scoring                            │
+│     - Diagnostic report tailored to this repo             │
+│                                                          │
+│  4. User receives:                                       │
+│     - &quot;For YOUR repo, System X scores 0.72 and System Y  │
+│       scores 0.58. System X handles your refactoring      │
+│       patterns better, but System Y is better at your     │
+│       cross-module patterns.&quot;                             │
+│     - Fix suggestions specific to their codebase          │
+│     - Cost estimate for ongoing evaluation                │
+└──────────────────────────────────────────────────────────┘</code></pre>
+<h4 id="blk-78770">BYOR Scenario Generation</h4>
+<p>When a user provides a repo, PRISM's Scenario Composer (§5) runs in <strong>auto-discovery mode</strong>:</p>
+<ol><li><p><strong>Walk commit history</strong> in the specified range</p></li><li><p><strong>Identify CL-relevant events</strong> automatically:</p></li></ol>
+<ul><li><p>Refactors (large file renames, function signature changes) → Knowledge Update scenarios</p></li><li><p>Dependency changes (package additions/removals/upgrades) → Stability + Plasticity scenarios</p></li><li><p>Cross-module patterns (same pattern appearing in different files) → Transfer scenarios</p></li><li><p>Contradictions (config value changed, API reversed) → Knowledge Update scenarios</p></li><li><p>Long gaps between related commits → Temporal Reasoning scenarios</p></li></ul>
+<ol start="3"><li><p><strong>Generate scenarios</strong> with ground truth derived from the actual code at each commit</p></li><li><p><strong>Validate</strong> — a different model checks that the generated scenarios are fair, answerable, and CL-relevant</p></li><li><p><strong>Tag difficulty</strong> — based on commit gap length, contradiction subtlety, and cross-module complexity</p></li></ol>
+<h4 id="blk-78795">BYOR vs Standard Evaluation</h4>
+<table><thead><tr><th>Aspect</th><th>Standard (Leaderboard)</th><th>BYOR (Personal)</th></tr></thead><tbody><tr><td>Scenarios</td><td>Curated anchor + frontier suite</td><td>Auto-generated from user's repo</td></tr><tr><td>Ground truth</td><td>Pre-validated, IRT-calibrated</td><td>Auto-extracted, validation-checked</td></tr><tr><td>Systems compared</td><td>All registered systems</td><td>User-selected subset</td></tr><tr><td>IRT calibration</td><td>Full (multi-cycle data)</td><td>Cold-start (uncalibrated difficulty)</td></tr><tr><td>Results published</td><td>Yes (public leaderboard)</td><td>Optional (private by default)</td></tr><tr><td>Cost</td><td>Shared across all users</td><td>User pays for their evaluation</td></tr><tr><td>Diagnostic depth</td><td>General patterns</td><td>Repo-specific patterns and fix suggestions</td></tr></tbody></table>
+<h4 id="blk-78821">BYOR for Non-Code Domains</h4>
+<p>BYOR is not limited to Git repositories:</p>
+<table><thead><tr><th>Domain</th><th>Input Source</th><th>Ground Truth Derivation</th></tr></thead><tbody><tr><td>Code</td><td>Git repo + commit range</td><td>File content at specific commits</td></tr><tr><td>Medical</td><td>Clinical guideline documents + revision history</td><td>Published guideline versions with DOIs</td></tr><tr><td>Legal</td><td>Case law database + amendment history</td><td>Specific case citations and statute text</td></tr><tr><td>Research</td><td>Paper collection + citation graph</td><td>Published findings with DOIs</td></tr><tr><td>Business</td><td>Strategy documents + quarterly updates</td><td>Document version history</td></tr><tr><td>Operations</td><td>Runbook repo + incident reports</td><td>Post-mortem findings and config changes</td></tr></tbody></table>
+<p>For non-Git sources, the user provides a structured timeline of knowledge changes (JSON format). PRISM generates scenarios from this timeline using the same CL event detection logic.</p>
+<h4 id="blk-78846">BYOR Privacy</h4>
+<ul><li><p>BYOR evaluations are <strong>private by default</strong> — results are only visible to the user</p></li><li><p>Users can opt-in to publish results (adds data to the community pool, improves IRT calibration)</p></li><li><p>Repository content is processed locally or in the user's deployment — PRISM never stores proprietary code on the public leaderboard infrastructure</p></li><li><p>Transcripts from private evaluations are never included in public audit data</p></li></ul>
+<h4 id="blk-78856">BYOR MCP Tools</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Key Parameters</th></tr></thead><tbody><tr><td><code>byor_register_repo</code></td><td>Register a personal repo for evaluation</td><td>repo_url, commit_range, domain</td></tr><tr><td><code>byor_discover_events</code></td><td>Auto-discover CL-relevant events in a repo</td><td>repo_anchor_id</td></tr><tr><td><code>byor_generate_scenarios</code></td><td>Generate scenarios from discovered events</td><td>repo_anchor_id, focus_dimensions, count</td></tr><tr><td><code>byor_evaluate</code></td><td>Run full BYOR evaluation</td><td>repo_anchor_id, systems[], models[]</td></tr><tr><td><code>byor_compare</code></td><td>Compare systems on your repo</td><td>repo_anchor_id, system_a, system_b</td></tr><tr><td><code>byor_recommend</code></td><td>Get system recommendation for your use case</td><td>repo_anchor_id, budget, priorities</td></tr></tbody></table>
+<p>This brings the MCP tool count from 36 to 42.</p>
+<h3 id="blk-78880">35. System-Task Fit Recommendations</h3>
+<h4 id="blk-78881">Beyond Rankings</h4>
+<p>A leaderboard ranks systems globally. But the right memory system depends on the task:</p>
+<ul><li><p>A <strong>personal assistant</strong> needs strong Stability + Temporal Reasoning (remember user preferences across months, know what's current)</p></li><li><p>A <strong>code review agent</strong> needs strong Knowledge Update + Consolidation (track refactors, summarize architecture patterns)</p></li><li><p>A <strong>medical AI</strong> needs strong Epistemic Awareness + Intentional Forgetting (know when evidence is uncertain, GDPR-erase patient data)</p></li><li><p>A <strong>research assistant</strong> needs strong Cross-Domain Transfer + Consolidation (connect insights across papers, synthesize themes)</p></li></ul>
+<p>PRISM's 9-dimensional scoring + domain tags enable <strong>task-specific system recommendations</strong>.</p>
+<h4 id="blk-78893">Task Profiles</h4>
+<p>A task profile defines the relative importance of each CL dimension for a specific use case:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;task_profile&quot;</span>: <span class="t-string">&quot;code_review_agent&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Agent that reviews PRs, tracks architecture decisions, and detects regressions&quot;</span>,
+  <span class="t-key">&quot;dimension_priorities&quot;</span>: {
+    <span class="t-key">&quot;stability&quot;</span>: <span class="t-num">0.15</span>,
+    <span class="t-key">&quot;plasticity&quot;</span>: <span class="t-num">0.20</span>,
+    <span class="t-key">&quot;knowledge_update&quot;</span>: <span class="t-num">0.25</span>,
+    <span class="t-key">&quot;temporal&quot;</span>: <span class="t-num">0.15</span>,
+    <span class="t-key">&quot;consolidation&quot;</span>: <span class="t-num">0.10</span>,
+    <span class="t-key">&quot;epistemic&quot;</span>: <span class="t-num">0.05</span>,
+    <span class="t-key">&quot;transfer&quot;</span>: <span class="t-num">0.05</span>,
+    <span class="t-key">&quot;forgetting&quot;</span>: <span class="t-num">0.00</span>,
+    <span class="t-key">&quot;feedback&quot;</span>: <span class="t-num">0.05</span>
+  },
+  <span class="t-key">&quot;primary_domains&quot;</span>: [<span class="t-string">&quot;code&quot;</span>, <span class="t-string">&quot;operations&quot;</span>],
+  <span class="t-key">&quot;budget_sensitivity&quot;</span>: <span class="t-string">&quot;medium&quot;</span>
+}</code></pre>
+<h4 id="blk-78896">Fit Score Calculation</h4>
+<p>For a given task profile T and system S:</p>
+<pre><code>fit_score(S, T) = Σ(score(S, d) × priority(T, d))
+                  for d in dimensions
+                  filtered to T.primary_domains where available</code></pre>
+<p>This re-weights the PRISM scores according to what the task actually needs. A system that's mediocre overall but excellent on Knowledge Update + Plasticity would score highest for a code review agent.</p>
+<h4 id="blk-78900">Pre-Built Task Profiles</h4>
+<p>PRISM ships with pre-built profiles for common use cases:</p>
+<table><thead><tr><th>Profile</th><th>Top Dimensions</th><th>Primary Domains</th></tr></thead><tbody><tr><td><code>personal_assistant</code></td><td>Stability (0.25), Temporal (0.20), Plasticity (0.15)</td><td>personal, operations</td></tr><tr><td><code>code_review_agent</code></td><td>Knowledge Update (0.25), Plasticity (0.20), Temporal (0.15)</td><td>code</td></tr><tr><td><code>research_assistant</code></td><td>Consolidation (0.20), Transfer (0.20), Stability (0.15)</td><td>research</td></tr><tr><td><code>medical_ai</code></td><td>Epistemic (0.25), Forgetting (0.20), Knowledge Update (0.20)</td><td>medical</td></tr><tr><td><code>legal_analyst</code></td><td>Stability (0.20), Knowledge Update (0.20), Temporal (0.20)</td><td>legal</td></tr><tr><td><code>devops_agent</code></td><td>Knowledge Update (0.20), Temporal (0.20), Feedback (0.15)</td><td>code, operations</td></tr><tr><td><code>creative_collaborator</code></td><td>Plasticity (0.25), Consolidation (0.20), Transfer (0.15)</td><td>creative</td></tr><tr><td><code>customer_support</code></td><td>Stability (0.20), Plasticity (0.20), Epistemic (0.15)</td><td>personal, business</td></tr></tbody></table>
+<h4 id="blk-78930">Custom Task Profiles</h4>
+<p>Users can define custom profiles via the <code>create_task_profile</code> MCP tool or via the BYOR pipeline (PRISM can infer a task profile from the repo's commit patterns and domain).</p>
+<h4 id="blk-78932">Fit Recommendation Output</h4>
+<pre><code>═══ Task Fit: code_review_agent ═══
+Based on Cycle 5 results, filtered to [code, operations] domains:
+
+RECOMMENDED:
+  1. Graphonomous  — fit: 0.74 [0.68, 0.80]
+     Best at: Knowledge Update (0.82), Feedback (0.65)
+     Weak at: Transfer (0.41) — less important for this task
+
+  2. Zep/Graphiti  — fit: 0.71 [0.65, 0.77]  *tied with #1
+     Best at: Stability (0.79), Plasticity (0.75)
+     Weak at: Feedback (0.35) — no outcome loop
+
+  3. Mem0           — fit: 0.63 [0.57, 0.69]
+     Best at: Stability (0.72), Forgetting (0.68)
+     Weak at: Consolidation (0.38) — no abstraction layer
+
+NOTE: Systems 1 and 2 are tied within confidence intervals.
+Consider cost and integration complexity as tiebreakers.
+
+COST COMPARISON (estimated monthly for this task profile):
+  Graphonomous: $0 (self-hosted, Elixir/OTP)
+  Zep/Graphiti: $29/mo (cloud tier)
+  Mem0:         $49/mo (pro tier)</code></pre>
+<h4 id="blk-78934">MCP Tools for Fit Recommendations</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Key Parameters</th></tr></thead><tbody><tr><td><code>create_task_profile</code></td><td>Define a custom task profile</td><td>name, dimension_priorities, domains</td></tr><tr><td><code>list_task_profiles</code></td><td>List pre-built and custom profiles</td><td>(none)</td></tr><tr><td><code>get_fit_recommendation</code></td><td>System recommendation for a task</td><td>profile_id, cycle, budget</td></tr><tr><td><code>compare_fit</code></td><td>Compare two systems for a specific task</td><td>profile_id, system_a, system_b</td></tr><tr><td><code>byor_infer_profile</code></td><td>Infer task profile from repo patterns</td><td>repo_anchor_id</td></tr></tbody></table>
+<p>This brings the final MCP tool count from 42 to 47.</p>
+<h3 id="blk-78955">36. Implementation Roadmap</h3>
+<h4 id="blk-78956">Phase I: Foundation</h4>
+<ol><li><p>Spec v3.0 with Related Work, Statistical Rigor, Limitations, Evaluation Divisions ← DONE</p></li><li><p>Spec v3.0 Actionable Diagnostics, BYOR, System-Task Fit ← DONE</p></li><li><p>Domain vocabulary module</p></li><li><p>Postgres schema + Ecto migrations</p></li><li><p>Scenario Composer (Phase 1) — domain-tagged, git-grounded</p></li></ol>
+<h4 id="blk-78968">Phase II: Interaction Engine</h4>
+<ol start="6"><li><p>Scenario Sequence builder — ordered scenario lists for closed-loop testing</p></li><li><p>User Simulator — script mode first</p></li><li><p>MCP Adapter with <code>interact/3</code></p></li><li><p>Sequence Runner — no memory reset between passes</p></li></ol>
+<h4 id="blk-78978">Phase III: Judging &amp; Diagnostics</h4>
+<ol start="10"><li><p>Layer 2 Judges with structured rubrics</p></li><li><p>Layer 3 Meta-Judges with cross-model enforcement</p></li><li><p>Sequence Scorer — loop closure rate, improvement curves</p></li><li><p>Score aggregation + leaderboard (domain filters + loop closure rate)</p></li><li><p>BCa bootstrap confidence intervals + effect size reporting</p></li><li><p>Failure pattern extraction + diagnostic report generation</p></li><li><p>Regression alert system (cross-cycle comparison)</p></li></ol>
+<h4 id="blk-78994">Phase IV: Self-Improvement</h4>
+<ol start="17"><li><p>IRT Calibrator</p></li><li><p>Gap analysis + scenario evolution</p></li><li><p>Contamination prevention (canary strings, memorization detection)</p></li><li><p>Scenario quality metrics tracking</p></li><li><p>Fix-and-retest protocol (<code>run_retest</code>, verification reports)</p></li><li><p>MCP Server (47 tools)</p></li><li><p>Deploy to Fly.io + run Cycle 1</p></li></ol>
+<h4 id="blk-79010">Phase V: BYOR &amp; Task Fit</h4>
+<ol start="24"><li><p>BYOR repo registration + auto-discovery of CL events</p></li><li><p>BYOR scenario generation from user repos</p></li><li><p>BYOR evaluation pipeline (private by default)</p></li><li><p>Pre-built task profiles (8 common use cases)</p></li><li><p>Fit score calculation + system recommendations</p></li><li><p>Custom task profile creation + inference from repo patterns</p></li></ol>
+<h4 id="blk-79024">Phase VI: Credibility &amp; Community</h4>
+<ol start="30"><li><p>Publish Cycle 1 results with ≥ 3 non-Graphonomous systems</p></li><li><p>Release raw data (transcripts, judgments, meta-judgments)</p></li><li><p>Submit workshop paper: &quot;PRISM: A Self-Improving Diagnostic Benchmark for Continual Learning in Agent Memory Systems&quot;</p></li><li><p>Establish advisory board (≥ 2 external members)</p></li><li><p>Open community scenario contributions + anchor improvement PRs</p></li><li><p>Launch BYOR for public beta</p></li></ol>
+<h3 id="blk-79038">Appendix A: Worked Example</h3>
+<p>This appendix walks through one complete evaluation: from scenario to final leaderboard score.</p>
+<h4 id="blk-79040">A.1 Scenario</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;sc-demo-001&quot;</span>,
+  <span class="t-key">&quot;kind&quot;</span>: <span class="t-string">&quot;anchor&quot;</span>,
+  <span class="t-key">&quot;domain&quot;</span>: <span class="t-string">&quot;code&quot;</span>,
+  <span class="t-key">&quot;repo_anchor_id&quot;</span>: <span class="t-string">&quot;ra-elixir-web-app&quot;</span>,
+  <span class="t-key">&quot;difficulty&quot;</span>: <span class="t-num">2</span>,
+  <span class="t-key">&quot;persona&quot;</span>: {
+    <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;senior_developer&quot;</span>,
+    <span class="t-key">&quot;context&quot;</span>: <span class="t-string">&quot;Maintaining an Elixir Phoenix web app through an auth library migration&quot;</span>
+  },
+  <span class="t-key">&quot;sessions&quot;</span>: [
+    {
+      <span class="t-key">&quot;session_number&quot;</span>: <span class="t-num">1</span>,
+      <span class="t-key">&quot;commit_range&quot;</span>: <span class="t-string">&quot;a1b2c3..d4e5f6&quot;</span>,
+      <span class="t-key">&quot;turns&quot;</span>: [
+        {
+          <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;user&quot;</span>,
+          <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;ingest_diff&quot;</span>,
+          <span class="t-key">&quot;commit&quot;</span>: <span class="t-string">&quot;a1b2c3&quot;</span>,
+          <span class="t-key">&quot;text&quot;</span>: <span class="t-string">&quot;I just pushed a commit updating the auth module. Can you remember the token setup?&quot;</span>
+        },
+        {
+          <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;user&quot;</span>,
+          <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;probe&quot;</span>,
+          <span class="t-key">&quot;cl_challenge&quot;</span>: {
+            <span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;stability&quot;</span>,
+            <span class="t-key">&quot;ground_truth_commit&quot;</span>: <span class="t-string">&quot;a1b2c3&quot;</span>,
+            <span class="t-key">&quot;ground_truth_file&quot;</span>: <span class="t-string">&quot;lib/myapp/auth.ex&quot;</span>,
+            <span class="t-key">&quot;ground_truth_answer&quot;</span>: <span class="t-string">&quot;Uses Guardian 2.3 for JWT with 24-hour TTL configured in config/runtime.exs&quot;</span>
+          },
+          <span class="t-key">&quot;text&quot;</span>: <span class="t-string">&quot;What token library does the auth module use, and what's the TTL?&quot;</span>
+        }
+      ]
+    },
+    {
+      <span class="t-key">&quot;session_number&quot;</span>: <span class="t-num">2</span>,
+      <span class="t-key">&quot;commit_range&quot;</span>: <span class="t-string">&quot;d4e5f6..g7h8i9&quot;</span>,
+      <span class="t-key">&quot;turns&quot;</span>: [
+        {
+          <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;user&quot;</span>,
+          <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;ingest_diff&quot;</span>,
+          <span class="t-key">&quot;commit&quot;</span>: <span class="t-string">&quot;d4e5f6&quot;</span>,
+          <span class="t-key">&quot;text&quot;</span>: <span class="t-string">&quot;New commit — we replaced Guardian with Joken 2.6. Take a look.&quot;</span>
+        },
+        {
+          <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;user&quot;</span>,
+          <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;probe&quot;</span>,
+          <span class="t-key">&quot;cl_challenge&quot;</span>: {
+            <span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;knowledge_update&quot;</span>,
+            <span class="t-key">&quot;ground_truth_commit&quot;</span>: <span class="t-string">&quot;d4e5f6&quot;</span>,
+            <span class="t-key">&quot;ground_truth_file&quot;</span>: <span class="t-string">&quot;lib/myapp/auth.ex&quot;</span>,
+            <span class="t-key">&quot;ground_truth_answer&quot;</span>: <span class="t-string">&quot;Joken 2.6 — replaced Guardian in commit d4e5f6, TTL now 12 hours&quot;</span>
+          },
+          <span class="t-key">&quot;text&quot;</span>: <span class="t-string">&quot;What token library does the auth module use now?&quot;</span>
+        },
+        {
+          <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;user&quot;</span>,
+          <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;probe&quot;</span>,
+          <span class="t-key">&quot;cl_challenge&quot;</span>: {
+            <span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;temporal&quot;</span>,
+            <span class="t-key">&quot;ground_truth_commit&quot;</span>: <span class="t-string">&quot;d4e5f6&quot;</span>,
+            <span class="t-key">&quot;ground_truth_file&quot;</span>: <span class="t-string">&quot;lib/myapp/auth.ex&quot;</span>,
+            <span class="t-key">&quot;ground_truth_answer&quot;</span>: <span class="t-string">&quot;Guardian was used before the migration commit (d4e5f6); Joken is current&quot;</span>
+          },
+          <span class="t-key">&quot;text&quot;</span>: <span class="t-string">&quot;What library was used before the migration?&quot;</span>
+        }
+      ]
+    }
+  ],
+  <span class="t-key">&quot;cl_challenges_summary&quot;</span>: [
+    {<span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;stability&quot;</span>, <span class="t-key">&quot;count&quot;</span>: <span class="t-num">1</span>},
+    {<span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;knowledge_update&quot;</span>, <span class="t-key">&quot;count&quot;</span>: <span class="t-num">1</span>},
+    {<span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;temporal&quot;</span>, <span class="t-key">&quot;count&quot;</span>: <span class="t-num">1</span>}
+  ],
+  <span class="t-key">&quot;irt_params&quot;</span>: {
+    <span class="t-key">&quot;difficulty_b&quot;</span>: <span class="t-num">0.0</span>,
+    <span class="t-key">&quot;discrimination_a&quot;</span>: <span class="t-num">1.0</span>,
+    <span class="t-key">&quot;guessing_c&quot;</span>: <span class="t-num">0.1</span>,
+    <span class="t-key">&quot;calibrated&quot;</span>: <span class="t-lit">false</span>
+  }
+}</code></pre>
+<h4 id="blk-79042">A.2 Interaction Transcript (excerpt)</h4>
+<p>The User Simulator runs this scenario against &quot;System A&quot; using <code>claude-sonnet-4-20250514</code>:</p>
+<pre><code>Session 1, Turn 1: Simulator feeds commit a1b2c3 diff.
+  → System A calls store_node(content=&quot;Auth module uses Guardian 2.3...&quot;)
+  → System A calls store_edge(source=..., target=..., edge_type=&quot;part_of&quot;)
+
+Session 1, Turn 2: Simulator asks &quot;What token library...?&quot;
+  → System A calls retrieve_context(query=&quot;auth module token library&quot;)
+  → System A responds: &quot;The auth module uses Guardian 2.3 for JWT generation
+     with a 24-hour TTL, configured in config/runtime.exs.&quot;
+  → Ground truth match: YES (Guardian 2.3 + 24h TTL + config location)
+
+Session 2, Turn 1: Simulator feeds commit d4e5f6 diff (Guardian → Joken).
+  → System A calls store_node(content=&quot;Auth migrated from Guardian to Joken 2.6...&quot;)
+  → System A calls belief_revise(old=&quot;Guardian 2.3&quot;, new=&quot;Joken 2.6&quot;)
+
+Session 2, Turn 2: Simulator asks &quot;What token library now?&quot;
+  → System A calls retrieve_context(query=&quot;current auth token library&quot;)
+  → System A responds: &quot;The auth module now uses Joken 2.6, which replaced
+     Guardian in the latest commit. TTL was reduced to 12 hours.&quot;
+  → Ground truth match: YES (Joken 2.6 + replacement noted + 12h TTL)
+
+Session 2, Turn 3: Simulator asks &quot;What was used before?&quot;
+  → System A responds: &quot;Guardian 2.3 was the previous token library, used
+     before commit d4e5f6 migrated to Joken.&quot;
+  → Ground truth match: YES (Guardian + temporal ordering correct)</code></pre>
+<h4 id="blk-79045">A.3 Layer 2 Judgment (Stability dimension)</h4>
+<p>Judge model: <code>claude-sonnet-4-20250514</code></p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;layer&quot;</span>: <span class="t-num">2</span>,
+  <span class="t-key">&quot;dimension&quot;</span>: <span class="t-string">&quot;stability&quot;</span>,
+  <span class="t-key">&quot;challenge_scores&quot;</span>: [
+    {
+      <span class="t-key">&quot;challenge_id&quot;</span>: <span class="t-string">&quot;stability-1&quot;</span>,
+      <span class="t-key">&quot;score&quot;</span>: <span class="t-num">0.90</span>,
+      <span class="t-key">&quot;evidence&quot;</span>: <span class="t-string">&quot;System correctly recalled Guardian 2.3, TTL, and config location from session 1 ingestion. Minor: did not mention the exact version (2.3.1) from the Hex dependency.&quot;</span>,
+      <span class="t-key">&quot;ground_truth_verified&quot;</span>: <span class="t-lit">true</span>
+    }
+  ],
+  <span class="t-key">&quot;unprompted_score&quot;</span>: <span class="t-num">0.80</span>,
+  <span class="t-key">&quot;unprompted_evidence&quot;</span>: <span class="t-string">&quot;System proactively created an edge linking the auth module to its dependencies, demonstrating structural memory beyond flat storage.&quot;</span>,
+  <span class="t-key">&quot;composite_score&quot;</span>: <span class="t-num">0.87</span>,
+  <span class="t-key">&quot;rubric_version&quot;</span>: <span class="t-string">&quot;v3.0&quot;</span>
+}</code></pre>
+<p><strong>Composite calculation:</strong> 0.70 × 0.90 (challenge) + 0.30 × 0.80 (unprompted) = 0.87</p>
+<h4 id="blk-79049">A.4 Layer 3 Meta-Judgment</h4>
+<p>Meta-judge model: <code>gpt-4o</code> (different family from L2 judge)</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;consistency_score&quot;</span>: <span class="t-num">0.85</span>,
+  <span class="t-key">&quot;evidence_grounding_score&quot;</span>: <span class="t-num">0.90</span>,
+  <span class="t-key">&quot;rubric_compliance_score&quot;</span>: <span class="t-num">0.95</span>,
+  <span class="t-key">&quot;composite_score&quot;</span>: <span class="t-num">0.90</span>,
+  <span class="t-key">&quot;recommendation&quot;</span>: <span class="t-string">&quot;accept&quot;</span>,
+  <span class="t-key">&quot;reasoning&quot;</span>: <span class="t-string">&quot;L2 judge correctly identified the stability challenge, cited specific transcript evidence (Guardian 2.3 recall), and scored according to rubric structure. The 0.90 challenge score is well-justified — the minor version omission (2.3 vs 2.3.1) is a reasonable deduction.&quot;</span>
+}</code></pre>
+<p><strong>Meta-judgment composite:</strong> mean(0.85, 0.90, 0.95) = 0.90 → <strong>Accept</strong> (≥ 0.7)</p>
+<h4 id="blk-79053">A.5 Score Aggregation</h4>
+<p>For System A on this scenario, with accepted L2 judgments:</p>
+<table><thead><tr><th>Dimension</th><th>L2 Score</th><th>Meta Quality</th><th>Weighted Score</th></tr></thead><tbody><tr><td>Stability</td><td>0.87</td><td>1.0 (accepted)</td><td>0.87</td></tr><tr><td>Knowledge Update</td><td>0.82</td><td>1.0 (accepted)</td><td>0.82</td></tr><tr><td>Temporal</td><td>0.78</td><td>0.7 (flagged)</td><td>0.55</td></tr></tbody></table>
+<p>Note: Temporal was flagged by meta-judge (composite 0.62), so its quality weight is 0.7.</p>
+<p><strong>Weighted total (for tested dimensions only):</strong></p>
+<pre><code>stability:        0.87 × 0.20 = 0.174
+knowledge_update: 0.82 × 0.15 = 0.123
+temporal:         0.55 × 0.12 = 0.066
+                                ------
+Sum of tested weights: 0.20 + 0.15 + 0.12 = 0.47
+Normalized: (0.174 + 0.123 + 0.066) / 0.47 = 0.772</code></pre>
+<p>This scenario contributes a normalized PRISM score of <strong>0.772</strong> for System A. The full suite score is the mean across all 40 scenarios, with BCa bootstrap CIs.</p>
+<h4 id="blk-79076">A.6 Leaderboard Entry</h4>
+<p>After completing all 40 scenarios across 3 models:</p>
+<pre><code>PRISM Leaderboard — Cycle 1, Code Domain
+═══════════════════════════════════════════════════════════════
+System         Stab.  Plast. KnowUp Temp.  ...  Total  Loop   CI (95%)
+───────────────────────────────────────────────────────────────
+System A       0.82   0.75   0.78   0.71   ...  0.68   0.31↑  [0.62, 0.74]
+System B       0.79   0.73   0.74   0.68   ...  0.65   0.05→  [0.59, 0.71]  *tied
+System C       0.81   0.70   0.71   0.65   ...  0.64   0.00→  [0.58, 0.70]  *tied
+───────────────────────────────────────────────────────────────
+* Systems B and C are tied (overlapping 95% BCa CIs)
+  Loop closure: ↑ = positive slope, → = flat (≤0.05)
+  Meta-judge accept rate this cycle: 78%</code></pre>
+<p>This worked example demonstrates the full pipeline: scenario → interaction → L2 judgment → L3 meta-judgment → score aggregation → leaderboard. Every intermediate artifact is public and auditable.</p>
+<h3 id="blk-79080">Related: PRISM engine implementation docs</h3>
+<p>The <code>/PRISM/</code> codebase (Elixir/OTP, Fly.io) ships its own engineering docs:</p>
+<ul><li><p><a href="#/PRISM/docs/DUAL_LOOP_MACHINES.md" data-link>Dual-Loop Machines</a> — how the PRISM benchmark loop interlocks with the Graphonomous memory loop (and triple-loop nesting via PULSE)</p></li><li><p><a href="#/PRISM/docs/ARITHMETIC_INTEGRATION.md" data-link>Arithmetic Integration</a> — how PRISM gates diagnostics on the box-and-box kernel verdict</p></li><li><p><a href="#/PRISM/docs/NPM_PACKAGE.md" data-link>NPM Package</a> — the PRISM client/runner package</p></li><li><p><a href="#/PRISM/docs/ux/user-stories.md" data-link>User Stories</a> — benchmarking workflows from the operator's perspective</p></li></ul></div>
+<p class="src"><a href="/#/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-76785" class="lvl2">OpenSentience Specification OS-009-PRISM v3.0</a><a href="#blk-76800" class="lvl2">Table of Contents</a><a href="#blk-76876" class="lvl2">1. Why Existing Benchmarks Fall Short</a><a href="#blk-76877" class="lvl3">The Legacy Pattern</a><a href="#blk-76898" class="lvl3">The Landscape</a><a href="#blk-76925" class="lvl3">What PRISM Does Differently</a><a href="#blk-76953" class="lvl2">2. Related Work</a><a href="#blk-76955" class="lvl3">2.1 Agent Memory Benchmarks</a><a href="#blk-76961" class="lvl3">2.2 IRT in AI Evaluation</a><a href="#blk-76966" class="lvl3">2.3 Self-Improving and Dynamic Benchmarks</a><a href="#blk-76970" class="lvl3">2.4 Cognitive Science Foundations</a><a href="#blk-76992" class="lvl2">3. The 9 CL Dimensions</a><a href="#blk-77035" class="lvl3">Weight Rationale</a><a href="#blk-77047" class="lvl3">Academic Grounding</a><a href="#blk-77060" class="lvl3">Judge Reliability by Dimension</a><a href="#blk-77102" class="lvl3">Judge Reliability Floor</a><a href="#blk-77112" class="lvl2">4. Architecture Overview</a><a href="#blk-77114" class="lvl3">OTP Supervision Tree</a><a href="#blk-77116" class="lvl3">How This Differs from Legacy Architectures</a><a href="#blk-77130" class="lvl2">5. Phase 1: Compose</a><a href="#blk-77131" class="lvl3">Overview</a><a href="#blk-77133" class="lvl3">Scenario Structure</a><a href="#blk-77135" class="lvl3">Anchor vs Frontier Scenarios</a><a href="#blk-77160" class="lvl3">Composition Process</a><a href="#blk-77182" class="lvl3">Coverage Analysis</a><a href="#blk-77192" class="lvl2">6. Phase 2: Interact</a><a href="#blk-77193" class="lvl3">Overview</a><a href="#blk-77195" class="lvl3">User Simulator</a><a href="#blk-77199" class="lvl3">Simulator-to-System Interaction</a><a href="#blk-77202" class="lvl3">Git Interaction Tools</a><a href="#blk-77212" class="lvl3">Transcript Recording</a><a href="#blk-77215" class="lvl3">System Registration</a><a href="#blk-77228" class="lvl3">Adapter Notes</a><a href="#blk-77235" class="lvl3">Matrix Execution</a><a href="#blk-77239" class="lvl2">7. Phase 3: Observe</a><a href="#blk-77240" class="lvl3">Overview</a><a href="#blk-77243" class="lvl3">Layer 1: Interaction Transcripts</a><a href="#blk-77245" class="lvl3">Layer 2: Dimension Judges</a><a href="#blk-77256" class="lvl3">Layer 3: Meta-Judges</a><a href="#blk-77280" class="lvl3">Aggregation</a><a href="#blk-77293" class="lvl3">Confidence Intervals</a><a href="#blk-77307" class="lvl2">8. Phase 4: Reflect</a><a href="#blk-77308" class="lvl3">Overview</a><a href="#blk-77310" class="lvl3">Gap Analysis (after each cycle)</a><a href="#blk-77324" class="lvl3">Scenario Evolution</a><a href="#blk-77340" class="lvl3">Convergence Properties</a><a href="#blk-77350" class="lvl2">9. Git-Grounded Anchors</a><a href="#blk-77351" class="lvl3">Why Git</a><a href="#blk-77370" class="lvl3">Repo Anchor Structure</a><a href="#blk-77372" class="lvl3">Repo Selection Criteria</a><a href="#blk-77386" class="lvl3">Probe Generation from Repos</a><a href="#blk-77398" class="lvl2">10. Domain Categories</a><a href="#blk-77399" class="lvl3">Controlled Vocabulary</a><a href="#blk-77429" class="lvl3">Domain as First-Class Field</a><a href="#blk-77441" class="lvl2">11. Closed-Loop Testing</a><a href="#blk-77442" class="lvl3">The Problem No Other Benchmark Solves</a><a href="#blk-77446" class="lvl3">Mechanism: Scenario Sequences</a><a href="#blk-77452" class="lvl3">Closed-Loop Metrics</a><a href="#blk-77469" class="lvl3">Loop Closure Rate as First-Class Metric</a><a href="#blk-77472" class="lvl2">12. IRT Calibration</a><a href="#blk-77473" class="lvl3">Why IRT</a><a href="#blk-77475" class="lvl3">3PL Model</a><a href="#blk-77487" class="lvl3">Calibration Process</a><a href="#blk-77497" class="lvl3">Adaptive Scenario Selection (Future)</a><a href="#blk-77506" class="lvl2">13. Statistical Rigor</a><a href="#blk-77507" class="lvl3">Power Analysis</a><a href="#blk-77556" class="lvl3">Confidence Interval Methodology</a><a href="#blk-77569" class="lvl3">Effect Size Reporting</a><a href="#blk-77581" class="lvl3">Multiple Comparisons Correction</a><a href="#blk-77584" class="lvl2">14. Contamination Prevention</a><a href="#blk-77585" class="lvl3">Canary String</a><a href="#blk-77589" class="lvl3">Temporal Splits</a><a href="#blk-77599" class="lvl3">Memorization Detection</a><a href="#blk-77610" class="lvl3">Scenario Rotation</a><a href="#blk-77612" class="lvl2">15. Data Model (Postgres)</a><a href="#blk-77614" class="lvl2">16. MCP Tool Surface (47 tools)</a><a href="#blk-77615" class="lvl3">Scenario Management (6)</a><a href="#blk-77638" class="lvl3">Interaction (6)</a><a href="#blk-77661" class="lvl3">Judging (5)</a><a href="#blk-77681" class="lvl3">Leaderboard (4)</a><a href="#blk-77698" class="lvl3">Meta-Loop &amp; Calibration (5)</a><a href="#blk-77718" class="lvl3">Configuration (4)</a><a href="#blk-77735" class="lvl3">Diagnostics &amp; Retest (6)</a><a href="#blk-77758" class="lvl3">BYOR — Bring Your Own Repo (6)</a><a href="#blk-77781" class="lvl3">System-Task Fit (5)</a><a href="#blk-77801" class="lvl2">17. CL Category Specifications</a><a href="#blk-77803" class="lvl3">Stability (weight: 0.20)</a><a href="#blk-77825" class="lvl3">Plasticity (weight: 0.18)</a><a href="#blk-77847" class="lvl3">Knowledge Update (weight: 0.15)</a><a href="#blk-77868" class="lvl3">Temporal Reasoning (weight: 0.12)</a><a href="#blk-77889" class="lvl3">Consolidation (weight: 0.10)</a><a href="#blk-77910" class="lvl3">Epistemic Awareness (weight: 0.08)</a><a href="#blk-77931" class="lvl3">Cross-Domain Transfer (weight: 0.07)</a><a href="#blk-77952" class="lvl3">Intentional Forgetting (weight: 0.05)</a><a href="#blk-77973" class="lvl3">Outcome Feedback (weight: 0.05)</a><a href="#blk-77994" class="lvl2">18. Scoring System Design</a><a href="#blk-77995" class="lvl3">Per-Dimension Scoring</a><a href="#blk-78006" class="lvl3">Composite Score</a><a href="#blk-78008" class="lvl3">Domain-Filtered Scores</a><a href="#blk-78011" class="lvl3">Loop Closure Rate</a><a href="#blk-78015" class="lvl2">19. External Benchmark Integration</a><a href="#blk-78047" class="lvl2">20. Deployment (Fly.io)</a><a href="#blk-78048" class="lvl3">Infrastructure</a><a href="#blk-78050" class="lvl3">Configuration</a><a href="#blk-78052" class="lvl3">Environment Variables (Runtime)</a><a href="#blk-78054" class="lvl2">21. Observability &amp; Telemetry</a><a href="#blk-78055" class="lvl3">Metrics (via :telemetry)</a><a href="#blk-78057" class="lvl3">Logging</a><a href="#blk-78068" class="lvl2">22. Evaluation Divisions</a><a href="#blk-78069" class="lvl3">Closed Division (Primary Leaderboard)</a><a href="#blk-78082" class="lvl3">Open Division (Exploratory)</a><a href="#blk-78094" class="lvl3">Division Rules</a><a href="#blk-78117" class="lvl2">23. Known Risks &amp; Mitigations</a><a href="#blk-78151" class="lvl2">24. Anti-Gaming Rules</a><a href="#blk-78152" class="lvl3">Prohibited Behaviors</a><a href="#blk-78165" class="lvl3">IRT-Based Anomaly Detection</a><a href="#blk-78175" class="lvl3">Reporting Obligations</a><a href="#blk-78185" class="lvl2">25. Capability Audit Matrix</a><a href="#blk-78267" class="lvl2">26. Cost Tiers</a><a href="#blk-78293" class="lvl3">Cost Breakdown</a><a href="#blk-78306" class="lvl3">Budget Guard</a><a href="#blk-78308" class="lvl2">27. Governance &amp; Integrity</a><a href="#blk-78309" class="lvl3">Weight Changes</a><a href="#blk-78317" class="lvl3">Scenario Authoring</a><a href="#blk-78325" class="lvl3">Result Publication</a><a href="#blk-78335" class="lvl3">Leaderboard Integrity</a><a href="#blk-78345" class="lvl3">Advisory Board</a><a href="#blk-78365" class="lvl3">Recusal Policy</a><a href="#blk-78376" class="lvl2">28. Community Contribution</a><a href="#blk-78377" class="lvl3">Scenario Submission Process</a><a href="#blk-78386" class="lvl3">Review Criteria</a><a href="#blk-78425" class="lvl3">Review Process</a><a href="#blk-78435" class="lvl3">Contributor Recognition</a><a href="#blk-78443" class="lvl3">Scenario Copyright</a><a href="#blk-78445" class="lvl2">29. Audit Protocol</a><a href="#blk-78446" class="lvl3">Audit Triggers</a><a href="#blk-78459" class="lvl3">Audit Process</a><a href="#blk-78482" class="lvl3">Auditor Selection</a><a href="#blk-78492" class="lvl3">Audit Outcomes</a><a href="#blk-78504" class="lvl3">Audit History</a><a href="#blk-78506" class="lvl2">30. Scenario Quality Metrics</a><a href="#blk-78507" class="lvl3">Per-Scenario Quality Tracking</a><a href="#blk-78528" class="lvl3">Quality Thresholds</a><a href="#blk-78548" class="lvl3">Suite-Level Quality</a><a href="#blk-78562" class="lvl2">31. Versioning Policy</a><a href="#blk-78563" class="lvl3">Spec Versioning</a><a href="#blk-78578" class="lvl3">Cycle Versioning</a><a href="#blk-78587" class="lvl3">Backward Compatibility</a><a href="#blk-78597" class="lvl3">Release Cadence</a><a href="#blk-78605" class="lvl2">32. Limitations</a><a href="#blk-78607" class="lvl3">32.1 Cold-Start Problem</a><a href="#blk-78611" class="lvl3">32.2 Small-N System Problem</a><a href="#blk-78614" class="lvl3">32.3 Loop Closure Rate Statistical Power</a><a href="#blk-78617" class="lvl3">32.4 Cross-Domain Transfer Judge Reliability</a><a href="#blk-78620" class="lvl3">32.5 Domain Coverage Bias</a><a href="#blk-78631" class="lvl3">32.6 Git-Grounding Scope</a><a href="#blk-78642" class="lvl3">32.7 Cost Barrier</a><a href="#blk-78645" class="lvl3">32.8 Self-Referential Evaluation Risk</a><a href="#blk-78648" class="lvl3">32.9 Benchmark Saturation Timeline</a><a href="#blk-78651" class="lvl2">33. Actionable Diagnostics</a><a href="#blk-78652" class="lvl3">Design Principle</a><a href="#blk-78655" class="lvl3">Per-System Diagnostic Reports</a><a href="#blk-78658" class="lvl3">Failure Pattern Extraction</a><a href="#blk-78671" class="lvl3">Fix-and-Retest Protocol</a><a href="#blk-78695" class="lvl3">Regression Alerts</a><a href="#blk-78718" class="lvl3">Community Anchor Improvement</a><a href="#blk-78739" class="lvl3">MCP Tools for Diagnostics</a><a href="#blk-78763" class="lvl2">34. Bring Your Own Repo (BYOR)</a><a href="#blk-78764" class="lvl3">The Problem BYOR Solves</a><a href="#blk-78768" class="lvl3">How It Works</a><a href="#blk-78770" class="lvl3">BYOR Scenario Generation</a><a href="#blk-78795" class="lvl3">BYOR vs Standard Evaluation</a><a href="#blk-78821" class="lvl3">BYOR for Non-Code Domains</a><a href="#blk-78846" class="lvl3">BYOR Privacy</a><a href="#blk-78856" class="lvl3">BYOR MCP Tools</a><a href="#blk-78880" class="lvl2">35. System-Task Fit Recommendations</a><a href="#blk-78881" class="lvl3">Beyond Rankings</a><a href="#blk-78893" class="lvl3">Task Profiles</a><a href="#blk-78896" class="lvl3">Fit Score Calculation</a><a href="#blk-78900" class="lvl3">Pre-Built Task Profiles</a><a href="#blk-78930" class="lvl3">Custom Task Profiles</a><a href="#blk-78932" class="lvl3">Fit Recommendation Output</a><a href="#blk-78934" class="lvl3">MCP Tools for Fit Recommendations</a><a href="#blk-78955" class="lvl2">36. Implementation Roadmap</a><a href="#blk-78956" class="lvl3">Phase I: Foundation</a><a href="#blk-78968" class="lvl3">Phase II: Interaction Engine</a><a href="#blk-78978" class="lvl3">Phase III: Judging &amp; Diagnostics</a><a href="#blk-78994" class="lvl3">Phase IV: Self-Improvement</a><a href="#blk-79010" class="lvl3">Phase V: BYOR &amp; Task Fit</a><a href="#blk-79024" class="lvl3">Phase VI: Credibility &amp; Community</a><a href="#blk-79038" class="lvl2">Appendix A: Worked Example</a><a href="#blk-79040" class="lvl3">A.1 Scenario</a><a href="#blk-79042" class="lvl3">A.2 Interaction Transcript (excerpt)</a><a href="#blk-79045" class="lvl3">A.3 Layer 2 Judgment (Stability dimension)</a><a href="#blk-79049" class="lvl3">A.4 Layer 3 Meta-Judgment</a><a href="#blk-79053" class="lvl3">A.5 Score Aggregation</a><a href="#blk-79076" class="lvl3">A.6 Leaderboard Entry</a><a href="#blk-79080" class="lvl2">Related: PRISM engine implementation docs</a></nav></div><div class="card"><div class="lab">links to</div><a href="/PRISM/docs/DUAL_LOOP_MACHINES.md/">Dual- and Triple-Loop Machine Architecture</a><a href="/PRISM/docs/ARITHMETIC_INTEGRATION.md/">PRISM × box-and-box — Arithmetic Integration Review</a><a href="/PRISM/docs/NPM_PACKAGE.md/">os-prism — NPM Package Specification</a><a href="/PRISM/docs/ux/user-stories.md/">PRISM — User Stories</a></div><div class="card"><div class="lab">referenced by</div><a href="/ECOSYSTEM.md/">The [&amp;] Protocol Ecosystem</a><a href="/PULSE/docs/THREE_PROTOCOL_STACK.md/">The Three-Protocol Stack: [&amp;], PULSE, PRISM</a><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/docs/spec/OS-008-HARNESS.md/">OS-008: Agent Harness Protocol</a><a href="/opensentience.org/docs/spec/OS-010-PULSE-SPECIFICATION.md/">PULSE — Protocol for Uniform Loop State Exchange</a><a href="/opensentience.org/docs/spec/OS-011-EMBODIMENT.md/">OS-011 — Embodiment Protocol</a><a href="/opensentience.org/docs/spec/OS-E001-EMPIRICAL-EVALUATION.md/">OS-E001: Empirical Evaluation of Topology-Aware Continual Learning</a><a href="/opensentience.org/docs/spec/README.md/">OpenSentience — Open Research into Machine Cognition</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieralcgum4gvjepzzypez2jvln2qzpncrl6p3tuuxqa6v63lu34lxmdq</div></div></div>
+</div></div>
+</body></html>

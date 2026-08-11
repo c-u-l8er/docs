@@ -1,0 +1,111 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Skill 02 — Validation · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Validation catches declaration errors before they reach composition or generation. A malformed ampersand.json cannot produce correct MCP or A2A output.…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill 02 — Validation">
+<meta property="og:description" content="Validation catches declaration errors before they reach composition or generation. A malformed ampersand.json cannot produce correct MCP or A2A output.…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 02 — Validation","name":"Skill 02 — Validation","description":"Validation catches declaration errors before they reach composition or generation. A malformed ampersand.json cannot produce correct MCP or A2A output.…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/","identifier":"bagaaieraon5t4uyhbw4le7odsgbxwhb4nfgdeezuk4u2dh6gkgmis2mrleda","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why This Matters"},{"@type":"WebPageElement","name":"CLI Validation"},{"@type":"WebPageElement","name":"Basic usage"},{"@type":"WebPageElement","name":"Flags"},{"@type":"WebPageElement","name":"Exit codes"},{"@type":"WebPageElement","name":"Schema Validation Rules"},{"@type":"WebPageElement","name":"Required fields"},{"@type":"WebPageElement","name":"Capability entry rules"},{"@type":"WebPageElement","name":"Governance rules (when present)"},{"@type":"WebPageElement","name":"Common Validation Errors"},{"@type":"WebPageElement","name":"Batch Validation"},{"@type":"WebPageElement","name":"Programmatic Validation — npm SDK"},{"@type":"WebPageElement","name":"Programmatic Validation — Python SDK"},{"@type":"WebPageElement","name":"Validation in CI/CD"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/"},{"@type":"ListItem","position":5,"name":"02_VALIDATION.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/skills/02_VALIDATION.md</span>
+
+</div></div>
+<div class="lead">Validation catches declaration errors before they reach composition or generation. A malformed ampersand.json cannot produce correct MCP or A2A output. Validate early and often.</div>
+<div class="prose"><h1 id="blk-16336">Skill 02 — Validation</h1>
+<blockquote><p>Running schema validation on agent declarations — via CLI, npm SDK, or Python SDK. How to read errors and fix them.</p></blockquote>
+<h3 id="blk-16339">Why This Matters</h3>
+<p>Validation catches declaration errors before they reach composition or generation. A malformed <code>ampersand.json</code> cannot produce correct MCP or A2A output. Validate early and often.</p>
+<h3 id="blk-16341">CLI Validation</h3>
+<h4 id="blk-16342">Basic usage</h4>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> reference/elixir/ampersand_core
+./ampersand validate ../../examples/infra-operator.ampersand.json</code></pre>
+<p><strong>Success output:</strong></p>
+<pre><code>OK  infra-operator.ampersand.json
+  Agent: InfraOperator v1.0.0
+  Capabilities: 6
+  Governance: hard=1 soft=1 escalation=yes
+  Provenance: enabled</code></pre>
+<p><strong>Failure output:</strong></p>
+<pre><code>FAIL  broken-agent.ampersand.json
+  errors:
+    - /agent: Required property missing
+    - /capabilities/&amp;memory: Invalid capability identifier (missing subtype)
+    - /governance/escalate_when/confidence_below: Expected number, got string</code></pre>
+<h4 id="blk-16348">Flags</h4>
+<table><thead><tr><th>Flag</th><th>Effect</th></tr></thead><tbody><tr><td><code>--format json</code></td><td>Output validation results as JSON</td></tr><tr><td><code>--format text</code></td><td>Human-readable output (default)</td></tr><tr><td><code>--schema &lt;path&gt;</code></td><td>Use a local schema file instead of the default</td></tr><tr><td><code>--quiet</code></td><td>Suppress success output, only show errors</td></tr></tbody></table>
+<h4 id="blk-16360">Exit codes</h4>
+<table><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody><tr><td><code>0</code></td><td>Valid declaration</td></tr><tr><td><code>1</code></td><td>Schema validation errors</td></tr><tr><td><code>2</code></td><td>File not found or unreadable</td></tr></tbody></table>
+<h3 id="blk-16370">Schema Validation Rules</h3>
+<p>The canonical schema lives at <code>protocol/schema/v0.1.0/ampersand.schema.json</code> and uses JSON Schema draft 2020-12.</p>
+<h4 id="blk-16372">Required fields</h4>
+<table><thead><tr><th>Field</th><th>Type</th><th>Constraint</th></tr></thead><tbody><tr><td><code>agent</code></td><td>string</td><td>Non-empty, matches <code>^[A-Za-z][A-Za-z0-9_-]*$</code></td></tr><tr><td><code>version</code></td><td>string</td><td>Valid semver (<code>X.Y.Z</code>)</td></tr><tr><td><code>capabilities</code></td><td>object</td><td>At least one capability entry</td></tr></tbody></table>
+<h4 id="blk-16386">Capability entry rules</h4>
+<p>Each key must match <code>^&amp;(memory|reason|time|space|govern)\.[a-z][a-z0-9_]*$</code>.</p>
+<p>Each value must have:</p>
+<ul><li><p><code>provider</code> — string (provider name or <code>&quot;auto&quot;</code>)</p></li><li><p><code>config</code> — object (provider-specific, no schema constraints)</p></li></ul>
+<h4 id="blk-16394">Governance rules (when present)</h4>
+<ul><li><p><code>hard</code> — array of strings (inviolable constraints)</p></li><li><p><code>soft</code> — array of strings (preferences)</p></li><li><p><code>escalate_when</code> — object with numeric or boolean trigger fields</p></li><li><p><code>autonomy.level</code> — one of <code>&quot;observe&quot;</code>, <code>&quot;advise&quot;</code>, <code>&quot;act&quot;</code></p></li><li><p><code>autonomy.model_tier</code> — one of <code>&quot;local_small&quot;</code>, <code>&quot;local_large&quot;</code>, <code>&quot;cloud_frontier&quot;</code></p></li></ul>
+<h3 id="blk-16406">Common Validation Errors</h3>
+<table><thead><tr><th>Error</th><th>Cause</th><th>Fix</th></tr></thead><tbody><tr><td><code>Required property 'agent' missing</code></td><td>No <code>agent</code> field</td><td>Add <code>&quot;agent&quot;: &quot;YourAgentName&quot;</code></td></tr><tr><td><code>Invalid capability identifier</code></td><td>Key does not match <code>&amp;primitive.subtype</code></td><td>Use format <code>&amp;memory.graph</code>, not <code>memory.graph</code> or <code>&amp;memory</code></td></tr><tr><td><code>Empty capabilities object</code></td><td>No capabilities declared</td><td>Add at least one capability</td></tr><tr><td><code>Invalid version format</code></td><td>Non-semver string</td><td>Use <code>&quot;1.0.0&quot;</code>, not <code>&quot;v1&quot;</code> or <code>&quot;1.0&quot;</code></td></tr><tr><td><code>Unknown autonomy level</code></td><td>Typo in level value</td><td>Must be <code>&quot;observe&quot;</code>, <code>&quot;advise&quot;</code>, or <code>&quot;act&quot;</code></td></tr><tr><td><code>Expected number, got string</code></td><td>Wrong type in escalation rule</td><td>Check types in <code>escalate_when</code></td></tr></tbody></table>
+<h3 id="blk-16429">Batch Validation</h3>
+<p>Validate multiple files by passing them as arguments:</p>
+<pre data-lang="bash"><code>./ampersand validate examples/*.ampersand.json</code></pre>
+<p>Output shows pass/fail for each file:</p>
+<pre><code>OK    infra-operator.ampersand.json
+OK    research-agent.ampersand.json
+OK    customer-support.ampersand.json
+FAIL  broken.ampersand.json
+  errors:
+    - /capabilities: Must have at least 1 property</code></pre>
+<p>Exit code is <code>1</code> if any file fails.</p>
+<h3 id="blk-16435">Programmatic Validation — npm SDK</h3>
+<p>The <code>@ampersand-protocol/validate</code> package provides schema validation for JavaScript/TypeScript projects:</p>
+<pre data-lang="bash"><code>npm install @ampersand-protocol/validate</code></pre>
+<pre data-lang="javascript"><code><span class="t-kw">import</span> { validate } <span class="t-kw">from</span> <span class="t-string">'@ampersand-protocol/validate'</span>;
+
+<span class="t-kw">const</span> result = <span class="t-fn">validate</span>(<span class="t-string">'./agent.ampersand.json'</span>);
+
+<span class="t-kw">if</span> (result.valid) {
+  console.<span class="t-fn">log</span>(<span class="t-string">`Agent: ${result.agent} v${result.version}`</span>);
+  console.<span class="t-fn">log</span>(<span class="t-string">`Capabilities: ${result.capabilityCount}`</span>);
+} <span class="t-kw">else</span> {
+  <span class="t-kw">for</span> (<span class="t-kw">const</span> error <span class="t-kw">of</span> result.errors) {
+    console.<span class="t-fn">error</span>(<span class="t-string">`${error.path}: ${error.message}`</span>);
+  }
+}</code></pre>
+<p>The SDK uses <code>ajv</code> (JSON Schema draft 2020-12) under the hood.</p>
+<h3 id="blk-16440">Programmatic Validation — Python SDK</h3>
+<p>The <code>ampersand-protocol</code> Python package provides equivalent functionality:</p>
+<pre data-lang="bash"><code>pip install ampersand-protocol</code></pre>
+<pre data-lang="python"><code>from ampersand_protocol import validate
+
+result = validate(&quot;agent.ampersand.json&quot;)
+
+if result.valid:
+    print(f&quot;Agent: {result.agent} v{result.version}&quot;)
+else:
+    for error in result.errors:
+        print(f&quot;{error.path}: {error.message}&quot;)</code></pre>
+<h3 id="blk-16444">Validation in CI/CD</h3>
+<p>Add schema validation to your pipeline to catch declaration errors before deployment:</p>
+<pre data-lang="yaml"><code># GitHub Actions example
+- name: Validate agent declarations
+  run: |
+    npx @ampersand-protocol/validate agents/*.ampersand.json</code></pre>
+<p>This ensures all declarations in the repository conform to the schema before any downstream tooling runs.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/skills/02_VALIDATION.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-16339" class="lvl2">Why This Matters</a><a href="#blk-16341" class="lvl2">CLI Validation</a><a href="#blk-16342" class="lvl3">Basic usage</a><a href="#blk-16348" class="lvl3">Flags</a><a href="#blk-16360" class="lvl3">Exit codes</a><a href="#blk-16370" class="lvl2">Schema Validation Rules</a><a href="#blk-16372" class="lvl3">Required fields</a><a href="#blk-16386" class="lvl3">Capability entry rules</a><a href="#blk-16394" class="lvl3">Governance rules (when present)</a><a href="#blk-16406" class="lvl2">Common Validation Errors</a><a href="#blk-16429" class="lvl2">Batch Validation</a><a href="#blk-16435" class="lvl2">Programmatic Validation — npm SDK</a><a href="#blk-16440" class="lvl2">Programmatic Validation — Python SDK</a><a href="#blk-16444" class="lvl2">Validation in CI/CD</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/">Skill 01 — Writing Agent Declarations</a><a href="/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/">Skill 03 — Capability Composition</a><a href="/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/">Skill 04 — Capability Contracts</a><a href="/AmpersandBoxDesign/docs/skills/05_GENERATION.md/">Skill 05 — Generation</a><a href="/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/">Skill 06 — CLI Reference</a><a href="/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/">Skill 07 — Integration Patterns</a><a href="/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/">Skill 08 — Provider Implementation</a><a href="/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/">Skill 09 — Governance and Provenance</a><a href="/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/">Skill 10 — Anti-Patterns</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraon5t4uyhbw4le7odsgbxwhb4nfgdeezuk4u2dh6gkgmis2mrleda</div></div></div>
+</div></div>
+</body></html>

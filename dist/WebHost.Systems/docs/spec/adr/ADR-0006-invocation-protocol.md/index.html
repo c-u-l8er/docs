@@ -1,0 +1,151 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>ADR-0006: Canonical Invocation Protocol (invoke/v1) and Streaming Strategy · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/ADR-0006-invocation-protocol.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ADR-0006: Canonical Invocation Protocol (invoke/v1) and Streaming Strategy">
+<meta property="og:description" content="Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/ADR-0006-invocation-protocol.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"ADR-0006: Canonical Invocation Protocol (invoke/v1) and Streaming Strategy","name":"ADR-0006: Canonical Invocation Protocol (invoke/v1) and Streaming Strategy","description":"Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/ADR-0006-invocation-protocol.md/","identifier":"bagaaieratnmrbqpe6xqevar2q2mpwog6upvwekmx6xzqbaybzp6c4plonoca","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Context"},{"@type":"WebPageElement","name":"Decision"},{"@type":"WebPageElement","name":"1) Adopt a canonical invocation protocol: invoke/v1"},{"@type":"WebPageElement","name":"2) Canonical input: chat messages (with prompt convenience)"},{"@type":"WebPageElement","name":"3) Session semantics: opaque sessionId"},{"@type":"WebPageElement","name":"4) Canonical output: text-first"},{"@type":"WebPageElement","name":"5) Usage and correlation are first-class"},{"@type":"WebPageElement","name":"6) Streaming strategy: SSE as the standard transport"},{"@type":"WebPageElement","name":"Alternatives considered"},{"@type":"WebPageElement","name":"A) Prompt-only protocol"},{"@type":"WebPageElement","name":"B) Provider-specific protocols per runtime"},{"@type":"WebPageElement","name":"C) WebSockets for streaming"},{"@type":"WebPageElement","name":"D) gRPC for invocation"},{"@type":"WebPageElement","name":"Consequences"},{"@type":"WebPageElement","name":"Positive"},{"@type":"WebPageElement","name":"Negative / tradeoffs"},{"@type":"WebPageElement","name":"Implementation details (normative requirements)"},{"@type":"WebPageElement","name":"1) Protocol versioning"},{"@type":"WebPageElement","name":"2) Request normalization rules"},{"@type":"WebPageElement","name":"3) Session rules"},{"@type":"WebPageElement","name":"4) Streaming rules"},{"@type":"WebPageElement","name":"5) Error normalization"},{"@type":"WebPageElement","name":"6) Telemetry correlation"},{"@type":"WebPageElement","name":"7) Limits and gating integration"},{"@type":"WebPageElement","name":"Acceptance criteria"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/"},{"@type":"ListItem","position":5,"name":"adr","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/"},{"@type":"ListItem","position":6,"name":"ADR-0006-invocation-protocol.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/ADR-0006-invocation-protocol.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/docs/spec/adr/ADR-0006-invocation-protocol.md</span>
+
+</div></div>
+<div class="lead">Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:</div>
+<div class="prose"><h1 id="blk-52043">ADR-0006: Canonical Invocation Protocol (invoke/v1) and Streaming Strategy</h1>
+<p>Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:</p>
+<ul><li><p><code>WebHost.Systems/docs/spec/00_MASTER_SPEC.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/10_API_CONTRACTS.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/40_SECURITY_SECRETS_COMPLIANCE.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/adr/ADR-0008-delegated-invocation-auth.md</code> (delegated invocation auth mode; preserves invoke/v1 semantics)</p></li></ul>
+<h3 id="blk-52058">Context</h3>
+<p>webhost.systems is a multi-runtime platform for deploying and running customer AI agents. The system must route invocations through a control plane to one of multiple data plane runtime providers (initially Cloudflare Workers/DO and AWS Bedrock AgentCore), while maintaining:</p>
+<ul><li><p>a stable external API for clients and the dashboard,</p></li><li><p>consistent session semantics across runtimes,</p></li><li><p>consistent telemetry attribution and usage/cost accounting,</p></li><li><p>safe error handling and sanitization,</p></li><li><p>optional streaming output for good UX.</p></li></ul>
+<p>Without a canonical invocation protocol, each runtime will expose different request/response shapes (prompt-only vs message arrays, provider-specific session concepts, different streaming models, tool call shapes). This would make:</p>
+<ul><li><p>the invocation gateway hard to implement and evolve,</p></li><li><p>SDKs hard to write,</p></li><li><p>telemetry inconsistent,</p></li><li><p>limit enforcement unreliable.</p></li></ul>
+<p>We need a single “invoke contract” that the control plane and adapters can enforce, plus an explicit streaming model that works across runtimes.</p>
+<h3 id="blk-52082">Decision</h3>
+<h4 id="blk-52083">1) Adopt a canonical invocation protocol: <code>invoke/v1</code></h4>
+<p>All invocations in webhost.systems use a single protocol version identifier:</p>
+<ul><li><p><code>protocol = &quot;invoke/v1&quot;</code></p></li></ul>
+<p>The protocol applies to:</p>
+<ul><li><p>the invocation gateway API (client -&gt; control plane),</p></li><li><p>the internal Runtime Provider Interface (control plane -&gt; provider adapters),</p></li><li><p>the runtime payloads (as applicable) for data plane execution,</p></li><li><p>telemetry correlation via <code>traceId</code>.</p></li></ul>
+<p>Note: Additional authentication modes (e.g., delegated server-to-server invocation) MUST NOT introduce a new protocol shape. They preserve the same <code>invoke/v1</code> request/response semantics and differ only in how the invocation gateway authenticates and attributes the caller. See <code>ADR-0008-delegated-invocation-auth.md</code>.</p>
+<h4 id="blk-52099">2) Canonical input: chat messages (with prompt convenience)</h4>
+<p><code>invoke/v1</code> defines the canonical input shape as chat <code>messages</code>:</p>
+<ul><li><p><code>input.messages: Array&lt;{ role, content }&gt;</code></p></li><li><p><code>role ∈ { &quot;system&quot;, &quot;user&quot;, &quot;assistant&quot;, &quot;tool&quot; }</code></p></li><li><p><code>content: string</code></p></li></ul>
+<p>Additionally, for client convenience, <code>invoke/v1</code> allows a <code>prompt</code> form:</p>
+<ul><li><p><code>input.prompt: string</code></p></li></ul>
+<p>When <code>prompt</code> is provided, the control plane MUST normalize it to:</p>
+<ul><li><p><code>messages = [{ role: &quot;user&quot;, content: prompt }]</code></p></li></ul>
+<p>Rationale:</p>
+<ul><li><p>“messages” is compatible with most modern LLM/agent frameworks,</p></li><li><p>it supports future tool call and transcript semantics,</p></li><li><p>it avoids provider-specific payload drift.</p></li></ul>
+<h4 id="blk-52124">3) Session semantics: opaque <code>sessionId</code></h4>
+<p><code>invoke/v1</code> standardizes stateful execution via an opaque <code>sessionId</code> string:</p>
+<ul><li><p>Clients MAY include <code>sessionId</code> to continue a prior session.</p></li><li><p>If omitted, the system MAY create a new session and return a new <code>sessionId</code>.</p></li></ul>
+<p>Rules:</p>
+<ul><li><p><code>sessionId</code> is opaque; clients MUST NOT parse it.</p></li><li><p>The control plane MUST treat it as opaque and MUST NOT embed meaning or routing logic in the <code>sessionId</code> string.</p></li><li><p>Each runtime provider maps <code>sessionId</code> to its own session primitive:</p></li></ul>
+<ul><li><p>Cloudflare: Durable Object id / instance key</p></li><li><p>Session state is stored in Durable Object storage.</p></li><li><p><code>sessionId</code> typically maps 1:1 to a DO instance identifier.</p></li></ul>
+<ul><li><p>AgentCore: AgentCore runtime session identifier (e.g., <code>runtimeSessionId</code>)</p></li><li><p>AgentCore is TypeScript-capable end-to-end (control plane and runtime integration), so the adapter SHOULD use the official TypeScript AWS SDK to invoke sessions.</p></li><li><p>The adapter MUST treat the <code>sessionId</code> as a provider runtime session id and pass it through to invocation calls.</p></li><li><p>If <code>sessionId</code> is not provided, the adapter SHOULD create one (or let the provider return one) and return it to the client as the opaque <code>sessionId</code>.</p></li><li><p>Session expiration MUST be handled gracefully and consistently:</p></li><li><p>if the provider indicates “unknown/expired session”, return a normalized <code>RUNTIME_ERROR</code> with a safe message such as “Session expired” and <code>retryable=false</code> (do not leak provider internals).</p></li></ul>
+<p>Implementation note (AgentCore TypeScript invocation shape, conceptual):</p>
+<ul><li><p>Invoke with the deployment’s AgentCore runtime reference (e.g., <code>agentRuntimeArn</code>) and a <code>runtimeSessionId</code> set to the opaque <code>sessionId</code> (or a newly generated one if absent).</p></li><li><p>Example fields you will typically populate via the TypeScript AWS SDK:</p></li><li><p><code>agentRuntimeArn: &lt;from deployment.providerRef.agentcore.agentRuntimeArn&gt;</code></p></li><li><p><code>runtimeSessionId: sessionId || &lt;new session id&gt;</code></p></li><li><p><code>payload: &lt;encoded invoke/v1 request JSON&gt;</code></p></li></ul>
+<h4 id="blk-52171">4) Canonical output: text-first</h4>
+<p><code>invoke/v1</code> defines the canonical output as:</p>
+<ul><li><p><code>output.text: string</code> (required)</p></li></ul>
+<p>Optionally:</p>
+<ul><li><p><code>output.messages?: transcript array</code> (MAY in v1; SHOULD be added later only if stable across runtimes)</p></li></ul>
+<p>Rationale:</p>
+<ul><li><p>text-first is sufficient for v1 UX and reduces cross-runtime complexity.</p></li><li><p>transcript support can be added later without breaking existing clients.</p></li></ul>
+<h4 id="blk-52186">5) Usage and correlation are first-class</h4>
+<p>Every <code>invoke/v1</code> response MUST include:</p>
+<ul><li><p><code>traceId: string</code> (generated by the invocation gateway if not provided)</p></li></ul>
+<p>Response SHOULD include:</p>
+<ul><li><p><code>usage.tokens?: number</code></p></li><li><p><code>usage.computeMs?: number</code></p></li><li><p><code>usage.toolCalls?: number</code> (or provider-specific tooling counters normalized when available)</p></li></ul>
+<p>Telemetry events MUST include the same <code>traceId</code> when available, and MUST be attributable to:</p>
+<ul><li><p><code>{ userId, agentId, deploymentId, runtimeProvider, timestamp }</code></p></li></ul>
+<h4 id="blk-52203">6) Streaming strategy: SSE as the standard transport</h4>
+<p><code>invoke/v1</code> defines streaming semantics via <strong>Server-Sent Events (SSE)</strong> on a dedicated streaming endpoint:</p>
+<ul><li><p><code>POST /v1/invoke/{agentId}/stream</code></p></li><li><p><code>Accept: text/event-stream</code></p></li></ul>
+<p>Standard SSE event types:</p>
+<ul><li><p><code>meta</code> (MUST be first)</p></li><li><p>includes <code>traceId</code> and <code>sessionId</code> (if known at start)</p></li><li><p><code>delta</code> (0..N)</p></li><li><p>includes incremental output text chunks</p></li><li><p><code>usage</code> (0..1; SHOULD be emitted before done)</p></li><li><p>includes final usage summary when available</p></li><li><p><code>done</code> (MUST be last on success)</p></li><li><p><code>error</code> (terminal on failure)</p></li><li><p>includes the normalized error envelope</p></li></ul>
+<p>If a runtime provider supports true streaming:</p>
+<ul><li><p>the adapter SHOULD pass-through streaming (mapping provider stream to <code>delta</code> events).</p></li></ul>
+<p>If a runtime provider does not support streaming:</p>
+<ul><li><p>the adapter MAY emulate streaming by buffering and chunking output, but MUST preserve ordering and terminal events.</p></li></ul>
+<p>Rationale:</p>
+<ul><li><p>SSE is widely supported, simple, and works well for “text token streaming”.</p></li><li><p>A consistent event schema enables a unified client and UI implementation.</p></li></ul>
+<h3 id="blk-52244">Alternatives considered</h3>
+<h4 id="blk-52245">A) Prompt-only protocol</h4>
+<p>Pros:</p>
+<ul><li><p>simplest request shape</p></li></ul>
+<p>Cons:</p>
+<ul><li><p>loses structured conversation context</p></li><li><p>complicates future tool call integration</p></li><li><p>diverges from modern agent UX and frameworks</p></li></ul>
+<p>Rejected because messages are the better canonical baseline with a prompt convenience fallback.</p>
+<h4 id="blk-52259">B) Provider-specific protocols per runtime</h4>
+<p>Pros:</p>
+<ul><li><p>maximum leverage of each provider’s features</p></li></ul>
+<p>Cons:</p>
+<ul><li><p>breaks portability and unified SDKs</p></li><li><p>complicates limit enforcement and telemetry</p></li><li><p>increases maintenance and user confusion</p></li></ul>
+<p>Rejected because webhost.systems differentiates on portability and unified control plane semantics.</p>
+<h4 id="blk-52273">C) WebSockets for streaming</h4>
+<p>Pros:</p>
+<ul><li><p>bidirectional, flexible</p></li></ul>
+<p>Cons:</p>
+<ul><li><p>more operational complexity (connection state, proxies)</p></li><li><p>not necessary for v1</p></li><li><p>harder to support across platforms and edge gateways</p></li></ul>
+<p>Rejected for v1; SSE is sufficient for streaming output. WebSockets can be introduced later if interactive tool call UX requires it.</p>
+<h4 id="blk-52287">D) gRPC for invocation</h4>
+<p>Pros:</p>
+<ul><li><p>strict contracts, performance</p></li></ul>
+<p>Cons:</p>
+<ul><li><p>browser compatibility constraints</p></li><li><p>higher adoption friction</p></li><li><p>more infrastructure requirements</p></li></ul>
+<p>Rejected for v1; HTTP+JSON and SSE are simpler and adequate.</p>
+<h3 id="blk-52301">Consequences</h3>
+<h4 id="blk-52302">Positive</h4>
+<ul><li><p>Stable, runtime-agnostic contract for clients and SDKs.</p></li><li><p>Simplifies the invocation gateway and adapter logic (one normalized shape).</p></li><li><p>Enables consistent telemetry attribution and usage accounting.</p></li><li><p>Makes streaming UX consistent across runtimes.</p></li></ul>
+<h4 id="blk-52312">Negative / tradeoffs</h4>
+<ul><li><p>Some provider-native features won’t map cleanly to v1 without extensions (e.g., tool call transcripts).</p></li><li><p>Streaming emulation may not reflect true token-level timing for non-streaming providers.</p></li><li><p>Token counts and usage fields may be estimated or unavailable for some providers; must be communicated as such.</p></li></ul>
+<h3 id="blk-52320">Implementation details (normative requirements)</h3>
+<h4 id="blk-52321">1) Protocol versioning</h4>
+<ul><li><p>Every deployment artifact manifest MUST declare <code>protocol: &quot;invoke/v1&quot;</code>.</p></li><li><p>The control plane MUST reject deployments with unknown protocol versions (<code>INVALID_REQUEST</code>).</p></li></ul>
+<h4 id="blk-52327">2) Request normalization rules</h4>
+<ul><li><p>If <code>input.prompt</code> provided and <code>input.messages</code> missing:</p></li><li><p>normalize to one user message.</p></li><li><p>If both are provided:</p></li><li><p>prefer <code>messages</code> and ignore <code>prompt</code> (or reject as invalid; choose one consistent policy; v1 recommendation: reject with <code>INVALID_REQUEST</code> to avoid ambiguity).</p></li></ul>
+<h4 id="blk-52337">3) Session rules</h4>
+<ul><li><p>If <code>sessionId</code> is present:</p></li><li><p>adapter MUST attempt to continue that session in the provider.</p></li><li><p>adapter MUST treat <code>sessionId</code> as opaque and MUST NOT parse or re-encode it.</p></li><li><p>if the provider rejects session id as unknown/expired:</p></li><li><p>return <code>RUNTIME_ERROR</code> with <code>retryable=false</code> (v1 canonical behavior) and a safe message such as “Session expired”.</p></li><li><p>do not leak provider error details or identifiers to the client.</p></li></ul>
+<ul><li><p>If <code>sessionId</code> is absent:</p></li><li><p>adapter MAY start a new session and MUST return the new <code>sessionId</code> if created.</p></li><li><p>AgentCore-specific guidance (TypeScript):</p></li><li><p>the adapter SHOULD set <code>runtimeSessionId</code> explicitly on invocation (e.g., <code>sess_&lt;generated&gt;</code>), or accept a provider-returned session id if the API returns one.</p></li><li><p>the adapter MUST return the session identifier to the client as the opaque <code>sessionId</code> for subsequent calls.</p></li></ul>
+<ul><li><p>Session lifecycle and timeouts:</p></li><li><p>adapters SHOULD document provider-specific session lifetimes and idle timeouts (in internal docs and/or UI hints) but MUST keep the external <code>invoke/v1</code> contract stable.</p></li></ul>
+<h4 id="blk-52367">4) Streaming rules</h4>
+<ul><li><p>Streaming endpoint MUST:</p></li><li><p>send <code>meta</code> as first event,</p></li><li><p>send <code>done</code> as last event on success,</p></li><li><p>send <code>error</code> as terminal event on failure.</p></li><li><p>Even on streaming:</p></li><li><p>gateway MUST still produce telemetry for the invocation.</p></li><li><p><code>usage</code> event SHOULD be sent once final usage is known.</p></li></ul>
+<h4 id="blk-52383">5) Error normalization</h4>
+<ul><li><p>All invocation failures MUST be mapped to the normalized error envelope described in <code>10_API_CONTRACTS.md</code>.</p></li><li><p>Provider internals (request ids, stack traces, credentials) MUST NOT be returned to clients.</p></li><li><p><code>retryable</code> must be accurate:</p></li><li><p>transient provider failures: true</p></li><li><p>validation/config/session-expired: false</p></li></ul>
+<h4 id="blk-52395">6) Telemetry correlation</h4>
+<ul><li><p>The invocation gateway MUST generate a <code>traceId</code> if missing and propagate it:</p></li><li><p>to the provider adapter request metadata (headers/metadata where possible),</p></li><li><p>to telemetry events emitted by the data plane or adapter.</p></li></ul>
+<h4 id="blk-52403">7) Limits and gating integration</h4>
+<ul><li><p>Limit enforcement is performed in the invocation gateway before provider invocation whenever possible.</p></li><li><p>Runtime gating (AgentCore entitlement) MUST be enforced on:</p></li><li><p>deploy path,</p></li><li><p>invoke path,</p></li><li><p>adapter path (defense in depth).</p></li></ul>
+<h3 id="blk-52415">Acceptance criteria</h3>
+<p>This ADR is correctly implemented when:</p>
+<ol><li><p><strong>Unified contract</strong></p></li></ol>
+<ul><li><p>Both Cloudflare and AgentCore invocations accept the same <code>invoke/v1</code> request shape at the gateway.</p></li></ul>
+<ol start="2"><li><p><strong>Normalization</strong></p></li></ol>
+<ul><li><p><code>prompt</code> input is correctly normalized to <code>messages</code>.</p></li><li><p>Ambiguous inputs (both prompt and messages) are handled consistently.</p></li></ul>
+<ol start="3"><li><p><strong>Sessions</strong></p></li></ol>
+<ul><li><p><code>sessionId</code> round-trips correctly for sessionful invocations on both providers (where supported).</p></li><li><p>The system treats session ids as opaque and does not leak provider internals.</p></li></ul>
+<ol start="4"><li><p><strong>Streaming</strong></p></li></ol>
+<ul><li><p>Streaming endpoint emits SSE events in the required order (<code>meta</code> → <code>delta*</code> → <code>usage?</code> → <code>done</code> OR <code>error</code>).</p></li><li><p>Non-streaming providers can still be used through streaming endpoint (emulated streaming acceptable).</p></li></ul>
+<ol start="5"><li><p><strong>Telemetry</strong></p></li></ol>
+<ul><li><p>Each invocation results in a telemetry event with correct attribution and <code>traceId</code>.</p></li><li><p>Telemetry cannot be spoofed (signature verification enforced elsewhere per security spec).</p></li></ul>
+<ol start="6"><li><p><strong>Errors</strong></p></li></ol>
+<ul><li><p>Provider failures are normalized and sanitized; no secrets or raw provider errors leak to clients.</p></li></ul>
+<h3 id="blk-52461">Follow-ups / future extensions</h3>
+<ul><li><p>Add <code>invoke/v2</code> if/when tool calls and structured outputs need to be first-class in the protocol:</p></li><li><p>tool call messages,</p></li><li><p>structured JSON outputs with schemas,</p></li><li><p>partial tool events over the stream.</p></li><li><p>Introduce WebSockets only if bidirectional interactive tool sessions become a product requirement.</p></li><li><p>Add explicit “async job” protocol for long-running tasks (especially for AgentCore) to avoid HTTP timeouts while preserving correlation and telemetry.</p></li></ul></div>
+<p class="src"><a href="/#/WebHost.Systems/docs/spec/adr/ADR-0006-invocation-protocol.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-52058" class="lvl2">Context</a><a href="#blk-52082" class="lvl2">Decision</a><a href="#blk-52083" class="lvl3">1) Adopt a canonical invocation protocol: invoke/v1</a><a href="#blk-52099" class="lvl3">2) Canonical input: chat messages (with prompt convenience)</a><a href="#blk-52124" class="lvl3">3) Session semantics: opaque sessionId</a><a href="#blk-52171" class="lvl3">4) Canonical output: text-first</a><a href="#blk-52186" class="lvl3">5) Usage and correlation are first-class</a><a href="#blk-52203" class="lvl3">6) Streaming strategy: SSE as the standard transport</a><a href="#blk-52244" class="lvl2">Alternatives considered</a><a href="#blk-52245" class="lvl3">A) Prompt-only protocol</a><a href="#blk-52259" class="lvl3">B) Provider-specific protocols per runtime</a><a href="#blk-52273" class="lvl3">C) WebSockets for streaming</a><a href="#blk-52287" class="lvl3">D) gRPC for invocation</a><a href="#blk-52301" class="lvl2">Consequences</a><a href="#blk-52302" class="lvl3">Positive</a><a href="#blk-52312" class="lvl3">Negative / tradeoffs</a><a href="#blk-52320" class="lvl2">Implementation details (normative requirements)</a><a href="#blk-52321" class="lvl3">1) Protocol versioning</a><a href="#blk-52327" class="lvl3">2) Request normalization rules</a><a href="#blk-52337" class="lvl3">3) Session rules</a><a href="#blk-52367" class="lvl3">4) Streaming rules</a><a href="#blk-52383" class="lvl3">5) Error normalization</a><a href="#blk-52395" class="lvl3">6) Telemetry correlation</a><a href="#blk-52403" class="lvl3">7) Limits and gating integration</a><a href="#blk-52415" class="lvl2">Acceptance criteria</a><a href="#blk-52461" class="lvl2">Follow-ups / future extensions</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/spec/adr/ADR-0001-multi-runtime.md/">ADR-0001: Multi-Runtime Strategy (Cloudflare Workers/DO + AWS Bedrock AgentCore)</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0002-supabase-control-plane.md/">ADR-0002: Use Supabase as the Control Plane Backend (PostgreSQL + Edge Functions)</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0003-secrets-strategy.md/">ADR-0003: Secrets Handling &amp; Provider Injection Strategy</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0004-telemetry-integrity.md/">ADR-0004: Telemetry Integrity &amp; Attribution Model (Deployment-Scoped Signed Events)</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0005-deployment-immutability.md/">ADR-0005: Deployment Immutability + Active Deployment Pointer Model</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0007-entitlements-and-limits.md/">ADR-0007: Tier Entitlements, Runtime Gating, and Limit Enforcement Strategy</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0008-delegated-invocation-auth.md/">ADR-0008: Delegated Invocation Auth Mode (Server-to-Server HMAC)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieratnmrbqpe6xqevar2q2mpwog6upvwekmx6xzqbaybzp6c4plonoca</div></div></div>
+</div></div>
+</body></html>

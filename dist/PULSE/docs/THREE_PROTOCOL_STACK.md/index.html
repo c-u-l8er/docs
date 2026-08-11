@@ -1,0 +1,95 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>The Three-Protocol Stack: [&amp;], PULSE, PRISM · PULSE · Ampersand Box</title>
+<meta name="description" content="This document explains how the three [&amp;] ecosystem protocols compose into a complete substrate for accountable, evolvable, benchmarkable agent systems.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/PULSE/docs/THREE_PROTOCOL_STACK.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Three-Protocol Stack: [&amp;], PULSE, PRISM">
+<meta property="og:description" content="This document explains how the three [&amp;] ecosystem protocols compose into a complete substrate for accountable, evolvable, benchmarkable agent systems.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/PULSE/docs/THREE_PROTOCOL_STACK.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"The Three-Protocol Stack: [&], PULSE, PRISM","name":"The Three-Protocol Stack: [&], PULSE, PRISM","description":"This document explains how the three [&] ecosystem protocols compose into a complete substrate for accountable, evolvable, benchmarkable agent systems.","url":"https://docs.ampersandboxdesign.com/PULSE/docs/THREE_PROTOCOL_STACK.md/","identifier":"bagaaierah6g4yyycxhvgmwqwd375oyn2pc7x5ciogb63w4yc33arzpu3ccba","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"PULSE","url":"https://docs.ampersandboxdesign.com/PULSE/"},"articleSection":"PULSE","hasPart":[{"@type":"WebPageElement","name":"What each layer answers"},{"@type":"WebPageElement","name":"Three closed loops, three nesting levels"},{"@type":"WebPageElement","name":"How signals flow"},{"@type":"WebPageElement","name":"Conformance composition"},{"@type":"WebPageElement","name":"Why three protocols, not one"},{"@type":"WebPageElement","name":"Related"},{"@type":"WebPageElement","name":"PULSE implementation docs"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"PULSE","item":"https://docs.ampersandboxdesign.com/PULSE/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/PULSE/docs/"},{"@type":"ListItem","position":4,"name":"THREE_PROTOCOL_STACK.md","item":"https://docs.ampersandboxdesign.com/PULSE/docs/THREE_PROTOCOL_STACK.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">PULSE</span>
+<span class="path">PULSE/docs/THREE_PROTOCOL_STACK.md</span>
+
+</div></div>
+<div class="lead">This document explains how the three [&amp;] ecosystem protocols compose into a complete substrate for accountable, evolvable, benchmarkable agent systems.</div>
+<div class="prose"><h1 id="blk-23123">The Three-Protocol Stack: [&amp;], PULSE, PRISM</h1>
+<p>This document explains how the three [&amp;] ecosystem protocols compose into a complete substrate for accountable, evolvable, benchmarkable agent systems.</p>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│  PRISM    — measures loops over time      (diagnostic)   │ OS-009
+├──────────────────────────────────────────────────────────┤
+│  PULSE    — declares loops + circulation   (temporal)    │ OS-010
+├──────────────────────────────────────────────────────────┤
+│  [&amp;]      — composes capabilities          (structural)  │ AmpersandBoxDesign
+└──────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="blk-23126">What each layer answers</h3>
+<table><thead><tr><th>Layer</th><th>Question</th><th>Artifact</th></tr></thead><tbody><tr><td>[[&amp;]](../../AmpersandBoxDesign/docs/index.md)</td><td>What can each agent do, and how do they compose?</td><td><code>*.ampersand.json</code></td></tr><tr><td><a href="#/opensentience.org/docs/spec/OS-010-PULSE-SPECIFICATION.md" data-link>PULSE</a></td><td>How do their processes cycle and signal each other?</td><td><code>*.pulse.json</code> (loop manifest)</td></tr><tr><td><a href="#/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md" data-link>PRISM</a></td><td>How well do those cycles actually work over time?</td><td>Diagnostic reports + leaderboards</td></tr></tbody></table>
+<p>A customer adopting all three writes (at minimum) two files:</p>
+<pre><code>acme-insurance/
+├── acme.ampersand.json   # [&amp;] — capability declarations
+└── acme.pulse.json       # PULSE — loop topology + cadence + connections</code></pre>
+<p>PRISM does not require a separate file — it reads the PULSE manifest directly to discover phases, signatures, and substrates.</p>
+<h3 id="blk-23143">Three closed loops, three nesting levels</h3>
+<p>The reference [&amp;] ecosystem already operates with three nested loops:</p>
+<pre><code>PRISM (outer)        compose → interact → observe → reflect → diagnose
+  │
+  └─ Graphonomous    retrieve → route → act → learn → consolidate
+       │
+       └─ Deliberation    survey → triage → dispatch → act → learn</code></pre>
+<p>PULSE encodes this nesting in the <code>nesting</code> block of each manifest:</p>
+<ul><li><p><code>prism.benchmark</code> declares <code>inner_loops: [graphonomous.continual_learning]</code></p></li><li><p><code>graphonomous.continual_learning</code> declares <code>inner_loops: [graphonomous.deliberate]</code></p></li><li><p><code>graphonomous.deliberate</code> declares <code>parent_loop: graphonomous.continual_learning</code></p></li></ul>
+<p>OS-008 (Agent Harness, draft) is expected to add a fourth outer layer. PULSE supports unbounded nesting depth — adding OS-008 is just another manifest with <code>inner_loops: [prism.benchmark]</code>.</p>
+<h3 id="blk-23155">How signals flow</h3>
+<p>Cross-loop signals carry one of five canonical tokens through CloudEvents-compatible envelopes:</p>
+<pre><code>                              ┌────────────────────┐
+                              │  ReputationUpdate  │ ────────────────┐
+                              └────────────────────┘                  │
+                                       ▲                              ▼
+                                       │                    ┌──────────────────┐
+                              ┌────────┴────────┐           │ fleetprompt.trust │
+                              │ OutcomeSignal   │           │  (marketplace)    │
+                              └────────┬────────┘           └──────────────────┘
+                                       │
+        ┌──────────────────────────────┼───────────────────────────┐
+        │                              │                            │
+        ▼                              ▼                            ▼
+┌──────────────┐            ┌──────────────────┐         ┌────────────────────┐
+│ graphonomous │ ──signal──▶│  prism.benchmark │         │ agentromatic.delib │
+│ (memory loop)│            │ (eval loop)      │         │ (consensus loop)   │
+└──────┬───────┘            └────────┬─────────┘         └─────────┬──────────┘
+       │                             │                              │
+       │ TopologyContext             │ DeliberationResult           │
+       ▼                             ▼                              ▼
+┌──────────────┐            ┌──────────────────┐         ┌────────────────────┐
+│ ConsolidationEvent          (read by other loops as substrate state)        │
+└──────────────┘            └──────────────────┘         └────────────────────┘</code></pre>
+<p>The five tokens are stable for v0.1:</p>
+<ol><li><p><code>TopologyContext</code> — emitted by <code>retrieve</code>, consumed by <code>route</code></p></li><li><p><code>DeliberationResult</code> — emitted by inner deliberation loops</p></li><li><p><code>OutcomeSignal</code> — emitted by <code>learn</code> after action results</p></li><li><p><code>ReputationUpdate</code> — canonical reputation/confidence delta</p></li><li><p><code>ConsolidationEvent</code> — emitted by <code>consolidate</code> phases</p></li></ol>
+<h3 id="blk-23170">Conformance composition</h3>
+<p>A loop is <strong>PULSE-conforming</strong> if its manifest validates against <code>pulse-loop-manifest.v0.1.json</code> and its runtime passes all 12 conformance tests.</p>
+<p>A system is <strong>PRISM-evaluable</strong> automatically once it is PULSE-conforming — PRISM's <code>compose</code> phase reads the manifest, injects scenarios at the declared <code>retrieve</code> boundary, and observes outcomes via the declared <code>learn</code> phase.</p>
+<p>A system is <strong>[&amp;]-composable</strong> if its agents declare capabilities with matching <code>accepts_from</code> / <code>feeds_into</code> contracts.</p>
+<p>The three layers are independent. A system may adopt one without the others. Adoption order is typically:</p>
+<ol><li><p><strong>[&amp;]</strong> (capability declarations) — earliest, lowest commitment</p></li><li><p><strong>PULSE</strong> (loop manifest) — when the system has closed feedback</p></li><li><p><strong>PRISM</strong> (benchmarking) — when the loop is ready to be measured</p></li></ol>
+<h3 id="blk-23182">Why three protocols, not one</h3>
+<p>A monolithic protocol covering capabilities, loops, and benchmarking would be larger, harder to evolve, and harder to adopt incrementally. The three-layer split mirrors how HTTP, HTML, and CSS became ubiquitous separately before converging in the browser.</p>
+<table><thead><tr><th>Concern</th><th>Layer</th><th>Cadence of change</th></tr></thead><tbody><tr><td>What can be done</td><td>[&amp;]</td><td>months–years</td></tr><tr><td>How it cycles</td><td>PULSE</td><td>weeks–months</td></tr><tr><td>How well it works</td><td>PRISM</td><td>continuous</td></tr></tbody></table>
+<p>Different rates of change deserve different protocols.</p>
+<h3 id="blk-23198">Related</h3>
+<ul><li><p><a href="#/ECOSYSTEM.md" data-link>Ecosystem overview</a> — how every product fits the stack</p></li><li><p><a href="#/STACK_COMPLETION.md" data-link>Stack status</a> — versions, test counts, deployment state</p></li><li><p>[[&amp;] Protocol docs](../../AmpersandBoxDesign/docs/index.md) — capability composition (structural)</p></li><li><p><a href="#/opensentience.org/docs/spec/OS-010-PULSE-SPECIFICATION.md" data-link>OS-010 PULSE specification</a> — loop + circulation algebra (temporal)</p></li><li><p><a href="#/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md" data-link>OS-009 PRISM specification</a> — cross-system benchmark (diagnostic)</p></li><li><p><a href="#/graphonomous/docs/spec/README.md" data-link>Graphonomous spec</a> — the reference memory loop these protocols compose around</p></li></ul>
+<h4 id="blk-23212">PULSE implementation docs</h4>
+<ul><li><p><a href="#/PULSE/docs/ARITHMETIC_INTEGRATION.md" data-link>Arithmetic Integration</a> — how PULSE phases gate on the box-and-box kernel verdict</p></li><li><p><a href="#/PULSE/docs/V0.2-BEHAVIORAL-TYPES.md" data-link>V0.2 Behavioral Types</a> — session-typed phase contracts (draft)</p></li><li><p><a href="#/PULSE/docs/V0.2-IMPLEMENTATION-PLAN.md" data-link>V0.2 Implementation Plan</a> — roadmap for the v0.2 manifest schema</p></li><li><p><a href="#/PULSE/docs/NPM_PACKAGE.md" data-link>NPM Package</a> — the PULSE validator/conformance package</p></li></ul></div>
+<p class="src"><a href="/#/PULSE/docs/THREE_PROTOCOL_STACK.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-23126" class="lvl2">What each layer answers</a><a href="#blk-23143" class="lvl2">Three closed loops, three nesting levels</a><a href="#blk-23155" class="lvl2">How signals flow</a><a href="#blk-23170" class="lvl2">Conformance composition</a><a href="#blk-23182" class="lvl2">Why three protocols, not one</a><a href="#blk-23198" class="lvl2">Related</a><a href="#blk-23212" class="lvl3">PULSE implementation docs</a></nav></div><div class="card"><div class="lab">links to</div><a href="/opensentience.org/docs/spec/OS-010-PULSE-SPECIFICATION.md/">PULSE — Protocol for Uniform Loop State Exchange</a><a href="/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md/">PRISM — Protocol for Rating Iterative System Memory</a><a href="/ECOSYSTEM.md/">The [&amp;] Protocol Ecosystem</a><a href="/STACK_COMPLETION.md/">[&amp;] Stack Completion Status</a><a href="/graphonomous/docs/spec/README.md/">Graphonomous — Continual Learning Engine</a><a href="/PULSE/docs/ARITHMETIC_INTEGRATION.md/">PULSE × box-and-box — Arithmetic Integration Review</a><a href="/PULSE/docs/V0.2-BEHAVIORAL-TYPES.md/">PULSE v0.2 — Behavioral Loop Types</a><a href="/PULSE/docs/V0.2-IMPLEMENTATION-PLAN.md/">PULSE v0.2 — Implementation Plan</a><a href="/PULSE/docs/NPM_PACKAGE.md/">os-pulse — NPM Package Specification</a></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/STACK_COMPLETION.md/">[&amp;] Stack Completion Status</a><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/agentelic.com/docs/index.md/">Agentelic Documentation</a><a href="/agentromatic.com/docs/index.md/">AgenTroMatic Documentation</a><a href="/bendscript.com/docs/spec/README.md/">BendScript Protocol — v0.1</a><a href="/delegatic.com/docs/index.md/">Delegatic Documentation</a><a href="/deliberatic.com/docs/index.md/">Deliberatic Documentation</a><a href="/fleetprompt.com/docs/index.md/">FleetPrompt Documentation</a><a href="/geofleetic.com/docs/index.md/">GeoFleetic Documentation</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a><a href="/specprompt.com/docs/index.md/">SpecPrompt Documentation</a><a href="/ticktickclock.com/docs/index.md/">TickTickClock Documentation</a><a href="/weave/docs/weave-design.md/">Weave — a better Bend, built invariant-first (consolidated)</a><a href="/workbench/docs/spec/README.md/">Workbench — Crystallize agent behavior into replayable skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/PULSE/docs/ARITHMETIC_INTEGRATION.md/">PULSE × box-and-box — Arithmetic Integration Review</a><a href="/PULSE/docs/NPM_PACKAGE.md/">os-pulse — NPM Package Specification</a><a href="/PULSE/docs/V0.2-BEHAVIORAL-TYPES.md/">PULSE v0.2 — Behavioral Loop Types</a><a href="/PULSE/docs/V0.2-IMPLEMENTATION-PLAN.md/">PULSE v0.2 — Implementation Plan</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierah6g4yyycxhvgmwqwd375oyn2pc7x5ciogb63w4yc33arzpu3ccba</div></div></div>
+</div></div>
+</body></html>

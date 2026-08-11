@@ -1,0 +1,121 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Progress Log — 2026-01-23 · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="Project: webhost.systems (v1) Focus: Slice B — Control plane (Convex) + Cloudflare runtime path + Dashboard (Vite + Clerk) Owner: Engineering">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/progress/2026-01-23.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Progress Log — 2026-01-23">
+<meta property="og:description" content="Project: webhost.systems (v1) Focus: Slice B — Control plane (Convex) + Cloudflare runtime path + Dashboard (Vite + Clerk) Owner: Engineering">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/progress/2026-01-23.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Progress Log — 2026-01-23","name":"Progress Log — 2026-01-23","description":"Project: webhost.systems (v1) Focus: Slice B — Control plane (Convex) + Cloudflare runtime path + Dashboard (Vite + Clerk) Owner: Engineering","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/progress/2026-01-23.md/","identifier":"bagaaierawywkkymgbozcc3yy7mh6ckzdtwaumwdloxni5l6krhbxstvnwfvq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Summary (what changed today)"},{"@type":"WebPageElement","name":"Deliverables"},{"@type":"WebPageElement","name":"A) Control plane app created"},{"@type":"WebPageElement","name":"B) Cloudflare runtime provider path implemented (v1 baseline)"},{"@type":"WebPageElement","name":"C) Telemetry integrity implemented"},{"@type":"WebPageElement","name":"D) Dashboard app created"},{"@type":"WebPageElement","name":"Endpoints implemented/updated today (control plane)"},{"@type":"WebPageElement","name":"Agents"},{"@type":"WebPageElement","name":"Deployments"},{"@type":"WebPageElement","name":"Invocation gateway"},{"@type":"WebPageElement","name":"Telemetry (no user auth; deployment-scoped signature auth)"},{"@type":"WebPageElement","name":"Usage + metrics reads (dashboard support)"},{"@type":"WebPageElement","name":"Spec alignment checklist (today’s status)"},{"@type":"WebPageElement","name":"✅ Tenant isolation"},{"@type":"WebPageElement","name":"✅ Deployment immutability + active pointer (ADR-0005)"},{"@type":"WebPageElement","name":"✅ Invocation protocol (ADR-0006)"},{"@type":"WebPageElement","name":"✅ Telemetry integrity (ADR-0004)"},{"@type":"WebPageElement","name":"✅ Multi-runtime foundation (ADR-0001)"},{"@type":"WebPageElement","name":"⚠️ Limits/entitlements/billing (ADR-0007)"},{"@type":"WebPageElement","name":"⚠️ Secrets strategy (ADR-0003)"},{"@type":"WebPageElement","name":"Operational notes / prerequisites added today"},{"@type":"WebPageElement","name":"Control plane env vars (minimum for Slice B)"},{"@type":"WebPageElement","name":"Dashboard env vars"},{"@type":"WebPageElement","name":"Known gaps / TODOs (next work items)"},{"@type":"WebPageElement","name":"Quick verification steps (manual)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/"},{"@type":"ListItem","position":5,"name":"progress","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/progress/"},{"@type":"ListItem","position":6,"name":"2026-01-23.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/progress/2026-01-23.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/docs/spec/progress/2026-01-23.md</span>
+
+</div></div>
+<div class="lead">Project: webhost.systems (v1) Focus: Slice B — Control plane (Convex) + Cloudflare runtime path + Dashboard (Vite + Clerk) Owner: Engineering</div>
+<div class="prose"><h1 id="blk-53291">Progress Log — 2026-01-23</h1>
+<p>Project: <strong>webhost.systems</strong> (v1) Focus: <strong>Slice B</strong> — Control plane (Convex) + Cloudflare runtime path + Dashboard (Vite + Clerk) Owner: Engineering</p>
+<h3 id="blk-53293">Summary (what changed today)</h3>
+<p>Implemented a greenfield, spec-aligned baseline that supports the v1 “Slice B” E2E demo flow:</p>
+<ul><li><p><strong>Control plane (Convex)</strong>:</p></li><li><p>Tenant-isolated <strong>agent CRUD</strong></p></li><li><p><strong>Immutable deployments</strong> with <code>agents.activeDeploymentId</code> routing pointer</p></li><li><p>Cloudflare <strong>deploy orchestration</strong> (server-side provider calls via internal action)</p></li><li><p><strong>Invocation gateway</strong>: non-streaming + SSE endpoint (streaming currently emulated)</p></li><li><p><strong>Signed telemetry ingestion</strong>: deployment-scoped HMAC verification over <em>raw bytes</em> + ownership cross-check</p></li><li><p>Added dashboard-support <strong>read endpoints</strong>: deployments list, current usage, recent telemetry events</p></li></ul>
+<ul><li><p><strong>Dashboard (Vite + React + Clerk)</strong>:</p></li><li><p>Clerk auth integrated using <code>@clerk/clerk-react@latest</code></p></li><li><p>Calls control plane endpoints with <code>Authorization: Bearer &lt;JWT&gt;</code></p></li><li><p>UI flows: create agent → deploy → invoke (non-streaming + SSE) → view deployments/usage/recent telemetry</p></li></ul>
+<p>This establishes a functioning control-plane/data-plane boundary and the core invariants from the spec (tenant isolation, deployment immutability, invoke routing via active pointer, telemetry integrity model).</p>
+<h3 id="blk-53320">Deliverables</h3>
+<h4 id="blk-53321">A) Control plane app created</h4>
+<p>Location:</p>
+<ul><li><p><code>WebHost.Systems/apps/control-plane</code></p></li></ul>
+<p>Highlights:</p>
+<ul><li><p><code>convex/schema.ts</code>: initial v1 control-plane schema:</p></li><li><p><code>users</code>, <code>agents</code>, <code>deployments</code>, <code>metricsEvents</code>, <code>billingUsage</code></p></li><li><p>optional: <code>subscriptions</code>, <code>auditLog</code></p></li><li><p><code>convex/auth.config.ts</code>: Clerk authentication configuration via <code>CLERK_JWT_ISSUER_DOMAIN</code></p></li><li><p><code>convex/http.ts</code>: HTTP API router for Slice B endpoints</p></li></ul>
+<p>Notes:</p>
+<ul><li><p>Convex <code>_generated/</code> types are not committed; generated via dev/codegen.</p></li></ul>
+<h4 id="blk-53342">B) Cloudflare runtime provider path implemented (v1 baseline)</h4>
+<ul><li><p>Cloudflare adapter that:</p></li><li><p>uploads Worker module code</p></li><li><p>injects deployment-scoped <code>TELEMETRY_SECRET</code> as a Worker secret binding</p></li><li><p>injects per-deployment metadata (report URL, attribution ids) as secret bindings for simplicity in Slice B</p></li><li><p>Deterministic Worker template:</p></li><li><p>Implements <code>invoke/v1</code> (text-first)</p></li><li><p>Emits signed telemetry asynchronously (best-effort, does not block invocations)</p></li></ul>
+<h4 id="blk-53358">C) Telemetry integrity implemented</h4>
+<ul><li><p>Telemetry ingestion endpoint validates:</p></li><li><p><code>X-Telemetry-Deployment-Id</code></p></li><li><p><code>X-Telemetry-Signature: v1=&lt;hex(hmac_sha256(raw_bytes))&gt;</code></p></li><li><p>ownership cross-check <code>{userId, agentId, deploymentId}</code> against deployments table</p></li><li><p>Ingestion writes append-only <code>metricsEvents</code> with dedupe:</p></li><li><p>preferred key: <code>(deploymentId, eventId)</code></p></li><li><p>fallback: <code>(deploymentId, traceId)</code></p></li></ul>
+<h4 id="blk-53374">D) Dashboard app created</h4>
+<p>Location:</p>
+<ul><li><p><code>WebHost.Systems/apps/web</code></p></li></ul>
+<p>Key points:</p>
+<ul><li><p>Vite + React + TypeScript</p></li><li><p>Clerk auth wrapper in <code>src/main.tsx</code></p></li><li><p>UI uses <code>&lt;SignedIn&gt;</code>, <code>&lt;SignedOut&gt;</code>, <code>&lt;SignInButton&gt;</code>, <code>&lt;SignUpButton&gt;</code>, <code>&lt;UserButton&gt;</code></p></li><li><p>Calls the control plane base URL from <code>VITE_CONTROL_PLANE_URL</code></p></li><li><p>Uses <code>VITE_CLERK_PUBLISHABLE_KEY</code></p></li></ul>
+<h3 id="blk-53391">Endpoints implemented/updated today (control plane)</h3>
+<p>All control-plane endpoints require auth via <code>Authorization: Bearer &lt;JWT&gt;</code> unless noted.</p>
+<h4 id="blk-53393">Agents</h4>
+<ul><li><p><code>GET /v1/agents</code></p></li><li><p><code>POST /v1/agents</code></p></li><li><p><code>GET /v1/agents/:agentId</code></p></li><li><p><code>PATCH /v1/agents/:agentId</code></p></li><li><p><code>POST /v1/agents/:agentId/disable</code></p></li><li><p><code>DELETE /v1/agents/:agentId</code></p></li></ul>
+<h4 id="blk-53407">Deployments</h4>
+<ul><li><p><code>POST /v1/agents/:agentId/deploy</code></p></li><li><p><code>moduleCode</code> optional; if omitted, deploys built-in deterministic worker template</p></li><li><p><code>GET /v1/agents/:agentId/deployments</code> (dashboard support)</p></li><li><p><code>POST /v1/agents/:agentId/deployments/:deploymentId/activate</code></p></li></ul>
+<h4 id="blk-53417">Invocation gateway</h4>
+<ul><li><p><code>POST /v1/invoke/:agentId</code> (non-streaming)</p></li><li><p><code>POST /v1/invoke/:agentId/stream</code> (SSE; currently emulated)</p></li></ul>
+<h4 id="blk-53423">Telemetry (no user auth; deployment-scoped signature auth)</h4>
+<ul><li><p><code>POST /v1/telemetry/report</code></p></li><li><p>validates signature + ownership mapping</p></li></ul>
+<h4 id="blk-53429">Usage + metrics reads (dashboard support)</h4>
+<ul><li><p><code>GET /v1/usage/current</code></p></li><li><p><code>GET /v1/metrics/recent?agentId=...&amp;sinceMs=...&amp;limit=...</code></p></li></ul>
+<h3 id="blk-53435">Spec alignment checklist (today’s status)</h3>
+<h4 id="blk-53436">✅ Tenant isolation</h4>
+<ul><li><p>Server-side mapping from Clerk identity → internal <code>users._id</code></p></li><li><p>Ownership checks enforced on agent/deployment/metrics reads and writes</p></li></ul>
+<h4 id="blk-53442">✅ Deployment immutability + active pointer (ADR-0005)</h4>
+<ul><li><p>New deployment row per deploy attempt</p></li><li><p>Invocation routing via <code>agents.activeDeploymentId</code> only</p></li><li><p>Rollback implemented as activation endpoint (pointer flip)</p></li></ul>
+<h4 id="blk-53450">✅ Invocation protocol (ADR-0006)</h4>
+<ul><li><p>Gateway expects <code>invoke/v1</code> and forwards to runtime</p></li><li><p>SSE endpoint exists with ordered event types (<code>meta</code> → <code>delta*</code> → <code>usage?</code> → <code>done|error</code>)</p></li><li><p>Implementation is emulated streaming for now (buffered upstream)</p></li></ul>
+<h4 id="blk-53458">✅ Telemetry integrity (ADR-0004)</h4>
+<ul><li><p>Deployment-scoped signing secret injected into data plane</p></li><li><p>HMAC verification uses raw body bytes</p></li><li><p>Ownership cross-check enforced</p></li></ul>
+<h4 id="blk-53466">✅ Multi-runtime foundation (ADR-0001)</h4>
+<ul><li><p>Provider boundary exists (Cloudflare implemented)</p></li><li><p>AgentCore not implemented yet (planned later)</p></li></ul>
+<h4 id="blk-53472">⚠️ Limits/entitlements/billing (ADR-0007)</h4>
+<ul><li><p>Implemented <strong>request-limit hard-stop</strong> (pre-invocation) and <strong>runtime gating</strong> foundations (tier entitlements mapping).</p></li><li><p>Requests are enforced <strong>pre-invoke</strong> via a reservation counter; tokens/compute remain <strong>post-charge</strong> via telemetry/aggregation (subsequent blocking not yet implemented).</p></li><li><p>Billing provider integration (checkout + webhook-driven tier updates) is still not implemented.</p></li></ul>
+<h4 id="blk-53480">⚠️ Secrets strategy (ADR-0003)</h4>
+<ul><li><p>No plaintext secrets stored for <em>customer secrets</em> (not yet implemented)</p></li><li><p>Telemetry signing secret is stored <strong>encrypted-at-rest</strong> in Convex to allow verification (Cloudflare secrets are write-only, so control plane cannot retrieve secret values later).</p></li><li><p>This is consistent with “no plaintext secrets in DB” but is a pragmatic deviation from “store only provider secret references” ideal.</p></li><li><p>Future option: move telemetry secret storage to a dedicated secret store / KMS-backed vault so the DB stores only references.</p></li></ul>
+<h3 id="blk-53490">Operational notes / prerequisites added today</h3>
+<h4 id="blk-53491">Control plane env vars (minimum for Slice B)</h4>
+<ul><li><p><code>CLERK_JWT_ISSUER_DOMAIN</code></p></li><li><p><code>TELEMETRY_SECRETS_ENCRYPTION_KEY</code> (32 bytes key material; encoding per implementation)</p></li><li><p><code>CLOUDFLARE_ACCOUNT_ID</code></p></li><li><p><code>CLOUDFLARE_API_TOKEN</code></p></li><li><p><code>CLOUDFLARE_WORKERS_DEV_SUBDOMAIN</code></p></li><li><p><code>CONTROL_PLANE_TELEMETRY_REPORT_URL</code> (public URL to <code>/v1/telemetry/report</code>)</p></li></ul>
+<h4 id="blk-53505">Dashboard env vars</h4>
+<ul><li><p><code>VITE_CLERK_PUBLISHABLE_KEY</code></p></li><li><p><code>VITE_CONTROL_PLANE_URL</code> (Convex HTTP base URL)</p></li></ul>
+<h3 id="blk-53511">Known gaps / TODOs (next work items)</h3>
+<ol><li><p><strong>Aggregation job</strong>: compute <code>billingUsage</code> from <code>metricsEvents</code> (idempotent, recomputable).</p></li><li><p><strong>Limits &amp; runtime gating</strong>:</p></li></ol>
+<ul><li><p>enforce request limits pre-invocation</p></li><li><p>gate AgentCore runtime by tier (defense in depth)</p></li></ul>
+<ol start="3"><li><p><strong>Write-only secrets API</strong> for agent env vars (no plaintext in DB, provider injection).</p></li><li><p><strong>Cloudflare Durable Objects session mapping</strong>:</p></li></ol>
+<ul><li><p>treat <code>sessionId</code> as opaque externally but map to DO ids internally.</p></li></ul>
+<ol start="5"><li><p><strong>True streaming</strong>:</p></li></ol>
+<ul><li><p>convert data plane invocation to real streaming if/when supported; map to SSE deltas.</p></li></ul>
+<ol start="6"><li><p><strong>Hardening</strong>:</p></li></ol>
+<ul><li><p>tighter CORS allowlist</p></li><li><p>richer audit logs for telemetry rejects and deploy failures</p></li><li><p>reconcile partial deploy failures (orphan cleanup by tags)</p></li></ul>
+<h3 id="blk-53546">Quick verification steps (manual)</h3>
+<ol><li><p>Sign into dashboard (Clerk).</p></li><li><p>Create agent.</p></li><li><p>Deploy (Cloudflare).</p></li><li><p>Invoke:</p></li></ol>
+<ul><li><p>non-streaming: <code>/v1/invoke/:agentId</code></p></li><li><p>SSE: <code>/v1/invoke/:agentId/stream</code></p></li></ul>
+<ol start="5"><li><p>Confirm telemetry events appear in:</p></li></ol>
+<ul><li><p><code>/v1/metrics/recent?agentId=...</code></p></li></ul>
+<ol start="6"><li><p>Confirm deployments list:</p></li></ol>
+<ul><li><p><code>/v1/agents/:agentId/deployments</code></p></li></ul>
+<ol start="7"><li><p>Confirm rollback pointer flip:</p></li></ol>
+<ul><li><p>activate older deployment and re-invoke.</p></li></ul>
+<h3 id="blk-53579">Addendum (later on 2026-01-23)</h3>
+<p>Additional progress completed after the earlier log was written:</p>
+<h4 id="blk-53581">Limits &amp; runtime gating (ADR-0007)</h4>
+<ul><li><p>Implemented <strong>pre-invocation request-limit hard-stop</strong> in the invocation gateway:</p></li><li><p>Added a new <code>requestUsageCounters</code> table (per-user, per-period) to support a fast counter.</p></li><li><p>Added an internal reservation mutation that validates <code>{userId, agentId, deploymentId}</code> + deployment state and <strong>reserves 1 request</strong> before calling the runtime (reduces concurrency gaps).</p></li><li><p>Added tier entitlements mapping in <code>convex/lib/entitlements.ts</code> and wired deploy/invoke gating through it.</p></li></ul>
+<h4 id="blk-53591">Billing usage aggregation (v1 incremental)</h4>
+<ul><li><p>Implemented <strong>incremental</strong> updates to <code>billingUsage</code> during telemetry ingestion:</p></li><li><p>When a telemetry event is accepted, <code>billingUsage</code> totals for the telemetry event’s <code>periodKey</code> are updated.</p></li><li><p>Note: this is still considered derived data; a future idempotent recompute job remains planned for hardening.</p></li></ul>
+<h4 id="blk-53599">Notes on v1 semantics</h4>
+<ul><li><p>Tokens/compute enforcement remains <strong>post-charge</strong> via telemetry/aggregation; requests are the only dimension hard-stopped pre-invoke in this baseline.</p></li></ul>
+<h4 id="blk-53603">Cloudflare deploy hardening (unblocked real deploy/invoke)</h4>
+<ul><li><p>Fixed deterministic Worker template generation to emit <strong>valid JavaScript</strong> (Cloudflare parses uploaded code as JS, not TS).</p></li><li><p>Removed TypeScript-only syntax that caused Cloudflare upload rejection (<code>Unexpected token 'export'</code>).</p></li><li><p>Improved Cloudflare adapter error reporting to include <strong>deploy step + endpoint + Cloudflare error message</strong> (sanitized), making failures debuggable from the dashboard.</p></li></ul>
+<h4 id="blk-53611">Invocation reliability + debuggability</h4>
+<ul><li><p>Improved invocation gateway error diagnostics for Cloudflare:</p></li><li><p>Distinguish <strong>network errors</strong> vs <strong>non-2xx upstream status</strong>.</p></li><li><p>Include safe upstream context (<code>invokeHost</code>, bounded <code>upstreamBodySnippet</code>) to rapidly diagnose routing/host/path issues without leaking secrets.</p></li><li><p>Improved dashboard error display to include <code>status</code>, <code>retryable</code>, <code>requestId</code>, and <code>details</code> so production-ish debugging can happen from the UI.</p></li></ul>
+<h4 id="blk-53621">Cloudflare custom domain routes (recommended) — <code>workers-api.webhost.systems</code></h4>
+<ul><li><p>Added a custom-domain routing strategy to avoid relying on <code>workers.dev</code> activation state:</p></li><li><p>Uses a single stable hostname, e.g. <code>workers-api.webhost.systems</code>.</p></li><li><p>Creates a <strong>per-deployment</strong> route so multiple deployments can coexist safely:</p></li><li><p>route prefix: <code>/dep/&lt;deploymentId&gt;</code></p></li><li><p>invoke path: <code>/dep/&lt;deploymentId&gt;/invoke</code></p></li><li><p>invoke URL: <code>https://workers-api.webhost.systems/dep/&lt;deploymentId&gt;/invoke</code></p></li><li><p>Deploy action now supports:</p></li><li><p>workers.dev fallback (simple) OR</p></li><li><p>custom domain routing when <code>CLOUDFLARE_WORKERS_CUSTOM_DOMAIN</code> + <code>CLOUDFLARE_ZONE_ID</code> are configured.</p></li><li><p>Added guidance to ensure the Cloudflare API token includes <strong>zone Workers Routes</strong> permissions (required to create routes).</p></li></ul>
+<h4 id="blk-53643">E2E status (confirmed working)</h4>
+<ul><li><p>✅ End-to-end verified:</p></li><li><p>create agent → deploy Cloudflare → invoke (non-streaming) → invoke (SSE) → telemetry ingestion accepted → metrics/usage visible.</p></li></ul>
+<h3 id="blk-53649">Notes</h3>
+<p>This progress log reflects implementation work completed on 2026-01-23. The source-of-truth spec remains <code>docs/spec/</code>.</p></div>
+<p class="src"><a href="/#/WebHost.Systems/docs/spec/progress/2026-01-23.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-53293" class="lvl2">Summary (what changed today)</a><a href="#blk-53320" class="lvl2">Deliverables</a><a href="#blk-53321" class="lvl3">A) Control plane app created</a><a href="#blk-53342" class="lvl3">B) Cloudflare runtime provider path implemented (v1 baseline)</a><a href="#blk-53358" class="lvl3">C) Telemetry integrity implemented</a><a href="#blk-53374" class="lvl3">D) Dashboard app created</a><a href="#blk-53391" class="lvl2">Endpoints implemented/updated today (control plane)</a><a href="#blk-53393" class="lvl3">Agents</a><a href="#blk-53407" class="lvl3">Deployments</a><a href="#blk-53417" class="lvl3">Invocation gateway</a><a href="#blk-53423" class="lvl3">Telemetry (no user auth; deployment-scoped signature auth)</a><a href="#blk-53429" class="lvl3">Usage + metrics reads (dashboard support)</a><a href="#blk-53435" class="lvl2">Spec alignment checklist (today’s status)</a><a href="#blk-53436" class="lvl3">✅ Tenant isolation</a><a href="#blk-53442" class="lvl3">✅ Deployment immutability + active pointer (ADR-0005)</a><a href="#blk-53450" class="lvl3">✅ Invocation protocol (ADR-0006)</a><a href="#blk-53458" class="lvl3">✅ Telemetry integrity (ADR-0004)</a><a href="#blk-53466" class="lvl3">✅ Multi-runtime foundation (ADR-0001)</a><a href="#blk-53472" class="lvl3">⚠️ Limits/entitlements/billing (ADR-0007)</a><a href="#blk-53480" class="lvl3">⚠️ Secrets strategy (ADR-0003)</a><a href="#blk-53490" class="lvl2">Operational notes / prerequisites added today</a><a href="#blk-53491" class="lvl3">Control plane env vars (minimum for Slice B)</a><a href="#blk-53505" class="lvl3">Dashboard env vars</a><a href="#blk-53511" class="lvl2">Known gaps / TODOs (next work items)</a><a href="#blk-53546" class="lvl2">Quick verification steps (manual)</a><a href="#blk-53579" class="lvl2">Addendum (later on 2026-01-23)</a><a href="#blk-53581" class="lvl3">Limits &amp; runtime gating (ADR-0007)</a><a href="#blk-53591" class="lvl3">Billing usage aggregation (v1 incremental)</a><a href="#blk-53599" class="lvl3">Notes on v1 semantics</a><a href="#blk-53603" class="lvl3">Cloudflare deploy hardening (unblocked real deploy/invoke)</a><a href="#blk-53611" class="lvl3">Invocation reliability + debuggability</a><a href="#blk-53621" class="lvl3">Cloudflare custom domain routes (recommended) — workers-api.webhost.systems</a><a href="#blk-53643" class="lvl3">E2E status (confirmed working)</a><a href="#blk-53649" class="lvl2">Notes</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/spec/progress/2026-01-24.md/">Progress Log — 2026-01-24</a><a href="/WebHost.Systems/docs/spec/progress/README.md/">docs/spec/progress — Daily Engineering Progress Logs</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierawywkkymgbozcc3yy7mh6ckzdtwaumwdloxni5l6krhbxstvnwfvq</div></div></div>
+</div></div>
+</body></html>

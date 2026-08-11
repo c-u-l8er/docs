@@ -13,6 +13,8 @@ import { fileToBlocks } from './ingest.mjs';
 import { toBlocks, docHTML, plain } from './render.mjs';
 import { BANDS, REGISTRY, FALLBACK } from './home.mjs';
 import { DARK_FACTORY_STEPS } from './sources.mjs';
+import { prerender, sweepStale, CANONICAL_HOST } from './prerender.mjs';
+import { loadPolicy, applyPolicy, declaredVisibility } from './visibility.mjs';
 
 // ---- build provenance: derived from git, never invented ---------------------------------
 // The commit hash is the immutable anchor that lets a deployment be traced back to its
@@ -112,11 +114,23 @@ function relink(blocks, fromRoute, sink) {
   });
 }
 
+// ---- publication policy ----------------------------------------------------------------
+// Applied BEFORE anything is built, because dist/index.html inlines every page the build knows
+// about: a doc filtered out later would still ship its full text inside the SPA payload. See
+// visibility.mjs. Nothing is dropped silently — every non-public route is named in the report.
+const POLICY = loadPolicy();
+// A document's own front matter outranks any filename pattern; a repository ceiling outranks
+// the document. See visibility.mjs for the full precedence and why it is ordered that way.
+const VIS = applyPolicy(POLICY, docs, (d) => declaredVisibility(posix.join(ROOT, d.source), d.route));
+const PRIVATE = new Set(VIS.private);
+const UNLISTED = new Set(VIS.unlisted);
+const published = docs.filter(d => !PRIVATE.has(d.route));
+
 const pages = [];
 let totalEdges = 0, fixpointAll = true, fallbacks = 0;
-const back = new Map(docs.map(d => [d.route, []]));
+const back = new Map(published.map(d => [d.route, []]));
 
-for (const d of docs) {
+for (const d of published) {
   let bsBlocks, html, links = new Set(), fellBack = false;
   try {
     const authored = relink(fileToBlocks(d.source), d.route, links);
@@ -141,7 +155,8 @@ for (const d of docs) {
   writeFileSync(`dist/bend/${fileSlug(d.route)}.bend.json`, canonical);
 
   html = docHTML(bsBlocks);
-  const linkArr = [...links];
+  // A private doc is not in the build, so a resolved link to one would point at nothing.
+  const linkArr = [...links].filter(r => !PRIVATE.has(r));
   totalEdges += linkArr.length;
   for (const r of linkArr) back.get(r)?.push(d.route);
   pages.push({ route: d.route, source: d.source, project: d.project, name: d.name,
@@ -150,6 +165,17 @@ for (const d of docs) {
 }
 
 // ---- the site model -------------------------------------------------------------------
+// Prune private routes out of the directory tree as well. The tree is embedded in the SPA
+// model and drives its folder listings, so leaving them in would advertise documents the
+// build deliberately withheld.
+(function pruneTree(node) {
+  node.files = node.files.filter(f => !PRIVATE.has(f.route));
+  for (const [name, child] of [...node.dirs]) {
+    pruneTree(child);
+    if (!child.files.length && !child.dirs.size) node.dirs.delete(name);
+  }
+})(tree);
+
 const byRoute = Object.fromEntries(pages.map(p => [p.route, p]));
 for (const p of pages) p.back = (back.get(p.route) || []).map(r => ({ route: r, title: byRoute[r]?.title }));
 
@@ -222,6 +248,8 @@ const page = `<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="build-commit" content="${BUILD_COMMIT}">
 <title>${model.brand} — stack docs atlas</title>
+<meta name="description" content="${model.subtitle} — ${model.count} documents mirrored from ${model.projects.length} projects, each one a validated, content-addressed BendScript document.">
+<link rel="canonical" href="${CANONICAL_HOST}/">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');window.__atlasTheme=t;document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
@@ -234,6 +262,21 @@ const page = `<!doctype html><html lang="en"><head>
 <script>${JS}</script></body></html>`;
 writeFileSync('dist/index.html', page);
 copyFileSync('amp-nav.js', 'dist/amp-nav.js');   // shared portfolio nav web component
+
+// ---- prerender: one server-visible page per doc ----------------------------------------
+// The shell above is hash-routed, so every doc in it shares one indexable URL. These files
+// are the crawlable surface; see prerender.mjs for the measurement that motivated them.
+const pre = prerender(pages, model, tree, UNLISTED);
+
+// Remove anything dist/ still holds from a previous build. Required by the publication policy:
+// a doc reclassified from public to private keeps its page, its .bend.json and its URL until
+// the file is actually deleted, and dist/ is committed and deployed as-is.
+const expected = new Set([
+  'dist/.nojekyll', 'dist/index.html', 'dist/atlas.json', 'dist/amp-nav.js',
+  ...pre.files,
+  ...pages.map(p => `dist/bend/${fileSlug(p.route)}.bend.json`),
+]);
+const swept = sweepStale(expected);
 
 // ---- report ---------------------------------------------------------------------------
 console.log(`\n${C}stack docs atlas · build report${R}`);
@@ -250,6 +293,70 @@ console.log(`  ${G}✓${R} dark-factory phases derived (${DARK_FACTORY_STEPS.len
 for (const s of DARK_FACTORY_STEPS)
   console.log(`     ${D}${s.name}: ${s.rung ? s.rung + '  ←  ' + s.source : 'GAP — ' + s.gap}${R}`);
 console.log(`${D}────────────────────────────────────────${R}`);
+console.log(`  ${G}✓${R} ${pre.written} docs prerendered to server-visible HTML (was: 1 indexable URL for all of them)`);
+// Publication policy: never silent. Every withheld or de-indexed route is named here, because
+// a build that quietly drops documents reads as "we published everything" when it did not.
+console.log(`  ${G}✓${R} publication policy: ${VIS.public.length} public · ${VIS.unlisted.length} unlisted · ${VIS.private.length} private`);
+console.log(`     ${D}${VIS.declaredCount} ruled by the document's own front matter · the rest by pattern default${R}`);
+// Declarations are for exceptions. One that restates the default is ceremony, and ceremony is
+// how declarations stop being read.
+if (VIS.redundant.length) {
+  console.log(`  ${Y}!${R} ${VIS.redundant.length} redundant declaration(s) — they restate what the default already does:`);
+  for (const r of VIS.redundant.slice(0, 5))
+    console.log(`       ${D}· ${r.route} declares ${r.class}; ${r.wouldBe} already gives ${r.class}${R}`);
+  console.log(`     ${D}remove them: a declaration should mark a decision, not repeat one${R}`);
+}
+// A ceiling silently overruling an author would be worse than having no declarations at all,
+// because the author would believe the declaration took effect.
+const byCeiling = new Map();
+for (const o of VIS.overrides) {
+  if (!byCeiling.has(o.by.match)) byCeiling.set(o.by.match, []);
+  byCeiling.get(o.by.match).push(o);
+}
+for (const [match, list] of byCeiling) {
+  const authored = list.filter(o => o.was === 'declared');
+  console.log(`  ${Y}!${R} ceiling ${match} capped ${list.length} doc(s)` +
+    (authored.length ? ` — ${Y}${authored.length} of them had declared otherwise${R}` : ` ${D}(none had declared; all were pattern/global defaults)${R}`));
+  for (const o of authored)
+    console.log(`       ${Y}· ${o.route} declared ${o.from} → forced ${o.by.max}${R}`);
+}
+for (const [label, list] of [['private (withheld entirely)', VIS.private], ['unlisted (noindex, not in sitemap)', VIS.unlisted]]) {
+  if (!list.length) continue;
+  console.log(`     ${Y}${label}${R}`);
+  // Group by what decided it, so the report answers "why is this not public" per rule rather
+  // than per file. `source` distinguishes a ruling the author made from one a pattern made.
+  const why = new Map();
+  for (const r of list) {
+    const res = VIS.by.get(r);
+    const k = res?.source === 'declared' ? 'declared in front matter' : (res?.rule?.match || '(global default)');
+    why.set(k, (why.get(k) || []).concat(r));
+  }
+  for (const [match, routes] of why) {
+    console.log(`       ${D}${match} → ${routes.length}${R}`);
+    for (const r of routes.slice(0, 4)) console.log(`         ${D}· ${r}${R}`);
+    if (routes.length > 4) console.log(`         ${D}  … +${routes.length - 4} more${R}`);
+  }
+}
+// The review backlog: documents a filename cannot classify and which have not yet declared.
+// Ruling one means adding `visibility:` to its front matter; it then drops off this list.
+let unruled = 0;
+for (const r of VIS.review) {
+  unruled += r.undeclared.length;
+  const state = r.undeclared.length ? `${Y}${r.undeclared.length} unruled${R}` : `${G}all ruled${R}`;
+  console.log(`  ${r.undeclared.length ? Y + '?' : G + '✓'}${R} review: ${r.match} → ${r.hits.length} doc(s), ${state} ${D}— ${r.why.split('.')[0]}${R}`);
+}
+if (unruled) console.log(`     ${D}rule one by adding \`visibility: public|unlisted|private\` to its front matter${R}`);
+if (swept.length) {
+  console.log(`  ${Y}✓${R} ${swept.length} stale file(s) removed from dist/ (previously published, no longer produced)`);
+  for (const f of swept.slice(0, 4)) console.log(`       ${D}· ${f}${R}`);
+  if (swept.length > 4) console.log(`         ${D}… +${swept.length - 4} more${R}`);
+}
+console.log(`  ${G}✓${R} ${pre.hubs} directory hubs — every folder resolves, every doc gains a parent link`);
+console.log(`  ${G}✓${R} canonical host: ${CANONICAL_HOST}  (one host for a corpus that three served identically)`);
+console.log(`${D}────────────────────────────────────────${R}`);
 console.log(`  → dist/index.html   (self-contained filesystem atlas)`);
+console.log(`  → dist/<route>/index.html   (${pre.written} crawlable pages, canonical + JSON-LD)`);
+console.log(`  → dist/sitemap.xml   (${pre.sitemap} URLs)`);
+console.log(`  → dist/robots.txt`);
 console.log(`  → dist/atlas.json   (route⇄source map for agents)`);
 console.log(`  → dist/bend/*.bend.json   (${pages.length} content-addressed source docs)\n`);

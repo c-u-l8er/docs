@@ -1,0 +1,82 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>07 — Security and Secrets · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="Every table in the control plane database enforces Row-Level Security:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="07 — Security and Secrets">
+<meta property="og:description" content="Every table in the control plane database enforces Row-Level Security:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"07 — Security and Secrets","name":"07 — Security and Secrets","description":"Every table in the control plane database enforces Row-Level Security:","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/","identifier":"bagaaieraskd6mwmllynr5zhqqb4dow44fyicq2zdutry2zar4vwn2w23577a","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Tenant Isolation (RLS)"},{"@type":"WebPageElement","name":"RLS Rules"},{"@type":"WebPageElement","name":"Provider Namespace Isolation"},{"@type":"WebPageElement","name":"Secrets Handling"},{"@type":"WebPageElement","name":"Supabase Vault"},{"@type":"WebPageElement","name":"Secret Lifecycle"},{"@type":"WebPageElement","name":"Secret Rotation"},{"@type":"WebPageElement","name":"Telemetry Authentication"},{"@type":"WebPageElement","name":"Abuse Prevention"},{"@type":"WebPageElement","name":"Rate Limiting"},{"@type":"WebPageElement","name":"Input Validation"},{"@type":"WebPageElement","name":"Account-Level"},{"@type":"WebPageElement","name":"Supply Chain Validation"},{"@type":"WebPageElement","name":"Audit Log"},{"@type":"WebPageElement","name":"Security Checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/"},{"@type":"ListItem","position":5,"name":"07_SECURITY_AND_SECRETS.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md</span>
+
+</div></div>
+<div class="lead">Every table in the control plane database enforces Row-Level Security:</div>
+<div class="prose"><h1 id="blk-43683">07 — Security and Secrets</h1>
+<blockquote><p><strong>Purpose:</strong> Tenant isolation via RLS, encrypted secret storage via Supabase Vault, telemetry authentication, abuse prevention, supply chain validation, and audit logging requirements.</p></blockquote>
+<h3 id="blk-43686">Tenant Isolation (RLS)</h3>
+<p>Every table in the control plane database enforces Row-Level Security:</p>
+<pre data-lang="sql"><code>-- Example: agents table policy
+CREATE POLICY &quot;users can only access own agents&quot;
+  ON agents
+  FOR ALL
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);</code></pre>
+<h4 id="blk-43689">RLS Rules</h4>
+<table><thead><tr><th>Table</th><th>Policy</th></tr></thead><tbody><tr><td><code>users</code></td><td><code>auth.uid() = id</code></td></tr><tr><td><code>agents</code></td><td><code>auth.uid() = user_id</code></td></tr><tr><td><code>deployments</code></td><td><code>auth.uid() = user_id</code></td></tr><tr><td><code>metrics_events</code></td><td><code>auth.uid() = user_id</code></td></tr><tr><td><code>billing_usage</code></td><td><code>auth.uid() = user_id</code></td></tr></tbody></table>
+<p><strong>Hard rule:</strong> No table is accessible without an RLS policy. If a new table is added, an RLS policy must be created before any data is inserted.</p>
+<h4 id="blk-43704">Provider Namespace Isolation</h4>
+<p>Runtime provider resources are namespaced per user:</p>
+<ul><li><p>Cloudflare: Worker names include user ID prefix</p></li><li><p>AgentCore: Runtime resources tagged with user ID</p></li></ul>
+<h3 id="blk-43711">Secrets Handling</h3>
+<h4 id="blk-43712">Supabase Vault</h4>
+<p>Secrets are stored in <strong>Supabase Vault</strong> -- an encrypted key-value store built into Supabase. The primary database (<code>agents</code>, <code>deployments</code>, etc.) never contains plaintext secret values.</p>
+<pre><code>User adds secret &quot;OPENAI_API_KEY&quot; via dashboard
+  -&gt; Value encrypted and stored in Vault (vault.secrets)
+  -&gt; agents.env_var_keys = [&quot;OPENAI_API_KEY&quot;] (key name only)</code></pre>
+<h4 id="blk-43715">Secret Lifecycle</h4>
+<pre><code>1. User creates secret via UI -&gt; stored in Vault
+2. Deploy triggers -&gt; Edge Function reads from Vault
+3. Secret pushed to provider mechanism:
+   - Cloudflare: Workers Secrets API
+   - AgentCore: Environment variable injection / Secrets Manager
+4. Vault reference remains; plaintext never logged</code></pre>
+<h4 id="blk-43717">Secret Rotation</h4>
+<ol><li><p>User updates secret value in Vault via dashboard</p></li><li><p>User triggers a re-deploy to push the new value to the provider</p></li><li><p>Old provider secret is overwritten</p></li></ol>
+<p><strong>Rule:</strong> Never log secret values. Never include secrets in error messages, telemetry events, or API responses.</p>
+<h3 id="blk-43726">Telemetry Authentication</h3>
+<p>The telemetry ingestion endpoint rejects unauthenticated events. See <code>05_TELEMETRY_AND_METRICS.md</code> for HMAC and JWT details.</p>
+<p>Key requirements:</p>
+<ul><li><p>[ ] Per-deployment signing key generated at deploy time</p></li><li><p>[ ] Signing key stored in Vault (not in the deployments table)</p></li><li><p>[ ] Anti-replay: timestamp within 5-minute window</p></li><li><p>[ ] Attribution verified against deployment records</p></li></ul>
+<h3 id="blk-43738">Abuse Prevention</h3>
+<h4 id="blk-43739">Rate Limiting</h4>
+<table><thead><tr><th>Scope</th><th>Limit</th></tr></thead><tbody><tr><td>Per-user, all agents</td><td>N requests/second (configurable)</td></tr><tr><td>Per-agent</td><td>M requests/second (configurable)</td></tr><tr><td>Payload size</td><td>Max 1 MB request body</td></tr></tbody></table>
+<h4 id="blk-43749">Input Validation</h4>
+<ul><li><p>Reject oversized payloads before parsing</p></li><li><p>Validate JSON structure before processing</p></li><li><p>Prevent prompt bombing (excessively long message arrays)</p></li></ul>
+<h4 id="blk-43757">Account-Level</h4>
+<ul><li><p>Disable agent on repeated errors</p></li><li><p>Flag accounts with anomalous usage patterns</p></li><li><p>Hard-stop on plan limits (see <code>06_BILLING_AND_LIMITS.md</code>)</p></li></ul>
+<h3 id="blk-43765">Supply Chain Validation</h3>
+<p>Uploaded bundles must pass validation before deployment:</p>
+<table><thead><tr><th>Check</th><th>Rule</th></tr></thead><tbody><tr><td>Size limit</td><td>Max compressed size (e.g., 50 MB)</td></tr><tr><td>File count</td><td>Max files (e.g., 10,000)</td></tr><tr><td>Path traversal</td><td>Reject entries with <code>../</code> or absolute paths</td></tr><tr><td>Symlinks</td><td>Reject unsafe symlinks</td></tr><tr><td>Required files</td><td><code>agent.config.json</code> + entrypoint must exist</td></tr><tr><td>Manifest validity</td><td>JSON parses, required fields present</td></tr></tbody></table>
+<p>Post-MVP: dependency scanning for known vulnerabilities.</p>
+<h3 id="blk-43783">Audit Log</h3>
+<p>The platform SHOULD maintain an audit log for security-sensitive operations:</p>
+<table><thead><tr><th>Event</th><th>Fields</th></tr></thead><tbody><tr><td>Agent created</td><td>user_id, agent_id, timestamp</td></tr><tr><td>Agent disabled</td><td>user_id, agent_id, timestamp</td></tr><tr><td>Deployment created</td><td>user_id, agent_id, deployment_id, timestamp</td></tr><tr><td>Secret created/rotated</td><td>user_id, secret_key (not value), timestamp</td></tr><tr><td>Tier changed</td><td>user_id, old_tier, new_tier, timestamp</td></tr><tr><td>Invocation rejected (limit)</td><td>user_id, agent_id, reason, timestamp</td></tr></tbody></table>
+<p>Audit log entries are append-only and retained for at least 90 days regardless of tier.</p>
+<h3 id="blk-43801">Security Checklist</h3>
+<ul><li><p>[ ] RLS policy exists on every table</p></li><li><p>[ ] No plaintext secrets in <code>agents</code>, <code>deployments</code>, or <code>metrics_events</code> tables</p></li><li><p>[ ] Secrets stored exclusively in Supabase Vault</p></li><li><p>[ ] Secret values never appear in logs, errors, or telemetry</p></li><li><p>[ ] Telemetry endpoint rejects unauthenticated events</p></li><li><p>[ ] Rate limiting is enforced per-user and per-agent</p></li><li><p>[ ] Uploaded bundles pass all supply chain validation checks</p></li><li><p>[ ] Provider resources are namespaced per user</p></li><li><p>[ ] Audit log captures security-sensitive operations</p></li><li><p>[ ] New tables require an RLS policy before first use</p></li></ul></div>
+<p class="src"><a href="/#/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-43686" class="lvl2">Tenant Isolation (RLS)</a><a href="#blk-43689" class="lvl3">RLS Rules</a><a href="#blk-43704" class="lvl3">Provider Namespace Isolation</a><a href="#blk-43711" class="lvl2">Secrets Handling</a><a href="#blk-43712" class="lvl3">Supabase Vault</a><a href="#blk-43715" class="lvl3">Secret Lifecycle</a><a href="#blk-43717" class="lvl3">Secret Rotation</a><a href="#blk-43726" class="lvl2">Telemetry Authentication</a><a href="#blk-43738" class="lvl2">Abuse Prevention</a><a href="#blk-43739" class="lvl3">Rate Limiting</a><a href="#blk-43749" class="lvl3">Input Validation</a><a href="#blk-43757" class="lvl3">Account-Level</a><a href="#blk-43765" class="lvl2">Supply Chain Validation</a><a href="#blk-43783" class="lvl2">Audit Log</a><a href="#blk-43801" class="lvl2">Security Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/">01 — Agent Management</a><a href="/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/">02 — Deployment Pipeline</a><a href="/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/">03 — Invocation Gateway</a><a href="/WebHost.Systems/docs/skills/04_RUNTIME_PROVIDERS.md/">04 — Runtime Providers</a><a href="/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/">05 — Telemetry and Metrics</a><a href="/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/">06 — Billing and Limits</a><a href="/WebHost.Systems/docs/skills/08_AMPERSAND_INTEGRATION.md/">08 — [&amp;] Protocol Integration</a><a href="/WebHost.Systems/docs/skills/09_ANTI_PATTERNS.md/">09 — Anti-Patterns</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraskd6mwmllynr5zhqqb4dow44fyicq2zdutry2zar4vwn2w23577a</div></div></div>
+</div></div>
+</body></html>

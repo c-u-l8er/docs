@@ -1,0 +1,438 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;space.route -- Route Intelligence, Path Optimization, and Explainable Navigation · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;space.route is the [&amp;] Protocol capability for route-aware spatial intelligence.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/space.route.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;space.route -- Route Intelligence, Path Optimization, and Explainable Navigation">
+<meta property="og:description" content="&amp;space.route is the [&amp;] Protocol capability for route-aware spatial intelligence.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/space.route.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&space.route -- Route Intelligence, Path Optimization, and Explainable Navigation","name":"&space.route -- Route Intelligence, Path Optimization, and Explainable Navigation","description":"&space.route is the [&] Protocol capability for route-aware spatial intelligence.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/space.route.md/","identifier":"bagaaierauewlem2gsjbdxo4je7fpvtjsoyriyvxvqqqovcnc2o67yj275vga","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. What problems &space.route solves"},{"@type":"WebPageElement","name":"4. Capability role in the &space namespace"},{"@type":"WebPageElement","name":"5. Typical use cases"},{"@type":"WebPageElement","name":"Delivery routing under constraints"},{"@type":"WebPageElement","name":"Route optimization"},{"@type":"WebPageElement","name":"Route explanation and auditing"},{"@type":"WebPageElement","name":"Constraint-reactive re-routing"},{"@type":"WebPageElement","name":"Multi-stop service planning"},{"@type":"WebPageElement","name":"Supply chain path selection"},{"@type":"WebPageElement","name":"Cross-region infrastructure routing"},{"@type":"WebPageElement","name":"6. Example capability contract"},{"@type":"WebPageElement","name":"What this contract means"},{"@type":"WebPageElement","name":"7. Core operations"},{"@type":"WebPageElement","name":"route"},{"@type":"WebPageElement","name":"optimize"},{"@type":"WebPageElement","name":"explain"},{"@type":"WebPageElement","name":"8. Architecture patterns"},{"@type":"WebPageElement","name":"Pattern A: anomaly -> route re-planning -> reasoning"},{"@type":"WebPageElement","name":"Pattern B: fleet state -> route generation -> planning"},{"@type":"WebPageElement","name":"Pattern C: route generation -> optimization -> explanation"},{"@type":"WebPageElement","name":"Pattern D: memory -> route planning -> reasoning"},{"@type":"WebPageElement","name":"9. Architecture diagram"},{"@type":"WebPageElement","name":"10. Example declaration"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"space.route.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/space.route.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/space.route.md</span>
+
+</div></div>
+<div class="lead">&amp;space.route is the [&amp;] Protocol capability for route-aware spatial intelligence.</div>
+<div class="prose"><h1 id="blk-13820"><code>&amp;space.route</code> -- Route Intelligence, Path Optimization, and Explainable Navigation</h1>
+<p><code>&amp;space.route</code> is the [&amp;] Protocol capability for <strong>route-aware spatial intelligence</strong>.</p>
+<p>It describes an agent's ability to reason about:</p>
+<ul><li><p>how assets or deliveries get from origin to destination</p></li><li><p>which paths are feasible under current constraints</p></li><li><p>how a route can be improved for cost, time, or service-level objectives</p></li><li><p>why a particular route was selected over alternatives</p></li><li><p>how spatial and temporal constraints shape navigation decisions</p></li></ul>
+<p>In the protocol's four-primitive model:</p>
+<ul><li><p><code>&amp;memory</code> answers <strong>what</strong> the agent knows</p></li><li><p><code>&amp;reason</code> answers <strong>how</strong> the agent decides</p></li><li><p><code>&amp;time</code> answers <strong>when</strong> things change</p></li><li><p><code>&amp;space</code> answers <strong>where</strong> things are</p></li></ul>
+<p><code>&amp;space.route</code> is the <code>&amp;space</code> subtype for <strong>sequenced movement through space</strong>. Many real agents must plan, evaluate, or explain paths across:</p>
+<ul><li><p>delivery networks</p></li><li><p>field service territories</p></li><li><p>supply chain corridors</p></li><li><p>vehicle dispatch systems</p></li><li><p>logistics and freight operations</p></li><li><p>multi-stop service routes</p></li><li><p>infrastructure maintenance circuits</p></li></ul>
+<h3 id="blk-13860">1. Definition</h3>
+<p><code>&amp;space.route</code> is the capability interface for <strong>path generation, route optimization, and explainable navigation</strong>.</p>
+<p>It is used when an agent must work with:</p>
+<ul><li><p>route generation from origin to destination under constraints</p></li><li><p>route improvement for efficiency, cost, or SLA compliance</p></li><li><p>route explanation for operator review, auditing, or compliance</p></li><li><p>constraint-aware path planning across regions or zones</p></li><li><p>navigation decisions that must be justified after the fact</p></li></ul>
+<p>This capability is not limited to literal vehicle routing.</p>
+<p>It can also apply to:</p>
+<ul><li><p>data pipeline routing across regions</p></li><li><p>network traffic path selection</p></li><li><p>workflow routing through processing stages</p></li><li><p>supply chain path decisions</p></li><li><p>maintenance circuit planning</p></li><li><p>evacuation or emergency routing</p></li></ul>
+<p>The key idea is that the system is planning or evaluating a <strong>sequence of steps through space</strong>.</p>
+<h3 id="blk-13890">2. Why this capability exists</h3>
+<p>Many agent systems can reason about what to do, but not about how to get there.</p>
+<p>That gap shows up quickly in real workflows.</p>
+<p>Examples:</p>
+<ul><li><p>A logistics agent receives a delivery request, but has no structured way to generate or compare route options.</p></li><li><p>A dispatch agent knows which unit to send, but cannot explain why a particular path was chosen over a shorter one.</p></li><li><p>An operations agent detects a regional constraint, but cannot re-route affected deliveries under the new conditions.</p></li><li><p>A planning agent optimizes cost, but does not account for SLA windows or restricted zones along the route.</p></li></ul>
+<p>In all of these cases, the missing layer is <strong>structured route intelligence</strong>.</p>
+<p><code>&amp;space.route</code> gives the protocol a standard way to declare that capability.</p>
+<h3 id="blk-13905">3. What problems <code>&amp;space.route</code> solves</h3>
+<p><code>&amp;space.route</code> is useful when an agent needs to answer questions like:</p>
+<ul><li><p>What is the best route from A to B under current constraints?</p></li><li><p>Can this route be improved for cost, travel time, or service compliance?</p></li><li><p>Why was this route chosen instead of the obvious alternative?</p></li><li><p>What tradeoffs were involved in the route selection?</p></li><li><p>How should the route change now that a regional constraint has appeared?</p></li><li><p>Which stops should be reordered to improve efficiency?</p></li><li><p>What would the route look like if we added a new constraint or waypoint?</p></li></ul>
+<p>Without this capability, route reasoning tends to get buried inside:</p>
+<ul><li><p>one-off service calls</p></li><li><p>custom application logic</p></li><li><p>hidden prompt assumptions</p></li><li><p>vendor-specific optimization APIs</p></li></ul>
+<p>The protocol makes it explicit instead.</p>
+<h3 id="blk-13933">4. Capability role in the <code>&amp;space</code> namespace</h3>
+<p>The <code>&amp;space</code> primitive can support multiple subtypes, including:</p>
+<ul><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;space.route</code></p></li><li><p><code>&amp;space.geofence</code></p></li></ul>
+<p>A helpful distinction is:</p>
+<ul><li><p><code>&amp;space.fleet</code> = distributed assets and regional state</p></li><li><p><code>&amp;space.route</code> = path and route computation</p></li><li><p><code>&amp;space.geofence</code> = boundary and zone membership logic</p></li></ul>
+<p><code>&amp;space.route</code> is the right subtype when the main problem is <strong>planning or evaluating a path through space</strong>, not tracking where assets currently are or checking whether a point falls inside a boundary.</p>
+<p>A useful way to remember the difference:</p>
+<ul><li><p><code>&amp;space.fleet</code> answers <strong>where things are</strong></p></li><li><p><code>&amp;space.route</code> answers <strong>how things get there</strong></p></li><li><p><code>&amp;space.geofence</code> answers <strong>whether something is inside or outside a zone</strong></p></li></ul>
+<h3 id="blk-13959">5. Typical use cases</h3>
+<h4 id="blk-13960">Delivery routing under constraints</h4>
+<p>Generate feasible delivery routes that respect time windows, vehicle capacity, restricted zones, and cost targets.</p>
+<h4 id="blk-13962">Route optimization</h4>
+<p>Take an existing route plan and improve it for travel time, fuel cost, driver hours, or SLA compliance.</p>
+<h4 id="blk-13964">Route explanation and auditing</h4>
+<p>Produce structured justifications for why a route was selected, what tradeoffs were made, and which constraints shaped the decision.</p>
+<h4 id="blk-13966">Constraint-reactive re-routing</h4>
+<p>When a new constraint appears (road closure, weather, regional restriction), re-plan affected routes under updated conditions.</p>
+<h4 id="blk-13968">Multi-stop service planning</h4>
+<p>Plan maintenance, inspection, or field-service routes across multiple stops with ordering constraints.</p>
+<h4 id="blk-13970">Supply chain path selection</h4>
+<p>Choose transport corridors or logistics paths that balance cost, speed, and risk.</p>
+<h4 id="blk-13972">Cross-region infrastructure routing</h4>
+<p>Select data, traffic, or workload routing paths across distributed infrastructure regions.</p>
+<h3 id="blk-13974">6. Example capability contract</h3>
+<p>A representative contract for <code>&amp;space.route</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;space.route&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Route intelligence contract for path generation, optimization, and explainable navigation decisions under spatial and operational constraints.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;route&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;route_request&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;route_plan&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Generate a feasible route plan from an origin, destination, and operating constraints.&quot;</span>
+    },
+    <span class="t-key">&quot;optimize&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;route_plan&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;optimized_route&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Improve an existing route plan for efficiency, cost, or service-level objectives.&quot;</span>
+    },
+    <span class="t-key">&quot;explain&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;route_plan&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;route_explanation&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Explain route selection, tradeoffs, and constraint impacts for auditing and operator review.&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;time.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.*&quot;</span>,
+    <span class="t-string">&quot;context&quot;</span>,
+    <span class="t-string">&quot;route_request&quot;</span>,
+    <span class="t-string">&quot;raw_data&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;reason.*&quot;</span>,
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.*&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;route-generation&quot;</span>,
+    <span class="t-string">&quot;route-optimization&quot;</span>
+  ]
+}</code></pre>
+<h4 id="blk-13977">What this contract means</h4>
+<p>This contract says that <code>&amp;space.route</code> can:</p>
+<ul><li><p>generate feasible route plans</p></li><li><p>optimize existing routes for cost, time, or SLA objectives</p></li><li><p>explain route decisions for auditing and operator review</p></li></ul>
+<p>It also says that this capability composes well with:</p>
+<ul><li><p><code>&amp;time.*</code> upstream, where temporal signals constrain route feasibility</p></li><li><p><code>&amp;memory.*</code> upstream, where prior route history or incident context informs planning</p></li><li><p><code>&amp;space.*</code> upstream, where fleet state or geofence boundaries shape available paths</p></li><li><p><code>&amp;reason.*</code> downstream, where route options feed into action selection</p></li><li><p><code>&amp;memory.*</code> downstream, where route decisions should be recorded for future reference</p></li></ul>
+<h3 id="blk-13998">7. Core operations</h3>
+<h4 id="blk-13999"><code>route</code></h4>
+<p>Purpose:</p>
+<ul><li><p>generate a feasible route plan from origin to destination under constraints</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>route_request</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>route_plan</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>the agent needs to produce one or more candidate routes for a trip, delivery, or movement</p></li></ul>
+<h4 id="blk-14016"><code>optimize</code></h4>
+<p>Purpose:</p>
+<ul><li><p>improve an existing route plan for efficiency, cost, or service objectives</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>route_plan</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>optimized_route</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>a route exists but may not be optimal, and the system should try to reduce cost, travel time, or SLA risk</p></li></ul>
+<h4 id="blk-14033"><code>explain</code></h4>
+<p>Purpose:</p>
+<ul><li><p>produce a structured justification for route selection and tradeoffs</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>route_plan</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>route_explanation</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>an operator, auditor, or downstream agent needs to understand why a route was chosen and what constraints shaped the decision</p></li></ul>
+<h3 id="blk-14050">8. Architecture patterns</h3>
+<h4 id="blk-14051">Pattern A: anomaly -&gt; route re-planning -&gt; reasoning</h4>
+<pre><code>stream_data
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;space.route.route()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>a temporal signal (anomaly, disruption, delay) invalidates current routes and requires re-planning</p></li></ul>
+<p>Example:</p>
+<ul><li><p>detect a regional weather disruption</p></li><li><p>generate alternative routes that avoid the affected area</p></li><li><p>evaluate which re-route option best balances cost and SLA</p></li></ul>
+<h4 id="blk-14065">Pattern B: fleet state -&gt; route generation -&gt; planning</h4>
+<pre><code>dispatch_request
+|&gt; &amp;space.fleet.locate()
+|&gt; &amp;space.route.route()
+|&gt; &amp;reason.plan.plan()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>current fleet positions should inform route generation before action is selected</p></li></ul>
+<p>Example:</p>
+<ul><li><p>locate available delivery vehicles</p></li><li><p>generate candidate routes from nearest vehicle to destination</p></li><li><p>build a dispatch plan</p></li></ul>
+<h4 id="blk-14079">Pattern C: route generation -&gt; optimization -&gt; explanation</h4>
+<pre><code>delivery_request
+|&gt; &amp;space.route.route()
+|&gt; &amp;space.route.optimize()
+|&gt; &amp;space.route.explain()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>the system should generate, improve, and then justify a route in sequence</p></li></ul>
+<p>Example:</p>
+<ul><li><p>generate an initial delivery route</p></li><li><p>optimize for fuel cost and driver hours</p></li><li><p>produce an explanation for the dispatcher</p></li></ul>
+<h4 id="blk-14093">Pattern D: memory -&gt; route planning -&gt; reasoning</h4>
+<pre><code>incident_context
+|&gt; &amp;memory.graph.enrich()
+|&gt; &amp;space.route.route()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>prior operational context (past incidents, known constraints) should inform route selection before a decision is made</p></li></ul>
+<h3 id="blk-14099">9. Architecture diagram</h3>
+<p>A simplified conceptual flow for <code>&amp;space.route</code>:</p>
+<pre><code>incoming request / constraint / forecast
+              |
+              v
+      +-------------------+
+      |   &amp;space.route    |
+      |                   |
+      | route             |
+      | optimize          |
+      | explain           |
+      +---------+---------+
+                |
+                v
+      +-------------------+
+      | route_plan        |
+      | optimized_route   |
+      | route_explanation |
+      +---------+---------+
+                |
+                v
+      +-------------------+
+      | &amp;reason.* /       |
+      | &amp;memory.* /       |
+      | &amp;space.* /        |
+      | output            |
+      +-------------------+</code></pre>
+<p>The capability's job is to turn movement requests and constraints into <strong>actionable and explainable route intelligence</strong>.</p>
+<h3 id="blk-14103">10. Example declaration</h3>
+<p>A concrete <code>ampersand.json</code> fragment:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;space.route&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+    <span class="t-key">&quot;config&quot;</span>: {
+      <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>, <span class="t-string">&quot;us-central&quot;</span>],
+      <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;constraint-aware-routing&quot;</span>
+    }
+  }
+}</code></pre>
+<p>A fuller declaration:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;RouteManager&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;time.anomaly&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+      <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;real-time anomaly detection over regional telemetry streams&quot;</span>
+    },
+    <span class="t-key">&quot;&amp;space.route&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>, <span class="t-string">&quot;us-central&quot;</span>],
+        <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;constraint-aware-routing&quot;</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;reason.argument&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+      <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;auditable route decision evaluation with governance-aware justification&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never route through restricted zones without authorization&quot;</span>,
+      <span class="t-string">&quot;Never exceed maximum allowable transit time for priority shipments&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer lower-cost routes when SLA compliance is not at risk&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.75</span>,
+      <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span>
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<p>An auto-resolved declaration using <code>&amp;space.route</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;space.route&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+    <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;route feasibility checks and optimization under regional constraints&quot;</span>
+  }
+}</code></pre>
+<h3 id="blk-14110">11. Example API shape</h3>
+<p>A provider-specific API will vary, but a typical <code>route</code> request might look like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;route&quot;</span>,
+  <span class="t-key">&quot;input&quot;</span>: {
+    <span class="t-key">&quot;origin&quot;</span>: { <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">40.7128</span>, <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-74.0060</span> },
+    <span class="t-key">&quot;destination&quot;</span>: { <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">39.9526</span>, <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-75.1652</span> },
+    <span class="t-key">&quot;constraints&quot;</span>: {
+      <span class="t-key">&quot;avoid_regions&quot;</span>: [<span class="t-string">&quot;restricted-zone-3&quot;</span>],
+      <span class="t-key">&quot;max_transit_hours&quot;</span>: <span class="t-num">4</span>,
+      <span class="t-key">&quot;vehicle_type&quot;</span>: <span class="t-string">&quot;standard&quot;</span>
+    }
+  }
+}</code></pre>
+<p>Representative response:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;route_plan&quot;</span>: {
+    <span class="t-key">&quot;route_id&quot;</span>: <span class="t-string">&quot;rt_20260315_001&quot;</span>,
+    <span class="t-key">&quot;origin&quot;</span>: { <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">40.7128</span>, <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-74.0060</span> },
+    <span class="t-key">&quot;destination&quot;</span>: { <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">39.9526</span>, <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-75.1652</span> },
+    <span class="t-key">&quot;estimated_duration_hours&quot;</span>: <span class="t-num">2.1</span>,
+    <span class="t-key">&quot;estimated_cost_usd&quot;</span>: <span class="t-num">48.50</span>,
+    <span class="t-key">&quot;waypoints&quot;</span>: [
+      { <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">40.2301</span>, <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-74.7699</span>, <span class="t-key">&quot;label&quot;</span>: <span class="t-string">&quot;interchange-17&quot;</span> }
+    ],
+    <span class="t-key">&quot;constraints_satisfied&quot;</span>: <span class="t-lit">true</span>
+  }
+}</code></pre>
+<p>An <code>optimize</code> request might look like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;optimize&quot;</span>,
+  <span class="t-key">&quot;input&quot;</span>: {
+    <span class="t-key">&quot;route_plan&quot;</span>: {
+      <span class="t-key">&quot;route_id&quot;</span>: <span class="t-string">&quot;rt_20260315_001&quot;</span>,
+      <span class="t-key">&quot;origin&quot;</span>: { <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">40.7128</span>, <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-74.0060</span> },
+      <span class="t-key">&quot;destination&quot;</span>: { <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">39.9526</span>, <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-75.1652</span> },
+      <span class="t-key">&quot;waypoints&quot;</span>: [
+        { <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">40.2301</span>, <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-74.7699</span>, <span class="t-key">&quot;label&quot;</span>: <span class="t-string">&quot;interchange-17&quot;</span> }
+      ]
+    },
+    <span class="t-key">&quot;optimize_for&quot;</span>: [<span class="t-string">&quot;cost&quot;</span>, <span class="t-string">&quot;travel_time&quot;</span>]
+  }
+}</code></pre>
+<p>Representative response:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;optimized_route&quot;</span>: {
+    <span class="t-key">&quot;route_id&quot;</span>: <span class="t-string">&quot;rt_20260315_001_opt&quot;</span>,
+    <span class="t-key">&quot;estimated_duration_hours&quot;</span>: <span class="t-num">1.9</span>,
+    <span class="t-key">&quot;estimated_cost_usd&quot;</span>: <span class="t-num">41.20</span>,
+    <span class="t-key">&quot;improvement&quot;</span>: {
+      <span class="t-key">&quot;duration_reduction_pct&quot;</span>: <span class="t-num">9.5</span>,
+      <span class="t-key">&quot;cost_reduction_pct&quot;</span>: <span class="t-num">15.1</span>
+    },
+    <span class="t-key">&quot;waypoints&quot;</span>: []
+  }
+}</code></pre>
+<p>The protocol does not standardize this exact transport payload. It standardizes the capability contract.</p>
+<h3 id="blk-14120">12. Compatible providers</h3>
+<p>Representative compatible providers include:</p>
+<ul><li><p><code>geofleetic</code></p></li><li><p>custom route planning services</p></li><li><p>logistics optimization backends exposed behind MCP-compatible surfaces</p></li><li><p>vehicle routing problem (VRP) solvers with stable contract wrappers</p></li><li><p>last-mile delivery platforms with route generation APIs</p></li><li><p>infrastructure path selection systems</p></li></ul>
+<h4 id="blk-14135">Default ecosystem fit</h4>
+<p>The most natural default ecosystem example in this repository is:</p>
+<ul><li><p><code>geofleetic</code></p></li></ul>
+<p>Why it fits:</p>
+<ul><li><p>route-aware domain model with constraint handling</p></li><li><p>optimization and explanation semantics built in</p></li><li><p>strong compatibility with logistics, delivery, and dispatch use cases</p></li></ul>
+<p>The protocol stance remains:</p>
+<blockquote><p><code>&amp;space.route</code> is the capability. <code>geofleetic</code> is one provider that may satisfy it.</p></blockquote>
+<h3 id="blk-14151">13. Governance implications</h3>
+<p>Route decisions often have real operational and safety consequences, so governance matters.</p>
+<h4 id="blk-14153">Common hard constraints</h4>
+<p>Examples:</p>
+<ul><li><p>Never route through restricted or unsafe zones without authorization.</p></li><li><p>Never exceed maximum allowable transit time for priority shipments.</p></li><li><p>Never generate routes that violate vehicle weight, height, or hazmat restrictions.</p></li><li><p>Never disclose route details outside authorized workflows.</p></li></ul>
+<h4 id="blk-14164">Common soft constraints</h4>
+<p>Examples:</p>
+<ul><li><p>Prefer lower-cost routes when SLA compliance is not at risk.</p></li><li><p>Prefer routes that minimize driver fatigue or hours-of-service pressure.</p></li><li><p>Prefer fewer stops when delivery density allows consolidation.</p></li><li><p>Prefer routes with established operational history over untested alternatives.</p></li></ul>
+<h4 id="blk-14175">Common escalation rules</h4>
+<p>Examples:</p>
+<ul><li><p>escalate when no feasible route can be found under current constraints</p></li><li><p>escalate when route cost exceeds budget thresholds</p></li><li><p>escalate when a hard constraint is approached or violated</p></li><li><p>escalate when optimization produces only marginal improvement</p></li><li><p>escalate when route explanation reveals conflicting constraints</p></li></ul>
+<p>Representative governance block:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never route through restricted zones without authorization&quot;</span>,
+      <span class="t-string">&quot;Never exceed maximum transit time for priority shipments&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer lower-cost routes when SLA compliance is not at risk&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span>,
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.75</span>
+    }
+  }
+}</code></pre>
+<h3 id="blk-14190">14. Provenance implications</h3>
+<p>Route decisions should participate in the provenance chain.</p>
+<p>Representative provenance record:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;space.route&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;optimize&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T14:30:00Z&quot;</span>,
+  <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:4e8a...&quot;</span>,
+  <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:d31f...&quot;</span>,
+  <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:9a77...&quot;</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;groute-opt-118&quot;</span>
+}</code></pre>
+<p>This matters because route context can strongly influence downstream action.</p>
+<p>Provenance should help answer questions like:</p>
+<ul><li><p>Why was this route chosen instead of the more direct path?</p></li><li><p>Which constraints caused the route to change from the original plan?</p></li><li><p>Which provider produced the route recommendation?</p></li><li><p>Which upstream anomaly or fleet state led to the re-routing?</p></li><li><p>What optimization criteria were applied and what tradeoffs resulted?</p></li></ul>
+<h3 id="blk-14207">15. A2A-facing skills</h3>
+<p>A <code>&amp;space.route</code> capability may advertise skills such as:</p>
+<ul><li><p><code>route-generation</code></p></li><li><p><code>route-optimization</code></p></li></ul>
+<p>These are useful when generating A2A-style agent cards, because they let an external coordination surface say more than &quot;has routing awareness.&quot;</p>
+<p>Instead, it can say the agent can:</p>
+<ul><li><p>generate feasible route plans under constraints</p></li><li><p>optimize routes for cost, time, or service objectives</p></li></ul>
+<h3 id="blk-14221">16. MCP-facing implications</h3>
+<p>A declaration containing <code>&amp;space.route</code> may compile into MCP-facing configuration for a compatible route intelligence provider.</p>
+<p>That makes <code>&amp;space.route</code> a good example of the protocol's overall claim:</p>
+<ul><li><p>the declaration captures capability composition</p></li><li><p>downstream tools can generate runtime config from that declaration</p></li></ul>
+<p>In other words:</p>
+<blockquote><p>[&amp;] declares the route intelligence capability MCP can carry the provider-facing integration</p></blockquote>
+<h3 id="blk-14232">17. Research grounding</h3>
+<p><code>&amp;space.route</code> is supported by several overlapping research and systems traditions:</p>
+<ul><li><p>vehicle routing and path planning</p></li><li><p>combinatorial optimization and operations research</p></li><li><p>logistics and supply chain management</p></li><li><p>constraint satisfaction and constraint programming</p></li><li><p>explainable AI and decision auditing</p></li><li><p>multi-objective optimization</p></li><li><p>spatial reasoning and geographic information systems</p></li></ul>
+<p>The important protocol-level insight is not that route optimization is new.</p>
+<p>It is that <strong>route intelligence should be explicit in the agent's capability declaration</strong>, rather than buried in framework code or provider-specific prompts.</p>
+<p>That explicitness enables:</p>
+<ul><li><p>schema validation</p></li><li><p>contract checking</p></li><li><p>provider interchangeability</p></li><li><p>governance-aware composition</p></li><li><p>provenance-preserving decisions</p></li><li><p>downstream MCP and A2A generation</p></li></ul>
+<h3 id="blk-14265">18. Anti-patterns</h3>
+<h4 id="blk-14266">Anti-pattern 1: collapse route into fleet state</h4>
+<p>Fleet state answers where things are. Route answers how things get there. These are related but distinct interfaces.</p>
+<h4 id="blk-14268">Anti-pattern 2: treat route optimization as a black box</h4>
+<p>If route decisions affect cost, SLA, or safety, the optimization should be explainable and auditable, not opaque.</p>
+<h4 id="blk-14270">Anti-pattern 3: let reasoning guess routes from text</h4>
+<p>A reasoner may describe a plausible path and still be wrong about feasibility, cost, or constraint satisfaction.</p>
+<h4 id="blk-14272">Anti-pattern 4: use route decisions without provenance</h4>
+<p>If a route recommendation changes the outcome, lineage should record which constraints, inputs, and provider produced it.</p>
+<h4 id="blk-14274">Anti-pattern 5: skip explanation when routes change</h4>
+<p>When a route is re-planned due to new constraints, operators need to understand what changed and why. Route changes without explanation erode trust.</p>
+<h3 id="blk-14276">19. Practical guidance</h3>
+<p>Use <code>&amp;space.route</code> when:</p>
+<ul><li><p>the system must plan or evaluate paths from one location to another</p></li><li><p>route decisions involve constraints that affect feasibility or cost</p></li><li><p>routes must be explainable to operators, auditors, or downstream agents</p></li><li><p>optimization should consider multiple objectives (cost, time, SLA, safety)</p></li></ul>
+<p>Prefer composing it with:</p>
+<ul><li><p><code>&amp;time.*</code> when temporal signals constrain route feasibility or timing</p></li><li><p><code>&amp;space.fleet</code> when current asset positions inform route generation</p></li><li><p><code>&amp;space.geofence</code> when zone boundaries restrict available paths</p></li><li><p><code>&amp;memory.*</code> when prior route history or incidents should influence planning</p></li><li><p><code>&amp;reason.*</code> when route options must be evaluated before action</p></li></ul>
+<p>Common high-value compositions:</p>
+<ul><li><p><code>&amp;time.anomaly</code> + <code>&amp;space.route</code> + <code>&amp;reason.argument</code></p></li><li><p><code>&amp;space.fleet</code> + <code>&amp;space.route</code> + <code>&amp;reason.plan</code></p></li><li><p><code>&amp;memory.graph</code> + <code>&amp;space.route</code> + <code>&amp;reason.argument</code></p></li></ul>
+<h3 id="blk-14307">20. Example scenarios</h3>
+<h4 id="blk-14308">Delivery routing under constraints</h4>
+<ul><li><p>receive delivery request with time window and vehicle constraints</p></li><li><p>generate feasible route candidates</p></li><li><p>optimize for cost and travel time</p></li><li><p>explain selected route to dispatcher</p></li></ul>
+<h4 id="blk-14318">Constraint-reactive re-routing</h4>
+<ul><li><p>detect regional disruption (weather, closure, capacity limit)</p></li><li><p>identify affected routes</p></li><li><p>re-plan under updated constraints</p></li><li><p>explain changes to affected operators</p></li></ul>
+<h4 id="blk-14328">Multi-stop service route planning</h4>
+<ul><li><p>receive set of service appointments across a territory</p></li><li><p>generate initial route with stop ordering</p></li><li><p>optimize for technician hours and travel distance</p></li><li><p>justify stop ordering decisions</p></li></ul>
+<h4 id="blk-14338">Route auditing and compliance</h4>
+<ul><li><p>receive completed route for review</p></li><li><p>explain why the route was selected over alternatives</p></li><li><p>verify constraint satisfaction</p></li><li><p>record provenance for regulatory compliance</p></li></ul>
+<h3 id="blk-14348">21. Summary</h3>
+<p><code>&amp;space.route</code> is the [&amp;] Protocol capability for <strong>route intelligence and explainable navigation</strong>.</p>
+<p>It is the right capability when an agent needs to know:</p>
+<ul><li><p>how to get from origin to destination under constraints</p></li><li><p>how to improve a route for cost, time, or service objectives</p></li><li><p>why a particular route was selected over alternatives</p></li><li><p>how constraints and tradeoffs shaped the navigation decision</p></li><li><p>how route decisions should be recorded for auditing and provenance</p></li></ul>
+<p>In one sentence:</p>
+<blockquote><p><code>&amp;space.route</code> gives an agent a protocol-native way to generate, optimize, and explain paths through space.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/space.route.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-13860" class="lvl2">1. Definition</a><a href="#blk-13890" class="lvl2">2. Why this capability exists</a><a href="#blk-13905" class="lvl2">3. What problems &amp;space.route solves</a><a href="#blk-13933" class="lvl2">4. Capability role in the &amp;space namespace</a><a href="#blk-13959" class="lvl2">5. Typical use cases</a><a href="#blk-13960" class="lvl3">Delivery routing under constraints</a><a href="#blk-13962" class="lvl3">Route optimization</a><a href="#blk-13964" class="lvl3">Route explanation and auditing</a><a href="#blk-13966" class="lvl3">Constraint-reactive re-routing</a><a href="#blk-13968" class="lvl3">Multi-stop service planning</a><a href="#blk-13970" class="lvl3">Supply chain path selection</a><a href="#blk-13972" class="lvl3">Cross-region infrastructure routing</a><a href="#blk-13974" class="lvl2">6. Example capability contract</a><a href="#blk-13977" class="lvl3">What this contract means</a><a href="#blk-13998" class="lvl2">7. Core operations</a><a href="#blk-13999" class="lvl3">route</a><a href="#blk-14016" class="lvl3">optimize</a><a href="#blk-14033" class="lvl3">explain</a><a href="#blk-14050" class="lvl2">8. Architecture patterns</a><a href="#blk-14051" class="lvl3">Pattern A: anomaly -&gt; route re-planning -&gt; reasoning</a><a href="#blk-14065" class="lvl3">Pattern B: fleet state -&gt; route generation -&gt; planning</a><a href="#blk-14079" class="lvl3">Pattern C: route generation -&gt; optimization -&gt; explanation</a><a href="#blk-14093" class="lvl3">Pattern D: memory -&gt; route planning -&gt; reasoning</a><a href="#blk-14099" class="lvl2">9. Architecture diagram</a><a href="#blk-14103" class="lvl2">10. Example declaration</a><a href="#blk-14110" class="lvl2">11. Example API shape</a><a href="#blk-14120" class="lvl2">12. Compatible providers</a><a href="#blk-14135" class="lvl3">Default ecosystem fit</a><a href="#blk-14151" class="lvl2">13. Governance implications</a><a href="#blk-14153" class="lvl3">Common hard constraints</a><a href="#blk-14164" class="lvl3">Common soft constraints</a><a href="#blk-14175" class="lvl3">Common escalation rules</a><a href="#blk-14190" class="lvl2">14. Provenance implications</a><a href="#blk-14207" class="lvl2">15. A2A-facing skills</a><a href="#blk-14221" class="lvl2">16. MCP-facing implications</a><a href="#blk-14232" class="lvl2">17. Research grounding</a><a href="#blk-14265" class="lvl2">18. Anti-patterns</a><a href="#blk-14266" class="lvl3">Anti-pattern 1: collapse route into fleet state</a><a href="#blk-14268" class="lvl3">Anti-pattern 2: treat route optimization as a black box</a><a href="#blk-14270" class="lvl3">Anti-pattern 3: let reasoning guess routes from text</a><a href="#blk-14272" class="lvl3">Anti-pattern 4: use route decisions without provenance</a><a href="#blk-14274" class="lvl3">Anti-pattern 5: skip explanation when routes change</a><a href="#blk-14276" class="lvl2">19. Practical guidance</a><a href="#blk-14307" class="lvl2">20. Example scenarios</a><a href="#blk-14308" class="lvl3">Delivery routing under constraints</a><a href="#blk-14318" class="lvl3">Constraint-reactive re-routing</a><a href="#blk-14328" class="lvl3">Multi-stop service route planning</a><a href="#blk-14338" class="lvl3">Route auditing and compliance</a><a href="#blk-14348" class="lvl2">21. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierauewlem2gsjbdxo4je7fpvtjsoyriyvxvqqqovcnc2o67yj275vga</div></div></div>
+</div></div>
+</body></html>

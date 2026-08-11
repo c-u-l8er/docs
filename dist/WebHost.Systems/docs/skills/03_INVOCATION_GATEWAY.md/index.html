@@ -1,0 +1,119 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>03 — Invocation Gateway · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="The invocation gateway is a Supabase Edge Function at /functions/v1/invoke/:agentId. It authenticates the caller, checks plan limits, resolves the active…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="03 — Invocation Gateway">
+<meta property="og:description" content="The invocation gateway is a Supabase Edge Function at /functions/v1/invoke/:agentId. It authenticates the caller, checks plan limits, resolves the active…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"03 — Invocation Gateway","name":"03 — Invocation Gateway","description":"The invocation gateway is a Supabase Edge Function at /functions/v1/invoke/:agentId. It authenticates the caller, checks plan limits, resolves the active…","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/","identifier":"bagaaierapydz6obochtbhtg7iytbsnfj5wkroqk2td4vo4x54iprxcpudmbq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Gateway Overview"},{"@type":"WebPageElement","name":"Request Shape (InvokeRequest)"},{"@type":"WebPageElement","name":"Response Shape (InvokeResponse)"},{"@type":"WebPageElement","name":"Gateway Pipeline"},{"@type":"WebPageElement","name":"Authentication"},{"@type":"WebPageElement","name":"Limit Checks"},{"@type":"WebPageElement","name":"Session Handling"},{"@type":"WebPageElement","name":"Streaming"},{"@type":"WebPageElement","name":"Error Normalization"},{"@type":"WebPageElement","name":"Rate Limiting"},{"@type":"WebPageElement","name":"Checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/"},{"@type":"ListItem","position":5,"name":"03_INVOCATION_GATEWAY.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md</span>
+
+</div></div>
+<div class="lead">The invocation gateway is a Supabase Edge Function at /functions/v1/invoke/:agentId. It authenticates the caller, checks plan limits, resolves the active deployment, routes to t…</div>
+<div class="prose"><h1 id="blk-43231">03 — Invocation Gateway</h1>
+<blockquote><p><strong>Purpose:</strong> How agent invocations flow through the Edge Function gateway, including the canonical request/response shapes, authentication, limit checks, session handling, streaming, and error normalization.</p></blockquote>
+<h3 id="blk-43234">Gateway Overview</h3>
+<p>The invocation gateway is a Supabase Edge Function at <code>/functions/v1/invoke/:agentId</code>. It authenticates the caller, checks plan limits, resolves the active deployment, routes to the runtime provider adapter, and returns a normalized response.</p>
+<h3 id="blk-43236">Request Shape (<code>InvokeRequest</code>)</h3>
+<pre data-lang="typescript"><code><span class="t-kw">interface</span> <span class="t-type">InvokeRequest</span> {
+  input: {
+    messages?: <span class="t-type">Array</span>&lt;{
+      role: <span class="t-string">&quot;system&quot;</span> | <span class="t-string">&quot;user&quot;</span> | <span class="t-string">&quot;assistant&quot;</span> | <span class="t-string">&quot;tool&quot;</span>;
+      content: string;
+    }&gt;;
+    prompt?: string;  <span class="t-comment">// converted to messages if provided</span>
+  };
+  sessionId?: string;  <span class="t-comment">// opaque; provider-specific</span>
+  options?: {
+    maxSteps?: number;
+    temperature?: number;
+    toolPolicy?: { allow?: string[]; deny?: string[] };
+  };
+  metadata?: {
+    traceId?: string;
+    client?: string;
+  };
+}</code></pre>
+<p><strong>Rule:</strong> If <code>prompt</code> is provided instead of <code>messages</code>, the gateway converts it to <code>[{ role: &quot;user&quot;, content: prompt }]</code> before forwarding.</p>
+<h3 id="blk-43239">Response Shape (<code>InvokeResponse</code>)</h3>
+<pre data-lang="typescript"><code><span class="t-kw">interface</span> <span class="t-type">InvokeResponse</span> {
+  output: {
+    text: string;
+    messages?: <span class="t-type">Array</span>&lt;{ role: string; content: string }&gt;;
+  };
+  sessionId?: string;
+  usage: {
+    tokens?: number;
+    computeMs?: number;
+    toolCalls?: number;
+  };
+  traceId: string;
+  error?: <span class="t-type">NormalizedError</span>;
+}</code></pre>
+<h3 id="blk-43241">Gateway Pipeline</h3>
+<pre><code>1. Parse request
+2. Authenticate (Supabase Auth JWT)
+3. Load agent record (RLS-filtered)
+4. Verify agent.status === &quot;active&quot;
+5. Resolve active deployment + runtime provider
+6. Check plan limits (billing_usage vs tier limits)
+7. Generate traceId (if not provided)
+8. Route to RPI adapter: invoke(input, sessionId, options)
+9. Normalize response
+10. Return to caller</code></pre>
+<h3 id="blk-43243">Authentication</h3>
+<p>All invocations require a valid Supabase Auth JWT in the <code>Authorization</code> header:</p>
+<pre><code>Authorization: Bearer &lt;supabase-jwt&gt;</code></pre>
+<p>The gateway extracts <code>auth.uid()</code> and uses it to load the agent via RLS. If the agent does not belong to the caller, the query returns empty and the gateway returns <code>NOT_FOUND</code>.</p>
+<p>Post-MVP: per-agent API keys for public invocation.</p>
+<h3 id="blk-43248">Limit Checks</h3>
+<p>Before routing to the provider, the gateway checks:</p>
+<pre data-lang="sql"><code>SELECT total_requests, total_tokens, total_compute_ms
+FROM billing_usage
+WHERE user_id = auth.uid()
+  AND period_key = current_period();</code></pre>
+<p>If any metric exceeds the user's tier limit, the gateway returns <code>LIMIT_EXCEEDED</code> without invoking the agent.</p>
+<h3 id="blk-43252">Session Handling</h3>
+<ul><li><p>If <code>sessionId</code> is provided, it is forwarded to the provider as-is.</p></li><li><p>If absent, the provider may create a new session and return the <code>sessionId</code>.</p></li><li><p>The gateway treats <code>sessionId</code> as <strong>opaque</strong> -- never parses or validates it.</p></li><li><p>Session semantics are provider-specific (DO instance for Cloudflare, runtime</p></li></ul>
+<p>session for AgentCore).</p>
+<h3 id="blk-43263">Streaming</h3>
+<p>When the provider supports streaming, the gateway uses Server-Sent Events (SSE):</p>
+<pre><code>Content-Type: text/event-stream
+
+data: {&quot;type&quot;:&quot;chunk&quot;,&quot;text&quot;:&quot;Hello&quot;}
+data: {&quot;type&quot;:&quot;chunk&quot;,&quot;text&quot;:&quot; world&quot;}
+data: {&quot;type&quot;:&quot;done&quot;,&quot;usage&quot;:{&quot;tokens&quot;:12,&quot;computeMs&quot;:340}}</code></pre>
+<p>When a provider does not support true streaming, the gateway MAY emulate it by returning the full response as a single chunk followed by <code>done</code>.</p>
+<h3 id="blk-43267">Error Normalization</h3>
+<p>All errors are mapped to a standard code set:</p>
+<table><thead><tr><th>Code</th><th>HTTP Status</th><th>Meaning</th></tr></thead><tbody><tr><td><code>UNAUTHENTICATED</code></td><td>401</td><td>Missing or invalid JWT</td></tr><tr><td><code>UNAUTHORIZED</code></td><td>403</td><td>Valid JWT but no access to this agent</td></tr><tr><td><code>NOT_FOUND</code></td><td>404</td><td>Agent does not exist (or not owned by caller)</td></tr><tr><td><code>LIMIT_EXCEEDED</code></td><td>429</td><td>Plan limit reached for this period</td></tr><tr><td><code>DEPLOYMENT_FAILED</code></td><td>502</td><td>No active deployment or deployment is broken</td></tr><tr><td><code>RUNTIME_ERROR</code></td><td>502</td><td>Provider returned an error during execution</td></tr><tr><td><code>INVALID_REQUEST</code></td><td>400</td><td>Malformed input or missing required fields</td></tr></tbody></table>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;error&quot;</span>: {
+    <span class="t-key">&quot;code&quot;</span>: <span class="t-string">&quot;LIMIT_EXCEEDED&quot;</span>,
+    <span class="t-key">&quot;message&quot;</span>: <span class="t-string">&quot;Monthly request limit reached. Upgrade your plan.&quot;</span>,
+    <span class="t-key">&quot;traceId&quot;</span>: <span class="t-string">&quot;tr_abc123&quot;</span>
+  }
+}</code></pre>
+<p><strong>Rule:</strong> Error messages must be safe for display. Never include secrets or internal stack traces.</p>
+<h3 id="blk-43296">Rate Limiting</h3>
+<p>The gateway SHOULD enforce per-user and per-agent rate limits beyond plan quotas:</p>
+<ul><li><p>Per-user: max N requests/second across all agents</p></li><li><p>Per-agent: max M requests/second per agent</p></li><li><p>Payload size: max 1 MB request body</p></li></ul>
+<h3 id="blk-43305">Checklist</h3>
+<ul><li><p>[ ] Every invocation is authenticated via Supabase Auth JWT</p></li><li><p>[ ] Agent status is verified as <code>active</code> before routing</p></li><li><p>[ ] Plan limits are checked before invoking the provider</p></li><li><p>[ ] <code>traceId</code> is generated or forwarded on every request</p></li><li><p>[ ] Errors are normalized to the standard code set</p></li><li><p>[ ] Error messages never contain secrets or internal details</p></li><li><p>[ ] <code>sessionId</code> is treated as opaque</p></li><li><p>[ ] Streaming uses SSE format when supported</p></li><li><p>[ ] Request payload size is validated</p></li></ul></div>
+<p class="src"><a href="/#/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-43234" class="lvl2">Gateway Overview</a><a href="#blk-43236" class="lvl2">Request Shape (InvokeRequest)</a><a href="#blk-43239" class="lvl2">Response Shape (InvokeResponse)</a><a href="#blk-43241" class="lvl2">Gateway Pipeline</a><a href="#blk-43243" class="lvl2">Authentication</a><a href="#blk-43248" class="lvl2">Limit Checks</a><a href="#blk-43252" class="lvl2">Session Handling</a><a href="#blk-43263" class="lvl2">Streaming</a><a href="#blk-43267" class="lvl2">Error Normalization</a><a href="#blk-43296" class="lvl2">Rate Limiting</a><a href="#blk-43305" class="lvl2">Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/">01 — Agent Management</a><a href="/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/">02 — Deployment Pipeline</a><a href="/WebHost.Systems/docs/skills/04_RUNTIME_PROVIDERS.md/">04 — Runtime Providers</a><a href="/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/">05 — Telemetry and Metrics</a><a href="/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/">06 — Billing and Limits</a><a href="/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/">07 — Security and Secrets</a><a href="/WebHost.Systems/docs/skills/08_AMPERSAND_INTEGRATION.md/">08 — [&amp;] Protocol Integration</a><a href="/WebHost.Systems/docs/skills/09_ANTI_PATTERNS.md/">09 — Anti-Patterns</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierapydz6obochtbhtg7iytbsnfj5wkroqk2td4vo4x54iprxcpudmbq</div></div></div>
+</div></div>
+</body></html>

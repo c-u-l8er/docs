@@ -1,0 +1,124 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Quickstart · opensentience.org · Ampersand Box</title>
+<meta name="description" content="This starts the PermissionEngine, AutonomyController, AuditWriter, AgentSupervisor, and MCP Server.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/opensentience.org/docs/quickstart.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Quickstart">
+<meta property="og:description" content="This starts the PermissionEngine, AutonomyController, AuditWriter, AgentSupervisor, and MCP Server.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/opensentience.org/docs/quickstart.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Quickstart","name":"Quickstart","description":"This starts the PermissionEngine, AutonomyController, AuditWriter, AgentSupervisor, and MCP Server.","url":"https://docs.ampersandboxdesign.com/opensentience.org/docs/quickstart.md/","identifier":"bagaaiera6lwnl7niafbgqnymr4abch7xud4retlmjraotasq6gjnjsgklgza","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"Prerequisites"},{"@type":"WebPageElement","name":"1. Add the Dependency"},{"@type":"WebPageElement","name":"2. Add to Your Supervision Tree"},{"@type":"WebPageElement","name":"3. Install Your First Agent"},{"@type":"WebPageElement","name":"4. Check Permissions"},{"@type":"WebPageElement","name":"5. Enable and Run the Agent"},{"@type":"WebPageElement","name":"6. Change Autonomy Level"},{"@type":"WebPageElement","name":"7. Query the Audit Trail"},{"@type":"WebPageElement","name":"8. Lifecycle Transitions"},{"@type":"WebPageElement","name":"What Happens Next"},{"@type":"WebPageElement","name":"MCP Tool Equivalents"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/"},{"@type":"ListItem","position":4,"name":"quickstart.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/quickstart.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">opensentience.org</span>
+<span class="path">opensentience.org/docs/quickstart.md</span>
+
+</div></div>
+<div class="lead">This starts the PermissionEngine, AutonomyController, AuditWriter, AgentSupervisor, and MCP Server.</div>
+<div class="prose"><h1 id="blk-73778">Quickstart</h1>
+<blockquote><p>Zero-to-value walkthrough: add <code>open_sentience</code> to your project, install an agent, configure permissions, and run it under governance.</p></blockquote>
+<h3 id="blk-73781">Prerequisites</h3>
+<ul><li><p>Elixir 1.16+ and OTP 26+</p></li><li><p>An existing Mix project with a supervision tree</p></li></ul>
+<h3 id="blk-73787">1. Add the Dependency</h3>
+<pre data-lang="elixir"><code><span class="t-comment"># mix.exs</span>
+<span class="t-kw">defp</span> deps <span class="t-kw">do</span>
+  [
+    {<span class="t-atom">:open_sentience</span>, <span class="t-string">&quot;~&gt; 0.1.0&quot;</span>}
+  ]
+<span class="t-kw">end</span></code></pre>
+<pre data-lang="sh"><code>mix deps.get</code></pre>
+<h3 id="blk-73790">2. Add to Your Supervision Tree</h3>
+<pre data-lang="elixir"><code><span class="t-comment"># lib/my_app/application.ex</span>
+<span class="t-kw">def</span> start(_type, _args) <span class="t-kw">do</span>
+  children = [
+    <span class="t-comment"># Your existing children...</span>
+    {<span class="t-type">OpenSentience.Supervisor</span>, []}
+  ]
+
+  opts = [strategy: <span class="t-atom">:one_for_one</span>, name: <span class="t-type">MyApp.Supervisor</span>]
+  <span class="t-type">Supervisor</span>.start_link(children, opts)
+<span class="t-kw">end</span></code></pre>
+<p>This starts the PermissionEngine, AutonomyController, AuditWriter, AgentSupervisor, and MCP Server.</p>
+<h3 id="blk-73793">3. Install Your First Agent</h3>
+<p>Use the <code>agent_install</code> MCP tool (or call the Elixir API directly):</p>
+<pre data-lang="elixir"><code><span class="t-type">OpenSentience</span>.install_agent(%{
+  agent_id: <span class="t-string">&quot;my-worker&quot;</span>,
+  name: <span class="t-string">&quot;My Worker Agent&quot;</span>,
+  child_spec: {<span class="t-type">MyApp.Worker</span>, []},
+  permissions: %{
+    granted: [
+      %{type: <span class="t-atom">:filesystem</span>, access: <span class="t-atom">:read</span>, resource: <span class="t-string">&quot;/data/**&quot;</span>},
+      %{type: <span class="t-atom">:network</span>, access: <span class="t-atom">:outbound</span>, resource: <span class="t-string">&quot;api.example.com&quot;</span>}
+    ],
+    denied: [
+      %{type: <span class="t-atom">:filesystem</span>, access: <span class="t-atom">:write</span>, resource: <span class="t-string">&quot;/etc/**&quot;</span>}
+    ]
+  }
+})</code></pre>
+<p>The agent is now in the <code>installed</code> state. It is registered but not running.</p>
+<h3 id="blk-73797">4. Check Permissions</h3>
+<p>Verify what the agent can and cannot do:</p>
+<pre data-lang="elixir"><code><span class="t-type">OpenSentience</span>.permission_check(<span class="t-string">&quot;my-worker&quot;</span>, <span class="t-atom">:filesystem</span>, <span class="t-atom">:read</span>, <span class="t-string">&quot;/data/input.csv&quot;</span>)
+<span class="t-comment"># =&gt; {:allow, &quot;explicit grant: /data/**&quot;}</span>
+
+<span class="t-type">OpenSentience</span>.permission_check(<span class="t-string">&quot;my-worker&quot;</span>, <span class="t-atom">:filesystem</span>, <span class="t-atom">:write</span>, <span class="t-string">&quot;/etc/passwd&quot;</span>)
+<span class="t-comment"># =&gt; {:deny, &quot;explicit denial: /etc/**&quot;}</span>
+
+<span class="t-type">OpenSentience</span>.permission_check(<span class="t-string">&quot;my-worker&quot;</span>, <span class="t-atom">:network</span>, <span class="t-atom">:inbound</span>, <span class="t-string">&quot;0.0.0.0:8080&quot;</span>)
+<span class="t-comment"># =&gt; {:deny, &quot;default deny: no matching grant&quot;}</span></code></pre>
+<h3 id="blk-73800">5. Enable and Run the Agent</h3>
+<pre data-lang="elixir"><code><span class="t-comment"># Transition from installed to enabled</span>
+<span class="t-type">OpenSentience</span>.enable_agent(<span class="t-string">&quot;my-worker&quot;</span>)
+
+<span class="t-comment"># The agent starts under the AgentSupervisor.</span>
+<span class="t-comment"># Default autonomy level is :observe — the agent can see but not act.</span></code></pre>
+<h3 id="blk-73802">6. Change Autonomy Level</h3>
+<p>Progress the agent through graduated autonomy:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># Check current level</span>
+<span class="t-type">OpenSentience</span>.autonomy_level(<span class="t-string">&quot;my-worker&quot;</span>)
+<span class="t-comment"># =&gt; :observe</span>
+
+<span class="t-comment"># Promote to advise (agent queues actions for approval)</span>
+<span class="t-type">OpenSentience</span>.set_autonomy_level(<span class="t-string">&quot;my-worker&quot;</span>, <span class="t-atom">:advise</span>)
+
+<span class="t-comment"># After building trust, promote to act (autonomous within permissions)</span>
+<span class="t-type">OpenSentience</span>.set_autonomy_level(<span class="t-string">&quot;my-worker&quot;</span>, <span class="t-atom">:act</span>)</code></pre>
+<p>Each change is recorded in the audit trail.</p>
+<h3 id="blk-73806">7. Query the Audit Trail</h3>
+<pre data-lang="elixir"><code><span class="t-type">OpenSentience</span>.audit(<span class="t-string">&quot;my-worker&quot;</span>, type: <span class="t-atom">:lifecycle_transition</span>, limit: <span class="t-num">10</span>)
+<span class="t-comment"># =&gt; [</span>
+<span class="t-comment">#   %{id: &quot;...&quot;, timestamp: ~U[...], event_type: :lifecycle_transition,</span>
+<span class="t-comment">#     operation: &quot;installed -&gt; enabled&quot;, result: :ok, actor: &quot;system&quot;, ...},</span>
+<span class="t-comment">#   %{id: &quot;...&quot;, timestamp: ~U[...], event_type: :autonomy_change,</span>
+<span class="t-comment">#     operation: &quot;observe -&gt; advise&quot;, result: :ok, actor: &quot;operator&quot;, ...},</span>
+<span class="t-comment">#   ...</span>
+<span class="t-comment"># ]</span></code></pre>
+<p>The audit trail is append-only. Entries cannot be modified or deleted.</p>
+<h3 id="blk-73809">8. Lifecycle Transitions</h3>
+<p>Move agents through the full lifecycle as needed:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># Graceful stop (running -&gt; enabled -&gt; disabled)</span>
+<span class="t-type">OpenSentience</span>.disable_agent(<span class="t-string">&quot;my-worker&quot;</span>)
+
+<span class="t-comment"># Re-enable later</span>
+<span class="t-type">OpenSentience</span>.enable_agent(<span class="t-string">&quot;my-worker&quot;</span>)
+
+<span class="t-comment"># Permanent removal (must be disabled first)</span>
+<span class="t-type">OpenSentience</span>.remove_agent(<span class="t-string">&quot;my-worker&quot;</span>)</code></pre>
+<h3 id="blk-73812">What Happens Next</h3>
+<ul><li><p>Read <a href="#/opensentience.org/docs/architecture.md" data-link>architecture.md</a> to understand the OTP internals</p></li><li><p>Read <a href="#/opensentience.org/docs/skills/03_PERMISSIONS.md" data-link>skills/03_PERMISSIONS.md</a> for the full permission model</p></li><li><p>Read <a href="#/opensentience.org/docs/skills/04_AUTONOMY_LEVELS.md" data-link>skills/04_AUTONOMY_LEVELS.md</a> for autonomy details</p></li><li><p>Read <a href="#/opensentience.org/docs/skills/06_INTEGRATION.md" data-link>skills/06_INTEGRATION.md</a> to connect with Graphonomous,</p></li></ul>
+<p>Delegatic, and the rest of the [&amp;] ecosystem</p>
+<h3 id="blk-73823">MCP Tool Equivalents</h3>
+<p>Every operation above is also available as an MCP tool for LLM agents:</p>
+<table><thead><tr><th>Elixir API</th><th>MCP Tool</th><th>Purpose</th></tr></thead><tbody><tr><td><code>install_agent/1</code></td><td><code>agent_install</code></td><td>Register agent with permissions</td></tr><tr><td><code>enable_agent/1</code></td><td><code>agent_enable</code></td><td>Start the governed process</td></tr><tr><td><code>disable_agent/1</code></td><td><code>agent_disable</code></td><td>Graceful stop</td></tr><tr><td><code>agent_status/1</code></td><td><code>agent_status</code></td><td>Current state and metadata</td></tr><tr><td><code>audit/2</code></td><td><code>agent_audit</code></td><td>Query audit trail</td></tr><tr><td><code>permission_check/4</code></td><td><code>permission_check</code></td><td>Evaluate a permission</td></tr><tr><td><code>set_autonomy_level/2</code></td><td><code>autonomy_level</code></td><td>Get or set autonomy</td></tr></tbody></table></div>
+<p class="src"><a href="/#/opensentience.org/docs/quickstart.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-73781" class="lvl2">Prerequisites</a><a href="#blk-73787" class="lvl2">1. Add the Dependency</a><a href="#blk-73790" class="lvl2">2. Add to Your Supervision Tree</a><a href="#blk-73793" class="lvl2">3. Install Your First Agent</a><a href="#blk-73797" class="lvl2">4. Check Permissions</a><a href="#blk-73800" class="lvl2">5. Enable and Run the Agent</a><a href="#blk-73802" class="lvl2">6. Change Autonomy Level</a><a href="#blk-73806" class="lvl2">7. Query the Audit Trail</a><a href="#blk-73809" class="lvl2">8. Lifecycle Transitions</a><a href="#blk-73812" class="lvl2">What Happens Next</a><a href="#blk-73823" class="lvl2">MCP Tool Equivalents</a></nav></div><div class="card"><div class="lab">links to</div><a href="/opensentience.org/docs/architecture.md/">Architecture</a><a href="/opensentience.org/docs/skills/03_PERMISSIONS.md/">Skill 03 — Permissions</a><a href="/opensentience.org/docs/skills/04_AUTONOMY_LEVELS.md/">Skill 04 — Autonomy Levels</a><a href="/opensentience.org/docs/skills/06_INTEGRATION.md/">Skill 06 — Integration</a></div><div class="card"><div class="lab">referenced by</div><a href="/opensentience.org/README.md/">OpenSentience</a><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/docs/architecture.md/">Architecture</a><a href="/opensentience.org/docs/comparison-table.md/">OpenSentience vs. Alternatives</a><a href="/opensentience.org/docs/competitive-landscape.md/">Competitive Landscape: Agent Governance and Runtime Enforcement</a><a href="/opensentience.org/docs/ecosystem-overview.md/">OpenSentience Protocol Layer — How the 10 Protocols Connect Across the [&amp;] Ecosystem</a><a href="/opensentience.org/docs/faq.md/">Frequently Asked Questions</a><a href="/opensentience.org/docs/harness-engineering.md/">The Harness Is the Bottleneck: OS-008 and the Emerging Discipline of Harness Engineering</a><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/opensentience.org/docs/positioning.md/">The Missing Constraint: Runtime Governance in the Agent Stack</a><a href="/opensentience.org/docs/research.md/">Research Overview</a><a href="/opensentience.org/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera6lwnl7niafbgqnymr4abch7xud4retlmjraotasq6gjnjsgklgza</div></div></div>
+</div></div>
+</body></html>

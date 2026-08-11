@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Intentional Forgetting — Structured Knowledge Removal · graphonomous · Ampersand Box</title>
+<meta name="description" content="Four forgetting modes plus budget-aware policy pruning.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/forgetting.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Intentional Forgetting — Structured Knowledge Removal">
+<meta property="og:description" content="Four forgetting modes plus budget-aware policy pruning.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/forgetting.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Intentional Forgetting — Structured Knowledge Removal","name":"Intentional Forgetting — Structured Knowledge Removal","description":"Four forgetting modes plus budget-aware policy pruning.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/forgetting.md/","identifier":"bagaaierah7qn2ro2ikgjaqzz2lnkdzq3ivdvmrwumiappj4nvtm4rqecycnq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Arguments"},{"@type":"WebPageElement","name":"Forgetting Modes"},{"@type":"WebPageElement","name":"Soft Forget — Hide from Retrieval"},{"@type":"WebPageElement","name":"Hard Forget — Delete Node + Edges"},{"@type":"WebPageElement","name":"Cascade Forget — Delete + Orphaned Dependents"},{"@type":"WebPageElement","name":"GDPR Erase — Permanent Audit-Logged Deletion"},{"@type":"WebPageElement","name":"Budget-Aware Policy Pruning"},{"@type":"WebPageElement","name":"When to Use Which"},{"@type":"WebPageElement","name":"Anti-patterns to avoid"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/"},{"@type":"ListItem","position":5,"name":"forgetting.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/forgetting.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/docs/skills/forgetting.md</span>
+
+</div></div>
+<div class="lead">Four forgetting modes plus budget-aware policy pruning.</div>
+<div class="prose"><h1 id="blk-67337">Intentional Forgetting — Structured Knowledge Removal</h1>
+<p>Four forgetting modes plus budget-aware policy pruning.</p>
+<h3 id="blk-67339">Arguments</h3>
+<p>Mode and target: $ARGUMENTS</p>
+<h3 id="blk-67341">Forgetting Modes</h3>
+<h4 id="blk-67342">Soft Forget — Hide from Retrieval</h4>
+<pre><code>act(action: &quot;forget_node&quot;, node_id: &quot;&lt;id&gt;&quot;, mode: &quot;soft&quot;, reason: &quot;Outdated reference&quot;)</code></pre>
+<p>Node gets <code>forgotten_at</code> timestamp internally, excluded from retrieval, but structure/edges preserved. Reversible.</p>
+<h4 id="blk-67345">Hard Forget — Delete Node + Edges</h4>
+<pre><code>act(action: &quot;forget_node&quot;, node_id: &quot;&lt;id&gt;&quot;, mode: &quot;hard&quot;)</code></pre>
+<p>UtU-style constant-time unlink: severs all edges, deletes node. Irreversible.</p>
+<h4 id="blk-67348">Cascade Forget — Delete + Orphaned Dependents</h4>
+<pre><code>act(action: &quot;forget_node&quot;, node_id: &quot;&lt;id&gt;&quot;, mode: &quot;cascade&quot;, reason: &quot;Removing stale test data&quot;)</code></pre>
+<p>Also deletes orphaned dependents — nodes whose ONLY incoming support was from the deleted node.</p>
+<h4 id="blk-67351">GDPR Erase — Permanent Audit-Logged Deletion</h4>
+<pre><code>act(action: &quot;gdpr_erase&quot;, node_id: &quot;&lt;id&gt;&quot;)</code></pre>
+<p>Permanently removes node, all edges, and embedding data. Audit-logged per GDPR Article 17. No recovery possible.</p>
+<h3 id="blk-67354">Budget-Aware Policy Pruning</h3>
+<p>Preview what would be forgotten:</p>
+<pre><code>act(action: &quot;forget_policy&quot;, dry_run: true, max_nodes: 500)</code></pre>
+<p>Execute the policy:</p>
+<pre><code>act(action: &quot;forget_policy&quot;, max_nodes: 500)</code></pre>
+<p>Priority scoring: <code>confidence x recency x (1 + log(access_count + 1)) x (1 + connectivity)</code>. Lowest-priority nodes forgotten first via soft-forget.</p>
+<h3 id="blk-67360">When to Use Which</h3>
+<table><thead><tr><th>Scenario</th><th>Mode</th></tr></thead><tbody><tr><td>Outdated but might be useful later</td><td><code>forget_node</code> mode: <code>soft</code></td></tr><tr><td>Definitely wrong, no dependents</td><td><code>forget_node</code> mode: <code>hard</code></td></tr><tr><td>Wrong + has orphaned dependents</td><td><code>forget_node</code> mode: <code>cascade</code></td></tr><tr><td>Contains PII / user data</td><td><code>gdpr_erase</code></td></tr><tr><td>Graph getting too large</td><td><code>forget_policy</code></td></tr><tr><td>Want to weaken, not remove</td><td>Use <code>act(action: &quot;belief_revise&quot;, operation: &quot;contract&quot;)</code> instead</td></tr></tbody></table>
+<h3 id="blk-67376">Anti-patterns to avoid</h3>
+<ul><li><p>Don't GDPR-erase non-PII nodes — use soft/hard instead</p></li><li><p>Don't forget without checking dependents — use cascade if unsure</p></li><li><p>Always dry_run policy before executing</p></li><li><p>Don't forget nodes that are part of active goals — check goal linkage first</p></li></ul></div>
+<p class="src"><a href="/#/graphonomous/docs/skills/forgetting.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-67339" class="lvl2">Arguments</a><a href="#blk-67341" class="lvl2">Forgetting Modes</a><a href="#blk-67342" class="lvl3">Soft Forget — Hide from Retrieval</a><a href="#blk-67345" class="lvl3">Hard Forget — Delete Node + Edges</a><a href="#blk-67348" class="lvl3">Cascade Forget — Delete + Orphaned Dependents</a><a href="#blk-67351" class="lvl3">GDPR Erase — Permanent Audit-Logged Deletion</a><a href="#blk-67354" class="lvl2">Budget-Aware Policy Pruning</a><a href="#blk-67360" class="lvl2">When to Use Which</a><a href="#blk-67376" class="lvl2">Anti-patterns to avoid</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a><a href="/graphonomous/docs/skills/attention.md/">Attention Engine</a><a href="/graphonomous/docs/skills/belief.md/">Belief Revision</a><a href="/graphonomous/docs/skills/bootstrap.md/">Graphonomous Bootstrap</a><a href="/graphonomous/docs/skills/consolidate.md/">Consolidation</a><a href="/graphonomous/docs/skills/deliberate.md/">Topology and Deliberation</a><a href="/graphonomous/docs/skills/epistemic-frontier.md/">Epistemic Frontier — Uncertainty-Guided Investigation</a><a href="/graphonomous/docs/skills/goals.md/">Goal Management</a><a href="/graphonomous/docs/skills/graph-health.md/">Graph Health Check</a><a href="/graphonomous/docs/skills/inspect.md/">Graph Inspection</a><a href="/graphonomous/docs/skills/learn.md/">Learning Loop</a><a href="/graphonomous/docs/skills/retrieve.md/">Retrieve and Remember</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierah7qn2ro2ikgjaqzz2lnkdzq3ivdvmrwumiappj4nvtm4rqecycnq</div></div></div>
+</div></div>
+</body></html>

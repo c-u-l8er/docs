@@ -1,0 +1,447 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Supervisor — Build Prompt v1.1 · workbench · Ampersand Box</title>
+<meta name="description" content="The v1.0 prompt sat on top of SUPERVISOR.md v0.1. This v1.1 prompt sits on top of SUPERVISOR.md v0.2 and fixes the drift bugs flagged in the design review:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/workbench/docs/spec/SUPERVISOR_BUILD_PROMPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Supervisor — Build Prompt v1.1">
+<meta property="og:description" content="The v1.0 prompt sat on top of SUPERVISOR.md v0.1. This v1.1 prompt sits on top of SUPERVISOR.md v0.2 and fixes the drift bugs flagged in the design review:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/workbench/docs/spec/SUPERVISOR_BUILD_PROMPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Supervisor — Build Prompt v1.1","name":"Supervisor — Build Prompt v1.1","description":"The v1.0 prompt sat on top of SUPERVISOR.md v0.1. This v1.1 prompt sits on top of SUPERVISOR.md v0.2 and fixes the drift bugs flagged in the design review:","url":"https://docs.ampersandboxdesign.com/workbench/docs/spec/SUPERVISOR_BUILD_PROMPT.md/","identifier":"bagaaierahwr5gudlwd7qquxg4g7ev7moor4kg5cd6yweshwjbx5ki7uky5ma","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"workbench","url":"https://docs.ampersandboxdesign.com/workbench/"},"articleSection":"workbench","hasPart":[{"@type":"WebPageElement","name":"0a. Changelog vs v1.0"},{"@type":"WebPageElement","name":"0. The one-sentence idea"},{"@type":"WebPageElement","name":"1. Why this exists (the gap)"},{"@type":"WebPageElement","name":"2. What already exists (do NOT rebuild)"},{"@type":"WebPageElement","name":"3. What you will build"},{"@type":"WebPageElement","name":"4. The 5-phase loop (spec §4.1)"},{"@type":"WebPageElement","name":"5. File-by-file contracts"},{"@type":"WebPageElement","name":"5.1 lib/factory/run_one.ts"},{"@type":"WebPageElement","name":"5.2 lib/supervisor/goal_gen.ts"},{"@type":"WebPageElement","name":"5.3 lib/supervisor/auto_manifest.ts"},{"@type":"WebPageElement","name":"5.4 lib/supervisor/critic.ts"},{"@type":"WebPageElement","name":"5.5 lib/supervisor/run.ts"},{"@type":"WebPageElement","name":"5.6 routes/supervise/+page.svelte"},{"@type":"WebPageElement","name":"5.7 routes/supervise/[run_id]/+page.svelte"},{"@type":"WebPageElement","name":"5.8 lib/supervisor/cell_ledger.ts"},{"@type":"WebPageElement","name":"5.9 lib/supervisor/mcp_pack.ts"},{"@type":"WebPageElement","name":"5.10 lib/mcp/discovery.ts"},{"@type":"WebPageElement","name":"5.11 lib/bundle/verify_mcp.ts"},{"@type":"WebPageElement","name":"6. IndexedDB schema delta"},{"@type":"WebPageElement","name":"7. Acceptance criteria (spec §11 verbatim)"},{"@type":"WebPageElement","name":"8. Testing protocol"},{"@type":"WebPageElement","name":"9. Scope guards — what NOT to do"},{"@type":"WebPageElement","name":"10. Why this earns the title \"Principal\""},{"@type":"WebPageElement","name":"11. Companion docs to read before coding"},{"@type":"WebPageElement","name":"12. Definition of done"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"workbench","item":"https://docs.ampersandboxdesign.com/workbench/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/workbench/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/workbench/docs/spec/"},{"@type":"ListItem","position":5,"name":"SUPERVISOR_BUILD_PROMPT.md","item":"https://docs.ampersandboxdesign.com/workbench/docs/spec/SUPERVISOR_BUILD_PROMPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">workbench</span>
+<span class="path">workbench/docs/spec/SUPERVISOR_BUILD_PROMPT.md</span>
+
+</div></div>
+<div class="lead">The v1.0 prompt sat on top of SUPERVISOR.md v0.1. This v1.1 prompt sits on top of SUPERVISOR.md v0.2 and fixes the drift bugs flagged in the design review:</div>
+<div class="prose"><h1 id="blk-88439">Supervisor — Build Prompt v1.1</h1>
+<blockquote><p><strong>Purpose:</strong> Implementation prompt for the autonomous teacher loop (&quot;the Principal&quot;) that closes the gap between <code>workbench/docs/spec/SUPERVISOR.md</code> (complete spec) and a working <code>/supervise</code> page. The Supervisor takes a <code>TeacherCharter</code> as commission and emits a verified <code>CurriculumBundle</code>.  <strong>Source-of-truth spec:</strong> <code>workbench/docs/spec/SUPERVISOR.md</code> (v0.2 draft, 15 sections, panel + MCP + Registrar). This prompt does NOT replace it — it is a build order layered on top of it. When this prompt and the spec disagree, the spec wins.  <strong>Depends on:</strong> Workbench v0.3.0-alpha already in-tree. No new MCP servers, no new schemas, no new backends. (<code>MCP_INVARIANT_PACK.v0.schema.json</code> is new but it's a sibling spec file, not a new substrate.)  <strong>Target agent:</strong> ChatGPT-5.3-Codex in Zed (or any coding agent with file access). The author of this prompt plans in Claude; codes in Codex.  <strong>Author:</strong> Travis / [&amp;] Ampersand Box Design  <strong>Date:</strong> 2026-05-27  <strong>Version:</strong> 1.1 (matches SUPERVISOR.md v0.2 — adds MCP-tool awareness, devil's-advocate panel default-on, CellLedger scaffolding, stratified picker; fixes five drift bugs from v1.0)  <strong>Scope:</strong> ~1,000 LOC TypeScript + ~400 LOC Svelte. Single PR. No protocol changes. No new dependencies.</p></blockquote>
+<h3 id="blk-88442">0a. Changelog vs v1.0</h3>
+<p>The v1.0 prompt sat on top of SUPERVISOR.md v0.1. This v1.1 prompt sits on top of SUPERVISOR.md v0.2 and fixes the drift bugs flagged in the design review:</p>
+<ol><li><p><strong>Halt-reason vocabulary</strong> now matches <code>lib/supervisor/bundle.ts:HaltReason</code> exactly (<code>max_skills_reached</code>, <code>consecutive_failures</code>, etc.) — no freelance literals in pseudocode. See §5.5.</p></li><li><p><strong>Wilson lower bound</strong> is computed by <code>computeFrontier</code> (dedups by <code>cellKey</code>), NOT by <code>coverageWilsonLower(covered_array.length, ...)</code> which double-counts repeat-visits. See §5.5 pseudocode.</p></li><li><p><strong>Critic config</strong>: <code>critic_model</code> is the v0.1 field, kept. v0.2 adds the optional <code>faculty.advocate</code> field. Presence of either ⇒ advocate is enabled (no separate <code>critic_enabled</code> flag).</p></li><li><p><strong>`rng_seed` plumbing</strong>: threaded into BOTH the stratified picker AND the goal generator (OpenRouter <code>seed</code> param). Per-cell seed = <code>hash(rng_seed || canonical(cell))</code>.</p></li><li><p><strong>Dual run loop</strong> (teach/+page.svelte AND factory/run_one.ts coexist post-PR): acknowledged as known tech debt, follow-up issue tracked in §9.</p></li></ol>
+<h3 id="blk-88455">0. The one-sentence idea</h3>
+<p><strong>The Supervisor is the principal of the [&amp;] skill school. It accepts an invariant + manifestation space + budget as commission, drives the existing Workbench teach loop one cell at a time, and emits a content-hashed `CurriculumBundle` that a third party can re-verify from JSON alone.</strong></p>
+<p>The Workbench is the teacher. PRISM is the grader. The Supervisor is the principal who hires the teacher, designs the holdout exam, picks which cell to teach next, and signs the graduation diploma.</p>
+<h3 id="blk-88458">1. Why this exists (the gap)</h3>
+<p>Workbench v0.3.0-alpha lets a human:</p>
+<ol><li><p>Pick a fixture</p></li><li><p>Click Send → drive one teach turn</p></li><li><p>Click Crystallize → seal one <code>SkillBundle</code></p></li></ol>
+<p>That's a teacher. It cannot:</p>
+<ul><li><p>Set policy (which invariants matter, with what budget)</p></li><li><p>Iterate across a manifestation space without a human clicking</p></li><li><p>Hold scenarios out from the teacher so the teacher can't train-to-the-test</p></li><li><p>Produce a curriculum-level artifact</p></li></ul>
+<p>The <code>SUPERVISOR.md</code> spec describes the missing layer. The <strong>data layer is already shipped</strong> (<code>charter.ts</code>, <code>manifestation.ts</code>, <code>coverage.ts</code>, <code>bundle.ts</code>, all with vitest passing). The <strong>orchestration layer and UI are not</strong>. This prompt builds them.</p>
+<h3 id="blk-88478">2. What already exists (do NOT rebuild)</h3>
+<p>All of these are in-tree and tested. Read them before writing anything.</p>
+<table><thead><tr><th>File</th><th>Exports</th><th>Tests</th></tr></thead><tbody><tr><td><code>app/src/lib/supervisor/charter.ts</code></td><td><code>TeacherCharter</code>, <code>validateCharter</code>, <code>parseCharter</code>, <code>charterContentHash</code></td><td><code>charter.test.ts</code></td></tr><tr><td><code>app/src/lib/supervisor/manifestation.ts</code></td><td><code>ManifestationCell</code>, <code>enumerateCells</code>, <code>computeFrontier</code>, <code>pickNextCell</code> (uniform-random)</td><td><code>manifestation.test.ts</code></td></tr><tr><td><code>app/src/lib/supervisor/coverage.ts</code></td><td><code>wilsonLowerBound</code>, <code>coverageWilsonLower</code></td><td><code>coverage.test.ts</code></td></tr><tr><td><code>app/src/lib/supervisor/bundle.ts</code></td><td><code>CurriculumBundle</code>, <code>assembleCurriculumBundle</code>, <code>verifyCurriculumContentHash</code></td><td><code>bundle.test.ts</code></td></tr><tr><td><code>examples/charters/replay_fidelity.charter.json</code></td><td>The §2.3 worked example</td><td><code>example.test.ts</code> validates it</td></tr></tbody></table>
+<p>Schemas:</p>
+<ul><li><p><code>app/src/lib/schemas/TEACHER_CHARTER.v0.schema.json</code></p></li><li><p><code>app/src/lib/schemas/CURRICULUM_BUNDLE.v0.schema.json</code></p></li></ul>
+<p><strong>Do not touch any of these files.</strong> They are the contract surface this build sits on top of.</p>
+<h3 id="blk-88506">3. What you will build</h3>
+<p>Nine TypeScript files, two Svelte files, plus tests. Total: ~1,500 LOC TS + ~400 LOC Svelte.</p>
+<table><thead><tr><th>File</th><th>Lines (est.)</th><th>Purpose</th></tr></thead><tbody><tr><td><code>app/src/lib/factory/run_one.ts</code></td><td>~180</td><td>Pure-function single-skill teach loop. The atomic op the Supervisor dispatches.</td></tr><tr><td><code>app/src/lib/supervisor/goal_gen.ts</code></td><td>~100</td><td>One LLM call that turns <code>(invariant, cell, mcp_target?)</code> into a goal paragraph. When <code>mcp_target</code> is set, includes the discovered tool list in the prompt.</td></tr><tr><td><code>app/src/lib/supervisor/auto_manifest.ts</code></td><td>~60</td><td>Derives <code>SkillManifest</code> (<code>name</code>, <code>slug</code>, <code>description</code>) from a goal + cell heuristically.</td></tr><tr><td><code>app/src/lib/supervisor/critic.ts</code></td><td>~90</td><td><strong>Devil's advocate</strong> panel slot (v0.2 default-on when <code>critic_model</code> or <code>faculty.advocate</code> is present). Runs in a separate context from the lead teacher. Returns `{ verdict: 'consent'\</td><td>'dissent', counter_example?, rationale }`.</td></tr><tr><td><code>app/src/lib/supervisor/run.ts</code></td><td>~340</td><td>The 5-phase loop. Calls everything above + reuses <code>verifyBundle</code>. Threads <code>rng_seed</code> into picker + goal_gen.</td></tr><tr><td><code>app/src/lib/supervisor/cell_ledger.ts</code></td><td>~40</td><td>v0.2 Registrar scaffolding (write-only). Appends each cell-attempt to an IDB-backed ledger keyed by <code>school_ref</code>. No reads in v0.2; v0.3 enables stale-skill detection.</td></tr><tr><td><code>app/src/lib/supervisor/mcp_pack.ts</code></td><td>~50</td><td>Loads + validates <code>MCPInvariantPack</code> JSON against <code>MCP_INVARIANT_PACK.v0.schema.json</code>. Surfaces invariants as one-click charter templates on <code>/supervise</code>.</td></tr><tr><td><code>app/src/lib/mcp/discovery.ts</code></td><td>~60</td><td><code>tools/list</code> discovery against a configured MCP server. Computes <code>server_fingerprint</code> (sha256 of canonical tools/list response). Used when <code>charter.mcp_targets[0].discovery === 'tools/list'</code>.</td></tr><tr><td><code>app/src/lib/bundle/verify_mcp.ts</code></td><td>~80</td><td>Three MCP-specific gates: <code>gate.tool_contract_compliance</code> (every <code>tool_call</code> edge's args/result conforms to discovered inputSchema/outputSchema), <code>gate.tool_idempotence</code> (two edges with identical <code>args_hash</code> produce identical <code>result_hash</code> when the tool is declared idempotent), <code>gate.tool_version_consistency</code> (all <code>tool_call</code> edges in a bundle target the same <code>server_version</code>).</td></tr><tr><td><code>app/src/routes/supervise/+page.svelte</code></td><td>~250</td><td>Paste-charter UI + Run button + live phase progress + frontier table + &quot;load from MCP pack&quot; template chooser.</td></tr><tr><td><code>app/src/routes/supervise/[run_id]/+page.svelte</code></td><td>~200</td><td>Completed-run inspector. Tabs: Charter / Skills / Coverage / Frontier / Panel / Bundle.</td></tr></tbody></table>
+<p>Plus tests for <code>run_one.ts</code>, <code>goal_gen.ts</code>, <code>auto_manifest.ts</code>, <code>critic.ts</code>, <code>run.ts</code>, <code>cell_ledger.ts</code>, <code>mcp_pack.ts</code>, <code>discovery.ts</code>, <code>verify_mcp.ts</code> (vitest, target ~45 new tests).</p>
+<h3 id="blk-88547">4. The 5-phase loop (spec §4.1)</h3>
+<pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                       SupervisorRun.execute()                    │
+│                                                                  │
+│   loop while not halted():                                       │
+│     ┌────────┐  ┌───────┐  ┌─────┐  ┌───────┐  ┌─────────────┐   │
+│     │RETRIEVE│→ │ ROUTE │→ │ ACT │→ │ LEARN │→ │ CONSOLIDATE │   │
+│     └────────┘  └───────┘  └─────┘  └───────┘  └─────────────┘   │
+│        │           │          │         │             │          │
+│     prior      pick next   teach one  verify     emit Curr-      │
+│     bundles    cell from   skill via  bundle +   iculumBundle    │
+│     (IDB)      frontier    run_one    update     when halted     │
+│                                       frontier                   │
+└──────────────────────────────────────────────────────────────────┘</code></pre>
+<p>Halt on the FIRST of (spec §4.2). The <code>HaltReason</code> union in <code>lib/supervisor/bundle.ts</code> is authoritative — <strong>use those exact string literals</strong>:</p>
+<table><thead><tr><th>Condition</th><th><code>HaltReason</code> literal</th></tr></thead><tbody><tr><td><code>skills_produced &gt;= charter.budget.max_skills</code></td><td><code>'max_skills_reached'</code></td></tr><tr><td><code>dollars_spent &gt;= charter.budget.max_dollars</code> (if set)</td><td><code>'max_dollars_reached'</code></td></tr><tr><td><code>wallclock_seconds &gt;= charter.budget.max_seconds</code> (if set)</td><td><code>'max_seconds_reached'</code></td></tr><tr><td><code>coverage.wilson_lower_bound &gt;= charter.rubric.coverage_target</code> (if set)</td><td><code>'coverage_target_reached'</code></td></tr><tr><td><code>frontier_remaining</code> is empty</td><td><code>'frontier_empty'</code></td></tr><tr><td>Three consecutive failed teach attempts (defensive)</td><td><code>'consecutive_failures'</code></td></tr><tr><td><code>AbortController.abort()</code> from the UI</td><td><code>'user_aborted'</code></td></tr></tbody></table>
+<p>Drift bug fix (v1.0 → v1.1): the prior pseudocode used <code>'max_skills'</code>/<code>'max_dollars'</code>/<code>'three_consecutive_failures'</code> — those literals do NOT exist in <code>bundle.ts:HaltReason</code>. v1.1 pseudocode in §5.5 uses the table above verbatim.</p>
+<h3 id="blk-88568">5. File-by-file contracts</h3>
+<h4 id="blk-88569">5.1 <code>lib/factory/run_one.ts</code></h4>
+<p>Pure-function single-skill teach loop. Extracts the logic currently inlined in <code>routes/teach/+page.svelte</code>. The Svelte page can be refactored to call this in a later PR; do NOT refactor <code>teach/+page.svelte</code> in this build. Just create the extracted module and use it from <code>supervisor/run.ts</code>.</p>
+<pre data-lang="ts"><code><span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">RunOneArgs</span> {
+  goal: string;
+  body: <span class="t-type">BodyChoice</span>;
+  model: string;
+  capabilities_required: <span class="t-type">Capability</span>[];
+  useDelegatic: boolean;
+  <span class="t-comment">// Optional pre-seeded edges (scripted, from a fixture). The teach loop</span>
+  <span class="t-comment">// splices these in before sealing. Mirrors the existing teach flow.</span>
+  scripted_edges?: <span class="t-type">Array</span>&lt;<span class="t-type">Pick</span>&lt;<span class="t-type">TraceEdge</span>, <span class="t-string">'kind'</span> | <span class="t-string">'capability'</span> | <span class="t-string">'observation'</span>&gt;&gt;;
+  <span class="t-comment">// Hooks for live UI updates (optional).</span>
+  on_edge?: (edge: <span class="t-type">TraceEdge</span>) =&gt; <span class="t-kw">void</span>;
+  on_phase?: (phase: <span class="t-string">'turn'</span> | <span class="t-string">'authorize'</span> | <span class="t-string">'verify'</span> | <span class="t-string">'seal'</span>) =&gt; <span class="t-kw">void</span>;
+}
+
+<span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">RunOneResult</span> {
+  bundle: <span class="t-type">SkillBundle</span>;
+  report: <span class="t-type">VerifyReport</span>;          <span class="t-comment">// from verifyBundle</span>
+  manifest: <span class="t-type">SkillManifest</span>;
+  dollars_spent: number;         <span class="t-comment">// estimate from token counts × model price</span>
+  tokens_consumed: number;
+  wallclock_seconds: number;
+}
+
+<span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">runOne</span>(args: <span class="t-type">RunOneArgs</span>): <span class="t-type">Promise</span>&lt;<span class="t-type">RunOneResult</span>&gt;;</code></pre>
+<p>Implementation notes:</p>
+<ul><li><p>Reuse <code>lib/openrouter.ts</code> for LLM, <code>lib/trace.ts</code> for <code>newTrace</code>/<code>appendEdge</code>, <code>lib/bundle/builder.ts</code> for assembly, <code>lib/bundle/verify.ts</code> for verification, <code>lib/storage.ts</code> for IDB writes.</p></li><li><p>Wrap each phase in try/catch and surface failures as <code>RunOneResult</code> with <code>report.overall_verdict = 'inconclusive'</code> and a <code>report.error</code> field rather than throwing — <code>supervisor/run.ts</code> needs to count failures without unwinding the loop.</p></li><li><p>Dollars: estimate <code>prompt_tokens × $0.000003 + completion_tokens × $0.000015</code> for Haiku, scale linearly for other models. Don't worry about exact prices — <code>max_dollars</code> is a soft cap; the user accepts ±2× error.</p></li></ul>
+<h4 id="blk-88580">5.2 <code>lib/supervisor/goal_gen.ts</code></h4>
+<pre data-lang="ts"><code><span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">GoalGenArgs</span> {
+  invariant: <span class="t-type">InvariantRef</span>;       <span class="t-comment">// from TeacherCharter</span>
+  cell: <span class="t-type">ManifestationCell</span>;
+  required_capabilities: <span class="t-type">Capability</span>[];
+  forbidden_capabilities: <span class="t-type">Capability</span>[];
+  model: string;                 <span class="t-comment">// charter.faculty.goal_gen ?? charter.model</span>
+  <span class="t-comment">// v0.2 MCP awareness — when set, the goal_gen prompt is biased to</span>
+  <span class="t-comment">// produce goals that invoke these tools. Pulled from charter.mcp_targets[0]</span>
+  <span class="t-comment">// after discovery resolves the tool list.</span>
+  mcp_context?: {
+    server_id: string;
+    server_version: string;
+    server_fingerprint: string;
+    tools: <span class="t-type">Array</span>&lt;{ name: string; description?: string; inputSchema?: object }&gt;;
+  };
+  <span class="t-comment">// v0.2 seed plumbing — combined with the cell key for per-cell reproducibility.</span>
+  rng_seed?: number;
+}
+
+<span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">GoalGenResult</span> {
+  goal: string;                  <span class="t-comment">// the paragraph fed into runOne()</span>
+  dollars_spent: number;
+  tokens_consumed: number;
+}
+
+<span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">generateGoal</span>(args: <span class="t-type">GoalGenArgs</span>): <span class="t-type">Promise</span>&lt;<span class="t-type">GoalGenResult</span>&gt;;</code></pre>
+<p>Implementation: the exact prompt template is in spec §4.3. One LLM call. Set <code>temperature: 0.3</code>, <code>seed: hash(rng_seed ?? 0, cellKey(cell))</code> for reproducibility (v0.2 plumbs <code>rng_seed</code> from the charter into BOTH the stratified picker AND OpenRouter's <code>seed</code> param here).</p>
+<p>The goal_gen <strong>MUST NOT</strong> see the gate's executable predicate (anti-collusion §0.4 + §4.5). It sees only <code>invariant.formal_definition</code> (prose). When <code>mcp_context</code> is set, append: &quot;The skill MUST contain at least one <code>tool_call</code> edge against server <code>${server_id}@${server_version}</code> using one of: [tool names].&quot;</p>
+<h4 id="blk-88584">5.3 <code>lib/supervisor/auto_manifest.ts</code></h4>
+<pre data-lang="ts"><code><span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">autoManifest</span>(args: {
+  goal: string;
+  cell: <span class="t-type">ManifestationCell</span>;
+  charter: <span class="t-type">TeacherCharter</span>;
+}): {
+  name: string;
+  slug: string;
+  description: string;
+  capabilities_required: <span class="t-type">Capability</span>[];
+};</code></pre>
+<p>Implementation:</p>
+<ul><li><p><code>name</code>: title-case first 6 words of <code>goal</code></p></li><li><p><code>slug</code>: kebab-case of <code>name</code> + <code>-</code> + <code>cellKey(cell)</code> (first 8 chars hex)</p></li><li><p><code>description</code>: <code>goal</code> truncated to 280 chars</p></li><li><p><code>capabilities_required</code>: copy <code>charter.rubric.required_capabilities</code> (or <code>['ambient']</code> if empty)</p></li></ul>
+<p>Pure synchronous function. No LLM call. Spec §4.4 says &quot;auto-fill harness shipped with Workbench v0.3&quot; — this IS that harness; we ship it here.</p>
+<h4 id="blk-88597">5.4 <code>lib/supervisor/critic.ts</code></h4>
+<p>The <strong>devil's advocate</strong> panel slot. v0.2 ships default-on whenever <code>charter.critic_model</code> OR <code>charter.faculty.advocate</code> is present (there is NO separate <code>critic_enabled</code> flag — drift bug fix #3).</p>
+<pre data-lang="ts"><code><span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">CriticArgs</span> {
+  invariant: <span class="t-type">InvariantRef</span>;
+  cell: <span class="t-type">ManifestationCell</span>;
+  bundle: <span class="t-type">SkillBundle</span>;
+  model: string;          <span class="t-comment">// charter.faculty.advocate ?? charter.critic_model ?? charter.model</span>
+  <span class="t-comment">// v0.2: when the lead teacher hit a tool_call edge, the advocate gets</span>
+  <span class="t-comment">// the discovered tool list and is asked to propose a counter-example</span>
+  <span class="t-comment">// input that would have caused the gate to fail.</span>
+  mcp_context?: <span class="t-type">GoalGenArgs</span>[<span class="t-string">'mcp_context'</span>];
+  <span class="t-comment">// Per-cell seed so advocate is reproducible alongside teacher + picker.</span>
+  rng_seed?: number;
+}
+
+<span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">CriticVerdict</span> {
+  verdict: <span class="t-string">'consent'</span> | <span class="t-string">'dissent'</span>;
+  rationale: string;
+  <span class="t-comment">// v0.2: when dissenting, the advocate MUST produce a concrete counter-example</span>
+  <span class="t-comment">// (args / cell coordinates that would have exposed the cheap-pass).</span>
+  <span class="t-comment">// Surfaced into CurriculumBundle.invariant_claims[].counter_example.</span>
+  counter_example?: <span class="t-type">Record</span>&lt;string, unknown&gt;;
+  dollars_spent: number;
+  tokens_consumed: number;
+}
+
+<span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">critique</span>(args: <span class="t-type">CriticArgs</span>): <span class="t-type">Promise</span>&lt;<span class="t-type">CriticVerdict</span>&gt;;</code></pre>
+<p><strong>Anti-collusion contract (spec §4.5):</strong> the advocate MUST be invoked in a SEPARATE openrouter context (separate request, no shared conversation history) from the lead teacher — even when both <code>faculty.lead</code> and <code>faculty.advocate</code> reference the same model. Implementation: call <code>lib/openrouter.ts</code> with a fresh <code>messages: []</code> array and no <code>conversation_id</code>. Verify this with a structural test (see §8).</p>
+<p><strong>Authority contract:</strong> the advocate's verdict is <strong>advisory only</strong>. <code>verifyBundle</code> (the examiner) is the sole authority for <code>passed</code>. The advocate's dissent is recorded in <code>CurriculumBundle.invariant_claims[].critic_dissent</code> and <code>counter_example</code>, plus aggregated into <code>panel_summary.advocate_dissent</code>. It does NOT flip <code>passed</code>.</p>
+<h4 id="blk-88602">5.5 <code>lib/supervisor/run.ts</code></h4>
+<p>The orchestrator. The principal.</p>
+<pre data-lang="ts"><code><span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">SupervisorRunArgs</span> {
+  charter: <span class="t-type">TeacherCharter</span>;
+  <span class="t-comment">// Optional hooks for live UI progress (called from each phase transition).</span>
+  on_phase?: (event: <span class="t-type">SupervisorPhaseEvent</span>) =&gt; <span class="t-kw">void</span>;
+  on_skill?: (skill: { bundle_id: string; verdict: <span class="t-type">Verdict</span>; cell: <span class="t-type">ManifestationCell</span> }) =&gt; <span class="t-kw">void</span>;
+  on_halt?: (reason: <span class="t-type">HaltReason</span>) =&gt; <span class="t-kw">void</span>;
+  <span class="t-comment">// For deterministic testing.</span>
+  rng_seed?: number;
+}
+
+<span class="t-kw">export</span> <span class="t-kw">type</span> <span class="t-type">SupervisorPhaseEvent</span> =
+  | { phase: <span class="t-string">'retrieve'</span>; cells_total: number; cells_visited: number }
+  | { phase: <span class="t-string">'route'</span>; next_cell: <span class="t-type">ManifestationCell</span> }
+  | { phase: <span class="t-string">'act'</span>; goal: string; cell: <span class="t-type">ManifestationCell</span> }
+  | { phase: <span class="t-string">'learn'</span>; verdict: <span class="t-type">Verdict</span>; covered: boolean }
+  | { phase: <span class="t-string">'consolidate'</span>; reason: <span class="t-type">HaltReason</span> };
+
+<span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">SupervisorRunResult</span> {
+  curriculum: <span class="t-type">CurriculumBundle</span>;
+  halt_reason: <span class="t-type">HaltReason</span>;
+  run_id: string;
+}
+
+<span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">executeSupervisorRun</span>(
+  args: <span class="t-type">SupervisorRunArgs</span>
+): <span class="t-type">Promise</span>&lt;<span class="t-type">SupervisorRunResult</span>&gt;;</code></pre>
+<p>Pseudocode (read spec §4.1 + §4.2 + §4.6 alongside this). <strong>Two drift bugs from v1.0 are fixed below</strong>: halt-reason literals match <code>bundle.ts:HaltReason</code> (#1); coverage is computed via <code>computeFrontier()</code> which dedups by <code>cellKey</code> instead of growing a <code>covered[]</code> array that double-counts (#2).</p>
+<pre data-lang="ts"><code><span class="t-kw">const</span> cells = <span class="t-fn">enumerateCells</span>(charter.manifestation_space, charter.manifestation_excludes);
+<span class="t-kw">const</span> attempts: <span class="t-type">Array</span>&lt;{ cell: <span class="t-type">ManifestationCell</span>; passed: boolean }&gt; = [];
+<span class="t-kw">const</span> skillRefs: <span class="t-type">SkillBundleRef</span>[] = [];
+<span class="t-kw">const</span> claims: <span class="t-type">InvariantClaim</span>[] = [];
+<span class="t-kw">const</span> budget = { skills: <span class="t-num">0</span>, dollars: <span class="t-num">0</span>, tokens: <span class="t-num">0</span>, started_at: <span class="t-type">Date</span>.<span class="t-fn">now</span>() };
+<span class="t-kw">let</span> consecutive_failures = <span class="t-num">0</span>;
+
+<span class="t-comment">// v0.2: resolve MCP target once, before the loop, so all skills share</span>
+<span class="t-comment">// the same fingerprint. Also surfaced into curriculum.mcp_targets_resolved.</span>
+<span class="t-kw">const</span> mcp_context = charter.mcp_targets?.[<span class="t-num">0</span>]
+  ? <span class="t-kw">await</span> <span class="t-fn">discoverMcpTarget</span>(charter.mcp_targets[<span class="t-num">0</span>])  <span class="t-comment">// tools/list + fingerprint</span>
+  : <span class="t-kw">undefined</span>;
+
+<span class="t-kw">while</span> (<span class="t-lit">true</span>) {
+  <span class="t-comment">// RETRIEVE — v0.1 no-op; v0.2 reads cell_ledger for school_ref if set</span>
+  <span class="t-kw">const</span> { cells_visited, cells_covered, wilson_lower_bound, frontier_remaining } =
+    <span class="t-fn">computeFrontier</span>(cells, attempts);
+  on_phase?.({ phase: <span class="t-string">'retrieve'</span>, cells_total: cells.length, cells_visited });
+
+  <span class="t-comment">// ROUTE — stratified picker (spec §4.6), seeded by charter.rng_seed</span>
+  <span class="t-kw">if</span> (frontier_remaining.length === <span class="t-num">0</span>) <span class="t-kw">return</span> <span class="t-fn">halt</span>(<span class="t-string">'frontier_empty'</span>);
+  <span class="t-kw">const</span> next = <span class="t-fn">pickNextCell</span>(frontier_remaining, attempts, charter.rng_seed);
+  on_phase?.({ phase: <span class="t-string">'route'</span>, next_cell: next });
+
+  <span class="t-comment">// ACT — goal_gen + autoManifest + runOne (lead teacher), then optional advocate</span>
+  <span class="t-kw">const</span> { goal, dollars_spent: gd, tokens_consumed: gt } = <span class="t-kw">await</span> <span class="t-fn">generateGoal</span>({
+    invariant: charter.invariant_ref,
+    cell: next,
+    required_capabilities: charter.rubric.required_capabilities ?? [],
+    forbidden_capabilities: charter.rubric.forbidden_capabilities ?? [],
+    model: charter.faculty?.goal_gen ?? charter.model,
+    mcp_context,
+    rng_seed: charter.rng_seed,
+  });
+  budget.dollars += gd; budget.tokens += gt;
+  <span class="t-kw">const</span> manifest = <span class="t-fn">autoManifest</span>({ goal, cell: next, charter });
+  on_phase?.({ phase: <span class="t-string">'act'</span>, goal, cell: next });
+  <span class="t-kw">const</span> r = <span class="t-kw">await</span> <span class="t-fn">runOne</span>({
+    goal, body: charter.body ?? <span class="t-string">'simulator'</span>,
+    model: charter.faculty?.lead ?? charter.model,
+    capabilities_required: manifest.capabilities_required,
+    useDelegatic: charter.delegatic ?? <span class="t-lit">true</span>,
+  });
+  budget.dollars += r.dollars_spent; budget.tokens += r.tokens_consumed;
+  budget.skills += <span class="t-num">1</span>;
+
+  <span class="t-comment">// Devil's advocate — default-on when critic_model OR faculty.advocate set</span>
+  <span class="t-kw">const</span> advocateModel = charter.faculty?.advocate ?? charter.critic_model;
+  <span class="t-kw">const</span> advocateVerdict = advocateModel
+    ? <span class="t-kw">await</span> <span class="t-fn">critique</span>({
+        invariant: charter.invariant_ref,
+        cell: next, bundle: r.bundle,
+        model: advocateModel,
+        mcp_context,
+        rng_seed: charter.rng_seed,
+      })
+    : <span class="t-kw">undefined</span>;
+  <span class="t-kw">if</span> (advocateVerdict) { budget.dollars += advocateVerdict.dollars_spent; budget.tokens += advocateVerdict.tokens_consumed; }
+
+  <span class="t-comment">// LEARN — examiner (verifyBundle) is authority; advocate is advisory</span>
+  <span class="t-kw">const</span> passed = r.report.overall_verdict === <span class="t-string">'pass'</span>;
+  attempts.<span class="t-fn">push</span>({ cell: next, passed });
+  consecutive_failures = passed ? <span class="t-num">0</span> : consecutive_failures + <span class="t-num">1</span>;
+  skillRefs.<span class="t-fn">push</span>({
+    content_hash: r.bundle.content_hash,
+    manifestation: next,
+    skill_slug: manifest.slug,
+    verdict: r.report.overall_verdict,
+  });
+  <span class="t-comment">// v0.2: claims now record ALL gates run (6 v0.1 + any MCP gates), not just charter invariant gate.</span>
+  claims.<span class="t-fn">push</span>(...<span class="t-fn">claimsForAllGates</span>(r, charter.invariant_ref, advocateVerdict));
+  <span class="t-kw">if</span> (charter.school_ref) <span class="t-kw">await</span> <span class="t-fn">appendCellLedger</span>(charter.school_ref, { cell: next, passed, content_hash: r.bundle.content_hash });
+  on_phase?.({ phase: <span class="t-string">'learn'</span>, verdict: r.report.overall_verdict, covered: passed });
+  on_skill?.({ bundle_id: r.bundle.bundle_id, verdict: r.report.overall_verdict, cell: next });
+
+  <span class="t-comment">// CONSOLIDATE — halt-check using HaltReason vocabulary from bundle.ts</span>
+  <span class="t-kw">if</span> (consecutive_failures &gt;= <span class="t-num">3</span>) <span class="t-kw">return</span> <span class="t-fn">halt</span>(<span class="t-string">'consecutive_failures'</span>);
+  <span class="t-kw">if</span> (budget.skills &gt;= charter.budget.max_skills) <span class="t-kw">return</span> <span class="t-fn">halt</span>(<span class="t-string">'max_skills_reached'</span>);
+  <span class="t-kw">if</span> (charter.budget.max_dollars &amp;&amp; budget.dollars &gt;= charter.budget.max_dollars) <span class="t-kw">return</span> <span class="t-fn">halt</span>(<span class="t-string">'max_dollars_reached'</span>);
+  <span class="t-kw">if</span> (charter.budget.max_seconds &amp;&amp; (<span class="t-type">Date</span>.<span class="t-fn">now</span>() - budget.started_at) / <span class="t-num">1000</span> &gt;= charter.budget.max_seconds) <span class="t-kw">return</span> <span class="t-fn">halt</span>(<span class="t-string">'max_seconds_reached'</span>);
+  <span class="t-kw">if</span> (charter.rubric.coverage_target &amp;&amp; wilson_lower_bound &gt;= charter.rubric.coverage_target) <span class="t-kw">return</span> <span class="t-fn">halt</span>(<span class="t-string">'coverage_target_reached'</span>);
+  <span class="t-kw">if</span> (abortSignal?.aborted) <span class="t-kw">return</span> <span class="t-fn">halt</span>(<span class="t-string">'user_aborted'</span>);
+}
+
+<span class="t-kw">function</span> <span class="t-fn">halt</span>(reason: <span class="t-type">HaltReason</span>): <span class="t-type">SupervisorRunResult</span> {
+  on_phase?.({ phase: <span class="t-string">'consolidate'</span>, reason });
+  on_halt?.(reason);
+  <span class="t-kw">const</span> frontier = <span class="t-fn">computeFrontier</span>(cells, attempts);  <span class="t-comment">// recompute final, dedup'd</span>
+  <span class="t-kw">const</span> curriculum = <span class="t-kw">await</span> <span class="t-fn">assembleCurriculumBundle</span>({
+    charter, skillRefs, claims, frontier,
+    mcp_targets_resolved: mcp_context ? [mcp_context] : <span class="t-kw">undefined</span>,
+    panel_summary: <span class="t-fn">summarizePanel</span>(claims),
+    halt_reason: reason,
+    budget_consumed: budget,
+  });
+  <span class="t-kw">await</span> <span class="t-fn">putCurriculum</span>(curriculum);
+  <span class="t-kw">return</span> { curriculum, halt_reason: reason, run_id: curriculum.curriculum_id };
+}</code></pre>
+<p><strong>Wilson semantics fix (drift bug #2):</strong> <code>computeFrontier(cells, attempts)</code> is the single source of truth. It returns <code>cells_covered</code> as the count of DISTINCT cells with ≥1 pass (dedup'd by <code>cellKey</code>), not the length of the <code>attempts</code> array. The earlier v1.0 pseudocode that did <code>covered.push(next)</code> and then <code>coverageWilsonLower(covered.length, cells.length)</code> over-counted repeat-passes on the same cell. The reference impl in <code>lib/supervisor/manifestation.ts</code> already does the dedup correctly — this pseudocode just calls into it.</p>
+<h4 id="blk-88608">5.6 <code>routes/supervise/+page.svelte</code></h4>
+<p>Single page with two columns:</p>
+<pre><code>┌─────────────────────────┬────────────────────────────────────────┐
+│ CHARTER (left, 1/3)     │ LIVE RUN (right, 2/3)                  │
+│                         │                                        │
+│  [textarea]             │  Phase: act                            │
+│  paste JSON or pick     │  Current cell: { body: simulator,      │
+│  pre-built              │                  turn_count: short,    │
+│                         │                  ... }                 │
+│  [Run charter]          │                                        │
+│                         │  Frontier: 8/36 visited (Wilson .19)   │
+│  [validation status]    │                                        │
+│                         │  Budget: 8/12 skills · $0.42/$1.50 ·   │
+│                         │          318s/900s                     │
+│                         │                                        │
+│                         │  Skills produced (table):              │
+│                         │   # | slug | cell | verdict            │
+│                         │   1 | ...  | ...  | pass                │
+│                         │   2 | ...  | ...  | fail                │
+│                         │   ...                                  │
+│                         │                                        │
+│                         │  [stop] [view bundle on completion]    │
+└─────────────────────────┴────────────────────────────────────────┘</code></pre>
+<p>UI requirements (spec §11 AC #8):</p>
+<ul><li><p>Each phase transition reflected in the DOM within 500ms — use <code>on_phase</code> callback to update a Svelte writable store.</p></li><li><p>&quot;Stop&quot; button calls <code>controller.abort()</code> on an <code>AbortController</code> passed into <code>executeSupervisorRun</code> (you may extend the signature to accept one).</p></li><li><p>On halt, navigate to <code>/supervise/[run_id]</code> automatically.</p></li></ul>
+<h4 id="blk-88619">5.7 <code>routes/supervise/[run_id]/+page.svelte</code></h4>
+<p>Six tabs over a completed <code>CurriculumBundle</code>:</p>
+<table><thead><tr><th>Tab</th><th>Content</th></tr></thead><tbody><tr><td><strong>Charter</strong></td><td>Render the TeacherCharter (read-only JSON viewer with a &quot;Copy&quot; button)</td></tr><tr><td><strong>Skills</strong></td><td>Table of <code>skill_bundles[]</code> with click-through to <code>/skills/[content_hash]</code></td></tr><tr><td><strong>Coverage</strong></td><td>Wilson lower bound, cells visited/total, <code>frontier_remaining</code>, <code>intentionally_excluded</code></td></tr><tr><td><strong>Frontier</strong></td><td>Same as Coverage's <code>frontier_remaining</code> but pretty-printed and searchable</td></tr><tr><td><strong>Panel</strong></td><td>v0.2: <code>panel_summary</code> (examiner_pass / advocate_consent / advocate_dissent counts) + up to 5 <code>advocate_dissent_examples</code> with counter-examples. Plus a &quot;MCP target resolved&quot; block showing <code>mcp_targets_resolved[0]</code> (server_version, server_fingerprint, tools_observed) when set.</td></tr><tr><td><strong>Bundle export</strong></td><td>Big &quot;Download CurriculumBundle JSON&quot; button + content_hash display + &quot;Verify hash&quot; button that re-canonicalizes and confirms</td></tr></tbody></table>
+<h4 id="blk-88636">5.8 <code>lib/supervisor/cell_ledger.ts</code></h4>
+<p>v0.2 Registrar scaffolding — <strong>write-only</strong> in this PR. The full Registrar (CellLedger reads, InvariantLedger, TeacherLedger, AlumniLedger) lands in v0.3.</p>
+<pre data-lang="ts"><code><span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">CellLedgerEntry</span> {
+  cell: <span class="t-type">ManifestationCell</span>;
+  cell_key: string;          <span class="t-comment">// canonical key from manifestation.ts</span>
+  passed: boolean;
+  content_hash: string;      <span class="t-comment">// sha256 of the produced SkillBundle</span>
+  charter_id: string;
+  curriculum_id: string;
+  timestamp: string;         <span class="t-comment">// ISO-8601</span>
+}
+
+<span class="t-comment">// Append-only. v0.2 has no reads (the loop derives coverage from in-memory `attempts[]`).</span>
+<span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">appendCellLedger</span>(school_ref: string, entry: <span class="t-type">CellLedgerEntry</span>): <span class="t-type">Promise</span>&lt;<span class="t-kw">void</span>&gt;;</code></pre>
+<p>IDB store: <code>cell_ledger</code>, keyPath <code>id</code> (auto-increment). One index on <code>school_ref</code>. <strong>Do not</strong> read from this in v0.2 — the loop owns its own <code>attempts[]</code>. The ledger exists so v0.3 can do stale-skill detection without a schema migration.</p>
+<h4 id="blk-88640">5.9 <code>lib/supervisor/mcp_pack.ts</code></h4>
+<p>Loads + validates <code>MCPInvariantPack</code> JSON. Used by the <code>/supervise</code> UI to populate the &quot;load template&quot; dropdown.</p>
+<pre data-lang="ts"><code><span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">MCPInvariantPack</span> {
+  spec_version: <span class="t-string">'0.1'</span>;
+  server_id: string;
+  server_version: string;
+  server_fingerprint?: string;
+  tools: <span class="t-type">Array</span>&lt;{ name: string; idempotent?: boolean; side_effecting?: boolean; inputSchema?: object; outputSchema?: object; description?: string }&gt;;
+  invariants: <span class="t-type">Array</span>&lt;{
+    invariant_id: string;
+    family: <span class="t-string">'topological'</span> | <span class="t-string">'temporal'</span> | <span class="t-string">'governance'</span> | ... ;
+    formal_definition?: string;
+    proof_gate: string;
+    applies_to_tools: string[];
+    suggested_manifestation_space?: <span class="t-type">Array</span>&lt;{ dimension: string; values: string[] }&gt;;
+    sample_charter_uri?: string;
+  }&gt;;
+  registrar_hints?: { stale_after_version_bump?: boolean; preferred_advocate_model?: string };
+}
+
+<span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">loadMcpPack</span>(json: unknown): <span class="t-type">MCPInvariantPack</span>;   <span class="t-comment">// throws on invalid</span>
+<span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">packToCharter</span>(pack: <span class="t-type">MCPInvariantPack</span>, invariant_id: string, budget: <span class="t-type">Charter</span>[<span class="t-string">'budget'</span>]): <span class="t-type">TeacherCharter</span>;</code></pre>
+<p><code>packToCharter</code> is the one-click template: pick an invariant from the pack → get a draft TeacherCharter pre-filled with <code>invariant_ref</code>, <code>manifestation_space</code> from <code>suggested_manifestation_space</code>, and <code>mcp_targets[0]</code> pointing at the server. User can edit before running.</p>
+<h4 id="blk-88644">5.10 <code>lib/mcp/discovery.ts</code></h4>
+<pre data-lang="ts"><code><span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">DiscoveredMcpTarget</span> {
+  server_id: string;
+  server_version: string;
+  server_fingerprint: string;       <span class="t-comment">// sha256 of canonical tools/list response</span>
+  tools: <span class="t-type">Array</span>&lt;{ name: string; description?: string; inputSchema?: object; outputSchema?: object }&gt;;
+}
+
+<span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">discoverMcpTarget</span>(target: <span class="t-type">McpTargetRef</span>): <span class="t-type">Promise</span>&lt;<span class="t-type">DiscoveredMcpTarget</span>&gt;;</code></pre>
+<p>Implementation:</p>
+<ul><li><p><code>target.discovery === 'tools/list'</code> → call the configured MCP server's <code>tools/list</code> method. Canonicalize the JSON response (sort keys, no trailing whitespace), sha256, prefix <code>sha256:</code> → that's <code>server_fingerprint</code>.</p></li><li><p><code>target.discovery === 'explicit'</code> → use <code>target.tool_subset</code> directly. <code>server_fingerprint</code> is <code>sha256:</code> + hash of the explicit subset (so the bundle still records SOMETHING citable).</p></li><li><p>If <code>target.server_fingerprint</code> is set on the charter, verify the discovered fingerprint matches; throw if drift (spec §5.5).</p></li></ul>
+<p>v0.2 only handles 1 target (<code>mcp_targets.maxItems = 1</code>). Multi-server lands v0.3.</p>
+<h4 id="blk-88655">5.11 <code>lib/bundle/verify_mcp.ts</code></h4>
+<p>Three MCP-specific gates that ONLY run when the bundle contains ≥1 <code>tool_call</code> trace edge.</p>
+<pre data-lang="ts"><code><span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">ToolCallEdge</span> <span class="t-kw">extends</span> <span class="t-type">TraceEdge</span> {
+  kind: <span class="t-string">'tool_call'</span>;
+  server_id: string;
+  server_version: string;
+  tool_name: string;
+  args_hash: string;        <span class="t-comment">// sha256 of canonical(args)</span>
+  result_hash: string;      <span class="t-comment">// sha256 of canonical(result)</span>
+  args?: unknown;           <span class="t-comment">// for replay verification</span>
+  result?: unknown;
+}
+
+<span class="t-kw">export</span> <span class="t-kw">interface</span> <span class="t-type">McpGateReport</span> {
+  gate: <span class="t-string">'gate.tool_contract_compliance'</span> | <span class="t-string">'gate.tool_idempotence'</span> | <span class="t-string">'gate.tool_version_consistency'</span>;
+  passed: boolean;
+  details: string;
+}
+
+<span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">verifyMcpGates</span>(bundle: <span class="t-type">SkillBundle</span>, discovered: <span class="t-type">DiscoveredMcpTarget</span>): <span class="t-type">Promise</span>&lt;<span class="t-type">McpGateReport</span>[]&gt;;</code></pre>
+<p>Gate semantics:</p>
+<table><thead><tr><th>Gate</th><th>Predicate</th></tr></thead><tbody><tr><td><code>gate.tool_contract_compliance</code></td><td>For every <code>tool_call</code> edge, <code>args</code> validates against the discovered <code>inputSchema</code> AND <code>result</code> validates against <code>outputSchema</code>. Use ajv. <strong>fail</strong> on any violation.</td></tr><tr><td><code>gate.tool_idempotence</code></td><td>Group <code>tool_call</code> edges by <code>(tool_name, args_hash)</code>. For tools where the MCP pack declared <code>idempotent: true</code>, every group MUST have ≤1 distinct <code>result_hash</code>. <strong>fail</strong> if a divergent group is found. Tools without <code>idempotent: true</code> are skipped.</td></tr><tr><td><code>gate.tool_version_consistency</code></td><td>All <code>tool_call</code> edges in the bundle MUST share the same <code>server_version</code>. If <code>charter.mcp_targets[0].server_version</code> is pinned, edges MUST match it too.</td></tr></tbody></table>
+<p>These plug into <code>lib/bundle/verify.ts</code> as additional gates appended to the existing 6 v0.1 gates. <code>claimsForAllGates</code> (called from <code>run.ts</code>) records ALL 6-9 gate results into <code>CurriculumBundle.invariant_claims[]</code>.</p>
+<h3 id="blk-88669">6. IndexedDB schema delta</h3>
+<p>Add TWO new stores to <code>lib/storage.ts</code>:</p>
+<pre data-lang="ts"><code><span class="t-comment">// stores: 'skills', 'traces', 'bundles', 'replays', 'curricula' (NEW), 'cell_ledger' (NEW v0.2)</span>
+<span class="t-kw">const</span> <span class="t-type">STORE_NAMES</span> = [<span class="t-string">'skills'</span>, <span class="t-string">'traces'</span>, <span class="t-string">'bundles'</span>, <span class="t-string">'replays'</span>, <span class="t-string">'curricula'</span>, <span class="t-string">'cell_ledger'</span>] <span class="t-kw">as</span> <span class="t-kw">const</span>;
+
+<span class="t-comment">// New CRUD (curricula):</span>
+<span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">putCurriculum</span>(c: <span class="t-type">CurriculumBundle</span>): <span class="t-type">Promise</span>&lt;<span class="t-kw">void</span>&gt;;
+<span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">getCurriculum</span>(id: string): <span class="t-type">Promise</span>&lt;<span class="t-type">CurriculumBundle</span> | <span class="t-kw">undefined</span>&gt;;
+<span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">listCurricula</span>(): <span class="t-type">Promise</span>&lt;<span class="t-type">CurriculumBundle</span>[]&gt;;
+
+<span class="t-comment">// New CRUD (cell_ledger) — write-only in v0.2; readers land v0.3</span>
+<span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">putCellLedgerEntry</span>(school_ref: string, entry: <span class="t-type">CellLedgerEntry</span>): <span class="t-type">Promise</span>&lt;<span class="t-kw">void</span>&gt;;</code></pre>
+<p>Bump the IDB version from 1 → 2 and migrate by adding both stores. <code>cell_ledger</code> uses auto-increment keys with a <code>school_ref</code> index. The existing stores must remain untouched.</p>
+<h3 id="blk-88673">7. Acceptance criteria (spec §11 verbatim)</h3>
+<p>A v0.2 ship requires 16/16 green:</p>
+<ol><li><p>✅ A valid TeacherCharter JSON validates against the schema — <strong>already passing</strong> (<code>charter.test.ts</code>, <code>example.test.ts</code>)</p></li><li><p>✅ An invalid TeacherCharter fails with a clear error — <strong>already passing</strong></p></li><li><p>⬜ The 5-phase loop runs end-to-end against <code>examples/charters/replay_fidelity.charter.json</code> and produces a CurriculumBundle — <strong>new e2e test, preview-tool driven</strong></p></li><li><p>✅ CurriculumBundle <code>content_hash</code> re-computes byte-for-byte after JSON round-trip — <strong>already passing</strong> (<code>bundle.test.ts</code>)</p></li><li><p>⬜ A third party (fresh vitest worker, no IDB) re-verifies a CurriculumBundle from JSON alone — <strong>add test</strong></p></li><li><p>✅ Wilson lower bound matches hand-computed value within 1e-6 — <strong>already passing</strong> (<code>coverage.test.ts</code>)</p></li><li><p>⬜ Budget enforcement halts on each of the 7 <code>HaltReason</code> literals — <strong>`run.test.ts` with mocked `runOne`, one test per literal</strong></p></li><li><p>⬜ <code>/supervise</code> shows live phase progress (each transition &lt; 500ms in DOM) — <strong>preview-tool test</strong></p></li><li><p>⬜ A produced SkillBundle compiled to SKILL.md validates against the agentskills.io frontmatter schema — <strong>defer to follow-up PR if SKILL.md compiler doesn't exist yet; otherwise add test</strong></p></li><li><p>⬜ Advocate dissent (when faculty.advocate or critic_model set) appears on the bundle but does NOT override the examiner — <strong>`critic.test.ts`</strong></p></li><li><p>⬜ <strong>v0.2 net-new — Stratified picker</strong>: with a fixed <code>rng_seed</code>, the picker reproducibly visits cells in a deterministic order, and never returns a cell already in <code>attempts[]</code> until all cells have been attempted once — <strong>`manifestation.test.ts` extension</strong></p></li><li><p>⬜ <strong>v0.2 net-new — MCP charter end-to-end</strong>: a charter with <code>mcp_targets[0].server_id = 'graphonomous'</code> runs against a stub discovery that returns 3 tools, produces a bundle whose <code>tool_call</code> edges all match the discovered inputSchema, and surfaces <code>mcp_targets_resolved</code> on the curriculum — <strong>`run.test.ts` with stubbed discovery</strong></p></li><li><p>⬜ <strong>v0.2 net-new — MCPInvariantPack validation</strong>: a valid pack loads; an invalid pack (missing <code>proof_gate</code>, unknown <code>family</code>) is rejected with a clear error — <strong>`mcp_pack.test.ts`</strong></p></li><li><p>⬜ <strong>v0.2 net-new — All-gate claims</strong>: with the v0.2 expansion, each skill contributes ≥6 entries to <code>invariant_claims[]</code> (one per v0.1 gate) + extra entries when MCP gates fire — <strong>`run.test.ts` assertion on claim count</strong></p></li><li><p>⬜ <strong>v0.2 net-new — CellLedger persistence</strong>: when <code>charter.school_ref</code> is set, every visited cell produces exactly one entry in the <code>cell_ledger</code> IDB store — <strong>`cell_ledger.test.ts`</strong></p></li><li><p>⬜ <strong>v0.2 net-new — Anti-collusion structural test</strong>: when <code>faculty.lead === faculty.advocate</code> (same model), the advocate's openrouter call MUST receive <code>messages: []</code> with no prior turns from the lead's call. Verify via a spy on <code>lib/openrouter.ts</code> that the two calls' <code>messages</code> arrays are disjoint — <strong>`critic.test.ts` extension</strong></p></li></ol>
+<p>Items 3, 5, 7, 8, 10, 11–16 are this PR's test deliverables. Item 9 may be deferred.</p>
+<h3 id="blk-88709">8. Testing protocol</h3>
+<p>Run before committing:</p>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> workbench/app
+npm test                    <span class="t-comment"># all vitest must pass — target +45 new tests on top of 132 existing</span>
+npm run check               <span class="t-comment"># typecheck — don't regress from current 26 errors</span>
+npm run dev                 <span class="t-comment"># start preview server</span>
+<span class="t-comment"># Then via agent-browser (CLAUDE.md default): /supervise → paste the example charter → Run → verify CurriculumBundle appears</span></code></pre>
+<p>Use <code>agent-browser</code> (the repo default, per <code>CLAUDE.md</code>) to verify the live run loop. <code>preview_*</code> tools are still fine for dev-server management; use <code>agent-browser</code> once the server is running.</p>
+<p><strong>Holdout discipline (spec §0.4):</strong> Add ONE test (<code>run.test.ts</code>) that verifies the gate verdict is computed by <code>verifyBundle</code> — NOT by the goal generator, NOT by the advocate, NOT by anything inside <code>run.ts</code>. Stub <code>verifyBundle</code> to return <code>{ overall_verdict: 'fail' }</code> and confirm the resulting CurriculumBundle reports <code>fail</code> even when the advocate returns <code>consent</code>. This test enforces &quot;supervisor does not grade its own homework.&quot;</p>
+<p><strong>Anti-collusion structural test (spec §4.5):</strong> Add ONE test (<code>critic.test.ts</code>) that spies on <code>lib/openrouter.ts</code>. When <code>faculty.lead === faculty.advocate</code> (same model), verify the advocate's call's <code>messages[]</code> is disjoint from the lead's call's <code>messages[]</code> — i.e. the advocate gets a fresh context. This is the structural enforcement of the panel's anti-collusion contract.</p>
+<p><strong>MCP gate test (spec §5.4):</strong> Add <code>verify_mcp.test.ts</code> with three cases:</p>
+<ul><li><p>A bundle whose <code>tool_call</code> edges all conform to the discovered schemas → all 3 MCP gates pass.</p></li><li><p>A bundle where one <code>tool_call</code> has args violating <code>inputSchema</code> → <code>gate.tool_contract_compliance</code> fails.</p></li><li><p>A bundle with two <code>tool_call</code> edges declared <code>idempotent: true</code>, same <code>args_hash</code>, different <code>result_hash</code> → <code>gate.tool_idempotence</code> fails.</p></li></ul>
+<h3 id="blk-88723">9. Scope guards — what NOT to do</h3>
+<p>This PR is BIG ENOUGH. Resist the temptation to:</p>
+<ul><li><p>❌ Refactor <code>routes/teach/+page.svelte</code> to use <code>factory/run_one.ts</code>. That's drift bug #5 — known tech debt; separate PR. For now, the teach page and the Supervisor both call into <code>run_one.ts</code> independently.</p></li><li><p>❌ Add multi-invariant charters. Spec §0.5 forbids it; deferred to v0.3.</p></li><li><p>❌ Add multi-server MCP charters. v0.2 schema enforces <code>mcp_targets.maxItems = 1</code>; deferred to v0.3.</p></li><li><p>❌ Build the full Registrar (CellLedger reads, InvariantLedger, TeacherLedger, AlumniLedger). v0.2 only ships <strong>write-only</strong> CellLedger scaffolding. Spec §8.4 defers the reads to v0.3.</p></li><li><p>❌ Implement information-gain / Wilson-upper-bound routing. v0.2 uses stratified picking; Wilson-frontier picking is v0.3 (spec §6.5).</p></li><li><p>❌ Build a CLI runner. Spec §13 defers it.</p></li><li><p>❌ Wire PRISM live ingest. Gated on PRISM-side endpoint.</p></li><li><p>❌ Add scenario synthesis (Reflect → Composer → LLM → Compose closed loop). Out of scope; separate prompt.</p></li><li><p>❌ Build a charter marketplace. Spec §0.5 forbids it.</p></li><li><p>❌ Introduce new MCP servers (the schema for one is fine — <code>MCP_INVARIANT_PACK.v0.schema.json</code> is sibling spec, not a server).</p></li><li><p>❌ Touch <code>charter.ts</code>, <code>manifestation.ts</code>, <code>coverage.ts</code>, <code>bundle.ts</code> for behavior changes — they're the contract. v0.2 schema fields are additive only (already merged).</p></li></ul>
+<p>If any of these tempt you, write a follow-up issue and move on.</p>
+<h3 id="blk-88749">10. Why this earns the title &quot;Principal&quot;</h3>
+<p>Without the orchestrator, the Workbench is a teacher pushing buttons. With the orchestrator:</p>
+<table><thead><tr><th>Principal role</th><th>How this PR delivers it</th></tr></thead><tbody><tr><td>Set curriculum policy</td><td>TeacherCharter is the policy artifact</td></tr><tr><td>Pick what to teach next</td><td><code>route</code> phase + <code>pickNextCell</code></td></tr><tr><td>Run a teacher leaderboard</td><td>Charter pins the model; aggregate verdicts in <code>CurriculumBundle.prism_scores</code></td></tr><tr><td>Grade with a separate eye</td><td><code>verifyBundle</code> is the grader; spec §0.4 invariant is enforced by the holdout test in §8</td></tr><tr><td>Ship graduates, retire alumni</td><td><code>CurriculumBundle</code> is the graduation diploma; retirement is a v0.2 concern</td></tr><tr><td>Self-improve the school</td><td>Deferred (scenario synthesis is a separate prompt)</td></tr><tr><td>Hire teachers</td><td>Charter's <code>model</code> field is the hire</td></tr><tr><td>Decide graduation</td><td>Halt conditions in §4.2</td></tr></tbody></table>
+<p>This is the smallest thing that earns the title. Subsequent prompts will close the remaining principal roles (scenario synthesis, regret-based routing, teacher leaderboard persistence across runs).</p>
+<h3 id="blk-88771">11. Companion docs to read before coding</h3>
+<p>In order:</p>
+<ol><li><p><code>workbench/docs/spec/SUPERVISOR.md</code> — the spec this implements (~675 lines)</p></li><li><p><code>workbench/app/src/lib/supervisor/charter.ts</code> — the data contract (~380 LOC)</p></li><li><p><code>workbench/app/src/lib/supervisor/manifestation.ts</code> — frontier helpers (~140 LOC)</p></li><li><p><code>workbench/app/src/lib/supervisor/bundle.ts</code> — output assembly (~180 LOC)</p></li><li><p><code>workbench/app/src/routes/teach/+page.svelte</code> — the loop you're extracting (~470 LOC)</p></li><li><p><code>workbench/app/src/lib/bundle/verify.ts</code> — the grader (do NOT modify)</p></li><li><p><code>STACK_PERIODIC_TABLE_OF_AGENT_INVARIANTS.html</code> — the invariant catalogue</p></li></ol>
+<p>Don't read all the other [&amp;] stack docs first. They're context, not requirements. The seven above are sufficient.</p>
+<h3 id="blk-88789">12. Definition of done</h3>
+<p>A successful build of this prompt produces:</p>
+<ul><li><p>✅ 11 new files (9 TS + 2 Svelte) + 1 IDB-schema delta in <code>storage.ts</code> (two new stores)</p></li><li><p>✅ +45 new vitest tests (175+ total) all green</p></li><li><p>✅ <code>npm run check</code> count not regressed (≤ 26 errors)</p></li><li><p>✅ Live <code>/supervise</code> page demonstrating the <code>replay_fidelity</code> charter producing a CurriculumBundle with N ≤ 12 skills + Wilson coverage + (when applicable) panel summary + (when applicable) <code>mcp_targets_resolved</code></p></li><li><p>✅ <code>/supervise/[run_id]</code> viewable on completed runs with 6 tabs (Charter / Skills / Coverage / Frontier / Panel / Bundle)</p></li><li><p>✅ One PR, one commit message, no protocol changes</p></li><li><p>✅ 16/16 acceptance criteria green (§7)</p></li></ul>
+<p>When all seven bullets are green, the Workbench has a principal. Ship.</p>
+<h3 id="blk-88807">13. Update log</h3>
+<ul><li><p><strong>2026-05-27</strong> — v1.0 initial. Built on top of the SUPERVISOR.md spec (2026-05-25) and the in-tree data layer that shipped alongside it. Companion to KAPPA_DELIBERATOR_PROMPT.md and ATTENTION_ENGINE_PROMPT.md in tone and structure; lives in <code>workbench/docs/spec/</code> (not <code>AmpersandBoxDesign/prompts/</code>) because the Supervisor is a Workbench-scoped component.</p></li><li><p><strong>2026-05-27</strong> — v1.1. Re-anchored on SUPERVISOR.md v0.2 (panel + MCP-tool awareness + Registrar scaffolding + stratified picker). Fixes five drift bugs flagged in the design review (§0a). Adds four new file contracts (<code>cell_ledger.ts</code>, <code>mcp_pack.ts</code>, <code>mcp/discovery.ts</code>, <code>bundle/verify_mcp.ts</code>). Expands acceptance criteria from 10 → 16 (six v0.2 net-new tests: stratified picker, MCP charter e2e, MCPInvariantPack validation, all-gate claims, CellLedger persistence, anti-collusion structural test). LOC budget: ~700 TS → ~1,500 TS + ~400 Svelte. No protocol changes — schema additions are forward-compatible.</p></li></ul></div>
+<p class="src"><a href="/#/workbench/docs/spec/SUPERVISOR_BUILD_PROMPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-88442" class="lvl2">0a. Changelog vs v1.0</a><a href="#blk-88455" class="lvl2">0. The one-sentence idea</a><a href="#blk-88458" class="lvl2">1. Why this exists (the gap)</a><a href="#blk-88478" class="lvl2">2. What already exists (do NOT rebuild)</a><a href="#blk-88506" class="lvl2">3. What you will build</a><a href="#blk-88547" class="lvl2">4. The 5-phase loop (spec §4.1)</a><a href="#blk-88568" class="lvl2">5. File-by-file contracts</a><a href="#blk-88569" class="lvl3">5.1 lib/factory/run_one.ts</a><a href="#blk-88580" class="lvl3">5.2 lib/supervisor/goal_gen.ts</a><a href="#blk-88584" class="lvl3">5.3 lib/supervisor/auto_manifest.ts</a><a href="#blk-88597" class="lvl3">5.4 lib/supervisor/critic.ts</a><a href="#blk-88602" class="lvl3">5.5 lib/supervisor/run.ts</a><a href="#blk-88608" class="lvl3">5.6 routes/supervise/+page.svelte</a><a href="#blk-88619" class="lvl3">5.7 routes/supervise/[run_id]/+page.svelte</a><a href="#blk-88636" class="lvl3">5.8 lib/supervisor/cell_ledger.ts</a><a href="#blk-88640" class="lvl3">5.9 lib/supervisor/mcp_pack.ts</a><a href="#blk-88644" class="lvl3">5.10 lib/mcp/discovery.ts</a><a href="#blk-88655" class="lvl3">5.11 lib/bundle/verify_mcp.ts</a><a href="#blk-88669" class="lvl2">6. IndexedDB schema delta</a><a href="#blk-88673" class="lvl2">7. Acceptance criteria (spec §11 verbatim)</a><a href="#blk-88709" class="lvl2">8. Testing protocol</a><a href="#blk-88723" class="lvl2">9. Scope guards — what NOT to do</a><a href="#blk-88749" class="lvl2">10. Why this earns the title &quot;Principal&quot;</a><a href="#blk-88771" class="lvl2">11. Companion docs to read before coding</a><a href="#blk-88789" class="lvl2">12. Definition of done</a><a href="#blk-88807" class="lvl2">13. Update log</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/workbench/docs/spec/README.md/">Workbench — Crystallize agent behavior into replayable skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/workbench/docs/spec/README.md/">Workbench — Crystallize agent behavior into replayable skills</a><a href="/workbench/docs/spec/SUPERVISOR.md/">Supervisor — Invariant-driven autonomous teacher for the Workbench</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierahwr5gudlwd7qquxg4g7ev7moor4kg5cd6yweshwjbx5ki7uky5ma</div></div></div>
+</div></div>
+</body></html>

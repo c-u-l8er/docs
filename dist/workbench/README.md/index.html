@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Workbench · workbench · Ampersand Box</title>
+<meta name="description" content="A skill workshop and proof harness for the [&amp;] Stack. Teach an agent once, capture every observable step, and turn the trace into a signed, replayable…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/workbench/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Workbench">
+<meta property="og:description" content="A skill workshop and proof harness for the [&amp;] Stack. Teach an agent once, capture every observable step, and turn the trace into a signed, replayable…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/workbench/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Workbench","name":"Workbench","description":"A skill workshop and proof harness for the [&] Stack. Teach an agent once, capture every observable step, and turn the trace into a signed, replayable…","url":"https://docs.ampersandboxdesign.com/workbench/README.md/","identifier":"bagaaierazfu7dl34ba7yoekvpp27ipuifumtkiw4ng5fp64v5ynipuuqgruq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"workbench","url":"https://docs.ampersandboxdesign.com/workbench/"},"articleSection":"workbench","hasPart":[{"@type":"WebPageElement","name":"Why Workbench exists"},{"@type":"WebPageElement","name":"Layout"},{"@type":"WebPageElement","name":"Status"},{"@type":"WebPageElement","name":"Develop"},{"@type":"WebPageElement","name":"Deploy"},{"@type":"WebPageElement","name":"Specs that matter here"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"workbench","item":"https://docs.ampersandboxdesign.com/workbench/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/workbench/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">workbench</span>
+<span class="path">workbench/README.md</span>
+
+</div></div>
+<div class="lead">A skill workshop and proof harness for the [&amp;] Stack. Teach an agent once, capture every observable step, and turn the trace into a signed, replayable SkillBundle that PRISM can…</div>
+<div class="prose"><h1 id="blk-87021">Workbench</h1>
+<blockquote><p>Crystallize agent behavior into replayable skills.</p></blockquote>
+<p>A skill workshop and proof harness for the [&amp;] Stack. Teach an agent once, capture every observable step, and turn the trace into a signed, replayable <strong>SkillBundle</strong> that PRISM can score and that any [&amp;] body (browser / host / simulator) can re-execute.</p>
+<h3 id="blk-87025">Why Workbench exists</h3>
+<p>The [&amp;] Stack has eleven protocols (OS-001..OS-011), nine MCP servers, and roughly five hundred Elixir / TypeScript tests showing the parts work in isolation. What it didn't have — until now — was a <em>user-facing</em> artifact that exercises the whole pipeline and produces something a person actually wants. Workbench is that artifact.</p>
+<p>A SkillBundle is valuable to the user (a reusable, replayable thing they can share). The same JSON is valuable to PRISM (it satisfies the EvidenceBundle contract from <code>STACK_ARCHITECTURE_GAP_REVIEW.md</code> Finding 8). Two audiences, one file.</p>
+<p>See <a href="#/workbench/docs/spec/README.md" data-link>`docs/spec/README.md`</a> for the authoritative spec.</p>
+<h3 id="blk-87029">Layout</h3>
+<pre><code>workbench/
+├── docs/spec/                   # authoritative v0.1 spec + 6 JSON schemas
+├── fixtures/scenarios/          # 5 canonical fixture scenarios
+├── app/                         # SvelteKit static app (Cloudflare Pages)
+│   ├── src/lib/
+│   │   ├── types.ts             # TypeScript mirrors of every schema
+│   │   ├── hash.ts              # canonical JSON + sha256 + bundleContentHash
+│   │   ├── storage.ts           # IndexedDB + sessionStorage
+│   │   ├── openrouter.ts        # BYO-key chat client (via /api/llm/openrouter)
+│   │   ├── trace.ts             # InteractionTrace builder
+│   │   ├── mcp/                 # streamable-HTTP MCP client + per-server wrappers
+│   │   └── bundle/              # builder / verify / replay
+│   └── src/routes/              # +layout, +page (landing), teach, skills, compare, prism, import
+└── functions/
+    ├── llm/openrouter.ts        # CF Pages Function: OpenRouter pass-through
+    ├── mcp/                     # CF Pages Functions: delegatic / body-browser / prism MCP proxies
+    └── prism/leaderboard.ts     # CF Pages Function: PRISM read-only leaderboard proxy</code></pre>
+<h3 id="blk-87031">Status</h3>
+<p><strong>v0.3.0-alpha</strong> — Invariant Arithmetic v0.3 is wired into the verifier and replay surface. Every proof gate's verdict is now computed by an <code>InvariantArithmetic.consume(value, requirements)</code> call (<code>app/src/lib/ia/</code>), and every gate carries <code>law</code> (e.g. <code>'L12/L14'</code>) and <code>invariant_family</code> (<code>topological | spatial | temporal | governance</code>) annotations. Replay surprise signals carry the same projection. The three relevant JSON schemas (PROOF_RESULT, REPLAY_REPORT, EVIDENCE_BUNDLE) declare the optional <code>law</code> / <code>invariant_family</code> / <code>ia_substrate</code> / <code>invariants</code> fields.</p>
+<p><strong>v0.2.3 baseline</strong> — authority gate supports <code>delegatic-mcp</code> HMAC/TTL verification when enabled, <code>body-browser-mcp</code> is wired for browser-body teach flows, and the PRISM page stages SkillBundle hand-off by <code>content_hash</code>.</p>
+<p>Persisted bundles are now self-describing: <code>verifyBundle</code> returns an <code>ia_substrate</code> block (version + <code>laws_exercised</code> + <code>families_exercised</code> projected from the gates' annotations) which the teach flow stamps into <code>bundle.proof.ia_substrate</code> before re-sealing the <code>content_hash</code>. The compare flow leaves it ephemeral (no persistence).</p>
+<p>113 / 113 vitest tests pass as of 2026-05-27 (95 v0.2 + 15 IA law properties at 1000 trials each + 3 IA annotation/substrate tests). <code>npm run check</code> has 23 known TypeScript/Svelte diagnostics inherited from v0.2.3 (no new diagnostics from the IA work); do not present the app as typecheck-clean until those are resolved.</p>
+<table><thead><tr><th>Surface</th><th>Status</th></tr></thead><tbody><tr><td>JSON schemas (6)</td><td>✅ complete + IA-annotated</td></tr><tr><td>Fixture scenarios</td><td>✅ 5 / 5</td></tr><tr><td>SvelteKit app shell</td><td>✅ scaffolded</td></tr><tr><td>Teach (simulator)</td><td>✅ end-to-end</td></tr><tr><td>Fixture chooser</td><td>✅ 5 / 5 (AC #3)</td></tr><tr><td>Crystallize bundle</td><td>✅ working</td></tr><tr><td>Bundle verify</td><td>✅ 6 / 6 gates, IA-derived (v0.3)</td></tr><tr><td>Bundle replay</td><td>✅ deterministic, IA-annotated surprises (v0.3)</td></tr><tr><td>Redaction profiles</td><td>✅ none / transcript_pii / full</td></tr><tr><td>Compare tab (2 models)</td><td>✅ AC #13 (live LLM)</td></tr><tr><td>Live manifest validation</td><td>✅ AC #6</td></tr><tr><td>Cross-session re-import</td><td>✅ AC #8</td></tr><tr><td>Body-browser teach</td><td>✅ v0.2.2 (perceive + encode_state edges)</td></tr><tr><td>Delegatic authority</td><td>✅ v0.2.1 (put_policy → authorize → verify)</td></tr><tr><td>PRISM connectivity</td><td>✅ v0.2.3 (leaderboard + list_systems + bundle hand-off)</td></tr><tr><td>Invariant Arithmetic</td><td>✅ v0.3.0 (15 laws, 1000-trial property tests, <code>consume</code>-derived gates)</td></tr></tbody></table>
+<h3 id="blk-87071">Develop</h3>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> app
+npm install
+npm run dev    <span class="t-comment"># http://localhost:5180</span></code></pre>
+<p>The dev server expects an OpenRouter key in <code>sessionStorage</code> (set via the landing page). For local development without a real proxy, set up a Vite middleware that forwards <code>/api/llm/openrouter/*</code> to <code>https://openrouter.ai/api/v1/*</code>, or configure Cloudflare's <code>wrangler pages dev</code> to mount <code>functions/</code>.</p>
+<h3 id="blk-87074">Deploy</h3>
+<p>Cloudflare Pages, zero-budget tier. The static SvelteKit build lives under <code>app/build/</code>; the Pages Function under <code>functions/</code> is auto-discovered.</p>
+<h3 id="blk-87076">Specs that matter here</h3>
+<ul><li><p><code>docs/spec/README.md</code> — Workbench v0.1 spec (authoritative)</p></li><li><p><code>../AmpersandBoxDesign/SPEC.md</code> — [&amp;] Protocol</p></li><li><p><code>../PULSE/schemas/pulse-loop-manifest.v0.1.json</code> — PULSE manifests</p></li><li><p><code>../PRISM/docs/</code> — PRISM benchmark contract</p></li><li><p><code>../STACK_ARCHITECTURE_GAP_REVIEW.md</code> Finding 8 — the Evidence Bundle gap this closes</p></li></ul></div>
+<p class="src"><a href="/#/workbench/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-87025" class="lvl2">Why Workbench exists</a><a href="#blk-87029" class="lvl2">Layout</a><a href="#blk-87031" class="lvl2">Status</a><a href="#blk-87071" class="lvl2">Develop</a><a href="#blk-87074" class="lvl2">Deploy</a><a href="#blk-87076" class="lvl2">Specs that matter here</a></nav></div><div class="card"><div class="lab">links to</div><a href="/workbench/docs/spec/README.md/">Workbench — Crystallize agent behavior into replayable skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierazfu7dl34ba7yoekvpp27ipuifumtkiw4ng5fp64v5ynipuuqgruq</div></div></div>
+</div></div>
+</body></html>

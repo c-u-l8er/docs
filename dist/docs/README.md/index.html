@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>stackdocs — the whole [&amp;] stack, as a filesystem you can walk · docs · Ampersand Box</title>
+<meta name="description" content="A single, navigable documentation site that mirrors the live repository&#39;s filesystem: every real docs/ and prompts/ markdown file across all 43 projects —…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/docs/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="stackdocs — the whole [&amp;] stack, as a filesystem you can walk">
+<meta property="og:description" content="A single, navigable documentation site that mirrors the live repository&#39;s filesystem: every real docs/ and prompts/ markdown file across all 43 projects —…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/docs/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"stackdocs — the whole [&] stack, as a filesystem you can walk","name":"stackdocs — the whole [&] stack, as a filesystem you can walk","description":"A single, navigable documentation site that mirrors the live repository's filesystem: every real docs/ and prompts/ markdown file across all 43 projects —…","url":"https://docs.ampersandboxdesign.com/docs/README.md/","identifier":"bagaaieran5fhegfx53cmaz6tjzfogarqrdrwvb5kajxmty4cxiax3kfnb4jq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"docs","url":"https://docs.ampersandboxdesign.com/docs/"},"articleSection":"docs","hasPart":[{"@type":"WebPageElement","name":"What it is"},{"@type":"WebPageElement","name":"How it dogfoods the stack (in the build, not as metaphor)"},{"@type":"WebPageElement","name":"Robustness: the build never breaks on real content"},{"@type":"WebPageElement","name":"Build it"},{"@type":"WebPageElement","name":"Extending it"},{"@type":"WebPageElement","name":"Files"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"docs","item":"https://docs.ampersandboxdesign.com/docs/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/docs/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">docs</span>
+<span class="path">docs/README.md</span>
+
+</div></div>
+<div class="lead">A single, navigable documentation site that mirrors the live repository&#39;s filesystem: every real docs/ and prompts/ markdown file across all 43 projects — plus each project&#39;s ow…</div>
+<div class="prose"><h1 id="blk-59854">stackdocs — the whole [&amp;] stack, as a filesystem you can walk</h1>
+<p>A single, navigable documentation site that <strong>mirrors the live repository's filesystem</strong>: every real <code>docs/</code> and <code>prompts/</code> markdown file across all 43 projects — plus each project's own root-level markdown, where TRVM, TRAAVIIS and WRL keep nearly all of theirs — becomes a page whose route <em>is</em> its source path. No files are moved. Open <code>dist/index.html</code> — single file, no server.</p>
+<h3 id="blk-59856">What it is</h3>
+<p>The home page is a <strong>Runefort campus</strong>: the stack rendered as a place you can walk. Directories are floors (campus → building → floor), documents are rooms. The left rail is the real filesystem tree; the top bar is a live breadcrumb of the current path. Each document page shows its <strong>source path</strong> (with a copy button), the rendered markdown, and a right rail of typed neighbors: outgoing links, <strong>backlinks</strong> (&quot;referenced by&quot;), and siblings in the same folder.</p>
+<p>Because <code>route === source path</code>, an AI agent reading the rendered docs can round- trip back to the exact file on disk, and vice-versa. <code>dist/atlas.json</code> is the machine-readable route⇄source map for exactly this.</p>
+<h3 id="blk-59859">How it dogfoods the stack (in the build, not as metaphor)</h3>
+<p><code>build-atlas.mjs</code> uses the real <code>@bendscript/core</code> npm package to:</p>
+<ol><li><p><strong>Mirror the filesystem</strong> — <code>tree.mjs</code> scans the repo (excluding</p></li></ol>
+<p><code>node_modules</code>, <code>_build</code>, <code>deps</code>, <code>old_scrap</code>, and every dot-directory except <code>.claude</code>, so gitignored local state like <code>.amp/</code> is never published), collecting every <code>docs/</code>+<code>prompts/</code> <code>.md</code> file, each project's root-level markdown, and the top-level stack docs. 350 docs / 43 projects.</p>
+<ol start="2"><li><p><strong>Turn each file into a validated BendScript document</strong> — <code>ingest.mjs</code> parses</p></li></ol>
+<p>the markdown to blocks; <code>render.mjs</code> emits BendScript; each doc is validated against the protocol schema, normalized, and <strong>content-addressed</strong> (CIDv1). The CID is shown in the reader rail — change a file, its id changes.</p>
+<ol start="3"><li><p><strong>Type every cross-doc link as an edge</strong> — relative <code>.md</code> links that resolve</p></li></ol>
+<p>to a known route become internal navigation; the graph is inverted to produce backlinks. Unresolvable links degrade gracefully (never fail the build).</p>
+<ol start="4"><li><p><strong>Verify the round-trip invariant</strong> — <code>parse(serialize(parse(d)))</code> is checked</p></li></ol>
+<p>to be a CID fixpoint across the whole corpus — the protocol's load-bearing claim, now proven over 223 real documents.</p>
+<p>The campus <em>is</em> Runefort's <code>codebase-atlas</code> idea; the pages <em>are</em> BendScript's &quot;prose is one projection of the graph.&quot; The medium is the message.</p>
+<h3 id="blk-59878">Robustness: the build never breaks on real content</h3>
+<p>Real markdown is messy. The ingest pipeline falls back to a raw code-block view for any document it can't cleanly parse, counting fallbacks in the build report (currently <strong>0</strong>). So new or unusual docs join the atlas automatically without ever failing the build.</p>
+<h3 id="blk-59880">Build it</h3>
+<pre data-lang="bash"><code>npm i                 <span class="t-comment"># box-and-box + @bendscript/core</span>
+npm run build         <span class="t-comment"># node build-atlas.mjs → dist/index.html + dist/atlas.json + dist/bend/*</span>
+npm run build:curated <span class="t-comment"># the earlier 21-page curated proof (node build.mjs)</span></code></pre>
+<p>Build report (actual output):</p>
+<pre><code>  ✓ 350 real docs mirrored from 43 projects (no files moved)
+  ✓ route === source path for every page (lossless agent round-trip)
+  ✓ 360 cross-doc links resolved to internal navigation
+  ✓ every page is a validated, content-addressed BendScript document
+  ✓ round-trip CID fixpoint holds across the corpus: true
+  ✓ 0 doc(s) fell back to raw view (unparseable markdown)</code></pre>
+<h3 id="blk-59884">Extending it</h3>
+<ul><li><p><strong>Add docs:</strong> just add markdown under any project's <code>docs/</code> or <code>prompts/</code>. The</p></li></ul>
+<p>next build picks it up — it joins the tree, the floors, search, and the graph.</p>
+<ul><li><p><strong>Point an agent at it:</strong> read <code>dist/atlas.json</code> for the <code>route ⇄ source</code></p></li></ul>
+<p>mapping, or read any <code>dist/bend/&lt;slug&gt;.bend.json</code> for the content-addressed BendScript form of a single file.</p>
+<h3 id="blk-59893">Files</h3>
+<ul><li><p><code>build-atlas.mjs</code> — the filesystem-mirror build (primary)</p></li><li><p><code>tree.mjs</code> — repo scan → filesystem tree + route↔source map</p></li><li><p><code>ingest.mjs</code> — markdown → BendScript blocks (with raw-view fallback)</p></li><li><p><code>render.mjs</code> — BendScript → HTML, link resolution</p></li><li><p><code>shell-atlas.css</code> / <code>shell-atlas.js</code> — the Runefort campus client</p></li><li><p><code>dist/</code> — built site (<code>index.html</code>, <code>atlas.json</code>, <code>bend/*.bend.json</code>)</p></li><li><p><code>build.mjs</code> / <code>content.mjs</code> / <code>sources.mjs</code> — the earlier curated 21-page proof</p></li></ul></div>
+<p class="src"><a href="/#/docs/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-59856" class="lvl2">What it is</a><a href="#blk-59859" class="lvl2">How it dogfoods the stack (in the build, not as metaphor)</a><a href="#blk-59878" class="lvl2">Robustness: the build never breaks on real content</a><a href="#blk-59880" class="lvl2">Build it</a><a href="#blk-59884" class="lvl2">Extending it</a><a href="#blk-59893" class="lvl2">Files</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/ECOSYSTEM.md/">The [&amp;] Protocol Ecosystem</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieran5fhegfx53cmaz6tjzfogarqrdrwvb5kajxmty4cxiax3kfnb4jq</div></div></div>
+</div></div>
+</body></html>

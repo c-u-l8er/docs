@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>[&amp;] Ecosystem — Codex Prompt Guide · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Version: 1.0 Date: March 28, 2026">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/CODEX_GUIDE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[&amp;] Ecosystem — Codex Prompt Guide">
+<meta property="og:description" content="Version: 1.0 Date: March 28, 2026">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/CODEX_GUIDE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] Ecosystem — Codex Prompt Guide","name":"[&] Ecosystem — Codex Prompt Guide","description":"Version: 1.0 Date: March 28, 2026","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/CODEX_GUIDE.md/","identifier":"bagaaieracgxkzs6e5yqrekjxbky6ar5lbahksdesjahctmujodc22td52koa","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1) Existing Prompt Inventory"},{"@type":"WebPageElement","name":"AmpersandBoxDesign/prompts/ (5,063 lines)"},{"@type":"WebPageElement","name":"bendscript.com/prompts/ (3,461 lines)"},{"@type":"WebPageElement","name":"Dependency Order (read in this sequence)"},{"@type":"WebPageElement","name":"2) How to Use with Codex"},{"@type":"WebPageElement","name":"For Graphonomous tasks"},{"@type":"WebPageElement","name":"For BendScript tasks"},{"@type":"WebPageElement","name":"For WebHost.Systems tasks"},{"@type":"WebPageElement","name":"3) New Codex Prompts Needed"},{"@type":"WebPageElement","name":"High priority (reference impl exists, specs complete)"},{"@type":"WebPageElement","name":"Medium priority (specs complete, no impl yet)"},{"@type":"WebPageElement","name":"Lower priority (marketplace/tooling, depends on others)"},{"@type":"WebPageElement","name":"4) Codex Prompt Template"},{"@type":"WebPageElement","name":"5) Cleanup Notes"},{"@type":"WebPageElement","name":"6) Generation Workflow"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/"},{"@type":"ListItem","position":4,"name":"CODEX_GUIDE.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/CODEX_GUIDE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/prompts/CODEX_GUIDE.md</span>
+
+</div></div>
+<div class="lead">Version: 1.0 Date: March 28, 2026</div>
+<div class="prose"><h1 id="blk-18598">[&amp;] Ecosystem — Codex Prompt Guide</h1>
+<p>Version: 1.0 Date: March 28, 2026</p>
+<blockquote><p>How to use the existing prompts for Codex-driven development, and what new prompts are needed.</p></blockquote>
+<h3 id="blk-18602">1) Existing Prompt Inventory</h3>
+<h4 id="blk-18603">AmpersandBoxDesign/prompts/ (5,063 lines)</h4>
+<table><thead><tr><th>Prompt</th><th>Lines</th><th>Purpose</th><th>Dependency</th></tr></thead><tbody><tr><td><code>PROTOCOL_PROMPT.md</code></td><td>679</td><td>Project identity, architecture, formal grammar, design system</td><td>None (read first)</td></tr><tr><td><code>KAPPA_BUILD_PROMPT.md</code></td><td>1,053</td><td>κ cyclicity detection implementation (v2). Canonical schema, field rules.</td><td>PROTOCOL_PROMPT</td></tr><tr><td><code>KAPPA_DELIBERATOR_PROMPT.md</code></td><td>946</td><td>Deliberation loop: decompose → focus → reconcile pipeline.</td><td>KAPPA_BUILD</td></tr><tr><td><code>ATTENTION_ENGINE_PROMPT.md</code></td><td>1,335</td><td>Proactive attention: survey → triage → dispatch → execute → reflect.</td><td>KAPPA_DELIBERATOR</td></tr><tr><td><code>MODEL_TIER_PROMPT.md</code></td><td>860</td><td>Hardware-adaptive tier budgets (8B / 70B+ / cloud frontier).</td><td>ATTENTION_ENGINE</td></tr><tr><td><code>GRAPHONOMOUS_PROMPT.md</code></td><td>190</td><td>Autonomous codebase traversal using Graphonomous MCP.</td><td>PROTOCOL_PROMPT</td></tr></tbody></table>
+<h4 id="blk-18633">bendscript.com/prompts/ (3,461 lines)</h4>
+<table><thead><tr><th>Prompt</th><th>Lines</th><th>Purpose</th></tr></thead><tbody><tr><td><code>BUILD.md</code></td><td>1,738</td><td>Full SvelteKit + Supabase architecture and migration spec</td></tr><tr><td><code>MIGRATION_PROMPT.md</code></td><td>842</td><td>Engine extraction from prototype to production</td></tr><tr><td><code>CODEX_COMPLETION_PROMPT.md</code></td><td>881</td><td>Current-state completion guide written specifically for Codex</td></tr></tbody></table>
+<h4 id="blk-18647">Dependency Order (read in this sequence)</h4>
+<pre><code>PROTOCOL_PROMPT          ← architecture + identity
+    ↓
+KAPPA_BUILD_PROMPT       ← topology detection
+    ↓
+KAPPA_DELIBERATOR_PROMPT ← reasoning loop
+    ↓
+ATTENTION_ENGINE_PROMPT  ← autonomous ignition
+    ↓
+MODEL_TIER_PROMPT        ← hardware adaptation</code></pre>
+<h3 id="blk-18649">2) How to Use with Codex</h3>
+<h4 id="blk-18650">For Graphonomous tasks</h4>
+<ol><li><p>Load <code>PROTOCOL_PROMPT.md</code> for ecosystem context</p></li><li><p>Load <code>GRAPHONOMOUS_PROMPT.md</code> for traversal protocol</p></li><li><p>Load the relevant numbered prompt (KAPPA_BUILD, DELIBERATOR, ATTENTION, or MODEL_TIER)</p></li><li><p>Reference <code>graphonomous.com/project_spec/README.md</code> as the implementation spec</p></li><li><p>Run Codex with task-specific instructions</p></li></ol>
+<h4 id="blk-18662">For BendScript tasks</h4>
+<ol><li><p>Load <code>bendscript.com/prompts/CODEX_COMPLETION_PROMPT.md</code> (already Codex-formatted)</p></li><li><p>Reference <code>bendscript.com/project_spec/README.md</code> as the spec</p></li><li><p>Optionally load <code>BUILD.md</code> for architecture decisions</p></li></ol>
+<h4 id="blk-18670">For WebHost.Systems tasks</h4>
+<ol><li><p>Load <code>PROTOCOL_PROMPT.md</code> for [&amp;] context</p></li><li><p>Reference <code>WebHost.Systems/project_spec/spec_v1/70_AMPERSAND_PROTOCOL_INTEGRATION.md</code></p></li><li><p>Generate task-specific Codex prompts from the §70 spec phases</p></li></ol>
+<h3 id="blk-18678">3) New Codex Prompts Needed</h3>
+<p>Once project_specs are finalized (all 5 new specs now exist), generate implementation prompts for each ecosystem app. Priority order based on implementation readiness:</p>
+<h4 id="blk-18680">High priority (reference impl exists, specs complete)</h4>
+<table><thead><tr><th>App</th><th>Spec</th><th>Prompt to Create</th><th>Implementation Stack</th></tr></thead><tbody><tr><td><strong>Delegatic</strong></td><td><code>delegatic.com/project_spec/README.md</code></td><td><code>DELEGATIC_BUILD_PROMPT.md</code></td><td>Elixir/OTP, Phoenix, Ecto</td></tr><tr><td><strong>Deliberatic</strong></td><td><code>deliberatic.com/project_spec/README.md</code></td><td><code>DELIBERATIC_BUILD_PROMPT.md</code></td><td>Elixir/OTP</td></tr><tr><td><strong>AgenTroMatic</strong></td><td><code>agentromatic.com/project_spec/README.md</code></td><td><code>AGENTROMATIC_BUILD_PROMPT.md</code></td><td>Elixir/OTP</td></tr></tbody></table>
+<h4 id="blk-18698">Medium priority (specs complete, no impl yet)</h4>
+<table><thead><tr><th>App</th><th>Spec</th><th>Prompt to Create</th><th>Implementation Stack</th></tr></thead><tbody><tr><td><strong>TickTickClock</strong></td><td><code>ticktickclock.com/project_spec/README.md</code></td><td><code>TICKTICKCLOCK_BUILD_PROMPT.md</code></td><td>Elixir/OTP, Mamba SSM</td></tr><tr><td><strong>GeoFleetic</strong></td><td><code>geofleetic.com/project_spec/README.md</code></td><td><code>GEOFLEETIC_BUILD_PROMPT.md</code></td><td>Elixir/OTP, CRDTs</td></tr><tr><td><strong>Agentelic</strong></td><td><code>agentelic.com/project_spec/README.md</code></td><td><code>AGENTELIC_BUILD_PROMPT.md</code></td><td>Elixir/OTP</td></tr></tbody></table>
+<h4 id="blk-18716">Lower priority (marketplace/tooling, depends on others)</h4>
+<table><thead><tr><th>App</th><th>Spec</th><th>Prompt to Create</th><th>Implementation Stack</th></tr></thead><tbody><tr><td><strong>FleetPrompt</strong></td><td><code>fleetprompt.com/project_spec/README.md</code></td><td><code>FLEETPROMPT_BUILD_PROMPT.md</code></td><td>Web app (TBD)</td></tr><tr><td><strong>SpecPrompt</strong></td><td><code>specprompt.com/project_spec/README.md</code></td><td><code>SPECPROMPT_BUILD_PROMPT.md</code></td><td>CLI + web (TBD)</td></tr><tr><td><strong>OpenSentience</strong></td><td><code>opensentience.org/project_spec/README.md</code></td><td>Research publication, not a codebase</td><td>N/A</td></tr></tbody></table>
+<h3 id="blk-18734">4) Codex Prompt Template</h3>
+<p>Each new prompt should follow this structure (based on what works in the existing prompts):</p>
+<pre data-lang="markdown"><code># [App Name] — Codex Build Prompt
+Version: 1.0
+Date: [date]
+
+## Identity
+[What this app IS in 2-3 sentences. Role in [&amp;] ecosystem.]
+
+## Architecture
+[ASCII diagram from project_spec. Key components and their responsibilities.]
+
+## [&amp;] Capabilities
+[What capabilities this app provides/consumes. Contract references.]
+
+## Implementation Spec Reference
+[Point to project_spec/README.md sections]
+
+## Build Order
+[Phased task list, ~500-1000 lines per phase]
+
+### Phase 1: [Name]
+- Task 1: [description, inputs, outputs, acceptance criteria]
+- Task 2: ...
+
+### Phase 2: [Name]
+...
+
+## API Surface
+[Key endpoints, MCP tools, or CLI commands to implement]
+
+## Field Naming Conventions
+[From KAPPA_BUILD_PROMPT pattern — explicit field name rules]
+
+## Testing Requirements
+[What constitutes &quot;done&quot; for each phase]
+
+## Dependencies
+[Other [&amp;] apps this depends on, and mock strategies when they're not available]</code></pre>
+<h3 id="blk-18737">5) Cleanup Notes</h3>
+<p>The existing prompts are <strong>not stale</strong> — they are current (March 2026) and technically precise. No cleanup needed on content. What would help:</p>
+<ol><li><p><strong>Add frontmatter</strong> to each prompt (version, date, dependencies, target-app)</p></li><li><p><strong>Cross-link</strong> prompts to their corresponding project_spec</p></li><li><p><strong>Add milestone gates</strong> (&quot;what constitutes done&quot; per section)</p></li><li><p><strong>Break ATTENTION_ENGINE_PROMPT</strong> (1,335 lines) into Codex-sized chunks if Codex context windows are a constraint</p></li></ol>
+<h3 id="blk-18748">6) Generation Workflow</h3>
+<p>When ready to generate a new Codex prompt:</p>
+<ol><li><p>Read the target app's <code>project_spec/README.md</code></p></li><li><p>Read the relevant [&amp;] capability contracts in <code>AmpersandBoxDesign/contracts/v0.1.0/</code></p></li><li><p>Read <code>PROTOCOL_PROMPT.md</code> for ecosystem context</p></li><li><p>Use the template from §4 above</p></li><li><p>Save to <code>AmpersandBoxDesign/prompts/[APP]_BUILD_PROMPT.md</code></p></li><li><p>Update this guide's inventory (§1)</p></li></ol></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/prompts/CODEX_GUIDE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-18602" class="lvl2">1) Existing Prompt Inventory</a><a href="#blk-18603" class="lvl3">AmpersandBoxDesign/prompts/ (5,063 lines)</a><a href="#blk-18633" class="lvl3">bendscript.com/prompts/ (3,461 lines)</a><a href="#blk-18647" class="lvl3">Dependency Order (read in this sequence)</a><a href="#blk-18649" class="lvl2">2) How to Use with Codex</a><a href="#blk-18650" class="lvl3">For Graphonomous tasks</a><a href="#blk-18662" class="lvl3">For BendScript tasks</a><a href="#blk-18670" class="lvl3">For WebHost.Systems tasks</a><a href="#blk-18678" class="lvl2">3) New Codex Prompts Needed</a><a href="#blk-18680" class="lvl3">High priority (reference impl exists, specs complete)</a><a href="#blk-18698" class="lvl3">Medium priority (specs complete, no impl yet)</a><a href="#blk-18716" class="lvl3">Lower priority (marketplace/tooling, depends on others)</a><a href="#blk-18734" class="lvl2">4) Codex Prompt Template</a><a href="#blk-18737" class="lvl2">5) Cleanup Notes</a><a href="#blk-18748" class="lvl2">6) Generation Workflow</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/prompts/ATTENTION_ENGINE_PROMPT.md/">Attention Engine — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/DUAL_LOOP_MACHINES.md/">Dual- and Triple-Loop Machine Architecture</a><a href="/AmpersandBoxDesign/prompts/GRAPHONOMOUS_PROMPT.md/">GRAPHONOMOUS_PROMPT</a><a href="/AmpersandBoxDesign/prompts/KAPPA_BUILD_PROMPT.md/">κ-Aware Routing — Build Prompt v2 for Graphonomous + BendScript</a><a href="/AmpersandBoxDesign/prompts/KAPPA_DELIBERATOR_PROMPT.md/">κ-Driven Deliberation Orchestrator — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/MODEL_TIER_PROMPT.md/">Model Tier Adaptation — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md/">[&amp;] Protocol — Zed AI Coder Prompt</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieracgxkzs6e5yqrekjxbky6ar5lbahksdesjahctmujodc22td52koa</div></div></div>
+</div></div>
+</body></html>

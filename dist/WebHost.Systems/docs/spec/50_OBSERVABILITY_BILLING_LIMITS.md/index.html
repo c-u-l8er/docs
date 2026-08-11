@@ -1,0 +1,249 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>webhost.systems — Observability, Metering, Cost, Tiers, and Limit Enforcement (v1) · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="Version: 1.0 Status: Implementation-ready Last updated: 2026-01-21 Audience: Engineering (primary)">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webhost.systems — Observability, Metering, Cost, Tiers, and Limit Enforcement (v1)">
+<meta property="og:description" content="Version: 1.0 Status: Implementation-ready Last updated: 2026-01-21 Audience: Engineering (primary)">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"webhost.systems — Observability, Metering, Cost, Tiers, and Limit Enforcement (v1)","name":"webhost.systems — Observability, Metering, Cost, Tiers, and Limit Enforcement (v1)","description":"Version: 1.0 Status: Implementation-ready Last updated: 2026-01-21 Audience: Engineering (primary)","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md/","identifier":"bagaaierarjq2kzhktn3jiqxuwypaaa6kicgedzcnokjlyruczrvjddwussiq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"1) Goals and non-goals"},{"@type":"WebPageElement","name":"1.1 Goals"},{"@type":"WebPageElement","name":"1.2 Non-goals (v1)"},{"@type":"WebPageElement","name":"2) Canonical definitions"},{"@type":"WebPageElement","name":"2.1 Units"},{"@type":"WebPageElement","name":"2.2 Time windows"},{"@type":"WebPageElement","name":"2.3 Source of truth"},{"@type":"WebPageElement","name":"2.4 Runtime providers"},{"@type":"WebPageElement","name":"3) Observability pillars (what we collect)"},{"@type":"WebPageElement","name":"3.1 Metrics (required)"},{"@type":"WebPageElement","name":"3.2 Logs (minimum viable)"},{"@type":"WebPageElement","name":"3.3 Tracing / correlation (required baseline)"},{"@type":"WebPageElement","name":"4) Telemetry event schema (normative)"},{"@type":"WebPageElement","name":"5) Telemetry emission and ingestion pipeline"},{"@type":"WebPageElement","name":"5.1 Emission patterns"},{"@type":"WebPageElement","name":"5.2 Ingestion processing (MUST)"},{"@type":"WebPageElement","name":"5.3 Dedupe / idempotency (SHOULD)"},{"@type":"WebPageElement","name":"5.4 Backpressure behavior"},{"@type":"WebPageElement","name":"6) Metrics aggregation model (billing usage)"},{"@type":"WebPageElement","name":"6.1 Aggregation targets"},{"@type":"WebPageElement","name":"6.2 Aggregation strategies"},{"@type":"WebPageElement","name":"6.3 Staleness and UX"},{"@type":"WebPageElement","name":"7) Cost estimation (v1 = estimated, deterministic)"},{"@type":"WebPageElement","name":"7.1 Principles"},{"@type":"WebPageElement","name":"7.2 Token cost estimation"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/"},{"@type":"ListItem","position":5,"name":"50_OBSERVABILITY_BILLING_LIMITS.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md</span>
+
+</div></div>
+<div class="lead">Version: 1.0 Status: Implementation-ready Last updated: 2026-01-21 Audience: Engineering (primary)</div>
+<div class="prose"><h1 id="blk-47933">webhost.systems — Observability, Metering, Cost, Tiers, and Limit Enforcement (v1)</h1>
+<p>Version: 1.0 Status: Implementation-ready Last updated: 2026-01-21 Audience: Engineering (primary)</p>
+<p>This document specifies how webhost.systems captures observability data, performs usage metering, estimates cost, defines subscription tiers, and enforces limits at deploy and invoke time.</p>
+<p>Normative language: MUST, MUST NOT, SHOULD, MAY.</p>
+<h3 id="blk-47937">1) Goals and non-goals</h3>
+<h4 id="blk-47938">1.1 Goals</h4>
+<p>The platform MUST:</p>
+<ol><li><p>Attribute all billable usage to <code>{userId, agentId, deploymentId, runtimeProvider, timestamp}</code>.</p></li><li><p>Capture enough telemetry to:</p></li></ol>
+<ul><li><p>enforce plan limits,</p></li><li><p>display usage in the dashboard,</p></li><li><p>compute estimated cost (per runtime and total).</p></li></ul>
+<ol start="3"><li><p>Prevent telemetry spoofing and billing manipulation.</p></li><li><p>Enforce limits before incurring provider cost whenever possible (pre-checks at invocation gateway).</p></li><li><p>Provide operational observability:</p></li></ol>
+<ul><li><p>deployment outcomes,</p></li><li><p>invocation success/error rates,</p></li><li><p>latency and availability tracking,</p></li><li><p>basic tracing with <code>traceId</code>.</p></li></ul>
+<h4 id="blk-47968">1.2 Non-goals (v1)</h4>
+<ul><li><p>Perfect cost reconciliation against provider invoices (v1 uses estimated costs).</p></li><li><p>Full distributed tracing across all provider internals (v1 uses correlation IDs + structured events).</p></li><li><p>Public invocations with API keys (may be post-v1; requirements here assume authenticated invocations).</p></li></ul>
+<h3 id="blk-47976">2) Canonical definitions</h3>
+<h4 id="blk-47977">2.1 Units</h4>
+<ul><li><p><code>requests</code>: count of invocations.</p></li><li><p><code>tokens</code>: LLM tokens used (provider-reported preferred, otherwise estimated).</p></li><li><p><code>computeMs</code>: compute time for the invocation (wall time or billed time, depending on provider; must be consistent per provider).</p></li><li><p><code>costUsdEstimated</code>: estimated USD cost (deterministic given the event inputs).</p></li></ul>
+<h4 id="blk-47987">2.2 Time windows</h4>
+<ul><li><p><code>billing period</code>: the usage accounting window used for limits and billing UX.</p></li><li><p>v1 recommendation: calendar month (<code>YYYY-MM</code>) for simplicity.</p></li><li><p><code>retention window</code>: time horizon raw telemetry and logs are kept (tier-based).</p></li></ul>
+<h4 id="blk-47995">2.3 Source of truth</h4>
+<ul><li><p>Raw telemetry events (append-only) are the source of truth for usage.</p></li><li><p>Aggregates (billingUsage) are derived views and may be recomputed.</p></li></ul>
+<h4 id="blk-48001">2.4 Runtime providers</h4>
+<ul><li><p><code>cloudflare</code>: Cloudflare Workers + Durable Objects (default tier).</p></li><li><p>TypeScript-first: Workers and Durable Objects are commonly developed and deployed in TypeScript.</p></li><li><p><code>agentcore</code>: AWS Bedrock AgentCore (premium/enterprise tier).</p></li><li><p>TypeScript-first: AgentCore supports TypeScript end-to-end for management and invocation (e.g., via AWS SDK clients) and has a TypeScript tools ecosystem (e.g., Code Interpreter and Browser tooling integrations).</p></li><li><p>Note: tool availability and “built-in services” are provider features; webhost.systems should expose them as runtime capabilities and gate them by tier where appropriate.</p></li></ul>
+<h3 id="blk-48013">3) Observability pillars (what we collect)</h3>
+<h4 id="blk-48014">3.1 Metrics (required)</h4>
+<p>At minimum, the system MUST collect:</p>
+<ul><li><p>Invocations:</p></li><li><p><code>requests</code></p></li><li><p><code>errors</code></p></li><li><p><code>errorClass</code> (normalized)</p></li><li><p><code>runtimeProvider</code></p></li><li><p>Usage:</p></li><li><p><code>llmTokens</code> (reported or estimated)</p></li><li><p><code>computeMs</code></p></li><li><p>provider-specific counters (optional but recommended)</p></li><li><p>Cost:</p></li><li><p><code>costUsdEstimated</code> (per event, then aggregated)</p></li></ul>
+<h4 id="blk-48039">3.2 Logs (minimum viable)</h4>
+<p>v1 MUST provide:</p>
+<ul><li><p>deployment logs: status transitions + sanitized error messages.</p></li><li><p>invocation errors: last N error summaries per agent/deployment (may be derived from telemetry events).</p></li></ul>
+<p>v1 SHOULD provide:</p>
+<ul><li><p>structured logs with:</p></li><li><p>timestamp</p></li><li><p>level</p></li><li><p>traceId</p></li><li><p>agentId/deploymentId</p></li><li><p>message</p></li><li><p>an external log store pointer (logsRef) rather than storing large logs in the primary DB.</p></li></ul>
+<h4 id="blk-48062">3.3 Tracing / correlation (required baseline)</h4>
+<ul><li><p>Every invocation MUST have a <code>traceId</code> generated by the invocation gateway.</p></li><li><p>The <code>traceId</code> SHOULD be propagated to the runtime provider (headers/metadata where possible).</p></li><li><p>The <code>traceId</code> MUST be included in telemetry events whenever possible.</p></li></ul>
+<h3 id="blk-48070">4) Telemetry event schema (normative)</h3>
+<p>Telemetry events MUST be emitted per invocation. The canonical event shape (logical) is:</p>
+<ul><li><p>attribution:</p></li><li><p>userId</p></li><li><p>agentId</p></li><li><p>deploymentId (SHOULD be present; MAY be null only for transitional legacy paths)</p></li><li><p>runtimeProvider</p></li><li><p>time:</p></li><li><p>timestamp (invocation end time)</p></li><li><p>ingestion time (server adds)</p></li><li><p>counters:</p></li><li><p>requests (usually 1)</p></li><li><p>llmTokens</p></li><li><p>computeMs</p></li><li><p>errors (0/1 typical)</p></li><li><p>errorClass (optional)</p></li><li><p>provider details (optional, runtime-specific)</p></li><li><p>costUsdEstimated</p></li><li><p>traceId (optional but strongly recommended)</p></li></ul>
+<p>Security requirements for telemetry authenticity and anti-spoofing are defined in:</p>
+<ul><li><p><code>40_SECURITY_SECRETS_COMPLIANCE.md</code> (telemetry signing)</p></li><li><p><code>10_API_CONTRACTS.md</code> (telemetry ingestion endpoint contract)</p></li></ul>
+<h3 id="blk-48113">5) Telemetry emission and ingestion pipeline</h3>
+<h4 id="blk-48114">5.1 Emission patterns</h4>
+<p>Each runtime provider MUST choose one emission pattern (or both) and be consistent:</p>
+<p><strong>Pattern A — In-workload emission (preferred for Cloudflare DO):</strong></p>
+<ul><li><p>After completing invocation, the Worker/DO signs and sends the telemetry event to the control plane ingestion endpoint.</p></li><li><p>Advantages: captures compute timing and provider-specific counters from within the runtime.</p></li><li><p>Constraint: requires outbound call to control plane.</p></li></ul>
+<p><strong>Pattern B — Adapter-side emission (fallback / interim):</strong></p>
+<ul><li><p>After receiving provider response, the control plane runtime adapter emits telemetry using the information returned by the provider.</p></li><li><p>Advantages: simpler runtime code.</p></li><li><p>Constraint: may miss provider-specific counters; must not undercount usage.</p></li></ul>
+<h4 id="blk-48132">5.2 Ingestion processing (MUST)</h4>
+<p>On telemetry ingestion, the control plane MUST:</p>
+<ol><li><p>Verify the request is authentic (signature / secret per deployment).</p></li><li><p>Validate required fields and enums.</p></li><li><p>Cross-check ownership:</p></li></ol>
+<ul><li><p>deploymentId belongs to agentId,</p></li><li><p>agentId belongs to userId.</p></li></ul>
+<ol start="4"><li><p>Persist the event as append-only.</p></li><li><p>Update incremental counters (optional optimization) OR rely on scheduled aggregation.</p></li></ol>
+<h4 id="blk-48151">5.3 Dedupe / idempotency (SHOULD)</h4>
+<p>Telemetry ingestion SHOULD support deduplication to reduce double-counting from retries:</p>
+<ul><li><p>Preferred: include <code>eventId</code> generated by runtime and store it for a short dedupe window.</p></li><li><p>Alternative: dedupe using <code>(deploymentId, traceId)</code> if traceId uniqueness is guaranteed per invocation.</p></li><li><p>If implementing dedupe, do not reject legitimate distinct events.</p></li></ul>
+<h4 id="blk-48160">5.4 Backpressure behavior</h4>
+<p>If telemetry ingestion is temporarily unavailable:</p>
+<ul><li><p>Runtime SHOULD retry with exponential backoff (bounded).</p></li><li><p>Runtime SHOULD not block user responses indefinitely while retrying telemetry.</p></li><li><p>If telemetry fails entirely, invocation still succeeds, but usage may be undercounted; this is acceptable only if:</p></li><li><p>the system logs the telemetry failure internally,</p></li><li><p>the platform tracks “telemetry drop rate” as an internal health metric,</p></li><li><p>you add a mitigation plan post-v1 (buffering/queue).</p></li></ul>
+<h3 id="blk-48175">6) Metrics aggregation model (billing usage)</h3>
+<h4 id="blk-48176">6.1 Aggregation targets</h4>
+<p>The system MUST produce aggregates:</p>
+<ul><li><p>per user per billing period:</p></li><li><p>totals: requests, tokens, computeMs, costUsdEstimated</p></li><li><p>breakdown by runtimeProvider</p></li><li><p>optionally per agent per time bucket (hour/day) for dashboard charts</p></li></ul>
+<h4 id="blk-48187">6.2 Aggregation strategies</h4>
+<p>v1 supports either (choose one; both acceptable):</p>
+<p><strong>Strategy 1 — Scheduled recompute (simple):</strong></p>
+<ul><li><p>Periodically scan raw telemetry for a user and update <code>billingUsage</code>.</p></li><li><p>Pros: simplest correctness model.</p></li><li><p>Cons: expensive at scale without partitioning.</p></li></ul>
+<p><strong>Strategy 2 — Incremental counters + periodic reconciliation (recommended):</strong></p>
+<ul><li><p>On telemetry ingestion, increment per-period counters (and optionally per-day counters).</p></li><li><p>A scheduled job periodically reconciles by scanning raw events for the last N hours/days to correct drift.</p></li><li><p>Pros: fast reads for limit checks; scalable.</p></li><li><p>Cons: more implementation complexity.</p></li></ul>
+<h4 id="blk-48207">6.3 Staleness and UX</h4>
+<ul><li><p>Dashboard usage views MAY be eventually consistent (minutes).</p></li><li><p>Limit enforcement MUST be conservative (fail closed when uncertain) OR use a “soft buffer” (see §8.6) to reduce false blocks.</p></li></ul>
+<h3 id="blk-48213">7) Cost estimation (v1 = estimated, deterministic)</h3>
+<h4 id="blk-48214">7.1 Principles</h4>
+<ul><li><p>Cost is <strong>estimated</strong> until reconciled with provider billing exports.</p></li><li><p>The estimator MUST be deterministic given event inputs.</p></li><li><p>Each telemetry event MUST include <code>costUsdEstimated</code> (even if 0), to avoid complex recomputation on reads.</p></li></ul>
+<h4 id="blk-48222">7.2 Token cost estimation</h4>
+<p>If provider returns tokens, use them. If not, estimate tokens using a deterministic tokenizer approximation:</p>
+<ul><li><p>v1 recommendation: a heuristic based on character count (documented as estimate), or a stable tokenizer library if available in your runtime.</p></li><li><p>Keep the estimator consistent across invocations to maintain predictable limits.</p></li></ul>
+<h4 id="blk-48229">7.3 Cloudflare cost model (placeholder; configure constants)</h4>
+<p>Cloudflare cost may include:</p>
+<ul><li><p>Workers CPU / duration (depending on plan)</p></li><li><p>Durable Objects compute and storage operations</p></li><li><p>Workers AI calls (if used)</p></li><li><p>Egress (if relevant; usually excluded from v1 estimate)</p></li></ul>
+<p>v1 approach:</p>
+<ul><li><p>Define a <code>CloudflareCostModel</code> with configurable constants, e.g.:</p></li><li><p><code>USD_PER_MILLION_REQUESTS</code></p></li><li><p><code>USD_PER_GB_SECOND</code> (if using duration-based billing)</p></li><li><p><code>USD_PER_DO_OP</code> (optional)</p></li><li><p><code>USD_PER_WORKERS_AI_CALL</code> (optional)</p></li><li><p>Compute <code>costUsdEstimated = f(requests, computeMs, provider.cloudflare.*)</code></p></li></ul>
+<p>Important:</p>
+<ul><li><p>If you cannot confidently model Cloudflare components, v1 MAY set Cloudflare cost estimate to:</p></li><li><p>token-based (if you use a model with token cost), plus</p></li><li><p>a small fixed overhead per request,</p></li><li><p>and label clearly as estimate.</p></li></ul>
+<h4 id="blk-48264">7.4 AgentCore cost model (placeholder; configure constants)</h4>
+<p>AgentCore cost may include (depending on how you configure and bill the runtime):</p>
+<ul><li><p>runtime session duration (or billed runtime execution time)</p></li><li><p>compute resources (vCPU/memory shape, if applicable)</p></li><li><p>tool usage (e.g., code execution and browser automation), which may be:</p></li><li><p>billed implicitly as runtime execution time, and/or</p></li><li><p>billed explicitly per tool invocation (provider-dependent; model only if applicable)</p></li><li><p>token/model usage (if the platform provides models; BYOK token cost is informational)</p></li></ul>
+<p>v1 approach:</p>
+<ul><li><p>Define an <code>AgentCoreCostModel</code> with configurable constants (do not hardcode pricing into logic):</p></li><li><p><code>USD_PER_SESSION_MS</code> or <code>USD_PER_HOUR_BY_INSTANCE_SHAPE</code></p></li><li><p><code>USD_PER_TOOL_INVOCATION</code> (optional; only if the provider bills tools separately)</p></li><li><p>optional token pricing constants only for platform-provided model billing (not BYOK)</p></li><li><p>Compute <code>costUsdEstimated = f(tokens, sessionDurationMs, toolInvocations, instanceShape)</code> using whichever inputs are available from telemetry.</p></li><li><p>Implementation note (TypeScript): AgentCore is TypeScript-capable end-to-end; the adapter can capture and normalize tool/session usage surfaced by the runtime/tooling SDKs into the telemetry schema.</p></li></ul>
+<h4 id="blk-48293">7.5 Model/provider cost (BYOK vs platform-provided)</h4>
+<p>There are two modes:</p>
+<p><strong>Mode A — BYOK (Bring your own key):</strong></p>
+<ul><li><p>The platform does not pay the model provider; token cost is informational only.</p></li><li><p>Limits may still be enforced by tokens to protect platform compute or to provide guardrails.</p></li><li><p>Cost estimate SHOULD reflect platform costs only (runtime compute, tools), not customer’s model invoice.</p></li></ul>
+<p><strong>Mode B — Platform-provided model billing (post-v1 or optional):</strong></p>
+<ul><li><p>Token cost becomes part of platform cost estimate and billing.</p></li><li><p>This requires accurate token counting and potentially provider reconciliation.</p></li></ul>
+<p>v1 recommendation:</p>
+<ul><li><p>Start with BYOK + platform runtime costs (as estimates).</p></li><li><p>Keep the schema ready for Mode B.</p></li></ul>
+<h3 id="blk-48315">8) Subscription tiers and entitlements (normative)</h3>
+<h4 id="blk-48316">8.1 Tier list (v1)</h4>
+<ul><li><p><code>free</code></p></li><li><p><code>starter</code></p></li><li><p><code>pro</code></p></li><li><p><code>enterprise</code></p></li></ul>
+<h4 id="blk-48326">8.2 Entitlement dimensions</h4>
+<p>Each tier defines:</p>
+<h5 id="blk-48328">8.2.1 Core budgets (MUST)</h5>
+<ul><li><p><code>maxRequestsPerPeriod</code></p></li><li><p><code>maxTokensPerPeriod</code> (reported or estimated)</p></li><li><p><code>maxComputeMsPerPeriod</code></p></li></ul>
+<h5 id="blk-48336">8.2.2 Runtime access (MUST)</h5>
+<ul><li><p><code>agentcoreEnabled</code> (boolean)</p></li></ul>
+<h5 id="blk-48340">8.2.3 AgentCore capability flags (MUST when agentcoreEnabled=true)</h5>
+<p>These flags control which AgentCore features the platform is allowed to enable for a user’s deployments:</p>
+<ul><li><p><code>memoryEnabled</code> (boolean)</p></li><li><p><code>codeInterpreterEnabled</code> (boolean)</p></li><li><p><code>browserEnabled</code> (boolean)</p></li></ul>
+<p>Notes:</p>
+<ul><li><p>These are <strong>entitlements</strong>, not per-request knobs. The control plane may still choose to disable a capability for a specific deployment even when entitled, but MUST NOT enable a capability when not entitled.</p></li><li><p>These flags SHOULD be reflected in the data model (agent/providerConfig and deployment/providerRef) to support auditing, debugging, and consistent enforcement.</p></li></ul>
+<h5 id="blk-48355">8.2.4 Tool quotas (optional but recommended when tools are enabled)</h5>
+<p>If you enable AgentCore tools for any tier, the tier SHOULD also define explicit monthly quotas to prevent surprise costs:</p>
+<ul><li><p><code>maxToolCallsPerPeriod</code> (total tool invocations across code interpreter + browser + any future tools)</p></li><li><p><code>maxCodeExecutionSecondsPerPeriod</code> (time spent in code execution sandbox)</p></li><li><p><code>maxBrowserSessionsPerPeriod</code> (count of distinct browser tool sessions)</p></li></ul>
+<p>If these quotas are not implemented in v1:</p>
+<ul><li><p>the platform MUST still emit telemetry with tool usage fields when available, and</p></li><li><p>the platform SHOULD gate tool enablement to only the highest tier to reduce risk.</p></li></ul>
+<h5 id="blk-48370">8.2.5 Retention (MUST)</h5>
+<ul><li><p><code>telemetryRetentionDays</code></p></li><li><p><code>logsRetentionDays</code></p></li></ul>
+<h5 id="blk-48376">8.2.6 Optional platform caps (MAY)</h5>
+<ul><li><p><code>maxAgents</code></p></li><li><p><code>maxDeploymentsPerAgent</code></p></li><li><p><code>maxConcurrentInvocations</code></p></li><li><p>any other operational caps required for abuse prevention and cost control</p></li><li><p>invocation limits per billing period:</p></li><li><p>maxRequests</p></li><li><p>maxTokens</p></li><li><p>maxComputeMs</p></li><li><p>retention:</p></li><li><p>raw telemetry retention days</p></li><li><p>logs retention days</p></li><li><p>runtime access:</p></li><li><p>whether AgentCore runtime is enabled</p></li><li><p>optional: maxAgents, maxDeployments, maxEnvVars, etc.</p></li></ul>
+<h4 id="blk-48406">8.3 Default tier entitlements (fill values during pricing finalization)</h4>
+<p>The system MUST implement entitlements as configuration, not hardcoded literals.</p>
+<p>Example entitlement table (illustrative; not pricing commitment):</p>
+<ul><li><p>free:</p></li><li><p>maxRequests: X</p></li><li><p>maxTokens: Y</p></li><li><p>maxComputeMs: Z</p></li><li><p>agentcoreEnabled: false</p></li><li><p>memoryEnabled: false</p></li><li><p>codeInterpreterEnabled: false</p></li><li><p>browserEnabled: false</p></li><li><p>telemetryRetentionDays: 7</p></li><li><p>logsRetentionDays: 7</p></li></ul>
+<ul><li><p>starter:</p></li><li><p>higher limits</p></li><li><p>agentcoreEnabled: false (or limited, if you explicitly want a small allocation)</p></li><li><p>memoryEnabled: false</p></li><li><p>codeInterpreterEnabled: false</p></li><li><p>browserEnabled: false</p></li><li><p>telemetryRetentionDays: 14</p></li><li><p>logsRetentionDays: 14</p></li></ul>
+<ul><li><p>pro:</p></li><li><p>higher limits</p></li><li><p>agentcoreEnabled: optional (platform choice; if enabled, tools still SHOULD remain off by default in v1)</p></li><li><p>memoryEnabled: optional (only meaningful if agentcoreEnabled=true)</p></li><li><p>codeInterpreterEnabled: false (recommended v1)</p></li><li><p>browserEnabled: false (recommended v1)</p></li><li><p>telemetryRetentionDays: 30</p></li><li><p>logsRetentionDays: 30</p></li></ul>
+<ul><li><p>enterprise:</p></li><li><p>custom limits</p></li><li><p>agentcoreEnabled: true</p></li><li><p>memoryEnabled: true</p></li><li><p>codeInterpreterEnabled: true</p></li><li><p>browserEnabled: true</p></li><li><p>maxToolCallsPerPeriod: &lt;set value&gt;</p></li><li><p>maxCodeExecutionSecondsPerPeriod: &lt;set value&gt;</p></li><li><p>maxBrowserSessionsPerPeriod: &lt;set value&gt;</p></li><li><p>telemetryRetentionDays: 90</p></li><li><p>logsRetentionDays: 90</p></li></ul>
+<h4 id="blk-48487">8.4 Runtime gating rules (MUST)</h4>
+<ul><li><p>Deployments to <code>agentcore</code> MUST be rejected when <code>agentcoreEnabled=false</code>.</p></li><li><p>Invocations routed to <code>agentcore</code> MUST be rejected when <code>agentcoreEnabled=false</code> (defense in depth).</p></li><li><p>UI MUST hide or disable AgentCore options when not entitled, but backend enforcement is authoritative.</p></li></ul>
+<p>Capability gating (AgentCore):</p>
+<ul><li><p>If <code>memoryEnabled=false</code>, the control plane MUST NOT enable AgentCore memory features for any deployment, and MUST reject deployments that request/require memory.</p></li><li><p>If <code>codeInterpreterEnabled=false</code>, the control plane MUST NOT enable Code Interpreter for any deployment, and MUST reject deployments that request/require it.</p></li><li><p>If <code>browserEnabled=false</code>, the control plane MUST NOT enable Browser tooling for any deployment, and MUST reject deployments that request/require it.</p></li></ul>
+<p>Tool quota enforcement (if tool entitlements exist):</p>
+<ul><li><p>If a tier defines <code>maxToolCallsPerPeriod</code> / <code>maxCodeExecutionSecondsPerPeriod</code> / <code>maxBrowserSessionsPerPeriod</code>, the invocation path MUST enforce these limits (preferably pre-invocation; otherwise block subsequent invocations once exceeded).</p></li><li><p>Telemetry SHOULD include tool usage counters so quotas can be enforced and shown in the dashboard.</p></li></ul>
+<h4 id="blk-48509">8.5 Plan changes</h4>
+<p>When a user upgrades/downgrades:</p>
+<ul><li><p>Entitlements MUST update via verified billing webhook (or server-side admin action).</p></li><li><p>Limit checks MUST use the current tier entitlements effective at time of invocation.</p></li><li><p>If user is downgraded below current usage:</p></li><li><p>The platform MUST enforce limits immediately (block further invocations) OR</p></li><li><p>Allow a grace period (explicitly configured). v1 recommendation: block immediately to keep implementation simple.</p></li></ul>
+<h4 id="blk-48522">8.6 Buffers and fairness (recommended)</h4>
+<p>To avoid “false blocks” due to telemetry latency:</p>
+<ul><li><p>Implement a small buffer margin per limit (e.g., allow +1% or +N requests) and show it as “pending usage”.</p></li><li><p>OR enforce limits using a fast incremental counter updated at request time (preferred).</p></li></ul>
+<p>If you implement buffering:</p>
+<ul><li><p>Apply the same policy consistently across tiers.</p></li><li><p>Ensure it cannot be exploited for unlimited usage.</p></li></ul>
+<h3 id="blk-48535">9) Limit enforcement (normative)</h3>
+<h4 id="blk-48536">9.1 Enforcement points</h4>
+<p>Limits MUST be enforced at:</p>
+<ol><li><p><strong>Deploy time</strong>:</p></li></ol>
+<ul><li><p>runtime gating (AgentCore enabled),</p></li><li><p>optional limits on number of agents/deployments.</p></li></ul>
+<ol start="2"><li><p><strong>Invoke time</strong> (primary cost control):</p></li></ol>
+<ul><li><p>check budgets before calling provider runtime,</p></li><li><p>reject with <code>LIMIT_EXCEEDED</code> when exceeded.</p></li></ul>
+<h4 id="blk-48554">9.2 Budgets to enforce</h4>
+<p>At minimum, invocation gateway MUST enforce:</p>
+<ul><li><p>requests budget</p></li><li><p>tokens budget (estimated or reported)</p></li><li><p>computeMs budget (estimated)</p></li></ul>
+<p>Important nuance:</p>
+<ul><li><p>You cannot know actual tokens/computeMs before invocation.</p></li></ul>
+<p>Therefore v1 MUST implement <strong>predictive reservation</strong> or <strong>post-charge</strong> approach:</p>
+<p><strong>Option A — Conservative pre-reservation (recommended):</strong></p>
+<ul><li><p>Compute a worst-case or predicted cost for the request:</p></li><li><p>reserve <code>requests += 1</code></p></li><li><p>reserve <code>tokens += predictedTokens</code></p></li><li><p>reserve <code>computeMs += predictedComputeMs</code></p></li><li><p>If budget would exceed, reject before provider call.</p></li><li><p>After invocation, reconcile with actual usage (if actual &lt; reserved, release difference; if actual &gt; reserved, charge difference).</p></li></ul>
+<p><strong>Option B — Request-only pre-check + post-charge (acceptable for MVP):</strong></p>
+<ul><li><p>Pre-check only <code>requests</code> limit before provider call.</p></li><li><p>After invocation, post telemetry updates tokens/compute.</p></li><li><p>If tokens/compute exceed limits, block subsequent requests.</p></li><li><p>Risk: a user can exceed token/compute budget within a single request.</p></li></ul>
+<p>v1 recommendation:</p>
+<ul><li><p>Implement Option B initially (simpler), then upgrade to Option A as you scale/care about cost precision.</p></li><li><p>If you allow AgentCore (potentially expensive), prefer Option A at least for AgentCore tiers.</p></li></ul>
+<h4 id="blk-48598">9.3 Limit check algorithm (MUST be consistent)</h4>
+<p>At invocation start:</p>
+<ol><li><p>Resolve user and agent; ensure agent is active and has an active deployment.</p></li><li><p>Load entitlements for user tier.</p></li><li><p>Load current period usage totals for user (from <code>billingUsage</code> or incremental counters).</p></li><li><p>If any enforced limit is already exceeded:</p></li></ol>
+<ul><li><p>reject immediately with <code>LIMIT_EXCEEDED</code>.</p></li></ul>
+<ol start="5"><li><p>Proceed to runtime invocation.</p></li></ol>
+<p>After invocation:</p>
+<ul><li><p>Ensure telemetry event is recorded.</p></li><li><p>If you maintain incremental counters:</p></li><li><p>update counters atomically (idempotency-aware).</p></li><li><p>If user exceeded limits post-charge:</p></li><li><p>mark user/account state such that subsequent invocations are blocked.</p></li></ul>
+<h4 id="blk-48627">9.4 Atomicity and race conditions</h4>
+<p>Because invocations may be concurrent, enforcement MUST address race conditions.</p>
+<p>Minimum acceptable v1 behavior:</p>
+<ul><li><p>Enforce with best-effort and accept small overruns under concurrency (documented).</p></li><li><p>Ensure you never undercount systematically.</p></li></ul>
+<p>Recommended behavior:</p>
+<ul><li><p>Maintain a per-user per-period counter with atomic increments (or transactional update) for <code>requests</code>.</p></li><li><p>If implementing token/compute pre-reservations, those counters must also be atomic.</p></li></ul>
+<h4 id="blk-48641">9.5 Failure modes</h4>
+<p>If the usage store is unavailable (cannot read entitlements/usage):</p>
+<ul><li><p>The system SHOULD fail closed for expensive runtimes (AgentCore) and MAY fail open for low-cost runtimes (Cloudflare free tier) depending on risk tolerance.</p></li><li><p>v1 recommendation: fail closed for all invocations to avoid surprise costs and inconsistent state.</p></li></ul>
+<h4 id="blk-48648">9.6 Response format on limit exceeded</h4>
+<p>Invocation gateway MUST return a normalized error envelope:</p>
+<ul><li><p><code>code: LIMIT_EXCEEDED</code></p></li><li><p>message safe for display</p></li><li><p>details include:</p></li><li><p>limitType (requests/tokens/computeMs)</p></li><li><p>periodKey</p></li><li><p>current and limit values (if known)</p></li><li><p>suggested action (upgrade tier)</p></li></ul>
+<h3 id="blk-48665">10) Dashboard and reporting requirements (implementation-focused)</h3>
+<h4 id="blk-48666">10.1 Required views (MVP)</h4>
+<p>Dashboard MUST show:</p>
+<ul><li><p>Current tier and billing period usage:</p></li><li><p>totals: requests, tokens, computeMs, estimated cost</p></li><li><p>per-runtime breakdown</p></li><li><p>percent of limits used</p></li><li><p>Per-agent metrics:</p></li><li><p>requests and errors over time</p></li><li><p>last deployed time</p></li><li><p>active deployment version</p></li><li><p>Deployment history:</p></li><li><p>statuses, timestamps, error messages</p></li><li><p>Recent errors list:</p></li><li><p>timestamp, traceId, error class, runtime provider</p></li></ul>
+<h4 id="blk-48693">10.2 Time series bucketing</h4>
+<p>For charting:</p>
+<ul><li><p>Provide server-side bucketing into <code>minute | hour | day</code>.</p></li><li><p>For each bucket, compute:</p></li><li><p>requests sum</p></li><li><p>tokens sum</p></li><li><p>computeMs sum</p></li><li><p>errors sum</p></li><li><p>costUsdEstimated sum</p></li></ul>
+<h4 id="blk-48710">10.3 Cost display semantics</h4>
+<p>UI MUST label costs as:</p>
+<ul><li><p>“Estimated cost” unless reconciled.</p></li></ul>
+<p>If you later add reconciliation:</p>
+<ul><li><p>show both estimated and reconciled values and explain difference.</p></li></ul>
+<h3 id="blk-48719">11) Retention and deletion policies (observability data)</h3>
+<h4 id="blk-48720">11.1 Retention rules (tier-based)</h4>
+<p>The system MUST implement retention for:</p>
+<ul><li><p>raw telemetry events</p></li><li><p>logs (deployment and invocation logs)</p></li></ul>
+<p>Recommended minimum:</p>
+<ul><li><p>free: 7 days</p></li><li><p>starter: 14 days</p></li><li><p>pro: 30 days</p></li><li><p>enterprise: 90+ days</p></li></ul>
+<p>Retention MUST be implemented as a server-side scheduled job that:</p>
+<ul><li><p>deletes raw telemetry events older than retention cutoff per user tier (or per event bucket policy),</p></li><li><p>deletes logs older than retention cutoff,</p></li><li><p>preserves aggregated billing usage for at least 13 months (recommended) irrespective of tier.</p></li></ul>
+<h4 id="blk-48745">11.2 Deletion semantics for agents</h4>
+<p>When an agent is deleted (soft delete recommended):</p>
+<ul><li><p>new invocations MUST be blocked immediately.</p></li><li><p>existing telemetry and aggregates MAY remain until retention sweeps remove them (or be removed immediately if you implement stronger deletion guarantees).</p></li><li><p>If a user requests full deletion (post-v1), you need a stronger data deletion workflow.</p></li></ul>
+<h3 id="blk-48754">12) Provider reconciliation (post-v1 extension, but plan for it)</h3>
+<h4 id="blk-48755">12.1 Why</h4>
+<p>Estimated costs are good enough for limits and UX initially, but billing requires reconciliation if you charge based on actual provider spend.</p>
+<h4 id="blk-48757">12.2 Reconciliation approach (future)</h4>
+<ul><li><p>Periodically ingest provider billing exports:</p></li><li><p>Cloudflare billing export (if available)</p></li><li><p>AWS cost and usage reports</p></li><li><p>Map provider line items back to <code>{deploymentId, userId}</code> using:</p></li><li><p>provider tags/labels on resources,</p></li><li><p>naming conventions,</p></li><li><p>per-deployment resource references.</p></li><li><p>Store reconciled cost values in:</p></li><li><p>a new <code>costReconciliation</code> table, OR</p></li><li><p>additional fields in <code>billingUsage</code> (e.g., <code>costUsdReconciled</code>).</p></li></ul>
+<h4 id="blk-48779">12.3 Requirements for future compatibility (MUST now)</h4>
+<p>To enable reconciliation later, v1 MUST:</p>
+<ul><li><p>tag all provider resources with:</p></li><li><p>userId</p></li><li><p>agentId</p></li><li><p>deploymentId</p></li><li><p>store provider resource identifiers (<code>providerRef</code>) on deployments.</p></li></ul>
+<h3 id="blk-48792">13) Internal health metrics (for operating the platform)</h3>
+<p>The control plane SHOULD track (internal-only):</p>
+<ul><li><p>telemetry ingestion success rate and latency</p></li><li><p>telemetry drop rate (emit attempt failed)</p></li><li><p>invocation gateway latency (p50/p95/p99) by runtime provider</p></li><li><p>deployment success rate and deploy duration</p></li><li><p>error rates by errorClass and runtime provider</p></li><li><p>limit-exceeded rate (helps tune entitlements)</p></li></ul>
+<h3 id="blk-48807">14) Implementation checklist (v1)</h3>
+<h4 id="blk-48808">14.1 MUST</h4>
+<ul><li><p>[ ] Telemetry ingestion validates signature and ownership.</p></li><li><p>[ ] Telemetry events persisted append-only with required attribution fields.</p></li><li><p>[ ] Billing usage aggregates exist per user per period with per-runtime breakdown.</p></li><li><p>[ ] Invocation gateway enforces tier gating and limits (at least requests; preferably more).</p></li><li><p>[ ] Runtime provider resources are tagged with userId/agentId/deploymentId.</p></li><li><p>[ ] UI shows usage totals and limits with clear “estimated” labeling.</p></li><li><p>[ ] Retention job deletes raw telemetry and logs per tier.</p></li></ul>
+<h4 id="blk-48824">14.2 SHOULD</h4>
+<ul><li><p>[ ] Idempotent telemetry ingestion (eventId or traceId dedupe).</p></li><li><p>[ ] Incremental counters for fast limit checks under concurrency.</p></li><li><p>[ ] Streaming invocation includes traceId and emits final usage summary.</p></li><li><p>[ ] Alerting hooks for abnormal error rate or telemetry drop rate.</p></li></ul>
+<h4 id="blk-48834">14.3 MUST NOT</h4>
+<ul><li><p>[ ] MUST NOT store plaintext secrets in telemetry events or logs.</p></li><li><p>[ ] MUST NOT accept telemetry without integrity verification.</p></li><li><p>[ ] MUST NOT allow clients to set or modify subscription tier directly.</p></li></ul>
+<h3 id="blk-48842">15) Acceptance criteria (Definition of Done for this module)</h3>
+<p>This module is v1-complete when:</p>
+<ol><li><p>A successful invocation produces exactly one persisted telemetry event (or deduped as one logical event) with correct attribution.</p></li><li><p>The dashboard shows current-period totals and per-runtime breakdown within an acceptable delay (minutes).</p></li><li><p>Invocations are blocked when the user exceeds configured limits, returning <code>LIMIT_EXCEEDED</code>.</p></li><li><p>AgentCore deploy/invoke is blocked when the user is not entitled.</p></li><li><p>Telemetry ingestion rejects spoofed events (invalid signature) and mismatched ownership.</p></li><li><p>Retention sweeps remove raw telemetry and logs beyond tier limits while keeping aggregates for longer-term billing reporting.</p></li></ol></div>
+<p class="src"><a href="/#/WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-47937" class="lvl2">1) Goals and non-goals</a><a href="#blk-47938" class="lvl3">1.1 Goals</a><a href="#blk-47968" class="lvl3">1.2 Non-goals (v1)</a><a href="#blk-47976" class="lvl2">2) Canonical definitions</a><a href="#blk-47977" class="lvl3">2.1 Units</a><a href="#blk-47987" class="lvl3">2.2 Time windows</a><a href="#blk-47995" class="lvl3">2.3 Source of truth</a><a href="#blk-48001" class="lvl3">2.4 Runtime providers</a><a href="#blk-48013" class="lvl2">3) Observability pillars (what we collect)</a><a href="#blk-48014" class="lvl3">3.1 Metrics (required)</a><a href="#blk-48039" class="lvl3">3.2 Logs (minimum viable)</a><a href="#blk-48062" class="lvl3">3.3 Tracing / correlation (required baseline)</a><a href="#blk-48070" class="lvl2">4) Telemetry event schema (normative)</a><a href="#blk-48113" class="lvl2">5) Telemetry emission and ingestion pipeline</a><a href="#blk-48114" class="lvl3">5.1 Emission patterns</a><a href="#blk-48132" class="lvl3">5.2 Ingestion processing (MUST)</a><a href="#blk-48151" class="lvl3">5.3 Dedupe / idempotency (SHOULD)</a><a href="#blk-48160" class="lvl3">5.4 Backpressure behavior</a><a href="#blk-48175" class="lvl2">6) Metrics aggregation model (billing usage)</a><a href="#blk-48176" class="lvl3">6.1 Aggregation targets</a><a href="#blk-48187" class="lvl3">6.2 Aggregation strategies</a><a href="#blk-48207" class="lvl3">6.3 Staleness and UX</a><a href="#blk-48213" class="lvl2">7) Cost estimation (v1 = estimated, deterministic)</a><a href="#blk-48214" class="lvl3">7.1 Principles</a><a href="#blk-48222" class="lvl3">7.2 Token cost estimation</a><a href="#blk-48229" class="lvl3">7.3 Cloudflare cost model (placeholder; configure constants)</a><a href="#blk-48264" class="lvl3">7.4 AgentCore cost model (placeholder; configure constants)</a><a href="#blk-48293" class="lvl3">7.5 Model/provider cost (BYOK vs platform-provided)</a><a href="#blk-48315" class="lvl2">8) Subscription tiers and entitlements (normative)</a><a href="#blk-48316" class="lvl3">8.1 Tier list (v1)</a><a href="#blk-48326" class="lvl3">8.2 Entitlement dimensions</a><a href="#blk-48328" class="lvl4">8.2.1 Core budgets (MUST)</a><a href="#blk-48336" class="lvl4">8.2.2 Runtime access (MUST)</a><a href="#blk-48340" class="lvl4">8.2.3 AgentCore capability flags (MUST when agentcoreEnabled=true)</a><a href="#blk-48355" class="lvl4">8.2.4 Tool quotas (optional but recommended when tools are enabled)</a><a href="#blk-48370" class="lvl4">8.2.5 Retention (MUST)</a><a href="#blk-48376" class="lvl4">8.2.6 Optional platform caps (MAY)</a><a href="#blk-48406" class="lvl3">8.3 Default tier entitlements (fill values during pricing finalization)</a><a href="#blk-48487" class="lvl3">8.4 Runtime gating rules (MUST)</a><a href="#blk-48509" class="lvl3">8.5 Plan changes</a><a href="#blk-48522" class="lvl3">8.6 Buffers and fairness (recommended)</a><a href="#blk-48535" class="lvl2">9) Limit enforcement (normative)</a><a href="#blk-48536" class="lvl3">9.1 Enforcement points</a><a href="#blk-48554" class="lvl3">9.2 Budgets to enforce</a><a href="#blk-48598" class="lvl3">9.3 Limit check algorithm (MUST be consistent)</a><a href="#blk-48627" class="lvl3">9.4 Atomicity and race conditions</a><a href="#blk-48641" class="lvl3">9.5 Failure modes</a><a href="#blk-48648" class="lvl3">9.6 Response format on limit exceeded</a><a href="#blk-48665" class="lvl2">10) Dashboard and reporting requirements (implementation-focused)</a><a href="#blk-48666" class="lvl3">10.1 Required views (MVP)</a><a href="#blk-48693" class="lvl3">10.2 Time series bucketing</a><a href="#blk-48710" class="lvl3">10.3 Cost display semantics</a><a href="#blk-48719" class="lvl2">11) Retention and deletion policies (observability data)</a><a href="#blk-48720" class="lvl3">11.1 Retention rules (tier-based)</a><a href="#blk-48745" class="lvl3">11.2 Deletion semantics for agents</a><a href="#blk-48754" class="lvl2">12) Provider reconciliation (post-v1 extension, but plan for it)</a><a href="#blk-48755" class="lvl3">12.1 Why</a><a href="#blk-48757" class="lvl3">12.2 Reconciliation approach (future)</a><a href="#blk-48779" class="lvl3">12.3 Requirements for future compatibility (MUST now)</a><a href="#blk-48792" class="lvl2">13) Internal health metrics (for operating the platform)</a><a href="#blk-48807" class="lvl2">14) Implementation checklist (v1)</a><a href="#blk-48808" class="lvl3">14.1 MUST</a><a href="#blk-48824" class="lvl3">14.2 SHOULD</a><a href="#blk-48834" class="lvl3">14.3 MUST NOT</a><a href="#blk-48842" class="lvl2">15) Acceptance criteria (Definition of Done for this module)</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/spec/00_MASTER_SPEC.md/">webhost.systems — MASTER ENGINEERING SPEC (v1)</a><a href="/WebHost.Systems/docs/spec/10_API_CONTRACTS.md/">webhost.systems — API Contracts (v1)</a><a href="/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md/">webhost.systems — Runtime Provider Interface (RPI) &amp; Adapter Guidance (v1)</a><a href="/WebHost.Systems/docs/spec/30_DATA_MODEL_SUPABASE.md/">webhost.systems — Data Model (Supabase/PostgreSQL) &amp; Access Control (v1)</a><a href="/WebHost.Systems/docs/spec/40_SECURITY_SECRETS_COMPLIANCE.md/">webhost.systems — Security, Secrets, and Compliance (v1)</a><a href="/WebHost.Systems/docs/spec/60_TESTING_ACCEPTANCE.md/">webhost.systems — Testing Plan &amp; Acceptance Criteria (v1)</a><a href="/WebHost.Systems/docs/spec/70_AMPERSAND_PROTOCOL_INTEGRATION.md/">webhost.systems — [&amp;] Protocol Integration Spec (v1)</a><a href="/WebHost.Systems/docs/spec/README.md/">webhost.systems — Spec v1 (Implementation-Ready Document Set)</a><a href="/WebHost.Systems/docs/spec/REALIGNMENT_PLAN.md/">webhost.systems — Spec-to-Implementation Realignment Plan (v1)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierarjq2kzhktn3jiqxuwypaaa6kicgedzcnokjlyruczrvjddwussiq</div></div></div>
+</div></div>
+</body></html>

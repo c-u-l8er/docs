@@ -1,0 +1,130 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;body.browser · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;body.browser is the browser-embodiment capability of the [&amp;] Protocol. It declares that an agent has a web browser as its body — a typed interface for…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/body.browser.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;body.browser">
+<meta property="og:description" content="&amp;body.browser is the browser-embodiment capability of the [&amp;] Protocol. It declares that an agent has a web browser as its body — a typed interface for…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/body.browser.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&body.browser","name":"&body.browser","description":"&body.browser is the browser-embodiment capability of the [&] Protocol. It declares that an agent has a web browser as its body — a typed interface for…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/body.browser.md/","identifier":"bagaaieralkedav2ndm74vixzzh4u477btdtzw2jrbe2taozfi7xpqt7nvwva","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Definition"},{"@type":"WebPageElement","name":"Why it exists"},{"@type":"WebPageElement","name":"Position in the primitive family"},{"@type":"WebPageElement","name":"Capability contract summary"},{"@type":"WebPageElement","name":"Operations"},{"@type":"WebPageElement","name":"perceive(perception_query) → browser_observation"},{"@type":"WebPageElement","name":"act(typed_action) → action_outcome"},{"@type":"WebPageElement","name":"affordances(scope_query?) → affordance_set"},{"@type":"WebPageElement","name":"encode_state(perception_query?) → state_hash"},{"@type":"WebPageElement","name":"replay(interaction_trace) → replay_result"},{"@type":"WebPageElement","name":"Architecture patterns"},{"@type":"WebPageElement","name":"Example declaration"},{"@type":"WebPageElement","name":"Example payload shape"},{"@type":"WebPageElement","name":"Compatible providers"},{"@type":"WebPageElement","name":"Governance implications"},{"@type":"WebPageElement","name":"Provenance implications"},{"@type":"WebPageElement","name":"A2A and MCP implications"},{"@type":"WebPageElement","name":"Research grounding"},{"@type":"WebPageElement","name":"Anti-patterns"},{"@type":"WebPageElement","name":"Summary"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"body.browser.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/body.browser.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/body.browser.md</span>
+
+</div></div>
+<div class="lead">&amp;body.browser is the browser-embodiment capability of the [&amp;] Protocol. It declares that an agent has a web browser as its body — a typed interface for perceiving web pages, act…</div>
+<div class="prose"><h1 id="blk-8318"><code>&amp;body.browser</code></h1>
+<h3 id="blk-8319">Definition</h3>
+<p><code>&amp;body.browser</code> is the browser-embodiment capability of the [&amp;] Protocol. It declares that an agent has a web browser as its body — a typed interface for perceiving web pages, acting on DOM elements, enumerating what is currently interactable, and encoding page state so prior interactions can be deterministically replayed.</p>
+<h3 id="blk-8321">Why it exists</h3>
+<p>Before <code>&amp;body.browser</code>, agents that drove web pages did so through ungrounded MCP tool calls. There was no typed schema for &quot;what the agent sees in the browser right now,&quot; no canonical way to enumerate &quot;what actions are currently available to take,&quot; and no deterministic state identity that two agents could agree on for replay. Recording a successful workflow and shipping it to another agent was possible only as bespoke glue code — every integration had to be reinvented.</p>
+<p><code>&amp;body.browser</code> closes that gap. It gives every browser-driving agent (OpenClaw, Claude Computer Use, Pi.dev-based agents, agent-browser users, Playwright wrappers, custom Puppeteer scripts) a single capability contract to satisfy. Once satisfied, any upstream capability consumer — <code>&amp;memory.episodic.store</code> for recording, <code>&amp;reason.plan</code> for generating action sequences, <code>&amp;govern.telemetry</code> for observability — can consume the output without knowing which browser driver produced it.</p>
+<h3 id="blk-8324">Position in the primitive family</h3>
+<p><code>&amp;body.browser</code> is a subtype of <code>&amp;body</code> (sensorimotor primitive, introduced in protocol draft v0.1.0). It sits alongside:</p>
+<ul><li><p><code>&amp;body.os</code> — operating-system embodiment (shell, filesystem, screen)</p></li><li><p><code>&amp;body.vision</code> — reserved for audio/visual perception providers</p></li><li><p><code>&amp;body.voice</code> — reserved for audio input/output</p></li><li><p><code>&amp;body.motor</code> — reserved for physical-actuation providers (robotics)</p></li></ul>
+<p><code>&amp;body.browser</code> is distinct from <code>&amp;space.*</code> (external spatial data about fleets and regions), from <code>&amp;reason.plan</code> (abstract plan generation), and from <code>&amp;memory.episodic</code> (retrospective trace recall). Those primitives consume or produce browser traces but do not themselves constitute a browser body.</p>
+<h3 id="blk-8336">Capability contract summary</h3>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;body.browser&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;perceive&quot;</span>:      { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;perception_query&quot;</span>,  <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;browser_observation&quot;</span> },
+    <span class="t-key">&quot;act&quot;</span>:           { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;typed_action&quot;</span>,      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;action_outcome&quot;</span>      },
+    <span class="t-key">&quot;affordances&quot;</span>:   { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;scope_query&quot;</span>,       <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;affordance_set&quot;</span>      },
+    <span class="t-key">&quot;encode_state&quot;</span>:  { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;perception_query&quot;</span>,  <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;state_hash&quot;</span>          },
+    <span class="t-key">&quot;replay&quot;</span>:        { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;interaction_trace&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;replay_result&quot;</span>       }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [<span class="t-string">&quot;&amp;memory.episodic&quot;</span>, <span class="t-string">&quot;&amp;reason.plan&quot;</span>, <span class="t-string">&quot;&amp;govern.telemetry&quot;</span>, <span class="t-string">&quot;&amp;govern.identity&quot;</span>, <span class="t-string">&quot;context&quot;</span>, <span class="t-string">&quot;typed_action&quot;</span>, <span class="t-string">&quot;interaction_trace&quot;</span>],
+  <span class="t-key">&quot;feeds_into&quot;</span>:   [<span class="t-string">&quot;&amp;memory.episodic&quot;</span>, <span class="t-string">&quot;&amp;reason.*&quot;</span>,    <span class="t-string">&quot;&amp;govern.telemetry&quot;</span>, <span class="t-string">&quot;output&quot;</span>]
+}</code></pre>
+<p>Full contract: <code>contracts/v0.1.0/body.browser.contract.json</code>.</p>
+<h3 id="blk-8339">Operations</h3>
+<h4 id="blk-8340"><code>perceive(perception_query) → browser_observation</code></h4>
+<p>Capture current browser state. Observation includes URL, a11y tree structure, interactive element refs (e.g. <code>@e1</code>, <code>@e2</code>), viewport dimensions, document metadata. Refs assigned by a perceive call become stale on any navigation or DOM re-render; callers MUST re-perceive before re-acting on a ref. The observation is deterministic for a given page state.</p>
+<h4 id="blk-8342"><code>act(typed_action) → action_outcome</code></h4>
+<p>Execute a single typed action. Action types (closed set for v0.1): <code>click</code>, <code>dblclick</code>, <code>hover</code>, <code>focus</code>, <code>fill</code>, <code>type</code>, <code>press</code>, <code>check</code>, <code>uncheck</code>, <code>select</code>, <code>upload</code>, <code>scroll</code>, <code>scrollintoview</code>, <code>drag</code>, <code>navigate</code>, <code>wait</code>, <code>screenshot</code>. The outcome carries state hashes from before and after the action, which are what <code>&amp;memory.episodic.store</code> consumes to build an <code>InteractionTrace</code> edge.</p>
+<h4 id="blk-8344"><code>affordances(scope_query?) → affordance_set</code></h4>
+<p>Enumerate the typed actions currently available in the present browser state. This is the Gibson-style affordance interface: not every action is valid in every state. A <code>&lt;form&gt;</code> with no submit button has no <code>submit</code> affordance. A disabled button has no <code>click</code> affordance. Consumers use this for plan validation (<code>&amp;reason.plan</code>) and for state-encoded replay (matching a trace's required affordances against current state).</p>
+<h4 id="blk-8346"><code>encode_state(perception_query?) → state_hash</code></h4>
+<p>Produce a deterministic hash of current browser state. Canonical encoding: <code>sha256(canonical_json({url, a11y_tree_structure, viewport_hash}))</code>. Two agents with the same browser at the same page state MUST produce equal hashes. This is the FSM state-identity primitive — if two perceptions hash equal, a trace recorded from that state is replayable.</p>
+<h4 id="blk-8348"><code>replay(interaction_trace) → replay_result</code></h4>
+<p>Execute a stored <code>InteractionTrace</code> against the current browser. Fails fast if the starting state hash does not match the trace's recorded start, or if any intermediate hash diverges (indicating environment drift). See OS-011 for trace schema and replay semantics.</p>
+<h3 id="blk-8350">Architecture patterns</h3>
+<p>The canonical flow for browser-embodied continual learning:</p>
+<pre><code>perceive → affordances → &amp;reason.plan.generate → act (loop) → &amp;memory.episodic.store
+                                                                   ↓
+                                                           &amp;reason.learn_from_outcome
+                                                                   ↓
+                                                    &amp;memory.episodic (procedural crystallization)
+                                                                   ↓
+                                                   FleetPrompt SkillCandidate</code></pre>
+<p>A website FSM emerges naturally from repeated <code>perceive → act → perceive</code> cycles. States are the set of distinct <code>state_hash</code> values observed; transitions are the stored <code>InteractionTrace</code> edges between them.</p>
+<h3 id="blk-8354">Example declaration</h3>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;WebOperator&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;body.browser&quot;</span>:   { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;agent-browser&quot;</span> },
+    <span class="t-key">&quot;&amp;memory.episodic&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span> },
+    <span class="t-key">&quot;&amp;reason.plan&quot;</span>:    { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span> },
+    <span class="t-key">&quot;&amp;govern.telemetry&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span> }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never submit forms containing credentials without explicit authorization&quot;</span>,
+      <span class="t-string">&quot;Never navigate to URLs outside the authorized domain set&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: { <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span> }
+  }
+}</code></pre>
+<h3 id="blk-8356">Example payload shape</h3>
+<p>A single <code>InteractionTrace</code> edge emitted by <code>&amp;body.browser.act</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;trace_id&quot;</span>: <span class="t-string">&quot;01HX...&quot;</span>,
+  <span class="t-key">&quot;body_subtype&quot;</span>: <span class="t-string">&quot;browser&quot;</span>,
+  <span class="t-key">&quot;state_before&quot;</span>: <span class="t-string">&quot;sha256:abc123...&quot;</span>,
+  <span class="t-key">&quot;typed_action&quot;</span>: {
+    <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;click&quot;</span>,
+    <span class="t-key">&quot;target_ref&quot;</span>: <span class="t-string">&quot;@e5&quot;</span>,
+    <span class="t-key">&quot;semantic_locator&quot;</span>: { <span class="t-key">&quot;role&quot;</span>: <span class="t-string">&quot;button&quot;</span>, <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;Submit order&quot;</span> }
+  },
+  <span class="t-key">&quot;state_after&quot;</span>: <span class="t-string">&quot;sha256:def456...&quot;</span>,
+  <span class="t-key">&quot;latency_ms&quot;</span>: <span class="t-num">243</span>,
+  <span class="t-key">&quot;outcome_status&quot;</span>: <span class="t-string">&quot;success&quot;</span>,
+  <span class="t-key">&quot;provenance&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;agent-browser&quot;</span>,
+    <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;body.browser&quot;</span>,
+    <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;act&quot;</span>,
+    <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-04-21T14:22:05.123Z&quot;</span>,
+    <span class="t-key">&quot;agent_id&quot;</span>: <span class="t-string">&quot;WebOperator@workspace_42&quot;</span>
+  }
+}</code></pre>
+<h3 id="blk-8359">Compatible providers</h3>
+<ul><li><p><strong>agent-browser</strong> (npm) — CLI-first, snapshot-and-ref model; ProjectAmp2 default</p></li><li><p><strong>mcp__Claude_in_Chrome__</strong>* — Chrome extension MCP</p></li><li><p><strong>mcp__plugin_chrome-devtools-mcp__</strong>* — Chrome DevTools MCP (for performance/a11y audit flows)</p></li><li><p><strong>Playwright wrappers</strong> — any Playwright-based driver can satisfy <code>&amp;body.browser</code> by adapting the API</p></li><li><p><strong>Pi.dev browser extensions</strong> — see pi.dev for extension authoring</p></li></ul>
+<p>Providers satisfy the contract by implementing the five operations with the declared type signatures and state-hash determinism. Implementations MAY add provider-specific metadata fields (e.g., <code>playback_speed</code>, <code>mobile_emulation</code>) so long as the standard operations remain compatible.</p>
+<h3 id="blk-8372">Governance implications</h3>
+<ul><li><p><strong>Hard constraints</strong>: declarations SHOULD restrict browser actions to authorized domains, forbid navigation to external URLs, and deny submission of forms containing credentials unless explicitly authorized. See <code>&amp;govern.identity</code> + <code>&amp;govern.escalation</code>.</p></li><li><p><strong>Soft constraints</strong>: prefer semantic locators (role/text/label) over positional coordinates for replay robustness.</p></li><li><p><strong>Escalation</strong>: unexpected <code>action_outcome.status == &quot;failure&quot;</code> SHOULD emit a <code>SurpriseSignal</code> (OS-010 PULSE token) for learning, and optionally an escalation when confidence in the plan drops below threshold.</p></li></ul>
+<h3 id="blk-8380">Provenance implications</h3>
+<p>Every <code>action_outcome</code> MUST carry provenance: provider, capability, operation, timestamp, agent_id, trace_id. Browser actions are externally observable (they produce HTTP requests, DOM mutations) so provenance is an accountability floor, not a nicety. <code>&amp;govern.telemetry.emit</code> consumes these records.</p>
+<h3 id="blk-8382">A2A and MCP implications</h3>
+<ul><li><p><strong>MCP compilation</strong>: <code>&amp;body.browser</code> operations compile to MCP tool calls against the chosen provider's MCP server (e.g., <code>agent_browser_perceive</code>, <code>agent_browser_act</code>). Tool names are provider-specific; the [&amp;] contract abstracts over them.</p></li><li><p><strong>A2A skills</strong>: <code>browser-automation</code>, <code>web-form-completion</code>, <code>data-extraction</code>, <code>web-screenshot</code>, <code>embodied-browser-replay</code>. Agents advertising these skills at the A2A layer MUST back them with a conforming <code>&amp;body.browser</code> provider.</p></li></ul>
+<h3 id="blk-8388">Research grounding</h3>
+<ul><li><p><strong>Gibson's affordances</strong> (1977): the <code>affordances</code> operation makes environmental action-availability a first-class protocol concept, not an emergent property of tool calls.</p></li><li><p><strong>Sensorimotor grounding</strong> (Smith &amp; Gasser, 2005): the <code>perceive</code>/<code>act</code> loop is the minimal interface for grounding cognition in an environment.</p></li><li><p><strong>Ecological interface design</strong> (Vicente &amp; Rasmussen, 1992): affordance enumeration is the cognitive-engineering move that turns a closed action space into an agent-legible one.</p></li></ul>
+<h3 id="blk-8396">Anti-patterns</h3>
+<ul><li><p><strong>Recording raw screenshots as state</strong>: screenshots are not deterministic across browsers or viewports. Use <code>encode_state</code> + a11y-tree hashing instead. Screenshots belong in <code>action_outcome</code> evidence, not in <code>state_hash</code>.</p></li><li><p><strong>Replaying without re-perceiving</strong>: refs become stale on navigation. Implementations MUST re-perceive before dereferencing a ref. Callers that bypass this will see stochastic replay failures and incorrectly blame the schema.</p></li><li><p><strong>Stuffing provider-specific actions into `typed_action.type`</strong>: the action-type set is closed for v0.1. If you need a new action type (e.g., <code>record_audio</code>), propose it in the next protocol version rather than using <code>custom:foo</code> workarounds.</p></li><li><p><strong>Treating `&amp;body.browser` as &quot;just MCP&quot;</strong>: MCP is the transport; <code>&amp;body.browser</code> is the capability contract. An MCP browser server that doesn't implement all five operations does not satisfy <code>&amp;body.browser</code>.</p></li></ul>
+<h3 id="blk-8406">Summary</h3>
+<p><code>&amp;body.browser</code> is the typed browser body for [&amp;] Protocol agents. It makes perception, action, affordance enumeration, and state encoding first-class capability operations rather than implementation conventions. Any browser-driving agent — OpenClaw, Claude Computer Use, agent-browser, Pi.dev plugins — can satisfy the contract and immediately compose with every other [&amp;] capability: episodic memory for recording, planning for generating action sequences, telemetry for observability, governance for authorization. Combined with OS-011 (Embodiment Protocol), <code>&amp;body.browser</code> is what makes website FSMs recordable, replayable, and shareable across machines.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/body.browser.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-8319" class="lvl2">Definition</a><a href="#blk-8321" class="lvl2">Why it exists</a><a href="#blk-8324" class="lvl2">Position in the primitive family</a><a href="#blk-8336" class="lvl2">Capability contract summary</a><a href="#blk-8339" class="lvl2">Operations</a><a href="#blk-8340" class="lvl3">perceive(perception_query) → browser_observation</a><a href="#blk-8342" class="lvl3">act(typed_action) → action_outcome</a><a href="#blk-8344" class="lvl3">affordances(scope_query?) → affordance_set</a><a href="#blk-8346" class="lvl3">encode_state(perception_query?) → state_hash</a><a href="#blk-8348" class="lvl3">replay(interaction_trace) → replay_result</a><a href="#blk-8350" class="lvl2">Architecture patterns</a><a href="#blk-8354" class="lvl2">Example declaration</a><a href="#blk-8356" class="lvl2">Example payload shape</a><a href="#blk-8359" class="lvl2">Compatible providers</a><a href="#blk-8372" class="lvl2">Governance implications</a><a href="#blk-8380" class="lvl2">Provenance implications</a><a href="#blk-8382" class="lvl2">A2A and MCP implications</a><a href="#blk-8388" class="lvl2">Research grounding</a><a href="#blk-8396" class="lvl2">Anti-patterns</a><a href="#blk-8406" class="lvl2">Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.plan.md/">&amp;reason.plan -- Planning-Oriented Reasoning for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieralkedav2ndm74vixzzh4u477btdtzw2jrbe2taozfi7xpqt7nvwva</div></div></div>
+</div></div>
+</body></html>

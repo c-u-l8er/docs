@@ -1,0 +1,192 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Graphonomous v0.3 — P2 Implementation Prompt (Week 5+) · graphonomous · Ampersand Box</title>
+<meta name="description" content="P0 and P1 must be complete before starting P2. Verify:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/prompts/CONTINUAL_LEARNING_P2_PROMPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Graphonomous v0.3 — P2 Implementation Prompt (Week 5+)">
+<meta property="og:description" content="P0 and P1 must be complete before starting P2. Verify:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/prompts/CONTINUAL_LEARNING_P2_PROMPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graphonomous v0.3 — P2 Implementation Prompt (Week 5+)","name":"Graphonomous v0.3 — P2 Implementation Prompt (Week 5+)","description":"P0 and P1 must be complete before starting P2. Verify:","url":"https://docs.ampersandboxdesign.com/graphonomous/prompts/CONTINUAL_LEARNING_P2_PROMPT.md/","identifier":"bagaaieramu4f5kfgdp2um6n2753muse6e5rbzls7wjlbmqthbeb3p7vrw3iq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Prerequisites"},{"@type":"WebPageElement","name":"Session Goal"},{"@type":"WebPageElement","name":"Active Goal"},{"@type":"WebPageElement","name":"Capability 8: Scoped Uncertainty Propagation (3 days)"},{"@type":"WebPageElement","name":"What it does"},{"@type":"WebPageElement","name":"Why scoped (not universal)"},{"@type":"WebPageElement","name":"Research basis"},{"@type":"WebPageElement","name":"Schema migration"},{"@type":"WebPageElement","name":"New file: graphonomous/lib/graphonomous/uncertainty.ex"},{"@type":"WebPageElement","name":"New MCP tool"},{"@type":"WebPageElement","name":"Integration points"},{"@type":"WebPageElement","name":"Tests"},{"@type":"WebPageElement","name":"Capability 9: Procedural Metadata + Enhanced Retrieval (3 days)"},{"@type":"WebPageElement","name":"What it does"},{"@type":"WebPageElement","name":"Why metadata-only (not full composition)"},{"@type":"WebPageElement","name":"Research basis"},{"@type":"WebPageElement","name":"Schema note"},{"@type":"WebPageElement","name":"File: graphonomous/lib/graphonomous/retriever.ex"},{"@type":"WebPageElement","name":"File: graphonomous/lib/graphonomous/learner.ex"},{"@type":"WebPageElement","name":"File: graphonomous/lib/graphonomous/consolidator.ex"},{"@type":"WebPageElement","name":"Modify retrieve_procedural MCP tool"},{"@type":"WebPageElement","name":"Tests"},{"@type":"WebPageElement","name":"Capability 10: Multi-Agent Schema Prep (1 day)"},{"@type":"WebPageElement","name":"What it does"},{"@type":"WebPageElement","name":"Schema migration"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/graphonomous/prompts/"},{"@type":"ListItem","position":4,"name":"CONTINUAL_LEARNING_P2_PROMPT.md","item":"https://docs.ampersandboxdesign.com/graphonomous/prompts/CONTINUAL_LEARNING_P2_PROMPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/prompts/CONTINUAL_LEARNING_P2_PROMPT.md</span>
+
+</div></div>
+<div class="lead">P0 and P1 must be complete before starting P2. Verify:</div>
+<div class="prose"><h1 id="blk-70509">Graphonomous v0.3 — P2 Implementation Prompt (Week 5+)</h1>
+<h3 id="blk-70510">Prerequisites</h3>
+<p>P0 and P1 must be complete before starting P2. Verify:</p>
+<ul><li><p>[ ] <code>mix test</code> passes (all existing + P0 + P1 tests)</p></li><li><p>[ ] <code>mix benchmark.capability_spec</code> — 40/40 pass</p></li><li><p>[ ] LongMemEval SHR &gt;= 90.4% with two-phase retrieval</p></li><li><p>[ ] kappa &gt; 0 activates on real queries</p></li><li><p>[ ] Forgetting respects memory budget</p></li><li><p>[ ] Goal progress at 0.5</p></li></ul>
+<h3 id="blk-70525">Session Goal</h3>
+<p>Implement P2 capabilities: <strong>scoped uncertainty propagation</strong>, <strong>procedural metadata + enhanced retrieval</strong>, and <strong>multi-agent schema prep</strong>. These are lower-priority capabilities that serve future portfolio products (AgenTroMatic, FleetPrompt, GeoFleetic) while improving current Graphonomous quality.</p>
+<h3 id="blk-70527">Active Goal</h3>
+<p>Retrieve and update: <code>goal_ae39998e19f363c1519679b15d24744d</code></p>
+<h3 id="blk-70529">Capability 8: Scoped Uncertainty Propagation (3 days)</h3>
+<h4 id="blk-70530">What it does</h4>
+<p>Adds <code>evidence_count</code> to nodes. For nodes with outcome/feedback signals (evidence_count &gt; 0), computes Wilson score confidence intervals instead of point estimates. Propagates uncertainty through edges: nodes derived from uncertain parents inherit wider intervals. New <code>epistemic_frontier</code> query returns nodes where investigation would most reduce uncertainty.</p>
+<h4 id="blk-70532">Why scoped (not universal)</h4>
+<p>Most nodes come from file ingestion — they're either current or stale, not &quot;uncertain.&quot; Interval confidence only makes sense for nodes that have been tested against reality via <code>learn_from_outcome</code> or <code>learn_from_feedback</code>. This avoids the complexity of interval math on 27K+ ingested file nodes.</p>
+<h4 id="blk-70534">Research basis</h4>
+<p>UQ position paper (arxiv 2505.22655) — point estimates conflate &quot;I'm 70% sure&quot; with &quot;I have no idea.&quot; Wilson score intervals (used in Reddit's ranking algorithm) provide principled intervals from binary success/failure counts.</p>
+<h4 id="blk-70536">Schema migration</h4>
+<pre data-lang="sql"><code>ALTER TABLE nodes ADD COLUMN evidence_count INTEGER DEFAULT 0;</code></pre>
+<h4 id="blk-70538">New file: <code>graphonomous/lib/graphonomous/uncertainty.ex</code></h4>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Graphonomous.Uncertainty</span> <span class="t-kw">do</span>
+  <span class="t-attr">@moduledoc</span> <span class="t-string">&quot;&quot;&quot;
+  Uncertainty quantification for outcome-bearing nodes.
+  Uses Wilson score intervals for confidence bounds.
+  Only applies to nodes with evidence_count &gt; 0.
+  &quot;&quot;&quot;</span>
+
+  <span class="t-attr">@type</span> interval :: {lower :: float(), upper :: float()}
+
+  <span class="t-kw">def</span> interval(%{evidence_count: <span class="t-num">0</span>}), <span class="t-kw">do</span>: <span class="t-atom">:no_evidence</span>
+  <span class="t-kw">def</span> interval(%{confidence: c, evidence_count: n}) <span class="t-kw">do</span>
+    <span class="t-comment"># Wilson score interval at 95% confidence (z = 1.96)</span>
+    z = <span class="t-num">1.96</span>
+    phat = c
+    denom = <span class="t-num">1</span> + z * z / n
+    center = (phat + z * z / (<span class="t-num">2</span> * n)) / denom
+    spread = z * <span class="t-atom">:math</span>.sqrt((phat * (<span class="t-num">1</span> - phat) + z * z / (<span class="t-num">4</span> * n)) / n) / denom
+    {max(<span class="t-num">0.0</span>, center - spread), min(<span class="t-num">1.0</span>, center + spread)}
+  <span class="t-kw">end</span>
+
+  <span class="t-kw">def</span> propagate(node_id)
+  <span class="t-comment"># Walk :derived_from and :supports edges outward.</span>
+  <span class="t-comment"># For each child: if parent interval is wider than child's, widen child's.</span>
+  <span class="t-comment"># Widening factor: child_width = max(child_width, parent_width * edge_weight)</span>
+
+  <span class="t-kw">def</span> frontier(opts \\ [])
+  <span class="t-comment"># Return nodes where: evidence_count &gt; 0 AND interval width &gt; min_gap</span>
+  <span class="t-comment"># Sorted by information_gain (widest intervals with highest access_count first)</span>
+  <span class="t-comment"># These are the nodes where one more outcome would most narrow uncertainty.</span>
+
+  <span class="t-kw">def</span> entropy(%{confidence: c, evidence_count: <span class="t-num">0</span>}), <span class="t-kw">do</span>: <span class="t-num">1.0</span>  <span class="t-comment"># Maximum uncertainty</span>
+  <span class="t-kw">def</span> entropy(node) <span class="t-kw">do</span>
+    {lo, hi} = interval(node)
+    hi - lo  <span class="t-comment"># Simple width as entropy proxy</span>
+  <span class="t-kw">end</span>
+
+  <span class="t-kw">def</span> information_gain(node) <span class="t-kw">do</span>
+    <span class="t-comment"># Expected interval narrowing from one additional evidence point</span>
+    current = entropy(node)
+    projected = interval(%{node | evidence_count: node.evidence_count + <span class="t-num">1</span>})
+    <span class="t-kw">case</span> projected <span class="t-kw">do</span>
+      <span class="t-atom">:no_evidence</span> -&gt; <span class="t-num">0.0</span>
+      {lo, hi} -&gt; current - (hi - lo)
+    <span class="t-kw">end</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-70540">New MCP tool</h4>
+<ul><li><p><code>epistemic_frontier</code> — <code>{min_gap: float (default 0.3), limit: integer (default 10)}</code></p></li></ul>
+<p>Returns nodes with widest intervals, sorted by information gain.</p>
+<h4 id="blk-70545">Integration points</h4>
+<p><strong>File: `graphonomous/lib/graphonomous/learner.ex`</strong> In <code>learn_from_outcome</code> and <code>learn_from_feedback</code>: increment <code>evidence_count</code> on causal nodes.</p>
+<p><strong>File: `graphonomous/lib/graphonomous/coverage.ex`</strong> Replace <code>uncertainty_score</code> heuristic with <code>Uncertainty.entropy/1</code> averaged over retrieved nodes with evidence. For nodes without evidence, use the existing heuristic (they're file-ingested, not tested).</p>
+<p><strong>File: `graphonomous/lib/graphonomous/attention.ex`</strong> Add frontier nodes to survey: high-information-gain nodes with wide intervals are candidates for &quot;investigate further&quot; attention items.</p>
+<h4 id="blk-70549">Tests</h4>
+<ul><li><p>Node with confidence=0.7, evidence_count=1 → wide interval ~[0.35, 0.93]</p></li><li><p>Same node after 10 successful outcomes → narrow interval ~[0.60, 0.80]</p></li><li><p>Node with evidence_count=0 → returns <code>:no_evidence</code></p></li><li><p>Propagation: parent with wide interval → child inherits wider interval</p></li><li><p>Frontier returns widest-interval nodes sorted by information gain</p></li><li><p>Coverage uses entropy for evidence-bearing nodes, heuristic for others</p></li></ul>
+<h3 id="blk-70563">Capability 9: Procedural Metadata + Enhanced Retrieval (3 days)</h3>
+<h4 id="blk-70564">What it does</h4>
+<p>Adds structured metadata to procedural nodes (preconditions, postconditions, parameters, domain) without building a full skill composition engine. Enhances <code>retrieve_procedural</code> to match by preconditions AND semantic similarity. Makes procedures discoverable by what they need and what they produce.</p>
+<h4 id="blk-70566">Why metadata-only (not full composition)</h4>
+<p>Agentelic and FleetPrompt (the primary consumers of skill composition) are spec-only. The main beneficiary today is Claude Code using Graphonomous MCP tools. Structured metadata + enhanced retrieval gives 80% of the value at 20% of the effort. Composition engine deferred until FleetPrompt ships.</p>
+<h4 id="blk-70568">Research basis</h4>
+<p>Agent KB (TechRxiv 2025) shows 51-78% procedure reuse rates when procedures are well-indexed. Voyager's skill library pattern works because procedures are semantically searchable.</p>
+<h4 id="blk-70570">Schema note</h4>
+<p>No migration needed — use existing <code>metadata</code> JSON field on nodes:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;skill&quot;</span>: {
+    <span class="t-key">&quot;preconditions&quot;</span>: [<span class="t-string">&quot;has_git_repo&quot;</span>, <span class="t-string">&quot;has_test_suite&quot;</span>],
+    <span class="t-key">&quot;postconditions&quot;</span>: [<span class="t-string">&quot;tests_passing&quot;</span>, <span class="t-string">&quot;code_formatted&quot;</span>],
+    <span class="t-key">&quot;parameters&quot;</span>: [{<span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;branch&quot;</span>, <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;string&quot;</span>, <span class="t-key">&quot;default&quot;</span>: <span class="t-string">&quot;main&quot;</span>}],
+    <span class="t-key">&quot;domain&quot;</span>: <span class="t-string">&quot;software_development&quot;</span>,
+    <span class="t-key">&quot;success_rate&quot;</span>: <span class="t-num">0.85</span>,
+    <span class="t-key">&quot;usage_count&quot;</span>: <span class="t-num">12</span>
+  }
+}</code></pre>
+<h4 id="blk-70573">File: <code>graphonomous/lib/graphonomous/retriever.ex</code></h4>
+<p>Enhance <code>retrieve_procedural</code> to support precondition matching:</p>
+<pre data-lang="elixir"><code><span class="t-kw">def</span> retrieve_procedural(query, opts) <span class="t-kw">do</span>
+  <span class="t-comment"># Existing: semantic similarity search scoped to procedural nodes</span>
+  semantic_results = existing_procedural_retrieval(query, opts)
+
+  <span class="t-comment"># NEW: If opts[:preconditions] provided, boost nodes whose preconditions match</span>
+  <span class="t-kw">case</span> <span class="t-type">Keyword</span>.get(opts, <span class="t-atom">:preconditions</span>) <span class="t-kw">do</span>
+    <span class="t-lit">nil</span> -&gt; semantic_results
+    required_preconds -&gt;
+      semantic_results
+      |&gt; <span class="t-type">Enum</span>.map(<span class="t-kw">fn</span> result -&gt;
+        node_preconds = get_in(result.metadata, [<span class="t-string">&quot;skill&quot;</span>, <span class="t-string">&quot;preconditions&quot;</span>]) || []
+        match_score = precondition_match_score(required_preconds, node_preconds)
+        %{result | score: result.score * (<span class="t-num">1.0</span> + match_score)}
+      <span class="t-kw">end</span>)
+      |&gt; <span class="t-type">Enum</span>.sort_by(&amp; &amp;<span class="t-num">1</span>.score, <span class="t-atom">:desc</span>)
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span>
+
+<span class="t-kw">defp</span> precondition_match_score(required, available) <span class="t-kw">do</span>
+  return <span class="t-num">0.0</span> <span class="t-kw">if</span> required == [] <span class="t-kw">or</span> available == []
+  matched = <span class="t-type">Enum</span>.count(required, &amp;(&amp;<span class="t-num">1</span> <span class="t-kw">in</span> available))
+  matched / length(required)  <span class="t-comment"># 0.0 to 1.0</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-70576">File: <code>graphonomous/lib/graphonomous/learner.ex</code></h4>
+<p>When <code>learn_from_interaction</code> stores a procedural node, auto-extract skill metadata if the content contains structured indicators (e.g., &quot;Prerequisites:&quot;, &quot;Steps:&quot;, &quot;Result:&quot;).</p>
+<h4 id="blk-70578">File: <code>graphonomous/lib/graphonomous/consolidator.ex</code></h4>
+<p>In Stage 7 (generate abstractions): when 3+ procedural nodes share similar postconditions (&gt;60% overlap), note this in the generated abstraction's metadata as a composition candidate (but don't compose yet).</p>
+<h4 id="blk-70580">Modify <code>retrieve_procedural</code> MCP tool</h4>
+<p>Add optional <code>preconditions</code> parameter:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;retrieve_procedural&quot;</span>,
+  <span class="t-key">&quot;parameters&quot;</span>: {
+    <span class="t-key">&quot;query&quot;</span>: <span class="t-string">&quot;string&quot;</span>,
+    <span class="t-key">&quot;preconditions&quot;</span>: <span class="t-string">&quot;JSON array of required precondition strings (optional)&quot;</span>,
+    <span class="t-key">&quot;limit&quot;</span>: <span class="t-string">&quot;integer&quot;</span>
+  }
+}</code></pre>
+<h4 id="blk-70583">Tests</h4>
+<ul><li><p>Store procedural node with skill metadata → retrieve by precondition match</p></li><li><p>Precondition boosting: node matching 3/3 preconditions ranks above node matching 1/3</p></li><li><p>No preconditions provided → existing behavior unchanged</p></li><li><p>Skill metadata survives consolidation</p></li><li><p>Stage 7 identifies composition candidates but doesn't compose</p></li></ul>
+<h3 id="blk-70595">Capability 10: Multi-Agent Schema Prep (1 day)</h3>
+<h4 id="blk-70596">What it does</h4>
+<p>Adds <code>agent_id</code> to nodes and edges. This is schema-only — no behavioral changes. Prepares the data substrate for when AgenTroMatic, Delegatic, or FleetPrompt ship and need agent-scoped memory.</p>
+<h4 id="blk-70598">Schema migration</h4>
+<pre data-lang="sql"><code>ALTER TABLE nodes ADD COLUMN agent_id TEXT DEFAULT 'default';
+ALTER TABLE edges ADD COLUMN agent_id TEXT DEFAULT 'default';</code></pre>
+<h4 id="blk-70600">File: <code>graphonomous/lib/graphonomous/types/node.ex</code></h4>
+<p>Add <code>agent_id</code> to the Node struct with default <code>&quot;default&quot;</code>.</p>
+<h4 id="blk-70602">File: <code>graphonomous/lib/graphonomous/types/edge.ex</code></h4>
+<p>Add <code>agent_id</code> to the Edge struct with default <code>&quot;default&quot;</code>.</p>
+<h4 id="blk-70604">File: <code>graphonomous/lib/graphonomous/store.ex</code></h4>
+<ul><li><p>Include <code>agent_id</code> in INSERT statements</p></li><li><p>Add <code>agent_id</code> to SELECT result mapping</p></li><li><p>Add <code>list_nodes_by_agent(agent_id)</code> query (for future use)</p></li></ul>
+<h4 id="blk-70612">Tests</h4>
+<ul><li><p>Store node without agent_id → defaults to &quot;default&quot;</p></li><li><p>Store node with agent_id → persists correctly</p></li><li><p>Query by agent_id returns only that agent's nodes</p></li><li><p>Existing behavior unchanged (all queries work with &quot;default&quot; agent_id)</p></li></ul>
+<h3 id="blk-70622">GraphMemBench Phase 2 (2 days)</h3>
+<p>Add 40 more scenarios (8 each) to <code>mix benchmark.capability_spec</code>:</p>
+<p><strong>Category 6: Uncertainty Propagation (8 scenarios)</strong></p>
+<ul><li><p>Wilson interval computation at various evidence counts</p></li><li><p>Interval narrowing with more evidence</p></li><li><p>Propagation through derived_from edges</p></li><li><p>Frontier query returns widest intervals</p></li><li><p>Information gain calculation</p></li><li><p>Coverage integration uses entropy for evidence-bearing nodes</p></li><li><p>No-evidence nodes excluded from interval computation</p></li><li><p>Attention survey includes high-information-gain nodes</p></li></ul>
+<p><strong>Category 7: Procedural Retrieval (8 scenarios)</strong></p>
+<ul><li><p>Precondition matching boosts relevant procedures</p></li><li><p>Full precondition match scores higher than partial</p></li><li><p>No preconditions → existing behavior</p></li><li><p>Skill metadata persists through store/retrieve cycle</p></li><li><p>Multiple procedures with overlapping postconditions</p></li><li><p>Domain-scoped retrieval</p></li><li><p>Procedure success_rate from outcome history</p></li><li><p>Stage 7 composition candidate detection</p></li></ul>
+<p><strong>Category 8: Multi-Agent Prep (8 scenarios)</strong></p>
+<ul><li><p>Node created with agent_id persists</p></li><li><p>Edge created with agent_id persists</p></li><li><p>Default agent_id is &quot;default&quot;</p></li><li><p>Query by agent_id filters correctly</p></li><li><p>Mixed agent_id nodes in same graph</p></li><li><p>Graph stats include agent_id distribution</p></li><li><p>Topology analysis works across agent boundaries</p></li><li><p>Forgetting respects agent_id scope</p></li></ul>
+<p><strong>Category 9: Integration Scenarios (8 scenarios)</strong></p>
+<ul><li><p>Full loop: store → contradict → revise → retrieve (kappa&gt;0) → outcome → Q-value update → re-retrieve (improved ranking)</p></li><li><p>Uncertainty + forgetting: forget low-confidence wide-interval nodes first</p></li><li><p>Procedural + belief revision: procedure updated via revision, old version superseded</p></li><li><p>Multi-turn conversation simulation (5 turns) with belief changes</p></li><li><p>Memory pressure → forgetting → kappa recomputation (cycles may dissolve)</p></li><li><p>Attention survey with goals + uncertainty + memory pressure + conflicts</p></li><li><p>Consolidation full pipeline (all stages including 4.5) on 100-node graph</p></li><li><p>End-to-end: 50-session simulation with evolving facts, measure learning curve</p></li></ul>
+<p><strong>Category 10: Stress (8 scenarios)</strong></p>
+<ul><li><p>1000-node forgetting under budget pressure</p></li><li><p>5000-edge topology analysis latency</p></li><li><p>100 concurrent conflict resolutions in one consolidation</p></li><li><p>Q-value convergence after 50 outcome cycles</p></li><li><p>Uncertainty propagation through 10-hop chain</p></li><li><p>GraphMemBench full suite latency &lt; 60 seconds</p></li><li><p>Memory usage stays bounded during 500-node ingestion + forgetting cycle</p></li><li><p>Consolidation throughput at 1000+ nodes</p></li></ul>
+<h3 id="blk-70714">Files to Read Before Coding</h3>
+<ol><li><p><code>graphonomous/lib/graphonomous/retriever.ex</code> — retrieval pipeline (add precondition matching)</p></li><li><p><code>graphonomous/lib/graphonomous/learner.ex</code> — outcome learning (add evidence_count increment)</p></li><li><p><code>graphonomous/lib/graphonomous/coverage.ex</code> — uncertainty scoring (replace with entropy)</p></li><li><p><code>graphonomous/lib/graphonomous/attention.ex</code> — survey (add frontier nodes)</p></li><li><p><code>graphonomous/lib/graphonomous/consolidator.ex</code> — Stage 7 (add composition detection)</p></li><li><p><code>graphonomous/lib/graphonomous/store.ex</code> — SQL queries (add agent_id)</p></li><li><p><code>graphonomous/lib/graphonomous/types/node.ex</code> — struct (add fields)</p></li><li><p><code>graphonomous/lib/mix/tasks/benchmark/capability_spec.ex</code> — P1 benchmark (extend)</p></li></ol>
+<h3 id="blk-70732">Verification Checklist</h3>
+<ul><li><p>[ ] <code>mix compile --warnings-as-errors</code> passes</p></li><li><p>[ ] <code>mix test</code> — all existing + P0 + P1 + P2 tests pass</p></li><li><p>[ ] <code>mix benchmark.capability_spec</code> — 80/80 scenarios pass (Phase 1 + Phase 2)</p></li><li><p>[ ] Uncertainty intervals narrow with more evidence</p></li><li><p>[ ] Procedural retrieval with preconditions returns better matches</p></li><li><p>[ ] agent_id column populated correctly</p></li><li><p>[ ] Update goal progress to 0.85</p></li><li><p>[ ] Run consolidation to clean up session knowledge</p></li></ul></div>
+<p class="src"><a href="/#/graphonomous/prompts/CONTINUAL_LEARNING_P2_PROMPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-70510" class="lvl2">Prerequisites</a><a href="#blk-70525" class="lvl2">Session Goal</a><a href="#blk-70527" class="lvl2">Active Goal</a><a href="#blk-70529" class="lvl2">Capability 8: Scoped Uncertainty Propagation (3 days)</a><a href="#blk-70530" class="lvl3">What it does</a><a href="#blk-70532" class="lvl3">Why scoped (not universal)</a><a href="#blk-70534" class="lvl3">Research basis</a><a href="#blk-70536" class="lvl3">Schema migration</a><a href="#blk-70538" class="lvl3">New file: graphonomous/lib/graphonomous/uncertainty.ex</a><a href="#blk-70540" class="lvl3">New MCP tool</a><a href="#blk-70545" class="lvl3">Integration points</a><a href="#blk-70549" class="lvl3">Tests</a><a href="#blk-70563" class="lvl2">Capability 9: Procedural Metadata + Enhanced Retrieval (3 days)</a><a href="#blk-70564" class="lvl3">What it does</a><a href="#blk-70566" class="lvl3">Why metadata-only (not full composition)</a><a href="#blk-70568" class="lvl3">Research basis</a><a href="#blk-70570" class="lvl3">Schema note</a><a href="#blk-70573" class="lvl3">File: graphonomous/lib/graphonomous/retriever.ex</a><a href="#blk-70576" class="lvl3">File: graphonomous/lib/graphonomous/learner.ex</a><a href="#blk-70578" class="lvl3">File: graphonomous/lib/graphonomous/consolidator.ex</a><a href="#blk-70580" class="lvl3">Modify retrieve_procedural MCP tool</a><a href="#blk-70583" class="lvl3">Tests</a><a href="#blk-70595" class="lvl2">Capability 10: Multi-Agent Schema Prep (1 day)</a><a href="#blk-70596" class="lvl3">What it does</a><a href="#blk-70598" class="lvl3">Schema migration</a><a href="#blk-70600" class="lvl3">File: graphonomous/lib/graphonomous/types/node.ex</a><a href="#blk-70602" class="lvl3">File: graphonomous/lib/graphonomous/types/edge.ex</a><a href="#blk-70604" class="lvl3">File: graphonomous/lib/graphonomous/store.ex</a><a href="#blk-70612" class="lvl3">Tests</a><a href="#blk-70622" class="lvl2">GraphMemBench Phase 2 (2 days)</a><a href="#blk-70714" class="lvl2">Files to Read Before Coding</a><a href="#blk-70732" class="lvl2">Verification Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/prompts/BENCHMARK_EXPANSION_PROMPT.md/">Benchmark Expansion Prompt — Graphonomous v0.3.3+</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_P1_PROMPT.md/">Graphonomous v0.3 — P1 Implementation Prompt (Week 3-4)</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_P3_PROMPT.md/">Graphonomous v0.3 — P3 Implementation Prompt (Week 6+)</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_V03_PROMPT.md/">Graphonomous v0.3 Continual Learning Implementation Prompt</a><a href="/graphonomous/prompts/KAPPA_QA_OPTIMIZATION_PROMPT.md/">κ-Topology QA &amp; SHR Optimization — Session Prompt</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieramu4f5kfgdp2um6n2753muse6e5rbzls7wjlbmqthbeb3p7vrw3iq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,126 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>webhost.systems — Spec-to-Implementation Realignment Plan (v1) · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="Version: 1.0 Status: Actionable checklist (spec → code) Audience: Engineering Last updated: 2026-01-24">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/REALIGNMENT_PLAN.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webhost.systems — Spec-to-Implementation Realignment Plan (v1)">
+<meta property="og:description" content="Version: 1.0 Status: Actionable checklist (spec → code) Audience: Engineering Last updated: 2026-01-24">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/REALIGNMENT_PLAN.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"webhost.systems — Spec-to-Implementation Realignment Plan (v1)","name":"webhost.systems — Spec-to-Implementation Realignment Plan (v1)","description":"Version: 1.0 Status: Actionable checklist (spec → code) Audience: Engineering Last updated: 2026-01-24","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/REALIGNMENT_PLAN.md/","identifier":"bagaaieraampuxkqx2v47gr4rnsrij54hkiy334wt2e3yv4l52aoyryjgsava","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"0) How to use this plan"},{"@type":"WebPageElement","name":"1) Baseline alignment: definitions and boundaries"},{"@type":"WebPageElement","name":"1.1 Control plane vs data plane (hard rule)"},{"@type":"WebPageElement","name":"2) Identity model and tenancy (user-scoped v1)"},{"@type":"WebPageElement","name":"3) Normalized errors: one envelope, stable codes"},{"@type":"WebPageElement","name":"4) Data model realignment (Supabase schema + invariants)"},{"@type":"WebPageElement","name":"4.1 Tables existence"},{"@type":"WebPageElement","name":"4.2 Required invariants"},{"@type":"WebPageElement","name":"5) API surface realignment (HTTP contracts)"},{"@type":"WebPageElement","name":"5.1 Control plane endpoints"},{"@type":"WebPageElement","name":"5.2 Invocation gateway"},{"@type":"WebPageElement","name":"5.3 Streaming (if implemented)"},{"@type":"WebPageElement","name":"6) Secrets strategy: enforce “no plaintext in DB” while remaining implementable"},{"@type":"WebPageElement","name":"6.1 Customer env secrets"},{"@type":"WebPageElement","name":"6.2 Telemetry signing key (telemetrySecret)"},{"@type":"WebPageElement","name":"7) Provider adapters: RPI compliance checklist"},{"@type":"WebPageElement","name":"7.1 Adapter surface"},{"@type":"WebPageElement","name":"7.2 Idempotency and retries"},{"@type":"WebPageElement","name":"7.3 Cloudflare adapter"},{"@type":"WebPageElement","name":"7.4 AgentCore adapter"},{"@type":"WebPageElement","name":"8) Limits, billing, and enforcement (v1)"},{"@type":"WebPageElement","name":"9) Observability: traceability and safe logging"},{"@type":"WebPageElement","name":"10) Testing and acceptance (definition of done)"},{"@type":"WebPageElement","name":"Appendix A) Known spec-sensitive integration points (watch these)"},{"@type":"WebPageElement","name":"Appendix B) If the codebase already exists: recommended realignment sequence"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/"},{"@type":"ListItem","position":5,"name":"REALIGNMENT_PLAN.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/REALIGNMENT_PLAN.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/docs/spec/REALIGNMENT_PLAN.md</span>
+
+</div></div>
+<div class="lead">Version: 1.0 Status: Actionable checklist (spec → code) Audience: Engineering Last updated: 2026-01-24</div>
+<div class="prose"><h1 id="blk-50000">webhost.systems — Spec-to-Implementation Realignment Plan (v1)</h1>
+<p>Version: 1.0 Status: Actionable checklist (spec → code) Audience: Engineering Last updated: 2026-01-24</p>
+<p>This document is a <strong>realignment checklist</strong> to ensure the WebHost.Systems implementation matches the v1 spec set under <code>docs/spec/</code>. It is designed to be used whether you are building from scratch or bringing an existing codebase into compliance.</p>
+<h3 id="blk-50003">0) How to use this plan</h3>
+<ol><li><p>Treat the v1 spec docs as normative:</p></li></ol>
+<ul><li><p><code>00_MASTER_SPEC.md</code> (goals, boundaries, flows, definitions)</p></li><li><p><code>10_API_CONTRACTS.md</code> (HTTP contracts, error envelopes, auth modes)</p></li><li><p><code>20_RUNTIME_PROVIDER_INTERFACE.md</code> (provider adapter contract)</p></li><li><p><code>30_DATA_MODEL_SUPABASE.md</code> (tables/invariants)</p></li><li><p><code>40_SECURITY_SECRETS_COMPLIANCE.md</code> (security posture)</p></li><li><p><code>50_OBSERVABILITY_BILLING_LIMITS.md</code> (usage, limits, retention)</p></li><li><p><code>60_TESTING_ACCEPTANCE.md</code> (definition of done tests)</p></li></ul>
+<ol start="2"><li><p>Work through sections 1–10 in order. Each item is written as a measurable “done when…”.</p></li><li><p>Any deviation must be captured as an ADR in <code>adr/</code> (don’t silently drift).</p></li></ol>
+<h3 id="blk-50027">1) Baseline alignment: definitions and boundaries</h3>
+<h4 id="blk-50028">1.1 Control plane vs data plane (hard rule)</h4>
+<p><strong>Spec sources:</strong> <code>00_MASTER_SPEC.md</code>, <code>10_API_CONTRACTS.md</code>, <code>20_RUNTIME_PROVIDER_INTERFACE.md</code></p>
+<p>Checklist:</p>
+<ul><li><p>[ ] Data plane executes customer agent code; control plane never does.</p></li><li><p>[ ] Control plane stores metadata/config and orchestrates deploy/invoke/billing only.</p></li><li><p>[ ] No control-plane endpoint directly runs untrusted bundles.</p></li></ul>
+<p>Done when:</p>
+<ul><li><p>A code review can point to one “data plane entrypoint contract” per provider and confirm control-plane code does not execute customer code.</p></li></ul>
+<h3 id="blk-50042">2) Identity model and tenancy (user-scoped v1)</h3>
+<p><strong>Spec sources:</strong> <code>30_DATA_MODEL_CONVEX.md</code>, <code>10_API_CONTRACTS.md</code></p>
+<p>Checklist:</p>
+<ul><li><p>[ ] One canonical mapping from auth provider identity → internal <code>users</code> row.</p></li><li><p>[ ] Every control plane query/mutation is scoped to authenticated user.</p></li><li><p>[ ] All “get by id” endpoints verify ownership/membership before returning data.</p></li><li><p>[ ] Cross-tenant IDs do not leak existence (recommended: <code>NOT_FOUND</code> for foreign ids, consistently applied).</p></li></ul>
+<p>Done when:</p>
+<ul><li><p>You have an automated “IDOR suite” that tries random IDs from other users and always gets safe failures.</p></li></ul>
+<h3 id="blk-50058">3) Normalized errors: one envelope, stable codes</h3>
+<p><strong>Spec sources:</strong> <code>10_API_CONTRACTS.md</code> (Normalized errors REQUIRED)</p>
+<p>Checklist:</p>
+<ul><li><p>[ ] All API responses use the normalized error envelope.</p></li><li><p>[ ] Error <code>code</code> values are stable and used across the platform (no ad-hoc strings).</p></li><li><p>[ ] Validation errors return <code>fields[]</code> with actionable field paths.</p></li><li><p>[ ] Errors never include secret values or raw provider exceptions.</p></li></ul>
+<p>Done when:</p>
+<ul><li><p>A single shared error helper is used everywhere, and contract tests validate the envelope shape.</p></li></ul>
+<h3 id="blk-50074">4) Data model realignment (Supabase schema + invariants)</h3>
+<p><strong>Spec sources:</strong> <code>30_DATA_MODEL_SUPABASE.md</code></p>
+<h4 id="blk-50076">4.1 Tables existence</h4>
+<p>Checklist:</p>
+<ul><li><p>[ ] <code>users</code> exists with Supabase Auth <code>id</code> (maps to <code>auth.uid()</code>) as primary key.</p></li><li><p>[ ] <code>agents</code> exists and is indexed by <code>userId</code> (+ optional <code>userId+name</code> uniqueness).</p></li><li><p>[ ] <code>deployments</code> exists with immutable history and <code>agentId+version</code> monotonic enforcement.</p></li><li><p>[ ] <code>metrics</code> raw telemetry exists and can store per-invocation events.</p></li><li><p>[ ] <code>billingUsage</code> aggregates exist per user+period.</p></li></ul>
+<h4 id="blk-50089">4.2 Required invariants</h4>
+<p>Checklist:</p>
+<ul><li><p>[ ] <code>agents.activeDeploymentId</code> always points to a deployment for that agent (or null).</p></li><li><p>[ ] Deployments are immutable except allowed status/error/providerRef transitions.</p></li><li><p>[ ] No plaintext secrets are stored in DB fields (see §6).</p></li><li><p>[ ] Indices exist for:</p></li><li><p>agents by user</p></li><li><p>deployments by agent</p></li><li><p>metrics by agent/time and user/time</p></li><li><p>billingUsage by user/period</p></li></ul>
+<p>Done when:</p>
+<ul><li><p>You can run a “schema audit script” (or manual check) verifying fields and indexes match the spec’s semantics.</p></li></ul>
+<h3 id="blk-50112">5) API surface realignment (HTTP contracts)</h3>
+<p><strong>Spec sources:</strong> <code>10_API_CONTRACTS.md</code></p>
+<h4 id="blk-50114">5.1 Control plane endpoints</h4>
+<p>Checklist:</p>
+<ul><li><p>[ ] Agents: create/list/get/update/disable/delete match shapes and semantics.</p></li><li><p>[ ] Deployments: createAndDeploy, list/get, rollback match semantics.</p></li><li><p>[ ] Secrets: write-only endpoint exists; never echoes secrets.</p></li><li><p>[ ] Billing: checkout + webhook handler exist (server-only).</p></li></ul>
+<h4 id="blk-50125">5.2 Invocation gateway</h4>
+<p>Checklist:</p>
+<ul><li><p>[ ] <code>/v1/invoke/{agentId}</code> accepts <code>messages</code> or <code>prompt</code> form and returns normalized <code>InvokeResponse</code>.</p></li><li><p>[ ] <code>traceId</code> is always generated if absent and returned consistently.</p></li><li><p>[ ] Limits are enforced before routing to provider (hard-stop in MVP).</p></li></ul>
+<h4 id="blk-50134">5.3 Streaming (if implemented)</h4>
+<p>Checklist:</p>
+<ul><li><p>[ ] SSE format is consistent and versioned.</p></li><li><p>[ ] Non-streaming remains the canonical contract; streaming is additive.</p></li></ul>
+<p>Done when:</p>
+<ul><li><p>Contract tests run against a local server and validate request/response JSON exactly as per <code>10_API_CONTRACTS.md</code>.</p></li></ul>
+<h3 id="blk-50145">6) Secrets strategy: enforce “no plaintext in DB” while remaining implementable</h3>
+<p><strong>Spec sources:</strong> <code>00_MASTER_SPEC.md</code>, <code>10_API_CONTRACTS.md</code>, <code>20_RUNTIME_PROVIDER_INTERFACE.md</code>, <code>40_SECURITY_SECRETS_COMPLIANCE.md</code></p>
+<h4 id="blk-50147">6.1 Customer env secrets</h4>
+<p>Checklist:</p>
+<ul><li><p>[ ] Secrets are accepted only via the write-only endpoint.</p></li><li><p>[ ] DB stores <strong>key names</strong> (<code>envVarKeys</code>) and <strong>secret references/metadata</strong> only.</p></li><li><p>[ ] Provider injection sets secrets using provider-native mechanisms (Cloudflare secrets; AgentCore env injection or secret-manager refs).</p></li><li><p>[ ] Control plane never returns secret values to clients.</p></li></ul>
+<h4 id="blk-50158">6.2 Telemetry signing key (telemetrySecret)</h4>
+<p>Checklist:</p>
+<ul><li><p>[ ] Each deployment has a unique telemetry signing key.</p></li><li><p>[ ] The telemetry key is injected into the runtime as a secret.</p></li><li><p>[ ] DB stores only a <strong>reference/metadata</strong> sufficient for verification.</p></li><li><p>[ ] Control plane signature verification resolves the actual key value via:</p></li><li><p>provider secret store lookup, OR</p></li><li><p>external secret manager lookup, with server-only caching allowed.</p></li><li><p>[ ] Rotation is supported, with an optional overlap window.</p></li></ul>
+<p>Done when:</p>
+<ul><li><p>You can rotate secrets without data loss, and your logs show no secret material.</p></li></ul>
+<h3 id="blk-50179">7) Provider adapters: RPI compliance checklist</h3>
+<p><strong>Spec sources:</strong> <code>20_RUNTIME_PROVIDER_INTERFACE.md</code>, <code>00_MASTER_SPEC.md</code></p>
+<h4 id="blk-50181">7.1 Adapter surface</h4>
+<p>Checklist (per provider):</p>
+<ul><li><p>[ ] <code>deploy(deployInput) -&gt; deployOutput</code></p></li><li><p>[ ] <code>invoke(invokeInput) -&gt; invokeOutput</code> (+ optional streaming)</p></li><li><p>[ ] <code>healthcheck() -&gt; status</code></p></li><li><p>[ ] <code>estimateCost(usage) -&gt; costUsd</code> (approx is OK for MVP)</p></li></ul>
+<h4 id="blk-50192">7.2 Idempotency and retries</h4>
+<p>Checklist:</p>
+<ul><li><p>[ ] Deploy is idempotent or internally deduped (safe retries).</p></li><li><p>[ ] Invoke supports idempotency key (at least at gateway level).</p></li></ul>
+<h4 id="blk-50199">7.3 Cloudflare adapter</h4>
+<p>Checklist:</p>
+<ul><li><p>[ ] Deployment produces worker bundle + DO bindings when sessionful.</p></li><li><p>[ ] Invocation routes to worker/DO appropriately.</p></li><li><p>[ ] Telemetry is emitted with deployment-scoped signature.</p></li></ul>
+<h4 id="blk-50208">7.4 AgentCore adapter</h4>
+<p>Checklist:</p>
+<ul><li><p>[ ] Treat deployment as artifact-based (container-first).</p></li><li><p>[ ] SDK/package variability is isolated behind adapter boundaries.</p></li><li><p>[ ] Tier gating prevents unsupported users from deploying/invoking AgentCore.</p></li></ul>
+<p>Done when:</p>
+<ul><li><p>A “provider conformance test” suite can run deploy→invoke→telemetry roundtrip per provider.</p></li></ul>
+<h3 id="blk-50221">8) Limits, billing, and enforcement (v1)</h3>
+<p><strong>Spec sources:</strong> <code>00_MASTER_SPEC.md</code>, <code>50_OBSERVABILITY_BILLING_LIMITS.md</code>, <code>10_API_CONTRACTS.md</code></p>
+<p>Checklist:</p>
+<ul><li><p>[ ] Limit types exist: requests/tokens/computeMs + runtime gating.</p></li><li><p>[ ] Enforcement points exist:</p></li><li><p>invocation gateway hard-stops when exceeded</p></li><li><p>deploy blocks gated runtimes</p></li><li><p>[ ] Aggregation job produces <code>billingUsage</code> per period.</p></li><li><p>[ ] Retention defaults are defined and enforced or explicitly marked as “deferred but specified”.</p></li></ul>
+<p>Done when:</p>
+<ul><li><p>A user can exceed limits and always gets <code>LIMIT_EXCEEDED</code> deterministically (no partial charges beyond policy).</p></li></ul>
+<h3 id="blk-50241">9) Observability: traceability and safe logging</h3>
+<p><strong>Spec sources:</strong> <code>00_MASTER_SPEC.md</code>, <code>14 Observability</code> section, <code>50_OBSERVABILITY_BILLING_LIMITS.md</code></p>
+<p>Checklist:</p>
+<ul><li><p>[ ] Every invocation has a <code>traceId</code>.</p></li><li><p>[ ] Telemetry events include <code>traceId</code>, <code>userId</code>, <code>agentId</code>, <code>deploymentId</code> attribution.</p></li><li><p>[ ] Logs never contain secret values (headers, env vars, tokens, signing keys).</p></li><li><p>[ ] Minimal UI/backend query support exists for:</p></li><li><p>“recent invocation errors”</p></li><li><p>deployments status</p></li><li><p>usage for billing period</p></li></ul>
+<p>Done when:</p>
+<ul><li><p>You can answer: “why did invocation X fail?” using traceId across gateway + provider telemetry without exposing secrets.</p></li></ul>
+<h3 id="blk-50263">10) Testing and acceptance (definition of done)</h3>
+<p><strong>Spec sources:</strong> <code>60_TESTING_ACCEPTANCE.md</code> (plus API/data model invariants)</p>
+<p>Minimum required tests:</p>
+<ul><li><p>[ ] IDOR / tenancy isolation tests for all “get by id” endpoints.</p></li><li><p>[ ] Contract tests for normalized error envelopes.</p></li><li><p>[ ] Deploy pipeline golden path:</p></li><li><p>upload bundle → deploy → set active → rollback</p></li><li><p>[ ] Invoke golden path:</p></li><li><p>invoke → response → telemetry event accepted and attributed</p></li><li><p>[ ] Limits tests:</p></li><li><p>exceed requests/tokens/computeMs and verify hard-stop behavior</p></li><li><p>[ ] Secrets tests:</p></li><li><p>ensure no plaintext secrets in DB fields and logs</p></li><li><p>telemetry signature verification works</p></li></ul>
+<p>Done when:</p>
+<ul><li><p>You can demonstrate the v1 acceptance criteria from <code>00_MASTER_SPEC.md</code> end-to-end on Cloudflare, and (if enabled) on AgentCore for a paid tier.</p></li></ul>
+<h3 id="blk-50293">Appendix A) Known spec-sensitive integration points (watch these)</h3>
+<ol><li><p><strong>Telemetry secret verification</strong>: must be implementable without storing plaintext secrets in DB.</p></li><li><p><strong>Delegated invocation</strong>: must bill/enforce as the delegated user, never as the caller service.</p></li><li><p><strong>Deployment immutability</strong>: avoid “editing deployments in place”; use status transitions and active pointer.</p></li><li><p><strong>Error normalization</strong>: keep provider errors internal; map to stable codes.</p></li></ol>
+<h3 id="blk-50303">Appendix B) If the codebase already exists: recommended realignment sequence</h3>
+<ol><li><p>Lock down identity + tenancy checks (stop data leaks first).</p></li><li><p>Normalize errors across endpoints.</p></li><li><p>Enforce secrets handling and redact logs.</p></li><li><p>Make deployments immutable + active pointer.</p></li><li><p>Ensure telemetry is authenticated and attributable.</p></li><li><p>Add billing usage aggregation + limit enforcement.</p></li><li><p>Finish provider conformance tests and acceptance suite.</p></li></ol></div>
+<p class="src"><a href="/#/WebHost.Systems/docs/spec/REALIGNMENT_PLAN.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-50003" class="lvl2">0) How to use this plan</a><a href="#blk-50027" class="lvl2">1) Baseline alignment: definitions and boundaries</a><a href="#blk-50028" class="lvl3">1.1 Control plane vs data plane (hard rule)</a><a href="#blk-50042" class="lvl2">2) Identity model and tenancy (user-scoped v1)</a><a href="#blk-50058" class="lvl2">3) Normalized errors: one envelope, stable codes</a><a href="#blk-50074" class="lvl2">4) Data model realignment (Supabase schema + invariants)</a><a href="#blk-50076" class="lvl3">4.1 Tables existence</a><a href="#blk-50089" class="lvl3">4.2 Required invariants</a><a href="#blk-50112" class="lvl2">5) API surface realignment (HTTP contracts)</a><a href="#blk-50114" class="lvl3">5.1 Control plane endpoints</a><a href="#blk-50125" class="lvl3">5.2 Invocation gateway</a><a href="#blk-50134" class="lvl3">5.3 Streaming (if implemented)</a><a href="#blk-50145" class="lvl2">6) Secrets strategy: enforce “no plaintext in DB” while remaining implementable</a><a href="#blk-50147" class="lvl3">6.1 Customer env secrets</a><a href="#blk-50158" class="lvl3">6.2 Telemetry signing key (telemetrySecret)</a><a href="#blk-50179" class="lvl2">7) Provider adapters: RPI compliance checklist</a><a href="#blk-50181" class="lvl3">7.1 Adapter surface</a><a href="#blk-50192" class="lvl3">7.2 Idempotency and retries</a><a href="#blk-50199" class="lvl3">7.3 Cloudflare adapter</a><a href="#blk-50208" class="lvl3">7.4 AgentCore adapter</a><a href="#blk-50221" class="lvl2">8) Limits, billing, and enforcement (v1)</a><a href="#blk-50241" class="lvl2">9) Observability: traceability and safe logging</a><a href="#blk-50263" class="lvl2">10) Testing and acceptance (definition of done)</a><a href="#blk-50293" class="lvl2">Appendix A) Known spec-sensitive integration points (watch these)</a><a href="#blk-50303" class="lvl2">Appendix B) If the codebase already exists: recommended realignment sequence</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/spec/00_MASTER_SPEC.md/">webhost.systems — MASTER ENGINEERING SPEC (v1)</a><a href="/WebHost.Systems/docs/spec/10_API_CONTRACTS.md/">webhost.systems — API Contracts (v1)</a><a href="/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md/">webhost.systems — Runtime Provider Interface (RPI) &amp; Adapter Guidance (v1)</a><a href="/WebHost.Systems/docs/spec/30_DATA_MODEL_SUPABASE.md/">webhost.systems — Data Model (Supabase/PostgreSQL) &amp; Access Control (v1)</a><a href="/WebHost.Systems/docs/spec/40_SECURITY_SECRETS_COMPLIANCE.md/">webhost.systems — Security, Secrets, and Compliance (v1)</a><a href="/WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md/">webhost.systems — Observability, Metering, Cost, Tiers, and Limit Enforcement (v1)</a><a href="/WebHost.Systems/docs/spec/60_TESTING_ACCEPTANCE.md/">webhost.systems — Testing Plan &amp; Acceptance Criteria (v1)</a><a href="/WebHost.Systems/docs/spec/70_AMPERSAND_PROTOCOL_INTEGRATION.md/">webhost.systems — [&amp;] Protocol Integration Spec (v1)</a><a href="/WebHost.Systems/docs/spec/README.md/">webhost.systems — Spec v1 (Implementation-Ready Document Set)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraampuxkqx2v47gr4rnsrij54hkiy334wt2e3yv4l52aoyryjgsava</div></div></div>
+</div></div>
+</body></html>

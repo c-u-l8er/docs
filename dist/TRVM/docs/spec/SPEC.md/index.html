@@ -1,0 +1,231 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>TRVM — Specification (v0.1, draft for implementation) · TRVM · Ampersand Box</title>
+<meta name="description" content="TRVM = a distribution-native interaction-net runtime. Its reason to exist is not single-node speed (HVM5 shows an AI-assisted reducer reaches ~10x over…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/docs/spec/SPEC.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TRVM — Specification (v0.1, draft for implementation)">
+<meta property="og:description" content="TRVM = a distribution-native interaction-net runtime. Its reason to exist is not single-node speed (HVM5 shows an AI-assisted reducer reaches ~10x over…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/docs/spec/SPEC.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"TRVM — Specification (v0.1, draft for implementation)","name":"TRVM — Specification (v0.1, draft for implementation)","description":"TRVM = a distribution-native interaction-net runtime. Its reason to exist is not single-node speed (HVM5 shows an AI-assisted reducer reaches ~10x over…","url":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/SPEC.md/","identifier":"bagaaiera7rhcxnn73hg2edgzz7mgjp4kdymkm2sjqekbxy64tdxqq3b3s2ka","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"1. Computational model (the correctness bedrock)"},{"@type":"WebPageElement","name":"2. Memory representation (the IR)"},{"@type":"WebPageElement","name":"2.1 Port (a 64-bit tagged word)"},{"@type":"WebPageElement","name":"2.2 Node, redex, net"},{"@type":"WebPageElement","name":"2.3 Textual IR (for tests, debugging, serialization seed)"},{"@type":"WebPageElement","name":"2.4 Wire serialization (cross-node + disk)"},{"@type":"WebPageElement","name":"3. Rule table (normative)"},{"@type":"WebPageElement","name":"3.1 Annihilation (same kind)"},{"@type":"WebPageElement","name":"3.2 Commutation, eraser vs binary"},{"@type":"WebPageElement","name":"3.3 Commutation, CON vs DUP (different kinds, or different DUP colors)"},{"@type":"WebPageElement","name":"3.4 Arity & REF"},{"@type":"WebPageElement","name":"3.5 Extension fragment (NON-confluent — quarantined)"},{"@type":"WebPageElement","name":"3.6 Complete disposition matrix"},{"@type":"WebPageElement","name":"4. Boundary ports & the distribution protocol (the heart)"},{"@type":"WebPageElement","name":"4.1 Boundary table"},{"@type":"WebPageElement","name":"4.2 Export descriptor (the only cross-node message for reduction)"},{"@type":"WebPageElement","name":"4.3 Ownership rule"},{"@type":"WebPageElement","name":"4.4 Reduction protocol"},{"@type":"WebPageElement","name":"4.5 Delivery semantics for Export messages"},{"@type":"WebPageElement","name":"4.6 Why this is confluent & coordination-free"},{"@type":"WebPageElement","name":"4.7 What this does NOT solve"},{"@type":"WebPageElement","name":"5. Embedding API (C ABI — drives both a Rustler/zigler NIF and a WASM build)"},{"@type":"WebPageElement","name":"6. Invariants & conformance suite (the oracle)"},{"@type":"WebPageElement","name":"7. Implementation guidance"},{"@type":"WebPageElement","name":"8. Open questions (carried forward)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/TRVM/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/"},{"@type":"ListItem","position":5,"name":"SPEC.md","item":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/SPEC.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/docs/spec/SPEC.md</span>
+
+</div></div>
+<div class="lead">TRVM = a distribution-native interaction-net runtime. Its reason to exist is not single-node speed (HVM5 shows an AI-assisted reducer reaches ~10x over its predecessor in days —…</div>
+<div class="prose"><h1 id="blk-40318">TRVM — Specification (v0.1, draft for implementation)</h1>
+<p><strong>TRVM</strong> = a <strong>distribution-native</strong> interaction-net runtime. Its reason to exist is <em>not</em> single-node speed (HVM5 shows an AI-assisted reducer reaches ~10x over its predecessor in days — that loop is a commodity). TRVM's value is the layer HVM does not have and cannot easily grow: <strong>boundary ports, coordination-free reduction across machines, exactly-once boundary interactions, and termination detection.</strong> Deterministic-recompute fault tolerance is an intended future capability (§8) but is <strong>not specified in v0.1</strong>; the snapshot/restore API (§5) provides local checkpoint/recovery only.</p>
+<p>This document is written to be handed to coding agents. Normative requirements use MUST / MUST NOT / SHOULD. The executable reference semantics for the rule table and the distribution protocol live in <code>inet.py</code> (tested); this spec adds the production memory representation, the wire protocol, the embedding API, and the conformance suite.</p>
+<h3 id="blk-40321">1. Computational model (the correctness bedrock)</h3>
+<p>TRVM evaluates <strong>interaction nets</strong> (Lafont). Agents have exactly one <strong>principal port</strong> and zero or more <strong>auxiliary ports</strong>. The core agent set is the symmetric interaction combinators plus the machinery needed for a real runtime:</p>
+<table><thead><tr><th>Agent</th><th>Aux</th><th>Meaning</th></tr></thead><tbody><tr><td><code>ERA</code> (ε)</td><td>0</td><td>eraser</td></tr><tr><td><code>CON</code> (γ)</td><td>2</td><td>constructor / application (binary in v0.1; see §3.4)</td></tr><tr><td><code>DUP</code> (δ)</td><td>2</td><td>duplicator (labelled; the label is the DUP &quot;color&quot;)</td></tr><tr><td><code>REF</code></td><td>0</td><td>reference to a named definition (lazy unfold; needed for recursion)</td></tr><tr><td><code>BND</code></td><td>*</td><td><strong>boundary port</strong>: the wire's peer lives on another node (TRVM-specific)</td></tr></tbody></table>
+<p>A <strong>wire</strong> connects exactly two ports. An <strong>active pair</strong> (redex) is a wire connecting two principal ports. Reduction rewrites one active pair at a time; rewriting is <strong>local</strong> (touches only the two agents and their wires) and the system is <strong>strongly confluent</strong>: the normal form, and even the <em>number of interactions</em>, is independent of reduction order. (Reference: <code>inet.py</code> demo [1] — 300 random orders reach the same normal form in exactly 15 interactions on the test net.)</p>
+<blockquote><p><strong>Why this matters for distribution.</strong> Confluence makes single-net reduction <em>schedule-independent</em>: the normal form (and the interaction count) is the same under any ordering/batching of <strong>reduction steps</strong>, and confluent operations <em>compose</em>, so that schedule-independence holds across sites. Note the scope: this is order-independence of <em>reduction</em>, not of <em>input arrival</em> — coordination-freedom across an open, growing system additionally requires the boundary-port discipline (§4.4 here and <code>paper.md</code> §4.5). With that caveat, TRVM's pure fragment (the table in §3.1–§3.4) is confluent and therefore reducible with <strong>no locks and no consensus</strong>. The non-confluent fragment (native numbers/ops, IO, the superposition <em>collapse</em>) is quarantined in §3.5 and is the <em>only</em> place coordination is reintroduced — besides termination detection (§4.4).</p></blockquote>
+<h3 id="blk-40345">2. Memory representation (the IR)</h3>
+<p>Grounded in HVM2/HVM-core's layout (a node is two aux-port pointers; the principal port is <em>implicit</em>, represented by whatever points at the node; nets are a heap of nodes plus a bag of redexes).</p>
+<h4 id="blk-40347">2.1 Port (a 64-bit tagged word)</h4>
+<pre><code> bits:  [ 63 .. 32 ]   [ 31 .. 4 ]   [ 3 .. 0 ]
+        |   addr     | |  label   | |  tag    |</code></pre>
+<ul><li><p><code>tag</code> (4 bits): one of <code>VAR, REF, ERA, CON, DUP, NUM, OP2, SWI, BND</code> (room for 16).</p></li><li><p><code>label</code> (28 bits): DUP color, OP2 operator code, BND-table index, or REF symbol id.</p></li><li><p><code>addr</code> (32 bits): heap index of the target node (2 GB/instance; widen to 48 bits if needed).</p></li></ul>
+<p>A <code>VAR</code> port names a wire whose other end is an aux port (the two halves share a slot; substitution follows the var). A principal-port reference is any non-VAR port pointing at a node.</p>
+<h4 id="blk-40357">2.2 Node, redex, net</h4>
+<pre data-lang="c"><code>typedef uint64_t Port;
+typedef struct { Port aux1, aux2; } Node;          // principal is implicit
+typedef struct { Port a, b; }       Redex;         // a wire between two principal ports
+typedef struct {
+    Port   root;                                   // single free/interface wire
+    Redex *redexes; size_t n_redexes;              // the active-pair bag (work queue)
+    Node  *heap;    size_t heap_len;               // bump-allocated arena
+    Bnd   *bnd;     size_t n_bnd;                  // boundary table (§4.1)
+} Net;</code></pre>
+<ul><li><p>Allocation MUST be a bump/linear allocator over <code>heap</code>; all allocations are ≤ one <code>Node</code>.</p></li><li><p>The runtime is <strong>GC-free</strong>: the <code>ERA</code> rules free memory; an optional <code>collect()</code> may reclaim</p></li></ul>
+<p>unreachable subnets but MUST produce results identical to running erasure.</p>
+<h4 id="blk-40365">2.3 Textual IR (for tests, debugging, serialization seed)</h4>
+<p>Adapted from HVM-core: <code>(a b)</code> = CON, <code>{a b}</code> = DUP (with <code>{a b}#k</code> for color <code>k</code>), <code>*</code> = ERA, <code>@name</code> = REF, lowercase = VAR (aux-to-aux wire), <code>&amp; A ~ B</code> = an active pair, <code>R</code> = root wire. A boundary port is written <code>?w</code> where <code>w</code> is a global wire id (§4.1).</p>
+<pre><code>@main = R                       // a closed net with one free wire R
+  &amp; {a b} ~ (x x)               // an active pair: DUP applied to a CON</code></pre>
+<h4 id="blk-40368">2.4 Wire serialization (cross-node + disk)</h4>
+<p>This format is used by <code>trvm_load</code>, <code>trvm_snapshot</code>, and the boundary <code>Export</code> payload (§4.2). All multi-byte integers are <strong>little-endian</strong>. Counts are <strong>LEB128 varints</strong> (unsigned, ≤ 5 bytes, max value 2³²−1). Ports are fixed-width <strong>u64</strong>.</p>
+<p><strong>Normative layout:</strong></p>
+<table><thead><tr><th>Offset</th><th>Field</th><th>Encoding</th><th>Description</th></tr></thead><tbody><tr><td>0</td><td><code>magic</code></td><td>u32</td><td><code>0x5452564D</code> (&quot;TRVM&quot;)</td></tr><tr><td>4</td><td><code>version</code></td><td>u8</td><td>Format version; MUST be <code>1</code> for v0.1</td></tr><tr><td>5</td><td><code>n_nodes</code></td><td>varint</td><td>Number of <code>Node</code>s</td></tr><tr><td>—</td><td><code>nodes[0..n_nodes]</code></td><td><code>n_nodes</code> × 16 bytes</td><td>Each node: <code>aux1: u64</code>, <code>aux2: u64</code></td></tr><tr><td>—</td><td><code>n_redexes</code></td><td>varint</td><td>Number of <code>Redex</code>es</td></tr><tr><td>—</td><td><code>redexes[0..n_redexes]</code></td><td><code>n_redexes</code> × 16 bytes</td><td>Each redex: <code>a: u64</code>, <code>b: u64</code></td></tr><tr><td>—</td><td><code>n_bnd</code></td><td>varint</td><td>Number of <code>Bnd</code> entries</td></tr><tr><td>—</td><td><code>bnd[0..n_bnd]</code></td><td><code>n_bnd</code> × 16 bytes</td><td>Each: <code>wire_id: u64</code>, <code>owner_node: u32</code>, <code>peer_node: u32</code></td></tr><tr><td>—</td><td><code>n_refs</code></td><td>varint</td><td>Number of REF symbol entries</td></tr><tr><td>—</td><td><code>refs[0..n_refs]</code></td><td>variable</td><td>Each: <code>symbol_id: u32</code>, <code>name_len: varint</code>, <code>name: name_len bytes</code> (UTF-8), <code>body_len: varint</code>, <code>body: body_len bytes</code> (recursive net in this same format, without outer <code>magic</code>/<code>version</code>)</td></tr><tr><td>—</td><td><code>root</code></td><td>u64</td><td>The root port</td></tr></tbody></table>
+<p><strong>Port indexing.</strong> The <code>addr</code> field (bits 63..32) of any port within a serialized stream is a zero-based index into the <code>nodes</code> array of that stream. After loading, the implementation remaps these indices to its own heap addresses.</p>
+<p><strong>REF symbol table.</strong> Every <code>REF</code> port's <code>label</code> field (bits 31..4) is a <code>symbol_id</code>. The <code>refs</code> table MUST contain an entry for every <code>symbol_id</code> referenced by any port in the stream. A <code>REF</code> whose <code>symbol_id</code> has no entry in <code>refs</code> is a validation error. The <code>body</code> of each entry is itself a serialized net (same layout, omitting outer <code>magic</code> and <code>version</code>).</p>
+<p><strong>Canonical output.</strong> A conforming serializer MUST produce deterministic output: nodes in heap index order, redexes in the order they appear in the redex bag (oldest first), boundary entries ordered by <code>wire_id</code> ascending, and REF entries ordered by <code>symbol_id</code> ascending. Two serializations of semantically identical nets MUST be byte-identical.</p>
+<p><strong>Validation rules (MUST):</strong></p>
+<ul><li><p>A loader MUST reject input where <code>magic ≠ 0x5452564D</code> or <code>version</code> is unsupported.</p></li><li><p>A loader MUST reject input where any varint exceeds 5 bytes or any port's <code>tag</code> field (bits 3..0)</p></li></ul>
+<p>is not a recognized tag value.</p>
+<ul><li><p>A loader MUST reject input where the byte stream is truncated (fewer bytes than the counts</p></li></ul>
+<p>require) or has trailing bytes after <code>root</code>.</p>
+<ul><li><p>A loader MUST reject any <code>addr</code> field that references a heap index ≥ <code>n_nodes</code>.</p></li><li><p>A loader MUST reject any <code>REF</code> port whose <code>symbol_id</code> is absent from the <code>refs</code> table.</p></li><li><p>A loader MUST reject any <code>refs</code> entry whose <code>body</code> fails recursive validation.</p></li><li><p>On any validation failure, the loader MUST return an error and MUST NOT partially populate the</p></li></ul>
+<p>heap or redex bag.</p>
+<h3 id="blk-40444">3. Rule table (normative)</h3>
+<p>Every active pair (a wire between two principal ports) is dispatched by the tags of its two principals. The subsections below define each rewrite; §3.6 gives the complete disposition matrix. Wiring below is the tested wiring from <code>inet.py</code>. <code>peer(p)</code> = the port wired to <code>p</code> (captured <strong>before</strong> any node is freed).</p>
+<h4 id="blk-40446">3.1 Annihilation (same kind)</h4>
+<ul><li><p><strong>ERA ~ ERA</strong>: free both. (No aux.)</p></li><li><p><strong>CON ~ CON</strong> / <strong>DUP ~ DUP</strong> (same DUP color): free both; then <code>link(peer(A.aux1), peer(B.aux1))</code></p></li></ul>
+<p>and <code>link(peer(A.aux2), peer(B.aux2))</code>. (Symmetric IC: straight-through.)</p>
+<h4 id="blk-40453">3.2 Commutation, eraser vs binary</h4>
+<ul><li><p><strong>ERA ~ CON</strong> / <strong>ERA ~ DUP</strong>: free both; allocate two <code>ERA</code>; <code>link(ERA1, peer(g.aux1))</code>,</p></li></ul>
+<p><code>link(ERA2, peer(g.aux2))</code>. (The eraser propagates, capping both wires.)</p>
+<h4 id="blk-40458">3.3 Commutation, CON vs DUP (different kinds, or different DUP colors)</h4>
+<ul><li><p>Free both; allocate <code>CON1, CON2, DUP1, DUP2</code>; wire the 2×2 grid:</p></li></ul>
+<p>``<code> link(CON1.p, peer(DUP.aux1)); link(CON2.p, peer(DUP.aux2)) link(DUP1.p, peer(CON.aux1)); link(DUP2.p, peer(CON.aux2)) link(CON1.aux1, DUP1.aux1); link(CON1.aux2, DUP2.aux1) link(CON2.aux1, DUP1.aux2); link(CON2.aux2, DUP2.aux2) </code>`` (DUP of the same color annihilates instead — §3.1 — which is how labelled duplication avoids the &quot;DUP duplicating its own copies&quot; pathology.)</p>
+<h4 id="blk-40463">3.4 Arity &amp; REF</h4>
+<ul><li><p><strong>v0.1 restriction:</strong> all constructors (<code>CON</code>, <code>DUP</code>) are <strong>binary</strong> (exactly two auxiliary ports).</p></li></ul>
+<p>The <code>Node</code> struct (§2.2) stores exactly <code>aux1</code> and <code>aux2</code>; no arity field exists. An n-ary generalization (encoding arity in the label, allocating <code>⌈n/2⌉</code> heap slots per node) is deferred to a future version.</p>
+<ul><li><p><strong>REF ~ anything</strong>: the REF MUST first <em>unfold</em> to its definition's net (copied into the heap),</p></li></ul>
+<p>producing new redexes. Eager evaluators MUST compile recursion to <strong>supercombinators</strong> and unfold REFs lazily, or they will expand recursive bodies forever.</p>
+<h4 id="blk-40472">3.5 Extension fragment (NON-confluent — quarantined)</h4>
+<p><code>NUM</code>, <code>OP2</code>, <code>SWI</code> (native numbers/operators/match) and any IO are NOT part of the confluent core. Implementations MAY support them, but MUST mark redexes touching them as <strong>coordination-required</strong>: such a redex MUST be owned and reduced by a single node and MUST NOT be speculatively duplicated. The <code>&amp;</code>-superposition <strong>collapse</strong> is likewise in this fragment.</p>
+<h4 id="blk-40474">3.6 Complete disposition matrix</h4>
+<p>Every unordered pair of principal-port tags MUST be dispatched as exactly one of: <strong>annihilate</strong> (§3.1), <strong>erase</strong> (§3.2), <strong>commute</strong> (§3.3), <strong>unfold</strong> (§3.4), <strong>boundary protocol</strong> (§4.4), <strong>coordination-required</strong> (§3.5), or <strong>invalid</strong>.</p>
+<table><thead><tr><th>A \ B</th><th>ERA</th><th>CON</th><th>DUP</th><th>REF</th><th>BND</th><th>NUM/OP2/SWI</th></tr></thead><tbody><tr><td><strong>ERA</strong></td><td>annihilate</td><td>erase</td><td>erase</td><td>unfold REF → re-dispatch</td><td>boundary §4.4</td><td>coordination-required</td></tr><tr><td><strong>CON</strong></td><td>—</td><td>annihilate</td><td>commute</td><td>unfold REF → re-dispatch</td><td>boundary §4.4</td><td>coordination-required</td></tr><tr><td><strong>DUP</strong></td><td>—</td><td>—</td><td>same label: annihilate; diff label: commute</td><td>unfold REF → re-dispatch</td><td>boundary §4.4</td><td>coordination-required</td></tr><tr><td><strong>REF</strong></td><td>—</td><td>—</td><td>—</td><td>unfold one REF → re-dispatch</td><td>unfold REF → re-dispatch</td><td>unfold REF → re-dispatch</td></tr><tr><td><strong>BND</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td>see note¹</td><td>boundary §4.4</td></tr><tr><td><strong>NUM/OP2/SWI</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>coordination-required</td></tr></tbody></table>
+<p>Lower triangle is symmetric (omitted). &quot;—&quot; = covered by the transposed entry above.</p>
+<p>¹ <strong>BND ~ BND</strong> (both principals are boundary ports): this means both agents for a wire are remote to the local node. A conforming implementation MUST NOT hold such a redex locally — it arises only as a transient during export and is resolved by the boundary protocol: both non-owner sides export their agents to the respective owners, and the owner that reconstructs both sides reduces the resulting local redex. If an implementation detects a BND ~ BND redex in its local bag, it MUST export both sides (each to its respective owner per §4.3) and remove the local redex.</p>
+<h3 id="blk-40528">4. Boundary ports &amp; the distribution protocol (the heart)</h3>
+<p>This is the network generalization of HVM2's intra-machine safety rule — <em>the thread holding a redex owns both its trees</em>. TRVM lifts &quot;thread&quot; to &quot;node&quot; and makes ownership a <strong>deterministic function of the wire</strong>, so the two endpoints agree without a round-trip.</p>
+<h4 id="blk-40530">4.1 Boundary table</h4>
+<p>A <code>BND</code> port's <code>label</code> indexes the per-node boundary table:</p>
+<pre data-lang="c"><code>typedef struct {
+    uint64_t wire_id;     // globally unique id of this cross-node wire
+    uint32_t owner_node;  // the node that performs rewrites on this wire (see 4.3)
+    uint32_t peer_node;   // where the wire's other end currently lives
+} Bnd;</code></pre>
+<p><code>wire_id</code> MUST be globally unique and stable for the life of the wire (e.g. <code>(creator_node &lt;&lt; 40) | local_counter</code>).</p>
+<h4 id="blk-40534">4.2 Export descriptor (the only cross-node message for reduction)</h4>
+<p>When a node must hand a boundary agent to an owner, it sends:</p>
+<pre><code>Export {
+  sender     : u32           // originating node id
+  seq        : u64           // monotonic per directed pair (sender, receiver); see §4.5
+  wire_id    : u64           // the active-pair wire
+  kind, label: agent header  // CON/DUP/ERA/..., + DUP color etc.
+  aux_wires  : [u64]         // the wire_id each aux port connects to (NOT the subtrees)
+}</code></pre>
+<p><strong>Only the agent header travels — never its reachable subtree.</strong> This keeps every message proportional to the <em>cut</em>, not the net size, and preserves sharing. (Echoes PELCR's message-aggregation discipline and the distributed-graph pattern of shipping vertex updates, not subgraphs.)</p>
+<p><strong>Export wire encoding.</strong> All multi-byte integers are little-endian (matching §2.4).</p>
+<table><thead><tr><th>Offset</th><th>Field</th><th>Encoding</th><th>Description</th></tr></thead><tbody><tr><td>0</td><td><code>sender</code></td><td>u32</td><td>Originating node id</td></tr><tr><td>4</td><td><code>seq</code></td><td>u64</td><td>Per-directed-pair sequence number</td></tr><tr><td>12</td><td><code>wire_id</code></td><td>u64</td><td>Boundary wire being resolved</td></tr><tr><td>20</td><td><code>tag</code></td><td>u8</td><td>Agent tag (same encoding as port tag, bits 3..0)</td></tr><tr><td>21</td><td><code>label</code></td><td>u32</td><td>Agent label (DUP color, REF symbol_id, etc.)</td></tr><tr><td>25</td><td><code>n_aux</code></td><td>u8</td><td>Number of aux wires (0 for ERA, 2 for CON/DUP in v0.1)</td></tr><tr><td>26</td><td><code>aux_wires[0..n_aux]</code></td><td><code>n_aux</code> × 8 bytes</td><td>Each: <code>wire_id: u64</code></td></tr></tbody></table>
+<p>A receiver MUST reject an Export whose <code>tag</code> is not a recognized agent tag, whose <code>n_aux</code> does not match the tag's arity (§3.4), or whose byte length is inconsistent with <code>n_aux</code>.</p>
+<h4 id="blk-40573">4.3 Ownership rule</h4>
+<p>For a boundary wire <code>w</code> between nodes <code>A</code> and <code>B</code>:</p>
+<pre><code>owner(w) = min(A, B)</code></pre>
+<p>This is the <strong>mandatory v0.1 ownership function.</strong> Both endpoints compute it from their own node IDs with no communication. Node IDs MUST be stable for the lifetime of a reduction (they MUST NOT be reassigned while wires referencing them exist).</p>
+<blockquote><p><strong>Why not `h(wire_id) mod live_nodes`?</strong> A hash-based rule distributes load better but couples ownership to membership: if <code>live_nodes</code> changes (a node joins or fails), ownership of existing wires can silently change, violating exactly-once reduction. A membership-aware ownership function is a valid future extension but requires a protocol for ownership migration, which is out of scope for v0.1.</p></blockquote>
+<h4 id="blk-40579">4.4 Reduction protocol</h4>
+<p>Each node runs its own redex bag with <strong>no locking</strong>. Per redex:</p>
+<ol><li><p><strong>Both principals local</strong> → reduce immediately (§3). New nodes stay on this node.</p></li><li><p><strong>One principal is `BND`</strong> (boundary active pair on wire <code>w</code>):</p></li></ol>
+<ul><li><p>If this node is <strong>not</strong> <code>owner(w)</code>: emit <code>Export</code> for <em>its</em> agent to <code>owner(w)</code>, then delete the</p></li></ul>
+<p>agent locally; its aux wires are now owned by <code>owner(w)</code>. Do <strong>not</strong> rewrite.</p>
+<ul><li><p>If this node <strong>is</strong> <code>owner(w)</code>: <strong>wait</strong> for the peer's <code>Export</code>. On arrival, reconstruct the peer</p></li></ul>
+<p>agent locally (a node whose aux ports are <code>BND</code>s to <code>aux_wires</code>), which forms a local redex → reduce it via §3. Products whose ports reference remote wires become new <code>BND</code> ports / outgoing <code>Export</code>s as needed.</p>
+<blockquote><p><strong>A boundary active pair is reduced exactly once — by its owner, upon receiving the peer's export.</strong></p></blockquote>
+<p><strong>Channel requirement (found while building P2).</strong> Exporting an agent mints new boundary wires for its aux ports; a <em>child</em> export may reference a wire that a <em>parent</em> export created on the owner. Therefore message channels MUST be <strong>per-directed-pair FIFO</strong> (the owner must inject the parent before the child). TCP and BEAM distribution both provide this for free, so it costs no consensus and does not weaken coordination-freedom — but arbitrary global reordering is <em>not</em> tolerated, and an implementation over an unordered transport MUST buffer out-of-order injects until their wire exists.</p>
+<h4 id="blk-40597">4.5 Delivery semantics for Export messages</h4>
+<p>The reduction protocol (§4.4) assumes each Export arrives exactly once in FIFO order. Real transports can lose, duplicate, or replay messages. This section specifies the required behavior.</p>
+<p><strong>Stable message identity.</strong> Every <code>Export</code> message MUST carry a monotonically increasing <code>seq: u64</code> per directed pair <code>(sender, receiver)</code>. The <code>(sender, seq)</code> tuple is the message's stable identity.</p>
+<p><strong>At-least-once delivery required.</strong> The transport layer MUST eventually deliver every sent Export at least once (liveness). Implementations over TCP satisfy this automatically; implementations over unreliable transports MUST add acknowledgment and retransmission.</p>
+<p><strong>Idempotent inject.</strong> <code>trvm_inject</code> MUST be idempotent with respect to message identity: if an Export with a previously seen <code>(sender, seq)</code> is injected, the call MUST return success and MUST NOT create a duplicate agent or redex. Implementations MUST track the highest contiguous seq received per sender (a single <code>u64</code> high-water mark suffices since delivery is FIFO within a directed pair).</p>
+<p><strong>Reconnection.</strong> When a transport connection is re-established between two nodes, the reconnecting node MUST resume from the last acknowledged seq. The owner side MUST NOT reduce a boundary active pair whose peer Export has not yet been (re-)delivered.</p>
+<p><strong>Ordering.</strong> Per-directed-pair FIFO is REQUIRED (§4.4). Global ordering across different directed pairs is NOT required. An implementation over an unordered transport MUST buffer and reorder within each directed pair before calling <code>trvm_inject</code>.</p>
+<h4 id="blk-40604">4.6 Why this is confluent &amp; coordination-free</h4>
+<ol><li><p><strong>No local race.</strong> An agent has one principal port, so its <em>only</em> possible redex is on that</p></li></ol>
+<p>principal. A boundary agent's principal faces the boundary wire, so it cannot also be in a local redex. (Direct consequence of the single-principal discipline.)</p>
+<ol start="2"><li><p><strong>Exactly-once.</strong> Each boundary wire has one owner; only the owner rewrites; the non-owner only</p></li></ol>
+<p>exports. No double-spend even if both endpoints observe the wire simultaneously.</p>
+<ol start="3"><li><p><strong>Reorder-robust across pairs.</strong> Export messages only ever <em>graft</em> wires (monotone — they never</p></li></ol>
+<p>retract a result), so the global interleaving of messages <em>across different directed pairs</em> does not affect the normal form. (Within a directed pair, FIFO is still REQUIRED per §4.4 — a child export referencing a parent-created wire cannot be injected before the parent.)</p>
+<p><strong>Validated</strong> (<code>inet.py</code> demo [3]): 50 runs, deterministic owners, agents randomly partitioned, <strong>global schedule randomized</strong> (which directed pair delivers next is chosen uniformly at random; within each directed pair, FIFO is maintained) — every run reaches the identical normal form in the same 15 interactions, and <code>trvm_msgs_recv == trvm_boundary_rewrites</code> per node in every run (exactly-once).</p>
+<h4 id="blk-40618">4.7 What this does NOT solve</h4>
+<ul><li><p><strong>Global termination detection.</strong> Local reduction is coordination-free, but knowing <em>all</em> nodes are</p></li></ul>
+<p>idle and <em>no</em> messages are in flight is a separate problem. TRVM MUST expose the hooks in §5 so a <strong>Safra / Dijkstra–Scholten</strong> detector can run on top. This is the residual coordination point.</p>
+<ul><li><p><strong>The non-confluent fragment</strong> (§3.5).</p></li><li><p><strong>Distributed fault tolerance</strong> (§8, open).</p></li></ul>
+<h3 id="blk-40628">5. Embedding API (C ABI — drives both a Rustler/zigler NIF and a WASM build)</h3>
+<p>A single core compiles to (a) a C-ABI shared object for a BEAM NIF (Elixir-macro surface) and (b) <code>wasm32</code> for a JavaScript surface. The surface language is decoupled from this API.</p>
+<pre data-lang="c"><code>// ---- lifecycle ----
+TRVM*  trvm_new(uint32_t node_id, size_t heap_words);
+void   trvm_free(TRVM*);
+int    trvm_load(TRVM*, const uint8_t* net_bytes, size_t len);   // §2.4 -&gt; heap + redex bag
+size_t trvm_readback(TRVM*, uint8_t* out, size_t cap);           // serialize current net
+
+// ---- reduction (bounded burst; the budget is the coarsening knob) ----
+typedef struct { uint8_t* data; size_t len; } Bytes;
+typedef enum { TRVM_IDLE = 0, TRVM_ACTIVE = 1 } TrvmStatus;
+typedef struct {
+    TrvmStatus status;            // ACTIVE if local redexes remain
+    uint64_t   interactions;      // rewrites performed this call
+    Bytes*     exports; size_t n_exports;   // outgoing Export descriptors (§4.2) for the fabric
+} ReduceResult;
+ReduceResult trvm_reduce_batch(TRVM*, uint64_t budget);          // reduce &lt;= budget LOCAL redexes
+
+// ---- boundary I/O (the fabric calls these) ----
+int    trvm_inject(TRVM*, const uint8_t* export_bytes, size_t len);  // deliver a peer's Export
+int    trvm_open_boundary(TRVM*, uint64_t wire_id, uint32_t peer_node); // graft a BND port
+
+// ---- termination-detection hooks (§4.7) ----
+int      trvm_is_idle(TRVM*);                 // no local redexes AND no pending exports
+uint64_t trvm_msgs_sent(TRVM*);               // Export messages sent
+uint64_t trvm_msgs_recv(TRVM*);               // Export messages received (after dedup)
+uint64_t trvm_boundary_rewrites(TRVM*);       // boundary active pairs rewritten (as owner)
+
+// ---- checkpoint / restore (local-only; see §1, §8) ----
+size_t trvm_snapshot(TRVM*, uint8_t* out, size_t cap);           // serialize for recovery
+int    trvm_restore(TRVM*, const uint8_t* snap, size_t len);</code></pre>
+<p><strong>NIF discipline (MUST):</strong> <code>trvm_reduce_batch</code> runs on a <strong>dirty CPU scheduler</strong> and MUST return after <code>budget</code> interactions so the BEAM scheduler stays responsive and fault-isolated. The heap is held as an opaque resource (Rustler <code>ResourceArc</code> / zigler resource); BEAM exchanges only <code>Export</code> bytes, never the heap.</p>
+<h3 id="blk-40632">6. Invariants &amp; conformance suite (the oracle)</h3>
+<p>Any implementation MUST pass these — they are how AI-written code is audited (the HVM5 arity bug is exactly a property-test failure).</p>
+<p><strong>Structural invariants (check after every rewrite in debug mode):</strong></p>
+<ul><li><p>Every port is wired to exactly one other port (no dangling, no double-link).</p></li><li><p>Every agent has exactly one principal port.</p></li><li><p>After <code>ERA</code> rules, freed nodes are unreachable (GC-free property).</p></li><li><p><code>wire_id</code>s are unique among live <code>BND</code>s.</p></li></ul>
+<p><strong>Canonical test corpus.</strong> The conformance suite operates on the nets defined in <code>inet.py</code>'s <code>conformance_nets()</code> (the canonical corpus). At minimum, this corpus MUST include: (a) all pairwise agent interactions from §3.1–§3.4 in isolation, (b) at least one net requiring ≥ 10 interactions, (c) at least one net with REF unfolding, (d) at least one net requiring boundary exports under partitioning. Implementations MAY extend the corpus but MUST NOT remove canonical entries.</p>
+<p><strong>Normal-form comparison.</strong> Two nets are identical iff their canonical serializations (§2.4) are byte-identical after stripping <code>magic</code>, <code>version</code>, and <code>BND</code> entries (which are substrate-specific).</p>
+<p><strong>Behavioral conformance (port from `inet.py`):</strong></p>
+<ol><li><p><strong>Confluence</strong> — for each net in the canonical corpus, reduce under <strong>100</strong> random reduction orders</p></li></ol>
+<p>(seeded from a PRNG initialized with seeds <code>0..99</code>). Every run MUST yield identical normal form <em>and</em> identical interaction count. (demo [1])</p>
+<ol start="2"><li><p><strong>Distributed = sequential</strong> — for each partitionable net in the canonical corpus,</p></li></ol>
+<p><code>reduce_message_passing</code> under <strong>50</strong> random partitions with randomized global schedule (§4.6) MUST match the sequential normal form and interaction count. (demo [3])</p>
+<ol start="3"><li><p><strong>Exactly-once boundary</strong> — in every distributed run from (2): (a) <code>Σ trvm_msgs_sent</code> across all</p></li></ol>
+<p>nodes MUST equal <code>Σ trvm_msgs_recv</code> across all nodes (no lost or phantom messages); and (b) per node, <code>trvm_msgs_recv(n) == trvm_boundary_rewrites(n)</code> MUST hold (every received export triggers exactly one owner-side rewrite; no export is wasted or double-applied). (demo [3])</p>
+<ol start="4"><li><p><strong>Snapshot round-trip</strong> — <code>restore(snapshot(net))</code> MUST reduce to the same normal form as <code>net</code>.</p></li><li><p><strong>REF unfolding</strong> — recursive supercombinator definitions MUST terminate where the math says they</p></li></ol>
+<p>should and MUST NOT expand eagerly.</p>
+<p><strong>Deployed-substrate acceptance criteria (v0.1):</strong></p>
+<p>The behavioral conformance tests above (1–5) validate semantics in-process. A conforming v0.1 deployment MUST additionally pass these tests against the <strong>real deployed substrate</strong> (separate OS processes, real network transport):</p>
+<ol start="6"><li><p><strong>Cross-process reduction</strong> — two or more TRVM instances in separate OS processes, connected by</p></li></ol>
+<p>a real transport (TCP, distributed Erlang, etc.), MUST reduce a partitioned net to the same normal form and interaction count as sequential single-process reduction. The test harness MUST verify by comparing <code>trvm_readback</code> output from all participating nodes (reassembled) against the sequential oracle.</p>
+<ol start="7"><li><p><strong>Exactly-once boundary (cross-process)</strong> — across the real transport, `exports == boundary</p></li></ol>
+<p>rewrites<code> MUST hold. The test harness MUST inject at least one duplicate Export (same </code>(sender, seq)`) and verify it is silently discarded (§4.5 idempotent inject).</p>
+<ol start="8"><li><p><strong>Termination detection (cross-process)</strong> — the Safra/Dijkstra–Scholten detector running over</p></li></ol>
+<p>the real transport MUST correctly report global quiescence: it MUST NOT report &quot;done&quot; while messages are in flight or local redexes remain, and it MUST eventually report &quot;done&quot; when the net is fully reduced. The test MUST include at least one net where boundary interactions create cascading exports (a child export referencing a parent-created wire).</p>
+<ol start="9"><li><p><strong>Serialization interop</strong> — a net serialized by one TRVM instance (§2.4) MUST be loadable by a</p></li></ol>
+<p>separately compiled instance. The test MUST verify <code>magic</code>, <code>version</code>, and rejection of each malformed-input class defined in §2.4.</p>
+<p>Each criterion above constitutes a <strong>certificate</strong>: the test harness MUST emit a machine-readable pass/fail record naming the claim, the substrate (process IDs, transport type, node IDs), and the observable result (normal forms compared, interaction counts, export/rewrite counts).</p>
+<h3 id="blk-40684">7. Implementation guidance</h3>
+<ul><li><p><strong>Language.</strong> Surface ≠ runtime. Runtime options: <strong>Zig</strong> (best for hand-crafting: arena-friendly</p></li></ul>
+<p>pointer-graph code, first-class <code>wasm32</code> target, clean C-ABI NIFs via <code>zigler</code>; cost: pre-1.0); <strong>C</strong> (best if you fork HVM5 or let agents write the loop — matches the domain, trivially WASM-able and NIF-able; offset unsafety with the §6 suite); <strong>Rust</strong> (conservative/safe; borrow-checker tax on the graph). Lean Zig to craft, C to fork.</p>
+<ul><li><p><strong>Workflow.</strong> Own the spec and the §6 oracle; let coding agents implement and optimize the inner</p></li></ul>
+<p>loop against the oracle. This is HVM5's model with a correctness net the original lacked.</p>
+<ul><li><p><strong>What to borrow.</strong> HVM2/HVM-core for the heap encoding, redex bag, and bump allocator; HVM5's C</p></li></ul>
+<p>loop if forking; PELCR for message aggregation; <code>inet.py</code> for the rule wiring and the test battery.</p>
+<ul><li><p><strong>Phased plan.</strong></p></li><li><p><strong>P0</strong> single-node core passing conformance §6.1 (port <code>inet.py</code> to the flat heap).</p></li><li><p><strong>P1</strong> in-process multi-node passing §6.2–§6.3 (already modeled by <code>reduce_message_passing</code>).</p></li><li><p><strong>P2</strong> real two-process runtime: NIF on a dirty scheduler + BEAM/OTP fabric, <code>Export</code> over</p></li></ul>
+<p>distributed Erlang, Safra termination detector. (The Elixir <code>Partition</code> GenServer is the <code>:reduce</code> / <code>:wire</code> loop already prototyped.)</p>
+<ul><li><p><strong>P3</strong> locality-aware partitioner + sequentiality analysis.</p></li><li><p><strong>P4</strong> fault tolerance (out of v0.1 scope; see §8).</p></li><li><p><strong>Surfaces.</strong> Elixir-macro <code>defnet</code> DSL → IR + OTP scaffolding (and the distributed runtime lives</p></li></ul>
+<p>here). JS/WASM surface → single-node playground + visualizer (no BEAM, so no distribution there).</p>
+<h3 id="blk-40715">8. Open questions (carried forward)</h3>
+<ol><li><p>Can termination detection itself be made (near-)coordination-free, or what is the <em>minimal</em></p></li></ol>
+<p>coordination for the global &quot;done&quot; signal? (Frame via Complete-CALM's &quot;fragile structure&quot;.)</p>
+<ol start="2"><li><p><strong>Distributed fault tolerance.</strong> Deterministic-recompute recovery is TRVM's intended long-term</p></li></ol>
+<p>answer to partition loss, but specifying it requires resolving: (a) failure assumptions (crash-stop vs. Byzantine; network partitions vs. node loss); (b) what durable state each node must persist (the snapshot API §5 provides the mechanism, but not the when/what policy); (c) wire ownership after node loss (<code>min(A,B)</code> is undefined if <code>B</code> is dead — ownership must migrate or the wire must be declared failed); (d) replay boundaries (which messages must be replayed, from where); (e) sharing-aware lineage (a partition's reduction may share nodes with another's, so &quot;recompute from inputs&quot; needs a sharing-aware lineage model). These are deferred to a future version.</p>
+<ol start="3"><li><p>Where exactly does the confluent fragment end once §3.5 and effects are admitted?</p></li><li><p><strong>Membership-aware ownership.</strong> A hash-based <code>owner(w) = h(wire_id) mod live_nodes</code> distributes</p></li></ol>
+<p>load but requires an ownership-migration protocol when membership changes (see §4.3).</p>
+<h3 id="blk-40730">9. References</h3>
+<ul><li><p>Lafont, <em>Interaction Combinators</em>, Inf. Comput. 137 (1997).</p></li><li><p>HVM-core / HVM2 memory layout &amp; redex-ownership: https://docs.rs/crate/hvm-core/latest ; HVM2 PAPER https://docs.rs/crate/hvm/latest/source/paper/PAPER.pdf</p></li><li><p>HVM5 (AI-assisted, ~3k lines C, ~10x over HVM4): Taelin, June 2026.</p></li><li><p>Pedicini &amp; Quaglia, <em>PELCR</em> (distributed optimal reduction, message aggregation): https://arxiv.org/abs/cs/0407055</p></li><li><p>Hellerstein &amp; Alvaro, <em>Keeping CALM</em> (CACM 2020): https://cacm.acm.org/research/keeping-calm/ ; <em>Complete CALM</em> (2026): https://arxiv.org/html/2602.09435</p></li><li><p>Confluence composes / generalizes commutativity: https://arxiv.org/abs/2409.09934</p></li><li><p>Reference semantics &amp; conformance battery: <code>inet.py</code> (this repo).</p></li></ul></div>
+<p class="src"><a href="/#/TRVM/docs/spec/SPEC.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-40321" class="lvl2">1. Computational model (the correctness bedrock)</a><a href="#blk-40345" class="lvl2">2. Memory representation (the IR)</a><a href="#blk-40347" class="lvl3">2.1 Port (a 64-bit tagged word)</a><a href="#blk-40357" class="lvl3">2.2 Node, redex, net</a><a href="#blk-40365" class="lvl3">2.3 Textual IR (for tests, debugging, serialization seed)</a><a href="#blk-40368" class="lvl3">2.4 Wire serialization (cross-node + disk)</a><a href="#blk-40444" class="lvl2">3. Rule table (normative)</a><a href="#blk-40446" class="lvl3">3.1 Annihilation (same kind)</a><a href="#blk-40453" class="lvl3">3.2 Commutation, eraser vs binary</a><a href="#blk-40458" class="lvl3">3.3 Commutation, CON vs DUP (different kinds, or different DUP colors)</a><a href="#blk-40463" class="lvl3">3.4 Arity &amp; REF</a><a href="#blk-40472" class="lvl3">3.5 Extension fragment (NON-confluent — quarantined)</a><a href="#blk-40474" class="lvl3">3.6 Complete disposition matrix</a><a href="#blk-40528" class="lvl2">4. Boundary ports &amp; the distribution protocol (the heart)</a><a href="#blk-40530" class="lvl3">4.1 Boundary table</a><a href="#blk-40534" class="lvl3">4.2 Export descriptor (the only cross-node message for reduction)</a><a href="#blk-40573" class="lvl3">4.3 Ownership rule</a><a href="#blk-40579" class="lvl3">4.4 Reduction protocol</a><a href="#blk-40597" class="lvl3">4.5 Delivery semantics for Export messages</a><a href="#blk-40604" class="lvl3">4.6 Why this is confluent &amp; coordination-free</a><a href="#blk-40618" class="lvl3">4.7 What this does NOT solve</a><a href="#blk-40628" class="lvl2">5. Embedding API (C ABI — drives both a Rustler/zigler NIF and a WASM build)</a><a href="#blk-40632" class="lvl2">6. Invariants &amp; conformance suite (the oracle)</a><a href="#blk-40684" class="lvl2">7. Implementation guidance</a><a href="#blk-40715" class="lvl2">8. Open questions (carried forward)</a><a href="#blk-40730" class="lvl2">9. References</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/docs/spec/RELATED_WORK.md/">Related work, and an honest bound on novelty</a><a href="/TRVM/docs/spec/paper.md/">A Coordination-Free Distributed Interaction-Calculus Runtime</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera7rhcxnn73hg2edgzz7mgjp4kdymkm2sjqekbxy64tdxqq3b3s2ka</div></div></div>
+</div></div>
+</body></html>

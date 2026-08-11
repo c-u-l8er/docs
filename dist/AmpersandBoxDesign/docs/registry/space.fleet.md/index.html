@@ -1,0 +1,433 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;space.fleet — Fleet State, Regional Context, and Spatial Operations · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;space.fleet is the [&amp;] Protocol capability for fleet-aware spatial intelligence.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/space.fleet.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;space.fleet — Fleet State, Regional Context, and Spatial Operations">
+<meta property="og:description" content="&amp;space.fleet is the [&amp;] Protocol capability for fleet-aware spatial intelligence.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/space.fleet.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&space.fleet — Fleet State, Regional Context, and Spatial Operations","name":"&space.fleet — Fleet State, Regional Context, and Spatial Operations","description":"&space.fleet is the [&] Protocol capability for fleet-aware spatial intelligence.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/space.fleet.md/","identifier":"bagaaierao7faezr5hzkr7pz7kfbnsy3hwqs6rgkwbwscxsp7k45xt3n2inwq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. What problems &space.fleet solves"},{"@type":"WebPageElement","name":"4. Capability role in the &space namespace"},{"@type":"WebPageElement","name":"5. Typical use cases"},{"@type":"WebPageElement","name":"Fleet operations"},{"@type":"WebPageElement","name":"Infrastructure operations"},{"@type":"WebPageElement","name":"Logistics"},{"@type":"WebPageElement","name":"Service dispatch"},{"@type":"WebPageElement","name":"Supply chain"},{"@type":"WebPageElement","name":"Distributed robotics"},{"@type":"WebPageElement","name":"Multi-region platform operations"},{"@type":"WebPageElement","name":"6. Example capability contract"},{"@type":"WebPageElement","name":"What this contract means"},{"@type":"WebPageElement","name":"7. Core operations"},{"@type":"WebPageElement","name":"locate"},{"@type":"WebPageElement","name":"enrich"},{"@type":"WebPageElement","name":"capacity"},{"@type":"WebPageElement","name":"route"},{"@type":"WebPageElement","name":"8. Architecture patterns"},{"@type":"WebPageElement","name":"Pattern A: anomaly -> fleet enrichment -> reasoning"},{"@type":"WebPageElement","name":"Pattern B: forecast -> fleet capacity -> planning"},{"@type":"WebPageElement","name":"Pattern C: memory -> fleet enrichment -> reasoning"},{"@type":"WebPageElement","name":"Pattern D: fleet route support"},{"@type":"WebPageElement","name":"9. Architecture diagram"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"space.fleet.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/space.fleet.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/space.fleet.md</span>
+
+</div></div>
+<div class="lead">&amp;space.fleet is the [&amp;] Protocol capability for fleet-aware spatial intelligence.</div>
+<div class="prose"><h1 id="blk-12763"><code>&amp;space.fleet</code> — Fleet State, Regional Context, and Spatial Operations</h1>
+<p><code>&amp;space.fleet</code> is the [&amp;] Protocol capability for <strong>fleet-aware spatial intelligence</strong>.</p>
+<p>It describes an agent's ability to reason about:</p>
+<ul><li><p>where assets are</p></li><li><p>which regions are affected</p></li><li><p>how capacity is distributed</p></li><li><p>what route or allocation options are feasible</p></li><li><p>how spatial state should enrich downstream decisions</p></li></ul>
+<p>In the protocol's four-primitive model:</p>
+<ul><li><p><code>&amp;memory</code> answers <strong>what</strong> the agent knows</p></li><li><p><code>&amp;reason</code> answers <strong>how</strong> the agent decides</p></li><li><p><code>&amp;time</code> answers <strong>when</strong> things change</p></li><li><p><code>&amp;space</code> answers <strong>where</strong> things are</p></li></ul>
+<p><code>&amp;space.fleet</code> is one of the most practical <code>&amp;space</code> subtypes because many real agents operate over:</p>
+<ul><li><p>vehicles</p></li><li><p>field teams</p></li><li><p>datacenter regions</p></li><li><p>delivery networks</p></li><li><p>service territories</p></li><li><p>distributed assets</p></li><li><p>supply and dispatch systems</p></li></ul>
+<h3 id="blk-12803">1. Definition</h3>
+<p><code>&amp;space.fleet</code> is the capability interface for <strong>fleet-state and regional-context awareness</strong>.</p>
+<p>It is used when an agent must work with:</p>
+<ul><li><p>distributed assets across regions</p></li><li><p>current or near-current location state</p></li><li><p>region-level capacity and utilization</p></li><li><p>affected-area enrichment</p></li><li><p>fleet-aware routing or allocation support</p></li><li><p>operational boundaries tied to geography or logical regions</p></li></ul>
+<p>This capability is not limited to literal vehicle fleets.</p>
+<p>It can also apply to:</p>
+<ul><li><p>cloud regions and clusters</p></li><li><p>service zones</p></li><li><p>warehouse networks</p></li><li><p>technician territories</p></li><li><p>dispatchable units</p></li><li><p>mobile robotics</p></li><li><p>edge deployments</p></li></ul>
+<p>The key idea is that the system is managing a <strong>set of distributed units in space</strong>.</p>
+<h3 id="blk-12837">2. Why this capability exists</h3>
+<p>Many agent systems fail when they treat the world as if it were only text plus tools.</p>
+<p>That works for simple demos, but it breaks down quickly in real workflows.</p>
+<p>Examples:</p>
+<ul><li><p>An infrastructure agent detects an anomaly, but cannot localize which regions are affected.</p></li><li><p>A logistics agent forecasts demand, but cannot determine which fleet region has spare capacity.</p></li><li><p>A support agent recommends action, but does not know which warehouse or field team owns the issue.</p></li><li><p>A dispatch system can reason about urgency, but not whether the nearest viable unit is already overloaded.</p></li></ul>
+<p>In all of these cases, the missing layer is <strong>spatially grounded fleet state</strong>.</p>
+<p><code>&amp;space.fleet</code> gives the protocol a standard way to declare that capability.</p>
+<h3 id="blk-12852">3. What problems <code>&amp;space.fleet</code> solves</h3>
+<p><code>&amp;space.fleet</code> is useful when an agent needs to answer questions like:</p>
+<ul><li><p>Which region is affected?</p></li><li><p>Which assets are inside the impacted zone?</p></li><li><p>Which fleet segment has spare capacity?</p></li><li><p>Which unit is closest or most appropriate?</p></li><li><p>Which operational region should receive rerouted work?</p></li><li><p>Which datacenter or territory is under pressure?</p></li><li><p>How does spatial distribution change the recommended action?</p></li></ul>
+<p>Without this capability, spatial reasoning tends to get buried inside:</p>
+<ul><li><p>one-off service calls</p></li><li><p>custom application logic</p></li><li><p>hidden prompt assumptions</p></li><li><p>vendor-specific code paths</p></li></ul>
+<p>The protocol makes it explicit instead.</p>
+<h3 id="blk-12880">4. Capability role in the <code>&amp;space</code> namespace</h3>
+<p>The <code>&amp;space</code> primitive can support multiple subtypes, including:</p>
+<ul><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;space.route</code></p></li><li><p><code>&amp;space.geofence</code></p></li></ul>
+<p>A helpful distinction is:</p>
+<ul><li><p><code>&amp;space.fleet</code> = distributed assets and regional state</p></li><li><p><code>&amp;space.route</code> = path and route computation</p></li><li><p><code>&amp;space.geofence</code> = boundary and zone membership logic</p></li></ul>
+<p><code>&amp;space.fleet</code> is the right subtype when the main problem is <strong>state across a distributed fleet or region graph</strong>, not just route optimization or boundary checking.</p>
+<h3 id="blk-12898">5. Typical use cases</h3>
+<h4 id="blk-12899">Fleet operations</h4>
+<p>Track and enrich vehicle or field-unit state by region, capacity, and current location.</p>
+<h4 id="blk-12901">Infrastructure operations</h4>
+<p>Map incidents or anomalies to production regions, clusters, facilities, or datacenters.</p>
+<h4 id="blk-12903">Logistics</h4>
+<p>Determine which region can absorb demand or which assets should be reallocated.</p>
+<h4 id="blk-12905">Service dispatch</h4>
+<p>Identify nearest or most appropriate dispatchable unit under current fleet constraints.</p>
+<h4 id="blk-12907">Supply chain</h4>
+<p>Understand regional inventory or transport network pressure before a decision is made.</p>
+<h4 id="blk-12909">Distributed robotics</h4>
+<p>Select or evaluate units across spatially distributed systems.</p>
+<h4 id="blk-12911">Multi-region platform operations</h4>
+<p>Interpret failures, forecast load, or scale decisions in relation to regional topology.</p>
+<h3 id="blk-12913">6. Example capability contract</h3>
+<p>A representative contract for <code>&amp;space.fleet</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;space.fleet&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Spatial fleet-state contract for regional asset lookup, route-aware enrichment, and capacity snapshots.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;locate&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;asset_query&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;location_set&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Resolve current fleet or asset locations from an asset query.&quot;</span>
+    },
+    <span class="t-key">&quot;enrich&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;spatial_context&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Attach fleet, region, or topology context to an upstream artifact.&quot;</span>
+    },
+    <span class="t-key">&quot;capacity&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;region_query&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;capacity_snapshot&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Return region- or fleet-level capacity state for planning and routing.&quot;</span>
+    },
+    <span class="t-key">&quot;route&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;route_request&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;route_plan&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Produce a fleet-aware route recommendation under current spatial constraints.&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;time.*&quot;</span>,
+    <span class="t-string">&quot;raw_data&quot;</span>,
+    <span class="t-string">&quot;context&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;reason.*&quot;</span>,
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;fleet-state-enrichment&quot;</span>,
+    <span class="t-string">&quot;regional-capacity-lookup&quot;</span>,
+    <span class="t-string">&quot;route-feasibility-evaluation&quot;</span>
+  ]
+}</code></pre>
+<h4 id="blk-12916">What this contract means</h4>
+<p>This contract says that <code>&amp;space.fleet</code> can:</p>
+<ul><li><p>locate assets</p></li><li><p>enrich upstream context with spatial information</p></li><li><p>provide regional capacity snapshots</p></li><li><p>assist routing under spatial constraints</p></li></ul>
+<p>It also says that this capability composes well with:</p>
+<ul><li><p><code>&amp;time.*</code> upstream, where temporal signals must be localized</p></li><li><p><code>&amp;memory.*</code> upstream, where prior context should be tied to a region or asset cluster</p></li><li><p><code>&amp;reason.*</code> downstream, where spatial state affects action selection</p></li></ul>
+<h3 id="blk-12935">7. Core operations</h3>
+<h4 id="blk-12936"><code>locate</code></h4>
+<p>Purpose:</p>
+<ul><li><p>resolve current position or placement of assets</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>asset_query</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>location_set</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>the agent needs to know where relevant units or resources are right now</p></li></ul>
+<h4 id="blk-12953"><code>enrich</code></h4>
+<p>Purpose:</p>
+<ul><li><p>attach spatial fleet context to another artifact</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>context</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>spatial_context</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>another capability has already produced a useful signal and spatial grounding is required before a decision</p></li></ul>
+<h4 id="blk-12970"><code>capacity</code></h4>
+<p>Purpose:</p>
+<ul><li><p>return regional or fleet-wide capacity state</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>region_query</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>capacity_snapshot</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>planning, routing, or escalation depends on whether a region is overloaded or underutilized</p></li></ul>
+<h4 id="blk-12987"><code>route</code></h4>
+<p>Purpose:</p>
+<ul><li><p>provide a route or path recommendation informed by fleet conditions</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>route_request</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>route_plan</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>path choice depends on current distributed fleet state, not only geometry</p></li></ul>
+<h3 id="blk-13004">8. Architecture patterns</h3>
+<h4 id="blk-13005">Pattern A: anomaly -&gt; fleet enrichment -&gt; reasoning</h4>
+<pre><code>stream_data
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;space.fleet.enrich()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>a temporal signal needs to be localized to affected regions or assets before action is chosen</p></li></ul>
+<p>Example:</p>
+<ul><li><p>detect a load anomaly</p></li><li><p>determine which regions are actually constrained</p></li><li><p>decide whether to reroute, scale, or escalate</p></li></ul>
+<h4 id="blk-13019">Pattern B: forecast -&gt; fleet capacity -&gt; planning</h4>
+<pre><code>demand_history
+|&gt; &amp;time.forecast.predict()
+|&gt; &amp;space.fleet.capacity()
+|&gt; &amp;reason.plan.plan()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>future demand should be compared against current or projected regional capacity</p></li></ul>
+<p>Example:</p>
+<ul><li><p>forecast next-day delivery demand</p></li><li><p>inspect available fleet capacity by region</p></li><li><p>build a reallocation plan</p></li></ul>
+<h4 id="blk-13033">Pattern C: memory -&gt; fleet enrichment -&gt; reasoning</h4>
+<pre><code>incident_context
+|&gt; &amp;memory.graph.enrich()
+|&gt; &amp;space.fleet.enrich()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>prior operational or incident knowledge should be combined with live regional state before making a decision</p></li></ul>
+<h4 id="blk-13039">Pattern D: fleet route support</h4>
+<pre><code>dispatch_request
+|&gt; &amp;space.fleet.locate()
+|&gt; &amp;space.fleet.route()
+|&gt; &amp;reason.plan.evaluate()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>the system needs both current fleet placement and a route-aware recommendation</p></li></ul>
+<h3 id="blk-13045">9. Architecture diagram</h3>
+<p>A simplified conceptual flow for <code>&amp;space.fleet</code>:</p>
+<pre><code>incoming signal / query / forecast
+              |
+              v
+      +-------------------+
+      |   &amp;space.fleet    |
+      |                   |
+      | locate            |
+      | enrich            |
+      | capacity          |
+      | route             |
+      +---------+---------+
+                |
+                v
+      +-------------------+
+      | spatial_context   |
+      | location_set      |
+      | capacity_snapshot |
+      | route_plan        |
+      +---------+---------+
+                |
+                v
+      +-------------------+
+      | &amp;reason.* /       |
+      | &amp;memory.* /       |
+      | output            |
+      +-------------------+</code></pre>
+<p>The capability's job is to turn generic or upstream context into <strong>spatially actionable state</strong>.</p>
+<h3 id="blk-13049">10. Example declaration</h3>
+<p>A concrete <code>ampersand.json</code> fragment:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;space.fleet&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+    <span class="t-key">&quot;config&quot;</span>: {
+      <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>, <span class="t-string">&quot;us-central&quot;</span>],
+      <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;regional-capacity-awareness&quot;</span>
+    }
+  }
+}</code></pre>
+<p>A fuller declaration:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;FleetManager&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;time.forecast&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;horizon_hours&quot;</span>: <span class="t-num">24</span>,
+        <span class="t-key">&quot;granularity&quot;</span>: <span class="t-string">&quot;hourly&quot;</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;space.fleet&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>, <span class="t-string">&quot;us-central&quot;</span>],
+        <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;regional-capacity-awareness&quot;</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;reason.plan&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+      <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;fleet reallocation planning with policy-aware tradeoffs&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never route assets through restricted zones without authorization&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer local-region balancing before cross-region escalation&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.75</span>,
+      <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span>
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h3 id="blk-13054">11. Example API shape</h3>
+<p>A provider-specific API will vary, but a typical <code>locate</code> request might look like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;locate&quot;</span>,
+  <span class="t-key">&quot;input&quot;</span>: {
+    <span class="t-key">&quot;asset_ids&quot;</span>: [<span class="t-string">&quot;veh_102&quot;</span>, <span class="t-string">&quot;veh_104&quot;</span>, <span class="t-string">&quot;veh_201&quot;</span>],
+    <span class="t-key">&quot;region_scope&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>, <span class="t-string">&quot;us-central&quot;</span>]
+  }
+}</code></pre>
+<p>Representative response:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;location_set&quot;</span>: [
+    {
+      <span class="t-key">&quot;asset_id&quot;</span>: <span class="t-string">&quot;veh_102&quot;</span>,
+      <span class="t-key">&quot;region&quot;</span>: <span class="t-string">&quot;us-east&quot;</span>,
+      <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">40.7128</span>,
+      <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-74.0060</span>,
+      <span class="t-key">&quot;status&quot;</span>: <span class="t-string">&quot;available&quot;</span>
+    },
+    {
+      <span class="t-key">&quot;asset_id&quot;</span>: <span class="t-string">&quot;veh_104&quot;</span>,
+      <span class="t-key">&quot;region&quot;</span>: <span class="t-string">&quot;us-east&quot;</span>,
+      <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">39.9526</span>,
+      <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-75.1652</span>,
+      <span class="t-key">&quot;status&quot;</span>: <span class="t-string">&quot;busy&quot;</span>
+    }
+  ]
+}</code></pre>
+<p>A <code>capacity</code> request might look like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;capacity&quot;</span>,
+  <span class="t-key">&quot;input&quot;</span>: {
+    <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>, <span class="t-string">&quot;us-central&quot;</span>],
+    <span class="t-key">&quot;window&quot;</span>: <span class="t-string">&quot;next_24h&quot;</span>
+  }
+}</code></pre>
+<p>Representative response:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;capacity_snapshot&quot;</span>: {
+    <span class="t-key">&quot;us-east&quot;</span>: {
+      <span class="t-key">&quot;available_units&quot;</span>: <span class="t-num">14</span>,
+      <span class="t-key">&quot;utilization&quot;</span>: <span class="t-num">0.87</span>
+    },
+    <span class="t-key">&quot;us-central&quot;</span>: {
+      <span class="t-key">&quot;available_units&quot;</span>: <span class="t-num">22</span>,
+      <span class="t-key">&quot;utilization&quot;</span>: <span class="t-num">0.61</span>
+    }
+  }
+}</code></pre>
+<p>The protocol does not standardize this exact transport payload. It standardizes the capability contract.</p>
+<h3 id="blk-13064">12. Compatible providers</h3>
+<p>Representative compatible providers include:</p>
+<ul><li><p><code>geofleetic</code></p></li><li><p>custom geospatial fleet services</p></li><li><p>dispatch and field-service backends exposed behind MCP-compatible surfaces</p></li><li><p>routing and regional operations systems with stable contract wrappers</p></li><li><p>infrastructure topology services that expose region-state as a fleet-like capability</p></li></ul>
+<h4 id="blk-13077">Default ecosystem fit</h4>
+<p>The most natural default ecosystem example in this repository is:</p>
+<ul><li><p><code>geofleetic</code></p></li></ul>
+<p>Why it fits:</p>
+<ul><li><p>fleet-aware domain model</p></li><li><p>regional and route-aware spatial semantics</p></li><li><p>strong compatibility with logistics and distributed operations use cases</p></li></ul>
+<p>The protocol stance remains:</p>
+<blockquote><p><code>&amp;space.fleet</code> is the capability.   <code>geofleetic</code> is one provider that may satisfy it.</p></blockquote>
+<h3 id="blk-13093">13. Governance implications</h3>
+<p>Spatial fleet decisions often have real operational consequences, so governance matters.</p>
+<h4 id="blk-13095">Common hard constraints</h4>
+<p>Examples:</p>
+<ul><li><p>Never route assets through restricted or unsafe operating regions.</p></li><li><p>Never disclose sensitive fleet location outside authorized workflows.</p></li><li><p>Never exceed regional operational limits without approval.</p></li><li><p>Never rebalance fleet state in a way that violates service boundaries or compliance zones.</p></li></ul>
+<h4 id="blk-13106">Common soft constraints</h4>
+<p>Examples:</p>
+<ul><li><p>Prefer local-region balancing before cross-region failover.</p></li><li><p>Prefer lower-disruption route changes when confidence is moderate.</p></li><li><p>Prefer maintaining emergency reserve capacity in critical regions.</p></li></ul>
+<h4 id="blk-13115">Common escalation rules</h4>
+<p>Examples:</p>
+<ul><li><p>escalate when route feasibility is uncertain</p></li><li><p>escalate when a hard boundary is approached</p></li><li><p>escalate when regional capacity falls below a critical threshold</p></li><li><p>escalate when the best spatial option exceeds cost or policy thresholds</p></li></ul>
+<p>Representative governance block:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never route assets through restricted geofences&quot;</span>,
+      <span class="t-string">&quot;Never disclose customer or fleet location outside authorized workflows&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer local-region remediation before cross-region failover&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span>,
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.75</span>
+    }
+  }
+}</code></pre>
+<h3 id="blk-13128">14. Provenance implications</h3>
+<p>Spatial enrichment should participate in the provenance chain.</p>
+<p>Representative provenance record:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;space.fleet&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;enrich&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T12:00:00Z&quot;</span>,
+  <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:9a77...&quot;</span>,
+  <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:bc12...&quot;</span>,
+  <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:7b2c...&quot;</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;gfleet-enrich-204&quot;</span>
+}</code></pre>
+<p>This matters because spatial context can strongly influence downstream action.</p>
+<p>Provenance should help answer questions like:</p>
+<ul><li><p>Why did the system choose <code>us-east</code> instead of <code>us-central</code>?</p></li><li><p>Which fleet-state snapshot informed the decision?</p></li><li><p>Which provider produced the location or capacity context?</p></li><li><p>Which upstream anomaly or forecast led to this spatial query?</p></li></ul>
+<h3 id="blk-13143">15. A2A-facing skills</h3>
+<p>A <code>&amp;space.fleet</code> capability may advertise skills such as:</p>
+<ul><li><p><code>fleet-state-enrichment</code></p></li><li><p><code>regional-capacity-lookup</code></p></li><li><p><code>route-feasibility-evaluation</code></p></li></ul>
+<p>These are useful when generating A2A-style agent cards, because they let an external coordination surface say more than “has spatial awareness.”</p>
+<p>Instead, it can say the agent can:</p>
+<ul><li><p>enrich tasks with fleet state</p></li><li><p>evaluate regional capacity</p></li><li><p>support route feasibility judgments</p></li></ul>
+<h3 id="blk-13161">16. MCP-facing implications</h3>
+<p>A declaration containing <code>&amp;space.fleet</code> may compile into MCP-facing configuration for a compatible spatial provider.</p>
+<p>That makes <code>&amp;space.fleet</code> a good example of the protocol's overall claim:</p>
+<ul><li><p>the declaration captures capability composition</p></li><li><p>downstream tools can generate runtime config from that declaration</p></li></ul>
+<p>In other words:</p>
+<blockquote><p>[&amp;] declares the fleet-aware spatial capability   MCP can carry the provider-facing integration</p></blockquote>
+<h3 id="blk-13172">17. Research grounding</h3>
+<p><code>&amp;space.fleet</code> is supported by several overlapping research and systems traditions:</p>
+<ul><li><p>spatial reasoning</p></li><li><p>geospatial information systems</p></li><li><p>fleet optimization and dispatch</p></li><li><p>route planning and logistics</p></li><li><p>situated and embodied decision systems</p></li><li><p>distributed operations management</p></li><li><p>topology-aware infrastructure control</p></li></ul>
+<p>The important protocol-level insight is not that fleet optimization is new.</p>
+<p>It is that <strong>fleet-aware spatial reasoning should be explicit in the agent's capability declaration</strong>, rather than buried in framework code or provider-specific prompts.</p>
+<p>That explicitness enables:</p>
+<ul><li><p>schema validation</p></li><li><p>contract checking</p></li><li><p>provider interchangeability</p></li><li><p>governance-aware composition</p></li><li><p>provenance-preserving decisions</p></li><li><p>downstream MCP and A2A generation</p></li></ul>
+<h3 id="blk-13205">18. Anti-patterns</h3>
+<h4 id="blk-13206">Anti-pattern 1: treat fleet state as generic metadata</h4>
+<p>If fleet context changes the meaning of a decision, it should be modeled explicitly.</p>
+<h4 id="blk-13208">Anti-pattern 2: collapse route, fleet, and geofence into one opaque spatial block</h4>
+<p>These are related, but not identical, interfaces.</p>
+<h4 id="blk-13210">Anti-pattern 3: let reasoning guess spatial truth from text</h4>
+<p>A reasoner may explain well and still be the wrong source of authoritative fleet state.</p>
+<h4 id="blk-13212">Anti-pattern 4: use spatial decisions without provenance</h4>
+<p>If region, asset, or route context affects the outcome, lineage should be preserved.</p>
+<h3 id="blk-13214">19. Practical guidance</h3>
+<p>Use <code>&amp;space.fleet</code> when:</p>
+<ul><li><p>the system manages distributed assets or regions</p></li><li><p>current or projected capacity matters</p></li><li><p>the agent must localize events before acting</p></li><li><p>the system should choose actions differently depending on region or fleet state</p></li></ul>
+<p>Prefer composing it with:</p>
+<ul><li><p><code>&amp;time.*</code> when temporal signals need localization</p></li><li><p><code>&amp;memory.*</code> when prior incidents or cases should be mapped to spatial context</p></li><li><p><code>&amp;reason.*</code> when action selection depends on regional or fleet constraints</p></li></ul>
+<p>Common high-value compositions:</p>
+<ul><li><p><code>&amp;time.anomaly</code> + <code>&amp;space.fleet</code> + <code>&amp;reason.argument</code></p></li><li><p><code>&amp;time.forecast</code> + <code>&amp;space.fleet</code> + <code>&amp;reason.plan</code></p></li><li><p><code>&amp;memory.graph</code> + <code>&amp;space.fleet</code> + <code>&amp;reason.argument</code></p></li></ul>
+<h3 id="blk-13241">20. Example scenarios</h3>
+<h4 id="blk-13242">Regional infrastructure remediation</h4>
+<ul><li><p>detect anomaly</p></li><li><p>localize affected region</p></li><li><p>inspect region capacity</p></li><li><p>choose safe remediation</p></li></ul>
+<h4 id="blk-13252">Fleet rebalancing</h4>
+<ul><li><p>forecast demand surge</p></li><li><p>compare regional fleet availability</p></li><li><p>generate reallocation plan</p></li></ul>
+<h4 id="blk-13260">Field dispatch</h4>
+<ul><li><p>identify nearest viable unit</p></li><li><p>check territory constraints</p></li><li><p>select dispatch candidate</p></li></ul>
+<h4 id="blk-13268">Multi-region support operations</h4>
+<ul><li><p>determine which region owns the issue</p></li><li><p>check handoff capacity</p></li><li><p>escalate or reroute appropriately</p></li></ul>
+<h3 id="blk-13276">21. Summary</h3>
+<p><code>&amp;space.fleet</code> is the [&amp;] Protocol capability for <strong>fleet-aware spatial context</strong>.</p>
+<p>It is the right capability when an agent needs to know:</p>
+<ul><li><p>where distributed assets are</p></li><li><p>which regions are affected</p></li><li><p>how capacity is distributed</p></li><li><p>what route or reallocation decisions are feasible</p></li><li><p>how spatial state should constrain downstream action</p></li></ul>
+<p>In one sentence:</p>
+<blockquote><p><code>&amp;space.fleet</code> gives an agent a protocol-native way to understand and act on distributed spatial state.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/space.fleet.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-12803" class="lvl2">1. Definition</a><a href="#blk-12837" class="lvl2">2. Why this capability exists</a><a href="#blk-12852" class="lvl2">3. What problems &amp;space.fleet solves</a><a href="#blk-12880" class="lvl2">4. Capability role in the &amp;space namespace</a><a href="#blk-12898" class="lvl2">5. Typical use cases</a><a href="#blk-12899" class="lvl3">Fleet operations</a><a href="#blk-12901" class="lvl3">Infrastructure operations</a><a href="#blk-12903" class="lvl3">Logistics</a><a href="#blk-12905" class="lvl3">Service dispatch</a><a href="#blk-12907" class="lvl3">Supply chain</a><a href="#blk-12909" class="lvl3">Distributed robotics</a><a href="#blk-12911" class="lvl3">Multi-region platform operations</a><a href="#blk-12913" class="lvl2">6. Example capability contract</a><a href="#blk-12916" class="lvl3">What this contract means</a><a href="#blk-12935" class="lvl2">7. Core operations</a><a href="#blk-12936" class="lvl3">locate</a><a href="#blk-12953" class="lvl3">enrich</a><a href="#blk-12970" class="lvl3">capacity</a><a href="#blk-12987" class="lvl3">route</a><a href="#blk-13004" class="lvl2">8. Architecture patterns</a><a href="#blk-13005" class="lvl3">Pattern A: anomaly -&gt; fleet enrichment -&gt; reasoning</a><a href="#blk-13019" class="lvl3">Pattern B: forecast -&gt; fleet capacity -&gt; planning</a><a href="#blk-13033" class="lvl3">Pattern C: memory -&gt; fleet enrichment -&gt; reasoning</a><a href="#blk-13039" class="lvl3">Pattern D: fleet route support</a><a href="#blk-13045" class="lvl2">9. Architecture diagram</a><a href="#blk-13049" class="lvl2">10. Example declaration</a><a href="#blk-13054" class="lvl2">11. Example API shape</a><a href="#blk-13064" class="lvl2">12. Compatible providers</a><a href="#blk-13077" class="lvl3">Default ecosystem fit</a><a href="#blk-13093" class="lvl2">13. Governance implications</a><a href="#blk-13095" class="lvl3">Common hard constraints</a><a href="#blk-13106" class="lvl3">Common soft constraints</a><a href="#blk-13115" class="lvl3">Common escalation rules</a><a href="#blk-13128" class="lvl2">14. Provenance implications</a><a href="#blk-13143" class="lvl2">15. A2A-facing skills</a><a href="#blk-13161" class="lvl2">16. MCP-facing implications</a><a href="#blk-13172" class="lvl2">17. Research grounding</a><a href="#blk-13205" class="lvl2">18. Anti-patterns</a><a href="#blk-13206" class="lvl3">Anti-pattern 1: treat fleet state as generic metadata</a><a href="#blk-13208" class="lvl3">Anti-pattern 2: collapse route, fleet, and geofence into one opaque spatial block</a><a href="#blk-13210" class="lvl3">Anti-pattern 3: let reasoning guess spatial truth from text</a><a href="#blk-13212" class="lvl3">Anti-pattern 4: use spatial decisions without provenance</a><a href="#blk-13214" class="lvl2">19. Practical guidance</a><a href="#blk-13241" class="lvl2">20. Example scenarios</a><a href="#blk-13242" class="lvl3">Regional infrastructure remediation</a><a href="#blk-13252" class="lvl3">Fleet rebalancing</a><a href="#blk-13260" class="lvl3">Field dispatch</a><a href="#blk-13268" class="lvl3">Multi-region support operations</a><a href="#blk-13276" class="lvl2">21. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierao7faezr5hzkr7pz7kfbnsy3hwqs6rgkwbwscxsp7k45xt3n2inwq</div></div></div>
+</div></div>
+</body></html>

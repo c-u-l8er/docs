@@ -1,0 +1,139 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Skill 05 — Generation · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Generation is the payoff. A validated, composed ampersand.json compiles into runtime artifacts that existing protocols understand. This is how [&amp;]…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/05_GENERATION.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill 05 — Generation">
+<meta property="og:description" content="Generation is the payoff. A validated, composed ampersand.json compiles into runtime artifacts that existing protocols understand. This is how [&amp;]…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/05_GENERATION.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 05 — Generation","name":"Skill 05 — Generation","description":"Generation is the payoff. A validated, composed ampersand.json compiles into runtime artifacts that existing protocols understand. This is how [&]…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/05_GENERATION.md/","identifier":"bagaaierabirseybb5pw467xlcjxmxf4u4sz23yvpdnycr5zdknioovtoirlq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why This Matters"},{"@type":"WebPageElement","name":"Generating MCP Configuration"},{"@type":"WebPageElement","name":"Command"},{"@type":"WebPageElement","name":"What It Produces"},{"@type":"WebPageElement","name":"How Capabilities Map to MCP Tools"},{"@type":"WebPageElement","name":"Generating A2A Agent Cards"},{"@type":"WebPageElement","name":"Command"},{"@type":"WebPageElement","name":"What It Produces"},{"@type":"WebPageElement","name":"How Capabilities Map to A2A Skills"},{"@type":"WebPageElement","name":"Output Options"},{"@type":"WebPageElement","name":"Write to file"},{"@type":"WebPageElement","name":"Write to stdout (default)"},{"@type":"WebPageElement","name":"Compact output"},{"@type":"WebPageElement","name":"Generation Pipeline"},{"@type":"WebPageElement","name":"Custom Generation"},{"@type":"WebPageElement","name":"Provider overrides"},{"@type":"WebPageElement","name":"Transport selection"},{"@type":"WebPageElement","name":"What Generation Does NOT Do"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/"},{"@type":"ListItem","position":5,"name":"05_GENERATION.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/05_GENERATION.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/skills/05_GENERATION.md</span>
+
+</div></div>
+<div class="lead">Generation is the payoff. A validated, composed ampersand.json compiles into runtime artifacts that existing protocols understand. This is how [&amp;] complements MCP and A2A withou…</div>
+<div class="prose"><h1 id="blk-16679">Skill 05 — Generation</h1>
+<blockquote><p>Compiling agent declarations into MCP server configurations and A2A agent cards. The &quot;from spec to running agent&quot; path.</p></blockquote>
+<h3 id="blk-16682">Why This Matters</h3>
+<p>Generation is the payoff. A validated, composed <code>ampersand.json</code> compiles into runtime artifacts that existing protocols understand. This is how [&amp;] complements MCP and A2A without replacing either.</p>
+<pre><code>ampersand.json → ampersand generate → mcp-config.json + agent-card.json</code></pre>
+<h3 id="blk-16685">Generating MCP Configuration</h3>
+<h4 id="blk-16686">Command</h4>
+<pre data-lang="bash"><code>./ampersand generate mcp agent.ampersand.json</code></pre>
+<h4 id="blk-16688">What It Produces</h4>
+<p>An MCP server configuration that wires up the declared capability providers as MCP tools and resources:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;mcpServers&quot;</span>: {
+    <span class="t-key">&quot;graphonomous&quot;</span>: {
+      <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+      <span class="t-key">&quot;args&quot;</span>: [<span class="t-string">&quot;--instance&quot;</span>, <span class="t-string">&quot;infra-ops&quot;</span>],
+      <span class="t-key">&quot;transport&quot;</span>: <span class="t-string">&quot;stdio&quot;</span>,
+      <span class="t-key">&quot;tools&quot;</span>: [
+        <span class="t-string">&quot;store_node&quot;</span>, <span class="t-string">&quot;store_edge&quot;</span>, <span class="t-string">&quot;retrieve_context&quot;</span>,
+        <span class="t-string">&quot;topology_analyze&quot;</span>, <span class="t-string">&quot;deliberate&quot;</span>
+      ],
+      <span class="t-key">&quot;resources&quot;</span>: [<span class="t-string">&quot;graphonomous://runtime/health&quot;</span>]
+    },
+    <span class="t-key">&quot;ticktickclock&quot;</span>: {
+      <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+      <span class="t-key">&quot;args&quot;</span>: [<span class="t-string">&quot;--streams&quot;</span>, <span class="t-string">&quot;cpu,mem&quot;</span>],
+      <span class="t-key">&quot;transport&quot;</span>: <span class="t-string">&quot;stdio&quot;</span>,
+      <span class="t-key">&quot;tools&quot;</span>: [<span class="t-string">&quot;detect_anomaly&quot;</span>, <span class="t-string">&quot;enrich_context&quot;</span>, <span class="t-string">&quot;learn_observation&quot;</span>]
+    },
+    <span class="t-key">&quot;deliberatic&quot;</span>: {
+      <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+      <span class="t-key">&quot;args&quot;</span>: [<span class="t-string">&quot;--governance&quot;</span>, <span class="t-string">&quot;constitutional&quot;</span>],
+      <span class="t-key">&quot;transport&quot;</span>: <span class="t-string">&quot;stdio&quot;</span>,
+      <span class="t-key">&quot;tools&quot;</span>: [<span class="t-string">&quot;evaluate_argument&quot;</span>, <span class="t-string">&quot;structured_vote&quot;</span>]
+    }
+  }
+}</code></pre>
+<h4 id="blk-16691">How Capabilities Map to MCP Tools</h4>
+<p>Each capability's operations become MCP tools:</p>
+<table><thead><tr><th>Capability</th><th>Operations</th><th>MCP Tools</th></tr></thead><tbody><tr><td><code>&amp;memory.graph</code></td><td><code>recall</code>, <code>store</code>, <code>enrich</code>, <code>topology</code></td><td><code>retrieve_context</code>, <code>store_node</code>, <code>store_edge</code>, <code>topology_analyze</code></td></tr><tr><td><code>&amp;time.anomaly</code></td><td><code>detect</code>, <code>enrich</code>, <code>learn</code></td><td><code>detect_anomaly</code>, <code>enrich_context</code>, <code>learn_observation</code></td></tr><tr><td><code>&amp;reason.argument</code></td><td><code>evaluate</code>, <code>vote</code></td><td><code>evaluate_argument</code>, <code>structured_vote</code></td></tr><tr><td><code>&amp;reason.deliberate</code></td><td><code>deliberate</code>, <code>decompose</code>, <code>reconcile</code></td><td><code>deliberate</code>, <code>decompose_topology</code>, <code>reconcile_conclusions</code></td></tr><tr><td><code>&amp;reason.attend</code></td><td><code>survey</code>, <code>triage</code>, <code>dispatch</code></td><td><code>attention_survey</code>, <code>attention_triage</code>, <code>attention_run_cycle</code></td></tr></tbody></table>
+<p>The mapping is defined in each capability's contract. The generator reads the contract and emits the corresponding MCP tool registrations.</p>
+<h3 id="blk-16713">Generating A2A Agent Cards</h3>
+<h4 id="blk-16714">Command</h4>
+<pre data-lang="bash"><code>./ampersand generate a2a agent.ampersand.json</code></pre>
+<h4 id="blk-16716">What It Produces</h4>
+<p>An A2A agent card suitable for <code>/.well-known/agent.json</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;InfraOperator&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Infrastructure operations agent with graph memory, temporal anomaly detection, fleet awareness, and deliberative reasoning.&quot;</span>,
+  <span class="t-key">&quot;skills&quot;</span>: [
+    {
+      <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;temporal-anomaly-detection&quot;</span>,
+      <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;Temporal Anomaly Detection&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Detect anomalous events in temporal data streams.&quot;</span>,
+      <span class="t-key">&quot;inputModes&quot;</span>: [<span class="t-string">&quot;application/json&quot;</span>],
+      <span class="t-key">&quot;outputModes&quot;</span>: [<span class="t-string">&quot;application/json&quot;</span>]
+    },
+    {
+      <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;topology-aware-deliberation&quot;</span>,
+      <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;Topology-Aware Deliberation&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Focused reasoning through knowledge graph cycles.&quot;</span>,
+      <span class="t-key">&quot;inputModes&quot;</span>: [<span class="t-string">&quot;application/json&quot;</span>],
+      <span class="t-key">&quot;outputModes&quot;</span>: [<span class="t-string">&quot;application/json&quot;</span>]
+    },
+    {
+      <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;fleet-spatial-awareness&quot;</span>,
+      <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;Fleet Spatial Awareness&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Geospatial fleet tracking and geofence management.&quot;</span>,
+      <span class="t-key">&quot;inputModes&quot;</span>: [<span class="t-string">&quot;application/json&quot;</span>],
+      <span class="t-key">&quot;outputModes&quot;</span>: [<span class="t-string">&quot;application/json&quot;</span>]
+    }
+  ],
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;streaming&quot;</span>: <span class="t-lit">false</span>,
+    <span class="t-key">&quot;pushNotifications&quot;</span>: <span class="t-lit">false</span>
+  }
+}</code></pre>
+<h4 id="blk-16719">How Capabilities Map to A2A Skills</h4>
+<p>Each capability contract includes an <code>a2a_skills</code> field that defines the skill identifiers exposed via A2A:</p>
+<table><thead><tr><th>Capability</th><th><code>a2a_skills</code></th><th>A2A Skill Entry</th></tr></thead><tbody><tr><td><code>&amp;time.anomaly</code></td><td><code>[&quot;temporal-anomaly-detection&quot;]</code></td><td>Temporal anomaly detection skill</td></tr><tr><td><code>&amp;reason.deliberate</code></td><td><code>[&quot;topology-aware-deliberation&quot;]</code></td><td>Deliberation skill</td></tr><tr><td><code>&amp;space.fleet</code></td><td><code>[&quot;fleet-spatial-awareness&quot;]</code></td><td>Fleet tracking skill</td></tr></tbody></table>
+<h3 id="blk-16734">Output Options</h3>
+<h4 id="blk-16735">Write to file</h4>
+<pre data-lang="bash"><code>./ampersand generate mcp agent.ampersand.json<span class="t-flag"> --output</span> mcp-config.json
+./ampersand generate a2a agent.ampersand.json<span class="t-flag"> --output</span> agent-card.json</code></pre>
+<h4 id="blk-16737">Write to stdout (default)</h4>
+<pre data-lang="bash"><code>./ampersand generate mcp agent.ampersand.json | jq .</code></pre>
+<h4 id="blk-16739">Compact output</h4>
+<pre data-lang="bash"><code>./ampersand generate mcp agent.ampersand.json<span class="t-flag"> --compact</span></code></pre>
+<h3 id="blk-16741">Generation Pipeline</h3>
+<p>Generation runs after validation and composition. The full sequence:</p>
+<pre><code>1. Parse ampersand.json
+2. Validate against schema (same as `validate`)
+3. Compose and check type safety (same as `compose`)
+4. Resolve providers from registry
+5. Load capability contracts for each provider
+6. Map operations → MCP tools or A2A skills
+7. Emit output artifact</code></pre>
+<p>If validation or composition fails, generation aborts with the relevant errors. You do not need to run <code>validate</code> and <code>compose</code> separately before <code>generate</code> — the command includes both checks.</p>
+<h3 id="blk-16745">Custom Generation</h3>
+<h4 id="blk-16746">Provider overrides</h4>
+<p>Override providers at generation time without modifying the declaration:</p>
+<pre data-lang="bash"><code>./ampersand generate mcp agent.ampersand.json \
+ <span class="t-flag"> --provider</span> <span class="t-string">&quot;&amp;memory.graph=custom-graph-service&quot;</span></code></pre>
+<h4 id="blk-16749">Transport selection</h4>
+<p>Force a specific MCP transport:</p>
+<pre data-lang="bash"><code>./ampersand generate mcp agent.ampersand.json<span class="t-flag"> --transport</span> http</code></pre>
+<p>Default is <code>stdio</code>.</p>
+<h3 id="blk-16753">What Generation Does NOT Do</h3>
+<ul><li><p>It does not start MCP servers or deploy agents</p></li><li><p>It does not install provider binaries</p></li><li><p>It does not modify the source declaration</p></li><li><p>It does not create network connections</p></li></ul>
+<p>Generation produces <strong>configuration artifacts</strong>. Deployment is a separate concern handled by your runtime infrastructure.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/skills/05_GENERATION.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-16682" class="lvl2">Why This Matters</a><a href="#blk-16685" class="lvl2">Generating MCP Configuration</a><a href="#blk-16686" class="lvl3">Command</a><a href="#blk-16688" class="lvl3">What It Produces</a><a href="#blk-16691" class="lvl3">How Capabilities Map to MCP Tools</a><a href="#blk-16713" class="lvl2">Generating A2A Agent Cards</a><a href="#blk-16714" class="lvl3">Command</a><a href="#blk-16716" class="lvl3">What It Produces</a><a href="#blk-16719" class="lvl3">How Capabilities Map to A2A Skills</a><a href="#blk-16734" class="lvl2">Output Options</a><a href="#blk-16735" class="lvl3">Write to file</a><a href="#blk-16737" class="lvl3">Write to stdout (default)</a><a href="#blk-16739" class="lvl3">Compact output</a><a href="#blk-16741" class="lvl2">Generation Pipeline</a><a href="#blk-16745" class="lvl2">Custom Generation</a><a href="#blk-16746" class="lvl3">Provider overrides</a><a href="#blk-16749" class="lvl3">Transport selection</a><a href="#blk-16753" class="lvl2">What Generation Does NOT Do</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/">Skill 01 — Writing Agent Declarations</a><a href="/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/">Skill 02 — Validation</a><a href="/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/">Skill 03 — Capability Composition</a><a href="/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/">Skill 04 — Capability Contracts</a><a href="/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/">Skill 06 — CLI Reference</a><a href="/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/">Skill 07 — Integration Patterns</a><a href="/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/">Skill 08 — Provider Implementation</a><a href="/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/">Skill 09 — Governance and Provenance</a><a href="/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/">Skill 10 — Anti-Patterns</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierabirseybb5pw467xlcjxmxf4u4sz23yvpdnycr5zdknioovtoirlq</div></div></div>
+</div></div>
+</body></html>

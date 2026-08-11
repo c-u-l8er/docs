@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Topology and Deliberation · graphonomous · Ampersand Box</title>
+<meta name="description" content="Detect and reason through circular dependencies (cycles) in knowledge.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/deliberate.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Topology and Deliberation">
+<meta property="og:description" content="Detect and reason through circular dependencies (cycles) in knowledge.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/deliberate.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Topology and Deliberation","name":"Topology and Deliberation","description":"Detect and reason through circular dependencies (cycles) in knowledge.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/deliberate.md/","identifier":"bagaaieraxuxssauoindwlk5reh27mweqjy5r5427ooqqkeypjoecl3kciclq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Key Concepts"},{"@type":"WebPageElement","name":"Arguments"},{"@type":"WebPageElement","name":"Analyze Topology"},{"@type":"WebPageElement","name":"Deliberate Through Cycles"},{"@type":"WebPageElement","name":"When to use write_back"},{"@type":"WebPageElement","name":"Full Workflow"},{"@type":"WebPageElement","name":"When NOT to deliberate"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/"},{"@type":"ListItem","position":5,"name":"deliberate.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/deliberate.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/docs/skills/deliberate.md</span>
+
+</div></div>
+<div class="lead">Detect and reason through circular dependencies (cycles) in knowledge.</div>
+<div class="prose"><h1 id="blk-67189">Topology and Deliberation</h1>
+<p>Detect and reason through circular dependencies (cycles) in knowledge.</p>
+<h3 id="blk-67191">Key Concepts</h3>
+<p><strong>kappa</strong> is the cycle-complexity invariant — it measures how entangled the knowledge is:</p>
+<ul><li><p><strong>kappa = 0</strong> — acyclic DAG, no cycles. Safe for fast retrieval.</p></li><li><p><strong>kappa = 1</strong> — simple cycle (A-&gt;B-&gt;C-&gt;A). Deliberation may help for high-stakes decisions.</p></li><li><p><strong>kappa = 2+</strong> — nested/overlapping cycles. Deliberation strongly recommended.</p></li></ul>
+<p><strong>SCCs (Strongly Connected Components)</strong> are maximal cyclic clusters — groups of nodes where every node can reach every other node through directed edges.</p>
+<p><strong>Fault-line edges</strong> are the weakest links in a cycle — the assumptions most likely to be wrong. Examining these first is the fastest path to resolving contradictions.</p>
+<h3 id="blk-67202">Arguments</h3>
+<p>Question to deliberate: $ARGUMENTS</p>
+<h3 id="blk-67204">Analyze Topology</h3>
+<p>Read-only diagnostic — understand the structure:</p>
+<pre><code>route(action: &quot;topology&quot;, query: &quot;&lt;topic&gt;&quot;)</code></pre>
+<p><strong>Parameters:</strong></p>
+<ul><li><p><code>node_ids</code> (optional) — explicit array of node IDs to analyze</p></li><li><p><code>query</code> (optional) — retrieve nodes by query, then analyze</p></li><li><p>Neither — analyzes full graph</p></li></ul>
+<p>If both <code>node_ids</code> and <code>query</code> are provided, <code>node_ids</code> takes precedence.</p>
+<p><strong>Response fields:</strong></p>
+<ul><li><p><code>routing</code> — <code>&quot;fast&quot;</code> or <code>&quot;deliberate&quot;</code></p></li><li><p><code>max_kappa</code> — highest kappa value found</p></li><li><p><code>sccs</code> — array of strongly connected components, each with its own <code>routing</code> and <code>kappa</code></p></li><li><p><code>fault_line_edges</code> — weakest edges in cycles (examine these first)</p></li><li><p><code>deliberation_budget</code> — <code>max_iterations</code> and <code>focus_edges</code> to guide deliberation effort</p></li><li><p><code>recommendation</code> — human-readable guidance</p></li><li><p><code>selection</code> — how nodes were resolved (explicit/query/full_graph)</p></li><li><p><code>approximate</code> — whether analysis used approximation for large graphs</p></li></ul>
+<h3 id="blk-67234">Deliberate Through Cycles</h3>
+<p>Reason through cyclic knowledge and optionally persist conclusions:</p>
+<pre><code>route(action: &quot;deliberate&quot;,
+  query: &quot;Should we use approach A or B given the conflicting evidence?&quot;,
+  node_ids: [&quot;&lt;node1&gt;&quot;, &quot;&lt;node2&gt;&quot;],
+  write_back: true
+)</code></pre>
+<p><strong>Response fields:</strong></p>
+<ul><li><p><code>conclusions</code> — array of resolved conclusions, each with <code>source_scc_id</code>, <code>source_kappa</code>, <code>fault_lines_examined</code></p></li><li><p><code>deliberation.converged</code> — whether deliberation reached stable conclusions</p></li><li><p><code>deliberation.iterations_used</code> — how many reasoning passes were needed</p></li><li><p><code>deliberation.topology_change</code> — <code>kappa_before</code>, <code>kappa_after</code>, <code>new_nodes_created</code></p></li></ul>
+<h4 id="blk-67247">When to use <code>write_back</code></h4>
+<ul><li><p><code>write_back: true</code> — crystallizes conclusions as new nodes. Use when you've reached a resolution you want to persist (reduces kappa for future retrievals).</p></li><li><p><code>write_back: false</code> — reasoning only, no graph changes. Use for exploration or when you're not confident in the conclusion yet.</p></li></ul>
+<h3 id="blk-67253">Full Workflow</h3>
+<ol><li><p><strong>Detect</strong> — <code>retrieve(action: &quot;context&quot;, ...)</code> returns <code>topology.routing: &quot;deliberate&quot;</code></p></li><li><p><strong>Diagnose</strong> — <code>route(action: &quot;topology&quot;, query: &quot;...&quot;)</code> for detailed cycle info and fault-lines</p></li><li><p><strong>Examine fault-lines</strong> — inspect the weakest edges identified in step 2</p></li><li><p><strong>Deliberate</strong> — <code>route(action: &quot;deliberate&quot;, query: &quot;...&quot;, write_back: true)</code> to reason through and resolve</p></li><li><p><strong>Verify</strong> — re-run <code>route(action: &quot;topology&quot;, ...)</code> to confirm kappa decreased after resolution</p></li></ol>
+<h3 id="blk-67265">When NOT to deliberate</h3>
+<ul><li><p>When <code>routing: &quot;fast&quot;</code> — normal retrieval is sufficient</p></li><li><p>For low-stakes decisions — deliberation has a cost</p></li><li><p>When there are no cycles (kappa = 0) — nothing to deliberate about</p></li><li><p>Over-deliberation is an anti-pattern — only deliberate when routing recommends it or you suspect contradictions</p></li></ul></div>
+<p class="src"><a href="/#/graphonomous/docs/skills/deliberate.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-67191" class="lvl2">Key Concepts</a><a href="#blk-67202" class="lvl2">Arguments</a><a href="#blk-67204" class="lvl2">Analyze Topology</a><a href="#blk-67234" class="lvl2">Deliberate Through Cycles</a><a href="#blk-67247" class="lvl3">When to use write_back</a><a href="#blk-67253" class="lvl2">Full Workflow</a><a href="#blk-67265" class="lvl2">When NOT to deliberate</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a><a href="/graphonomous/docs/skills/attention.md/">Attention Engine</a><a href="/graphonomous/docs/skills/belief.md/">Belief Revision</a><a href="/graphonomous/docs/skills/bootstrap.md/">Graphonomous Bootstrap</a><a href="/graphonomous/docs/skills/consolidate.md/">Consolidation</a><a href="/graphonomous/docs/skills/epistemic-frontier.md/">Epistemic Frontier — Uncertainty-Guided Investigation</a><a href="/graphonomous/docs/skills/forgetting.md/">Intentional Forgetting — Structured Knowledge Removal</a><a href="/graphonomous/docs/skills/goals.md/">Goal Management</a><a href="/graphonomous/docs/skills/graph-health.md/">Graph Health Check</a><a href="/graphonomous/docs/skills/inspect.md/">Graph Inspection</a><a href="/graphonomous/docs/skills/learn.md/">Learning Loop</a><a href="/graphonomous/docs/skills/retrieve.md/">Retrieve and Remember</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraxuxssauoindwlk5reh27mweqjy5r5427ooqqkeypjoecl3kciclq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,118 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>WebHost.Systems Architecture · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="All tables enforce RLS: auth.uid() = user_id.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/architecture.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebHost.Systems Architecture">
+<meta property="og:description" content="All tables enforce RLS: auth.uid() = user_id.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/architecture.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"WebHost.Systems Architecture","name":"WebHost.Systems Architecture","description":"All tables enforce RLS: auth.uid() = user_id.","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/architecture.md/","identifier":"bagaaieraamlqxi3uyvo7bafj2vdflnmcnchsbl2iozdpfygut6zopitkc36a","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Design Principles"},{"@type":"WebPageElement","name":"System Diagram (Text)"},{"@type":"WebPageElement","name":"Component Responsibilities"},{"@type":"WebPageElement","name":"Control Plane (Supabase)"},{"@type":"WebPageElement","name":"Data Plane"},{"@type":"WebPageElement","name":"Canonical Request Flows"},{"@type":"WebPageElement","name":"Flow A: Create Agent"},{"@type":"WebPageElement","name":"Flow B: Deploy Agent"},{"@type":"WebPageElement","name":"Flow C: Invoke Agent"},{"@type":"WebPageElement","name":"Flow D: Usage Aggregation"},{"@type":"WebPageElement","name":"Data Model (Key Tables)"},{"@type":"WebPageElement","name":"Security Boundaries"},{"@type":"WebPageElement","name":"Further Reading"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"architecture.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/architecture.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/docs/architecture.md</span>
+
+</div></div>
+<div class="lead">All tables enforce RLS: auth.uid() = user_id.</div>
+<div class="prose"><h1 id="blk-42595">WebHost.Systems Architecture</h1>
+<blockquote><p><strong>Purpose:</strong> Explain the control plane / data plane split, component responsibilities, and canonical request flows for the WebHost.Systems multi-runtime AI agent deployment platform.</p></blockquote>
+<h3 id="blk-42598">Design Principles</h3>
+<ol><li><p><strong>Runtime portability</strong> -- A single abstraction (RPI) across Cloudflare Workers/DO and AWS Bedrock AgentCore.</p></li><li><p><strong>Tenant isolation</strong> -- RLS on every table; no cross-tenant data leakage.</p></li><li><p><strong>Deployment immutability</strong> -- Deployments are append-only records; rollback via active pointer.</p></li><li><p><strong>Metered by default</strong> -- Every invocation emits authenticated telemetry.</p></li><li><p><strong>TypeScript-first</strong> -- End-to-end TypeScript across control plane and data plane.</p></li></ol>
+<h3 id="blk-42610">System Diagram (Text)</h3>
+<pre><code>                         +------------------+
+                         |   Web Dashboard  |
+                         | (Vite + React +  |
+                         |    Clerk Auth)   |
+                         +--------+---------+
+                                  |
+                         Supabase Auth JWT
+                                  |
+                  +---------------v----------------+
+                  |        CONTROL PLANE            |
+                  |   (Supabase: PostgreSQL +       |
+                  |    PostgREST + Edge Functions    |
+                  |    + Realtime + Vault)           |
+                  |                                  |
+                  |  +----------+  +-------------+  |
+                  |  | Agent    |  | Deployment  |  |
+                  |  | CRUD/RPC |  | Orchestrator|  |
+                  |  +----------+  +-------------+  |
+                  |  +----------+  +-------------+  |
+                  |  | Billing  |  | Telemetry   |  |
+                  |  | Engine   |  | Ingestion   |  |
+                  |  +----------+  +-------------+  |
+                  +-----+------------------+--------+
+                        |                  |
+              +---------v------+   +-------v---------+
+              |   DATA PLANE   |   |   DATA PLANE    |
+              |  (Cloudflare)  |   |  (AgentCore)    |
+              |                |   |                  |
+              | Workers + DO   |   | AWS Bedrock      |
+              | Edge execution |   | Container runtime|
+              | Session via DO |   | Session via SDK  |
+              +-------+--------+   +--------+---------+
+                      |                      |
+                      +--- Telemetry Events -+
+                                  |
+                         +--------v---------+
+                         | metrics_events   |
+                         | (PostgreSQL)     |
+                         +--------+---------+
+                                  |
+                         pg_cron aggregation
+                                  |
+                         +--------v---------+
+                         | billing_usage    |
+                         +------------------+</code></pre>
+<h3 id="blk-42612">Component Responsibilities</h3>
+<h4 id="blk-42613">Control Plane (Supabase)</h4>
+<table><thead><tr><th>Component</th><th>Responsibility</th></tr></thead><tbody><tr><td><strong>PostgreSQL</strong></td><td>Agents, deployments, metrics_events, billing_usage, users</td></tr><tr><td><strong>PostgREST</strong></td><td>Auto-generated REST for CRUD with RLS enforcement</td></tr><tr><td><strong>RPC Functions</strong></td><td>Business logic: create_agent, disable, rollback</td></tr><tr><td><strong>Edge Functions</strong></td><td>Server-only: deploy orchestration, invoke gateway, telemetry ingestion, billing webhooks</td></tr><tr><td><strong>Supabase Auth</strong></td><td>Email + OAuth (Google, GitHub); JWT issuance</td></tr><tr><td><strong>Supabase Vault</strong></td><td>Encrypted secret storage (never plaintext in DB)</td></tr><tr><td><strong>Realtime</strong></td><td>Live dashboard updates via LISTEN/NOTIFY</td></tr><tr><td><strong>pg_cron</strong></td><td>Periodic aggregation of metrics into billing_usage</td></tr></tbody></table>
+<h4 id="blk-42633">Data Plane</h4>
+<table><thead><tr><th>Provider</th><th>Execution Model</th><th>Session Model</th></tr></thead><tbody><tr><td><strong>Cloudflare Workers/DO</strong></td><td>Worker routes to Durable Object for stateful sessions</td><td><code>sessionId</code> = DO instance key</td></tr><tr><td><strong>AWS Bedrock AgentCore</strong></td><td>Container-based runtime via AWS SDK</td><td><code>sessionId</code> = AgentCore session ID</td></tr></tbody></table>
+<h3 id="blk-42644">Canonical Request Flows</h3>
+<h4 id="blk-42645">Flow A: Create Agent</h4>
+<pre><code>UI -&gt; POST /rest/v1/rpc/create_agent (RLS: auth.uid() = user_id)
+   -&gt; INSERT into agents (status: created)
+   -&gt; Return agent record</code></pre>
+<h4 id="blk-42647">Flow B: Deploy Agent</h4>
+<pre><code>UI -&gt; POST /functions/v1/deploy (Edge Function)
+   -&gt; Validate bundle (agent.config.json, entrypoint, size)
+   -&gt; INSERT into deployments (status: deploying)
+   -&gt; Call RPI adapter: deploy(artifact, config, secrets)
+   -&gt; On success: UPDATE deployment status -&gt; active
+                  SET agents.active_deployment_id
+   -&gt; On failure: UPDATE deployment status -&gt; failed
+                  SET error_message</code></pre>
+<h4 id="blk-42649">Flow C: Invoke Agent</h4>
+<pre><code>Client -&gt; POST /functions/v1/invoke/:agentId (Edge Function)
+       -&gt; Authenticate (Supabase Auth JWT)
+       -&gt; Check plan limits (billing_usage vs tier)
+       -&gt; Resolve active deployment + runtime provider
+       -&gt; Call RPI adapter: invoke(input, sessionId?, options)
+       -&gt; Return normalized response (output, usage, traceId)
+       -&gt; Data plane emits telemetry event async</code></pre>
+<h4 id="blk-42651">Flow D: Usage Aggregation</h4>
+<pre><code>Data plane -&gt; POST /functions/v1/metrics/report (HMAC-authenticated)
+           -&gt; INSERT into metrics_events
+pg_cron    -&gt; Aggregate metrics_events into billing_usage by period
+Dashboard  -&gt; SELECT billing_usage WHERE user_id = auth.uid()</code></pre>
+<h3 id="blk-42653">Data Model (Key Tables)</h3>
+<table><thead><tr><th>Table</th><th>Purpose</th><th>Key Fields</th></tr></thead><tbody><tr><td><code>users</code></td><td>Account + subscription tier</td><td>id, email, subscription_tier</td></tr><tr><td><code>agents</code></td><td>Logical AI service</td><td>id, user_id, runtime_provider, status, active_deployment_id</td></tr><tr><td><code>deployments</code></td><td>Immutable version record</td><td>id, agent_id, version, status, artifact, provider_ref</td></tr><tr><td><code>metrics_events</code></td><td>Raw per-invocation telemetry</td><td>agent_id, requests, llm_tokens, compute_ms, cost_usd_estimated</td></tr><tr><td><code>billing_usage</code></td><td>Aggregated usage per period</td><td>user_id, period_key, total_requests, total_tokens</td></tr></tbody></table>
+<p>All tables enforce RLS: <code>auth.uid() = user_id</code>.</p>
+<h3 id="blk-42674">Security Boundaries</h3>
+<ul><li><p>Control plane never executes customer agent code.</p></li><li><p>Data plane never has broad access to other tenants' data.</p></li><li><p>Secrets flow: Supabase Vault -&gt; provider secret mechanism at deploy time.</p></li><li><p>Telemetry is HMAC-signed or JWT-authenticated; unauthenticated events are rejected.</p></li></ul>
+<h3 id="blk-42684">Further Reading</h3>
+<ul><li><p><a href="#/WebHost.Systems/docs/skills/SKILLS.md" data-link>Skills Reference</a> -- Operational guides</p></li><li><p><a href="#/WebHost.Systems/docs/spec/00_MASTER_SPEC.md" data-link>Master Spec</a> -- Full engineering spec</p></li><li><p><a href="#/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md" data-link>RPI Spec</a> -- Provider adapter contracts</p></li></ul></div>
+<p class="src"><a href="/#/WebHost.Systems/docs/architecture.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-42598" class="lvl2">Design Principles</a><a href="#blk-42610" class="lvl2">System Diagram (Text)</a><a href="#blk-42612" class="lvl2">Component Responsibilities</a><a href="#blk-42613" class="lvl3">Control Plane (Supabase)</a><a href="#blk-42633" class="lvl3">Data Plane</a><a href="#blk-42644" class="lvl2">Canonical Request Flows</a><a href="#blk-42645" class="lvl3">Flow A: Create Agent</a><a href="#blk-42647" class="lvl3">Flow B: Deploy Agent</a><a href="#blk-42649" class="lvl3">Flow C: Invoke Agent</a><a href="#blk-42651" class="lvl3">Flow D: Usage Aggregation</a><a href="#blk-42653" class="lvl2">Data Model (Key Tables)</a><a href="#blk-42674" class="lvl2">Security Boundaries</a><a href="#blk-42684" class="lvl2">Further Reading</a></nav></div><div class="card"><div class="lab">links to</div><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a><a href="/WebHost.Systems/docs/spec/00_MASTER_SPEC.md/">webhost.systems — MASTER ENGINEERING SPEC (v1)</a><a href="/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md/">webhost.systems — Runtime Provider Interface (RPI) &amp; Adapter Guidance (v1)</a></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/quickstart.md/">WebHost.Systems Quickstart</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/quickstart.md/">WebHost.Systems Quickstart</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraamlqxi3uyvo7bafj2vdflnmcnchsbl2iozdpfygut6zopitkc36a</div></div></div>
+</div></div>
+</body></html>

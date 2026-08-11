@@ -1,0 +1,226 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Skill 07 — Integration Patterns · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Abstract composition is useful for understanding the protocol. Concrete recipes are useful for building agents. This file provides five tested patterns…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill 07 — Integration Patterns">
+<meta property="og:description" content="Abstract composition is useful for understanding the protocol. Concrete recipes are useful for building agents. This file provides five tested patterns…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 07 — Integration Patterns","name":"Skill 07 — Integration Patterns","description":"Abstract composition is useful for understanding the protocol. Concrete recipes are useful for building agents. This file provides five tested patterns…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/","identifier":"bagaaieraxlke2xkbkvqlfbwmmhbdmvna4564nbnfg42khguw4ycndeahfmwq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why This Matters"},{"@type":"WebPageElement","name":"Recipe 1: Temporal Anomaly Enrichment"},{"@type":"WebPageElement","name":"Declaration"},{"@type":"WebPageElement","name":"Type flow"},{"@type":"WebPageElement","name":"What it produces"},{"@type":"WebPageElement","name":"Recipe 2: Evidence-Grounded Reasoning"},{"@type":"WebPageElement","name":"Declaration"},{"@type":"WebPageElement","name":"Type flow"},{"@type":"WebPageElement","name":"Recipe 3: Fleet Intelligence"},{"@type":"WebPageElement","name":"Declaration"},{"@type":"WebPageElement","name":"Composition expression"},{"@type":"WebPageElement","name":"Recipe 4: Governance-Aware Decision"},{"@type":"WebPageElement","name":"Declaration"},{"@type":"WebPageElement","name":"Recipe 5: Full Cognitive Stack"},{"@type":"WebPageElement","name":"Declaration"},{"@type":"WebPageElement","name":"Composition expression"},{"@type":"WebPageElement","name":"Recipe 6: Embodied Computer-Use Agent (all six primitives)"},{"@type":"WebPageElement","name":"Declaration"},{"@type":"WebPageElement","name":"Composition expression"},{"@type":"WebPageElement","name":"Pattern Selection Guide"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/"},{"@type":"ListItem","position":5,"name":"07_INTEGRATION_PATTERNS.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md</span>
+
+</div></div>
+<div class="lead">Abstract composition is useful for understanding the protocol. Concrete recipes are useful for building agents. This file provides five tested patterns that combine the six prim…</div>
+<div class="prose"><h1 id="blk-16914">Skill 07 — Integration Patterns</h1>
+<blockquote><p>Real-world capability composition recipes. Each recipe shows a problem, the declaration, the composition, and what generation produces.</p></blockquote>
+<h3 id="blk-16917">Why This Matters</h3>
+<p>Abstract composition is useful for understanding the protocol. Concrete recipes are useful for building agents. This file provides five tested patterns that combine the six primitives (four cognitive + <code>&amp;body</code> sensorimotor + <code>&amp;govern</code> cross-cutting) in production-relevant ways.</p>
+<h3 id="blk-16919">Recipe 1: Temporal Anomaly Enrichment</h3>
+<p><strong>Problem:</strong> Detect anomalies in time-series data and enrich them with historical context from memory before routing to reasoning.</p>
+<p><strong>Pipeline:</strong> <code>time -&gt; memory -&gt; reason</code></p>
+<h4 id="blk-16922">Declaration</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;AnomalyTriager&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>:    { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;instance&quot;</span>: <span class="t-string">&quot;ops&quot;</span> } },
+    <span class="t-key">&quot;&amp;time.anomaly&quot;</span>:    { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;streams&quot;</span>: [<span class="t-string">&quot;cpu&quot;</span>, <span class="t-string">&quot;latency&quot;</span>] } },
+    <span class="t-key">&quot;&amp;reason.argument&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;governance&quot;</span>: <span class="t-string">&quot;evidence-first&quot;</span> } }
+  },
+  <span class="t-key">&quot;pipelines&quot;</span>: {
+    <span class="t-key">&quot;triage&quot;</span>: {
+      <span class="t-key">&quot;source_type&quot;</span>: <span class="t-string">&quot;stream_data&quot;</span>,
+      <span class="t-key">&quot;source_ref&quot;</span>: <span class="t-string">&quot;raw_data&quot;</span>,
+      <span class="t-key">&quot;steps&quot;</span>: [
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;time.anomaly&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;detect&quot;</span> },
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;enrich&quot;</span> },
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.argument&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;evaluate&quot;</span> }
+      ]
+    }
+  }
+}</code></pre>
+<h4 id="blk-16924">Type flow</h4>
+<pre><code>stream_data -&gt; anomaly_set -&gt; enriched_context -&gt; evaluation_result
+               &amp;time.anomaly  &amp;memory.graph      &amp;reason.argument</code></pre>
+<h4 id="blk-16926">What it produces</h4>
+<ul><li><p>MCP config with three servers (graphonomous, ticktickclock, deliberatic)</p></li><li><p>A2A card with skills: temporal-anomaly-detection, topology-aware-deliberation</p></li></ul>
+<h3 id="blk-16932">Recipe 2: Evidence-Grounded Reasoning</h3>
+<p><strong>Problem:</strong> Answer questions by first recalling relevant knowledge, then reasoning over retrieved evidence with provenance.</p>
+<p><strong>Pipeline:</strong> <code>memory -&gt; reason -&gt; output</code></p>
+<h4 id="blk-16935">Declaration</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;EvidenceReasoner&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+    <span class="t-key">&quot;&amp;reason.deliberate&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;budget&quot;</span>: <span class="t-string">&quot;kappa&quot;</span> } }
+  },
+  <span class="t-key">&quot;pipelines&quot;</span>: {
+    <span class="t-key">&quot;answer&quot;</span>: {
+      <span class="t-key">&quot;source_type&quot;</span>: <span class="t-string">&quot;query&quot;</span>,
+      <span class="t-key">&quot;source_ref&quot;</span>: <span class="t-string">&quot;user_query&quot;</span>,
+      <span class="t-key">&quot;steps&quot;</span>: [
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;recall&quot;</span> },
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;topology&quot;</span> },
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.deliberate&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;deliberate&quot;</span> }
+      ]
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h4 id="blk-16937">Type flow</h4>
+<pre><code>query -&gt; retrieval_result -&gt; topology_result -&gt; deliberation_result
+         &amp;memory.graph       &amp;memory.graph      &amp;reason.deliberate</code></pre>
+<p>This is the <strong>reactive pipeline</strong> from the protocol spec. The topology step detects cycles (kappa &gt; 0) in the retrieved knowledge, and deliberation resolves them through focused reasoning.</p>
+<h3 id="blk-16940">Recipe 3: Fleet Intelligence</h3>
+<p><strong>Problem:</strong> Combine spatial fleet tracking with temporal pattern detection and deliberative reasoning for fleet-wide decision making.</p>
+<p><strong>Pipeline:</strong> <code>space + time -&gt; reason</code></p>
+<h4 id="blk-16943">Declaration</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;FleetIntel&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;space.fleet&quot;</span>:       { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>, <span class="t-string">&quot;eu-west&quot;</span>] } },
+    <span class="t-key">&quot;&amp;time.pattern&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;granularity&quot;</span>: <span class="t-string">&quot;hourly&quot;</span> } },
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+    <span class="t-key">&quot;&amp;reason.argument&quot;</span>:   { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} }
+  },
+  <span class="t-key">&quot;pipelines&quot;</span>: {
+    <span class="t-key">&quot;fleet_analysis&quot;</span>: {
+      <span class="t-key">&quot;source_type&quot;</span>: <span class="t-string">&quot;stream_data&quot;</span>,
+      <span class="t-key">&quot;source_ref&quot;</span>: <span class="t-string">&quot;fleet_telemetry&quot;</span>,
+      <span class="t-key">&quot;steps&quot;</span>: [
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;space.fleet&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;locate&quot;</span> },
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;time.pattern&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;detect&quot;</span> },
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;enrich&quot;</span> },
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.argument&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;evaluate&quot;</span> }
+      ]
+    }
+  }
+}</code></pre>
+<h4 id="blk-16945">Composition expression</h4>
+<pre><code>&amp;space.fleet &amp; &amp;time.pattern &amp; &amp;memory.graph &amp; &amp;reason.argument</code></pre>
+<p>All four cognitive primitives are represented in this recipe (memory, reason, time, space). The pipeline flows spatial data through temporal analysis, enriches with historical context, and routes to reasoning. An embodied variant would add <code>&amp;body.*</code> for perception and action; see Recipe 6 below.</p>
+<h3 id="blk-16948">Recipe 4: Governance-Aware Decision</h3>
+<p><strong>Problem:</strong> Make high-stakes decisions with hard constraints, escalation triggers, and full provenance for audit trails.</p>
+<h4 id="blk-16950">Declaration</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;GovernedDecider&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+    <span class="t-key">&quot;&amp;reason.argument&quot;</span>:   { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;governance&quot;</span>: <span class="t-string">&quot;constitutional&quot;</span> } },
+    <span class="t-key">&quot;&amp;reason.attend&quot;</span>:     { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never authorize expenditures above $10,000&quot;</span>,
+      <span class="t-string">&quot;Never modify production systems without approval&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer reversible actions over irreversible ones&quot;</span>,
+      <span class="t-string">&quot;Prefer consensus when multiple options score equally&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.6</span>,
+      <span class="t-key">&quot;cost_exceeds_usd&quot;</span>: <span class="t-num">5000</span>,
+      <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span>
+    },
+    <span class="t-key">&quot;autonomy&quot;</span>: {
+      <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;advise&quot;</span>,
+      <span class="t-key">&quot;model_tier&quot;</span>: <span class="t-string">&quot;local_large&quot;</span>,
+      <span class="t-key">&quot;budget&quot;</span>: {
+        <span class="t-key">&quot;max_actions_per_hour&quot;</span>: <span class="t-num">10</span>,
+        <span class="t-key">&quot;require_approval_for&quot;</span>: [<span class="t-string">&quot;act&quot;</span>]
+      }
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<p>The governance block ensures the agent operates within declared boundaries. The <code>advise</code> autonomy level means it proposes actions but waits for approval. Provenance creates an audit trail of every capability invocation.</p>
+<h3 id="blk-16953">Recipe 5: Full Cognitive Stack</h3>
+<p><strong>Problem:</strong> Build an agent that uses the four cognitive primitives — memory, reasoning, temporal awareness, and spatial awareness — in a cohesive architecture. (Pure cognitive agent; adds <code>&amp;body.*</code> in Recipe 6 for embodied agents.)</p>
+<h4 id="blk-16955">Declaration</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;CognitiveAgent&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;instance&quot;</span>: <span class="t-string">&quot;cognitive&quot;</span> } },
+    <span class="t-key">&quot;&amp;memory.episodic&quot;</span>:   { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+    <span class="t-key">&quot;&amp;reason.deliberate&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;budget&quot;</span>: <span class="t-string">&quot;kappa&quot;</span> } },
+    <span class="t-key">&quot;&amp;reason.attend&quot;</span>:     { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+    <span class="t-key">&quot;&amp;time.anomaly&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;streams&quot;</span>: [<span class="t-string">&quot;all&quot;</span>] } },
+    <span class="t-key">&quot;&amp;time.forecast&quot;</span>:     { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+    <span class="t-key">&quot;&amp;space.fleet&quot;</span>:       { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;global&quot;</span>] } },
+    <span class="t-key">&quot;&amp;space.geofence&quot;</span>:    { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [<span class="t-string">&quot;Never act without evidence from at least two capability domains&quot;</span>],
+    <span class="t-key">&quot;soft&quot;</span>: [<span class="t-string">&quot;Prefer multi-signal corroboration&quot;</span>],
+    <span class="t-key">&quot;escalate_when&quot;</span>: { <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.5</span> },
+    <span class="t-key">&quot;autonomy&quot;</span>: { <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;act&quot;</span>, <span class="t-key">&quot;model_tier&quot;</span>: <span class="t-string">&quot;cloud_frontier&quot;</span> }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h4 id="blk-16957">Composition expression</h4>
+<pre><code>&amp;memory.graph &amp; &amp;memory.episodic &amp; &amp;reason.deliberate &amp; &amp;reason.attend
+&amp; &amp;time.anomaly &amp; &amp;time.forecast &amp; &amp;space.fleet &amp; &amp;space.geofence</code></pre>
+<p>Eight capabilities across all four cognitive primitives. This is a high-trust agent (<code>autonomy: &quot;act&quot;</code>, <code>model_tier: &quot;cloud_frontier&quot;</code>) with a governance constraint requiring multi-domain evidence before acting.</p>
+<h3 id="blk-16960">Recipe 6: Embodied Computer-Use Agent (all six primitives)</h3>
+<p><strong>Problem:</strong> Build an agent that acts on a real browser and operating system, learns from its perception-action traces, and can ship crystallized workflows to other machines — the full dark-factory shape.</p>
+<h4 id="blk-16962">Declaration</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;EmbodiedFactoryWorker&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span> },
+    <span class="t-key">&quot;&amp;memory.episodic&quot;</span>:   { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span> },
+    <span class="t-key">&quot;&amp;reason.plan&quot;</span>:       { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span> },
+    <span class="t-key">&quot;&amp;reason.deliberate&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;budget&quot;</span>: <span class="t-string">&quot;kappa&quot;</span> } },
+    <span class="t-key">&quot;&amp;time.forecast&quot;</span>:     { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span> },
+    <span class="t-key">&quot;&amp;space.region&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span> },
+    <span class="t-key">&quot;&amp;body.browser&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;agent-browser&quot;</span> },
+    <span class="t-key">&quot;&amp;body.os&quot;</span>:           { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;openclaw&quot;</span> },
+    <span class="t-key">&quot;&amp;govern.identity&quot;</span>:   { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;delegatic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;workspace&quot;</span>: <span class="t-string">&quot;factory_42&quot;</span> } },
+    <span class="t-key">&quot;&amp;govern.telemetry&quot;</span>:  { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span> },
+    <span class="t-key">&quot;&amp;govern.escalation&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;delegatic&quot;</span> }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never write to paths outside the workspace sandbox&quot;</span>,
+      <span class="t-string">&quot;Never submit browser forms containing credentials without explicit authorization&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: { <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.75</span>, <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span> },
+    <span class="t-key">&quot;autonomy&quot;</span>: {
+      <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;act&quot;</span>,
+      <span class="t-key">&quot;model_tier&quot;</span>: <span class="t-string">&quot;local_large&quot;</span>,
+      <span class="t-key">&quot;heartbeat_seconds&quot;</span>: <span class="t-num">60</span>,
+      <span class="t-key">&quot;budget&quot;</span>: { <span class="t-key">&quot;max_actions_per_hour&quot;</span>: <span class="t-num">100</span>, <span class="t-key">&quot;require_approval_for&quot;</span>: [<span class="t-string">&quot;process_spawn&quot;</span>, <span class="t-string">&quot;file_delete&quot;</span>] }
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h4 id="blk-16964">Composition expression</h4>
+<pre><code>&amp;memory.graph &amp; &amp;memory.episodic &amp; &amp;reason.plan &amp; &amp;reason.deliberate
+&amp; &amp;time.forecast &amp; &amp;space.region &amp; &amp;body.browser &amp; &amp;body.os
+&amp; &amp;govern.identity &amp; &amp;govern.telemetry &amp; &amp;govern.escalation</code></pre>
+<p>This recipe is the canonical shape for a [&amp;]-composed continual-learning computer-use agent. The <code>&amp;body.*</code> capabilities provide the perception-action loop (OS-011 Embodiment Protocol). The <code>&amp;memory.episodic</code> consumes InteractionTraces produced by every <code>&amp;body.*.act</code> call. Crystallized procedural clusters promote to FleetPrompt SkillCandidates for cross-machine skill transfer. PRISM benchmarks embodiment fidelity.</p>
+<h3 id="blk-16967">Pattern Selection Guide</h3>
+<table><thead><tr><th>Situation</th><th>Recommended Recipe</th></tr></thead><tbody><tr><td>Stream monitoring with alerting</td><td>Recipe 1: Temporal Anomaly Enrichment</td></tr><tr><td>Knowledge-intensive Q&amp;A</td><td>Recipe 2: Evidence-Grounded Reasoning</td></tr><tr><td>Multi-region fleet operations</td><td>Recipe 3: Fleet Intelligence</td></tr><tr><td>Regulated or audited environments</td><td>Recipe 4: Governance-Aware Decision</td></tr><tr><td>General-purpose autonomous agent</td><td>Recipe 5: Full Cognitive Stack</td></tr></tbody></table>
+<p>Start with the simplest recipe that covers your needs. Add capabilities incrementally as requirements emerge.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-16917" class="lvl2">Why This Matters</a><a href="#blk-16919" class="lvl2">Recipe 1: Temporal Anomaly Enrichment</a><a href="#blk-16922" class="lvl3">Declaration</a><a href="#blk-16924" class="lvl3">Type flow</a><a href="#blk-16926" class="lvl3">What it produces</a><a href="#blk-16932" class="lvl2">Recipe 2: Evidence-Grounded Reasoning</a><a href="#blk-16935" class="lvl3">Declaration</a><a href="#blk-16937" class="lvl3">Type flow</a><a href="#blk-16940" class="lvl2">Recipe 3: Fleet Intelligence</a><a href="#blk-16943" class="lvl3">Declaration</a><a href="#blk-16945" class="lvl3">Composition expression</a><a href="#blk-16948" class="lvl2">Recipe 4: Governance-Aware Decision</a><a href="#blk-16950" class="lvl3">Declaration</a><a href="#blk-16953" class="lvl2">Recipe 5: Full Cognitive Stack</a><a href="#blk-16955" class="lvl3">Declaration</a><a href="#blk-16957" class="lvl3">Composition expression</a><a href="#blk-16960" class="lvl2">Recipe 6: Embodied Computer-Use Agent (all six primitives)</a><a href="#blk-16962" class="lvl3">Declaration</a><a href="#blk-16964" class="lvl3">Composition expression</a><a href="#blk-16967" class="lvl2">Pattern Selection Guide</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/">Skill 01 — Writing Agent Declarations</a><a href="/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/">Skill 02 — Validation</a><a href="/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/">Skill 03 — Capability Composition</a><a href="/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/">Skill 04 — Capability Contracts</a><a href="/AmpersandBoxDesign/docs/skills/05_GENERATION.md/">Skill 05 — Generation</a><a href="/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/">Skill 06 — CLI Reference</a><a href="/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/">Skill 08 — Provider Implementation</a><a href="/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/">Skill 09 — Governance and Provenance</a><a href="/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/">Skill 10 — Anti-Patterns</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraxlke2xkbkvqlfbwmmhbdmvna4564nbnfg42khguw4ycndeahfmwq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,132 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;reason.deliberate is the capability page for the &amp;reason.deliberate subtype in the [&amp;] Protocol.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol">
+<meta property="og:description" content="&amp;reason.deliberate is the capability page for the &amp;reason.deliberate subtype in the [&amp;] Protocol.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&reason.deliberate — κ-Aware Deliberation for the [&] Protocol","name":"&reason.deliberate — κ-Aware Deliberation for the [&] Protocol","description":"&reason.deliberate is the capability page for the &reason.deliberate subtype in the [&] Protocol.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.deliberate.md/","identifier":"bagaaieradygw5vgufovygxs6nya2hp4wbsamuaf3qi2pccyhl34f7xqdf5da","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. Where it fits in the protocol"},{"@type":"WebPageElement","name":"4. Capability contract (representative)"},{"@type":"WebPageElement","name":"5. Operations"},{"@type":"WebPageElement","name":"deliberate"},{"@type":"WebPageElement","name":"decompose"},{"@type":"WebPageElement","name":"reconcile"},{"@type":"WebPageElement","name":"6. Composition patterns"},{"@type":"WebPageElement","name":"Pattern A — Topology-aware reactive reasoning"},{"@type":"WebPageElement","name":"Pattern B — Attention-triggered deliberation"},{"@type":"WebPageElement","name":"Pattern C — Deliberate then justify"},{"@type":"WebPageElement","name":"7. Tier-aware behavior"},{"@type":"WebPageElement","name":"8. Governance implications"},{"@type":"WebPageElement","name":"9. Provenance implications"},{"@type":"WebPageElement","name":"10. Compatible providers"},{"@type":"WebPageElement","name":"11. Anti-patterns"},{"@type":"WebPageElement","name":"12. Summary"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"reason.deliberate.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.deliberate.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/reason.deliberate.md</span>
+
+</div></div>
+<div class="lead">&amp;reason.deliberate is the capability page for the &amp;reason.deliberate subtype in the [&amp;] Protocol.</div>
+<div class="prose"><h1 id="blk-11596"><code>&amp;reason.deliberate</code> — κ-Aware Deliberation for the [&amp;] Protocol</h1>
+<p><code>&amp;reason.deliberate</code> is the capability page for the <code>&amp;reason.deliberate</code> subtype in the [&amp;] Protocol.</p>
+<p>It represents a reasoning surface optimized for <strong>cyclic knowledge regions</strong> where simple one-shot evaluation is often insufficient.</p>
+<p>In short:</p>
+<blockquote><p><code>&amp;reason.deliberate</code> is the protocol capability for agents that must reason through feedback loops using topology-aware decomposition and reconciliation.</p></blockquote>
+<h3 id="blk-11602">1. Definition</h3>
+<p><code>&amp;reason.deliberate</code> is a subtype of <code>&amp;reason</code>.</p>
+<p>It describes a focused reasoning capability that consumes graph-structural context (for example SCCs, κ values, and fault lines) and produces:</p>
+<ul><li><p>reconciled conclusions</p></li><li><p>confidence-scored outputs</p></li><li><p>optional crystallized knowledge suitable for write-back into memory</p></li></ul>
+<p>Unlike generic reasoning steps, <code>&amp;reason.deliberate</code> is explicitly designed to operate on <strong>non-acyclic</strong> knowledge structures.</p>
+<h3 id="blk-11613">2. Why this capability exists</h3>
+<p>Many decision problems are not DAG-shaped. They contain circular dependencies such as:</p>
+<ul><li><p>demand ↔ pricing feedback</p></li><li><p>quality ↔ retention feedback</p></li><li><p>risk ↔ intervention feedback</p></li></ul>
+<p>In these cases, a direct “retrieve then decide” step can underperform because the model must juggle mutually dependent assumptions.</p>
+<p><code>&amp;reason.deliberate</code> exists to make this structure explicit and routable:</p>
+<ol><li><p>detect cyclic structure from memory topology</p></li><li><p>decompose along weak links (fault lines)</p></li><li><p>run focused passes on scoped partitions</p></li><li><p>reconcile intermediate conclusions</p></li></ol>
+<p>This improves controllability, auditability, and consistency in high-friction reasoning regions.</p>
+<h3 id="blk-11634">3. Where it fits in the protocol</h3>
+<p>The [&amp;] Protocol organizes cognition, embodiment, and governance into six primitive families:</p>
+<ul><li><p><code>&amp;memory</code> — what the agent knows</p></li><li><p><code>&amp;reason</code> — how the agent decides</p></li><li><p><code>&amp;time</code> — when things happen</p></li><li><p><code>&amp;space</code> — where things are</p></li><li><p><code>&amp;body</code> — how the agent is instantiated in an environment (perception, action, affordance)</p></li><li><p><code>&amp;govern</code> — who is acting, under what rules, at what cost</p></li></ul>
+<p><code>&amp;reason.deliberate</code> sits under <code>&amp;reason</code> and composes most naturally with:</p>
+<ul><li><p><code>&amp;memory.graph</code> (topology and retrieval grounding)</p></li><li><p><code>&amp;reason.attend</code> (attention routing into deliberate work)</p></li><li><p><code>&amp;memory.*</code> write-back flows for crystallized conclusions</p></li></ul>
+<h3 id="blk-11657">4. Capability contract (representative)</h3>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.deliberate&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;κ-driven deliberation contract for topology-aware focused reasoning over cyclic knowledge regions.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;deliberate&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;topology_result&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;deliberation_result&quot;</span>
+    },
+    <span class="t-key">&quot;decompose&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;topology_result&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;partitions&quot;</span>
+    },
+    <span class="t-key">&quot;reconcile&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;intermediate_conclusions&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;deliberation_result&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [<span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-string">&quot;&amp;memory.*&quot;</span>, <span class="t-string">&quot;topology_result&quot;</span>, <span class="t-string">&quot;context&quot;</span>],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [<span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-string">&quot;&amp;reason.*&quot;</span>, <span class="t-string">&quot;deliberation_result&quot;</span>, <span class="t-string">&quot;output&quot;</span>],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [<span class="t-string">&quot;topology-aware-deliberation&quot;</span>, <span class="t-string">&quot;fault-line-reconciliation&quot;</span>]
+}</code></pre>
+<h3 id="blk-11659">5. Operations</h3>
+<h4 id="blk-11660"><code>deliberate</code></h4>
+<p>Runs focused reasoning over selected SCC regions and returns reconciled conclusions with confidence metadata.</p>
+<h4 id="blk-11662"><code>decompose</code></h4>
+<p>Splits cyclic regions into scoped partitions (typically by fault lines) for manageable passes.</p>
+<h4 id="blk-11664"><code>reconcile</code></h4>
+<p>Combines partition-level intermediates into a coherent result suitable for downstream action or memory write-back.</p>
+<h3 id="blk-11666">6. Composition patterns</h3>
+<h4 id="blk-11667">Pattern A — Topology-aware reactive reasoning</h4>
+<pre><code>query
+  -&gt; &amp;memory.graph.recall()
+  -&gt; &amp;memory.graph.topology()
+  -&gt; &amp;reason.deliberate.deliberate()
+  -&gt; &amp;memory.graph.learn()</code></pre>
+<p>Use when a query touches cyclic regions and requires deeper reasoning before action.</p>
+<h4 id="blk-11670">Pattern B — Attention-triggered deliberation</h4>
+<pre><code>heartbeat_or_demand
+  -&gt; &amp;reason.attend.survey()
+  -&gt; &amp;reason.attend.triage()
+  -&gt; &amp;reason.deliberate.deliberate()
+  -&gt; output</code></pre>
+<p>Use when an attention engine routes high-friction regions into explicit deliberation.</p>
+<h4 id="blk-11673">Pattern C — Deliberate then justify</h4>
+<pre><code>topology_result
+  -&gt; &amp;reason.deliberate.deliberate()
+  -&gt; &amp;reason.argument.justify()
+  -&gt; output</code></pre>
+<p>Use when downstream stakeholders require structured justification artifacts.</p>
+<h3 id="blk-11676">7. Tier-aware behavior</h3>
+<p>Implementations may adapt <code>&amp;reason.deliberate</code> by declared <code>model_tier</code>:</p>
+<ul><li><p><code>local_small</code></p></li></ul>
+<p>Often uses single-pass strategy for higher κ only; may skip low-κ cycles below a floor.</p>
+<ul><li><p><code>local_large</code></p></li></ul>
+<p>Typically supports multi-pass decomposition/reconciliation on κ &gt; 0.</p>
+<ul><li><p><code>cloud_frontier</code></p></li></ul>
+<p>Supports deeper multi-pass budgets and larger partition scopes.</p>
+<p>This keeps routing semantics stable while adapting execution depth to available inference capacity.</p>
+<h3 id="blk-11691">8. Governance implications</h3>
+<p><code>&amp;reason.deliberate</code> should honor governance boundaries in both routing and output handling:</p>
+<ul><li><p>respect escalation thresholds (<code>confidence_below</code>, cost limits, boundary flags)</p></li><li><p>enforce hard constraints before downstream action dispatch</p></li><li><p>avoid auto-execution when autonomy level is limited to <code>observe</code> or <code>advise</code></p></li></ul>
+<p>A deliberation result should be treated as <strong>decision support</strong>, not unconditional permission to act.</p>
+<h3 id="blk-11701">9. Provenance implications</h3>
+<p>A deliberation step should preserve strong traceability, including:</p>
+<ul><li><p>topology basis (SCC IDs, κ values, fault-line edges)</p></li><li><p>operation name and provider</p></li><li><p>input and output hashes</p></li><li><p>parent trace linkage</p></li><li><p>timestamps and any transport trace IDs</p></li></ul>
+<p>This is essential for replay, audit, and post-outcome learning loops.</p>
+<h3 id="blk-11715">10. Compatible providers</h3>
+<p>Current ecosystem-aligned provider:</p>
+<ul><li><p><code>graphonomous</code></p></li></ul>
+<p>Protocol note: providers are implementations; <code>&amp;reason.deliberate</code> remains the capability interface.</p>
+<h3 id="blk-11721">11. Anti-patterns</h3>
+<ul><li><p>Treating cyclic reasoning as plain one-shot ranking without topology context.</p></li><li><p>Collapsing <code>decompose</code> and <code>reconcile</code> semantics into undocumented prompt hacks.</p></li><li><p>Emitting deliberation outputs with no confidence or provenance linkage.</p></li><li><p>Skipping governance checks and directly dispatching real-world actions.</p></li></ul>
+<h3 id="blk-11731">12. Summary</h3>
+<p><code>&amp;reason.deliberate</code> formalizes a critical reasoning mode for cyclic, feedback-heavy domains.</p>
+<p>It gives agent systems:</p>
+<ul><li><p>explicit topology-aware routing</p></li><li><p>scoped decomposition for hard reasoning regions</p></li><li><p>reconciled, confidence-bearing conclusions</p></li><li><p>clean composition with memory, governance, and provenance layers</p></li></ul>
+<p>This makes deliberation a portable protocol capability rather than ad hoc prompt behavior.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/reason.deliberate.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-11602" class="lvl2">1. Definition</a><a href="#blk-11613" class="lvl2">2. Why this capability exists</a><a href="#blk-11634" class="lvl2">3. Where it fits in the protocol</a><a href="#blk-11657" class="lvl2">4. Capability contract (representative)</a><a href="#blk-11659" class="lvl2">5. Operations</a><a href="#blk-11660" class="lvl3">deliberate</a><a href="#blk-11662" class="lvl3">decompose</a><a href="#blk-11664" class="lvl3">reconcile</a><a href="#blk-11666" class="lvl2">6. Composition patterns</a><a href="#blk-11667" class="lvl3">Pattern A — Topology-aware reactive reasoning</a><a href="#blk-11670" class="lvl3">Pattern B — Attention-triggered deliberation</a><a href="#blk-11673" class="lvl3">Pattern C — Deliberate then justify</a><a href="#blk-11676" class="lvl2">7. Tier-aware behavior</a><a href="#blk-11691" class="lvl2">8. Governance implications</a><a href="#blk-11701" class="lvl2">9. Provenance implications</a><a href="#blk-11715" class="lvl2">10. Compatible providers</a><a href="#blk-11721" class="lvl2">11. Anti-patterns</a><a href="#blk-11731" class="lvl2">12. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.plan.md/">&amp;reason.plan -- Planning-Oriented Reasoning for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieradygw5vgufovygxs6nya2hp4wbsamuaf3qi2pccyhl34f7xqdf5da</div></div></div>
+</div></div>
+</body></html>

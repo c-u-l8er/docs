@@ -1,0 +1,71 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Evidence Path Tracing · graphonomous · Ampersand Box</title>
+<meta name="description" content="Find the lowest-cost evidence path between two knowledge nodes using weighted Dijkstra with optional K-shortest alternate paths via Yen&#39;s algorithm.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/trace-evidence-path.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Evidence Path Tracing">
+<meta property="og:description" content="Find the lowest-cost evidence path between two knowledge nodes using weighted Dijkstra with optional K-shortest alternate paths via Yen&#39;s algorithm.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/trace-evidence-path.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Evidence Path Tracing","name":"Evidence Path Tracing","description":"Find the lowest-cost evidence path between two knowledge nodes using weighted Dijkstra with optional K-shortest alternate paths via Yen's algorithm.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/trace-evidence-path.md/","identifier":"bagaaierahnm3dgw6wvocrs7yx3j2hh275qsge7qbocpdvpyrlq2gsfdjpcna","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Arguments"},{"@type":"WebPageElement","name":"When to Use"},{"@type":"WebPageElement","name":"Basic Usage"},{"@type":"WebPageElement","name":"Trace shortest evidence path"},{"@type":"WebPageElement","name":"Find K alternate paths"},{"@type":"WebPageElement","name":"Parameters"},{"@type":"WebPageElement","name":"Cost Function"},{"@type":"WebPageElement","name":"Response Fields"},{"@type":"WebPageElement","name":"Full Workflow"},{"@type":"WebPageElement","name":"Combining with Other Machines"},{"@type":"WebPageElement","name":"Tuning Tips"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/"},{"@type":"ListItem","position":5,"name":"trace-evidence-path.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/trace-evidence-path.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/docs/skills/trace-evidence-path.md</span>
+
+</div></div>
+<div class="lead">Find the lowest-cost evidence path between two knowledge nodes using weighted Dijkstra with optional K-shortest alternate paths via Yen&#39;s algorithm.</div>
+<div class="prose"><h1 id="blk-68122">Evidence Path Tracing</h1>
+<p>Find the lowest-cost evidence path between two knowledge nodes using weighted Dijkstra with optional K-shortest alternate paths via Yen's algorithm.</p>
+<h3 id="blk-68124">Arguments</h3>
+<p>From/to node IDs and options: $ARGUMENTS</p>
+<h3 id="blk-68126">When to Use</h3>
+<ul><li><p><strong>Explainability</strong> — &quot;Why did you conclude X from Y?&quot; Trace the causal chain.</p></li><li><p><strong>Provenance audit</strong> — Verify that a conclusion has a legitimate evidence path.</p></li><li><p><strong>Decision support</strong> — Before high-stakes actions, show the reasoning chain.</p></li><li><p><strong>Contradiction investigation</strong> — When two nodes seem related but the connection is unclear.</p></li><li><p><strong>After deliberation</strong> — Verify that crystallized conclusions connect back to source evidence.</p></li></ul>
+<h3 id="blk-68138">Basic Usage</h3>
+<h4 id="blk-68139">Trace shortest evidence path</h4>
+<pre><code>retrieve(action: &quot;trace_evidence&quot;, source_id: &quot;&lt;source_node_id&gt;&quot;, target_id: &quot;&lt;target_node_id&gt;&quot;)</code></pre>
+<p>Returns the single lowest-cost path with per-edge cost breakdown.</p>
+<h4 id="blk-68142">Find K alternate paths</h4>
+<pre><code>retrieve(action: &quot;trace_evidence&quot;, source_id: &quot;&lt;source_node_id&gt;&quot;, target_id: &quot;&lt;target_node_id&gt;&quot;, k: 3)</code></pre>
+<p>Returns up to K paths ranked by total cost, using Yen's algorithm. Useful for finding diverse reasoning chains.</p>
+<h3 id="blk-68145">Parameters</h3>
+<table><thead><tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>source_id</code></td><td>string</td><td>_(required)_</td><td>Source node ID</td></tr><tr><td><code>target_id</code></td><td>string</td><td>_(required)_</td><td>Target node ID</td></tr><tr><td><code>k</code></td><td>number</td><td>1</td><td>Number of alternate paths (max 10)</td></tr><tr><td><code>half_life_hours</code></td><td>number</td><td>168.0</td><td>Recency decay half-life (lower = prefer recent edges)</td></tr><tr><td><code>bidirectional</code></td><td>boolean</td><td>true</td><td>Search edges in both directions</td></tr><tr><td><code>max_hops</code></td><td>number</td><td>10</td><td>BFS expansion limit for subgraph construction</td></tr></tbody></table>
+<h3 id="blk-68175">Cost Function</h3>
+<p>Each edge's cost is computed as:</p>
+<pre><code>cost = -log(confidence) + recency_decay(age_hours / half_life) + type_cost(edge_type)</code></pre>
+<p><strong>Type costs:</strong></p>
+<table><thead><tr><th>Edge Type</th><th>Cost</th><th>Rationale</th></tr></thead><tbody><tr><td><code>causal</code></td><td>0.0</td><td>Direct causation is free — strongest evidence</td></tr><tr><td><code>supports</code></td><td>0.1</td><td>Supporting evidence is cheap</td></tr><tr><td><code>related_to</code></td><td>0.5</td><td>Association — weaker link</td></tr><tr><td><code>contradicts</code></td><td>2.0</td><td>Penalty for contradictory edges</td></tr><tr><td>other</td><td>1.0</td><td>Default penalty</td></tr></tbody></table>
+<p><strong>Implications:</strong></p>
+<ul><li><p>High-confidence causal edges are nearly free to traverse.</p></li><li><p>Old edges are more expensive (recency decay).</p></li><li><p>Contradictory paths are strongly penalized — if the shortest path traverses a <code>contradicts</code> edge, something may be wrong.</p></li></ul>
+<h3 id="blk-68206">Response Fields</h3>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;paths&quot;</span>: [
+    {
+      <span class="t-key">&quot;path&quot;</span>: [<span class="t-string">&quot;node_abc&quot;</span>, <span class="t-string">&quot;node_def&quot;</span>, <span class="t-string">&quot;node_ghi&quot;</span>],
+      <span class="t-key">&quot;total_cost&quot;</span>: <span class="t-num">0.423</span>,
+      <span class="t-key">&quot;edges&quot;</span>: [
+        {<span class="t-key">&quot;from&quot;</span>: <span class="t-string">&quot;node_abc&quot;</span>, <span class="t-key">&quot;to&quot;</span>: <span class="t-string">&quot;node_def&quot;</span>, <span class="t-key">&quot;cost&quot;</span>: <span class="t-num">0.105</span>, <span class="t-key">&quot;edge_type&quot;</span>: <span class="t-string">&quot;causal&quot;</span>, <span class="t-key">&quot;confidence&quot;</span>: <span class="t-num">0.9</span>},
+        {<span class="t-key">&quot;from&quot;</span>: <span class="t-string">&quot;node_def&quot;</span>, <span class="t-key">&quot;to&quot;</span>: <span class="t-string">&quot;node_ghi&quot;</span>, <span class="t-key">&quot;cost&quot;</span>: <span class="t-num">0.318</span>, <span class="t-key">&quot;edge_type&quot;</span>: <span class="t-string">&quot;supports&quot;</span>, <span class="t-key">&quot;confidence&quot;</span>: <span class="t-num">0.7</span>}
+      ]
+    }
+  ],
+  <span class="t-key">&quot;subgraph_size&quot;</span>: {<span class="t-key">&quot;nodes&quot;</span>: <span class="t-num">15</span>, <span class="t-key">&quot;edges&quot;</span>: <span class="t-num">23</span>}
+}</code></pre>
+<h3 id="blk-68208">Full Workflow</h3>
+<ol><li><p><strong>Identify endpoints</strong> — use <code>retrieve(action: &quot;context&quot;, ...)</code> or <code>consolidate(action: &quot;query&quot;, ...)</code> to find the two nodes you want to connect.</p></li><li><p><strong>Trace path</strong> — <code>retrieve(action: &quot;trace_evidence&quot;, source_id: &quot;&lt;id_a&gt;&quot;, target_id: &quot;&lt;id_b&gt;&quot;, k: 3)</code></p></li><li><p><strong>Interpret costs</strong> — low total cost = strong evidence chain. Check for <code>contradicts</code> edges in any path.</p></li><li><p><strong>Report to user</strong> — summarize the chain in natural language.</p></li><li><p><strong>Store episodic</strong> — if the trace revealed something important, store it as an episodic node.</p></li></ol>
+<h3 id="blk-68220">Combining with Other Machines</h3>
+<table><thead><tr><th>Scenario</th><th>Workflow</th></tr></thead><tbody><tr><td>Verify deliberation output</td><td><code>route(action: &quot;deliberate&quot;)</code> -&gt; <code>retrieve(action: &quot;trace_evidence&quot;)</code> from source to conclusion</td></tr><tr><td>Audit before high-stakes action</td><td><code>retrieve(action: &quot;context&quot;)</code> -&gt; identify causal chain -&gt; <code>retrieve(action: &quot;trace_evidence&quot;)</code> to verify</td></tr><tr><td>Investigate contradiction</td><td><code>learn(action: &quot;contradictions&quot;)</code> -&gt; find conflicting nodes -&gt; <code>retrieve(action: &quot;trace_evidence&quot;)</code> between them</td></tr><tr><td>Topology + path</td><td><code>route(action: &quot;topology&quot;)</code> -&gt; identify SCC members -&gt; <code>retrieve(action: &quot;trace_evidence&quot;)</code> within the cycle</td></tr><tr><td>Goal provenance</td><td><code>route(action: &quot;review_goal&quot;)</code> -&gt; get linked nodes -&gt; <code>retrieve(action: &quot;trace_evidence&quot;)</code> from evidence to goal</td></tr></tbody></table>
+<h3 id="blk-68234">Tuning Tips</h3>
+<ul><li><p><strong>Lower `half_life_hours`</strong> (e.g., 24) to strongly prefer recent evidence chains.</p></li><li><p><strong>Set `bidirectional: false`</strong> to enforce strict causal direction.</p></li><li><p><strong>Increase `k`</strong> to find diverse paths — if path 1 goes through node X but path 2 doesn't, node X is not the only link.</p></li><li><p><strong>Increase `max_hops`</strong> for large graphs where the two nodes are far apart.</p></li></ul></div>
+<p class="src"><a href="/#/graphonomous/docs/skills/trace-evidence-path.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-68124" class="lvl2">Arguments</a><a href="#blk-68126" class="lvl2">When to Use</a><a href="#blk-68138" class="lvl2">Basic Usage</a><a href="#blk-68139" class="lvl3">Trace shortest evidence path</a><a href="#blk-68142" class="lvl3">Find K alternate paths</a><a href="#blk-68145" class="lvl2">Parameters</a><a href="#blk-68175" class="lvl2">Cost Function</a><a href="#blk-68206" class="lvl2">Response Fields</a><a href="#blk-68208" class="lvl2">Full Workflow</a><a href="#blk-68220" class="lvl2">Combining with Other Machines</a><a href="#blk-68234" class="lvl2">Tuning Tips</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a><a href="/graphonomous/docs/skills/attention.md/">Attention Engine</a><a href="/graphonomous/docs/skills/belief.md/">Belief Revision</a><a href="/graphonomous/docs/skills/bootstrap.md/">Graphonomous Bootstrap</a><a href="/graphonomous/docs/skills/consolidate.md/">Consolidation</a><a href="/graphonomous/docs/skills/deliberate.md/">Topology and Deliberation</a><a href="/graphonomous/docs/skills/epistemic-frontier.md/">Epistemic Frontier — Uncertainty-Guided Investigation</a><a href="/graphonomous/docs/skills/forgetting.md/">Intentional Forgetting — Structured Knowledge Removal</a><a href="/graphonomous/docs/skills/goals.md/">Goal Management</a><a href="/graphonomous/docs/skills/graph-health.md/">Graph Health Check</a><a href="/graphonomous/docs/skills/inspect.md/">Graph Inspection</a><a href="/graphonomous/docs/skills/learn.md/">Learning Loop</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierahnm3dgw6wvocrs7yx3j2hh275qsge7qbocpdvpyrlq2gsfdjpcna</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,71 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>graphonomous — NPM Package Specification · graphonomous · Ampersand Box</title>
+<meta name="description" content="Package: graphonomous Version: 0.4.0 (current) → 0.4.1 (three-package alignment bump) Language: TypeScript (MCP wrapper) + Elixir (engine, vendored…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/NPM_PACKAGE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="graphonomous — NPM Package Specification">
+<meta property="og:description" content="Package: graphonomous Version: 0.4.0 (current) → 0.4.1 (three-package alignment bump) Language: TypeScript (MCP wrapper) + Elixir (engine, vendored…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/docs/NPM_PACKAGE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"graphonomous — NPM Package Specification","name":"graphonomous — NPM Package Specification","description":"Package: graphonomous Version: 0.4.0 (current) → 0.4.1 (three-package alignment bump) Language: TypeScript (MCP wrapper) + Elixir (engine, vendored…","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/NPM_PACKAGE.md/","identifier":"bagaaierauitlq6sjjheibvsbfftsthas7cpzwcvbian7o33o377saejjntxq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Purpose"},{"@type":"WebPageElement","name":"Install"},{"@type":"WebPageElement","name":"MCP Surface — 5 Loop-Phase Machines"},{"@type":"WebPageElement","name":"v0.4.1 Checklist"},{"@type":"WebPageElement","name":"Why graphonomous ships last"},{"@type":"WebPageElement","name":"Reference"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"NPM_PACKAGE.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/NPM_PACKAGE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/docs/NPM_PACKAGE.md</span>
+
+</div></div>
+<div class="lead">Package: graphonomous Version: 0.4.0 (current) → 0.4.1 (three-package alignment bump) Language: TypeScript (MCP wrapper) + Elixir (engine, vendored escript) License: Apache-2.0…</div>
+<div class="prose"><h1 id="blk-64139">graphonomous — NPM Package Specification</h1>
+<p><strong>Package</strong>: <code>graphonomous</code> <strong>Version</strong>: <code>0.4.0</code> (current) → <code>0.4.1</code> (three-package alignment bump) <strong>Language</strong>: TypeScript (MCP wrapper) + Elixir (engine, vendored escript) <strong>License</strong>: Apache-2.0 <strong>Registry</strong>: https://www.npmjs.com/package/graphonomous <strong>Repository</strong>: <code>AmpersandBoxDesign/graphonomous</code> (monorepo subdir)</p>
+<h3 id="blk-64141">Purpose</h3>
+<p><code>graphonomous</code> is the MCP server for the continual learning engine. It exposes the 5 Graphonomous loop-phase machines (<code>retrieve</code>, <code>route</code>, <code>act</code>, <code>learn</code>, <code>consolidate</code>) over stdio and persists knowledge in an embedded SQLite + sqlite-vec database.</p>
+<p>This package already ships at v0.4.0 and serves as the <strong>template</strong> for the other two packages in the three-package MCP stack. A v0.4.1 bump is required to:</p>
+<ol><li><p>Update the package description to name the 5-machine surface (no more</p></li></ol>
+<p>&quot;28 tools&quot; wording — the v1 tool surface is now legacy).</p>
+<ol start="2"><li><p>Update the README to reference the three-package install story.</p></li><li><p>Publish a <code>graphonomous.continual_learning.pulse.json</code> manifest so</p></li></ol>
+<p><code>os-prism</code> can benchmark against a canonical PULSE manifest.</p>
+<ol start="4"><li><p>Register itself with a running <code>os-pulse</code> instance at startup if one</p></li></ol>
+<p>is configured (optional).</p>
+<p>No Elixir code changes are required. The existing vendored escript at <code>graphonomous/npm/vendor/</code> and the existing postinstall script continue to work.</p>
+<h3 id="blk-64159">Install</h3>
+<pre data-lang="bash"><code>npx<span class="t-flag"> -y</span> graphonomous<span class="t-flag"> --db</span> ~/.graphonomous/knowledge.db</code></pre>
+<p>Or in <code>.mcp.json</code>:</p>
+<pre data-lang="jsonc"><code>{
+  <span class="t-key">&quot;mcpServers&quot;</span>: {
+    <span class="t-key">&quot;graphonomous&quot;</span>: {
+      <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;npx&quot;</span>,
+      <span class="t-key">&quot;args&quot;</span>: [<span class="t-string">&quot;-y&quot;</span>, <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-string">&quot;--db&quot;</span>, <span class="t-string">&quot;~/.graphonomous/knowledge.db&quot;</span>]
+    }
+  }
+}</code></pre>
+<h3 id="blk-64163">MCP Surface — 5 Loop-Phase Machines</h3>
+<table><thead><tr><th>Machine</th><th>Phase</th><th>Actions</th></tr></thead><tbody><tr><td><code>retrieve</code></td><td>&quot;What do I know?&quot;</td><td><code>context</code>, <code>episodic</code>, <code>procedural</code>, <code>coverage</code>, <code>trace_evidence</code>, <code>frontier</code></td></tr><tr><td><code>route</code></td><td>&quot;What should I do?&quot;</td><td><code>topology</code>, <code>deliberate</code>, <code>attention_survey</code>, <code>attention_cycle</code>, <code>review_goal</code></td></tr><tr><td><code>act</code></td><td>&quot;Do it&quot;</td><td><code>store_node</code>, <code>store_edge</code>, <code>delete_node</code>, <code>manage_edge</code>, <code>manage_goal</code>, <code>belief_revise</code>, <code>forget_node</code>, <code>forget_policy</code>, <code>gdpr_erase</code></td></tr><tr><td><code>learn</code></td><td>&quot;Did it work?&quot;</td><td><code>from_outcome</code>, <code>from_feedback</code>, <code>detect_novelty</code>, <code>from_interaction</code>, <code>contradictions</code></td></tr><tr><td><code>consolidate</code></td><td>&quot;Clean up&quot;</td><td><code>run</code>, <code>stats</code>, <code>query</code>, <code>traverse</code></td></tr></tbody></table>
+<p>The v1 tool surface (29 individual tools) remains available for backward compatibility but is deprecated. New integrations should use the 5 machines.</p>
+<h3 id="blk-64184">v0.4.1 Checklist</h3>
+<ul><li><p>[ ] Bump <code>mix.exs</code> version to <code>0.4.1</code></p></li><li><p>[ ] Bump <code>npm/package.json</code> version to <code>0.4.1</code></p></li><li><p>[ ] Update <code>npm/package.json</code> description to the 5-machine framing (<strong>done</strong>)</p></li><li><p>[ ] Update <code>npm/README.md</code> to reference three-package install block</p></li><li><p>[ ] Add <code>graphonomous.continual_learning.pulse.json</code> alongside the existing</p></li></ul>
+<p><code>PULSE/manifests/graphonomous.continual_learning.json</code> so the manifest is shipped as part of the npm package's <code>files</code> array</p>
+<ul><li><p>[ ] Add optional <code>--pulse-registry &lt;url&gt;</code> CLI flag to auto-register the</p></li></ul>
+<p>manifest with a running <code>os-pulse</code> instance at startup</p>
+<ul><li><p>[ ] Rebuild platform escripts and upload to GitHub Releases under tag</p></li></ul>
+<p><code>graphonomous-v0.4.1</code></p>
+<ul><li><p>[ ] <code>npm publish --access public</code></p></li></ul>
+<h3 id="blk-64208">Why graphonomous ships last</h3>
+<ol><li><p>Already shipping and stable at v0.4.0 — no urgency for the actual code.</p></li><li><p>Depends on <code>os-pulse</code> being live so the auto-registration feature can be</p></li></ol>
+<p>dogfooded.</p>
+<ol start="3"><li><p>Depends on <code>os-prism</code> being live so Phase 5 (dogfood benchmark) can</p></li></ol>
+<p>actually run against graphonomous end-to-end.</p>
+<ol start="4"><li><p>Doc and version bump only — lowest-risk release in the sequence.</p></li></ol>
+<h3 id="blk-64222">Reference</h3>
+<ul><li><p><code>graphonomous/docs/spec/README.md</code> — full engine spec (v0.4)</p></li><li><p><code>graphonomous/docs/skills/SKILLS.md</code> — ampersand-plugins skills pack</p></li><li><p><code>PULSE/manifests/graphonomous.continual_learning.json</code> — canonical PULSE manifest</p></li></ul></div>
+<p class="src"><a href="/#/graphonomous/docs/NPM_PACKAGE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-64141" class="lvl2">Purpose</a><a href="#blk-64159" class="lvl2">Install</a><a href="#blk-64163" class="lvl2">MCP Surface — 5 Loop-Phase Machines</a><a href="#blk-64184" class="lvl2">v0.4.1 Checklist</a><a href="#blk-64208" class="lvl2">Why graphonomous ships last</a><a href="#blk-64222" class="lvl2">Reference</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/ARITHMETIC_COMPLIANCE.md/">Graphonomous × box-and-box — Arithmetic Compliance Review</a><a href="/graphonomous/docs/BOOTSTRAP.md/">Graphonomous Local Bootstrap &amp; Verification Guide</a><a href="/graphonomous/docs/NPM_PUBLISH.md/">Graphonomous npm Publishing + Maintenance Runbook (Manual-First)</a><a href="/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/">Graphonomous Technical Documentation</a><a href="/graphonomous/docs/ZED.md/">Graphonomous + Zed MCP Setup Guide</a><a href="/graphonomous/docs/architecture.md/">Graphonomous Architecture</a><a href="/graphonomous/docs/faq.md/">Graphonomous FAQ</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/mcp-tools.md/">Graphonomous MCP Tools Reference</a><a href="/graphonomous/docs/operations.md/">Operations &amp; Maintenance</a><a href="/graphonomous/docs/quickstart.md/">Graphonomous Quickstart</a><a href="/graphonomous/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierauitlq6sjjheibvsbfftsthas7cpzwcvbian7o33o377saejjntxq</div></div></div>
+</div></div>
+</body></html>

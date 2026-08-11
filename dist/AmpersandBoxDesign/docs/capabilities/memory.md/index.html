@@ -1,0 +1,259 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;memory: Capability Deep Dive · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="The &amp;memory namespace describes what an agent can store, retrieve, enrich, consolidate, and replay across time.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/memory.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;memory: Capability Deep Dive">
+<meta property="og:description" content="The &amp;memory namespace describes what an agent can store, retrieve, enrich, consolidate, and replay across time.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/memory.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&memory: Capability Deep Dive","name":"&memory: Capability Deep Dive","description":"The &memory namespace describes what an agent can store, retrieve, enrich, consolidate, and replay across time.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/memory.md/","identifier":"bagaaierat3oklzvwbipzhkjjqblctngpz73kt6vlcnvkdaphqt6dd63ivj7a","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Why &memory exists as a primitive"},{"@type":"WebPageElement","name":"2. Research grounding"},{"@type":"WebPageElement","name":"2.1 Classic memory distinctions"},{"@type":"WebPageElement","name":"2.2 Modern agent systems"},{"@type":"WebPageElement","name":"2.3 Why this matters for a protocol"},{"@type":"WebPageElement","name":"3. The &memory namespace"},{"@type":"WebPageElement","name":"4. Memory subtypes"},{"@type":"WebPageElement","name":"4.1 &memory.graph"},{"@type":"WebPageElement","name":"4.2 &memory.vector"},{"@type":"WebPageElement","name":"4.3 &memory.episodic"},{"@type":"WebPageElement","name":"5. How memory differs from related primitives"},{"@type":"WebPageElement","name":"&memory vs &reason"},{"@type":"WebPageElement","name":"&memory vs &time"},{"@type":"WebPageElement","name":"&memory vs &space"},{"@type":"WebPageElement","name":"6. Architecture patterns for memory"},{"@type":"WebPageElement","name":"6.1 Retrieval-first memory"},{"@type":"WebPageElement","name":"6.2 Relationship-first memory"},{"@type":"WebPageElement","name":"6.3 Experience-first memory"},{"@type":"WebPageElement","name":"6.4 Hybrid memory"},{"@type":"WebPageElement","name":"6.5 Consolidation architecture"},{"@type":"WebPageElement","name":"7. Protocol schema shape for &memory"},{"@type":"WebPageElement","name":"8. Capability contract shape for &memory"},{"@type":"WebPageElement","name":"9. Example providers"},{"@type":"WebPageElement","name":"Graph memory providers"},{"@type":"WebPageElement","name":"Vector memory providers"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"capabilities","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/"},{"@type":"ListItem","position":5,"name":"memory.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/memory.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/capabilities/memory.md</span>
+
+</div></div>
+<div class="lead">The &amp;memory namespace describes what an agent can store, retrieve, enrich, consolidate, and replay across time.</div>
+<div class="prose"><h1 id="blk-3488"><code>&amp;memory</code>: Capability Deep Dive</h1>
+<p>The <code>&amp;memory</code> namespace describes what an agent can <strong>store, retrieve, enrich, consolidate, and replay</strong> across time.</p>
+<p>In the [&amp;] Protocol, memory is not treated as a single binary feature. An agent does not simply “have memory” or “not have memory.” Instead, memory is modeled as a <strong>family of capability interfaces</strong> with distinct semantics, retrieval patterns, and downstream composition behavior.</p>
+<p>This page explains:</p>
+<ul><li><p>why memory is a first-class protocol primitive</p></li><li><p>how <code>&amp;memory</code> maps to cognitive and systems research</p></li><li><p>the major memory subtypes in the protocol</p></li><li><p>common architecture patterns</p></li><li><p>schema and contract shapes for memory capabilities</p></li><li><p>example providers</p></li><li><p>example pipelines that use memory capabilities</p></li></ul>
+<h3 id="blk-3507">1. Why <code>&amp;memory</code> exists as a primitive</h3>
+<p>Memory is one of the clearest places where agent architecture becomes more than prompt engineering.</p>
+<p>Real agent systems often need to:</p>
+<ul><li><p>recall prior incidents</p></li><li><p>retrieve documents or prior conversations</p></li><li><p>maintain durable state across sessions</p></li><li><p>preserve audit-relevant facts</p></li><li><p>enrich current context with historical relationships</p></li><li><p>replay prior episodes or workflows</p></li><li><p>consolidate repeated observations into a more durable representation</p></li></ul>
+<p>These are not all the same task.</p>
+<p>A graph-based incident memory behaves differently from a vector retrieval layer. An episodic replay system behaves differently from a semantic knowledge store. The protocol therefore treats memory as a <strong>namespace of capabilities</strong>, not a single implementation detail.</p>
+<p>In protocol terms, <code>&amp;memory</code> answers the question:</p>
+<blockquote><p>What can this agent remember, and in what form?</p></blockquote>
+<h3 id="blk-3530">2. Research grounding</h3>
+<p>The <code>&amp;memory</code> primitive is informed by long-standing distinctions in cognitive science and practical distinctions in modern AI systems.</p>
+<h4 id="blk-3532">2.1 Classic memory distinctions</h4>
+<p>Several research threads motivate treating memory as plural rather than singular:</p>
+<ul><li><p><strong>Atkinson &amp; Shiffrin</strong> introduced a staged view of memory with distinct storage roles.</p></li><li><p><strong>Tulving</strong> distinguished <strong>episodic</strong> and <strong>semantic</strong> memory.</p></li><li><p><strong>Baddeley</strong> developed the concept of <strong>working memory</strong> as an active, limited-capacity system.</p></li><li><p><strong>Squire</strong> and later memory-systems work reinforced the idea that memory is composed of different functional systems rather than one undifferentiated store.</p></li></ul>
+<p>The [&amp;] Protocol does not attempt to reproduce neuroscience literally, but these distinctions are useful because they map well to engineering concerns:</p>
+<ul><li><p>semantic retrieval</p></li><li><p>durable structured knowledge</p></li><li><p>experience replay</p></li><li><p>short-lived context scaffolding</p></li><li><p>consolidation and long-term retention</p></li></ul>
+<h4 id="blk-3555">2.2 Modern agent systems</h4>
+<p>Modern agent architectures already separate memory into operational categories such as:</p>
+<ul><li><p>vector retrieval memory</p></li><li><p>graph knowledge memory</p></li><li><p>episodic conversation history</p></li><li><p>scratchpads or working context</p></li><li><p>durable event logs</p></li><li><p>long-term knowledge consolidation</p></li></ul>
+<p>That convergence suggests memory is ready to be treated as a protocol concern.</p>
+<h4 id="blk-3571">2.3 Why this matters for a protocol</h4>
+<p>If memory remains implicit, then every framework invents its own hidden model of:</p>
+<ul><li><p>what memory means</p></li><li><p>how memory is queried</p></li><li><p>how memory interacts with reasoning</p></li><li><p>what guarantees memory provides</p></li><li><p>how memory participates in provenance</p></li></ul>
+<p>By modeling memory as a protocol namespace, the [&amp;] Protocol makes those choices explicit and composable.</p>
+<h3 id="blk-3585">3. The <code>&amp;memory</code> namespace</h3>
+<p>The primitive root is:</p>
+<ul><li><p><code>&amp;memory</code></p></li></ul>
+<p>Common subtypes include:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;memory.vector</code></p></li><li><p><code>&amp;memory.episodic</code></p></li></ul>
+<p>Future subtypes may include patterns such as:</p>
+<ul><li><p><code>&amp;memory.working</code></p></li><li><p><code>&amp;memory.semantic</code></p></li><li><p><code>&amp;memory.cache</code></p></li><li><p><code>&amp;memory.eventlog</code></p></li></ul>
+<p>The protocol keeps the primitive set small but allows subtype growth through namespacing.</p>
+<h3 id="blk-3609">4. Memory subtypes</h3>
+<h3 id="blk-3610">4.1 <code>&amp;memory.graph</code></h3>
+<p><code>&amp;memory.graph</code> represents graph-structured memory.</p>
+<p>Use it when the agent needs:</p>
+<ul><li><p>entity and relationship recall</p></li><li><p>cross-event linkage</p></li><li><p>incident or causal graph navigation</p></li><li><p>enrichment from connected prior knowledge</p></li><li><p>durable structure over time</p></li></ul>
+<p>Typical operations:</p>
+<ul><li><p><code>recall</code></p></li><li><p><code>learn</code></p></li><li><p><code>consolidate</code></p></li><li><p><code>enrich</code></p></li></ul>
+<p>Typical strengths:</p>
+<ul><li><p>relationship-aware retrieval</p></li><li><p>explainable linked context</p></li><li><p>incident and dependency modeling</p></li><li><p>durable, structured long-term memory</p></li></ul>
+<p>Good fit for:</p>
+<ul><li><p>infrastructure operations</p></li><li><p>research knowledge graphs</p></li><li><p>policy and dependency modeling</p></li><li><p>multi-step causal analysis</p></li></ul>
+<h3 id="blk-3654">4.2 <code>&amp;memory.vector</code></h3>
+<p><code>&amp;memory.vector</code> represents vector or embedding-based semantic retrieval.</p>
+<p>Use it when the agent needs:</p>
+<ul><li><p>semantic nearest-neighbor search</p></li><li><p>retrieval over documents or chunks</p></li><li><p>knowledge base lookup</p></li><li><p>dense similarity matching</p></li><li><p>lightweight enrichment from unstructured text</p></li></ul>
+<p>Typical operations:</p>
+<ul><li><p><code>search</code></p></li><li><p><code>upsert</code></p></li><li><p><code>enrich</code></p></li></ul>
+<p>Typical strengths:</p>
+<ul><li><p>efficient semantic retrieval</p></li><li><p>broad compatibility with document corpora</p></li><li><p>simple integration with retrieval-augmented systems</p></li><li><p>strong performance for textual memory use cases</p></li></ul>
+<p>Good fit for:</p>
+<ul><li><p>knowledge assistants</p></li><li><p>customer support search</p></li><li><p>research retrieval</p></li><li><p>FAQ and documentation assistants</p></li></ul>
+<h3 id="blk-3696">4.3 <code>&amp;memory.episodic</code></h3>
+<p><code>&amp;memory.episodic</code> represents remembered experiences, prior sessions, or replayable sequences.</p>
+<p>Use it when the agent needs:</p>
+<ul><li><p>prior interaction history</p></li><li><p>experience replay</p></li><li><p>route or workflow history</p></li><li><p>conversation continuity</p></li><li><p>case-by-case recall rather than abstracted knowledge only</p></li></ul>
+<p>Typical operations:</p>
+<ul><li><p><code>recall</code></p></li><li><p><code>store</code></p></li><li><p><code>replay</code></p></li><li><p><code>enrich</code></p></li></ul>
+<p>Typical strengths:</p>
+<ul><li><p>preserves sequence and narrative structure</p></li><li><p>useful for case memory and interaction continuity</p></li><li><p>supports “what happened before?” workflows</p></li><li><p>natural fit for session-based systems</p></li></ul>
+<p>Good fit for:</p>
+<ul><li><p>customer support agents</p></li><li><p>route history systems</p></li><li><p>workflow assistants</p></li><li><p>longitudinal research assistants</p></li></ul>
+<h3 id="blk-3740">5. How memory differs from related primitives</h3>
+<p>Memory often gets confused with neighboring capabilities. The protocol keeps these boundaries explicit.</p>
+<h4 id="blk-3742"><code>&amp;memory</code> vs <code>&amp;reason</code></h4>
+<ul><li><p><code>&amp;memory</code> stores or retrieves what is known</p></li><li><p><code>&amp;reason</code> evaluates, argues, plans, or decides</p></li></ul>
+<p>Memory may enrich reasoning, but it should not be conflated with reasoning.</p>
+<h4 id="blk-3749"><code>&amp;memory</code> vs <code>&amp;time</code></h4>
+<ul><li><p><code>&amp;memory</code> is about retained knowledge</p></li><li><p><code>&amp;time</code> is about temporal patterns, forecasts, anomalies, and sequence-aware temporal behavior</p></li></ul>
+<p>A time capability may produce signals that memory stores or enriches, but the two are distinct.</p>
+<h4 id="blk-3756"><code>&amp;memory</code> vs <code>&amp;space</code></h4>
+<ul><li><p><code>&amp;memory</code> stores knowledge</p></li><li><p><code>&amp;space</code> models where things are, how they are distributed, or how routes/regions constrain behavior</p></li></ul>
+<p>Memory can preserve spatial context, but space is still its own primitive.</p>
+<h3 id="blk-3763">6. Architecture patterns for memory</h3>
+<p>Different systems use different memory architectures. The protocol is designed to describe them without forcing one implementation.</p>
+<h3 id="blk-3765">6.1 Retrieval-first memory</h3>
+<p>Pattern:</p>
+<ul><li><p>store documents or summaries in vector form</p></li><li><p>retrieve semantically relevant material</p></li><li><p>pass results into reasoning</p></li></ul>
+<p>Typical capability:</p>
+<ul><li><p><code>&amp;memory.vector</code></p></li></ul>
+<p>Best for:</p>
+<ul><li><p>document-heavy systems</p></li><li><p>support and research workflows</p></li><li><p>broad semantic recall</p></li></ul>
+<h3 id="blk-3786">6.2 Relationship-first memory</h3>
+<p>Pattern:</p>
+<ul><li><p>represent facts, events, or incidents as nodes and edges</p></li><li><p>enrich current tasks by traversing links and related cases</p></li></ul>
+<p>Typical capability:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li></ul>
+<p>Best for:</p>
+<ul><li><p>operations systems</p></li><li><p>causal tracing</p></li><li><p>dependency-rich environments</p></li><li><p>long-term structured knowledge</p></li></ul>
+<h3 id="blk-3807">6.3 Experience-first memory</h3>
+<p>Pattern:</p>
+<ul><li><p>store replayable episodes or sequences</p></li><li><p>enrich the current task with similar prior experiences</p></li></ul>
+<p>Typical capability:</p>
+<ul><li><p><code>&amp;memory.episodic</code></p></li></ul>
+<p>Best for:</p>
+<ul><li><p>customer interactions</p></li><li><p>route or workflow history</p></li><li><p>case-handling systems</p></li><li><p>“similar past situation” analysis</p></li></ul>
+<h3 id="blk-3828">6.4 Hybrid memory</h3>
+<p>Pattern:</p>
+<ul><li><p>combine graph, vector, and episodic memory</p></li><li><p>use each memory form for different retrieval needs</p></li></ul>
+<p>Example composition:</p>
+<ul><li><p><code>&amp;memory.graph</code> for durable relationships</p></li><li><p><code>&amp;memory.vector</code> for document retrieval</p></li><li><p><code>&amp;memory.episodic</code> for session history</p></li></ul>
+<p>This is often the most realistic production architecture.</p>
+<h3 id="blk-3844">6.5 Consolidation architecture</h3>
+<p>Pattern:</p>
+<ul><li><p>ingest raw observations</p></li><li><p>store short-term or episodic traces</p></li><li><p>consolidate repeated or related observations into more durable memory</p></li></ul>
+<p>Typical flow:</p>
+<ol><li><p>capture observations</p></li><li><p>store near-term experience</p></li><li><p>consolidate patterns into graph or semantic memory</p></li><li><p>enrich future reasoning from consolidated memory</p></li></ol>
+<p>This pattern is especially useful for long-running systems.</p>
+<h3 id="blk-3864">7. Protocol schema shape for <code>&amp;memory</code></h3>
+<p>At the declaration level, memory capabilities are represented inside <code>ampersand.json</code>.</p>
+<p>Example:</p>
+<p>~~~json { &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;, &quot;agent&quot;: &quot;ResearchAgent&quot;, &quot;version&quot;: &quot;0.1.0&quot;, &quot;capabilities&quot;: { &quot;&amp;memory.vector&quot;: { &quot;provider&quot;: &quot;pgvector&quot;, &quot;config&quot;: { &quot;index&quot;: &quot;papers&quot;, &quot;namespace&quot;: &quot;research-corpus&quot; } }, &quot;&amp;reason.argument&quot;: { &quot;provider&quot;: &quot;deliberatic&quot;, &quot;config&quot;: { &quot;governance&quot;: &quot;evidence-first&quot; } } }, &quot;provenance&quot;: true } ~~~</p>
+<p>Memory capability keys follow the same capability identifier rule as the rest of the protocol:</p>
+<ul><li><p><code>&amp;memory</code></p></li><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;memory.vector</code></p></li><li><p><code>&amp;memory.episodic</code></p></li></ul>
+<p>With explicit binding:</p>
+<p>~~~json { &quot;&amp;memory.graph&quot;: { &quot;provider&quot;: &quot;graphonomous&quot;, &quot;config&quot;: { &quot;instance&quot;: &quot;infra-ops&quot; } } } ~~~</p>
+<p>With auto resolution:</p>
+<p>~~~json { &quot;&amp;memory.episodic&quot;: { &quot;provider&quot;: &quot;auto&quot;, &quot;need&quot;: &quot;customer interaction history with replayable escalation context&quot; } } ~~~</p>
+<h3 id="blk-3882">8. Capability contract shape for <code>&amp;memory</code></h3>
+<p>Memory becomes operationally important when paired with contracts.</p>
+<p>A memory contract describes:</p>
+<ul><li><p>supported operations</p></li><li><p>input and output types</p></li><li><p>adjacency rules</p></li><li><p>optional A2A skill mappings</p></li></ul>
+<p>Example contract for <code>&amp;memory.graph</code>:</p>
+<p>~~~json { &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;, &quot;capability&quot;: &quot;&amp;memory.graph&quot;, &quot;provider&quot;: &quot;graphonomous&quot;, &quot;version&quot;: &quot;0.1.0&quot;, &quot;description&quot;: &quot;Graph-structured memory for relationship-aware recall and enrichment.&quot;, &quot;operations&quot;: { &quot;recall&quot;: { &quot;in&quot;: &quot;query_context&quot;, &quot;out&quot;: &quot;memory_hits&quot; }, &quot;learn&quot;: { &quot;in&quot;: &quot;observation&quot;, &quot;out&quot;: &quot;ack&quot; }, &quot;consolidate&quot;: { &quot;in&quot;: &quot;memory_batch&quot;, &quot;out&quot;: &quot;graph_update&quot; }, &quot;enrich&quot;: { &quot;in&quot;: &quot;anomaly_set&quot;, &quot;out&quot;: &quot;enriched_context&quot; } }, &quot;accepts_from&quot;: [ &quot;&amp;time.*&quot;, &quot;&amp;reason.*&quot;, &quot;query_context&quot;, &quot;observation&quot; ], &quot;feeds_into&quot;: [ &quot;&amp;reason.*&quot;, &quot;&amp;space.*&quot;, &quot;output&quot; ], &quot;a2a_skills&quot;: [ &quot;graph-memory-recall&quot;, &quot;context-enrichment&quot; ] } ~~~</p>
+<p>Example contract for <code>&amp;memory.vector</code>:</p>
+<p>~~~json { &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;, &quot;capability&quot;: &quot;&amp;memory.vector&quot;, &quot;provider&quot;: &quot;pgvector&quot;, &quot;version&quot;: &quot;0.1.0&quot;, &quot;description&quot;: &quot;Semantic retrieval memory over embedded documents.&quot;, &quot;operations&quot;: { &quot;search&quot;: { &quot;in&quot;: &quot;query_context&quot;, &quot;out&quot;: &quot;retrieval_hits&quot; }, &quot;upsert&quot;: { &quot;in&quot;: &quot;document_batch&quot;, &quot;out&quot;: &quot;ack&quot; }, &quot;enrich&quot;: { &quot;in&quot;: &quot;query_context&quot;, &quot;out&quot;: &quot;enriched_context&quot; } }, &quot;accepts_from&quot;: [ &quot;&amp;reason.*&quot;, &quot;query_context&quot;, &quot;document_batch&quot; ], &quot;feeds_into&quot;: [ &quot;&amp;reason.*&quot;, &quot;output&quot; ], &quot;a2a_skills&quot;: [ &quot;semantic-retrieval&quot;, &quot;knowledge-base-enrichment&quot; ] } ~~~</p>
+<h3 id="blk-3898">9. Example providers</h3>
+<p>The protocol is provider-agnostic, but current example providers include:</p>
+<h4 id="blk-3900">Graph memory providers</h4>
+<ul><li><p><code>graphonomous</code></p></li><li><p><code>neo4j-memory</code></p></li></ul>
+<h4 id="blk-3906">Vector memory providers</h4>
+<ul><li><p><code>pgvector</code></p></li><li><p><code>weaviate</code></p></li><li><p><code>pinecone</code></p></li></ul>
+<h4 id="blk-3914">Episodic memory providers</h4>
+<ul><li><p><code>graphonomous</code></p></li><li><p>custom or application-specific implementations</p></li></ul>
+<p>The protocol position is:</p>
+<ul><li><p>the capability is the interface</p></li><li><p>the provider is an implementation that satisfies it</p></li></ul>
+<p>That is why <code>&amp;memory.graph</code> is more important than any one vendor name.</p>
+<h3 id="blk-3927">10. Memory and governance</h3>
+<p>Memory capabilities often interact directly with governance.</p>
+<p>Examples of governance constraints that frequently apply to memory:</p>
+<ul><li><p>never store private customer data without policy justification</p></li><li><p>never reveal one user’s memory context to another user</p></li><li><p>always preserve audit trail for learned incident context</p></li><li><p>prefer retrieving policy-grounded evidence over unsupported recollection</p></li></ul>
+<p>Memory is therefore not only a retrieval concern. It is also a <strong>policy-sensitive capability</strong>.</p>
+<p>Example:</p>
+<p>~~~json { &quot;governance&quot;: { &quot;hard&quot;: [ &quot;Never reveal private customer data to another customer&quot;, &quot;Always preserve an audit trail for memory-backed account changes&quot; ], &quot;soft&quot;: [ &quot;Prefer policy-grounded retrieval over speculative recollection&quot; ], &quot;escalate_when&quot;: { &quot;confidence_below&quot;: 0.75, &quot;hard_boundary_approached&quot;: true } } } ~~~</p>
+<h3 id="blk-3942">11. Memory and provenance</h3>
+<p>Memory is one of the most provenance-sensitive capabilities in the protocol.</p>
+<p>Why?</p>
+<p>Because downstream decisions often depend on:</p>
+<ul><li><p>which memory source was queried</p></li><li><p>which provider answered</p></li><li><p>what was retrieved</p></li><li><p>how retrieved context was transformed</p></li><li><p>whether recall was based on semantic similarity, graph structure, or episodic replay</p></li></ul>
+<p>A provenance-aware memory operation should preserve at least:</p>
+<ul><li><p>source capability, such as <code>&amp;memory.graph</code></p></li><li><p>provider, such as <code>graphonomous</code></p></li><li><p>operation, such as <code>recall</code> or <code>enrich</code></p></li><li><p>timestamp</p></li><li><p>input hash</p></li><li><p>output hash</p></li><li><p>parent hash</p></li></ul>
+<p>Example provenance record:</p>
+<p>~~~json { &quot;source&quot;: &quot;&amp;memory.graph&quot;, &quot;provider&quot;: &quot;graphonomous&quot;, &quot;operation&quot;: &quot;enrich&quot;, &quot;timestamp&quot;: &quot;2026-03-14T14:23:07Z&quot;, &quot;input_hash&quot;: &quot;sha256:1a2b...&quot;, &quot;output_hash&quot;: &quot;sha256:7c8d...&quot;, &quot;parent_hash&quot;: &quot;sha256:0000...&quot; } ~~~</p>
+<p>This is critical for:</p>
+<ul><li><p>debugging</p></li><li><p>audits</p></li><li><p>trust</p></li><li><p>post-incident analysis</p></li><li><p>policy review</p></li></ul>
+<h3 id="blk-3987">12. Example memory-heavy agent declarations</h3>
+<h3 id="blk-3988">12.1 Graph-backed operations agent</h3>
+<p>~~~json { &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;, &quot;agent&quot;: &quot;InfraOperator&quot;, &quot;version&quot;: &quot;1.0.0&quot;, &quot;capabilities&quot;: { &quot;&amp;memory.graph&quot;: { &quot;provider&quot;: &quot;graphonomous&quot;, &quot;config&quot;: { &quot;instance&quot;: &quot;infra-ops&quot; } }, &quot;&amp;time.anomaly&quot;: { &quot;provider&quot;: &quot;ticktickclock&quot;, &quot;config&quot;: { &quot;streams&quot;: [&quot;cpu&quot;, &quot;mem&quot;] } }, &quot;&amp;reason.argument&quot;: { &quot;provider&quot;: &quot;deliberatic&quot;, &quot;config&quot;: { &quot;governance&quot;: &quot;constitutional&quot; } } }, &quot;provenance&quot;: true } ~~~</p>
+<p>Why memory matters here:</p>
+<ul><li><p>prior incidents can enrich anomaly interpretation</p></li><li><p>related infrastructure dependencies can be recalled</p></li><li><p>new outcomes can be learned into the graph</p></li></ul>
+<h3 id="blk-3998">12.2 Vector-backed research agent</h3>
+<p>~~~json { &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;, &quot;agent&quot;: &quot;ResearchAgent&quot;, &quot;version&quot;: &quot;0.1.0&quot;, &quot;capabilities&quot;: { &quot;&amp;memory.vector&quot;: { &quot;provider&quot;: &quot;pgvector&quot;, &quot;config&quot;: { &quot;index&quot;: &quot;papers&quot;, &quot;namespace&quot;: &quot;research-corpus&quot; } }, &quot;&amp;reason.argument&quot;: { &quot;provider&quot;: &quot;deliberatic&quot;, &quot;config&quot;: { &quot;governance&quot;: &quot;evidence-first&quot; } } }, &quot;governance&quot;: { &quot;hard&quot;: [ &quot;Always preserve citation traceability&quot; ] }, &quot;provenance&quot;: true } ~~~</p>
+<p>Why memory matters here:</p>
+<ul><li><p>retrieval quality directly affects reasoning quality</p></li><li><p>provenance matters for evidence traceability</p></li><li><p>semantic memory is more important than graph structure in many literature workflows</p></li></ul>
+<h3 id="blk-4008">12.3 Episodic customer support agent</h3>
+<p>~~~json { &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;, &quot;agent&quot;: &quot;CustomerSupport&quot;, &quot;version&quot;: &quot;0.1.0&quot;, &quot;capabilities&quot;: { &quot;&amp;memory.episodic&quot;: { &quot;provider&quot;: &quot;graphonomous&quot;, &quot;config&quot;: { &quot;instance&quot;: &quot;customer-support-history&quot;, &quot;retention_days&quot;: 90 } }, &quot;&amp;memory.vector&quot;: { &quot;provider&quot;: &quot;pgvector&quot;, &quot;config&quot;: { &quot;index&quot;: &quot;support-kb&quot;, &quot;namespace&quot;: &quot;help-center&quot; } }, &quot;&amp;reason.argument&quot;: { &quot;provider&quot;: &quot;deliberatic&quot;, &quot;config&quot;: { &quot;governance&quot;: &quot;customer-safe&quot; } } }, &quot;provenance&quot;: true } ~~~</p>
+<p>Why memory matters here:</p>
+<ul><li><p>episodic memory preserves prior customer context</p></li><li><p>vector memory supports policy and knowledge retrieval</p></li><li><p>the combination supports both continuity and grounding</p></li></ul>
+<h3 id="blk-4018">13. Example memory pipelines</h3>
+<h3 id="blk-4019">13.1 Anomaly enrichment pipeline</h3>
+<p>This is a classic infrastructure pattern:</p>
+<p>~~~text stream_data</p>
+<p>~~~</p>
+<p>What happens:</p>
+<ol><li><p>temporal capability detects anomalies</p></li><li><p>graph memory enriches the anomaly set with similar incidents or related dependencies</p></li><li><p>reasoning evaluates action options</p></li><li><p>resulting decision or outcome is learned back into memory</p></li></ol>
+<p>This is a good example of memory as both:</p>
+<ul><li><p>enrichment layer</p></li><li><p>long-term learning surface</p></li></ul>
+<h3 id="blk-4039">13.2 Retrieval-grounded reasoning pipeline</h3>
+<p>A research or policy workflow:</p>
+<p>~~~text query_context</p>
+<p>~~~</p>
+<p>What happens:</p>
+<ol><li><p>vector memory searches relevant materials</p></li><li><p>retrieved context is enriched</p></li><li><p>reasoning operates on grounded evidence rather than unsupported recall</p></li></ol>
+<h3 id="blk-4051">13.3 Episodic support replay pipeline</h3>
+<p>A continuity-focused workflow:</p>
+<p>~~~text customer_case</p>
+<p>~~~</p>
+<p>What happens:</p>
+<ol><li><p>prior interaction history is recalled</p></li><li><p>policy and knowledge base context is retrieved</p></li><li><p>reasoning generates a response or decision</p></li><li><p>the new case state is stored as a new episode</p></li></ol>
+<h3 id="blk-4065">14. When to choose each memory subtype</h3>
+<h4 id="blk-4066">Choose <code>&amp;memory.graph</code> when you need:</h4>
+<ul><li><p>relationships</p></li><li><p>causality</p></li><li><p>incident linkage</p></li><li><p>explainable structure</p></li><li><p>durable knowledge graphs</p></li></ul>
+<h4 id="blk-4078">Choose <code>&amp;memory.vector</code> when you need:</h4>
+<ul><li><p>semantic document retrieval</p></li><li><p>dense search</p></li><li><p>broad textual recall</p></li><li><p>quick retrieval over corpora</p></li><li><p>knowledge base enrichment</p></li></ul>
+<h4 id="blk-4090">Choose <code>&amp;memory.episodic</code> when you need:</h4>
+<ul><li><p>interaction continuity</p></li><li><p>replayable prior experiences</p></li><li><p>session or case history</p></li><li><p>sequence-aware recall</p></li></ul>
+<h4 id="blk-4100">Choose multiple memory capabilities when you need:</h4>
+<ul><li><p>hybrid retrieval</p></li><li><p>both structure and semantic search</p></li><li><p>both historical episodes and durable knowledge</p></li><li><p>different memory surfaces for different downstream tasks</p></li></ul>
+<h3 id="blk-4110">15. Design principles for <code>&amp;memory</code></h3>
+<h4 id="blk-4111">15.1 Keep capability and provider separate</h4>
+<p>Use:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p>not “Graphonomous memory” as the protocol-level concept</p></li></ul>
+<h4 id="blk-4118">15.2 Treat memory as plural</h4>
+<p>Do not collapse all memory use cases into one abstraction.</p>
+<h4 id="blk-4120">15.3 Make contracts explicit</h4>
+<p>A memory capability should describe:</p>
+<ul><li><p>what it accepts</p></li><li><p>what it outputs</p></li><li><p>what it can enrich</p></li><li><p>what can follow it in a pipeline</p></li></ul>
+<h4 id="blk-4131">15.4 Preserve provenance</h4>
+<p>Memory-backed decisions should be auditable.</p>
+<h4 id="blk-4133">15.5 Let governance travel with memory</h4>
+<p>Sensitive retrieval and storage behavior should be constrained declaratively.</p>
+<h3 id="blk-4135">16. Open questions for future protocol work</h3>
+<p>Useful future extensions for the <code>&amp;memory</code> namespace may include:</p>
+<ul><li><p>working-memory or scratchpad-oriented subtypes</p></li><li><p>stronger retention and expiration metadata</p></li><li><p>cross-memory consolidation semantics</p></li><li><p>richer privacy and access-control traits</p></li><li><p>more formal distinction between semantic and episodic retrieval contracts</p></li><li><p>standardized memory quality metrics</p></li></ul>
+<p>These are appropriate areas for protocol growth, but the current namespace is already useful without overfitting too early.</p>
+<h3 id="blk-4151">17. Summary</h3>
+<p><code>&amp;memory</code> is one of the most important primitives in the [&amp;] Protocol because it turns “agent memory” from a vague feature into a composable capability family.</p>
+<p>It provides a vocabulary for:</p>
+<ul><li><p>graph-structured memory</p></li><li><p>vector retrieval memory</p></li><li><p>episodic memory</p></li><li><p>future subtype expansion</p></li></ul>
+<p>It also provides a place to standardize:</p>
+<ul><li><p>typed memory operations</p></li><li><p>compatibility with downstream reasoning</p></li><li><p>governance-sensitive storage and recall</p></li><li><p>provenance-aware context enrichment</p></li></ul>
+<p>In short:</p>
+<blockquote><p><code>&amp;memory</code> defines what the agent can remember, how it remembers it, and how that remembered context composes with the rest of the system.</p></blockquote>
+<h3 id="blk-4176">Suggested next reading</h3>
+<ul><li><p><code>docs/capabilities/reason.md</code></p></li><li><p><code>docs/capabilities/time.md</code></p></li><li><p><code>docs/capabilities/space.md</code></p></li><li><p><code>docs/architecture.md</code></p></li><li><p><code>protocol/schema/v0.1.0/ampersand.schema.json</code></p></li><li><p><code>protocol/schema/v0.1.0/capability-contract.schema.json</code></p></li></ul></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/capabilities/memory.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-3507" class="lvl2">1. Why &amp;memory exists as a primitive</a><a href="#blk-3530" class="lvl2">2. Research grounding</a><a href="#blk-3532" class="lvl3">2.1 Classic memory distinctions</a><a href="#blk-3555" class="lvl3">2.2 Modern agent systems</a><a href="#blk-3571" class="lvl3">2.3 Why this matters for a protocol</a><a href="#blk-3585" class="lvl2">3. The &amp;memory namespace</a><a href="#blk-3609" class="lvl2">4. Memory subtypes</a><a href="#blk-3610" class="lvl2">4.1 &amp;memory.graph</a><a href="#blk-3654" class="lvl2">4.2 &amp;memory.vector</a><a href="#blk-3696" class="lvl2">4.3 &amp;memory.episodic</a><a href="#blk-3740" class="lvl2">5. How memory differs from related primitives</a><a href="#blk-3742" class="lvl3">&amp;memory vs &amp;reason</a><a href="#blk-3749" class="lvl3">&amp;memory vs &amp;time</a><a href="#blk-3756" class="lvl3">&amp;memory vs &amp;space</a><a href="#blk-3763" class="lvl2">6. Architecture patterns for memory</a><a href="#blk-3765" class="lvl2">6.1 Retrieval-first memory</a><a href="#blk-3786" class="lvl2">6.2 Relationship-first memory</a><a href="#blk-3807" class="lvl2">6.3 Experience-first memory</a><a href="#blk-3828" class="lvl2">6.4 Hybrid memory</a><a href="#blk-3844" class="lvl2">6.5 Consolidation architecture</a><a href="#blk-3864" class="lvl2">7. Protocol schema shape for &amp;memory</a><a href="#blk-3882" class="lvl2">8. Capability contract shape for &amp;memory</a><a href="#blk-3898" class="lvl2">9. Example providers</a><a href="#blk-3900" class="lvl3">Graph memory providers</a><a href="#blk-3906" class="lvl3">Vector memory providers</a><a href="#blk-3914" class="lvl3">Episodic memory providers</a><a href="#blk-3927" class="lvl2">10. Memory and governance</a><a href="#blk-3942" class="lvl2">11. Memory and provenance</a><a href="#blk-3987" class="lvl2">12. Example memory-heavy agent declarations</a><a href="#blk-3988" class="lvl2">12.1 Graph-backed operations agent</a><a href="#blk-3998" class="lvl2">12.2 Vector-backed research agent</a><a href="#blk-4008" class="lvl2">12.3 Episodic customer support agent</a><a href="#blk-4018" class="lvl2">13. Example memory pipelines</a><a href="#blk-4019" class="lvl2">13.1 Anomaly enrichment pipeline</a><a href="#blk-4039" class="lvl2">13.2 Retrieval-grounded reasoning pipeline</a><a href="#blk-4051" class="lvl2">13.3 Episodic support replay pipeline</a><a href="#blk-4065" class="lvl2">14. When to choose each memory subtype</a><a href="#blk-4066" class="lvl3">Choose &amp;memory.graph when you need:</a><a href="#blk-4078" class="lvl3">Choose &amp;memory.vector when you need:</a><a href="#blk-4090" class="lvl3">Choose &amp;memory.episodic when you need:</a><a href="#blk-4100" class="lvl3">Choose multiple memory capabilities when you need:</a><a href="#blk-4110" class="lvl2">15. Design principles for &amp;memory</a><a href="#blk-4111" class="lvl3">15.1 Keep capability and provider separate</a><a href="#blk-4118" class="lvl3">15.2 Treat memory as plural</a><a href="#blk-4120" class="lvl3">15.3 Make contracts explicit</a><a href="#blk-4131" class="lvl3">15.4 Preserve provenance</a><a href="#blk-4133" class="lvl3">15.5 Let governance travel with memory</a><a href="#blk-4135" class="lvl2">16. Open questions for future protocol work</a><a href="#blk-4151" class="lvl2">17. Summary</a><a href="#blk-4176" class="lvl2">Suggested next reading</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/capabilities/govern.md/">&amp;govern: Cross-Cutting Governance for Agents</a><a href="/AmpersandBoxDesign/docs/capabilities/reason.md/">&amp;reason: Deliberation, Evaluation, and Decision-Making</a><a href="/AmpersandBoxDesign/docs/capabilities/space.md/">&amp;space: Spatial Intelligence for Agents</a><a href="/AmpersandBoxDesign/docs/capabilities/time.md/">&amp;time: Temporal Intelligence in the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierat3oklzvwbipzhkjjqblctngpz73kt6vlcnvkdaphqt6dd63ivj7a</div></div></div>
+</div></div>
+</body></html>

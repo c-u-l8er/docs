@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Filesystem Sync — Batch Ingest to Graphonomous · graphonomous · Ampersand Box</title>
+<meta name="description" content="Sync filesystem changes into the Graphonomous knowledge graph.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/sync.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Filesystem Sync — Batch Ingest to Graphonomous">
+<meta property="og:description" content="Sync filesystem changes into the Graphonomous knowledge graph.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/sync.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Filesystem Sync — Batch Ingest to Graphonomous","name":"Filesystem Sync — Batch Ingest to Graphonomous","description":"Sync filesystem changes into the Graphonomous knowledge graph.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/sync.md/","identifier":"bagaaierayieslqjbrg4gcxob6ssf2g3yblek2n4hk4pxee3ruuoxae7lyliq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Arguments"},{"@type":"WebPageElement","name":"How It Works"},{"@type":"WebPageElement","name":"Mode 1: Tracked Changes (Default)"},{"@type":"WebPageElement","name":"Mode 2: Directory Scan (with path argument)"},{"@type":"WebPageElement","name":"Mode 3: Post-Consolidation"},{"@type":"WebPageElement","name":"Deduplication"},{"@type":"WebPageElement","name":"Edge Extraction Patterns"},{"@type":"WebPageElement","name":"Anti-patterns to avoid"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/"},{"@type":"ListItem","position":5,"name":"sync.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/sync.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/docs/skills/sync.md</span>
+
+</div></div>
+<div class="lead">Sync filesystem changes into the Graphonomous knowledge graph.</div>
+<div class="prose"><h1 id="blk-68024">Filesystem Sync — Batch Ingest to Graphonomous</h1>
+<p>Sync filesystem changes into the Graphonomous knowledge graph.</p>
+<h3 id="blk-68026">Arguments</h3>
+<p>Optional path or flags: $ARGUMENTS</p>
+<ul><li><p>No arguments: sync only files changed during this session (tracked by the PostToolUse hook)</p></li><li><p><code>&lt;path&gt;</code>: scan a specific directory (uses <code>scan_directory</code> for full traversal)</p></li><li><p><code>--full</code>: force full directory scan even if change tracking is available</p></li><li><p><code>--consolidate</code>: run consolidation after ingestion</p></li></ul>
+<h3 id="blk-68037">How It Works</h3>
+<p>This skill bridges the gap between AI-driven file editing and Graphonomous memory. When Claude writes or edits files, those changes should be reflected in the knowledge graph so that future retrieval includes the latest state.</p>
+<h4 id="blk-68039">Mode 1: Tracked Changes (Default)</h4>
+<p>The PostToolUse hook on Write/Edit tools records changed file paths in a session file at <code>/tmp/graphonomous-changed-files.jsonl</code>. This skill reads that file and batch-ingests only the changed files.</p>
+<p><strong>Steps:</strong></p>
+<ol><li><p>Read the change tracker file (<code>/tmp/graphonomous-changed-files.jsonl</code>)</p></li><li><p>For each changed file, call <code>act(action: &quot;store_node&quot;, ...)</code> with:</p></li></ol>
+<ul><li><p><code>content</code>: first 16KB of file content</p></li><li><p><code>node_type</code>: &quot;episodic&quot;</p></li><li><p><code>source</code>: &quot;filesystem_sync&quot;</p></li><li><p><code>confidence</code>: 0.65</p></li><li><p><code>metadata</code>: <code>{&quot;path&quot;: &quot;&lt;absolute_path&gt;&quot;, &quot;extension&quot;: &quot;&lt;ext&gt;&quot;, &quot;sync_reason&quot;: &quot;file_changed&quot;}</code></p></li></ul>
+<ol start="3"><li><p>After all nodes are stored, create edges between related files using <code>act(action: &quot;store_edge&quot;, ...)</code>:</p></li></ol>
+<ul><li><p>Files in the same directory get <code>related</code> edges (weight 0.4)</p></li><li><p>Files that import/reference each other get <code>derived_from</code> edges (weight 0.6)</p></li></ul>
+<ol start="4"><li><p>Clear the change tracker file</p></li><li><p>Report: files synced, nodes created, edges created</p></li></ol>
+<p><strong>Example — sync tracked changes:</strong></p>
+<pre><code>/graphonomous:sync</code></pre>
+<h4 id="blk-68073">Mode 2: Directory Scan (with path argument)</h4>
+<p>When given a path, performs a full <code>scan_directory</code>-style ingestion.</p>
+<p><strong>Steps:</strong></p>
+<ol><li><p>List files in the target directory (respecting .gitignore, max 1MB per file)</p></li><li><p>For each file matching supported extensions (.ex, .exs, .ts, .js, .tsx, .md, .html, .css, .json, .yml, .yaml, .toml, .svelte):</p></li></ol>
+<ul><li><p>Read first 16KB</p></li><li><p>Call <code>act(action: &quot;store_node&quot;, ...)</code> with file content and path metadata</p></li></ul>
+<ol start="3"><li><p>Create inter-file edges based on import/reference patterns</p></li><li><p>Report ingestion stats</p></li></ol>
+<p><strong>Example — scan a specific directory:</strong></p>
+<pre><code>/graphonomous:sync graphonomous/lib/</code></pre>
+<p><strong>Example — full scan with consolidation:</strong></p>
+<pre><code>/graphonomous:sync graphonomous/ --full --consolidate</code></pre>
+<h4 id="blk-68095">Mode 3: Post-Consolidation</h4>
+<p>If <code>--consolidate</code> is passed, run consolidation after ingestion:</p>
+<pre><code>consolidate(action: &quot;run&quot;)</code></pre>
+<h3 id="blk-68098">Deduplication</h3>
+<p>Before storing, check if a node with the same path already exists:</p>
+<pre><code>consolidate(action: &quot;query&quot;, operation: &quot;similarity_search&quot;, query: &quot;&lt;file path&gt;&quot;, limit: 1)</code></pre>
+<p>If a high-similarity node exists (score &gt; 0.9), update it via <code>learn(action: &quot;from_feedback&quot;, feedback_type: &quot;correction&quot;)</code> rather than creating a duplicate.</p>
+<h3 id="blk-68102">Edge Extraction Patterns</h3>
+<p>After storing nodes, create edges for detected references:</p>
+<ul><li><p><strong>Elixir</strong>: <code>alias Foo.Bar</code> / <code>import Foo</code> / <code>use Foo</code> / <code>require Foo</code> -&gt; <code>derived_from</code> edge</p></li><li><p><strong>JS/TS</strong>: <code>import ... from './foo'</code> / <code>require('./foo')</code> -&gt; <code>derived_from</code> edge</p></li><li><p><strong>Markdown</strong>: backtick file paths, cross-project names -&gt; <code>related</code> edge</p></li></ul>
+<pre><code>act(action: &quot;store_edge&quot;, source_id: &quot;&lt;importer_node&gt;&quot;, target_id: &quot;&lt;imported_node&gt;&quot;, edge_type: &quot;derived_from&quot;, weight: 0.6)</code></pre>
+<h3 id="blk-68112">Anti-patterns to avoid</h3>
+<ul><li><p>Don't sync every tiny edit in real-time — batch at natural breakpoints</p></li><li><p>Don't ingest binary files, node_modules, _build, deps, or .git directories</p></li><li><p>Don't set confidence above 0.65 for file content (it's raw, not curated knowledge)</p></li><li><p>Don't skip edge extraction — edges are what make the graph useful for retrieval</p></li></ul></div>
+<p class="src"><a href="/#/graphonomous/docs/skills/sync.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-68026" class="lvl2">Arguments</a><a href="#blk-68037" class="lvl2">How It Works</a><a href="#blk-68039" class="lvl3">Mode 1: Tracked Changes (Default)</a><a href="#blk-68073" class="lvl3">Mode 2: Directory Scan (with path argument)</a><a href="#blk-68095" class="lvl3">Mode 3: Post-Consolidation</a><a href="#blk-68098" class="lvl2">Deduplication</a><a href="#blk-68102" class="lvl2">Edge Extraction Patterns</a><a href="#blk-68112" class="lvl2">Anti-patterns to avoid</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a><a href="/graphonomous/docs/skills/attention.md/">Attention Engine</a><a href="/graphonomous/docs/skills/belief.md/">Belief Revision</a><a href="/graphonomous/docs/skills/bootstrap.md/">Graphonomous Bootstrap</a><a href="/graphonomous/docs/skills/consolidate.md/">Consolidation</a><a href="/graphonomous/docs/skills/deliberate.md/">Topology and Deliberation</a><a href="/graphonomous/docs/skills/epistemic-frontier.md/">Epistemic Frontier — Uncertainty-Guided Investigation</a><a href="/graphonomous/docs/skills/forgetting.md/">Intentional Forgetting — Structured Knowledge Removal</a><a href="/graphonomous/docs/skills/goals.md/">Goal Management</a><a href="/graphonomous/docs/skills/graph-health.md/">Graph Health Check</a><a href="/graphonomous/docs/skills/inspect.md/">Graph Inspection</a><a href="/graphonomous/docs/skills/learn.md/">Learning Loop</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierayieslqjbrg4gcxob6ssf2g3yblek2n4hk4pxee3ruuoxae7lyliq</div></div></div>
+</div></div>
+</body></html>

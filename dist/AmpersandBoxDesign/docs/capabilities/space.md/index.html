@@ -1,0 +1,204 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;space: Spatial Intelligence for Agents · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="The &amp;space capability family represents an agent&#39;s ability to reason about where things are, how they move, how regions relate to one another, and what…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/space.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;space: Spatial Intelligence for Agents">
+<meta property="og:description" content="The &amp;space capability family represents an agent&#39;s ability to reason about where things are, how they move, how regions relate to one another, and what…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/space.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&space: Spatial Intelligence for Agents","name":"&space: Spatial Intelligence for Agents","description":"The &space capability family represents an agent's ability to reason about where things are, how they move, how regions relate to one another, and what…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/space.md/","identifier":"bagaaieratho63dab7c4ohiicnzgi7q6h7w6av53qm7rtwzcydnlpuybb5iuq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why &space exists as a first-class primitive"},{"@type":"WebPageElement","name":"What &space means in the protocol"},{"@type":"WebPageElement","name":"Common &space subtypes"},{"@type":"WebPageElement","name":"&space.fleet"},{"@type":"WebPageElement","name":"&space.route"},{"@type":"WebPageElement","name":"&space.geofence"},{"@type":"WebPageElement","name":"Future subtype candidates"},{"@type":"WebPageElement","name":"What problems &space solves"},{"@type":"WebPageElement","name":"Cognitive role of &space"},{"@type":"WebPageElement","name":"Typical providers"},{"@type":"WebPageElement","name":"geofleetic"},{"@type":"WebPageElement","name":"GIS and geospatial databases"},{"@type":"WebPageElement","name":"Routing engines"},{"@type":"WebPageElement","name":"Custom domain-specific spatial systems"},{"@type":"WebPageElement","name":"Example declaration"},{"@type":"WebPageElement","name":"Example contract shape"},{"@type":"WebPageElement","name":"Example pipelines involving &space"},{"@type":"WebPageElement","name":"Temporal event localized spatially"},{"@type":"WebPageElement","name":"Memory + spatial context"},{"@type":"WebPageElement","name":"Route-aware planning"},{"@type":"WebPageElement","name":"How &space composes with the other primitives"},{"@type":"WebPageElement","name":"&space + &memory"},{"@type":"WebPageElement","name":"&space + &time"},{"@type":"WebPageElement","name":"&space + &reason"},{"@type":"WebPageElement","name":"&space + &memory + &time + &reason"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"capabilities","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/"},{"@type":"ListItem","position":5,"name":"space.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/space.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/capabilities/space.md</span>
+
+</div></div>
+<div class="lead">The &amp;space capability family represents an agent&#39;s ability to reason about where things are, how they move, how regions relate to one another, and what actions are valid in a sp…</div>
+<div class="prose"><h1 id="blk-4780"><code>&amp;space</code>: Spatial Intelligence for Agents</h1>
+<p>The <code>&amp;space</code> capability family represents an agent's ability to reason about <strong>where things are, how they move, how regions relate to one another, and what actions are valid in a spatial context</strong>.</p>
+<p>In the [&amp;] Protocol, <code>&amp;space</code> is one of the four core cognitive primitives (alongside <code>&amp;body</code> the sensorimotor primitive and <code>&amp;govern</code> the cross-cutting operational primitive):</p>
+<ul><li><p><code>&amp;memory</code> — what the agent knows</p></li><li><p><code>&amp;reason</code> — how the agent decides</p></li><li><p><code>&amp;time</code> — when things happen</p></li><li><p><code>&amp;space</code> — where things are</p></li><li><p><code>&amp;body</code> — how the agent is instantiated in an environment (perception, action, affordance)</p></li><li><p><code>&amp;govern</code> — who is acting, under what rules, at what cost</p></li></ul>
+<p>Spatial capability matters whenever an agent operates over fleets, maps, routes, regions, geofences, topologies, facilities, service territories, supply chains, or any system where location and position change what a valid decision looks like.</p>
+<p><code>&amp;space</code> is distinct from <code>&amp;body</code>: <code>&amp;space</code> models external spatial data (fleet positions, regions, routes), while <code>&amp;body</code> models the agent's own sensorimotor interface to an environment (perception, typed action, affordance enumeration). An agent may consume <code>&amp;space.fleet</code> to reason about where vehicles are AND declare <code>&amp;body.motor</code> to actuate one.</p>
+<h3 id="blk-4798">Why <code>&amp;space</code> exists as a first-class primitive</h3>
+<p>A large number of agents fail in subtle ways because they treat the world as if it were only text plus tools.</p>
+<p>That is often enough for toy demos, but it breaks down quickly in real systems.</p>
+<p>A support agent may need to know which warehouse serves a customer. A fleet agent may need to know which vehicles are inside a region. An infrastructure agent may need to know which datacenter cluster is affected by an incident. A delivery agent may need to know whether a route crosses a restricted area. A security or compliance agent may need to know whether data or assets entered a prohibited zone.</p>
+<p>Those are not just &quot;tool calls.&quot; They are spatial questions.</p>
+<p>Treating spatial intelligence as a first-class capability allows the protocol to express:</p>
+<ul><li><p>that an agent has spatial awareness at all</p></li><li><p>what kind of spatial awareness it has</p></li><li><p>which provider implements it</p></li><li><p>how it composes with memory, time, and reasoning</p></li><li><p>what types it accepts and produces in a pipeline</p></li></ul>
+<p>Without <code>&amp;space</code>, spatial reasoning tends to be hidden inside ad hoc prompt logic or application-specific glue code. The result is architecture that looks plausible but is difficult to validate, govern, or reuse.</p>
+<h3 id="blk-4816">What <code>&amp;space</code> means in the protocol</h3>
+<p>At the protocol level, <code>&amp;space</code> is not a vendor, map service, or database.</p>
+<p>It is a <strong>capability interface</strong>.</p>
+<p>That means:</p>
+<ul><li><p><code>&amp;space.fleet</code> is a protocol capability</p></li><li><p><code>geofleetic</code> is one provider that may satisfy it</p></li><li><p>another provider could also satisfy <code>&amp;space.fleet</code> if it implements the same contract</p></li></ul>
+<p>This separation is important.</p>
+<p>If spatial intelligence were modeled only as provider names, then architecture would collapse into product branding. By modeling <code>&amp;space</code> as an interface family, the protocol stays portable.</p>
+<h3 id="blk-4829">Common <code>&amp;space</code> subtypes</h3>
+<p>The current protocol direction suggests several useful subtype patterns.</p>
+<h4 id="blk-4831"><code>&amp;space.fleet</code></h4>
+<p>Represents awareness of distributed assets, vehicles, units, nodes, or regions as a coordinated fleet-like system.</p>
+<p>Typical concerns:</p>
+<ul><li><p>region occupancy</p></li><li><p>asset distribution</p></li><li><p>nearest available unit</p></li><li><p>affected-region lookup</p></li><li><p>current fleet state</p></li><li><p>capacity by territory</p></li></ul>
+<p>This is the subtype most relevant to logistics, dispatch, field operations, and infrastructure regions.</p>
+<h4 id="blk-4848"><code>&amp;space.route</code></h4>
+<p>Represents route computation, path constraints, spatial transitions, and route optimization.</p>
+<p>Typical concerns:</p>
+<ul><li><p>shortest or cheapest path</p></li><li><p>route feasibility</p></li><li><p>route recomputation</p></li><li><p>path explanation</p></li><li><p>route impact under changing conditions</p></li></ul>
+<p>This subtype matters when sequence through space is more important than current static position.</p>
+<h4 id="blk-4863"><code>&amp;space.geofence</code></h4>
+<p>Represents boundary-aware spatial logic.</p>
+<p>Typical concerns:</p>
+<ul><li><p>enter/exit events</p></li><li><p>restricted zones</p></li><li><p>compliance zones</p></li><li><p>operating boundaries</p></li><li><p>service areas</p></li><li><p>event-triggered actions based on region membership</p></li></ul>
+<p>This subtype is useful whenever boundary conditions affect policy or action.</p>
+<h4 id="blk-4880">Future subtype candidates</h4>
+<p>As the protocol evolves, additional spatial subtypes may emerge, for example:</p>
+<ul><li><p><code>&amp;space.topology</code></p></li><li><p><code>&amp;space.facility</code></p></li><li><p><code>&amp;space.coverage</code></p></li><li><p><code>&amp;space.territory</code></p></li></ul>
+<p>The protocol should stay conservative at the primitive level and extensible at the subtype level.</p>
+<h3 id="blk-4892">What problems <code>&amp;space</code> solves</h3>
+<p><code>&amp;space</code> gives the protocol a standard place to express capabilities like:</p>
+<ul><li><p>finding where an event occurred</p></li><li><p>mapping impact to regions or zones</p></li><li><p>connecting a decision to real-world or logical geography</p></li><li><p>constraining actions by allowed locations</p></li><li><p>ranking options by distance, route cost, or region state</p></li><li><p>enriching a decision with local spatial context</p></li></ul>
+<p>These are especially important when spatial context changes the meaning of the same underlying event.</p>
+<p>Example:</p>
+<p>An anomaly in CPU usage means something very different if it affects:</p>
+<ul><li><p>one isolated test node</p></li><li><p>every production node in <code>us-east</code></p></li><li><p>a route-optimization cluster near a major logistics hub</p></li><li><p>a restricted compliance boundary</p></li></ul>
+<p>The anomaly itself may be temporal. The business meaning often becomes spatial.</p>
+<p>That is why <code>&amp;space</code> composes naturally with <code>&amp;time</code>.</p>
+<h3 id="blk-4921">Cognitive role of <code>&amp;space</code></h3>
+<p>A useful way to think about the four primitives is:</p>
+<ul><li><p><code>&amp;memory</code> stores and recalls prior structure</p></li><li><p><code>&amp;reason</code> evaluates and decides</p></li><li><p><code>&amp;time</code> models change and sequence</p></li><li><p><code>&amp;space</code> localizes state and action</p></li></ul>
+<p>In practice, <code>&amp;space</code> helps answer:</p>
+<ul><li><p>Where is this happening?</p></li><li><p>What else is nearby or inside the same boundary?</p></li><li><p>What region, route, zone, or topology is affected?</p></li><li><p>What actions are allowed in this location?</p></li><li><p>How does location change priority or response?</p></li></ul>
+<p>This makes <code>&amp;space</code> an essential primitive for situated agents.</p>
+<h3 id="blk-4945">Typical providers</h3>
+<p>The protocol does not require one provider, but a few provider patterns are common.</p>
+<h4 id="blk-4947"><code>geofleetic</code></h4>
+<p>A natural example provider for <code>&amp;space.fleet</code>.</p>
+<p>This kind of provider may expose:</p>
+<ul><li><p>region state</p></li><li><p>fleet distribution</p></li><li><p>geofencing</p></li><li><p>location enrichment</p></li><li><p>affected-region queries</p></li></ul>
+<h4 id="blk-4961">GIS and geospatial databases</h4>
+<p>A geospatial database or service can satisfy parts of <code>&amp;space</code> if it exposes the right contract.</p>
+<p>Examples might include systems built around:</p>
+<ul><li><p>PostGIS</p></li><li><p>custom geospatial indexes</p></li><li><p>spatial event stores</p></li><li><p>topology services</p></li></ul>
+<h4 id="blk-4973">Routing engines</h4>
+<p>A routing engine may satisfy parts of <code>&amp;space.route</code>.</p>
+<p>What matters is not the brand name, but whether the implementation satisfies the protocol contract for that subtype.</p>
+<h4 id="blk-4976">Custom domain-specific spatial systems</h4>
+<p>A warehouse graph, datacenter topology model, maritime route service, or airspace constraint system could all act as <code>&amp;space</code> providers if they are wrapped behind the expected capability surface.</p>
+<h3 id="blk-4978">Example declaration</h3>
+<p>A simple spatial capability declaration in <code>ampersand.json</code> might look like this:</p>
+<p>{ &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;, &quot;agent&quot;: &quot;FleetManager&quot;, &quot;version&quot;: &quot;0.1.0&quot;, &quot;capabilities&quot;: { &quot;&amp;space.fleet&quot;: { &quot;provider&quot;: &quot;geofleetic&quot;, &quot;config&quot;: { &quot;regions&quot;: [&quot;us-east&quot;, &quot;us-central&quot;], &quot;mode&quot;: &quot;regional-capacity-awareness&quot; } } }, &quot;provenance&quot;: true }</p>
+<p>A goal-driven variant might use auto-resolution:</p>
+<p>{ &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;, &quot;agent&quot;: &quot;RouteCoordinator&quot;, &quot;version&quot;: &quot;0.1.0&quot;, &quot;capabilities&quot;: { &quot;&amp;space.route&quot;: { &quot;provider&quot;: &quot;auto&quot;, &quot;need&quot;: &quot;regional route optimization with compliance boundaries&quot; } }, &quot;governance&quot;: { &quot;infer_from_goal&quot;: true }, &quot;provenance&quot;: true }</p>
+<h3 id="blk-4983">Example contract shape</h3>
+<p>A capability contract for <code>&amp;space.fleet</code> might express operations like these:</p>
+<p>{ &quot;capability&quot;: &quot;&amp;space.fleet&quot;, &quot;operations&quot;: { &quot;locate&quot;: { &quot;in&quot;: &quot;asset_query&quot;, &quot;out&quot;: &quot;location_set&quot; }, &quot;enrich&quot;: { &quot;in&quot;: &quot;context&quot;, &quot;out&quot;: &quot;spatial_context&quot; }, &quot;capacity&quot;: { &quot;in&quot;: &quot;region_query&quot;, &quot;out&quot;: &quot;capacity_snapshot&quot; } }, &quot;accepts_from&quot;: [&quot;&amp;time.*&quot;, &quot;&amp;memory.*&quot;, &quot;raw_data&quot;], &quot;feeds_into&quot;: [&quot;&amp;reason.*&quot;, &quot;&amp;memory.*&quot;, &quot;output&quot;], &quot;a2a_skills&quot;: [&quot;fleet-state-enrichment&quot;, &quot;regional-capacity-lookup&quot;] }</p>
+<p>The point is not that every provider must use exactly these names.</p>
+<p>The point is that spatial capability should expose:</p>
+<ul><li><p>explicit operations</p></li><li><p>explicit input/output types</p></li><li><p>explicit compatibility boundaries</p></li></ul>
+<p>That is what makes composition validateable.</p>
+<h3 id="blk-4996">Example pipelines involving <code>&amp;space</code></h3>
+<h4 id="blk-4997">Temporal event localized spatially</h4>
+<p>A common flow is:</p>
+<p>stream_data</p>
+<p>Interpretation:</p>
+<ol><li><p>detect anomalies</p></li><li><p>map those anomalies to affected regions or assets</p></li><li><p>reason over the enriched operational context</p></li></ol>
+<h4 id="blk-5008">Memory + spatial context</h4>
+<p>Another common pattern is:</p>
+<p>incident_context</p>
+<p>Interpretation:</p>
+<ol><li><p>retrieve similar prior incidents</p></li><li><p>determine whether current assets or actions intersect constrained zones</p></li><li><p>reason under both historical and spatial constraints</p></li></ol>
+<h4 id="blk-5019">Route-aware planning</h4>
+<p>A route-sensitive planning flow may look like:</p>
+<p>delivery_request</p>
+<p>Interpretation:</p>
+<ol><li><p>produce route options or route context</p></li><li><p>enrich with temporal expectation such as demand or congestion window</p></li><li><p>select or evaluate a plan</p></li></ol>
+<h3 id="blk-5030">How <code>&amp;space</code> composes with the other primitives</h3>
+<h4 id="blk-5031"><code>&amp;space</code> + <code>&amp;memory</code></h4>
+<p>Memory helps answer what happened before. Space helps answer where it is happening now.</p>
+<p>Together they support questions like:</p>
+<ul><li><p>Have we seen incidents like this in this region?</p></li><li><p>Which routes historically fail under these conditions?</p></li><li><p>Which service zones tend to exceed capacity after similar events?</p></li></ul>
+<p>This pairing is especially strong for historical localization.</p>
+<h4 id="blk-5042"><code>&amp;space</code> + <code>&amp;time</code></h4>
+<p>Time detects sequence, trend, anomaly, or forecast. Space localizes the effect.</p>
+<p>Together they support questions like:</p>
+<ul><li><p>Which region is drifting toward overload?</p></li><li><p>Where are anomalies clustering over time?</p></li><li><p>Which route becomes invalid during a forecasted demand spike?</p></li></ul>
+<p>This pairing is essential for operational and logistics agents.</p>
+<h4 id="blk-5053"><code>&amp;space</code> + <code>&amp;reason</code></h4>
+<p>Spatial context often changes which decisions are acceptable.</p>
+<p>Reasoning without spatial awareness can choose actions that are technically coherent but operationally invalid.</p>
+<p>Together they support questions like:</p>
+<ul><li><p>Is scaling in this region allowed under policy?</p></li><li><p>Which region should receive rerouted capacity?</p></li><li><p>Which route balances service level and compliance risk?</p></li></ul>
+<h4 id="blk-5064"><code>&amp;space</code> + <code>&amp;memory</code> + <code>&amp;time</code> + <code>&amp;reason</code></h4>
+<p>This is the full composition story for many real systems:</p>
+<ul><li><p>memory gives history</p></li><li><p>time gives dynamics</p></li><li><p>space gives localization</p></li><li><p>reason gives decision logic</p></li></ul>
+<p>That combination is why the protocol models all four primitives rather than reducing everything to one generic intelligence bucket.</p>
+<h3 id="blk-5076">Governance implications of <code>&amp;space</code></h3>
+<p>Spatial systems often have strong governance requirements.</p>
+<p>Examples:</p>
+<ul><li><p>never route assets through a restricted zone</p></li><li><p>never expose private location data outside authorized context</p></li><li><p>always escalate when operations cross a jurisdictional boundary</p></li><li><p>prefer routes that remain inside approved service areas</p></li><li><p>prefer region-local action over cross-region action when confidence is low</p></li></ul>
+<p>This makes <code>&amp;space</code> especially relevant to declarative governance.</p>
+<p>A governance block might include rules like:</p>
+<p>{ &quot;governance&quot;: { &quot;hard&quot;: [ &quot;Never route assets through restricted geofences&quot;, &quot;Never disclose customer or fleet location outside authorized workflows&quot; ], &quot;soft&quot;: [ &quot;Prefer local-region remediation before cross-region failover&quot; ], &quot;escalate_when&quot;: { &quot;hard_boundary_approached&quot;: true, &quot;confidence_below&quot;: 0.75 } } }</p>
+<p>The protocol's value here is that spatial constraints become portable data, not hidden application logic.</p>
+<h3 id="blk-5094">Provenance implications of <code>&amp;space</code></h3>
+<p>Spatial enrichment should be provenance-aware.</p>
+<p>If an agent reasons over spatial context, a provenance chain should preserve facts like:</p>
+<ul><li><p>which spatial capability produced the region mapping</p></li><li><p>which provider supplied the spatial enrichment</p></li><li><p>which operation was called</p></li><li><p>which input led to the spatial result</p></li><li><p>what downstream reasoning consumed that result</p></li></ul>
+<p>That is important for questions like:</p>
+<ul><li><p>Why did the agent choose <code>us-east</code> over <code>us-central</code>?</p></li><li><p>Why did the system reject this route?</p></li><li><p>Which geofence triggered escalation?</p></li><li><p>Which provider determined regional capacity?</p></li></ul>
+<p>Spatial claims can have major operational consequences, so they should be auditable.</p>
+<h3 id="blk-5119">Design patterns for <code>&amp;space</code></h3>
+<h4 id="blk-5120">Pattern 1: Spatial enrichment before reasoning</h4>
+<p>Good when the decision depends on location-aware context.</p>
+<p>Example: detect first, localize second, reason third.</p>
+<h4 id="blk-5123">Pattern 2: Boundary validation before execution</h4>
+<p>Good for compliance and operational safety.</p>
+<p>Example: check geofence or route legality before the planner or executor commits an action.</p>
+<h4 id="blk-5126">Pattern 3: Region-aware memory lookup</h4>
+<p>Good when similarity depends on both event type and location.</p>
+<p>Example: retrieve prior incidents from the same facility type, same region class, or same route family.</p>
+<h4 id="blk-5129">Pattern 4: Spatial fallback routing</h4>
+<p>Good when a preferred route or region becomes invalid.</p>
+<p>Example: route planner requests an alternative region or path under governance constraints.</p>
+<h3 id="blk-5132">Anti-patterns</h3>
+<h4 id="blk-5133">Anti-pattern 1: Treating space as just metadata</h4>
+<p>If location meaningfully changes action, <code>&amp;space</code> should be modeled explicitly, not buried in arbitrary JSON fields.</p>
+<h4 id="blk-5135">Anti-pattern 2: Collapsing all spatial problems into one provider call</h4>
+<p>Route planning, geofencing, and fleet-state enrichment are related but not identical. Subtypes exist to keep those concerns distinct.</p>
+<h4 id="blk-5137">Anti-pattern 3: Letting reasoners infer geography from raw text alone</h4>
+<p>A reasoner may be excellent at explanation and still be a poor source of authoritative spatial state.</p>
+<h4 id="blk-5139">Anti-pattern 4: Ignoring provenance for location-sensitive decisions</h4>
+<p>Spatial decisions without lineage are hard to debug and risky to audit.</p>
+<h3 id="blk-5141">How <code>&amp;space</code> should evolve</h3>
+<p>The protocol should keep <code>&amp;space</code> simple at the primitive level and expressive at the subtype and contract level.</p>
+<p>That suggests a few healthy directions:</p>
+<ul><li><p>preserve <code>&amp;space</code> as a stable top-level primitive</p></li><li><p>allow subtypes to evolve as use cases become clearer</p></li><li><p>keep providers separate from capabilities</p></li><li><p>encourage typed contracts instead of loose &quot;map&quot; outputs</p></li><li><p>expand examples and registry entries only when grounded in real use cases</p></li></ul>
+<p>A good <code>&amp;space</code> ecosystem is not one with the most subtype names. It is one where spatial capability is explicit, composable, and trustworthy.</p>
+<h3 id="blk-5156">Practical examples in this repository</h3>
+<p>The protocol repository already points toward several spatially relevant examples:</p>
+<ul><li><p><code>&amp;space.fleet</code> in infrastructure and fleet-oriented declarations</p></li><li><p>provider patterns such as <code>geofleetic</code></p></li><li><p>composition with <code>&amp;time.anomaly</code> and <code>&amp;reason.argument</code></p></li></ul>
+<p>As the docs hub expands, useful next additions would include:</p>
+<ul><li><p>a route-planning example declaration</p></li><li><p>a geofence/compliance example</p></li><li><p>a contract artifact for <code>&amp;space.fleet</code></p></li><li><p>registry entries for additional spatial providers</p></li><li><p>diagrams showing <code>&amp;space</code> composition with time and reason</p></li></ul>
+<h3 id="blk-5177">Summary</h3>
+<p><code>&amp;space</code> is the protocol's answer to the question:</p>
+<p><strong>How does an agent represent and reason about where things are?</strong></p>
+<p>It matters because many real agent systems are not purely textual or purely symbolic. They are situated.</p>
+<p><code>&amp;space</code> makes spatial intelligence:</p>
+<ul><li><p>explicit in the declaration</p></li><li><p>separable from providers</p></li><li><p>contract-aware</p></li><li><p>composable with memory, time, and reason</p></li><li><p>governable</p></li><li><p>provenance-aware</p></li><li><p>compilable into downstream agent artifacts</p></li></ul>
+<p>If <code>&amp;memory</code> helps the agent remember, and <code>&amp;reason</code> helps it decide, and <code>&amp;time</code> helps it understand change,</p>
+<p>then <code>&amp;space</code> helps it stay grounded in the world the decision actually affects.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/capabilities/space.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-4798" class="lvl2">Why &amp;space exists as a first-class primitive</a><a href="#blk-4816" class="lvl2">What &amp;space means in the protocol</a><a href="#blk-4829" class="lvl2">Common &amp;space subtypes</a><a href="#blk-4831" class="lvl3">&amp;space.fleet</a><a href="#blk-4848" class="lvl3">&amp;space.route</a><a href="#blk-4863" class="lvl3">&amp;space.geofence</a><a href="#blk-4880" class="lvl3">Future subtype candidates</a><a href="#blk-4892" class="lvl2">What problems &amp;space solves</a><a href="#blk-4921" class="lvl2">Cognitive role of &amp;space</a><a href="#blk-4945" class="lvl2">Typical providers</a><a href="#blk-4947" class="lvl3">geofleetic</a><a href="#blk-4961" class="lvl3">GIS and geospatial databases</a><a href="#blk-4973" class="lvl3">Routing engines</a><a href="#blk-4976" class="lvl3">Custom domain-specific spatial systems</a><a href="#blk-4978" class="lvl2">Example declaration</a><a href="#blk-4983" class="lvl2">Example contract shape</a><a href="#blk-4996" class="lvl2">Example pipelines involving &amp;space</a><a href="#blk-4997" class="lvl3">Temporal event localized spatially</a><a href="#blk-5008" class="lvl3">Memory + spatial context</a><a href="#blk-5019" class="lvl3">Route-aware planning</a><a href="#blk-5030" class="lvl2">How &amp;space composes with the other primitives</a><a href="#blk-5031" class="lvl3">&amp;space + &amp;memory</a><a href="#blk-5042" class="lvl3">&amp;space + &amp;time</a><a href="#blk-5053" class="lvl3">&amp;space + &amp;reason</a><a href="#blk-5064" class="lvl3">&amp;space + &amp;memory + &amp;time + &amp;reason</a><a href="#blk-5076" class="lvl2">Governance implications of &amp;space</a><a href="#blk-5094" class="lvl2">Provenance implications of &amp;space</a><a href="#blk-5119" class="lvl2">Design patterns for &amp;space</a><a href="#blk-5120" class="lvl3">Pattern 1: Spatial enrichment before reasoning</a><a href="#blk-5123" class="lvl3">Pattern 2: Boundary validation before execution</a><a href="#blk-5126" class="lvl3">Pattern 3: Region-aware memory lookup</a><a href="#blk-5129" class="lvl3">Pattern 4: Spatial fallback routing</a><a href="#blk-5132" class="lvl2">Anti-patterns</a><a href="#blk-5133" class="lvl3">Anti-pattern 1: Treating space as just metadata</a><a href="#blk-5135" class="lvl3">Anti-pattern 2: Collapsing all spatial problems into one provider call</a><a href="#blk-5137" class="lvl3">Anti-pattern 3: Letting reasoners infer geography from raw text alone</a><a href="#blk-5139" class="lvl3">Anti-pattern 4: Ignoring provenance for location-sensitive decisions</a><a href="#blk-5141" class="lvl2">How &amp;space should evolve</a><a href="#blk-5156" class="lvl2">Practical examples in this repository</a><a href="#blk-5177" class="lvl2">Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/capabilities/govern.md/">&amp;govern: Cross-Cutting Governance for Agents</a><a href="/AmpersandBoxDesign/docs/capabilities/memory.md/">&amp;memory: Capability Deep Dive</a><a href="/AmpersandBoxDesign/docs/capabilities/reason.md/">&amp;reason: Deliberation, Evaluation, and Decision-Making</a><a href="/AmpersandBoxDesign/docs/capabilities/time.md/">&amp;time: Temporal Intelligence in the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieratho63dab7c4ohiicnzgi7q6h7w6av53qm7rtwzcydnlpuybb5iuq</div></div></div>
+</div></div>
+</body></html>

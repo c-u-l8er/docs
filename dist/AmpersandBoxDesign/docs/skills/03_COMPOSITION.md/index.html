@@ -1,0 +1,123 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Skill 03 — Capability Composition · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Composition is the core thesis of the [&amp;] Protocol. Individual capabilities are useful; composed capabilities are powerful. The protocol defines two…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill 03 — Capability Composition">
+<meta property="og:description" content="Composition is the core thesis of the [&amp;] Protocol. Individual capabilities are useful; composed capabilities are powerful. The protocol defines two…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 03 — Capability Composition","name":"Skill 03 — Capability Composition","description":"Composition is the core thesis of the [&] Protocol. Individual capabilities are useful; composed capabilities are powerful. The protocol defines two…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/","identifier":"bagaaieraera4iiuml2yxnh4dbn4lr6tnw3m7azxlpyou6sdyhmkm75cwurda","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why This Matters"},{"@type":"WebPageElement","name":"The & Operator — Capability Sets"},{"@type":"WebPageElement","name":"ACI Properties"},{"@type":"WebPageElement","name":"Composition validation"},{"@type":"WebPageElement","name":"The |> Operator — Pipelines"},{"@type":"WebPageElement","name":"Type Compatibility"},{"@type":"WebPageElement","name":"Wildcard matching"},{"@type":"WebPageElement","name":"Pipeline Declarations in JSON"},{"@type":"WebPageElement","name":"Multi-Capability Declarations"},{"@type":"WebPageElement","name":"Composition Validation via CLI"},{"@type":"WebPageElement","name":"Anti-Patterns"},{"@type":"WebPageElement","name":"Elixir DSL Equivalent"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/"},{"@type":"ListItem","position":5,"name":"03_COMPOSITION.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/skills/03_COMPOSITION.md</span>
+
+</div></div>
+<div class="lead">Composition is the core thesis of the [&amp;] Protocol. Individual capabilities are useful; composed capabilities are powerful. The protocol defines two operators that make composit…</div>
+<div class="prose"><h1 id="blk-16448">Skill 03 — Capability Composition</h1>
+<blockquote><p>How capabilities compose via the <code>&amp;</code> operator and <code>|&gt;</code> pipeline operator. ACI algebra properties, type compatibility, and composition validation.</p></blockquote>
+<h3 id="blk-16451">Why This Matters</h3>
+<p>Composition is the core thesis of the [&amp;] Protocol. Individual capabilities are useful; composed capabilities are powerful. The protocol defines two operators that make composition formal, validated, and portable.</p>
+<h3 id="blk-16453">The <code>&amp;</code> Operator — Capability Sets</h3>
+<p>The <code>&amp;</code> operator combines capabilities into a validated set. It is the fundamental composition mechanism.</p>
+<pre><code>&amp;memory.graph &amp; &amp;time.anomaly &amp; &amp;reason.argument</code></pre>
+<p>This declares an agent with graph memory, temporal anomaly detection, and structured argumentation — composed as a single unit.</p>
+<h4 id="blk-16457">ACI Properties</h4>
+<p>The <code>&amp;</code> operator satisfies ACI (Associative, Commutative, Idempotent):</p>
+<table><thead><tr><th>Property</th><th>Meaning</th><th>Example</th></tr></thead><tbody><tr><td><strong>Associative</strong></td><td>Grouping does not matter</td><td><code>(&amp;memory &amp; &amp;time) &amp; &amp;space = &amp;memory &amp; (&amp;time &amp; &amp;space)</code></td></tr><tr><td><strong>Commutative</strong></td><td>Order does not matter</td><td><code>&amp;memory &amp; &amp;time = &amp;time &amp; &amp;memory</code></td></tr><tr><td><strong>Idempotent</strong></td><td>Duplicates collapse</td><td><code>&amp;memory &amp; &amp;memory = &amp;memory</code></td></tr><tr><td><strong>Identity</strong></td><td>Composing with nothing changes nothing</td><td><code>&amp;none &amp; &amp;memory = &amp;memory</code></td></tr></tbody></table>
+<p>These are the same properties CRDTs use for conflict-free convergence. They ensure capability sets are deterministic regardless of declaration order.</p>
+<h4 id="blk-16476">Composition validation</h4>
+<p>When you run <code>ampersand compose</code>, the tool checks:</p>
+<ol><li><p>All capability identifiers are valid (<code>&amp;primitive.subtype</code>)</p></li><li><p>All referenced providers exist in the registry (or are <code>&quot;auto&quot;</code>)</p></li><li><p>No conflicting providers for the same capability</p></li><li><p>ACI properties hold (duplicate removal, order normalization)</p></li></ol>
+<h3 id="blk-16487">The <code>|&gt;</code> Operator — Pipelines</h3>
+<p>The <code>|&gt;</code> operator flows data through capability operations in sequence:</p>
+<pre><code>stream_data
+  |&gt; &amp;time.anomaly.detect()
+  |&gt; &amp;memory.graph.enrich()
+  |&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Each step receives the output of the previous step as input. The pipeline is type-checked against capability contracts.</p>
+<h4 id="blk-16491">Type Compatibility</h4>
+<p>Pipelines are validated using <code>accepts_from</code> / <code>feeds_into</code> contracts:</p>
+<pre><code>Step 1: &amp;time.anomaly.detect()
+  Input:  stream_data
+  Output: anomaly_set
+
+Step 2: &amp;memory.graph.enrich()
+  Accepts: anomaly_set (via &amp;time.* wildcard in accepts_from)
+  Output:  enriched_context
+
+Step 3: &amp;reason.argument.evaluate()
+  Accepts: enriched_context (via &amp;memory.* wildcard in accepts_from)
+  Output:  evaluation_result</code></pre>
+<p>If Step N's output type does not match Step N+1's <code>accepts_from</code> list, composition fails with a type error.</p>
+<h4 id="blk-16495">Wildcard matching</h4>
+<p>Contract types support wildcard matching:</p>
+<table><thead><tr><th>Pattern</th><th>Matches</th></tr></thead><tbody><tr><td><code>&amp;memory.*</code></td><td>Any memory capability output</td></tr><tr><td><code>&amp;reason.*</code></td><td>Any reasoning capability output</td></tr><tr><td><code>raw_data</code></td><td>Literal type <code>raw_data</code></td></tr><tr><td><code>output</code></td><td>Terminal — pipeline result</td></tr></tbody></table>
+<h3 id="blk-16508">Pipeline Declarations in JSON</h3>
+<p>Pipelines are declared in the <code>pipelines</code> block of <code>ampersand.json</code>:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;pipelines&quot;</span>: {
+  <span class="t-key">&quot;incident_triage&quot;</span>: {
+    <span class="t-key">&quot;source_type&quot;</span>: <span class="t-string">&quot;stream_data&quot;</span>,
+    <span class="t-key">&quot;source_ref&quot;</span>: <span class="t-string">&quot;raw_data&quot;</span>,
+    <span class="t-key">&quot;steps&quot;</span>: [
+      { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;time.anomaly&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;detect&quot;</span> },
+      { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;enrich&quot;</span> },
+      { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.argument&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;evaluate&quot;</span> }
+    ]
+  }
+}</code></pre>
+<p>Each step references a capability declared in the <code>capabilities</code> block and an operation defined in that capability's contract.</p>
+<h3 id="blk-16512">Multi-Capability Declarations</h3>
+<p>An agent can declare any combination of capabilities across all four primitive domains:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;capabilities&quot;</span>: {
+  <span class="t-key">&quot;&amp;memory.graph&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+  <span class="t-key">&quot;&amp;memory.vector&quot;</span>:     { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;pgvector&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+  <span class="t-key">&quot;&amp;time.anomaly&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+  <span class="t-key">&quot;&amp;time.forecast&quot;</span>:     { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+  <span class="t-key">&quot;&amp;space.fleet&quot;</span>:       { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+  <span class="t-key">&quot;&amp;reason.argument&quot;</span>:   { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+  <span class="t-key">&quot;&amp;reason.deliberate&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} }
+}</code></pre>
+<p>Multiple subtypes of the same primitive are allowed. Each is independently bound to a provider.</p>
+<h3 id="blk-16516">Composition Validation via CLI</h3>
+<pre data-lang="bash"><code>./ampersand compose agent.ampersand.json</code></pre>
+<p><strong>Success output:</strong></p>
+<pre><code>OK  agent.ampersand.json
+  Capability set: &amp;memory.graph &amp; &amp;time.anomaly &amp; &amp;reason.argument
+  ACI normal form: &amp;memory.graph &amp; &amp;reason.argument &amp; &amp;time.anomaly
+  Pipelines: incident_triage (3 steps, type-safe)
+  Providers: graphonomous, ticktickclock, deliberatic</code></pre>
+<p><strong>Failure output:</strong></p>
+<pre><code>FAIL  agent.ampersand.json
+  errors:
+    - Pipeline &quot;incident_triage&quot; step 2: &amp;memory.graph.enrich() does not
+      accept type &quot;forecast_set&quot; (output of &amp;time.forecast.predict())
+    - Provider &quot;unknown_service&quot; not found in registry</code></pre>
+<h3 id="blk-16522">Anti-Patterns</h3>
+<table><thead><tr><th>Anti-Pattern</th><th>Problem</th><th>Fix</th></tr></thead><tbody><tr><td>Incompatible pipeline steps</td><td>Output type does not match next step's <code>accepts_from</code></td><td>Check contracts; insert a compatible intermediary</td></tr><tr><td>Circular pipeline dependencies</td><td>`</td><td>&gt;` is strictly linear</td><td>Use capability-level feedback, not pipeline cycles</td></tr><tr><td>Composing without validating</td><td>Errors surface late at generation time</td><td>Always <code>compose</code> before <code>generate</code></td></tr><tr><td>Ignoring ACI normalization</td><td>Assuming order matters when it does not</td><td>Trust the normal form; do not rely on declaration order</td></tr><tr><td>Over-composing</td><td>Declaring 15 capabilities when 3 suffice</td><td>Start minimal; add capabilities when needed</td></tr></tbody></table>
+<h3 id="blk-16543">Elixir DSL Equivalent</h3>
+<p>In the Elixir reference implementation, composition uses native syntax:</p>
+<pre data-lang="elixir"><code>capabilities <span class="t-kw">do</span>
+  &amp;memory.graph(<span class="t-atom">:graphonomous</span>, instance: <span class="t-string">&quot;infra-ops&quot;</span>)
+  &amp;time.anomaly(<span class="t-atom">:ticktickclock</span>, streams: [<span class="t-atom">:cpu</span>, <span class="t-atom">:mem</span>])
+  &amp;reason.argument(<span class="t-atom">:deliberatic</span>, governance: <span class="t-atom">:constitutional</span>)
+<span class="t-kw">end</span></code></pre>
+<p>Pipeline usage:</p>
+<pre data-lang="elixir"><code>stream_data
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;memory.graph.enrich()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>The <code>&amp;</code> leverages Elixir's capture operator. The <code>|&gt;</code> is Elixir's native pipe. Both map directly to the protocol's formal operators.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-16451" class="lvl2">Why This Matters</a><a href="#blk-16453" class="lvl2">The &amp; Operator — Capability Sets</a><a href="#blk-16457" class="lvl3">ACI Properties</a><a href="#blk-16476" class="lvl3">Composition validation</a><a href="#blk-16487" class="lvl2">The |&gt; Operator — Pipelines</a><a href="#blk-16491" class="lvl3">Type Compatibility</a><a href="#blk-16495" class="lvl3">Wildcard matching</a><a href="#blk-16508" class="lvl2">Pipeline Declarations in JSON</a><a href="#blk-16512" class="lvl2">Multi-Capability Declarations</a><a href="#blk-16516" class="lvl2">Composition Validation via CLI</a><a href="#blk-16522" class="lvl2">Anti-Patterns</a><a href="#blk-16543" class="lvl2">Elixir DSL Equivalent</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/">Skill 01 — Writing Agent Declarations</a><a href="/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/">Skill 02 — Validation</a><a href="/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/">Skill 04 — Capability Contracts</a><a href="/AmpersandBoxDesign/docs/skills/05_GENERATION.md/">Skill 05 — Generation</a><a href="/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/">Skill 06 — CLI Reference</a><a href="/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/">Skill 07 — Integration Patterns</a><a href="/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/">Skill 08 — Provider Implementation</a><a href="/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/">Skill 09 — Governance and Provenance</a><a href="/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/">Skill 10 — Anti-Patterns</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraera4iiuml2yxnh4dbn4lr6tnw3m7azxlpyou6sdyhmkm75cwurda</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,385 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;memory.episodic — Experience, Session History, and Replayable Context · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;memory.episodic is the [&amp;] Protocol capability for experience-based memory.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/memory.episodic.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;memory.episodic — Experience, Session History, and Replayable Context">
+<meta property="og:description" content="&amp;memory.episodic is the [&amp;] Protocol capability for experience-based memory.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/memory.episodic.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&memory.episodic — Experience, Session History, and Replayable Context","name":"&memory.episodic — Experience, Session History, and Replayable Context","description":"&memory.episodic is the [&] Protocol capability for experience-based memory.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/memory.episodic.md/","identifier":"bagaaiera3f22l26jafcbfuoay24hhh2vmhyirpps5kqq7o5hmtwe6soe3kjq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Why &memory.episodic exists"},{"@type":"WebPageElement","name":"2. What &memory.episodic means in the protocol"},{"@type":"WebPageElement","name":"3. Cognitive intuition"},{"@type":"WebPageElement","name":"4. When to use &memory.episodic"},{"@type":"WebPageElement","name":"Session continuity"},{"@type":"WebPageElement","name":"Case history"},{"@type":"WebPageElement","name":"Replayability"},{"@type":"WebPageElement","name":"Experience-based enrichment"},{"@type":"WebPageElement","name":"Escalation context"},{"@type":"WebPageElement","name":"Outcome-aware learning"},{"@type":"WebPageElement","name":"5. Typical use cases"},{"@type":"WebPageElement","name":"Customer support"},{"@type":"WebPageElement","name":"Incident response"},{"@type":"WebPageElement","name":"Logistics and routing"},{"@type":"WebPageElement","name":"Research workflows"},{"@type":"WebPageElement","name":"Agent orchestration"},{"@type":"WebPageElement","name":"Compliance and audit trails"},{"@type":"WebPageElement","name":"6. How &memory.episodic differs from other memory subtypes"},{"@type":"WebPageElement","name":"&memory.episodic vs &memory.vector"},{"@type":"WebPageElement","name":"&memory.episodic vs &memory.graph"},{"@type":"WebPageElement","name":"&memory.episodic vs &time.*"},{"@type":"WebPageElement","name":"7. Common operations"},{"@type":"WebPageElement","name":"recall"},{"@type":"WebPageElement","name":"store"},{"@type":"WebPageElement","name":"replay"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"memory.episodic.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/memory.episodic.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/memory.episodic.md</span>
+
+</div></div>
+<div class="lead">&amp;memory.episodic is the [&amp;] Protocol capability for experience-based memory.</div>
+<div class="prose"><h1 id="blk-9672"><code>&amp;memory.episodic</code> — Experience, Session History, and Replayable Context</h1>
+<p><code>&amp;memory.episodic</code> is the [&amp;] Protocol capability for <strong>experience-based memory</strong>.</p>
+<p>If <code>&amp;memory.graph</code> is best for structured relationships and <code>&amp;memory.vector</code> is best for semantic retrieval, <code>&amp;memory.episodic</code> is best for remembering <strong>what happened before</strong> in a way that preserves sequence, case context, and replayable experience.</p>
+<p>It is the memory surface you use when an agent should not only know facts, but also remember prior episodes, sessions, interactions, incidents, routes, or workflows as lived sequences.</p>
+<h3 id="blk-9676">1. Why <code>&amp;memory.episodic</code> exists</h3>
+<p>Many real agents need more than abstract knowledge retrieval.</p>
+<p>They need to answer questions like:</p>
+<ul><li><p>What happened in the last interaction with this customer?</p></li><li><p>Which prior escalation path was used for a similar case?</p></li><li><p>What was the sequence of steps during the last incident response?</p></li><li><p>Which route adjustments were made during the previous disruption?</p></li><li><p>What actions were attempted before the system escalated?</p></li><li><p>What did the agent observe, in order, across a prior session?</p></li></ul>
+<p>These are <strong>episodic</strong> questions.</p>
+<p>A document retriever may retrieve policy. A graph memory may retrieve linked entities or incidents. But neither alone is the same as preserving a <strong>replayable experience</strong>.</p>
+<p>That is why <code>&amp;memory.episodic</code> exists as its own capability.</p>
+<h3 id="blk-9695">2. What <code>&amp;memory.episodic</code> means in the protocol</h3>
+<p>At the protocol level, <code>&amp;memory.episodic</code> is a capability interface for memory that stores and recalls <strong>ordered prior experiences</strong>.</p>
+<p>It is meant for artifacts such as:</p>
+<ul><li><p>prior sessions</p></li><li><p>customer interactions</p></li><li><p>incident timelines</p></li><li><p>workflow executions</p></li><li><p>route histories</p></li><li><p>action traces</p></li><li><p>case-specific context sequences</p></li></ul>
+<p>An episodic memory system should make it possible to:</p>
+<ul><li><p>store new experiences</p></li><li><p>recall relevant prior episodes</p></li><li><p>replay or reconstruct prior sequences</p></li><li><p>enrich current work with experience-derived context</p></li></ul>
+<p>That makes <code>&amp;memory.episodic</code> especially useful for continuity, postmortem analysis, escalation support, and case-based reasoning.</p>
+<h3 id="blk-9724">3. Cognitive intuition</h3>
+<p>The four protocol primitives can be read like this:</p>
+<ul><li><p><code>&amp;memory</code> — what the agent can retain</p></li><li><p><code>&amp;reason</code> — how the agent decides</p></li><li><p><code>&amp;time</code> — how it understands change over time</p></li><li><p><code>&amp;space</code> — how it understands where things are</p></li></ul>
+<p>Within <code>&amp;memory</code>, the episodic subtype specifically answers:</p>
+<blockquote><p>What has this agent, user, case, or system experienced before?</p></blockquote>
+<p>This is different from:</p>
+<ul><li><p>semantic memory: generalized knowledge</p></li><li><p>graph memory: linked structured knowledge</p></li><li><p>working memory: short-lived active context</p></li></ul>
+<p><code>&amp;memory.episodic</code> is about <strong>remembered experience</strong>.</p>
+<h3 id="blk-9747">4. When to use <code>&amp;memory.episodic</code></h3>
+<p>Use <code>&amp;memory.episodic</code> when your agent needs one or more of these:</p>
+<h4 id="blk-9749">Session continuity</h4>
+<p>Remembering prior steps in an ongoing or repeated interaction.</p>
+<h4 id="blk-9751">Case history</h4>
+<p>Preserving what happened in a specific support case, incident, claim, ticket, or workflow.</p>
+<h4 id="blk-9753">Replayability</h4>
+<p>Reconstructing prior sequences in order, rather than only retrieving isolated facts.</p>
+<h4 id="blk-9755">Experience-based enrichment</h4>
+<p>Using similar prior episodes to enrich a current task.</p>
+<h4 id="blk-9757">Escalation context</h4>
+<p>Passing forward a concise but faithful representation of what has already been tried.</p>
+<h4 id="blk-9759">Outcome-aware learning</h4>
+<p>Recording what actions were taken and what happened afterward.</p>
+<h3 id="blk-9761">5. Typical use cases</h3>
+<h4 id="blk-9762">Customer support</h4>
+<p>A support agent should remember prior user interactions, previously attempted fixes, and earlier escalations.</p>
+<h4 id="blk-9764">Incident response</h4>
+<p>An operations agent should recall the sequence of steps taken in similar incidents.</p>
+<h4 id="blk-9766">Logistics and routing</h4>
+<p>A fleet system should remember prior route changes, delays, handoffs, and corrective actions.</p>
+<h4 id="blk-9768">Research workflows</h4>
+<p>A research assistant may preserve prior investigation episodes, not just the final notes.</p>
+<h4 id="blk-9770">Agent orchestration</h4>
+<p>A workflow agent may need to remember which tools were called, in what order, and what the outcomes were.</p>
+<h4 id="blk-9772">Compliance and audit trails</h4>
+<p>An agent should preserve a replayable case history where sequence matters for review.</p>
+<h3 id="blk-9774">6. How <code>&amp;memory.episodic</code> differs from other memory subtypes</h3>
+<h4 id="blk-9775"><code>&amp;memory.episodic</code> vs <code>&amp;memory.vector</code></h4>
+<ul><li><p><code>&amp;memory.vector</code> is strong for semantic retrieval across a document corpus.</p></li><li><p><code>&amp;memory.episodic</code> is strong for recalling prior experiences as episodes.</p></li></ul>
+<p>Vector memory answers:</p>
+<ul><li><p>What content is semantically similar?</p></li></ul>
+<p>Episodic memory answers:</p>
+<ul><li><p>What happened in a similar prior case?</p></li></ul>
+<h4 id="blk-9789"><code>&amp;memory.episodic</code> vs <code>&amp;memory.graph</code></h4>
+<ul><li><p><code>&amp;memory.graph</code> is strong for relationships and durable structured knowledge.</p></li><li><p><code>&amp;memory.episodic</code> is strong for sequences and lived case history.</p></li></ul>
+<p>Graph memory answers:</p>
+<ul><li><p>What entities, dependencies, and relationships connect here?</p></li></ul>
+<p>Episodic memory answers:</p>
+<ul><li><p>What was the prior sequence of events?</p></li></ul>
+<h4 id="blk-9803"><code>&amp;memory.episodic</code> vs <code>&amp;time.*</code></h4>
+<p>Temporal capabilities detect anomalies, patterns, or forecasts. Episodic memory preserves what was experienced.</p>
+<p>Time answers:</p>
+<ul><li><p>What is changing?</p></li><li><p>What pattern is emerging?</p></li></ul>
+<p>Episodic memory answers:</p>
+<ul><li><p>What happened previously in comparable situations?</p></li></ul>
+<h3 id="blk-9815">7. Common operations</h3>
+<p>A representative <code>&amp;memory.episodic</code> contract often includes operations like:</p>
+<ul><li><p><code>recall</code></p></li><li><p><code>store</code></p></li><li><p><code>replay</code></p></li><li><p><code>enrich</code></p></li></ul>
+<h4 id="blk-9826"><code>recall</code></h4>
+<p>Retrieve prior episodes relevant to the current context.</p>
+<h4 id="blk-9828"><code>store</code></h4>
+<p>Persist a new episode, event, or session artifact.</p>
+<h4 id="blk-9830"><code>replay</code></h4>
+<p>Reconstruct a prior sequence into a usable replayed context.</p>
+<h4 id="blk-9832"><code>enrich</code></h4>
+<p>Attach relevant prior episode information to a current task or context payload.</p>
+<p>These are protocol-level operations. A provider may have more internal complexity, but these operations are the kinds of surfaces the protocol should standardize.</p>
+<h3 id="blk-9835">8. Example contract</h3>
+<p>A representative standalone contract artifact for <code>&amp;memory.episodic</code> may look like this:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;memory.episodic&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Episodic memory contract for storing, replaying, and enriching agents with prior experiences and session history.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;recall&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;query_context&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;episode_set&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Retrieve prior episodes relevant to the current context.&quot;</span>
+    },
+    <span class="t-key">&quot;store&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;episode_event&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;ack&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Persist a new episode or session event.&quot;</span>
+    },
+    <span class="t-key">&quot;replay&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;episode_set&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;replayed_context&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Reconstruct ordered prior context from stored episodes.&quot;</span>
+    },
+    <span class="t-key">&quot;enrich&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;enriched_context&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Augment the current context with relevant prior experiences.&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;reason.*&quot;</span>,
+    <span class="t-string">&quot;&amp;time.*&quot;</span>,
+    <span class="t-string">&quot;context&quot;</span>,
+    <span class="t-string">&quot;episode_event&quot;</span>,
+    <span class="t-string">&quot;query_context&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;reason.*&quot;</span>,
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;episodic-memory-recall&quot;</span>,
+    <span class="t-string">&quot;experience-replay&quot;</span>,
+    <span class="t-string">&quot;session-history-enrichment&quot;</span>
+  ]
+}</code></pre>
+<p>This is useful because it makes episodic memory composable and machine-checkable rather than hand-wavy.</p>
+<h3 id="blk-9839">9. Declaration examples</h3>
+<h4 id="blk-9840">Explicit provider binding</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;memory.episodic&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+    <span class="t-key">&quot;config&quot;</span>: {
+      <span class="t-key">&quot;instance&quot;</span>: <span class="t-string">&quot;customer-support-history&quot;</span>,
+      <span class="t-key">&quot;retention_days&quot;</span>: <span class="t-num">90</span>
+    }
+  }
+}</code></pre>
+<h4 id="blk-9842">Auto provider binding</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;memory.episodic&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+    <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;replayable support case history with escalation continuity&quot;</span>
+  }
+}</code></pre>
+<p>Use explicit binding when you know the provider. Use <code>provider: &quot;auto&quot;</code> when you want the registry/runtime to resolve the provider from the declared need.</p>
+<h3 id="blk-9845">10. Example providers</h3>
+<p>The protocol is provider-agnostic, but representative providers for episodic memory include:</p>
+<h4 id="blk-9847"><code>graphonomous</code></h4>
+<p>A natural example provider where episodic memory can be layered alongside graph-backed learning and recall.</p>
+<h4 id="blk-9849">Custom application memory service</h4>
+<p>A case-history or session-history service may satisfy <code>&amp;memory.episodic</code> if it exposes the right contract.</p>
+<h4 id="blk-9851">Workflow event store</h4>
+<p>A workflow execution service may satisfy parts of episodic memory if it supports replayable sequence retrieval and enrichment.</p>
+<p>The important distinction remains:</p>
+<ul><li><p><code>&amp;memory.episodic</code> = capability</p></li><li><p><code>graphonomous</code> or another service = provider</p></li></ul>
+<h3 id="blk-9859">11. Architecture patterns</h3>
+<h4 id="blk-9860">Pattern 1: support continuity</h4>
+<p>Composition:</p>
+<ul><li><p><code>&amp;memory.episodic</code></p></li><li><p><code>&amp;memory.vector</code></p></li><li><p><code>&amp;reason.argument</code></p></li></ul>
+<p>Use this when the system should combine prior customer history with policy retrieval and then decide how to respond.</p>
+<p>Typical flow:</p>
+<pre><code>support_case
+|&gt; &amp;memory.episodic.recall()
+|&gt; &amp;memory.vector.search()
+|&gt; &amp;reason.argument.evaluate()
+|&gt; &amp;memory.episodic.store()</code></pre>
+<p>What this does:</p>
+<ol><li><p>recalls prior case history</p></li><li><p>retrieves relevant documentation or policy</p></li><li><p>evaluates the best response</p></li><li><p>stores the new interaction as another episode</p></li></ol>
+<h4 id="blk-9882">Pattern 2: incident replay</h4>
+<p>Composition:</p>
+<ul><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;memory.episodic</code></p></li><li><p><code>&amp;reason.argument</code></p></li></ul>
+<p>Use this when prior incident sequences matter as much as current anomaly signals.</p>
+<p>Typical flow:</p>
+<pre><code>stream_data
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;memory.episodic.enrich()
+|&gt; &amp;reason.argument.evaluate()
+|&gt; &amp;memory.episodic.store()</code></pre>
+<p>What this does:</p>
+<ol><li><p>detects an anomaly</p></li><li><p>enriches the current incident with similar prior incident sequences</p></li><li><p>evaluates what to do</p></li><li><p>stores the current case outcome for future replay</p></li></ol>
+<h4 id="blk-9904">Pattern 3: workflow replay and audit</h4>
+<p>Composition:</p>
+<ul><li><p><code>&amp;memory.episodic</code></p></li><li><p><code>&amp;reason.plan</code></p></li></ul>
+<p>Use this when the system needs to reconstruct prior workflow steps before building the next plan.</p>
+<p>Typical flow:</p>
+<pre><code>workflow_context
+|&gt; &amp;memory.episodic.recall()
+|&gt; &amp;memory.episodic.replay()
+|&gt; &amp;reason.plan.plan()</code></pre>
+<p>What this does:</p>
+<ol><li><p>recalls related prior workflow episodes</p></li><li><p>reconstructs the useful execution trace</p></li><li><p>builds a new plan using that history</p></li></ol>
+<h3 id="blk-9922">12. Example APIs and payload shapes</h3>
+<p>Episodic providers will vary, but the interface usually implies payloads like these.</p>
+<h4 id="blk-9924">Example <code>recall</code> input</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;case_id&quot;</span>: <span class="t-string">&quot;SUP-10492&quot;</span>,
+  <span class="t-key">&quot;customer_id&quot;</span>: <span class="t-string">&quot;cust_8821&quot;</span>,
+  <span class="t-key">&quot;topic&quot;</span>: <span class="t-string">&quot;refund dispute&quot;</span>,
+  <span class="t-key">&quot;max_results&quot;</span>: <span class="t-num">5</span>
+}</code></pre>
+<h4 id="blk-9926">Example <code>recall</code> output</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;episodes&quot;</span>: [
+    {
+      <span class="t-key">&quot;episode_id&quot;</span>: <span class="t-string">&quot;ep_001&quot;</span>,
+      <span class="t-key">&quot;summary&quot;</span>: <span class="t-string">&quot;Customer contacted support about duplicate billing and requested refund review.&quot;</span>,
+      <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-01T13:11:00Z&quot;</span>,
+      <span class="t-key">&quot;tags&quot;</span>: [<span class="t-string">&quot;billing&quot;</span>, <span class="t-string">&quot;refund&quot;</span>, <span class="t-string">&quot;escalation&quot;</span>],
+      <span class="t-key">&quot;outcome&quot;</span>: <span class="t-string">&quot;manual review&quot;</span>
+    },
+    {
+      <span class="t-key">&quot;episode_id&quot;</span>: <span class="t-string">&quot;ep_002&quot;</span>,
+      <span class="t-key">&quot;summary&quot;</span>: <span class="t-string">&quot;Customer returned after review with follow-up documentation.&quot;</span>,
+      <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-02T09:43:00Z&quot;</span>,
+      <span class="t-key">&quot;tags&quot;</span>: [<span class="t-string">&quot;billing&quot;</span>, <span class="t-string">&quot;documents&quot;</span>],
+      <span class="t-key">&quot;outcome&quot;</span>: <span class="t-string">&quot;policy exception denied&quot;</span>
+    }
+  ]
+}</code></pre>
+<h4 id="blk-9928">Example <code>store</code> input</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;case_id&quot;</span>: <span class="t-string">&quot;SUP-10492&quot;</span>,
+  <span class="t-key">&quot;episode_event&quot;</span>: {
+    <span class="t-key">&quot;summary&quot;</span>: <span class="t-string">&quot;Agent escalated case after confidence dropped below threshold.&quot;</span>,
+    <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-03T16:28:00Z&quot;</span>,
+    <span class="t-key">&quot;actor&quot;</span>: <span class="t-string">&quot;CustomerSupport&quot;</span>,
+    <span class="t-key">&quot;outcome&quot;</span>: <span class="t-string">&quot;escalated&quot;</span>
+  }
+}</code></pre>
+<h4 id="blk-9930">Example <code>replay</code> output</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;replayed_context&quot;</span>: {
+    <span class="t-key">&quot;timeline&quot;</span>: [
+      <span class="t-string">&quot;Initial customer complaint received&quot;</span>,
+      <span class="t-string">&quot;Knowledge base consulted&quot;</span>,
+      <span class="t-string">&quot;Refund policy checked&quot;</span>,
+      <span class="t-string">&quot;Confidence dropped below threshold&quot;</span>,
+      <span class="t-string">&quot;Case escalated to human reviewer&quot;</span>
+    ],
+    <span class="t-key">&quot;summary&quot;</span>: <span class="t-string">&quot;Prior workflow attempted standard refund validation before escalation.&quot;</span>
+  }
+}</code></pre>
+<p>These are not canonical protocol payloads, but they show the shape of experience-oriented memory surfaces.</p>
+<h3 id="blk-9933">13. Governance considerations</h3>
+<p>Episodic memory is often highly sensitive because it may contain user, operational, or case history.</p>
+<p>That means governance matters.</p>
+<h4 id="blk-9936">Common hard constraints</h4>
+<p>Examples:</p>
+<ul><li><p>Never expose one customer’s prior episodes to another customer.</p></li><li><p>Never replay private history outside an authorized workflow.</p></li><li><p>Always preserve audit trail for escalations and account-affecting actions.</p></li><li><p>Never store sensitive episode data without retention and access policy.</p></li></ul>
+<h4 id="blk-9947">Common soft constraints</h4>
+<p>Examples:</p>
+<ul><li><p>Prefer concise summaries over full replay when the full episode is not required.</p></li><li><p>Prefer policy-grounded replay over speculative reconstruction.</p></li><li><p>Prefer recent relevant episodes over stale ones.</p></li></ul>
+<h4 id="blk-9956">Common escalation rules</h4>
+<p>Examples:</p>
+<ul><li><p>escalate when confidence in case interpretation is below threshold</p></li><li><p>escalate when a hard privacy boundary is approached</p></li><li><p>escalate when episodic replay indicates repeated unresolved attempts</p></li></ul>
+<p>A representative governance block might look like this:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never reveal private customer case history outside authorized support workflows&quot;</span>,
+      <span class="t-string">&quot;Always preserve an audit trail for escalations and account changes&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer concise replay summaries unless a full timeline is required&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.75</span>,
+      <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span>
+    }
+  }
+}</code></pre>
+<h3 id="blk-9967">14. Provenance implications</h3>
+<p><code>&amp;memory.episodic</code> should be provenance-aware because replayed history can influence a live decision.</p>
+<p>A provenance record for an episodic memory step may include:</p>
+<ul><li><p>source capability</p></li><li><p>provider</p></li><li><p>operation</p></li><li><p>timestamp</p></li><li><p>input hash</p></li><li><p>output hash</p></li><li><p>parent hash</p></li></ul>
+<p>Representative example:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;memory.episodic&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;recall&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-14T14:23:07Z&quot;</span>,
+  <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:aa91...&quot;</span>,
+  <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:cc42...&quot;</span>,
+  <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:0000...&quot;</span>
+}</code></pre>
+<p>This matters for questions like:</p>
+<ul><li><p>Which prior case history was used?</p></li><li><p>Why did the agent decide to escalate?</p></li><li><p>Which episode influenced the current response?</p></li><li><p>Was the replayed context policy-appropriate?</p></li></ul>
+<p>Episodic memory without provenance quickly becomes hard to audit.</p>
+<h3 id="blk-9998">15. Research grounding</h3>
+<p><code>&amp;memory.episodic</code> is strongly aligned with classic distinctions between episodic and semantic memory.</p>
+<p>The engineering interpretation is straightforward:</p>
+<ul><li><p>episodic memory preserves experience traces</p></li><li><p>semantic memory preserves generalized knowledge</p></li></ul>
+<p>That distinction remains useful in agent systems because prior sessions, incidents, and cases often matter even when they are not generalized into durable semantic knowledge.</p>
+<p>Modern agent workflows reinforce this need:</p>
+<ul><li><p>support systems need continuity</p></li><li><p>incident systems need prior case replay</p></li><li><p>planning systems need prior execution traces</p></li><li><p>audit-sensitive systems need sequence-preserving history</p></li></ul>
+<p>The protocol turns that engineering need into a declarative capability surface.</p>
+<h3 id="blk-10018">16. Compatible providers</h3>
+<p>Representative compatible provider types include:</p>
+<ul><li><p>graph-backed memory systems that support episode storage and replay</p></li><li><p>event-store-backed case history systems</p></li><li><p>workflow execution stores with replay support</p></li><li><p>session-history services for conversational or support systems</p></li></ul>
+<p>Example provider IDs you might see in protocol artifacts:</p>
+<ul><li><p><code>graphonomous</code></p></li><li><p>custom internal episodic memory providers</p></li><li><p>case-history services wrapped behind MCP-compatible interfaces</p></li></ul>
+<p>The capability page should always emphasize that provider compatibility is determined by contract satisfaction, not brand labeling.</p>
+<h3 id="blk-10038">17. Example pipeline diagram</h3>
+<p>A simple conceptual pipeline for episodic support handling:</p>
+<pre><code>incoming_case
+   |
+   v
+&amp;memory.episodic.recall
+   |
+   v
+&amp;memory.vector.search
+   |
+   v
+&amp;reason.argument.evaluate
+   |
+   v
+&amp;memory.episodic.store</code></pre>
+<p>Interpretation:</p>
+<ul><li><p>recall prior case experience</p></li><li><p>retrieve current policy/support knowledge</p></li><li><p>decide on the best action</p></li><li><p>record the new episode for future continuity</p></li></ul>
+<h3 id="blk-10051">18. A2A-facing implications</h3>
+<p>An <code>&amp;memory.episodic</code> capability may compile into A2A-advertised skills such as:</p>
+<ul><li><p><code>episodic-memory-recall</code></p></li><li><p><code>experience-replay</code></p></li><li><p><code>session-history-enrichment</code></p></li></ul>
+<p>This is useful because an externally coordinated agent may want to advertise not merely that it “has memory,” but that it can:</p>
+<ul><li><p>recall prior experiences</p></li><li><p>replay workflow history</p></li><li><p>enrich tasks with case continuity</p></li></ul>
+<p>That makes the coordination layer more faithful to the actual agent architecture.</p>
+<h3 id="blk-10069">19. Anti-patterns</h3>
+<h4 id="blk-10070">Anti-pattern 1: using vector retrieval where sequence matters</h4>
+<p>If the task needs ordered prior experience, pure semantic retrieval may lose the structure that matters.</p>
+<h4 id="blk-10072">Anti-pattern 2: collapsing every memory need into graph memory</h4>
+<p>Graph memory is powerful, but not every “what happened before?” question is best represented as a graph traversal.</p>
+<h4 id="blk-10074">Anti-pattern 3: storing episode data without governance</h4>
+<p>Episodic memory often contains exactly the kind of history that privacy and audit policy must constrain.</p>
+<h4 id="blk-10076">Anti-pattern 4: replay without provenance</h4>
+<p>If replayed history affects a decision, the system should preserve lineage.</p>
+<h3 id="blk-10078">20. Practical guidance</h3>
+<p>Choose <code>&amp;memory.episodic</code> when you need:</p>
+<ul><li><p>case continuity</p></li><li><p>interaction history</p></li><li><p>incident replay</p></li><li><p>workflow sequence preservation</p></li><li><p>experience-based enrichment</p></li></ul>
+<p>Prefer combining it with:</p>
+<ul><li><p><code>&amp;memory.vector</code> for policy or document grounding</p></li><li><p><code>&amp;reason.argument</code> for decision quality</p></li><li><p><code>&amp;time.*</code> when prior sequences should be compared to current temporal behavior</p></li></ul>
+<p>A common production pattern is not to use episodic memory alone, but to combine it with another memory form and a reasoning layer.</p>
+<h3 id="blk-10100">21. Summary</h3>
+<p><code>&amp;memory.episodic</code> is the [&amp;] Protocol capability for <strong>remembered experience</strong>.</p>
+<p>It exists so that agents can do more than retrieve facts. They can also remember and replay what happened before in a way that preserves continuity, sequence, and case context.</p>
+<p>It is especially useful for:</p>
+<ul><li><p>customer support</p></li><li><p>incident response</p></li><li><p>workflow history</p></li><li><p>case management</p></li><li><p>audit-sensitive systems</p></li></ul>
+<p>At the protocol level, it gives you a way to declare:</p>
+<ul><li><p>that the agent has episodic memory</p></li><li><p>which provider satisfies it</p></li><li><p>what operations it supports</p></li><li><p>how it composes with reasoning, time, and other memory surfaces</p></li><li><p>how governance and provenance apply</p></li></ul>
+<p>In short:</p>
+<blockquote><p><code>&amp;memory.episodic</code> is how the [&amp;] Protocol represents replayable experience as a first-class memory capability.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/memory.episodic.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-9676" class="lvl2">1. Why &amp;memory.episodic exists</a><a href="#blk-9695" class="lvl2">2. What &amp;memory.episodic means in the protocol</a><a href="#blk-9724" class="lvl2">3. Cognitive intuition</a><a href="#blk-9747" class="lvl2">4. When to use &amp;memory.episodic</a><a href="#blk-9749" class="lvl3">Session continuity</a><a href="#blk-9751" class="lvl3">Case history</a><a href="#blk-9753" class="lvl3">Replayability</a><a href="#blk-9755" class="lvl3">Experience-based enrichment</a><a href="#blk-9757" class="lvl3">Escalation context</a><a href="#blk-9759" class="lvl3">Outcome-aware learning</a><a href="#blk-9761" class="lvl2">5. Typical use cases</a><a href="#blk-9762" class="lvl3">Customer support</a><a href="#blk-9764" class="lvl3">Incident response</a><a href="#blk-9766" class="lvl3">Logistics and routing</a><a href="#blk-9768" class="lvl3">Research workflows</a><a href="#blk-9770" class="lvl3">Agent orchestration</a><a href="#blk-9772" class="lvl3">Compliance and audit trails</a><a href="#blk-9774" class="lvl2">6. How &amp;memory.episodic differs from other memory subtypes</a><a href="#blk-9775" class="lvl3">&amp;memory.episodic vs &amp;memory.vector</a><a href="#blk-9789" class="lvl3">&amp;memory.episodic vs &amp;memory.graph</a><a href="#blk-9803" class="lvl3">&amp;memory.episodic vs &amp;time.*</a><a href="#blk-9815" class="lvl2">7. Common operations</a><a href="#blk-9826" class="lvl3">recall</a><a href="#blk-9828" class="lvl3">store</a><a href="#blk-9830" class="lvl3">replay</a><a href="#blk-9832" class="lvl3">enrich</a><a href="#blk-9835" class="lvl2">8. Example contract</a><a href="#blk-9839" class="lvl2">9. Declaration examples</a><a href="#blk-9840" class="lvl3">Explicit provider binding</a><a href="#blk-9842" class="lvl3">Auto provider binding</a><a href="#blk-9845" class="lvl2">10. Example providers</a><a href="#blk-9847" class="lvl3">graphonomous</a><a href="#blk-9849" class="lvl3">Custom application memory service</a><a href="#blk-9851" class="lvl3">Workflow event store</a><a href="#blk-9859" class="lvl2">11. Architecture patterns</a><a href="#blk-9860" class="lvl3">Pattern 1: support continuity</a><a href="#blk-9882" class="lvl3">Pattern 2: incident replay</a><a href="#blk-9904" class="lvl3">Pattern 3: workflow replay and audit</a><a href="#blk-9922" class="lvl2">12. Example APIs and payload shapes</a><a href="#blk-9924" class="lvl3">Example recall input</a><a href="#blk-9926" class="lvl3">Example recall output</a><a href="#blk-9928" class="lvl3">Example store input</a><a href="#blk-9930" class="lvl3">Example replay output</a><a href="#blk-9933" class="lvl2">13. Governance considerations</a><a href="#blk-9936" class="lvl3">Common hard constraints</a><a href="#blk-9947" class="lvl3">Common soft constraints</a><a href="#blk-9956" class="lvl3">Common escalation rules</a><a href="#blk-9967" class="lvl2">14. Provenance implications</a><a href="#blk-9998" class="lvl2">15. Research grounding</a><a href="#blk-10018" class="lvl2">16. Compatible providers</a><a href="#blk-10038" class="lvl2">17. Example pipeline diagram</a><a href="#blk-10051" class="lvl2">18. A2A-facing implications</a><a href="#blk-10069" class="lvl2">19. Anti-patterns</a><a href="#blk-10070" class="lvl3">Anti-pattern 1: using vector retrieval where sequence matters</a><a href="#blk-10072" class="lvl3">Anti-pattern 2: collapsing every memory need into graph memory</a><a href="#blk-10074" class="lvl3">Anti-pattern 3: storing episode data without governance</a><a href="#blk-10076" class="lvl3">Anti-pattern 4: replay without provenance</a><a href="#blk-10078" class="lvl2">20. Practical guidance</a><a href="#blk-10100" class="lvl2">21. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.plan.md/">&amp;reason.plan -- Planning-Oriented Reasoning for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera3f22l26jafcbfuoay24hhh2vmhyirpps5kqq7o5hmtwe6soe3kjq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,304 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Autonomous Systems: The Canonical [&amp;] Use Case · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="March 2026 · [&amp;] Ampersand Box Design">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/use-cases-autonomous-systems.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Autonomous Systems: The Canonical [&amp;] Use Case">
+<meta property="og:description" content="March 2026 · [&amp;] Ampersand Box Design">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/use-cases-autonomous-systems.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Autonomous Systems: The Canonical [&] Use Case","name":"Autonomous Systems: The Canonical [&] Use Case","description":"March 2026 · [&] Ampersand Box Design","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/use-cases-autonomous-systems.md/","identifier":"bagaaieralxg3irpwtyv5tpzuhlvhuiijod7o3isvvlu4stbjn4pj46xvbixa","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why autonomous vehicles and drones"},{"@type":"WebPageElement","name":"1. Where [&] sits in the autonomy stack"},{"@type":"WebPageElement","name":"2. Why all six primitives are load-bearing"},{"@type":"WebPageElement","name":"&memory.graph — operational picture as agent memory"},{"@type":"WebPageElement","name":"&time.anomaly — threat detection through temporal intelligence"},{"@type":"WebPageElement","name":"&space — survival through spatial reasoning"},{"@type":"WebPageElement","name":"&govern — telemetry, identity, and escalation as infrastructure"},{"@type":"WebPageElement","name":"&reason.deliberate — engagement decisions under governance"},{"@type":"WebPageElement","name":"3. Governance as constraint envelope"},{"@type":"WebPageElement","name":"DoD autonomy levels → [&] governance blocks"},{"@type":"WebPageElement","name":"Hard constraints as rules of engagement"},{"@type":"WebPageElement","name":"Soft constraints as tactical preferences"},{"@type":"WebPageElement","name":"Escalation as the human-machine handoff"},{"@type":"WebPageElement","name":"4. The disconnected operations problem"},{"@type":"WebPageElement","name":"5. Swarm governance through κ"},{"@type":"WebPageElement","name":"The topology-driven answer"},{"@type":"WebPageElement","name":"Why this adapts in real-time"},{"@type":"WebPageElement","name":"The engagement coordination example"},{"@type":"WebPageElement","name":"6. Manned-unmanned teaming (MUM-T)"},{"@type":"WebPageElement","name":"The composition problem"},{"@type":"WebPageElement","name":"Supervisory ratio"},{"@type":"WebPageElement","name":"7. The Palantir integration"},{"@type":"WebPageElement","name":"What Palantir provides"},{"@type":"WebPageElement","name":"What [&] provides"},{"@type":"WebPageElement","name":"The integration surface"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"use-cases-autonomous-systems.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/use-cases-autonomous-systems.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/use-cases-autonomous-systems.md</span>
+
+</div></div>
+<div class="lead">March 2026 · [&amp;] Ampersand Box Design</div>
+<div class="prose"><h1 id="blk-17713">Autonomous Systems: The Canonical [&amp;] Use Case</h1>
+<p><strong>March 2026 · [&amp;] Ampersand Box Design</strong></p>
+<h3 id="blk-17715">Why autonomous vehicles and drones</h3>
+<p>The [&amp;] Protocol was designed as a general composition layer for agent cognition. But not all applications exercise the protocol equally. Some agents need only memory and reasoning. Some need only tool connectivity. The protocol is useful in those cases, but it is not irreplaceable.</p>
+<p>Autonomous military systems — robotic combat vehicles, drone swarms, manned-unmanned teams — are different. They exercise all six primitives simultaneously, under conditions where governance is not optional and disconnected operations are the baseline assumption. This document explains why, where the protocol fits in the stack, and where it does not.</p>
+<h3 id="blk-17718">1. Where [&amp;] sits in the autonomy stack</h3>
+<p>The autonomous vehicle software stack has well-established layers. [&amp;] does not replace any of them. It occupies a specific position between the operational data layer and the vehicle control layer.</p>
+<pre><code>┌─────────────────────────────────────────────────┐
+│  Human Command                                   │
+│  Mission objectives, rules of engagement,        │
+│  commander's intent                              │
+├─────────────────────────────────────────────────┤
+│  Operational Data Layer                          │
+│  Palantir TITAN/Maven/Gotham, JADC2 feeds,       │
+│  intelligence fusion, ontology objects            │
+├─────────────────────────────────────────────────┤
+│  [&amp;] Protocol — Cognitive Composition Layer      │
+│  Capability declaration, typed pipelines,         │
+│  governance constraints, κ-driven deliberation,  │
+│  provenance chains                               │
+├─────────────────────────────────────────────────┤
+│  MCP / A2A                                       │
+│  Tool invocation, agent-to-agent coordination    │
+├─────────────────────────────────────────────────┤
+│  Vehicle Autonomy Stack                          │
+│  RTK, ROS2, PX4, navigation, obstacle avoidance, │
+│  path planning, motor control                    │
+├─────────────────────────────────────────────────┤
+│  Hardware                                        │
+│  Sensors (FLIR, LiDAR, radar, EO/IR), actuators, │
+│  MANET radios, GPS/INS, APS                      │
+└─────────────────────────────────────────────────┘</code></pre>
+<p>The data layer answers: <em>what is happening?</em> The control layer answers: <em>how do I move?</em> The [&amp;] layer answers: <em>how should I think about what is happening, and what should I decide to do?</em></p>
+<p>That middle layer — structured cognition with governance — is what autonomous systems currently lack. Vehicle control stacks (RTK, ROS2) handle navigation. Intelligence platforms (Palantir Foundry, TITAN) handle data fusion. But the step between &quot;here is what I know&quot; and &quot;here is what I should do&quot; is either hardcoded in mission-specific logic or left to unstructured prompt engineering. [&amp;] makes that step explicit, typed, and auditable.</p>
+<h3 id="blk-17723">2. Why all six primitives are load-bearing</h3>
+<p>Autonomous military systems are the canonical case where the full [&amp;] primitive set exercises simultaneously — including <code>&amp;body.*</code> for direct vehicle/drone actuation and perception. When robotic combat vehicles or drone swarms act on the physical world, a conforming <code>&amp;body.motor</code> implementation of OS-011 (Embodiment Protocol) enforces affordance-bounded action under Delegatic governance.</p>
+<p>Most agent applications use one or two [&amp;] primitives meaningfully. An infrastructure monitor needs <code>&amp;time.anomaly</code> and <code>&amp;memory.graph</code>. A research agent needs <code>&amp;memory</code> and <code>&amp;reason</code>. The other primitives are present but not survival-critical.</p>
+<p>Autonomous vehicles are the rare case where all six primitives are simultaneously essential and where failure in any one is catastrophic.</p>
+<h4 id="blk-17727"><code>&amp;memory.graph</code> — operational picture as agent memory</h4>
+<p>An autonomous vehicle's &quot;memory&quot; is not a vector store of past conversations. It is a structured knowledge graph of the operational environment: terrain features, threat positions, friendly force locations, no-go zones, previous engagement outcomes, supply routes, communication relay points.</p>
+<p>In a Palantir-integrated system, this memory is the ontology itself. Palantir's Object Types (buildings, vehicles, units, routes) become the nodes. Link Types (threatens, observes, supplies) become the edges. The vehicle's <code>&amp;memory.graph</code> capability binds to the Palantir Ontology via MCP, treating enterprise intelligence objects as its episodic and semantic memory.</p>
+<p>This is not metaphorical. Palantir released Ontology MCP in 2025, exposing object types, action types, and query functions as MCP tools. An [&amp;] declaration that binds <code>&amp;memory.graph</code> to a Palantir Ontology MCP server is a concrete integration, not a theoretical one.</p>
+<h4 id="blk-17731"><code>&amp;time.anomaly</code> — threat detection through temporal intelligence</h4>
+<p>A vehicle that was stationary for six hours and begins moving toward a checkpoint. A radio signature that appears in a previously silent sector. A pattern-of-life deviation in a monitored area. These are temporal anomalies — deviations from established baselines that may indicate threats.</p>
+<p>Palantir's streaming pipelines and TITAN's multi-INT fusion produce the raw temporal data. The <code>&amp;time.anomaly</code> capability gives the vehicle the cognitive faculty to notice deviations and reason about them, not just log them. The distinction matters: logging is passive infrastructure; anomaly detection is active cognition that triggers downstream deliberation.</p>
+<h4 id="blk-17734"><code>&amp;space</code> — survival through spatial reasoning</h4>
+<p>No other agent application has spatial reasoning as a survival requirement. For autonomous vehicles, <code>&amp;space</code> is the primitive that keeps the system alive:</p>
+<ul><li><p><strong>Path planning</strong>: navigating through contested terrain while minimizing exposure</p></li><li><p><strong>Formation geometry</strong>: maintaining tactical spacing in a convoy or swarm</p></li><li><p><strong>Terrain masking</strong>: using terrain features to avoid detection</p></li><li><p><strong>Threat proximity</strong>: evaluating distance to known and suspected threats</p></li><li><p><strong>Sensor coverage</strong>: understanding what the vehicle can and cannot observe</p></li></ul>
+<p><code>&amp;space.fleet</code> becomes <code>&amp;space.formation</code> or <code>&amp;space.tactical</code> in this domain — the same interface contract (regions, positions, routes, topology) applied to a context where spatial errors have kinetic consequences.</p>
+<h4 id="blk-17748"><code>&amp;govern</code> — telemetry, identity, and escalation as infrastructure</h4>
+<p>Governance in autonomous systems is not a policy overlay — it is survival infrastructure. A vehicle that cannot authenticate friendly forces, track its own operational telemetry, or enforce escalation policies is as compromised as one that cannot see.</p>
+<p><code>&amp;govern.identity</code> ensures the vehicle can authenticate itself to friendly systems and verify the identity of entities it communicates with — critical in contested electromagnetic environments where spoofing is a standard tactic. <code>&amp;govern.telemetry</code> provides the operational metrics pipeline: ammunition status, fuel state, sensor health, communication link quality. <code>&amp;govern.escalation</code> codifies the conditions under which autonomous action defers to a human operator, and — crucially — what happens when that deferral is impossible because comms are down.</p>
+<p>Unlike the governance <em>block</em> in <code>ampersand.json</code> (which expresses constraints as data), the <code>&amp;govern</code> <em>primitive</em> makes governance a composable, provider-backed capability that participates in pipelines, satisfies contracts, and generates provenance records like any other capability.</p>
+<h4 id="blk-17752"><code>&amp;reason.deliberate</code> — engagement decisions under governance</h4>
+<p>This is where autonomous systems diverge most sharply from other agent applications.</p>
+<p>An infrastructure agent that makes a bad scaling decision wastes money. An autonomous vehicle that makes a bad engagement decision causes casualties. The reasoning capability is not a nice-to-have — it is the component that determines whether the system operates within its rules of engagement or violates them.</p>
+<p><code>&amp;reason.deliberate</code> in this context means: evaluate candidate actions against hard constraints, weigh competing soft preferences, estimate confidence, and determine whether to act autonomously or escalate to a human operator. That is the exact function DoD Directive 3000.09 requires of autonomous and semi-autonomous weapon systems.</p>
+<h3 id="blk-17756">3. Governance as constraint envelope</h3>
+<p>The [&amp;] governance model maps directly onto the DoD's human control framework.</p>
+<h4 id="blk-17758">DoD autonomy levels → [&amp;] governance blocks</h4>
+<table><thead><tr><th>DoD Framework</th><th>[&amp;] Governance</th><th>Meaning</th></tr></thead><tbody><tr><td>Human-in-the-loop (HITL)</td><td><code>require_approval_for: [&quot;engage&quot;]</code></td><td>Human authorizes each engagement</td></tr><tr><td>Human-on-the-loop (HOTL)</td><td><code>autonomy_level: &quot;supervised&quot;</code>, <code>escalate_when: { confidence_below: 0.85 }</code></td><td>System acts autonomously; human monitors and can abort</td></tr><tr><td>Human-out-of-the-loop (HOOTL)</td><td><code>autonomy_level: &quot;autonomous&quot;</code></td><td>System operates independently (not currently permitted for U.S. lethal systems)</td></tr></tbody></table>
+<h4 id="blk-17772">Hard constraints as rules of engagement</h4>
+<p>Rules of engagement are not suggestions. They are inviolable constraints that define the legal and ethical boundaries of autonomous action. In [&amp;], they are expressed as <code>hard</code> constraints:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;hard&quot;</span>: [
+  <span class="t-string">&quot;Never engage without positive target identification&quot;</span>,
+  <span class="t-string">&quot;Respect no-fire zones as defined in operational picture&quot;</span>,
+  <span class="t-string">&quot;Do not engage targets within 500m of declared civilian structures&quot;</span>,
+  <span class="t-string">&quot;Cease engagement immediately on loss of target track&quot;</span>
+]</code></pre>
+<p>These constraints are declarative data, not runtime code. They travel with the vehicle's <code>ampersand.json</code> declaration. They can be validated before deployment. They can be audited after action. They do not depend on a network connection to a policy server.</p>
+<h4 id="blk-17776">Soft constraints as tactical preferences</h4>
+<p>Soft constraints express preferences that guide reasoning without creating inviolable boundaries:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;soft&quot;</span>: [
+  <span class="t-string">&quot;Prefer non-lethal response options when available&quot;</span>,
+  <span class="t-string">&quot;Minimize exposure time in open terrain&quot;</span>,
+  <span class="t-string">&quot;Conserve ammunition when resupply route is contested&quot;</span>,
+  <span class="t-string">&quot;Prefer terrain-masked positions for observation&quot;</span>
+]</code></pre>
+<h4 id="blk-17779">Escalation as the human-machine handoff</h4>
+<p>The <code>escalate_when</code> block defines the conditions under which the system defers to a human operator:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;escalate_when&quot;</span>: {
+  <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.85</span>,
+  <span class="t-key">&quot;target_near_civilian_structure&quot;</span>: <span class="t-lit">true</span>,
+  <span class="t-key">&quot;engagement_type&quot;</span>: <span class="t-string">&quot;lethal&quot;</span>,
+  <span class="t-key">&quot;comms_degraded&quot;</span>: <span class="t-lit">false</span>
+}</code></pre>
+<p>The last condition is important. When communications are degraded — the baseline assumption for peer conflict in GPS-denied, EW-contested environments — escalation to a human may be impossible. The governance model must account for this explicitly rather than failing silently.</p>
+<h3 id="blk-17783">4. The disconnected operations problem</h3>
+<p>This is where [&amp;]'s declarative architecture provides its strongest differentiation over cloud-dependent governance systems.</p>
+<p>In a contested electromagnetic environment, autonomous vehicles will routinely lose communications with command nodes. When that happens:</p>
+<ul><li><p><strong>Cloud-based policy engines</strong> become unreachable. The vehicle has no governance.</p></li><li><p><strong>Role-based permission systems</strong> cannot authenticate. The vehicle has no authorization.</p></li><li><p><strong>Human-in-the-loop gates</strong> have no human to loop in. The vehicle has no approval authority.</p></li></ul>
+<p>An [&amp;] declaration is different. The <code>ampersand.json</code> is compiled onboard before deployment. The constraint envelope — hard constraints, soft constraints, escalation conditions, autonomy level, action budgets — is local data. The vehicle does not need a network connection to know its rules of engagement.</p>
+<p>When comms are lost, the governance model degrades gracefully:</p>
+<ol><li><p><code>escalate_when</code> conditions that require human approval become unfulfillable</p></li><li><p>The autonomy level can be pre-configured to shift: <code>&quot;comms_lost_fallback&quot;: &quot;autonomous_within_hard_constraints&quot;</code></p></li><li><p>Hard constraints remain inviolable regardless of connectivity state</p></li><li><p>Provenance chains accumulate locally using SHA-256 hash linking</p></li><li><p>When comms restore, the full audit trail syncs — every decision, every constraint check, every provenance record</p></li></ol>
+<p>This is the Terraform analogy applied to governance: the plan is compiled ahead of time; execution happens locally; state syncs when possible.</p>
+<h3 id="blk-17807">5. Swarm governance through κ</h3>
+<p>Drone swarms present a governance problem that no existing framework addresses well: <em>which drones should coordinate with which other drones on which decisions?</em></p>
+<h4 id="blk-17809">The topology-driven answer</h4>
+<p>A drone swarm is a directed graph. Each drone is a node. Edges represent mutual influence: shared sensor coverage, overlapping threat exposure, communication links, formation dependencies. Run Tarjan's SCC analysis on this graph:</p>
+<ul><li><p><strong>κ = 0 (DAG region)</strong>: Drones operating independently — different sectors, no shared threats, no sensor overlap. These drones can act autonomously within their constraint envelopes. No coordination overhead. Fast.</p></li></ul>
+<ul><li><p><strong>κ ≥ 1 (SCC region)</strong>: Drones with mutual influence — shared threat exposure, overlapping sensor fields, formation dependencies where one drone's action changes the tactical picture for others. These drones must deliberate collectively before acting. Their states are entangled; unilateral action by one affects all.</p></li></ul>
+<h4 id="blk-17817">Why this adapts in real-time</h4>
+<p>Static role hierarchies (leader/follower, master/slave) break when the leader is destroyed or when the communication topology changes. κ-driven governance adapts because it is computed from the current graph state:</p>
+<ul><li><p>A drone that loses comms with its SCC drops to κ = 0 and falls back to its local constraint envelope</p></li><li><p>A drone that enters a new sensor overlap zone joins an SCC and gains deliberation rights with the drones it now mutually influences</p></li><li><p>Formation changes reconfigure the graph; governance reconfigures with it</p></li><li><p>No central coordinator is required — each drone can compute its local SCC membership from its knowledge of the swarm topology</p></li></ul>
+<h4 id="blk-17828">The engagement coordination example</h4>
+<p>Consider four drones (A, B, C, D) approaching a target area:</p>
+<ul><li><p>A and B have overlapping sensor coverage of the target → SCC (κ = 1)</p></li><li><p>C is providing overwatch from a different angle, sensor coverage overlaps with A → joins the SCC (κ = 1)</p></li><li><p>D is on a separate ISR mission 5km away → DAG (κ = 0)</p></li></ul>
+<p>The engagement decision involves A, B, and C deliberating — they share mutual influence over the tactical picture. D continues its ISR mission autonomously. If B is destroyed, the SCC is recomputed: A and C may still form an SCC, or they may fall to DAG status if their sensor coverage no longer overlaps.</p>
+<p>This is not a routing heuristic. It is a governance principle: <strong>deliberation rights derive from the topology of mutual influence</strong>.</p>
+<h3 id="blk-17839">6. Manned-unmanned teaming (MUM-T)</h3>
+<p>The U.S. Army's vision for 2028-2030 includes M1E3 Abrams crews supervising 2-4 Robotic Combat Vehicles (RCVs) alongside small reconnaissance drones. This is a heterogeneous capability graph — different platforms with different sensors, different weapons, different movement capabilities, unified under a human supervisor.</p>
+<p>[&amp;] gives this composition a schema.</p>
+<h4 id="blk-17842">The composition problem</h4>
+<p>Without a composition layer, the crew supervises each asset separately: one interface for the RCV-M, another for the recon drone, a third for their own vehicle systems. Cognitive load scales linearly with asset count.</p>
+<p>With [&amp;], the heterogeneous fleet is declared as a composed system:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;MUM-T_Section&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;palantir-ontology-mcp&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;scope&quot;</span>: <span class="t-string">&quot;battalion_operational_picture&quot;</span> }
+    },
+    <span class="t-key">&quot;&amp;space.formation&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;rtk-formation-planner&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;platforms&quot;</span>: [<span class="t-string">&quot;m1e3&quot;</span>, <span class="t-string">&quot;rcv-m-1&quot;</span>, <span class="t-string">&quot;rcv-m-2&quot;</span>, <span class="t-string">&quot;rq-11b&quot;</span>],
+        <span class="t-key">&quot;formation_doctrine&quot;</span>: <span class="t-string">&quot;bounding_overwatch&quot;</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;time.anomaly&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;titan-stream&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;feeds&quot;</span>: [<span class="t-string">&quot;eo-ir&quot;</span>, <span class="t-string">&quot;radar&quot;</span>, <span class="t-string">&quot;sigint&quot;</span>, <span class="t-string">&quot;aps-threat&quot;</span>]
+      }
+    },
+    <span class="t-key">&quot;&amp;reason.deliberate&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;budget&quot;</span>: <span class="t-string">&quot;kappa&quot;</span>,
+        <span class="t-key">&quot;engagement_doctrine&quot;</span>: <span class="t-string">&quot;3000.09_compliant&quot;</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;govern.identity&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;delegatic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;auth&quot;</span>: <span class="t-string">&quot;blue_force_tracker&quot;</span> }
+    },
+    <span class="t-key">&quot;&amp;govern.telemetry&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;delegatic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;streams&quot;</span>: [<span class="t-string">&quot;ammo&quot;</span>, <span class="t-string">&quot;fuel&quot;</span>, <span class="t-string">&quot;sensor_health&quot;</span>, <span class="t-string">&quot;comms_quality&quot;</span>] }
+    },
+    <span class="t-key">&quot;&amp;govern.escalation&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;delegatic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;comms_lost_fallback&quot;</span>: <span class="t-string">&quot;autonomous_within_hard_constraints&quot;</span> }
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;All lethal engagements require crew authorization&quot;</span>,
+      <span class="t-string">&quot;RCVs do not advance beyond line of departure without crew command&quot;</span>,
+      <span class="t-string">&quot;Cease fire on loss of positive target identification&quot;</span>,
+      <span class="t-string">&quot;Respect no-fire zones from operational picture&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;RCVs take first contact before manned platforms&quot;</span>,
+      <span class="t-string">&quot;Prefer terrain-masked advance routes&quot;</span>,
+      <span class="t-string">&quot;Conserve RCV ammunition when resupply is &gt;2 hours&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.8</span>,
+      <span class="t-key">&quot;target_classification&quot;</span>: <span class="t-string">&quot;uncertain&quot;</span>,
+      <span class="t-key">&quot;civilian_proximity&quot;</span>: <span class="t-lit">true</span>,
+      <span class="t-key">&quot;engagement_type&quot;</span>: <span class="t-string">&quot;lethal&quot;</span>
+    },
+    <span class="t-key">&quot;autonomy&quot;</span>: {
+      <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;supervised&quot;</span>,
+      <span class="t-key">&quot;heartbeat_seconds&quot;</span>: <span class="t-num">5</span>,
+      <span class="t-key">&quot;budget&quot;</span>: {
+        <span class="t-key">&quot;max_actions_per_hour&quot;</span>: <span class="t-num">20</span>,
+        <span class="t-key">&quot;require_approval_for&quot;</span>: [<span class="t-string">&quot;engage&quot;</span>, <span class="t-string">&quot;advance_past_phase_line&quot;</span>]
+      }
+    }
+  },
+  <span class="t-key">&quot;pipelines&quot;</span>: {
+    <span class="t-key">&quot;threat_response&quot;</span>: {
+      <span class="t-key">&quot;source_type&quot;</span>: <span class="t-string">&quot;sensor_fusion&quot;</span>,
+      <span class="t-key">&quot;source_ref&quot;</span>: <span class="t-string">&quot;aps_radar_contact&quot;</span>,
+      <span class="t-key">&quot;steps&quot;</span>: [
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;time.anomaly&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;detect&quot;</span> },
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;enrich&quot;</span> },
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;space.formation&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;evaluate_exposure&quot;</span> },
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.deliberate&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;recommend_action&quot;</span> },
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;govern.escalation&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;evaluate&quot;</span> },
+        { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;govern.telemetry&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;emit&quot;</span> }
+      ]
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<p>The pipeline tells the story: a sensor contact is detected (<code>&amp;time.anomaly</code>), enriched with known intelligence (<code>&amp;memory.graph</code>), evaluated for formation exposure (<code>&amp;space.formation</code>), and fed into deliberation that produces an action recommendation (<code>&amp;reason.deliberate</code>). The escalation policy is evaluated (<code>&amp;govern.escalation</code>) — does this require crew approval? — and operational telemetry is emitted (<code>&amp;govern.telemetry</code>). The crew sees the recommendation, the provenance chain, and the constraint evaluation — then approves or overrides.</p>
+<h4 id="blk-17847">Supervisory ratio</h4>
+<p>The Army's near-term goal is 1:N control — one operator supervising 2-4 unmanned vehicles. The far-term goal (2030+) is supervisory control over 6-10 vehicles, with AI handling navigation, formation, and target detection while humans approve engagements.</p>
+<p>[&amp;]'s governance model supports this transition directly. As trust increases:</p>
+<ul><li><p><code>autonomy_level</code> shifts from <code>&quot;supervised&quot;</code> to <code>&quot;autonomous_within_constraints&quot;</code></p></li><li><p><code>require_approval_for</code> narrows from <code>[&quot;engage&quot;, &quot;advance&quot;, &quot;reposition&quot;]</code> to <code>[&quot;engage&quot;]</code></p></li><li><p><code>heartbeat_seconds</code> lengthens</p></li><li><p><code>max_actions_per_hour</code> increases</p></li></ul>
+<p>The same declaration format scales from tight supervision to high autonomy. The constraint envelope widens; the governance structure remains.</p>
+<h3 id="blk-17860">7. The Palantir integration</h3>
+<p>Palantir and [&amp;] are complementary, not competitive. They occupy different layers of the same stack.</p>
+<h4 id="blk-17862">What Palantir provides</h4>
+<ul><li><p><strong>Ontology</strong>: structured representation of the operational environment — objects (vehicles, buildings, units), links (threatens, observes, supplies), properties (location, classification, movement vector)</p></li><li><p><strong>TITAN</strong>: multi-INT sensor fusion and AI-assisted targeting for long-range precision fires</p></li><li><p><strong>Maven</strong>: computer vision and ML for ISR data analysis — object detection, change detection, pattern-of-life</p></li><li><p><strong>AIP</strong>: generative AI for operational planning and intelligence analysis</p></li><li><p><strong>Edge Ontology</strong>: lightweight ontology runtime for mobile devices and drones</p></li></ul>
+<h4 id="blk-17874">What [&amp;] provides</h4>
+<ul><li><p><strong>Cognitive architecture</strong>: how the autonomous system reasons about ontology objects — not just storing them but deliberating over them</p></li><li><p><strong>Governance as data</strong>: constraint envelopes that travel with the vehicle and work offline</p></li><li><p><strong>κ-driven deliberation</strong>: topology-derived coordination for multi-vehicle decisions</p></li><li><p><strong>Provenance</strong>: hash-linked audit trail of every reasoning step, from sensor input to action recommendation</p></li></ul>
+<h4 id="blk-17884">The integration surface</h4>
+<p>Palantir's Ontology MCP server exposes objects and actions as MCP tools. [&amp;] declarations compile into MCP configurations. The connection point is concrete:</p>
+<pre><code>Palantir Ontology Objects → Ontology MCP Server → MCP Tools
+                                                      ↑
+[&amp;] Declaration → ampersand compose → MCP Config ─────┘</code></pre>
+<p>An [&amp;]-declared agent binds <code>&amp;memory.graph</code> to a Palantir Ontology MCP server. The agent's graph memory <em>is</em> the operational picture. When the agent runs <code>&amp;memory.graph.enrich</code>, it is querying Palantir ontology objects through MCP. When it runs <code>&amp;reason.deliberate</code>, it is reasoning over those objects under [&amp;] governance constraints. When the crew reviews the recommendation, the provenance chain traces back through both layers.</p>
+<h4 id="blk-17888">What neither system does alone</h4>
+<p>Palantir tells the vehicle what exists. [&amp;] tells the vehicle how to think about what exists. Neither replaces the other:</p>
+<ul><li><p>Palantir without [&amp;]: the vehicle has intelligence data but no structured cognitive architecture for reasoning about it under governance constraints</p></li><li><p>[&amp;] without Palantir: the vehicle has a cognitive architecture but no operational data substrate to reason about</p></li><li><p>Together: structured intelligence data flows through typed cognitive pipelines under declarative governance with full provenance</p></li></ul>
+<h3 id="blk-17897">8. What [&amp;] explicitly does not do</h3>
+<p>Maintaining credibility requires being precise about boundaries.</p>
+<h4 id="blk-17899">Not vehicle control</h4>
+<p>[&amp;] does not replace RTK, ROS2, PX4, or any motion planning stack. It does not compute trajectories, avoid obstacles, or control actuators. The <code>&amp;space</code> primitive models spatial reasoning at the tactical/cognitive level — threat proximity, formation geometry, route evaluation — not at the control loop level.</p>
+<h4 id="blk-17901">Not sensor processing</h4>
+<p>[&amp;] does not perform computer vision, radar signal processing, FLIR image analysis, or automatic target recognition. Those are ML inference tasks that sit below the composition layer. Palantir Maven, ATLAS, and similar systems handle sensor processing. [&amp;] consumes their outputs as typed inputs to cognitive pipelines.</p>
+<h4 id="blk-17903">Not communications infrastructure</h4>
+<p>[&amp;] does not replace MANET radios, satellite links, or tactical network protocols. It does not solve the bandwidth, latency, or jamming problems that constrain autonomous operations. It does benefit from its declarative architecture when communications fail — the governance model works offline — but it does not provide the communications themselves.</p>
+<h4 id="blk-17905">Not a targeting system</h4>
+<p>[&amp;] does not compute firing solutions, weapon-target pairings, or ballistic trajectories. TITAN and similar systems handle targeting. [&amp;]'s <code>&amp;reason.deliberate</code> capability evaluates whether an engagement is appropriate under governance constraints — a cognitive and governance function, not a fire control function.</p>
+<h4 id="blk-17907">Not FPV drone control</h4>
+<p>First-person-view combat drones are human-piloted with no autonomous cognition. They do not need a cognitive architecture. [&amp;] applies to autonomous and semi-autonomous systems, not teleoperated ones.</p>
+<h3 id="blk-17909">9. Platform applicability</h3>
+<p>Not every military autonomous system benefits equally from [&amp;]. The protocol is most valuable where autonomous cognition and governance are both present and critical.</p>
+<table><thead><tr><th>System</th><th>Autonomy Level</th><th>[&amp;] Relevance</th><th>Why</th></tr></thead><tbody><tr><td><strong>RCV-Medium</strong></td><td>Level 3 (supervised autonomous)</td><td><strong>High</strong></td><td>All five primitives active; governance is engagement-critical; designed for MUM-T</td></tr><tr><td><strong>RCV-Light</strong></td><td>Level 2-3</td><td><strong>High</strong></td><td>Armed scout role requires spatial reasoning + engagement governance</td></tr><tr><td><strong>Drone swarms</strong></td><td>Level 3-4</td><td><strong>High</strong></td><td>κ-driven swarm governance; multi-vehicle deliberation; disconnected ops</td></tr><tr><td><strong>M1E3 (as MUM-T hub)</strong></td><td>N/A (manned)</td><td><strong>Medium</strong></td><td>Orchestration declaration for supervised unmanned assets</td></tr><tr><td><strong>Loitering munitions</strong> (Switchblade 600)</td><td>Level 2</td><td><strong>Medium</strong></td><td>Governance constraints on terminal engagement; simpler cognitive needs</td></tr><tr><td><strong>Recon UAS</strong> (SRR program)</td><td>Level 2</td><td><strong>Low-Medium</strong></td><td>Primarily ISR; <code>&amp;space</code> and <code>&amp;time</code> useful, <code>&amp;reason.deliberate</code> less critical</td></tr><tr><td><strong>Counter-UAS</strong> (Coyote)</td><td>Level 3 (defensive)</td><td><strong>Low</strong></td><td>Time-critical intercept; reaction speed &gt; deliberation depth</td></tr><tr><td><strong>Perimeter robots</strong> (Ghost V60)</td><td>Level 2</td><td><strong>Low</strong></td><td>Patrol + alert; governance model is simple; fewer competing constraints</td></tr><tr><td><strong>FPV drones</strong></td><td>Level 1 (teleoperated)</td><td><strong>None</strong></td><td>No autonomous cognition</td></tr><tr><td><strong>Logistics robots</strong></td><td>Level 2-3</td><td><strong>Low</strong></td><td>Navigation autonomy but no engagement governance</td></tr></tbody></table>
+<p>The pattern: [&amp;] value increases with autonomy level × governance complexity × number of simultaneously active cognitive primitives.</p>
+<h3 id="blk-17957">10. The provenance requirement</h3>
+<p>Military autonomous systems will face legal and ethical scrutiny for every engagement decision. The question &quot;why did the system do that?&quot; will be asked by JAG officers, congressional committees, and international bodies.</p>
+<p>[&amp;]'s hash-linked provenance chains provide a structured answer:</p>
+<pre><code>provenance_record_1:
+  capability: &quot;&amp;time.anomaly&quot;
+  operation: &quot;detect&quot;
+  input_hash: &quot;sha256:a3f8...&quot;
+  output_hash: &quot;sha256:7c2e...&quot;
+  timestamp: &quot;2026-03-24T14:23:07Z&quot;
+  result: &quot;anomaly_detected: vehicle_movement_deviation&quot;
+
+provenance_record_2:
+  capability: &quot;&amp;memory.graph&quot;
+  operation: &quot;enrich&quot;
+  parent_hash: &quot;sha256:7c2e...&quot;
+  input_hash: &quot;sha256:7c2e...&quot;
+  output_hash: &quot;sha256:9b1d...&quot;
+  result: &quot;enriched_with: known_hostile_unit_marker&quot;
+
+provenance_record_3:
+  capability: &quot;&amp;reason.deliberate&quot;
+  operation: &quot;recommend_action&quot;
+  parent_hash: &quot;sha256:9b1d...&quot;
+  input_hash: &quot;sha256:9b1d...&quot;
+  output_hash: &quot;sha256:4e5f...&quot;
+  governance_check: {
+    &quot;hard_constraints_satisfied&quot;: true,
+    &quot;soft_constraints_applied&quot;: [&quot;prefer_non_lethal&quot;],
+    &quot;confidence&quot;: 0.91,
+    &quot;escalation_triggered&quot;: false
+  }
+  result: &quot;recommend: observe_and_track&quot;</code></pre>
+<p>Each record is hash-linked to its predecessor. The chain is tamper-evident. It can be replayed, audited, and presented as evidence that the system operated within its constraint envelope. This is not logging — it is a protocol-level requirement for explainable autonomous action.</p>
+<h3 id="blk-17962">Summary</h3>
+<p>Autonomous military systems are the canonical [&amp;] use case because they uniquely require:</p>
+<ol><li><p><strong>All six capability primitives simultaneously</strong> — memory, reasoning, time, space, body, and governance are each survival-critical</p></li><li><p><strong>Governance as a structural requirement</strong> — not optional, not aspirational, legally mandated</p></li><li><p><strong>Disconnected operations</strong> — the governance model must work without network connectivity</p></li><li><p><strong>Multi-vehicle coordination</strong> — κ-driven topology governance for swarms and MUM-T</p></li><li><p><strong>Full auditability</strong> — every decision must be explainable after the fact</p></li><li><p><strong>Graceful autonomy scaling</strong> — from tight supervision to high autonomy as trust increases</p></li></ol>
+<p>The protocol does not replace vehicle control stacks, sensor processing, communications infrastructure, or targeting systems. It occupies the cognitive composition layer between &quot;what do I know&quot; and &quot;what should I do&quot; — and it makes that layer explicit, typed, governable, and auditable.</p>
+<p>That is the missing layer for autonomous systems.</p>
+<p><em>[&amp;] Ampersand Box Design · ampersandboxdesign.com · Apache 2.0</em></p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/use-cases-autonomous-systems.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-17715" class="lvl2">Why autonomous vehicles and drones</a><a href="#blk-17718" class="lvl2">1. Where [&amp;] sits in the autonomy stack</a><a href="#blk-17723" class="lvl2">2. Why all six primitives are load-bearing</a><a href="#blk-17727" class="lvl3">&amp;memory.graph — operational picture as agent memory</a><a href="#blk-17731" class="lvl3">&amp;time.anomaly — threat detection through temporal intelligence</a><a href="#blk-17734" class="lvl3">&amp;space — survival through spatial reasoning</a><a href="#blk-17748" class="lvl3">&amp;govern — telemetry, identity, and escalation as infrastructure</a><a href="#blk-17752" class="lvl3">&amp;reason.deliberate — engagement decisions under governance</a><a href="#blk-17756" class="lvl2">3. Governance as constraint envelope</a><a href="#blk-17758" class="lvl3">DoD autonomy levels → [&amp;] governance blocks</a><a href="#blk-17772" class="lvl3">Hard constraints as rules of engagement</a><a href="#blk-17776" class="lvl3">Soft constraints as tactical preferences</a><a href="#blk-17779" class="lvl3">Escalation as the human-machine handoff</a><a href="#blk-17783" class="lvl2">4. The disconnected operations problem</a><a href="#blk-17807" class="lvl2">5. Swarm governance through κ</a><a href="#blk-17809" class="lvl3">The topology-driven answer</a><a href="#blk-17817" class="lvl3">Why this adapts in real-time</a><a href="#blk-17828" class="lvl3">The engagement coordination example</a><a href="#blk-17839" class="lvl2">6. Manned-unmanned teaming (MUM-T)</a><a href="#blk-17842" class="lvl3">The composition problem</a><a href="#blk-17847" class="lvl3">Supervisory ratio</a><a href="#blk-17860" class="lvl2">7. The Palantir integration</a><a href="#blk-17862" class="lvl3">What Palantir provides</a><a href="#blk-17874" class="lvl3">What [&amp;] provides</a><a href="#blk-17884" class="lvl3">The integration surface</a><a href="#blk-17888" class="lvl3">What neither system does alone</a><a href="#blk-17897" class="lvl2">8. What [&amp;] explicitly does not do</a><a href="#blk-17899" class="lvl3">Not vehicle control</a><a href="#blk-17901" class="lvl3">Not sensor processing</a><a href="#blk-17903" class="lvl3">Not communications infrastructure</a><a href="#blk-17905" class="lvl3">Not a targeting system</a><a href="#blk-17907" class="lvl3">Not FPV drone control</a><a href="#blk-17909" class="lvl2">9. Platform applicability</a><a href="#blk-17957" class="lvl2">10. The provenance requirement</a><a href="#blk-17962" class="lvl2">Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/use-cases-industry-verticals.md/">Industry Verticals: Where All Six Primitives Compose</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/CC2-capability-composition.md/">[&amp;] / CC2 — Capability Composition, v2 (Coalitional)</a><a href="/AmpersandBoxDesign/docs/COMPOSE_RUNTIME.md/">The Compose Runtime — CC2 compose, made authorable (design note)</a><a href="/AmpersandBoxDesign/docs/UMBRELLA.md/">The [&amp;] Umbrella — one stack: declare → … → observe</a><a href="/AmpersandBoxDesign/docs/architecture.md/">Architecture Guide</a><a href="/AmpersandBoxDesign/docs/comparison-table.md/">[&amp;] vs MCP vs A2A vs DALIA vs ACP</a><a href="/AmpersandBoxDesign/docs/competitive-landscape.md/">Competitive Landscape: Machine Cognition</a><a href="/AmpersandBoxDesign/docs/ecosystem-overview.md/">[&amp;] Ecosystem Overview — How Everything Ties Together</a><a href="/AmpersandBoxDesign/docs/faq.md/">FAQ</a><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/positioning.md/">The Missing Layer: Capability Composition in the Agent Protocol Stack</a><a href="/AmpersandBoxDesign/docs/quickstart.md/">Five-Minute Quickstart (Elixir Reference CLI)</a><a href="/AmpersandBoxDesign/docs/research.md/">Research Overview</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieralxg3irpwtyv5tpzuhlvhuiijod7o3isvvlu4stbjn4pj46xvbixa</div></div></div>
+</div></div>
+</body></html>

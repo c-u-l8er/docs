@@ -1,0 +1,181 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Graphonomous v0.3 — P1 Implementation Prompt (Week 3-4) · graphonomous · Ampersand Box</title>
+<meta name="description" content="P0 must be complete before starting P1. Verify:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/prompts/CONTINUAL_LEARNING_P1_PROMPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Graphonomous v0.3 — P1 Implementation Prompt (Week 3-4)">
+<meta property="og:description" content="P0 must be complete before starting P1. Verify:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/prompts/CONTINUAL_LEARNING_P1_PROMPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graphonomous v0.3 — P1 Implementation Prompt (Week 3-4)","name":"Graphonomous v0.3 — P1 Implementation Prompt (Week 3-4)","description":"P0 must be complete before starting P1. Verify:","url":"https://docs.ampersandboxdesign.com/graphonomous/prompts/CONTINUAL_LEARNING_P1_PROMPT.md/","identifier":"bagaaierayhb4scvmrajmnglcp3cnmipus76fgl7bxe2ixhrcntdyzvwkb37q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Prerequisites"},{"@type":"WebPageElement","name":"Session Goal"},{"@type":"WebPageElement","name":"Active Goal"},{"@type":"WebPageElement","name":"Capability 4: Two-Phase Retrieval (2 days)"},{"@type":"WebPageElement","name":"What it does"},{"@type":"WebPageElement","name":"Research basis"},{"@type":"WebPageElement","name":"Schema migration"},{"@type":"WebPageElement","name":"File: graphonomous/lib/graphonomous/retriever.ex"},{"@type":"WebPageElement","name":"File: graphonomous/lib/graphonomous/learner.ex"},{"@type":"WebPageElement","name":"File: graphonomous/lib/graphonomous/consolidator.ex"},{"@type":"WebPageElement","name":"Tests"},{"@type":"WebPageElement","name":"Capability 5: Simplified Forgetting (3 days)"},{"@type":"WebPageElement","name":"What it does"},{"@type":"WebPageElement","name":"Research basis"},{"@type":"WebPageElement","name":"Schema migration"},{"@type":"WebPageElement","name":"New file: graphonomous/lib/graphonomous/forgetter.ex"},{"@type":"WebPageElement","name":"New MCP tools (3)"},{"@type":"WebPageElement","name":"File: graphonomous/lib/graphonomous/consolidator.ex"},{"@type":"WebPageElement","name":"File: graphonomous/lib/graphonomous/retriever.ex"},{"@type":"WebPageElement","name":"File: graphonomous/lib/graphonomous/attention.ex"},{"@type":"WebPageElement","name":"Tests"},{"@type":"WebPageElement","name":"Capability 6: GraphMemBench Phase 1 (3 days)"},{"@type":"WebPageElement","name":"What it does"},{"@type":"WebPageElement","name":"Implementation"},{"@type":"WebPageElement","name":"Capability 7: LongMemEval Re-benchmark (1 day)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/graphonomous/prompts/"},{"@type":"ListItem","position":4,"name":"CONTINUAL_LEARNING_P1_PROMPT.md","item":"https://docs.ampersandboxdesign.com/graphonomous/prompts/CONTINUAL_LEARNING_P1_PROMPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/prompts/CONTINUAL_LEARNING_P1_PROMPT.md</span>
+
+</div></div>
+<div class="lead">P0 must be complete before starting P1. Verify:</div>
+<div class="prose"><h1 id="blk-70284">Graphonomous v0.3 — P1 Implementation Prompt (Week 3-4)</h1>
+<h3 id="blk-70285">Prerequisites</h3>
+<p>P0 must be complete before starting P1. Verify:</p>
+<ul><li><p>[ ] <code>mix test</code> passes (240+ existing + new P0 tests)</p></li><li><p>[ ] kappa &gt; 0 appears on at least some retrieval queries</p></li><li><p>[ ] <code>BeliefRevision</code> module exists with <code>expand/revise/contract/detect_contradictions</code></p></li><li><p>[ ] Consolidator Stage 4.5 (conflict resolution) is operational</p></li><li><p>[ ] <code>:superseded_by</code> edge type works</p></li></ul>
+<h3 id="blk-70298">Session Goal</h3>
+<p>Implement P1 capabilities: <strong>two-phase retrieval</strong> (Q-value utility scoring), <strong>simplified forgetting</strong> (budget-aware hybrid pruning + GDPR hard delete), <strong>GraphMemBench Phase 1</strong> (40 scenarios), and <strong>LongMemEval re-benchmark</strong>.</p>
+<h3 id="blk-70300">Active Goal</h3>
+<p>Retrieve and update: <code>goal_ae39998e19f363c1519679b15d24744d</code></p>
+<h3 id="blk-70302">Capability 4: Two-Phase Retrieval (2 days)</h3>
+<h4 id="blk-70303">What it does</h4>
+<p>Adds a second ranking phase to retrieval: after semantic similarity scoring, re-rank by Q-value (outcome utility). Nodes that have historically contributed to successful outcomes rank higher; nodes that led to failures rank lower.</p>
+<h4 id="blk-70305">Research basis</h4>
+<p>MemRL (arxiv 2601.03192) demonstrates semantic + utility outperforms semantic-only. We use Bayesian updates instead of RL training — simpler, interpretable, already in the codebase.</p>
+<h4 id="blk-70307">Schema migration</h4>
+<pre data-lang="sql"><code>ALTER TABLE nodes ADD COLUMN q_value REAL DEFAULT 0.5;
+ALTER TABLE nodes ADD COLUMN q_update_count INTEGER DEFAULT 0;</code></pre>
+<h4 id="blk-70309">File: <code>graphonomous/lib/graphonomous/retriever.ex</code></h4>
+<p>After existing ranking pipeline, add Phase 2:</p>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> utility_rerank(ranked, opts) <span class="t-kw">do</span>
+  alpha = <span class="t-type">Keyword</span>.get(opts, <span class="t-atom">:utility_weight</span>, <span class="t-num">0.3</span>)
+
+  ranked
+  |&gt; <span class="t-type">Enum</span>.map(<span class="t-kw">fn</span> entry -&gt;
+    q = <span class="t-type">Store</span>.get_q_value(entry.node_id) || <span class="t-num">0.5</span>
+    blended = (<span class="t-num">1.0</span> - alpha) * entry.score + alpha * q
+    %{entry | score: blended, metadata: <span class="t-type">Map</span>.put(entry.metadata || %{}, <span class="t-atom">:utility</span>, q)}
+  <span class="t-kw">end</span>)
+  |&gt; <span class="t-type">Enum</span>.sort_by(&amp; &amp;<span class="t-num">1</span>.score, <span class="t-atom">:desc</span>)
+<span class="t-kw">end</span></code></pre>
+<p>Call <code>utility_rerank/2</code> after the existing scoring in the retrieval pipeline. Skip when <code>q_update_count == 0</code> for all candidates (no outcome data yet — avoids changing behavior until outcomes exist).</p>
+<h4 id="blk-70313">File: <code>graphonomous/lib/graphonomous/learner.ex</code></h4>
+<p>In <code>update_node_from_outcome/3</code>, after updating confidence, also update Q-value:</p>
+<pre data-lang="elixir"><code>q_learning_rate = <span class="t-num">0.3</span>  <span class="t-comment"># Faster than confidence learning rate (0.2)</span>
+reward = <span class="t-kw">case</span> status <span class="t-kw">do</span>
+  <span class="t-atom">:success</span> -&gt; <span class="t-num">1.0</span>
+  <span class="t-atom">:partial_success</span> -&gt; <span class="t-num">0.65</span>
+  <span class="t-atom">:failure</span> -&gt; <span class="t-num">0.0</span>
+  <span class="t-atom">:timeout</span> -&gt; <span class="t-num">0.25</span>
+<span class="t-kw">end</span>
+
+new_q = old_q + q_learning_rate * (reward - old_q)
+<span class="t-type">Store</span>.update_q_value(node_id, new_q, q_update_count + <span class="t-num">1</span>)</code></pre>
+<h4 id="blk-70316">File: <code>graphonomous/lib/graphonomous/consolidator.ex</code></h4>
+<p>In Stage 1 (decay), decay Q-values at HALF the confidence decay rate:</p>
+<pre data-lang="elixir"><code>q_decay = node.decay_rate * <span class="t-num">0.5</span>
+new_q = node.q_value * (<span class="t-num">1.0</span> - q_decay)</code></pre>
+<h4 id="blk-70319">Tests</h4>
+<ul><li><p>Store 10 nodes. Mark 3 as causal in successful outcome, 2 in failed outcome. Verify re-ranking promotes successful nodes.</p></li><li><p>Verify Q-values don't affect ranking when no outcomes exist (q_update_count == 0).</p></li><li><p>Verify Q-value decay is slower than confidence decay.</p></li></ul>
+<h3 id="blk-70327">Capability 5: Simplified Forgetting (3 days)</h3>
+<h4 id="blk-70328">What it does</h4>
+<p>Two forgetting policies (not six):</p>
+<ol><li><p><strong>Budget-aware hybrid pruning</strong> — combines LRU + priority-decay. Triggers when node count exceeds <code>max_nodes</code>. Scores each node: <code>priority = confidence * recency_factor * (1 + log(access_count + 1))</code>. Lowest-priority nodes forgotten first.</p></li><li><p><strong>Governance-gated hard delete</strong> — UtU-style constant-time cascade deletion. Severs all edges, deletes node. Audit-logged. For GDPR compliance.</p></li></ol>
+<h4 id="blk-70335">Research basis</h4>
+<ul><li><p>FiFA (arxiv 2512.12856): hybrid policy achieves 0.911 composite score. LRU + priority-decay are the two most effective components.</p></li><li><p>UtU (arxiv 2402.10695): constant-time graph unlearning via edge unlinking, 97.3% privacy protection.</p></li></ul>
+<h4 id="blk-70341">Schema migration</h4>
+<pre data-lang="sql"><code>ALTER TABLE nodes ADD COLUMN forgotten_at TEXT;
+
+CREATE TABLE IF NOT EXISTS forgetting_config (
+  id TEXT PRIMARY KEY DEFAULT 'default',
+  policy TEXT NOT NULL DEFAULT 'hybrid',
+  max_nodes INTEGER DEFAULT 10000,
+  max_age_hours INTEGER DEFAULT 720,
+  updated_at TEXT NOT NULL
+);</code></pre>
+<h4 id="blk-70343">New file: <code>graphonomous/lib/graphonomous/forgetter.ex</code></h4>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Graphonomous.Forgetter</span> <span class="t-kw">do</span>
+  <span class="t-attr">@moduledoc</span> <span class="t-string">&quot;&quot;&quot;
+  Policy-driven intentional forgetting with governance integration.
+  Two policies: hybrid pruning (LRU + priority-decay) and GDPR hard delete.
+  &quot;&quot;&quot;</span>
+
+  <span class="t-attr">@type</span> forget_mode :: <span class="t-atom">:soft</span> | <span class="t-atom">:hard</span> | <span class="t-atom">:cascade</span>
+
+  <span class="t-kw">def</span> forget(node_id, mode \\ <span class="t-atom">:soft</span>, opts \\ [])
+  <span class="t-comment"># :soft — set forgotten_at timestamp, exclude from retrieval, keep structure</span>
+  <span class="t-comment"># :hard — delete node + all edges (UtU constant-time unlink)</span>
+  <span class="t-comment"># :cascade — hard delete + propagate to nodes whose ONLY support is this node</span>
+
+  <span class="t-kw">def</span> forget_by_policy(policy \\ <span class="t-atom">:hybrid</span>, opts \\ [])
+  <span class="t-comment"># :hybrid — score all nodes by priority, forget lowest until under max_nodes</span>
+  <span class="t-comment"># Returns {forgotten_count, surviving_count}</span>
+
+  <span class="t-kw">def</span> gdpr_erase(node_id)
+  <span class="t-comment"># Hard delete with audit record. No recovery. Requires OS-006 act-level autonomy.</span>
+
+  <span class="t-kw">def</span> candidates(policy \\ <span class="t-atom">:hybrid</span>, opts \\ [])
+  <span class="t-comment"># Dry run: return nodes that WOULD be forgotten, sorted by priority ascending</span>
+
+  <span class="t-kw">def</span> priority_score(node) <span class="t-kw">do</span>
+    recency = recency_factor(node.access_recency)  <span class="t-comment"># 1.0 for recent, decays to 0.0</span>
+    confidence = node.confidence
+    access = <span class="t-num">1.0</span> + <span class="t-atom">:math</span>.log(node.access_count + <span class="t-num">1</span>)
+    connectivity = edge_count(node.id) / max_edge_count()  <span class="t-comment"># 0.0 to 1.0</span>
+
+    confidence * recency * access * (<span class="t-num">1.0</span> + connectivity)
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-70345">New MCP tools (3)</h4>
+<ul><li><p><code>forget_node</code> — <code>{node_id, mode: &quot;soft&quot;|&quot;hard&quot;|&quot;cascade&quot;, reason: string}</code></p></li><li><p><code>forget_by_policy</code> — <code>{policy: &quot;hybrid&quot;, dry_run: boolean, max_nodes: integer}</code></p></li><li><p><code>gdpr_erase</code> — <code>{node_id}</code> — hard delete with audit trail</p></li></ul>
+<h4 id="blk-70353">File: <code>graphonomous/lib/graphonomous/consolidator.ex</code></h4>
+<p>Replace Stage 2 (prune weak nodes) with:</p>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> stage_prune_nodes(state) <span class="t-kw">do</span>
+  config = <span class="t-type">Forgetter</span>.get_config()
+  node_count = <span class="t-type">Store</span>.count_nodes()
+
+  <span class="t-kw">if</span> node_count &gt; config.max_nodes <span class="t-kw">do</span>
+    {<span class="t-atom">:ok</span>, result} = <span class="t-type">Forgetter</span>.forget_by_policy(<span class="t-atom">:hybrid</span>, max_nodes: config.max_nodes)
+    emit_telemetry(<span class="t-atom">:pruned_nodes</span>, %{count: result.forgotten_count, policy: <span class="t-atom">:hybrid</span>})
+  <span class="t-kw">else</span>
+    <span class="t-comment"># Fall back to existing confidence threshold pruning</span>
+    existing_prune_logic(state)
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-70356">File: <code>graphonomous/lib/graphonomous/retriever.ex</code></h4>
+<p>Filter out soft-forgotten nodes in retrieval:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># In the retrieval query, add: WHERE forgotten_at IS NULL</span></code></pre>
+<h4 id="blk-70359">File: <code>graphonomous/lib/graphonomous/attention.ex</code></h4>
+<p>Add memory pressure detection to survey:</p>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> check_memory_pressure() <span class="t-kw">do</span>
+  config = <span class="t-type">Forgetter</span>.get_config()
+  count = <span class="t-type">Store</span>.count_nodes()
+  <span class="t-kw">if</span> count &gt; config.max_nodes * <span class="t-num">0.9</span> <span class="t-kw">do</span>
+    %{type: <span class="t-atom">:memory_pressure</span>, severity: <span class="t-atom">:warning</span>, node_count: count, max: config.max_nodes}
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-70362">Tests</h4>
+<ul><li><p>Fill graph with 500 nodes of varying confidence/recency/access. Run hybrid forgetting with max_nodes=200. Verify high-priority nodes survive.</p></li><li><p>Test GDPR erase removes node + all edges completely.</p></li><li><p>Test soft forget excludes from retrieval but preserves structure.</p></li><li><p>Test cascade forget propagates to orphaned dependents.</p></li><li><p>Test retrieval filters out forgotten nodes.</p></li></ul>
+<h3 id="blk-70374">Capability 6: GraphMemBench Phase 1 (3 days)</h3>
+<h4 id="blk-70375">What it does</h4>
+<p>40 test scenarios across 5 categories (8 each) validating P0+P1 capabilities:</p>
+<p><strong>Category 1: Kappa Activation (8 scenarios)</strong></p>
+<ul><li><p>Store nodes with mutual references → verify kappa &gt;= 1</p></li><li><p>Store contradicting facts → verify <code>:contradicts</code> edges form SCC</p></li><li><p>Retrieve with expanded topology window → verify neighbor inclusion</p></li><li><p>Verify semantic back-references create reverse edges</p></li><li><p>Test kappa computation on 2-node, 3-node, and N-node SCCs</p></li><li><p>Test that kappa=0 fast path still works for acyclic subgraphs</p></li><li><p>Test deliberation triggers when kappa &gt; 0</p></li><li><p>End-to-end: ingest file pair with mutual imports → retrieve → verify kappa &gt; 0</p></li></ul>
+<p><strong>Category 2: Belief Revision (8 scenarios)</strong></p>
+<ul><li><p>Expand: store new belief, no contradiction → clean expansion</p></li><li><p>Revise: store contradicting belief → verify supersedes edge + confidence propagation</p></li><li><p>Contract: remove belief → verify dependent confidence reduction</p></li><li><p>Detect contradictions via semantic similarity</p></li><li><p>Detect contradictions via explicit <code>:contradicts</code> edges</p></li><li><p>Revision record created with correct fields</p></li><li><p>Pluggable hook receives contradiction notification</p></li><li><p>Chain revision: A superseded by B superseded by C → verify provenance chain</p></li></ul>
+<p><strong>Category 3: Conflict-Aware Consolidation (8 scenarios)</strong></p>
+<ul><li><p>High-similarity, divergent-confidence pair tagged during retrieval</p></li><li><p>Conflict resolved by temporal heuristic (newer wins)</p></li><li><p>Conflict resolved by evidence heuristic (more outcomes wins)</p></li><li><p>Unresolved conflict creates <code>:contradicts</code> edges</p></li><li><p>Unresolved conflict escalates to attention</p></li><li><p>Stage 4.5 runs between strengthen and merge</p></li><li><p>Conflict resolution doesn't interfere with Stage 5 merge (0.95 threshold)</p></li><li><p>Multiple conflicts in one consolidation cycle</p></li></ul>
+<p><strong>Category 4: Two-Phase Retrieval (8 scenarios)</strong></p>
+<ul><li><p>Q-value updates from successful outcome increase ranking</p></li><li><p>Q-value updates from failed outcome decrease ranking</p></li><li><p>No Q-value effect when q_update_count == 0 for all candidates</p></li><li><p>Blended scoring with alpha=0.3</p></li><li><p>Q-value decay is half confidence decay rate</p></li><li><p>High-confidence but low-utility node ranks below high-utility node</p></li><li><p>Retrieve same query before and after outcome learning → verify rank change</p></li><li><p>nDCG improvement after 5 outcome cycles</p></li></ul>
+<p><strong>Category 5: Intentional Forgetting (8 scenarios)</strong></p>
+<ul><li><p>Soft forget excludes from retrieval</p></li><li><p>Hard forget removes node + edges</p></li><li><p>Cascade forget propagates to orphaned dependents</p></li><li><p>GDPR erase leaves no trace</p></li><li><p>Budget-aware hybrid pruning respects max_nodes</p></li><li><p>Priority scoring favors high-confidence, recent, connected nodes</p></li><li><p>Forgotten nodes don't appear in topology analysis</p></li><li><p>Memory pressure triggers forgetting in attention survey</p></li></ul>
+<h4 id="blk-70467">Implementation</h4>
+<p>New file: <code>graphonomous/lib/mix/tasks/benchmark/capability_spec.ex</code></p>
+<p>Follow the pattern in <code>lib/mix/tasks/benchmark/longmemeval.ex</code>. Each category is a module with <code>run/1</code> that returns <code>{passed, failed, skipped}</code>. Results written to <code>benchmark_results/capability_spec.json</code>.</p>
+<p>Run: <code>mix benchmark.capability_spec</code></p>
+<h4 id="blk-70471">Capability 7: LongMemEval Re-benchmark (1 day)</h4>
+<p>After two-phase retrieval is implemented:</p>
+<pre data-lang="bash"><code><span class="t-kw">source</span> .envrc &amp;&amp; mix benchmark.longmemeval<span class="t-flag"> --split</span> oracle<span class="t-flag"> --neural</span><span class="t-flag"> --limit</span> <span class="t-undefined">100</span></code></pre>
+<p>Compare SHR against baseline 90.4%. The Q-value utility scoring should improve retrieval quality on &quot;knowledge updates&quot; questions (where outdated knowledge has low Q-values from failed outcomes).</p>
+<h3 id="blk-70475">Files to Read Before Coding</h3>
+<ol><li><p><code>graphonomous/lib/graphonomous/retriever.ex</code> — current scoring pipeline (add Phase 2)</p></li><li><p><code>graphonomous/lib/graphonomous/learner.ex</code> — <code>update_node_from_outcome</code> (add Q-value update)</p></li><li><p><code>graphonomous/lib/graphonomous/consolidator.ex</code> — Stage 2 prune logic (replace with Forgetter)</p></li><li><p><code>graphonomous/lib/graphonomous/store.ex</code> — SQL queries, migration system</p></li><li><p><code>graphonomous/lib/graphonomous/attention.ex</code> — survey pipeline (add memory pressure)</p></li><li><p><code>graphonomous/lib/mix/tasks/benchmark/longmemeval.ex</code> — benchmark pattern to follow</p></li><li><p><code>graphonomous/lib/graphonomous/mcp/server.ex</code> — MCP tool registration</p></li></ol>
+<h3 id="blk-70491">Verification Checklist</h3>
+<ul><li><p>[ ] <code>mix compile --warnings-as-errors</code> passes</p></li><li><p>[ ] <code>mix test</code> — all existing + P0 + P1 tests pass</p></li><li><p>[ ] <code>mix benchmark.capability_spec</code> — 40/40 scenarios pass</p></li><li><p>[ ] <code>mix benchmark.longmemeval --split oracle --neural --limit 100</code> — SHR &gt;= 90.4%</p></li><li><p>[ ] Q-value field populated after outcome learning</p></li><li><p>[ ] Forgetting respects budget (node count &lt;= max_nodes after policy run)</p></li><li><p>[ ] GDPR erase leaves no trace (node, edges, embeddings all removed)</p></li><li><p>[ ] Update goal progress to 0.5</p></li></ul></div>
+<p class="src"><a href="/#/graphonomous/prompts/CONTINUAL_LEARNING_P1_PROMPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-70285" class="lvl2">Prerequisites</a><a href="#blk-70298" class="lvl2">Session Goal</a><a href="#blk-70300" class="lvl2">Active Goal</a><a href="#blk-70302" class="lvl2">Capability 4: Two-Phase Retrieval (2 days)</a><a href="#blk-70303" class="lvl3">What it does</a><a href="#blk-70305" class="lvl3">Research basis</a><a href="#blk-70307" class="lvl3">Schema migration</a><a href="#blk-70309" class="lvl3">File: graphonomous/lib/graphonomous/retriever.ex</a><a href="#blk-70313" class="lvl3">File: graphonomous/lib/graphonomous/learner.ex</a><a href="#blk-70316" class="lvl3">File: graphonomous/lib/graphonomous/consolidator.ex</a><a href="#blk-70319" class="lvl3">Tests</a><a href="#blk-70327" class="lvl2">Capability 5: Simplified Forgetting (3 days)</a><a href="#blk-70328" class="lvl3">What it does</a><a href="#blk-70335" class="lvl3">Research basis</a><a href="#blk-70341" class="lvl3">Schema migration</a><a href="#blk-70343" class="lvl3">New file: graphonomous/lib/graphonomous/forgetter.ex</a><a href="#blk-70345" class="lvl3">New MCP tools (3)</a><a href="#blk-70353" class="lvl3">File: graphonomous/lib/graphonomous/consolidator.ex</a><a href="#blk-70356" class="lvl3">File: graphonomous/lib/graphonomous/retriever.ex</a><a href="#blk-70359" class="lvl3">File: graphonomous/lib/graphonomous/attention.ex</a><a href="#blk-70362" class="lvl3">Tests</a><a href="#blk-70374" class="lvl2">Capability 6: GraphMemBench Phase 1 (3 days)</a><a href="#blk-70375" class="lvl3">What it does</a><a href="#blk-70467" class="lvl3">Implementation</a><a href="#blk-70471" class="lvl3">Capability 7: LongMemEval Re-benchmark (1 day)</a><a href="#blk-70475" class="lvl2">Files to Read Before Coding</a><a href="#blk-70491" class="lvl2">Verification Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/prompts/BENCHMARK_EXPANSION_PROMPT.md/">Benchmark Expansion Prompt — Graphonomous v0.3.3+</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_P2_PROMPT.md/">Graphonomous v0.3 — P2 Implementation Prompt (Week 5+)</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_P3_PROMPT.md/">Graphonomous v0.3 — P3 Implementation Prompt (Week 6+)</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_V03_PROMPT.md/">Graphonomous v0.3 Continual Learning Implementation Prompt</a><a href="/graphonomous/prompts/KAPPA_QA_OPTIMIZATION_PROMPT.md/">κ-Topology QA &amp; SHR Optimization — Session Prompt</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierayhb4scvmrajmnglcp3cnmipus76fgl7bxe2ixhrcntdyzvwkb37q</div></div></div>
+</div></div>
+</body></html>

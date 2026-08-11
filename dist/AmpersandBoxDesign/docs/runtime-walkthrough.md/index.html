@@ -1,0 +1,432 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Runtime Walkthrough · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="This page shows what happens when a runtime processes an `ampersand.json` declaration from start to finish.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/runtime-walkthrough.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Runtime Walkthrough">
+<meta property="og:description" content="This page shows what happens when a runtime processes an `ampersand.json` declaration from start to finish.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/runtime-walkthrough.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Runtime Walkthrough","name":"Runtime Walkthrough","description":"This page shows what happens when a runtime processes an `ampersand.json` declaration from start to finish.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/runtime-walkthrough.md/","identifier":"bagaaieratq6vltd5krsdtgjcbk5hfdq3xpo6y7nj6t3phm5cb4ichlijrtma","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. What this walkthrough is"},{"@type":"WebPageElement","name":"2. A minimal declaration"},{"@type":"WebPageElement","name":"What the runtime sees immediately"},{"@type":"WebPageElement","name":"3. Step 1: schema validation"},{"@type":"WebPageElement","name":"What validation does not do yet"},{"@type":"WebPageElement","name":"4. Step 2: normalization and composition"},{"@type":"WebPageElement","name":"What normalization typically does"},{"@type":"WebPageElement","name":"Example CLI output"},{"@type":"WebPageElement","name":"5. Step 3: contract checking"},{"@type":"WebPageElement","name":"Conceptual pipeline"},{"@type":"WebPageElement","name":"What the runtime checks"},{"@type":"WebPageElement","name":"Example success output"},{"@type":"WebPageElement","name":"6. Step 4: provider resolution"},{"@type":"WebPageElement","name":"Explicit provider binding"},{"@type":"WebPageElement","name":"Automatic provider resolution"},{"@type":"WebPageElement","name":"About provider names in the docs"},{"@type":"WebPageElement","name":"7. Step 5: generation into downstream artifacts"},{"@type":"WebPageElement","name":"7.1 MCP generation"},{"@type":"WebPageElement","name":"Important constraint"},{"@type":"WebPageElement","name":"7.2 A2A generation"},{"@type":"WebPageElement","name":"8. Step 6: runtime execution and provenance emission"},{"@type":"WebPageElement","name":"9. What failure looks like"},{"@type":"WebPageElement","name":"Example failure output"},{"@type":"WebPageElement","name":"10. What governance does during runtime processing"},{"@type":"WebPageElement","name":"During validation"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"runtime-walkthrough.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/runtime-walkthrough.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/runtime-walkthrough.md</span>
+
+</div></div>
+<div class="lead">This page shows what happens when a runtime processes an `ampersand.json` declaration from start to finish.</div>
+<div class="prose"><h1 id="blk-15894">Runtime Walkthrough</h1>
+<p>This page shows what happens when a runtime processes an <a href="#/AmpersandBoxDesign/docs/architecture.md" data-link>`ampersand.json`</a> declaration from start to finish.</p>
+<p>The goal is to make the protocol operational, not just conceptual. The CLI flow shown here is reproducible in the reference implementation; for copy/paste setup steps and captured command output, see <a href="#/AmpersandBoxDesign/docs/quickstart.md" data-link>`quickstart.md`</a>.</p>
+<p>It answers practical questions such as:</p>
+<ul><li><p>what gets validated first</p></li><li><p>what gets normalized during composition</p></li><li><p>when providers are resolved</p></li><li><p>how governance and provenance are preserved</p></li><li><p>what generation into MCP and A2A artifacts looks like</p></li><li><p>what a failure looks like in CLI output</p></li></ul>
+<h3 id="blk-15911">1. What this walkthrough is</h3>
+<p>This is a <strong>reference workflow</strong> for an implementation of the [&amp;] Protocol.</p>
+<p>It is not a requirement that every runtime use the same CLI syntax or internal module layout. It <strong>is</strong> the intended lifecycle of the protocol:</p>
+<ol><li><p>declaration</p></li><li><p>validation</p></li><li><p>composition</p></li><li><p>contract checking</p></li><li><p>provider resolution</p></li><li><p>generation</p></li><li><p>execution-time provenance emission</p></li></ol>
+<p>In short:</p>
+<blockquote><p>declaration → validation → composition → resolution → generation</p></blockquote>
+<h3 id="blk-15932">2. A minimal declaration</h3>
+<p>Consider an infrastructure operations agent that needs:</p>
+<ul><li><p>graph-backed recall of prior incidents</p></li><li><p>anomaly detection over telemetry</p></li><li><p>fleet localization</p></li><li><p>argument-based reasoning under governance constraints</p></li></ul>
+<p>A declaration may look like this:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;infra-ops&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;instance&quot;</span>: <span class="t-string">&quot;infra-ops&quot;</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;time.anomaly&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;streams&quot;</span>: [<span class="t-string">&quot;cpu&quot;</span>, <span class="t-string">&quot;mem&quot;</span>, <span class="t-string">&quot;latency&quot;</span>]
+      }
+    },
+    <span class="t-key">&quot;&amp;space.fleet&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east-1&quot;</span>, <span class="t-string">&quot;us-west-2&quot;</span>, <span class="t-string">&quot;eu-central-1&quot;</span>]
+      }
+    },
+    <span class="t-key">&quot;&amp;reason.argument&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;governance&quot;</span>: <span class="t-string">&quot;constitutional&quot;</span>
+      }
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;do_not_recommend_destructive_action_without_human_review&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;prefer_reversible_remediation&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: [
+      <span class="t-string">&quot;confidence_below:0.75&quot;</span>,
+      <span class="t-string">&quot;cross_region_impact=true&quot;</span>
+    ]
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: {
+    <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;hash-linked&quot;</span>
+  }
+}</code></pre>
+<h4 id="blk-15945">What the runtime sees immediately</h4>
+<p>Before doing any execution, a runtime can already infer:</p>
+<ul><li><p>the declaration targets one agent: <code>infra-ops</code></p></li><li><p>four capability bindings are requested</p></li><li><p>provider identity is explicit rather than automatic</p></li><li><p>governance must survive the rest of the lifecycle</p></li><li><p>provenance is expected to be preserved in a hash-linked form</p></li></ul>
+<h3 id="blk-15958">3. Step 1: schema validation</h3>
+<p>The first step is structural validation.</p>
+<p>A CLI might expose that as (with reproducible command/output examples in <a href="#/AmpersandBoxDesign/docs/quickstart.md" data-link>`quickstart.md`</a>):</p>
+<pre><code>$ ampersand validate examples/infra-ops.ampersand.json
+✔ schema valid
+✔ agent id present
+✔ version present
+✔ capabilities object valid
+✔ governance object valid
+✔ provenance object valid</code></pre>
+<p>At this stage the runtime is checking things like:</p>
+<ul><li><p>required top-level fields exist</p></li><li><p>the capabilities object is well-formed</p></li><li><p>each capability entry matches the declaration schema</p></li><li><p>governance and provenance fields have valid shapes</p></li></ul>
+<h4 id="blk-15972">What validation does not do yet</h4>
+<p>Schema validation alone does <strong>not</strong> answer:</p>
+<ul><li><p>whether the chosen provider really supports the capability</p></li><li><p>whether capability combinations are semantically compatible</p></li><li><p>whether a pipeline between operations is type-safe</p></li><li><p>whether a provider can actually be launched in a target runtime</p></li></ul>
+<p>It only establishes that the declaration is structurally well-formed.</p>
+<h3 id="blk-15984">4. Step 2: normalization and composition</h3>
+<p>After schema validation, the runtime normalizes the capability set.</p>
+<p>This is where the protocol’s set-like semantics matter.</p>
+<h4 id="blk-15987">What normalization typically does</h4>
+<p>A runtime may:</p>
+<ul><li><p>canonicalize capability keys</p></li><li><p>normalize provider binding objects</p></li><li><p>sort capabilities into a stable internal order</p></li><li><p>collapse exact duplicates</p></li><li><p>surface incompatible duplicate bindings as conflicts</p></li></ul>
+<p>For the declaration above, the normalized internal shape may be represented like this:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;infra-ops&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: [
+    {
+      <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;&amp;memory.graph&quot;</span>,
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;instance&quot;</span>: <span class="t-string">&quot;infra-ops&quot;</span>
+      }
+    },
+    {
+      <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;&amp;reason.argument&quot;</span>,
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;governance&quot;</span>: <span class="t-string">&quot;constitutional&quot;</span>
+      }
+    },
+    {
+      <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;&amp;space.fleet&quot;</span>,
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east-1&quot;</span>, <span class="t-string">&quot;us-west-2&quot;</span>, <span class="t-string">&quot;eu-central-1&quot;</span>]
+      }
+    },
+    {
+      <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;&amp;time.anomaly&quot;</span>,
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;streams&quot;</span>: [<span class="t-string">&quot;cpu&quot;</span>, <span class="t-string">&quot;mem&quot;</span>, <span class="t-string">&quot;latency&quot;</span>]
+      }
+    }
+  ],
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;do_not_recommend_destructive_action_without_human_review&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;prefer_reversible_remediation&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: [
+      <span class="t-string">&quot;confidence_below:0.75&quot;</span>,
+      <span class="t-string">&quot;cross_region_impact=true&quot;</span>
+    ]
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: {
+    <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;hash-linked&quot;</span>
+  }
+}</code></pre>
+<p>The exact representation is runtime-specific. The important point is that composition produces a <strong>deterministic, normalized capability graph</strong>.</p>
+<h4 id="blk-16003">Example CLI output</h4>
+<p>The snippets below are illustrative of the same working commands demonstrated end-to-end in <a href="#/AmpersandBoxDesign/docs/quickstart.md" data-link>`quickstart.md`</a>, where actual captured JSON output is included.</p>
+<pre><code>$ ampersand compose examples/infra-ops.ampersand.json
+✔ normalized 4 capabilities
+✔ no duplicate bindings
+✔ no provider conflicts
+✔ governance preserved
+✔ provenance mode preserved</code></pre>
+<h3 id="blk-16006">5. Step 3: contract checking</h3>
+<p>Once the declaration is normalized, the runtime can check capability contracts.</p>
+<p>This is where the protocol moves from “well-shaped JSON” to “valid composition.”</p>
+<p>A runtime may verify:</p>
+<ul><li><p>the capability subtype exists in a known registry</p></li><li><p>the bound provider claims support for that subtype</p></li><li><p>required operations are available</p></li><li><p>declared or inferred pipelines are type-compatible</p></li><li><p>adjacency rules such as <code>accepts_from</code> and <code>feeds_into</code> are satisfied</p></li></ul>
+<h4 id="blk-16021">Conceptual pipeline</h4>
+<p>A common operational path for this agent might be:</p>
+<pre><code>stream_data
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;memory.graph.enrich()
+|&gt; &amp;space.fleet.enrich()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Important: <code>|&gt;</code> is used in the docs as a <strong>conceptual pipeline notation</strong>. It expresses ordered flow between capability operations. It is not, by itself, a required wire format for the protocol and it is not required to be literal CLI syntax.</p>
+<h4 id="blk-16025">What the runtime checks</h4>
+<p>For that pipeline, the runtime asks:</p>
+<ol><li><p>does <code>&amp;time.anomaly</code> support <code>detect</code></p></li><li><p>does <code>detect</code> emit a type that <code>&amp;memory.graph.enrich</code> accepts</p></li><li><p>does <code>&amp;memory.graph.enrich</code> emit a type that <code>&amp;space.fleet.enrich</code> accepts</p></li><li><p>does <code>&amp;space.fleet.enrich</code> emit a type that <code>&amp;reason.argument.evaluate</code> accepts</p></li><li><p>do the adjacency rules permit each transition</p></li></ol>
+<h4 id="blk-16038">Example success output</h4>
+<pre><code>$ ampersand check examples/infra-ops.ampersand.json --pipeline infra_ops
+✔ capability contracts loaded
+✔ provider support metadata loaded
+✔ &amp;time.anomaly.detect -&gt; &amp;memory.graph.enrich valid
+✔ &amp;memory.graph.enrich -&gt; &amp;space.fleet.enrich valid
+✔ &amp;space.fleet.enrich -&gt; &amp;reason.argument.evaluate valid
+✔ pipeline infra_ops is contract-safe</code></pre>
+<p>At this point the runtime knows that the declaration is not only valid in shape, but also meaningful as a composed system.</p>
+<h3 id="blk-16041">6. Step 4: provider resolution</h3>
+<p>Provider resolution answers:</p>
+<blockquote><p>Which implementation actually satisfies each declared capability?</p></blockquote>
+<p>There are two common cases.</p>
+<h4 id="blk-16046">Explicit provider binding</h4>
+<p>In the example declaration, every capability names a provider directly:</p>
+<ul><li><p><code>&amp;memory.graph</code> → <code>graphonomous</code></p></li><li><p><code>&amp;time.anomaly</code> → <code>ticktickclock</code></p></li><li><p><code>&amp;space.fleet</code> → <code>geofleetic</code></p></li><li><p><code>&amp;reason.argument</code> → <code>deliberatic</code></p></li></ul>
+<p>In that case, resolution is mostly verification:</p>
+<ul><li><p>is the provider known</p></li><li><p>does the provider advertise support for this subtype</p></li><li><p>are launch details or integration details available</p></li></ul>
+<h4 id="blk-16065">Automatic provider resolution</h4>
+<p>If a declaration uses <code>provider: &quot;auto&quot;</code>, a runtime would consult a registry and select a provider that satisfies the requested capability and constraints.</p>
+<p>For example:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;memory.graph&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+    <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;relationship-aware incident recall&quot;</span>
+  }
+}</code></pre>
+<p>A runtime might then produce:</p>
+<pre><code>$ ampersand resolve examples/infra-ops-auto.ampersand.json
+✔ found 2 candidate providers for &amp;memory.graph
+✔ selected graphonomous
+  reason: supports &amp;memory.graph, mcp_v1 transport metadata present, graph recall operations available</code></pre>
+<h4 id="blk-16071">About provider names in the docs</h4>
+<p>Provider names such as <code>graphonomous</code>, <code>deliberatic</code>, <code>ticktickclock</code>, and <code>geofleetic</code> are used throughout this documentation as <strong>illustrative example providers unless explicitly stated otherwise</strong>.</p>
+<p>Their purpose is to make capability/provider separation concrete in examples. They should not be read as a guarantee that those providers currently exist as public implementations.</p>
+<h3 id="blk-16074">7. Step 5: generation into downstream artifacts</h3>
+<p>After validation, composition, and provider resolution, the runtime can compile the declaration into downstream artifacts.</p>
+<p>This is where the protocol becomes operational.</p>
+<h3 id="blk-16077">7.1 MCP generation</h3>
+<p>A generator may emit an MCP-oriented configuration that groups capability bindings by provider and preserves enough provider information for a tool-facing runtime.</p>
+<p>An illustrative generated artifact might look like this:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;mcpServers&quot;</span>: {
+    <span class="t-key">&quot;graphonomous&quot;</span>: {
+      <span class="t-key">&quot;transport&quot;</span>: <span class="t-string">&quot;stdio&quot;</span>,
+      <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;graphonomous-mcp&quot;</span>,
+      <span class="t-key">&quot;args&quot;</span>: [<span class="t-string">&quot;serve&quot;</span>, <span class="t-string">&quot;--instance&quot;</span>, <span class="t-string">&quot;infra-ops&quot;</span>]
+    },
+    <span class="t-key">&quot;ticktickclock&quot;</span>: {
+      <span class="t-key">&quot;transport&quot;</span>: <span class="t-string">&quot;stdio&quot;</span>,
+      <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;ticktickclock-mcp&quot;</span>,
+      <span class="t-key">&quot;args&quot;</span>: [<span class="t-string">&quot;serve&quot;</span>, <span class="t-string">&quot;--streams&quot;</span>, <span class="t-string">&quot;cpu,mem,latency&quot;</span>]
+    },
+    <span class="t-key">&quot;geofleetic&quot;</span>: {
+      <span class="t-key">&quot;transport&quot;</span>: <span class="t-string">&quot;stdio&quot;</span>,
+      <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;geofleetic-mcp&quot;</span>,
+      <span class="t-key">&quot;args&quot;</span>: [<span class="t-string">&quot;serve&quot;</span>, <span class="t-string">&quot;--regions&quot;</span>, <span class="t-string">&quot;us-east-1,us-west-2,eu-central-1&quot;</span>]
+    },
+    <span class="t-key">&quot;deliberatic&quot;</span>: {
+      <span class="t-key">&quot;transport&quot;</span>: <span class="t-string">&quot;stdio&quot;</span>,
+      <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;deliberatic-mcp&quot;</span>,
+      <span class="t-key">&quot;args&quot;</span>: [<span class="t-string">&quot;serve&quot;</span>, <span class="t-string">&quot;--governance&quot;</span>, <span class="t-string">&quot;constitutional&quot;</span>]
+    }
+  }
+}</code></pre>
+<p>A CLI could report:</p>
+<pre><code>$ ampersand generate mcp examples/infra-ops.ampersand.json -o build/mcp.json
+✔ generated MCP configuration
+✔ 4 provider entries emitted
+✔ unresolved providers: 0</code></pre>
+<h4 id="blk-16083">Important constraint</h4>
+<p>A generator should only emit details that are actually known from the runtime or registry metadata. If launch details are unknown, the artifact should preserve that explicitly instead of inventing them.</p>
+<p>For example:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;mcpServers&quot;</span>: {
+    <span class="t-key">&quot;graphonomous&quot;</span>: {
+      <span class="t-key">&quot;transport&quot;</span>: <span class="t-string">&quot;unknown&quot;</span>,
+      <span class="t-key">&quot;status&quot;</span>: <span class="t-string">&quot;unresolved-launch-details&quot;</span>
+    }
+  }
+}</code></pre>
+<h3 id="blk-16087">7.2 A2A generation</h3>
+<p>A generator may also emit an A2A-style coordination artifact or agent card.</p>
+<p>An illustrative output could look like this:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;agent&quot;</span>: {
+    <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;infra-ops&quot;</span>,
+    <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+    <span class="t-key">&quot;skills&quot;</span>: [
+      <span class="t-string">&quot;memory.graph.recall&quot;</span>,
+      <span class="t-string">&quot;memory.graph.enrich&quot;</span>,
+      <span class="t-string">&quot;time.anomaly.detect&quot;</span>,
+      <span class="t-string">&quot;space.fleet.enrich&quot;</span>,
+      <span class="t-string">&quot;reason.argument.evaluate&quot;</span>
+    ],
+    <span class="t-key">&quot;capabilities&quot;</span>: [
+      <span class="t-string">&quot;&amp;memory.graph&quot;</span>,
+      <span class="t-string">&quot;&amp;time.anomaly&quot;</span>,
+      <span class="t-string">&quot;&amp;space.fleet&quot;</span>,
+      <span class="t-string">&quot;&amp;reason.argument&quot;</span>
+    ],
+    <span class="t-key">&quot;governance&quot;</span>: {
+      <span class="t-key">&quot;hard&quot;</span>: [
+        <span class="t-string">&quot;do_not_recommend_destructive_action_without_human_review&quot;</span>
+      ],
+      <span class="t-key">&quot;soft&quot;</span>: [
+        <span class="t-string">&quot;prefer_reversible_remediation&quot;</span>
+      ],
+      <span class="t-key">&quot;escalate_when&quot;</span>: [
+        <span class="t-string">&quot;confidence_below:0.75&quot;</span>,
+        <span class="t-string">&quot;cross_region_impact=true&quot;</span>
+      ]
+    },
+    <span class="t-key">&quot;provenance&quot;</span>: {
+      <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;hash-linked&quot;</span>
+    }
+  }
+}</code></pre>
+<p>And the CLI might show:</p>
+<pre><code>$ ampersand generate a2a examples/infra-ops.ampersand.json -o build/agent-card.json
+✔ generated A2A artifact
+✔ 5 skills published
+✔ governance metadata preserved
+✔ provenance metadata preserved</code></pre>
+<h3 id="blk-16093">8. Step 6: runtime execution and provenance emission</h3>
+<p>The protocol compiles declarations into downstream artifacts, but provenance becomes visible during execution.</p>
+<p>Suppose telemetry enters the system and the runtime executes the conceptual pipeline:</p>
+<pre><code>stream_data
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;memory.graph.enrich()
+|&gt; &amp;space.fleet.enrich()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>A provenance-aware runtime may emit records like:</p>
+<pre data-lang="json"><code>[
+  {
+    <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;time.anomaly&quot;</span>,
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+    <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;detect&quot;</span>,
+    <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-14T14:23:07Z&quot;</span>,
+    <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:1111aaaa&quot;</span>,
+    <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:2222bbbb&quot;</span>,
+    <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-lit">null</span>
+  },
+  {
+    <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;memory.graph&quot;</span>,
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+    <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;enrich&quot;</span>,
+    <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-14T14:23:08Z&quot;</span>,
+    <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:2222bbbb&quot;</span>,
+    <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:3333cccc&quot;</span>,
+    <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:2222bbbb&quot;</span>
+  },
+  {
+    <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;space.fleet&quot;</span>,
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+    <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;enrich&quot;</span>,
+    <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-14T14:23:09Z&quot;</span>,
+    <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:3333cccc&quot;</span>,
+    <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:4444dddd&quot;</span>,
+    <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:3333cccc&quot;</span>
+  },
+  {
+    <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;reason.argument&quot;</span>,
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+    <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;evaluate&quot;</span>,
+    <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-14T14:23:10Z&quot;</span>,
+    <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:4444dddd&quot;</span>,
+    <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:5555eeee&quot;</span>,
+    <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:4444dddd&quot;</span>
+  }
+]</code></pre>
+<p>This is why provenance is treated as a protocol concern rather than as optional logging.</p>
+<p>The declaration asked for provenance preservation. The runtime is now honoring that requirement at execution time.</p>
+<h3 id="blk-16101">9. What failure looks like</h3>
+<p>A useful walkthrough needs at least one failing example.</p>
+<p>Consider this invalid pipeline:</p>
+<pre><code>stream_data
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;reason.argument.evaluate()
+|&gt; &amp;memory.graph.enrich()</code></pre>
+<p>Assume:</p>
+<ul><li><p><code>&amp;time.anomaly.detect</code> outputs <code>anomaly_event</code></p></li><li><p><code>&amp;reason.argument.evaluate</code> outputs <code>decision_record</code></p></li><li><p><code>&amp;memory.graph.enrich</code> expects <code>incident_context</code> or <code>memory_context</code></p></li></ul>
+<p>The transition from <code>&amp;reason.argument.evaluate</code> to <code>&amp;memory.graph.enrich</code> may then be invalid.</p>
+<h4 id="blk-16114">Example failure output</h4>
+<pre><code>$ ampersand check examples/infra-ops-bad.ampersand.json --pipeline infra_ops_bad
+✔ capability contracts loaded
+✔ &amp;time.anomaly.detect -&gt; &amp;reason.argument.evaluate valid
+✖ &amp;reason.argument.evaluate -&gt; &amp;memory.graph.enrich invalid
+
+reason:
+  output type &quot;decision_record&quot; is not accepted by &amp;memory.graph.enrich
+  allowed input types: [&quot;incident_context&quot;, &quot;memory_context&quot;]
+
+exit status: 1</code></pre>
+<p>That kind of failure is exactly why the composition layer exists. The protocol allows the runtime to reject bad compositions before they become runtime bugs.</p>
+<h3 id="blk-16117">10. What governance does during runtime processing</h3>
+<p>Governance is declared early, but it influences more than one stage.</p>
+<h4 id="blk-16119">During validation</h4>
+<p>The runtime checks that governance fields are well-formed.</p>
+<h4 id="blk-16121">During generation</h4>
+<p>The runtime preserves governance metadata in generated artifacts so that downstream systems know what constraints travel with the agent.</p>
+<h4 id="blk-16123">During execution</h4>
+<p>The runtime or provider may enforce the declared constraints.</p>
+<p>For the example declaration, a decision flow might produce:</p>
+<pre><code>$ ampersnad run examples/infra-ops.ampersand.json --input sample-event.json
+…
+! escalation triggered
+  reason: cross_region_impact=true
+  action: require_human_review</code></pre>
+<p>The protocol does not require one universal enforcement engine. It requires governance intent to be <strong>declared portably</strong> so runtimes can preserve and apply it consistently.</p>
+<h3 id="blk-16128">11. Reference lifecycle summary</h3>
+<p>A compliant implementation should be understandable in terms of the following lifecycle:</p>
+<h4 id="blk-16130">Phase A: parse and validate</h4>
+<ul><li><p>read <code>ampersand.json</code></p></li><li><p>validate against the declaration schema</p></li><li><p>reject malformed declarations</p></li></ul>
+<h4 id="blk-16138">Phase B: normalize and compose</h4>
+<ul><li><p>canonicalize capability bindings</p></li><li><p>collapse exact duplicates</p></li><li><p>surface conflicts explicitly</p></li><li><p>preserve governance and provenance metadata</p></li></ul>
+<h4 id="blk-16148">Phase C: check semantics</h4>
+<ul><li><p>load contracts</p></li><li><p>load registry or provider support metadata</p></li><li><p>verify subtype support</p></li><li><p>verify pipeline compatibility when applicable</p></li></ul>
+<h4 id="blk-16158">Phase D: resolve providers</h4>
+<ul><li><p>confirm explicit providers</p></li><li><p>or select providers for <code>provider: &quot;auto&quot;</code></p></li></ul>
+<h4 id="blk-16164">Phase E: generate artifacts</h4>
+<ul><li><p>emit MCP configuration</p></li><li><p>emit A2A coordination artifacts</p></li><li><p>preserve unresolved details explicitly when they are unknown</p></li></ul>
+<h4 id="blk-16172">Phase F: execute with lineage</h4>
+<ul><li><p>run capability operations in the target runtime</p></li><li><p>emit provenance records according to the declaration</p></li><li><p>enforce or surface governance constraints</p></li></ul>
+<h3 id="blk-16180">12. What is normative and what is illustrative</h3>
+<p>This page includes both protocol expectations and implementation examples.</p>
+<h4 id="blk-16182">Normative at the protocol level</h4>
+<p>These ideas are central to the protocol model:</p>
+<ul><li><p>declarations are validated before generation</p></li><li><p>capability composition is distinct from execution</p></li><li><p>provider identity is separate from capability identity</p></li><li><p>contracts make composition checkable</p></li><li><p>governance and provenance travel with the declaration</p></li><li><p>downstream artifacts can be generated from a validated declaration</p></li></ul>
+<h4 id="blk-16197">Illustrative in this page</h4>
+<p>These details are examples rather than mandatory:</p>
+<ul><li><p>the exact CLI command names</p></li><li><p>the exact terminal output format</p></li><li><p>the internal normalized JSON shape</p></li><li><p>the specific provider names used in examples</p></li><li><p>the exact generated MCP command lines</p></li></ul>
+<p>That distinction matters. The protocol defines the lifecycle and artifact roles, not one single implementation UX.</p>
+<h3 id="blk-16211">13. Why this walkthrough matters</h3>
+<p>The most important idea in the protocol is not just that an agent can <em>declare</em> capabilities.</p>
+<p>It is that a declaration can be:</p>
+<ul><li><p>validated</p></li><li><p>normalized</p></li><li><p>checked</p></li><li><p>resolved</p></li><li><p>compiled</p></li><li><p>executed with lineage preserved</p></li></ul>
+<p>Without that lifecycle, <code>ampersand.json</code> would be only documentation. With that lifecycle, it becomes an operational source of truth for agent composition.</p>
+<h3 id="blk-16228">14. Short summary</h3>
+<p>A runtime processing the [&amp;] Protocol should be understandable as:</p>
+<ol><li><p><strong>validate the declaration</strong></p></li><li><p><strong>normalize the capability set</strong></p></li><li><p><strong>check contracts and pipeline compatibility</strong></p></li><li><p><strong>resolve providers</strong></p></li><li><p><strong>generate MCP and A2A artifacts</strong></p></li><li><p><strong>emit provenance and apply governance during execution</strong></p></li></ol>
+<p>That is how the protocol moves from architecture description to runtime behavior.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/runtime-walkthrough.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-15911" class="lvl2">1. What this walkthrough is</a><a href="#blk-15932" class="lvl2">2. A minimal declaration</a><a href="#blk-15945" class="lvl3">What the runtime sees immediately</a><a href="#blk-15958" class="lvl2">3. Step 1: schema validation</a><a href="#blk-15972" class="lvl3">What validation does not do yet</a><a href="#blk-15984" class="lvl2">4. Step 2: normalization and composition</a><a href="#blk-15987" class="lvl3">What normalization typically does</a><a href="#blk-16003" class="lvl3">Example CLI output</a><a href="#blk-16006" class="lvl2">5. Step 3: contract checking</a><a href="#blk-16021" class="lvl3">Conceptual pipeline</a><a href="#blk-16025" class="lvl3">What the runtime checks</a><a href="#blk-16038" class="lvl3">Example success output</a><a href="#blk-16041" class="lvl2">6. Step 4: provider resolution</a><a href="#blk-16046" class="lvl3">Explicit provider binding</a><a href="#blk-16065" class="lvl3">Automatic provider resolution</a><a href="#blk-16071" class="lvl3">About provider names in the docs</a><a href="#blk-16074" class="lvl2">7. Step 5: generation into downstream artifacts</a><a href="#blk-16077" class="lvl2">7.1 MCP generation</a><a href="#blk-16083" class="lvl3">Important constraint</a><a href="#blk-16087" class="lvl2">7.2 A2A generation</a><a href="#blk-16093" class="lvl2">8. Step 6: runtime execution and provenance emission</a><a href="#blk-16101" class="lvl2">9. What failure looks like</a><a href="#blk-16114" class="lvl3">Example failure output</a><a href="#blk-16117" class="lvl2">10. What governance does during runtime processing</a><a href="#blk-16119" class="lvl3">During validation</a><a href="#blk-16121" class="lvl3">During generation</a><a href="#blk-16123" class="lvl3">During execution</a><a href="#blk-16128" class="lvl2">11. Reference lifecycle summary</a><a href="#blk-16130" class="lvl3">Phase A: parse and validate</a><a href="#blk-16138" class="lvl3">Phase B: normalize and compose</a><a href="#blk-16148" class="lvl3">Phase C: check semantics</a><a href="#blk-16158" class="lvl3">Phase D: resolve providers</a><a href="#blk-16164" class="lvl3">Phase E: generate artifacts</a><a href="#blk-16172" class="lvl3">Phase F: execute with lineage</a><a href="#blk-16180" class="lvl2">12. What is normative and what is illustrative</a><a href="#blk-16182" class="lvl3">Normative at the protocol level</a><a href="#blk-16197" class="lvl3">Illustrative in this page</a><a href="#blk-16211" class="lvl2">13. Why this walkthrough matters</a><a href="#blk-16228" class="lvl2">14. Short summary</a></nav></div><div class="card"><div class="lab">links to</div><a href="/AmpersandBoxDesign/docs/architecture.md/">Architecture Guide</a><a href="/AmpersandBoxDesign/docs/quickstart.md/">Five-Minute Quickstart (Elixir Reference CLI)</a></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/CC2-capability-composition.md/">[&amp;] / CC2 — Capability Composition, v2 (Coalitional)</a><a href="/AmpersandBoxDesign/docs/COMPOSE_RUNTIME.md/">The Compose Runtime — CC2 compose, made authorable (design note)</a><a href="/AmpersandBoxDesign/docs/UMBRELLA.md/">The [&amp;] Umbrella — one stack: declare → … → observe</a><a href="/AmpersandBoxDesign/docs/architecture.md/">Architecture Guide</a><a href="/AmpersandBoxDesign/docs/comparison-table.md/">[&amp;] vs MCP vs A2A vs DALIA vs ACP</a><a href="/AmpersandBoxDesign/docs/competitive-landscape.md/">Competitive Landscape: Machine Cognition</a><a href="/AmpersandBoxDesign/docs/ecosystem-overview.md/">[&amp;] Ecosystem Overview — How Everything Ties Together</a><a href="/AmpersandBoxDesign/docs/faq.md/">FAQ</a><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/positioning.md/">The Missing Layer: Capability Composition in the Agent Protocol Stack</a><a href="/AmpersandBoxDesign/docs/quickstart.md/">Five-Minute Quickstart (Elixir Reference CLI)</a><a href="/AmpersandBoxDesign/docs/research.md/">Research Overview</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieratq6vltd5krsdtgjcbk5hfdq3xpo6y7nj6t3phm5cb4ichlijrtma</div></div></div>
+</div></div>
+</body></html>

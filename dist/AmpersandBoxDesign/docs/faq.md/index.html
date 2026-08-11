@@ -1,0 +1,264 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>FAQ · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="The [&amp;] Protocol is a language-agnostic specification for capability composition in AI agents.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/faq.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FAQ">
+<meta property="og:description" content="The [&amp;] Protocol is a language-agnostic specification for capability composition in AI agents.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/faq.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"FAQ","name":"FAQ","description":"The [&] Protocol is a language-agnostic specification for capability composition in AI agents.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/faq.md/","identifier":"bagaaierawjceo5r7ivwphl6z3bo4u7p3tmez43fofugv4oyg2j2bub3ma7rq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"What is the [&] Protocol?"},{"@type":"WebPageElement","name":"What problem does it solve?"},{"@type":"WebPageElement","name":"Does [&] replace MCP?"},{"@type":"WebPageElement","name":"Does [&] replace A2A?"},{"@type":"WebPageElement","name":"Why is the protocol called “[&]”?"},{"@type":"WebPageElement","name":"What are the six core capability domains?"},{"@type":"WebPageElement","name":"What is ampersand.json?"},{"@type":"WebPageElement","name":"Why use JSON instead of a language-specific DSL first?"},{"@type":"WebPageElement","name":"What does a capability declaration look like?"},{"@type":"WebPageElement","name":"What is a provider?"},{"@type":"WebPageElement","name":"Can multiple providers satisfy the same capability?"},{"@type":"WebPageElement","name":"What is provider: \"auto\"?"},{"@type":"WebPageElement","name":"Why is need required when provider is auto?"},{"@type":"WebPageElement","name":"What is capability composition?"},{"@type":"WebPageElement","name":"Why do algebraic properties matter here?"},{"@type":"WebPageElement","name":"What is the difference between & and |> in the protocol?"},{"@type":"WebPageElement","name":"What are capability contracts?"},{"@type":"WebPageElement","name":"What do accepts_from and feeds_into mean?"},{"@type":"WebPageElement","name":"What is type-safe pipeline validation in this context?"},{"@type":"WebPageElement","name":"What is provenance in the [&] Protocol?"},{"@type":"WebPageElement","name":"Why is provenance a protocol concern instead of just an implementation detail?"},{"@type":"WebPageElement","name":"What is governance in the protocol?"},{"@type":"WebPageElement","name":"What is the difference between hard and soft governance constraints?"},{"@type":"WebPageElement","name":"What does escalate_when do?"},{"@type":"WebPageElement","name":"Is the protocol only for autonomous agents?"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"faq.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/faq.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/faq.md</span>
+
+</div></div>
+<div class="lead">The [&amp;] Protocol is a language-agnostic specification for capability composition in AI agents.</div>
+<div class="prose"><h1 id="blk-6720">FAQ</h1>
+<h3 id="blk-6721">What is the [&amp;] Protocol?</h3>
+<p>The [&amp;] Protocol is a language-agnostic specification for <strong>capability composition in AI agents</strong>.</p>
+<p>It defines how an agent declares:</p>
+<ul><li><p>what it can remember</p></li><li><p>how it can reason</p></li><li><p>how it understands time</p></li><li><p>how it understands space</p></li><li><p>how those capabilities compose</p></li><li><p>how provenance is preserved</p></li><li><p>how governance constraints are expressed</p></li><li><p>how declarations compile into MCP and A2A configurations</p></li></ul>
+<p>The core source-of-truth artifact is <code>ampersand.json</code>.</p>
+<h3 id="blk-6742">What problem does it solve?</h3>
+<p>The current agent stack has useful protocol layers for:</p>
+<ul><li><p><strong>tools and context</strong> via MCP</p></li><li><p><strong>agent-to-agent coordination</strong> via A2A</p></li><li><p><strong>rendering and interaction</strong> via UI protocols</p></li></ul>
+<p>What is still missing is a standard way to express <strong>how an agent’s cognitive capabilities fit together before runtime wiring begins</strong>.</p>
+<p>The [&amp;] Protocol fills that gap by making capability composition explicit, machine-readable, and portable.</p>
+<h3 id="blk-6753">Does [&amp;] replace MCP?</h3>
+<p>No.</p>
+<p>MCP defines how an agent connects to tools and external resources.</p>
+<p>[&amp;] defines how an agent declares and validates the capabilities it needs <strong>before</strong> those tool bindings are generated.</p>
+<p>A good shorthand is:</p>
+<ul><li><p><strong>MCP</strong> = agent-to-tool connectivity</p></li><li><p><strong>A2A</strong> = agent-to-agent coordination</p></li><li><p><strong>[&amp;]</strong> = capability composition</p></li></ul>
+<p>[&amp;] compiles into MCP configuration. It does not compete with MCP.</p>
+<h3 id="blk-6766">Does [&amp;] replace A2A?</h3>
+<p>No.</p>
+<p>A2A is for agent discovery, delegation, and communication.</p>
+<p>[&amp;] is for describing what an agent is composed of and how those capabilities interoperate.</p>
+<p>In practice, an <code>ampersand.json</code> declaration can generate an A2A-style agent card that advertises the composed capabilities as skills.</p>
+<h3 id="blk-6771">Why is the protocol called “[&amp;]”?</h3>
+<p>Because the ampersand is the protocol’s composition operator.</p>
+<p>It is not just a brand mark. It represents the operation of combining capability declarations into a coherent set.</p>
+<p>Examples:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;reason.argument</code></p></li></ul>
+<p>And at the expression level:</p>
+<ul><li><p><code>&amp;memory.graph &amp; &amp;time.anomaly &amp; &amp;reason.argument</code></p></li></ul>
+<h3 id="blk-6786">What are the six core capability domains?</h3>
+<p>The protocol starts from four cognitive primitives, one sensorimotor primitive, and one cross-cutting governance primitive:</p>
+<ul><li><p><code>&amp;memory</code> — what the agent knows</p></li><li><p><code>&amp;reason</code> — how the agent decides</p></li><li><p><code>&amp;time</code> — when things happen</p></li><li><p><code>&amp;space</code> — where things are</p></li><li><p><code>&amp;body</code> — how the agent is instantiated in an environment (perception, action, affordance)</p></li><li><p><code>&amp;govern</code> — who is acting, under what rules, at what cost</p></li></ul>
+<p>Each primitive can be refined into subtypes, such as:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;memory.episodic</code></p></li><li><p><code>&amp;reason.argument</code></p></li><li><p><code>&amp;reason.vote</code></p></li><li><p><code>&amp;reason.deliberate</code></p></li><li><p><code>&amp;reason.attend</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;time.forecast</code></p></li><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;space.route</code></p></li><li><p><code>&amp;body.browser</code></p></li><li><p><code>&amp;body.os</code></p></li><li><p><code>&amp;govern.telemetry</code></p></li><li><p><code>&amp;govern.escalation</code></p></li><li><p><code>&amp;govern.identity</code></p></li></ul>
+<p><code>&amp;body</code> is the sensorimotor primitive added in draft v0.1.0; see OS-011 (Embodiment Protocol) for the behavioral loop that consumes it.</p>
+<h3 id="blk-6834">What is <code>ampersand.json</code>?</h3>
+<p><code>ampersand.json</code> is the canonical protocol declaration for an agent.</p>
+<p>It describes:</p>
+<ul><li><p>the agent name</p></li><li><p>the version</p></li><li><p>the declared capabilities</p></li><li><p>provider bindings</p></li><li><p>provider-specific config</p></li><li><p>governance rules</p></li><li><p>provenance requirements</p></li></ul>
+<p>It is intended to be:</p>
+<ul><li><p>human-readable</p></li><li><p>machine-validated</p></li><li><p>implementation-independent</p></li><li><p>suitable for downstream generation into other protocol formats</p></li></ul>
+<h3 id="blk-6862">Why use JSON instead of a language-specific DSL first?</h3>
+<p>Because the protocol is intended to be portable across runtimes and languages.</p>
+<p>JSON gives the project:</p>
+<ul><li><p>a stable interchange format</p></li><li><p>schema validation</p></li><li><p>compatibility with tooling ecosystems</p></li><li><p>a neutral source of truth</p></li></ul>
+<p>Language-specific DSLs can still exist, but they should compile down to the same canonical declaration.</p>
+<h3 id="blk-6875">What does a capability declaration look like?</h3>
+<p>A capability declaration is a key in the <code>capabilities</code> object of <code>ampersand.json</code>.</p>
+<p>For example:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;reason.argument</code></p></li></ul>
+<p>Each capability is bound to a provider and may include configuration.</p>
+<p>Example shape:</p>
+<ul><li><p><code>provider</code></p></li><li><p><code>config</code></p></li><li><p>optional <code>need</code> when using <code>provider: &quot;auto&quot;</code></p></li></ul>
+<h3 id="blk-6896">What is a provider?</h3>
+<p>A provider is a concrete implementation that satisfies a protocol capability.</p>
+<p>For example:</p>
+<ul><li><p><code>graphonomous</code> may satisfy <code>&amp;memory.graph</code></p></li><li><p><code>ticktickclock</code> may satisfy <code>&amp;time.anomaly</code></p></li><li><p><code>deliberatic</code> may satisfy <code>&amp;reason.argument</code></p></li></ul>
+<p>Capabilities are interfaces. Providers are implementations.</p>
+<p>That distinction is important: the protocol should remain provider-agnostic.</p>
+<h3 id="blk-6908">Can multiple providers satisfy the same capability?</h3>
+<p>Yes.</p>
+<p>That is one of the protocol’s design goals.</p>
+<p>A capability such as <code>&amp;memory.graph</code> should not be tied to one company or one runtime. Any implementation that satisfies the contract can act as a provider.</p>
+<p>This makes the protocol portable and keeps the composition layer separate from vendor choice.</p>
+<h3 id="blk-6913">What is <code>provider: &quot;auto&quot;</code>?</h3>
+<p><code>provider: &quot;auto&quot;</code> means the declaration is intentionally leaving provider resolution to a registry or runtime.</p>
+<p>In that case, the declaration should also include a natural-language <code>need</code> field describing the requirement.</p>
+<p>Example intent:</p>
+<ul><li><p>the human or model says what capability is needed</p></li><li><p>the registry/runtime chooses which provider satisfies it</p></li></ul>
+<p>This supports autonomous or goal-driven composition workflows.</p>
+<h3 id="blk-6923">Why is <code>need</code> required when <code>provider</code> is <code>auto</code>?</h3>
+<p>Because <code>auto</code> without a requirement is underspecified.</p>
+<p>If the protocol is going to delegate provider resolution, it still needs enough semantic information to guide that decision. The <code>need</code> field provides that missing context.</p>
+<h3 id="blk-6926">What is capability composition?</h3>
+<p>Capability composition is the process of combining declared capabilities into a set that behaves coherently.</p>
+<p>The protocol treats capability declarations as set-like, not list-like. That means composition is intended to preserve algebraic properties such as:</p>
+<ul><li><p>commutativity</p></li><li><p>associativity</p></li><li><p>idempotence</p></li><li><p>identity</p></li></ul>
+<p>The practical benefit is that declaration order and duplication should not change the meaning of a valid capability set.</p>
+<h3 id="blk-6939">Why do algebraic properties matter here?</h3>
+<p>Because deterministic composition makes tooling safer and more portable.</p>
+<p>If capability sets behave predictably:</p>
+<ul><li><p>multiple tools can normalize the same declaration the same way</p></li><li><p>duplicates collapse safely</p></li><li><p>grouping does not change the result</p></li><li><p>composition becomes easier to validate and reason about</p></li></ul>
+<p>This is especially important if different agents, CLIs, SDKs, or runtimes all need to interpret the same declaration.</p>
+<h3 id="blk-6952">What is the difference between <code>&amp;</code> and <code>|&gt;</code> in the protocol?</h3>
+<p>The protocol uses two conceptual operators:</p>
+<ul><li><p><code>&amp;</code> for <strong>composition</strong></p></li><li><p><code>|&gt;</code> for <strong>pipeline flow</strong></p></li></ul>
+<p><code>&amp;</code> combines capabilities into a set.</p>
+<p><code>|&gt;</code> represents data or context flowing through capability operations.</p>
+<p>So the first answers:</p>
+<blockquote><p>What capabilities does this agent have?</p></blockquote>
+<p>The second answers:</p>
+<blockquote><p>In what order do capability operations process a piece of work?</p></blockquote>
+<h3 id="blk-6967">What are capability contracts?</h3>
+<p>Capability contracts declare:</p>
+<ul><li><p>what operations a capability supports</p></li><li><p>the typed inputs each operation accepts</p></li><li><p>the typed outputs each operation produces</p></li><li><p>what the capability can accept input from</p></li><li><p>what it can feed into</p></li><li><p>optional A2A skill mappings</p></li></ul>
+<p>These contracts enable pipeline validation and compatibility checks.</p>
+<h3 id="blk-6983">What do <code>accepts_from</code> and <code>feeds_into</code> mean?</h3>
+<p>They are adjacency constraints for composition and pipeline validation.</p>
+<ul><li><p><code>accepts_from</code> says what a capability is allowed to receive input from</p></li><li><p><code>feeds_into</code> says what a capability is allowed to send output into</p></li></ul>
+<p>These may refer to:</p>
+<ul><li><p>specific capabilities</p></li><li><p>wildcard primitive patterns like <code>&amp;memory.*</code></p></li><li><p>abstract type tokens like <code>raw_data</code> or <code>output</code></p></li></ul>
+<p>They help prevent invalid or nonsensical pipeline connections.</p>
+<h3 id="blk-6999">What is type-safe pipeline validation in this context?</h3>
+<p>It means the protocol can reject pipelines where one capability operation produces an output type that does not match the next capability operation’s expected input type.</p>
+<p>For example, if one operation outputs <code>anomaly_set</code> and the next expects <code>context</code>, the pipeline should fail validation unless there is an explicit compatible transformation.</p>
+<p>This prevents “plausible-looking but incoherent” pipelines.</p>
+<h3 id="blk-7003">What is provenance in the [&amp;] Protocol?</h3>
+<p>Provenance is the record of where context came from and how it moved through a capability pipeline.</p>
+<p>A provenance record may include:</p>
+<ul><li><p>source capability</p></li><li><p>provider</p></li><li><p>operation</p></li><li><p>timestamp</p></li><li><p>input hash</p></li><li><p>output hash</p></li><li><p>parent hash</p></li><li><p>transport trace identifier</p></li></ul>
+<p>The goal is to make agent decisions auditable and explainable.</p>
+<h3 id="blk-7024">Why is provenance a protocol concern instead of just an implementation detail?</h3>
+<p>Because explainability and auditability break down if every runtime invents its own incompatible tracing format.</p>
+<p>By making provenance a protocol-level concern, the project gives implementations a shared conceptual model for:</p>
+<ul><li><p>context lineage</p></li><li><p>decision traceability</p></li><li><p>audit-friendly outputs</p></li><li><p>downstream governance enforcement</p></li></ul>
+<h3 id="blk-7036">What is governance in the protocol?</h3>
+<p>Governance is the declarative constraint layer in <code>ampersand.json</code>.</p>
+<p>It lets a declaration express:</p>
+<ul><li><p><strong>hard constraints</strong> — non-negotiable boundaries</p></li><li><p><strong>soft constraints</strong> — preferences or heuristics</p></li><li><p><strong>escalation rules</strong> — conditions that require human review or handoff</p></li></ul>
+<p>Governance belongs in data so it can travel with the declaration instead of being buried inside one implementation.</p>
+<h3 id="blk-7047">What is the difference between hard and soft governance constraints?</h3>
+<p><strong>Hard constraints</strong> are boundaries that should not be violated.</p>
+<p>Examples:</p>
+<ul><li><p>never delete data without approval</p></li><li><p>never expose private customer data</p></li><li><p>never exceed a specified operational threshold</p></li></ul>
+<p><strong>Soft constraints</strong> are preferences that guide decisions but may be overridden with sufficient evidence.</p>
+<p>Examples:</p>
+<ul><li><p>prefer gradual scaling</p></li><li><p>prefer concise responses</p></li><li><p>prefer recent peer-reviewed evidence</p></li></ul>
+<h3 id="blk-7066">What does <code>escalate_when</code> do?</h3>
+<p>It defines conditions under which the system should defer to a human or another supervising process.</p>
+<p>Examples include:</p>
+<ul><li><p>confidence below a threshold</p></li><li><p>cost above a threshold</p></li><li><p>hard boundary approached</p></li></ul>
+<p>This helps connect protocol composition to operational safety and review workflows.</p>
+<h3 id="blk-7077">Is the protocol only for autonomous agents?</h3>
+<p>No.</p>
+<p>It is useful for:</p>
+<ul><li><p>human-authored agent configurations</p></li><li><p>partially automated builders</p></li><li><p>fully autonomous composition systems</p></li><li><p>CLIs and CI pipelines</p></li><li><p>reference implementations and SDKs</p></li></ul>
+<p>The protocol is about making composition explicit and portable, not about mandating a specific authoring model.</p>
+<h3 id="blk-7092">Is the protocol only for LLM agents?</h3>
+<p>No.</p>
+<p>It is most obviously useful in LLM-heavy systems, but the composition model is broader than that.</p>
+<p>Any system that needs to declare, validate, and bind memory, reasoning, temporal, or spatial capabilities can use the protocol.</p>
+<h3 id="blk-7096">Does the protocol depend on Elixir?</h3>
+<p>No.</p>
+<p>The protocol is language-agnostic.</p>
+<p>The current repository includes an Elixir reference implementation because it is a convenient way to explore the model, validate artifacts, and build a CLI. But the protocol itself is not tied to Elixir.</p>
+<p>Other implementations can exist in:</p>
+<ul><li><p>TypeScript</p></li><li><p>Rust</p></li><li><p>Python</p></li><li><p>Go</p></li><li><p>or other runtimes</p></li></ul>
+<h3 id="blk-7112">Why keep a reference implementation at all if the protocol is language-agnostic?</h3>
+<p>Because specifications become much more useful once they are grounded in working artifacts.</p>
+<p>A reference implementation helps prove that the protocol is:</p>
+<ul><li><p>implementable</p></li><li><p>testable</p></li><li><p>composable</p></li><li><p>not just a prose concept</p></li></ul>
+<p>It also gives future implementations a baseline for expected behavior.</p>
+<h3 id="blk-7125">What is the current reference implementation capable of?</h3>
+<p>At the time of writing, the repository includes a minimal Elixir reference layer that supports:</p>
+<ul><li><p>schema validation</p></li><li><p>capability normalization and composition checks</p></li><li><p>contract-based pipeline checks</p></li><li><p>MCP configuration generation</p></li><li><p>A2A-style agent card generation</p></li><li><p>a working <code>ampersand</code> CLI</p></li></ul>
+<p>It is intentionally minimal, but it is already useful for real validation and generation tasks.</p>
+<h3 id="blk-7141">What does the CLI do today?</h3>
+<p>The current CLI supports commands like:</p>
+<ul><li><p><code>validate</code></p></li><li><p><code>compose</code></p></li><li><p><code>generate mcp</code></p></li><li><p><code>generate a2a</code></p></li></ul>
+<p>That means a declaration can already be used as an executable artifact for:</p>
+<ul><li><p>schema validation</p></li><li><p>composition inspection</p></li><li><p>runtime-oriented config generation</p></li></ul>
+<h3 id="blk-7160">What is generated by <code>generate mcp</code>?</h3>
+<p>An MCP-oriented client configuration derived from the declared capability providers.</p>
+<p>At the moment, grounded provider resolution exists only where the repository contains real runtime evidence. Known providers can be turned into concrete MCP launch configuration. Unknown or unresolved providers are kept explicit rather than being guessed.</p>
+<p>This is deliberate: the generator should not invent runtime details it cannot justify.</p>
+<h3 id="blk-7164">What is generated by <code>generate a2a</code>?</h3>
+<p>An A2A-style agent card derived from the declaration.</p>
+<p>That card can expose:</p>
+<ul><li><p>agent identity</p></li><li><p>composed skills</p></li><li><p>provider bindings</p></li><li><p>governance and provenance metadata</p></li></ul>
+<p>The goal is to show how a single declaration can compile into downstream protocol artifacts.</p>
+<h3 id="blk-7177">What does “compile into MCP + A2A” mean?</h3>
+<p>It means the protocol acts as the higher-level source of truth.</p>
+<p>Instead of hand-authoring every downstream artifact independently, you author one canonical declaration and use generators to produce:</p>
+<ul><li><p>MCP config</p></li><li><p>A2A agent metadata</p></li><li><p>potentially other runtime or documentation artifacts later</p></li></ul>
+<p>This keeps the composition layer authoritative.</p>
+<h3 id="blk-7188">Is the schema the source of truth?</h3>
+<p>Yes, for the declaration format.</p>
+<p>The protocol’s prose is still important, but the schema is what makes the declaration machine-checkable. Once a declaration is validated against the schema, tools can safely build on it.</p>
+<p>That is why the schema is one of the first artifacts that should exist in the repository.</p>
+<h3 id="blk-7192">Why have multiple schemas instead of only <code>ampersand.schema.json</code>?</h3>
+<p>Because the protocol contains more than one kind of artifact.</p>
+<p>The repository may include schemas for:</p>
+<ul><li><p>agent declarations</p></li><li><p>capability contracts</p></li><li><p>registry documents</p></li></ul>
+<p>Each artifact has a different role and should be validated explicitly rather than being folded into one oversized schema.</p>
+<h3 id="blk-7203">What is the capability registry?</h3>
+<p>The capability registry is a catalog of:</p>
+<ul><li><p>primitives</p></li><li><p>subtypes</p></li><li><p>providers</p></li><li><p>supported operations</p></li><li><p>provider metadata</p></li><li><p>optional contract references</p></li></ul>
+<p>It supports discovery and resolution.</p>
+<p>This matters especially when declarations use <code>provider: &quot;auto&quot;</code>.</p>
+<h3 id="blk-7220">Do you need a registry to use the protocol?</h3>
+<p>Not always.</p>
+<p>If a declaration uses explicit provider bindings, the protocol can still be useful without a full registry.</p>
+<p>A registry becomes more important when you want:</p>
+<ul><li><p>dynamic resolution</p></li><li><p>discovery</p></li><li><p>compatibility checks across providers</p></li><li><p>richer automation</p></li></ul>
+<h3 id="blk-7233">Can the protocol be useful before a full ecosystem exists?</h3>
+<p>Yes.</p>
+<p>Even a small repository with:</p>
+<ul><li><p>a schema</p></li><li><p>a few validating examples</p></li><li><p>a minimal reference implementation</p></li><li><p>a CLI</p></li><li><p>a generator or two</p></li></ul>
+<p>is already significantly better than a purely conceptual protocol.</p>
+<p>That is enough to ground future iteration and prevent hallucinated architecture.</p>
+<h3 id="blk-7249">Is the protocol intended for public standards work or private internal use?</h3>
+<p>It can serve both.</p>
+<p>As an open specification, it is useful for ecosystem-level interoperability.</p>
+<p>As an internal artifact, it can also help one team standardize how agents are declared, validated, and generated across projects.</p>
+<h3 id="blk-7253">How is this different from “agent frameworks with memory modules”?</h3>
+<p>Most frameworks provide implementation building blocks.</p>
+<p>The [&amp;] Protocol focuses on the <strong>declaration and validation layer</strong> above implementation details. It aims to answer questions like:</p>
+<ul><li><p>Which capabilities are present?</p></li><li><p>Are they compatible?</p></li><li><p>What are the declared constraints?</p></li><li><p>How should provenance be represented?</p></li><li><p>What downstream configuration artifacts should be generated?</p></li></ul>
+<p>It is closer to a protocol and composition model than a framework runtime.</p>
+<h3 id="blk-7268">Is the protocol trying to standardize all of agent architecture?</h3>
+<p>No.</p>
+<p>It is intentionally scoped to the composition layer.</p>
+<p>It does not try to replace all runtime concerns, model orchestration, UI protocols, transport standards, or every possible implementation detail.</p>
+<p>Its job is to make capability composition explicit, portable, and machine-readable.</p>
+<h3 id="blk-7273">How should contributors think about future work?</h3>
+<p>Good next steps usually fall into one of these categories:</p>
+<ul><li><p>strengthen schemas</p></li><li><p>expand examples</p></li><li><p>deepen reference implementation behavior</p></li><li><p>improve registry artifacts</p></li><li><p>add more generators</p></li><li><p>improve docs and publishing</p></li><li><p>add provider integrations backed by real implementation evidence</p></li></ul>
+<p>A useful rule is:</p>
+<blockquote><p>Prefer grounded artifacts over speculative architecture.</p></blockquote>
+<h3 id="blk-7293">What should not be added casually?</h3>
+<p>A few things should be treated carefully:</p>
+<ul><li><p>invented provider commands</p></li><li><p>unsupported protocol claims</p></li><li><p>hand-wavy compatibility logic</p></li><li><p>vague governance semantics</p></li><li><p>runtime behavior that is not backed by schema or tests</p></li></ul>
+<p>The protocol gets stronger when each layer is precise and testable.</p>
+<h3 id="blk-7307">Who is this repository for right now?</h3>
+<p>Right now, it is most useful for:</p>
+<ul><li><p>protocol designers</p></li><li><p>AI platform engineers</p></li><li><p>agent infrastructure builders</p></li><li><p>researchers interested in composition, provenance, and governance</p></li><li><p>teams exploring interoperable agent declarations</p></li></ul>
+<p>It is early, but it is already concrete enough to build against.</p>
+<h3 id="blk-7321">Where should a new reader start?</h3>
+<p>A good reading path is:</p>
+<ol><li><p><code>README.md</code></p></li><li><p><code>SPEC.md</code></p></li><li><p><code>protocol/schema/v0.1.0/ampersand.schema.json</code></p></li><li><p><code>examples/</code></p></li><li><p><code>reference/elixir/ampersand_core/</code></p></li><li><p><code>docs/positioning.md</code></p></li></ol>
+<p>That path moves from concept to contract to working implementation.</p>
+<h3 id="blk-7337">What is the shortest possible summary?</h3>
+<p>The shortest accurate summary is:</p>
+<blockquote><p>[&amp;] is a protocol for declaring and validating how agent capabilities compose, then compiling that declaration into downstream protocol artifacts like MCP config and A2A agent cards.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/faq.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-6721" class="lvl2">What is the [&amp;] Protocol?</a><a href="#blk-6742" class="lvl2">What problem does it solve?</a><a href="#blk-6753" class="lvl2">Does [&amp;] replace MCP?</a><a href="#blk-6766" class="lvl2">Does [&amp;] replace A2A?</a><a href="#blk-6771" class="lvl2">Why is the protocol called “[&amp;]”?</a><a href="#blk-6786" class="lvl2">What are the six core capability domains?</a><a href="#blk-6834" class="lvl2">What is ampersand.json?</a><a href="#blk-6862" class="lvl2">Why use JSON instead of a language-specific DSL first?</a><a href="#blk-6875" class="lvl2">What does a capability declaration look like?</a><a href="#blk-6896" class="lvl2">What is a provider?</a><a href="#blk-6908" class="lvl2">Can multiple providers satisfy the same capability?</a><a href="#blk-6913" class="lvl2">What is provider: &quot;auto&quot;?</a><a href="#blk-6923" class="lvl2">Why is need required when provider is auto?</a><a href="#blk-6926" class="lvl2">What is capability composition?</a><a href="#blk-6939" class="lvl2">Why do algebraic properties matter here?</a><a href="#blk-6952" class="lvl2">What is the difference between &amp; and |&gt; in the protocol?</a><a href="#blk-6967" class="lvl2">What are capability contracts?</a><a href="#blk-6983" class="lvl2">What do accepts_from and feeds_into mean?</a><a href="#blk-6999" class="lvl2">What is type-safe pipeline validation in this context?</a><a href="#blk-7003" class="lvl2">What is provenance in the [&amp;] Protocol?</a><a href="#blk-7024" class="lvl2">Why is provenance a protocol concern instead of just an implementation detail?</a><a href="#blk-7036" class="lvl2">What is governance in the protocol?</a><a href="#blk-7047" class="lvl2">What is the difference between hard and soft governance constraints?</a><a href="#blk-7066" class="lvl2">What does escalate_when do?</a><a href="#blk-7077" class="lvl2">Is the protocol only for autonomous agents?</a><a href="#blk-7092" class="lvl2">Is the protocol only for LLM agents?</a><a href="#blk-7096" class="lvl2">Does the protocol depend on Elixir?</a><a href="#blk-7112" class="lvl2">Why keep a reference implementation at all if the protocol is language-agnostic?</a><a href="#blk-7125" class="lvl2">What is the current reference implementation capable of?</a><a href="#blk-7141" class="lvl2">What does the CLI do today?</a><a href="#blk-7160" class="lvl2">What is generated by generate mcp?</a><a href="#blk-7164" class="lvl2">What is generated by generate a2a?</a><a href="#blk-7177" class="lvl2">What does “compile into MCP + A2A” mean?</a><a href="#blk-7188" class="lvl2">Is the schema the source of truth?</a><a href="#blk-7192" class="lvl2">Why have multiple schemas instead of only ampersand.schema.json?</a><a href="#blk-7203" class="lvl2">What is the capability registry?</a><a href="#blk-7220" class="lvl2">Do you need a registry to use the protocol?</a><a href="#blk-7233" class="lvl2">Can the protocol be useful before a full ecosystem exists?</a><a href="#blk-7249" class="lvl2">Is the protocol intended for public standards work or private internal use?</a><a href="#blk-7253" class="lvl2">How is this different from “agent frameworks with memory modules”?</a><a href="#blk-7268" class="lvl2">Is the protocol trying to standardize all of agent architecture?</a><a href="#blk-7273" class="lvl2">How should contributors think about future work?</a><a href="#blk-7293" class="lvl2">What should not be added casually?</a><a href="#blk-7307" class="lvl2">Who is this repository for right now?</a><a href="#blk-7321" class="lvl2">Where should a new reader start?</a><a href="#blk-7337" class="lvl2">What is the shortest possible summary?</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/CC2-capability-composition.md/">[&amp;] / CC2 — Capability Composition, v2 (Coalitional)</a><a href="/AmpersandBoxDesign/docs/COMPOSE_RUNTIME.md/">The Compose Runtime — CC2 compose, made authorable (design note)</a><a href="/AmpersandBoxDesign/docs/UMBRELLA.md/">The [&amp;] Umbrella — one stack: declare → … → observe</a><a href="/AmpersandBoxDesign/docs/architecture.md/">Architecture Guide</a><a href="/AmpersandBoxDesign/docs/comparison-table.md/">[&amp;] vs MCP vs A2A vs DALIA vs ACP</a><a href="/AmpersandBoxDesign/docs/competitive-landscape.md/">Competitive Landscape: Machine Cognition</a><a href="/AmpersandBoxDesign/docs/ecosystem-overview.md/">[&amp;] Ecosystem Overview — How Everything Ties Together</a><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/positioning.md/">The Missing Layer: Capability Composition in the Agent Protocol Stack</a><a href="/AmpersandBoxDesign/docs/quickstart.md/">Five-Minute Quickstart (Elixir Reference CLI)</a><a href="/AmpersandBoxDesign/docs/research.md/">Research Overview</a><a href="/AmpersandBoxDesign/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierawjceo5r7ivwphl6z3bo4u7p3tmez43fofugv4oyg2j2bub3ma7rq</div></div></div>
+</div></div>
+</body></html>

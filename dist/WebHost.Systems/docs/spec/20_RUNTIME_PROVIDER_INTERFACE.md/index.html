@@ -1,0 +1,223 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>webhost.systems — Runtime Provider Interface (RPI) &amp; Adapter Guidance (v1) · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="Version: 1.0 Status: Implementation-ready Last updated: 2026-01-21">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webhost.systems — Runtime Provider Interface (RPI) &amp; Adapter Guidance (v1)">
+<meta property="og:description" content="Version: 1.0 Status: Implementation-ready Last updated: 2026-01-21">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"webhost.systems — Runtime Provider Interface (RPI) & Adapter Guidance (v1)","name":"webhost.systems — Runtime Provider Interface (RPI) & Adapter Guidance (v1)","description":"Version: 1.0 Status: Implementation-ready Last updated: 2026-01-21","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md/","identifier":"bagaaierajswv3b3oxi3efuxbzakobldcyb4gik5hddoodgyvyxbypvzwy5rq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"1) Goals & non-goals"},{"@type":"WebPageElement","name":"1.1 Goals"},{"@type":"WebPageElement","name":"1.2 Non-goals"},{"@type":"WebPageElement","name":"2) Key concepts"},{"@type":"WebPageElement","name":"2.1 Control plane vs data plane"},{"@type":"WebPageElement","name":"2.2 Provider adapter"},{"@type":"WebPageElement","name":"2.3 Session"},{"@type":"WebPageElement","name":"3) RPI: canonical types (normative)"},{"@type":"WebPageElement","name":"3.1 Provider identifiers"},{"@type":"WebPageElement","name":"3.2 Artifact reference"},{"@type":"WebPageElement","name":"3.3 Deploy input/output"},{"@type":"WebPageElement","name":"3.4 Invoke input/output"},{"@type":"WebPageElement","name":"3.5 Streaming invocation"},{"@type":"WebPageElement","name":"4) RPI required adapter surface (normative)"},{"@type":"WebPageElement","name":"4.1 deploy"},{"@type":"WebPageElement","name":"4.2 invoke"},{"@type":"WebPageElement","name":"4.3 healthcheck"},{"@type":"WebPageElement","name":"4.4 estimateCost (MVP)"},{"@type":"WebPageElement","name":"5) Cross-cutting concerns"},{"@type":"WebPageElement","name":"5.1 Versioning"},{"@type":"WebPageElement","name":"5.2 Idempotency and retries (deploy)"},{"@type":"WebPageElement","name":"5.3 Timeouts"},{"@type":"WebPageElement","name":"5.4 Payload limits"},{"@type":"WebPageElement","name":"5.5 Concurrency & backpressure"},{"@type":"WebPageElement","name":"6) Error normalization (normative)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/"},{"@type":"ListItem","position":5,"name":"20_RUNTIME_PROVIDER_INTERFACE.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md</span>
+
+</div></div>
+<div class="lead">Version: 1.0 Status: Implementation-ready Last updated: 2026-01-21</div>
+<div class="prose"><h1 id="blk-46065">webhost.systems — Runtime Provider Interface (RPI) &amp; Adapter Guidance (v1)</h1>
+<p>Version: 1.0 Status: Implementation-ready Last updated: 2026-01-21</p>
+<p>This document defines the <strong>Runtime Provider Interface (RPI)</strong>: the contract between the webhost.systems control plane and each runtime provider (e.g., Cloudflare Workers/DO, AWS Bedrock AgentCore). It also provides concrete guidance for implementing provider adapters, including deployment, invocation (streaming + non-streaming), telemetry, secrets, timeouts, idempotency, and error normalization.</p>
+<p>Normative language: MUST, MUST NOT, SHOULD, MAY.</p>
+<h3 id="blk-46069">1) Goals &amp; non-goals</h3>
+<h4 id="blk-46070">1.1 Goals</h4>
+<p>The RPI exists to ensure:</p>
+<ul><li><p>consistent invocation semantics across runtimes (including sessions),</p></li><li><p>consistent telemetry/cost attribution,</p></li><li><p>a single control-plane flow for deploy → activate → invoke → observe,</p></li><li><p>minimal lock-in to any one provider.</p></li></ul>
+<h4 id="blk-46081">1.2 Non-goals</h4>
+<ul><li><p>The RPI does not mandate a specific LLM SDK or “agent framework” inside the data plane.</p></li><li><p>The RPI does not attempt to unify every provider-specific feature (e.g., AgentCore tool ecosystem) into one universal surface in v1.</p></li><li><p>The RPI does not define the UI. It defines backend behavior and contracts.</p></li></ul>
+<h3 id="blk-46089">2) Key concepts</h3>
+<h4 id="blk-46090">2.1 Control plane vs data plane</h4>
+<ul><li><p><strong>Control plane</strong> (Supabase + web backend) owns: authentication, authorization, deployments, agent metadata, plan enforcement, telemetry ingestion, aggregation, and billing.</p></li><li><p><strong>Data plane</strong> (Cloudflare/AgentCore) owns: executing user agent code and reporting telemetry events.</p></li></ul>
+<h4 id="blk-46096">2.2 Provider adapter</h4>
+<p>A <strong>provider adapter</strong> is control-plane code that:</p>
+<ul><li><p>deploys user code to a provider,</p></li><li><p>invokes the currently active deployment on that provider,</p></li><li><p>maps provider responses/errors into the normalized webhost.systems contract,</p></li><li><p>ensures the deployed workload is configured to emit telemetry securely.</p></li></ul>
+<h4 id="blk-46107">2.3 Session</h4>
+<p>All sessions are represented externally as an opaque string <code>sessionId</code>. The meaning is provider-specific:</p>
+<ul><li><p>Cloudflare: Durable Object id / instance key</p></li><li><p>AgentCore: runtime session id</p></li></ul>
+<p>The control plane MUST treat <code>sessionId</code> as opaque and MUST NOT attempt to parse it.</p>
+<h3 id="blk-46115">3) RPI: canonical types (normative)</h3>
+<blockquote><p>These are <em>spec-level</em> types. Implementation languages may vary, but shapes and semantics MUST be preserved.</p></blockquote>
+<h4 id="blk-46118">3.1 Provider identifiers</h4>
+<ul><li><p><code>RuntimeProvider = &quot;cloudflare&quot; | &quot;agentcore&quot;</code></p></li></ul>
+<h4 id="blk-46122">3.2 Artifact reference</h4>
+<p>A deployment is driven by an artifact reference. v1 supports uploaded bundles as the primary input; repo refs are optional. For some runtimes (notably AgentCore), the control plane may also produce and persist a <strong>resolved artifact</strong> (e.g., a container image) derived from an uploaded bundle.</p>
+<ul><li><p><code>ArtifactRef.type = &quot;uploaded_bundle&quot; | &quot;repo_ref&quot; | &quot;agentcore_container&quot;</code></p></li></ul>
+<ul><li><p>For <code>uploaded_bundle</code>:</p></li><li><p><code>uploadId</code> (opaque)</p></li><li><p><code>checksum</code></p></li><li><p><code>sizeBytes</code></p></li></ul>
+<ul><li><p>For <code>repo_ref</code>:</p></li><li><p><code>githubUrl</code></p></li><li><p><code>ref</code></p></li><li><p>optional <code>commitHash</code></p></li></ul>
+<ul><li><p>For <code>agentcore_container</code> (resolved build output for AgentCore deployments):</p></li><li><p><code>imageUri</code> (container image reference, e.g., registry/ECR URI)</p></li><li><p>optional <code>imageDigest</code> (immutable digest if available)</p></li><li><p>optional <code>repository</code> (repository name/identifier if tracked)</p></li><li><p>optional <code>tag</code> (image tag if used)</p></li><li><p>optional <code>buildId</code> (build pipeline identifier)</p></li></ul>
+<p>Notes:</p>
+<ul><li><p><code>agentcore_container</code> artifacts are typically produced by the control plane build pipeline from an <code>uploaded_bundle</code> when deploying <code>runtimeProvider=&quot;agentcore&quot;</code>.</p></li><li><p>Clients generally submit <code>uploaded_bundle</code> or <code>repo_ref</code>; <code>agentcore_container</code> is usually created by the platform as a derived/resolved artifact for deployment and repeatability.</p></li></ul>
+<h4 id="blk-46164">3.3 Deploy input/output</h4>
+<p><strong>DeployInput (MUST include):</strong></p>
+<ul><li><p><code>userId</code>, <code>agentId</code>, <code>deploymentId</code>, <code>deploymentVersion</code></p></li><li><p><code>runtimeProvider</code></p></li><li><p><code>artifactRef</code></p></li><li><p><code>agentConfig</code> (non-secret config, including protocol version)</p></li><li><p><code>env</code>:</p></li><li><p><code>plain</code>: non-secret env vars (optional)</p></li><li><p><code>secretKeys</code>: list of keys expected to exist in provider secret store</p></li><li><p><code>telemetry</code>:</p></li><li><p><code>endpointUrl</code> (control-plane telemetry ingestion URL)</p></li><li><p><code>deploymentId</code> (for signature and attribution)</p></li><li><p><code>telemetryAuth</code> (provider-injected secret reference or signing config; see §7)</p></li></ul>
+<p><strong>DeployOutput (MUST include):</strong></p>
+<ul><li><p><code>providerRef</code>: runtime-specific reference needed for invocation</p></li><li><p><code>status</code>: <code>succeeded | failed</code></p></li><li><p><code>error?</code>: normalized error (see §6)</p></li></ul>
+<h4 id="blk-46197">3.4 Invoke input/output</h4>
+<p><strong>InvokeInput (MUST include):</strong></p>
+<ul><li><p><code>userId</code>, <code>agentId</code>, <code>deploymentId</code></p></li><li><p><code>runtimeProvider</code></p></li><li><p><code>providerRef</code></p></li><li><p><code>request</code>:</p></li><li><p><code>input</code>: either <code>{ messages: [...] }</code> or <code>{ prompt: string }</code> (server may normalize)</p></li><li><p><code>sessionId?</code></p></li><li><p><code>options?</code> (e.g., maxSteps, temperature)</p></li><li><p><code>metadata?</code> (traceId, client metadata)</p></li><li><p><code>limitsContext</code>:</p></li><li><p>plan tier info and remaining budgets (or a handle to check budgets)</p></li><li><p><code>timeouts</code>:</p></li><li><p><code>overallMs</code> (hard cap enforced by control plane gateway)</p></li><li><p>provider-specific timeouts (optional)</p></li></ul>
+<p><strong>InvokeOutput (MUST include):</strong></p>
+<ul><li><p><code>response</code>:</p></li><li><p><code>output.text</code></p></li><li><p><code>sessionId?</code> (new/continued)</p></li><li><p><code>usage?</code> (tokens/computeMs/toolCalls when available)</p></li><li><p><code>traceId</code></p></li><li><p><code>providerDiagnostics?</code> (internal-only; MUST NOT leak to untrusted clients)</p></li><li><p><code>error?</code> (if failed; normalized)</p></li></ul>
+<h4 id="blk-46242">3.5 Streaming invocation</h4>
+<p>If streaming is supported:</p>
+<ul><li><p>Adapter MUST provide a streaming pathway that emits:</p></li><li><p><code>meta</code> (traceId/sessionId)</p></li><li><p><code>delta</code> chunks (text)</p></li><li><p><code>usage</code> (final summary)</p></li><li><p><code>done</code></p></li><li><p><code>error</code> (normalized envelope)</p></li></ul>
+<p>If streaming is not supported by the provider:</p>
+<ul><li><p>Adapter MAY emulate streaming by chunking buffered output, but MUST still emit the correct event ordering and ensure consistent final <code>usage</code>.</p></li></ul>
+<h3 id="blk-46261">4) RPI required adapter surface (normative)</h3>
+<p>Each provider adapter MUST implement the following capabilities.</p>
+<h4 id="blk-46263">4.1 <code>deploy</code></h4>
+<p>Responsibilities:</p>
+<ol><li><p>Validate artifact and agent config compatibility with provider constraints.</p></li><li><p>Provision or update provider resources to host the deployment.</p></li><li><p>Inject required environment and telemetry configuration.</p></li><li><p>Return a <code>providerRef</code> that can be used to invoke.</p></li></ol>
+<p>MUST:</p>
+<ul><li><p>be safe to retry (idempotent by deploymentId; see §5.2)</p></li><li><p>never store plaintext secrets in control plane storage</p></li><li><p>sanitize provider errors before returning them</p></li></ul>
+<h4 id="blk-46282">4.2 <code>invoke</code></h4>
+<p>Responsibilities:</p>
+<ol><li><p>Enforce request-level constraints (payload size, session policy, timeouts).</p></li><li><p>Route to provider runtime for the active deployment.</p></li><li><p>Normalize output and errors.</p></li><li><p>Ensure telemetry is emitted (either by runtime workload or by adapter, depending on architecture; see §8).</p></li></ol>
+<p>MUST:</p>
+<ul><li><p>include <code>traceId</code> in provider request if possible</p></li><li><p>return an opaque <code>sessionId</code> when a new session is created</p></li><li><p>enforce plan limits (control plane responsibility; adapter must accept a “limits decision” or consult a limits service)</p></li></ul>
+<h4 id="blk-46301">4.3 <code>healthcheck</code></h4>
+<p>Responsibilities:</p>
+<ul><li><p>Provide a lightweight readiness signal for provider integration (credentials/config present, basic API reachability).</p></li></ul>
+<p>MUST:</p>
+<ul><li><p>avoid expensive calls</p></li><li><p>never require deploying user code</p></li></ul>
+<h4 id="blk-46312">4.4 <code>estimateCost</code> (MVP)</h4>
+<p>Responsibilities:</p>
+<ul><li><p>Convert <code>usage</code> into an estimated USD cost for telemetry.</p></li></ul>
+<p>MUST:</p>
+<ul><li><p>label estimates as estimates; do not imply reconciliation</p></li><li><p>be deterministic given the same usage inputs</p></li></ul>
+<h3 id="blk-46323">5) Cross-cutting concerns</h3>
+<h4 id="blk-46324">5.1 Versioning</h4>
+<ul><li><p>The invocation protocol version MUST be declared in the deployment manifest (e.g., <code>protocol: &quot;invoke/v1&quot;</code>).</p></li><li><p>Adapters MUST reject unsupported protocol versions with <code>INVALID_REQUEST</code>.</p></li></ul>
+<h4 id="blk-46330">5.2 Idempotency and retries (deploy)</h4>
+<p>Deploy operations MUST be idempotent per <code>(deploymentId, provider)</code>:</p>
+<ul><li><p>If the same deployment is redeployed due to retry, the adapter MUST return the same <code>providerRef</code> when safe, or MUST produce a semantically equivalent deployment and update the deployment record accordingly.</p></li><li><p>Adapter SHOULD use provider tagging/labels to locate already-created resources.</p></li></ul>
+<h4 id="blk-46337">5.3 Timeouts</h4>
+<ul><li><p>Control plane MUST enforce <code>overallMs</code> timeout on invocations.</p></li><li><p>Adapter MUST also set provider-side timeouts where available to avoid runaway compute.</p></li></ul>
+<p>Recommended defaults (tune per provider):</p>
+<ul><li><p>Cloudflare: overall 30–60s for typical requests; sessionful flows may be longer within provider constraints.</p></li><li><p>AgentCore: allow longer (minutes to hours) only on entitled tiers; still enforce a sane <code>overallMs</code> for the HTTP gateway and provide async job patterns post-v1 if needed.</p></li></ul>
+<h4 id="blk-46349">5.4 Payload limits</h4>
+<p>Adapter MUST validate:</p>
+<ul><li><p>maximum request JSON size</p></li><li><p>maximum message count and message length (to avoid abuse)</p></li><li><p>maximum output size (streaming preferred for large output)</p></li></ul>
+<h4 id="blk-46358">5.5 Concurrency &amp; backpressure</h4>
+<ul><li><p>Adapter SHOULD implement basic backpressure handling:</p></li><li><p>reject with <code>RATE_LIMITED</code> or <code>RUNTIME_ERROR</code> when provider capacity is exceeded,</p></li><li><p>include <code>retryable=true</code> where appropriate.</p></li><li><p>Control plane SHOULD apply per-user and per-agent rate limits (even if not in MVP).</p></li></ul>
+<h3 id="blk-46368">6) Error normalization (normative)</h3>
+<p>Adapters MUST normalize provider errors into the webhost.systems error envelope with these codes:</p>
+<ul><li><p><code>UNAUTHENTICATED</code> / <code>UNAUTHORIZED</code> (control plane usually handles)</p></li><li><p><code>NOT_FOUND</code> (missing deployment/provider resource)</p></li><li><p><code>INVALID_REQUEST</code> (bad input shape, unsupported protocol)</p></li><li><p><code>CONFLICT</code> (deployment in progress, invalid state)</p></li><li><p><code>LIMIT_EXCEEDED</code> (plan gate; control plane)</p></li><li><p><code>DEPLOYMENT_FAILED</code> (provider deploy failure)</p></li><li><p><code>RUNTIME_ERROR</code> (invoke failure, tool failure, provider errors)</p></li><li><p><code>INTERNAL</code> (unexpected)</p></li></ul>
+<p>Rules:</p>
+<ol><li><p>Never return raw provider exceptions directly to clients.</p></li><li><p>Include provider request ids in internal diagnostics only.</p></li><li><p>Mark <code>retryable</code> accurately:</p></li></ol>
+<ul><li><p>transient provider errors: <code>retryable=true</code></p></li><li><p>validation/config errors: <code>retryable=false</code></p></li></ul>
+<h3 id="blk-46400">7) Secrets and configuration (normative)</h3>
+<h4 id="blk-46401">7.1 Secret storage rule</h4>
+<p>Plaintext secrets MUST NOT be stored in the control plane database.</p>
+<p>The control plane may store:</p>
+<ul><li><p>secret key names (<code>envVarKeys</code>)</p></li><li><p>secret references (provider-specific identifiers)</p></li><li><p>rotation metadata (timestamps, last rotated by, etc.)</p></li></ul>
+<h4 id="blk-46411">7.2 Provider injection</h4>
+<p>Adapters MUST ensure secrets are injected into the runtime using provider-native mechanisms:</p>
+<ul><li><p>Cloudflare:</p></li><li><p>Worker secrets (bound at deploy time via provider API)</p></li></ul>
+<ul><li><p>AgentCore:</p></li><li><p><strong>v1 default:</strong> inject secrets as <strong>AgentCore Runtime environment variables</strong> as part of the runtime/deployment configuration (do not store plaintext in the control plane database).</p></li><li><p><strong>Deployment model note (critical):</strong> treat AgentCore deployment as <strong>artifact-based</strong> (commonly container-based). The control plane should be prepared to deploy an artifact reference (e.g., container image URI) plus runtime configuration (lifecycle, compute, env vars), rather than assuming “inline code” deployment.</p></li><li><p><strong>SDK/package variability note (critical):</strong> AWS may split “control plane” vs “runtime/data plane” APIs into separate SDK clients and/or package names across versions. The adapter MUST be written to tolerate this:</p></li><li><p>pin versions explicitly, and</p></li><li><p>isolate AWS calls behind the adapter so any SDK renames/command shape changes are localized.</p></li><li><p><strong>optional enhancement:</strong> use AWS Secrets Manager references (or equivalent) for advanced rotation and centralized secret governance.</p></li><li><p>The control plane MUST store only secret <strong>key names</strong> and/or secret <strong>references/metadata</strong> (never plaintext values).</p></li></ul>
+<h5 id="blk-46435">7.2.1 AgentCore TypeScript adapter example (conceptual; container-first; SDK-agnostic)</h5>
+<p>AgentCore is TypeScript-capable end-to-end. However, the adapter MUST be written to reflect two realities:</p>
+<ol><li><p><strong>Deployment is artifact-based (commonly container-based)</strong>, not necessarily “inline code”.</p></li><li><p><strong>AWS SDK/package shapes can vary by version</strong>, including potential separation of:</p></li></ol>
+<ul><li><p>“control plane” (create/update/delete runtime resources) and</p></li><li><p>“runtime/data plane” (invoke runtime sessions)</p></li></ul>
+<p>into different clients and/or package names.</p>
+<p>A typical control-plane adapter will:</p>
+<ul><li><p><strong>Deploy</strong> by creating/updating an AgentCore runtime using an <strong>artifact reference</strong> (e.g., container image URI) plus configuration:</p></li><li><p>lifecycle configuration (idle/max lifetime),</p></li><li><p>compute shape (vCPU/memory),</p></li><li><p>environment variables (including secrets injected at deploy time),</p></li><li><p>optional capability toggles (memory/code interpreter/browser) as allowed by entitlements,</p></li><li><p>tags for <code>{userId, agentId, deploymentId, deploymentVersion}</code>.</p></li><li><p><strong>Invoke</strong> by calling the AgentCore runtime invocation API with:</p></li><li><p>the deployment’s runtime reference (e.g., <code>agentRuntimeArn</code> and/or runtime id),</p></li><li><p>an opaque <code>runtimeSessionId</code> (mapped 1:1 from <code>sessionId</code>),</p></li><li><p>a payload containing the normalized <code>invoke/v1</code> request.</p></li></ul>
+<p>Example (illustrative pseudo-implementation; do not hardcode command names or assume a single SDK package name):</p>
+<p>// PSEUDOCODE: pin actual package names and command types in implementation. // Some SDK versions may expose separate clients for control vs runtime invocation. const controlClient = new AgentCoreControlClient({ region, credentials }); const runtimeClient = new AgentCoreRuntimeClient({ region, credentials });</p>
+<p>// Deploy/update runtime with a container artifact + env var injection const deployResp = await controlClient.createOrUpdateRuntime({ agentRuntimeName: <code>agent-${agentId}-v${deploymentVersion}</code>, agentRuntimeArtifact: { // Container-based artifact reference (recommended baseline) containerConfiguration: { containerUri: artifact.containerUri, // e.g., ECR image URI }, }, lifeCycleConfiguration: { idleTimeoutInSeconds: providerConfig.idleTimeoutSeconds, maxLifetimeInSeconds: providerConfig.maxLifetimeSeconds, }, compute: { vCpu: providerConfig.vCpu, memoryMb: providerConfig.memoryMb, }, environmentVariables: { TELEMETRY_ENDPOINT_URL: telemetry.endpointUrl, TELEMETRY_DEPLOYMENT_ID: deploymentId, TELEMETRY_SECRET: &quot;&lt;injected-as-secret-value&gt;&quot;, // Customer-provided secrets (write-only into provider): OPENAI_API_KEY: &quot;&lt;injected-as-secret-value&gt;&quot;, }, // Optional provider features gated by entitlements (only set if enabled): memory: providerConfig.memoryEnabled ? { enabled: true } : undefined, codeInterpreter: providerConfig.codeInterpreterEnabled ? { enabled: true } : undefined, browser: providerConfig.browserEnabled ? { enabled: true } : undefined, tags: [ { key: &quot;userId&quot;, value: userId }, { key: &quot;agentId&quot;, value: agentId }, { key: &quot;deploymentId&quot;, value: deploymentId }, { key: &quot;deploymentVersion&quot;, value: String(deploymentVersion) }, ], // IAM role / network config may be required depending on provider requirements: roleArn: providerConfig.roleArn, networkConfiguration: providerConfig.networkConfiguration, });</p>
+<p>// Invoke with session mapping (opaque sessionId -&gt; runtimeSessionId) const runtimeSessionId = sessionId ?? <code>sess_${Date.now()}</code>; const payloadBytes = new TextEncoder().encode(JSON.stringify(invokeV1Request));</p>
+<p>const invokeResp = await runtimeClient.invokeRuntime({ agentRuntimeArn: deployResp.agentRuntimeArn, runtimeSessionId, payload: payloadBytes, // Optional: qualifier/version selector if the provider supports it qualifier: deployResp.qualifier, });</p>
+<p>Adapter requirements (normative):</p>
+<ul><li><p>MUST treat <code>sessionId</code> as opaque and pass it through as the provider session identifier (or return the provider-returned session id).</p></li><li><p>MUST handle “unknown/expired session” as a normalized <code>RUNTIME_ERROR</code> with <code>retryable=false</code> and a safe message (no provider internals leaked).</p></li><li><p>MUST NOT store plaintext secrets in the control plane DB.</p></li><li><p>MUST ensure telemetry secrets are deployment-scoped and injected into the runtime as secrets (env vars are acceptable if injected via provider secret mechanisms; do not persist plaintext).</p></li><li><p>MUST tag provider resources with <code>{userId, agentId, deploymentId, deploymentVersion}</code> for cleanup and future cost reconciliation.</p></li><li><p>MUST pin specific AWS SDK versions and keep all AWS SDK usage isolated within the adapter to contain churn from package/command renames.</p></li></ul>
+<h4 id="blk-46489">7.3 Secret rotation</h4>
+<ul><li><p>Rotating a secret MAY require a redeploy depending on provider.</p></li><li><p>Adapters SHOULD document whether redeploy is required and provide a safe path.</p></li></ul>
+<h3 id="blk-46495">8) Telemetry (normative)</h3>
+<h4 id="blk-46496">8.1 Telemetry objectives</h4>
+<p>Every invocation MUST result in a telemetry event that is:</p>
+<ul><li><p>attributable to <code>{ userId, agentId, deploymentId, runtimeProvider }</code>,</p></li><li><p>integrity-protected against spoofing,</p></li><li><p>sufficient to enforce limits and compute estimated cost.</p></li></ul>
+<h4 id="blk-46505">8.2 Telemetry emission patterns (choose one per provider)</h4>
+<p><strong>Pattern A — In-workload reporting (preferred for Cloudflare DO):</strong></p>
+<ul><li><p>The deployed worker/DO calls <code>POST /v1/telemetry/report</code> after each invocation.</p></li></ul>
+<p><strong>Pattern B — Adapter-side reporting (fallback / interim):</strong></p>
+<ul><li><p>Adapter emits telemetry after receiving provider response.</p></li><li><p>Use only if provider response includes enough usage data and you can attribute compute reliably.</p></li></ul>
+<p>Cloudflare typically fits Pattern A; AgentCore may fit either depending on SDK capabilities and where you can best capture tool usage and session duration.</p>
+<h4 id="blk-46517">8.3 Telemetry authentication (MVP requirement)</h4>
+<p>Telemetry ingestion MUST reject spoofed events.</p>
+<p>MVP approach:</p>
+<ul><li><p>Each deployment has a <code>telemetrySecret</code> injected into the runtime.</p></li><li><p>Runtime signs telemetry payload:</p></li><li><p><code>X-Telemetry-Signature: v1=&lt;HMAC_SHA256(body, telemetrySecret)&gt;</code></p></li><li><p><code>X-Telemetry-Deployment-Id: &lt;deploymentId&gt;</code></p></li><li><p>Control plane validates signature using the secret reference for that deployment.</p></li></ul>
+<h4 id="blk-46531">8.4 Telemetry schema (minimum viable)</h4>
+<p>Telemetry event MUST include:</p>
+<ul><li><p><code>timestamp</code></p></li><li><p><code>requests</code> (typically 1)</p></li><li><p><code>llmTokens</code> (provider-reported preferred; estimated allowed)</p></li><li><p><code>computeMs</code> (wall time or billed compute time)</p></li><li><p><code>errors</code> + <code>errorClass</code></p></li><li><p><code>costUsd</code> (estimated allowed)</p></li><li><p><code>traceId</code> (if available)</p></li></ul>
+<p>Provider-specific optional:</p>
+<ul><li><p>Cloudflare: DO ops, Workers AI calls</p></li><li><p>AgentCore: session duration, tool invocations, browser interactions</p></li></ul>
+<h3 id="blk-46554">9) Deployment packaging and runtime expectations</h3>
+<h4 id="blk-46555">9.1 Required manifest</h4>
+<p>Each artifact MUST include <code>agent.config.json</code> (or an equivalent manifest) with:</p>
+<ul><li><p><code>protocol: &quot;invoke/v1&quot;</code></p></li><li><p><code>runtime: &quot;cloudflare&quot; | &quot;agentcore&quot;</code></p></li><li><p><code>entrypoint</code></p></li><li><p><code>env.requiredKeys</code> and <code>env.optionalKeys</code></p></li><li><p><code>capabilities.streaming</code>, <code>capabilities.tools</code> (booleans)</p></li></ul>
+<p>Adapter MUST validate:</p>
+<ul><li><p>manifest exists and is parseable</p></li><li><p>manifest runtime matches selected runtime provider</p></li><li><p>required env keys are declared</p></li></ul>
+<h4 id="blk-46576">9.2 Entrypoint contract (data plane)</h4>
+<p>The deployed code MUST expose a handler compatible with the selected runtime provider.</p>
+<p>The <em>behavioral</em> contract is:</p>
+<ul><li><p>Accept <code>InvokeRequest</code> input (messages/prompt, session id)</p></li><li><p>Return <code>InvokeResponse</code> output (text, session id, usage if available)</p></li><li><p>Respect timeouts and limits communicated via env/config where applicable</p></li><li><p>Emit telemetry (if Pattern A)</p></li></ul>
+<p>Adapters MAY provide thin runtime shims/templates that wrap user code into provider-specific handlers.</p>
+<h3 id="blk-46589">10) Provider-specific guidance</h3>
+<h3 id="blk-46590">10.1 Cloudflare Workers + Durable Objects adapter</h3>
+<h4 id="blk-46591">10.1.1 Recommended architecture</h4>
+<ul><li><p>A Worker acts as the HTTP entrypoint.</p></li><li><p>A Durable Object (DO) holds per-session state (conversation history, tool state, caches).</p></li><li><p><code>sessionId</code> maps to a DO id.</p></li></ul>
+<h4 id="blk-46599">10.1.2 Deploy responsibilities</h4>
+<p>Adapter SHOULD:</p>
+<ul><li><p>create/update Worker script with bundled code</p></li><li><p>bind:</p></li><li><p>DO namespace</p></li><li><p>secrets (telemetry secret, user-provided secrets like model keys)</p></li><li><p>non-secret env vars</p></li><li><p>ensure the Worker/DO is configured with:</p></li><li><p><code>TELEMETRY_ENDPOINT_URL</code></p></li><li><p><code>TELEMETRY_DEPLOYMENT_ID</code></p></li><li><p><code>TELEMETRY_SECRET</code> (provider secret)</p></li><li><p>optional <code>CONTROL_PLANE_BASE_URL</code> for any necessary callbacks</p></li></ul>
+<h4 id="blk-46622">10.1.3 Invoke responsibilities</h4>
+<ul><li><p>Invocation gateway may call the Worker URL directly (server-to-server).</p></li><li><p>For sessionful calls:</p></li><li><p>if <code>sessionId</code> present: route to that DO instance</p></li><li><p>else: generate a new DO instance id and return it</p></li><li><p>Ensure telemetry emission:</p></li><li><p>DO should emit telemetry at the end of each request with signature.</p></li></ul>
+<h4 id="blk-46636">10.1.4 Streaming</h4>
+<p>Cloudflare supports streaming responses well. Adapter SHOULD:</p>
+<ul><li><p>support SSE from invocation gateway to client</p></li><li><p>pass through provider streaming where possible, else stream from buffered output</p></li></ul>
+<h4 id="blk-46643">10.1.5 Limitations</h4>
+<p>Adapter MUST account for provider constraints (examples; confirm with current provider limits during implementation):</p>
+<ul><li><p>max CPU time</p></li><li><p>memory limits</p></li><li><p>maximum request/response sizes</p></li><li><p>DO concurrency patterns and potential hot-key issues</p></li></ul>
+<h3 id="blk-46654">10.2 AWS Bedrock AgentCore adapter</h3>
+<h4 id="blk-46655">10.2.1 Recommended architecture</h4>
+<ul><li><p>Control plane creates and manages AgentCore runtime resources using AWS SDK (TypeScript-supported).</p></li><li><p>Invocations call AgentCore runtime APIs.</p></li><li><p>Optional: integrate AgentCore tools SDK (code interpreter, browser tools) for premium tiers.</p></li></ul>
+<h4 id="blk-46663">10.2.2 Deploy responsibilities</h4>
+<p>Adapter MUST:</p>
+<ul><li><p>create/update the AgentCore runtime (or deployment unit) for the agent/deployment</p></li><li><p>store the provider reference (<code>agentRuntimeArn</code> / runtime id) as <code>providerRef</code></p></li><li><p>configure secrets via AWS-native mechanisms (preferred)</p></li><li><p>configure telemetry:</p></li><li><p>either in-workload reporting (if your runtime code can call out) OR</p></li><li><p>adapter-side reporting (if sufficient usage data is returned)</p></li></ul>
+<h4 id="blk-46678">10.2.3 Invoke responsibilities</h4>
+<ul><li><p>Map <code>sessionId</code> to AgentCore runtime session id.</p></li><li><p>Ensure <code>traceId</code> is propagated as metadata where supported.</p></li><li><p>Normalize usage reporting:</p></li><li><p>tokens, session duration, tool calls (if available)</p></li><li><p>Normalize tool errors into <code>RUNTIME_ERROR</code> with safe messaging.</p></li></ul>
+<h4 id="blk-46690">10.2.4 Streaming</h4>
+<p>Depending on the AgentCore invoke API capabilities:</p>
+<ul><li><p>If streaming supported: forward as SSE.</p></li><li><p>If not: return buffered responses; optionally emulate streaming.</p></li></ul>
+<h4 id="blk-46697">10.2.5 Tier gating</h4>
+<p>AgentCore usage SHOULD be restricted to higher tiers by policy:</p>
+<ul><li><p>free/starter/pro: Cloudflare default</p></li><li><p>enterprise (or higher): AgentCore enabled</p></li></ul>
+<p>Adapter MUST refuse deploy/invoke if the user is not entitled (control plane should prevent routing, but adapter must still be safe).</p>
+<h3 id="blk-46705">11) Adapter implementation checklist (do-this-not-that)</h3>
+<h4 id="blk-46706">11.1 MUST checklist</h4>
+<ul><li><p>[ ] Validate runtime entitlement before deploy and invoke.</p></li><li><p>[ ] Enforce deployment immutability: new deploy = new deployment id/version.</p></li><li><p>[ ] Ensure deploy is idempotent (retry-safe).</p></li><li><p>[ ] Never persist plaintext secrets.</p></li><li><p>[ ] Ensure telemetry integrity (sign events).</p></li><li><p>[ ] Normalize all errors with correct <code>retryable</code> flag.</p></li><li><p>[ ] Always include or generate <code>traceId</code>.</p></li><li><p>[ ] Ensure session ids are opaque and stable.</p></li></ul>
+<h4 id="blk-46724">11.2 SHOULD checklist</h4>
+<ul><li><p>[ ] Tag/label all provider resources with <code>{userId, agentId, deploymentId}</code> for cleanup and audits.</p></li><li><p>[ ] Provide a best-effort cleanup/deprovision method for agent deletion.</p></li><li><p>[ ] Implement exponential backoff on transient provider failures.</p></li><li><p>[ ] Provide provider diagnostics internally (request ids) without leaking to clients.</p></li></ul>
+<h4 id="blk-46734">11.3 MUST NOT checklist</h4>
+<ul><li><p>[ ] MUST NOT allow telemetry spoofing (unsigned events).</p></li><li><p>[ ] MUST NOT leak secret values in logs/errors.</p></li><li><p>[ ] MUST NOT permit cross-tenant access via provider resource naming collisions.</p></li></ul>
+<h3 id="blk-46742">12) Testing requirements (adapter-focused)</h3>
+<h4 id="blk-46743">12.1 Unit tests</h4>
+<ul><li><p>Deploy input validation and manifest parsing</p></li><li><p>Error mapping table (provider error → normalized code)</p></li><li><p>Telemetry signature generation/verification</p></li><li><p>Cost estimation determinism</p></li></ul>
+<h4 id="blk-46753">12.2 Integration tests (per provider)</h4>
+<p>Cloudflare:</p>
+<ul><li><p>Deploy a minimal agent</p></li><li><p>Invoke stateless and sessionful</p></li><li><p>Verify telemetry event accepted and stored</p></li><li><p>Verify streaming path (if implemented)</p></li></ul>
+<p>AgentCore:</p>
+<ul><li><p>Deploy a minimal agent</p></li><li><p>Invoke with and without session</p></li><li><p>Verify usage extraction and telemetry</p></li><li><p>Verify tier gating (deploy/invoke rejected when not entitled)</p></li></ul>
+<h4 id="blk-46774">12.3 Failure-mode tests</h4>
+<ul><li><p>Invalid manifest → <code>INVALID_REQUEST</code></p></li><li><p>Provider auth failure → <code>DEPLOYMENT_FAILED</code> or <code>RUNTIME_ERROR</code> with <code>retryable=false</code> (depending on operation)</p></li><li><p>Transient provider outage → <code>RUNTIME_ERROR</code> with <code>retryable=true</code></p></li><li><p>Telemetry with bad signature → rejected</p></li></ul>
+<h3 id="blk-46784">13) Future extensions (post-v1)</h3>
+<ul><li><p>Add additional runtime providers (e.g., another cloud or container-based runtime) by implementing the same adapter surface.</p></li><li><p>Add async jobs for long-running invocations (queue + callback/webhook/polling).</p></li><li><p>Add public agents via API keys, with per-agent rate limiting and usage attribution.</p></li><li><p>Add billing reconciliation via provider exports to convert cost from estimated → reconciled.</p></li></ul></div>
+<p class="src"><a href="/#/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-46069" class="lvl2">1) Goals &amp; non-goals</a><a href="#blk-46070" class="lvl3">1.1 Goals</a><a href="#blk-46081" class="lvl3">1.2 Non-goals</a><a href="#blk-46089" class="lvl2">2) Key concepts</a><a href="#blk-46090" class="lvl3">2.1 Control plane vs data plane</a><a href="#blk-46096" class="lvl3">2.2 Provider adapter</a><a href="#blk-46107" class="lvl3">2.3 Session</a><a href="#blk-46115" class="lvl2">3) RPI: canonical types (normative)</a><a href="#blk-46118" class="lvl3">3.1 Provider identifiers</a><a href="#blk-46122" class="lvl3">3.2 Artifact reference</a><a href="#blk-46164" class="lvl3">3.3 Deploy input/output</a><a href="#blk-46197" class="lvl3">3.4 Invoke input/output</a><a href="#blk-46242" class="lvl3">3.5 Streaming invocation</a><a href="#blk-46261" class="lvl2">4) RPI required adapter surface (normative)</a><a href="#blk-46263" class="lvl3">4.1 deploy</a><a href="#blk-46282" class="lvl3">4.2 invoke</a><a href="#blk-46301" class="lvl3">4.3 healthcheck</a><a href="#blk-46312" class="lvl3">4.4 estimateCost (MVP)</a><a href="#blk-46323" class="lvl2">5) Cross-cutting concerns</a><a href="#blk-46324" class="lvl3">5.1 Versioning</a><a href="#blk-46330" class="lvl3">5.2 Idempotency and retries (deploy)</a><a href="#blk-46337" class="lvl3">5.3 Timeouts</a><a href="#blk-46349" class="lvl3">5.4 Payload limits</a><a href="#blk-46358" class="lvl3">5.5 Concurrency &amp; backpressure</a><a href="#blk-46368" class="lvl2">6) Error normalization (normative)</a><a href="#blk-46400" class="lvl2">7) Secrets and configuration (normative)</a><a href="#blk-46401" class="lvl3">7.1 Secret storage rule</a><a href="#blk-46411" class="lvl3">7.2 Provider injection</a><a href="#blk-46435" class="lvl4">7.2.1 AgentCore TypeScript adapter example (conceptual; container-first; SDK-agnostic)</a><a href="#blk-46489" class="lvl3">7.3 Secret rotation</a><a href="#blk-46495" class="lvl2">8) Telemetry (normative)</a><a href="#blk-46496" class="lvl3">8.1 Telemetry objectives</a><a href="#blk-46505" class="lvl3">8.2 Telemetry emission patterns (choose one per provider)</a><a href="#blk-46517" class="lvl3">8.3 Telemetry authentication (MVP requirement)</a><a href="#blk-46531" class="lvl3">8.4 Telemetry schema (minimum viable)</a><a href="#blk-46554" class="lvl2">9) Deployment packaging and runtime expectations</a><a href="#blk-46555" class="lvl3">9.1 Required manifest</a><a href="#blk-46576" class="lvl3">9.2 Entrypoint contract (data plane)</a><a href="#blk-46589" class="lvl2">10) Provider-specific guidance</a><a href="#blk-46590" class="lvl2">10.1 Cloudflare Workers + Durable Objects adapter</a><a href="#blk-46591" class="lvl3">10.1.1 Recommended architecture</a><a href="#blk-46599" class="lvl3">10.1.2 Deploy responsibilities</a><a href="#blk-46622" class="lvl3">10.1.3 Invoke responsibilities</a><a href="#blk-46636" class="lvl3">10.1.4 Streaming</a><a href="#blk-46643" class="lvl3">10.1.5 Limitations</a><a href="#blk-46654" class="lvl2">10.2 AWS Bedrock AgentCore adapter</a><a href="#blk-46655" class="lvl3">10.2.1 Recommended architecture</a><a href="#blk-46663" class="lvl3">10.2.2 Deploy responsibilities</a><a href="#blk-46678" class="lvl3">10.2.3 Invoke responsibilities</a><a href="#blk-46690" class="lvl3">10.2.4 Streaming</a><a href="#blk-46697" class="lvl3">10.2.5 Tier gating</a><a href="#blk-46705" class="lvl2">11) Adapter implementation checklist (do-this-not-that)</a><a href="#blk-46706" class="lvl3">11.1 MUST checklist</a><a href="#blk-46724" class="lvl3">11.2 SHOULD checklist</a><a href="#blk-46734" class="lvl3">11.3 MUST NOT checklist</a><a href="#blk-46742" class="lvl2">12) Testing requirements (adapter-focused)</a><a href="#blk-46743" class="lvl3">12.1 Unit tests</a><a href="#blk-46753" class="lvl3">12.2 Integration tests (per provider)</a><a href="#blk-46774" class="lvl3">12.3 Failure-mode tests</a><a href="#blk-46784" class="lvl2">13) Future extensions (post-v1)</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/architecture.md/">WebHost.Systems Architecture</a><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/spec/00_MASTER_SPEC.md/">webhost.systems — MASTER ENGINEERING SPEC (v1)</a><a href="/WebHost.Systems/docs/spec/10_API_CONTRACTS.md/">webhost.systems — API Contracts (v1)</a><a href="/WebHost.Systems/docs/spec/30_DATA_MODEL_SUPABASE.md/">webhost.systems — Data Model (Supabase/PostgreSQL) &amp; Access Control (v1)</a><a href="/WebHost.Systems/docs/spec/40_SECURITY_SECRETS_COMPLIANCE.md/">webhost.systems — Security, Secrets, and Compliance (v1)</a><a href="/WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md/">webhost.systems — Observability, Metering, Cost, Tiers, and Limit Enforcement (v1)</a><a href="/WebHost.Systems/docs/spec/60_TESTING_ACCEPTANCE.md/">webhost.systems — Testing Plan &amp; Acceptance Criteria (v1)</a><a href="/WebHost.Systems/docs/spec/70_AMPERSAND_PROTOCOL_INTEGRATION.md/">webhost.systems — [&amp;] Protocol Integration Spec (v1)</a><a href="/WebHost.Systems/docs/spec/README.md/">webhost.systems — Spec v1 (Implementation-Ready Document Set)</a><a href="/WebHost.Systems/docs/spec/REALIGNMENT_PLAN.md/">webhost.systems — Spec-to-Implementation Realignment Plan (v1)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajswv3b3oxi3efuxbzakobldcyb4gik5hddoodgyvyxbypvzwy5rq</div></div></div>
+</div></div>
+</body></html>

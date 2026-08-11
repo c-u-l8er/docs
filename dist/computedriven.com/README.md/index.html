@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>computedriven.com · computedriven.com · Ampersand Box</title>
+<meta name="description" content="The homepage of ComputeDriven, a systems studio.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven.com/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="computedriven.com">
+<meta property="og:description" content="The homepage of ComputeDriven, a systems studio.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven.com/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"computedriven.com","name":"computedriven.com","description":"The homepage of ComputeDriven, a systems studio.","url":"https://docs.ampersandboxdesign.com/computedriven.com/README.md/","identifier":"bagaaieraimapdnmujjeoviljaqqzqviymvdc4loerorxji5ql7s5vgkd243q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven.com","url":"https://docs.ampersandboxdesign.com/computedriven.com/"},"articleSection":"computedriven.com","hasPart":[{"@type":"WebPageElement","name":"The argument the page makes"},{"@type":"WebPageElement","name":"What it links to"},{"@type":"WebPageElement","name":"Boot reports"},{"@type":"WebPageElement","name":"The contact form"},{"@type":"WebPageElement","name":"Editing rules"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven.com","item":"https://docs.ampersandboxdesign.com/computedriven.com/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/computedriven.com/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven.com</span>
+<span class="path">computedriven.com/README.md</span>
+
+</div></div>
+<div class="lead">The homepage of ComputeDriven, a systems studio.</div>
+<div class="prose"><h1 id="blk-58528">computedriven.com</h1>
+<p>The homepage of ComputeDriven, a systems studio.</p>
+<p>One static page, no build step, no npm. <code>index.html</code> carries its own CSS and a little vanilla JavaScript; <code>img/</code> holds the screenshots. The portfolio nav is loaded from <code>/amp-nav.js</code>, which is deployed by <code>sync-nav.sh</code> in the [&amp;] workspace rather than edited here.</p>
+<p>It has exactly <strong>one third-party runtime dependency</strong>, and it is worth naming rather than burying: the contact form posts to Formspree. Nothing else on the page calls out at load, and the page still renders and downloads work with <code>formspree.io</code> blocked — only the form stops.</p>
+<h3 id="blk-58532">The argument the page makes</h3>
+<p>Data driven keeps the result. Compute driven ships the derivation.</p>
+<blockquote><p>A claim is compute driven when the artifact carries enough — canonical input, executable semantics, a derived identity and its provenance — for an independent machine to derive the claim again.</p></blockquote>
+<p>Re-derivation proves fidelity, not correctness. A wrong computation re-runs perfectly and is still wrong.</p>
+<h3 id="blk-58537">What it links to</h3>
+<p>The first proof object is <a href="https://github.com/c-u-l8er/travel-and-rrabbit" target="_blank" rel="noopener">T&amp;R</a>, a FreeBSD 15 distribution assembled from pkgbase. Images are published as GitHub releases on that repo; this page links to them directly and quotes their sha256 sums.</p>
+<h3 id="blk-58539">Boot reports</h3>
+<p>The <code>#join</code> section exists because the portfolio nav's CTA reads &quot;Join ComputeDriven&quot; and there was nothing here to join. What it offers is not a mailing list. The page's last admitted gap — every measurement was taken on our machines — is the one gap we cannot close ourselves, so joining is defined as supplying the missing thing: a second machine.</p>
+<p>Reports arrive as GitHub issues on <a href="https://github.com/c-u-l8er/travel-and-rrabbit/issues?q=label%3Aboot-report" target="_blank" rel="noopener">travel-and-rrabbit</a>, filed through <code>.github/ISSUE_TEMPLATE/boot-report.yml</code> in that repo.</p>
+<p><strong>The two counts in `.jn-count` are hand-maintained.</strong> Nothing on this page fetches at runtime, so <code>Reports received</code> and <code>From real hardware</code> are stale by construction. Change them in the same commit that changes the date beneath them, and count only what is actually filed — a page that inflates its own evidence count has lost the whole argument. When the first report from real hardware lands, the &quot;Never booted on real hardware&quot; gap card must change too.</p>
+<h3 id="blk-58543">The contact form</h3>
+<p>Under the boot-report grid, posting to <code>https://formspree.io/f/xaewoadr</code>. <strong>No email address appears anywhere on this page</strong> — that is the point of using an endpoint, so do not reintroduce a <code>mailto:</code> as a &quot;fallback&quot;.</p>
+<p>It is a real <code>&lt;form&gt;</code> with <code>action</code> and <code>method</code>, so it works with scripting off; the script only upgrades it to an inline reply instead of a redirect to Formspree's own thank-you page. <code>_gotcha</code> is Formspree's honeypot and is positioned off-screen rather than <code>display: none</code>.</p>
+<p><strong>&quot;Sent&quot; is printed only on an actual 2xx from the endpoint.</strong> A form that thanks you on submit and drops the message is precisely the failure this site is about. Failures print the reason the endpoint gave, and the typed message survives so it can be retried. If you touch that handler, keep the three paths honest: server error, network failure, success.</p>
+<h3 id="blk-58547">Editing rules</h3>
+<p>Every status on the page is measured, sourced, or marked <em>not built</em>. If you change a number, change the measurement record under it in the same commit — including the date and the machine. If a claim gets weaker, say so; the &quot;Untested &amp; unfinished&quot; section is a feature, not a backlog.</p></div>
+<p class="src"><a href="/#/computedriven.com/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-58532" class="lvl2">The argument the page makes</a><a href="#blk-58537" class="lvl2">What it links to</a><a href="#blk-58539" class="lvl2">Boot reports</a><a href="#blk-58543" class="lvl2">The contact form</a><a href="#blk-58547" class="lvl2">Editing rules</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraimapdnmujjeoviljaqqzqviymvdc4loerorxji5ql7s5vgkd243q</div></div></div>
+</div></div>
+</body></html>

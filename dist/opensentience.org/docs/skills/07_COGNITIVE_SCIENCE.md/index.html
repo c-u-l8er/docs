@@ -1,0 +1,152 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Skill 07 — Cognitive Science Foundations · opensentience.org · Ampersand Box</title>
+<meta name="description" content="OpenSentience protocols are not arbitrary architecture decisions. Each one maps to a specific cognitive science finding about how intelligent systems…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/07_COGNITIVE_SCIENCE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill 07 — Cognitive Science Foundations">
+<meta property="og:description" content="OpenSentience protocols are not arbitrary architecture decisions. Each one maps to a specific cognitive science finding about how intelligent systems…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/07_COGNITIVE_SCIENCE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 07 — Cognitive Science Foundations","name":"Skill 07 — Cognitive Science Foundations","description":"OpenSentience protocols are not arbitrary architecture decisions. Each one maps to a specific cognitive science finding about how intelligent systems…","url":"https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/07_COGNITIVE_SCIENCE.md/","identifier":"bagaaieranvet5w2mmt7jq57jkxzs5kjorqg3eqgrbx32zejhgydll3pqksca","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"Why This Matters"},{"@type":"WebPageElement","name":"OS-001: Hippocampal Consolidation"},{"@type":"WebPageElement","name":"OS-002: Working Memory Gating"},{"@type":"WebPageElement","name":"OS-003: Dual-Process Theory"},{"@type":"WebPageElement","name":"OS-004: Endogenous Attention"},{"@type":"WebPageElement","name":"OS-005: Resource Rationality"},{"@type":"WebPageElement","name":"OS-006: Executive Function"},{"@type":"WebPageElement","name":"OS-007: Adversarial Robustness — Self/Non-Self Discrimination"},{"@type":"WebPageElement","name":"OS-008: Supervisory Attentional System"},{"@type":"WebPageElement","name":"OS-009: PRISM — Meta-Cognition + Psychometrics"},{"@type":"WebPageElement","name":"OS-010: PULSE — Closed-Loop Control Theory + Temporal Cognition"},{"@type":"WebPageElement","name":"Open Research Questions"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/"},{"@type":"ListItem","position":5,"name":"07_COGNITIVE_SCIENCE.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/07_COGNITIVE_SCIENCE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">opensentience.org</span>
+<span class="path">opensentience.org/docs/skills/07_COGNITIVE_SCIENCE.md</span>
+
+</div></div>
+<div class="lead">OpenSentience protocols are not arbitrary architecture decisions. Each one maps to a specific cognitive science finding about how intelligent systems manage knowledge, attention…</div>
+<div class="prose"><h1 id="blk-75519">Skill 07 — Cognitive Science Foundations</h1>
+<blockquote><p>Research grounding for each of the ten protocols: the theories, the papers, the design constraints, and the open questions. Eight cognitive primitives grounded in cognitive science / neuroscience, plus two cross-cutting protocols (OS-009 PRISM, OS-010 PULSE) grounded in psychometrics and closed-loop control theory.</p></blockquote>
+<h3 id="blk-75522">Why This Matters</h3>
+<p>OpenSentience protocols are not arbitrary architecture decisions. Each one maps to a specific cognitive science finding about how intelligent systems manage knowledge, attention, and self-regulation. Understanding the research helps you understand <em>why</em> the protocols work the way they do and where the boundaries of the analogy lie.</p>
+<h3 id="blk-75524">OS-001: Hippocampal Consolidation</h3>
+<p><strong>Key paper:</strong> McClelland, McNaughton &amp; O'Reilly (1995). &quot;Why there are complementary learning systems in the hippocampus and neocortex.&quot;</p>
+<p><strong>Theory:</strong> The brain uses two complementary systems for memory. The hippocampus rapidly encodes new experiences (fast write). The neocortex slowly integrates this knowledge into long-term structure (consolidation). Replaying memories during sleep transfers hippocampal traces into neocortical representations without catastrophic forgetting.</p>
+<p><strong>Design constraints for OS-001:</strong></p>
+<ul><li><p>New knowledge must be stored immediately without disrupting existing memory</p></li><li><p>Background consolidation must merge, decay, and prune to maintain quality</p></li><li><p>Episodic memories (events) are stored differently from semantic memories (facts)</p></li><li><p>Confidence decays over time unless reinforced by retrieval or outcomes</p></li></ul>
+<p><strong>What Graphonomous implements:</strong></p>
+<ul><li><p>Immediate <code>store_node</code> writes (hippocampal fast-write analog)</p></li><li><p><code>run_consolidation</code> background cycle (neocortical integration analog)</p></li><li><p>Three node types mapping to memory systems: episodic, semantic, procedural</p></li></ul>
+<h3 id="blk-75545">OS-002: Working Memory Gating</h3>
+<p><strong>Key paper:</strong> O'Reilly &amp; Frank (2006). &quot;Making working memory work: A computational model of learning in the prefrontal cortex and basal ganglia.&quot;</p>
+<p><strong>Theory:</strong> The prefrontal cortex maintains active representations in working memory, but not everything gets in. The basal ganglia acts as a gate — deciding what information is relevant enough to enter working memory based on learned relevance signals and conflict detection.</p>
+<p><strong>Design constraints for OS-002:</strong></p>
+<ul><li><p>Not all retrieved knowledge should be acted upon equally</p></li><li><p>Cyclic knowledge (contradictions, self-reinforcing claims) needs detection</p></li><li><p>The kappa parameter serves as the conflict signal: kappa = 0 means no</p></li></ul>
+<p>conflict (open the gate), kappa &gt; 0 means conflict (engage deliberation)</p>
+<ul><li><p>Routing must be fast for the common case (acyclic) and thorough for the</p></li></ul>
+<p>rare case (cyclic)</p>
+<p><strong>What Graphonomous implements:</strong></p>
+<ul><li><p>SCC detection on retrieved neighborhoods (basal ganglia conflict signal)</p></li><li><p>Kappa computation (gating threshold)</p></li><li><p>Fast vs deliberate routing based on kappa value</p></li></ul>
+<h3 id="blk-75569">OS-003: Dual-Process Theory</h3>
+<p><strong>Key paper:</strong> Kahneman (2011). &quot;Thinking, Fast and Slow.&quot;</p>
+<p><strong>Theory:</strong> Human cognition operates in two modes. System 1 is fast, automatic, and heuristic-based — it handles routine decisions effortlessly. System 2 is slow, effortful, and analytical — it engages when System 1 encounters novelty, conflict, or high stakes.</p>
+<p><strong>Design constraints for OS-003:</strong></p>
+<ul><li><p>Most agent decisions should be fast (System 1 analog)</p></li><li><p>Deliberation should engage only when triggered by conflict signals (kappa &gt; 0)</p></li><li><p>The deliberation protocol must structure argumentation (bid, debate, vote,</p></li></ul>
+<p>commit) to resolve conflict rather than amplify it</p>
+<ul><li><p>Timeout mechanisms prevent deliberation from stalling indefinitely</p></li></ul>
+<p><strong>What AgenTroMatic implements:</strong></p>
+<ul><li><p>Four-phase deliberation pipeline (bid/debate/vote/commit)</p></li><li><p>Argumentation framework with claims, warrants, and rebuttals</p></li><li><p>Consensus and escalation mechanisms</p></li></ul>
+<h3 id="blk-75592">OS-004: Endogenous Attention</h3>
+<p><strong>Key paper:</strong> Desimone &amp; Duncan (1995). &quot;Neural mechanisms of selective visual attention.&quot;</p>
+<p><strong>Theory:</strong> Attention is not just stimulus-driven (exogenous — a loud noise grabs your attention). It is also goal-directed (endogenous — you look for your car keys because you intend to drive). Endogenous attention biases perception toward goal-relevant information, filtering out distractions.</p>
+<p><strong>Design constraints for OS-004:</strong></p>
+<ul><li><p>The attention engine must prioritize based on active goals, not just recency</p></li></ul>
+<p>or novelty</p>
+<ul><li><p>Salience scoring combines urgency, recency, goal relevance, and confidence</p></li><li><p>The survey/triage/dispatch cycle mirrors the scan/filter/act structure of</p></li></ul>
+<p>biological attention</p>
+<ul><li><p>Dispatch modes (act, learn, escalate, idle) prevent attention from always</p></li></ul>
+<p>demanding action</p>
+<p><strong>What Graphonomous implements:</strong></p>
+<ul><li><p><code>attention_survey</code> (endogenous scan of goal-relevant state)</p></li><li><p><code>attention_run_cycle</code> (full survey/triage/dispatch loop)</p></li><li><p>Goal bias in salience scoring</p></li></ul>
+<h3 id="blk-75618">OS-005: Resource Rationality</h3>
+<p><strong>Key paper:</strong> Lieder &amp; Griffiths (2020). &quot;Resource-rational analysis: Understanding human cognition as the optimal use of limited computational resources.&quot;</p>
+<p><strong>Theory:</strong> Optimal cognition is not about always computing the best answer. It is about allocating computational effort proportional to the value of the decision. Simple decisions warrant fast, cheap heuristics. High-stakes decisions justify expensive, thorough analysis.</p>
+<p><strong>Design constraints for OS-005:</strong></p>
+<ul><li><p>Three model tiers map to three levels of computational investment</p></li><li><p>The same tool surface and topology are available at every tier</p></li><li><p>Escalation rules define when to upgrade from cheap to expensive processing</p></li><li><p>Budget constraints (tokens, latency, cost) prevent unbounded computation</p></li></ul>
+<p><strong>What Graphonomous and Agentelic implement:</strong></p>
+<ul><li><p>local_small / local_large / cloud_frontier tier definitions</p></li><li><p>Escalation thresholds based on confidence and decision stakes</p></li><li><p>Token and latency budgets per tier</p></li></ul>
+<h3 id="blk-75639">OS-006: Executive Function</h3>
+<p><strong>Key paper:</strong> Miyake, Friedman et al. (2000). &quot;The unity and diversity of executive functions and their contributions to complex frontal lobe tasks.&quot;</p>
+<p><strong>Theory:</strong> Executive function is an umbrella term for the cognitive processes that regulate, control, and manage other cognitive processes. Miyake et al. identified three core components: inhibitory control (suppressing inappropriate responses), task switching (flexibly shifting between tasks), and working memory updating (monitoring and revising held information).</p>
+<p><strong>Design constraints for OS-006:</strong></p>
+<ul><li><p>Inhibitory control maps to the permission system (blocking disallowed actions)</p></li><li><p>Task switching maps to the lifecycle state machine (managing agent state)</p></li><li><p>Working memory updating maps to graduated autonomy (adapting the level of</p></li></ul>
+<p>agent independence based on accumulated trust)</p>
+<ul><li><p>The audit trail provides metacognitive monitoring — awareness of what the</p></li></ul>
+<p>system has done</p>
+<p><strong>What `open_sentience` implements:</strong></p>
+<ul><li><p>PermissionEngine (inhibitory control)</p></li><li><p>AgentLifecycle GenStateMachine (task switching)</p></li><li><p>AutonomyController (working memory updating / cognitive flexibility)</p></li><li><p>AuditWriter (metacognitive monitoring)</p></li></ul>
+<h3 id="blk-75665">OS-007: Adversarial Robustness — Self/Non-Self Discrimination</h3>
+<p><strong>Theoretical grounding:</strong> Adaptive immunity theory (Burnet 1959; Janeway 1989).</p>
+<p><strong>Theory:</strong> Biological immune systems distinguish self from non-self through a combination of innate pattern recognition and adaptive memory. The same architecture maps cleanly to agent threat detection: known-good behavior is &quot;self,&quot; novel attack patterns are &quot;non-self,&quot; and the system must learn to recognize new threats without misclassifying legitimate variation.</p>
+<p><strong>Design constraints for OS-007:</strong></p>
+<ul><li><p>Five threat categories with explicit detection rules</p></li><li><p>Defense protocols must be reversible (quarantine before destroy)</p></li><li><p>Integration with OS-006 for permission revocation and OS-008 for circuit</p></li></ul>
+<p>breaking — the immune response is enacted by the governance and harness layers</p>
+<h3 id="blk-75677">OS-008: Supervisory Attentional System</h3>
+<p><strong>Key paper:</strong> Norman &amp; Shallice (1986). &quot;Attention to action: Willed and automatic control of behavior.&quot;</p>
+<p><strong>Theory:</strong> Routine behavior runs automatically through contention scheduling between learned action schemas. A <em>supervisory attentional system</em> intervenes when novel, dangerous, or constraint-violating situations arise. The supervisory system does not execute behavior directly — it modulates which schemas are allowed to run.</p>
+<p><strong>Design constraints for OS-008:</strong></p>
+<ul><li><p>The harness is the runtime that calls the agent, not a tool the agent calls</p></li><li><p>It enforces pipeline ordering, quality gates, sprint contracts, and context</p></li></ul>
+<p>management</p>
+<ul><li><p>It intervenes when prerequisites are not met or when quality thresholds are</p></li></ul>
+<p>not crossed — but it does not generate the agent's outputs</p>
+<h3 id="blk-75691">OS-009: PRISM — Meta-Cognition + Psychometrics</h3>
+<p><strong>Key references:</strong></p>
+<ul><li><p>Rasch, G. (1960). &quot;Probabilistic models for some intelligence and attainment</p></li></ul>
+<p>tests.&quot; (Item Response Theory foundation)</p>
+<ul><li><p>Lord, F. M. (1980). &quot;Applications of item response theory to practical testing</p></li></ul>
+<p>problems.&quot;</p>
+<ul><li><p>Green, D. M. &amp; Swets, J. A. (1966). &quot;Signal detection theory and</p></li></ul>
+<p>psychophysics.&quot;</p>
+<ul><li><p>Flavell, J. H. (1979). &quot;Metacognition and cognitive monitoring.&quot; (Meta-cognition)</p></li></ul>
+<p><strong>Theory:</strong> Measuring whether a system <em>learns</em> (rather than merely <em>answers</em>) requires the same toolkit psychometricians built for measuring human learning: calibrated item difficulty, separation of item-quality from learner-quality parameters, and detection of response bias. PRISM applies IRT to scenario calibration and signal detection theory to dimension scoring, then closes the meta-cognitive loop by reflecting on its own scenarios and evolving them.</p>
+<p><strong>Design constraints for OS-009:</strong></p>
+<ul><li><p>9 continual-learning dimensions (retention, plasticity, transfer,</p></li></ul>
+<p>contradiction handling, etc.) — each with calibrated scoring rubrics</p>
+<ul><li><p>4-phase evaluation loop: compose → interact → observe → reflect → diagnose</p></li></ul>
+<p>(the diagnostic must itself be a closed loop)</p>
+<ul><li><p>BYOR ingestion — point PRISM at any repo and it generates scenarios</p></li><li><p>IRT calibration of scenario difficulty across cycles</p></li><li><p><strong>PULSE-aware:</strong> PRISM's <code>interact</code> phase reads any system's PULSE manifest</p></li></ul>
+<p>at runtime and drives the inner loop through its declared phases</p>
+<h3 id="blk-75726">OS-010: PULSE — Closed-Loop Control Theory + Temporal Cognition</h3>
+<p><strong>Key references:</strong></p>
+<ul><li><p>Wiener, N. (1948). &quot;Cybernetics: or Control and Communication in the Animal</p></li></ul>
+<p>and the Machine.&quot; (Closed-loop control foundation)</p>
+<ul><li><p>Allen, J. F. (1983). &quot;Maintaining knowledge about temporal intervals.&quot;</p></li></ul>
+<p>(Interval algebra)</p>
+<ul><li><p>CloudEvents v1 specification (CNCF, 2019). (Event envelope standard)</p></li></ul>
+<p><strong>Theory:</strong> Wiener's cybernetics established that intelligent behavior — in animals or machines — requires closed feedback loops with explicit phases: sense, decide, act, observe, adjust. Allen's interval algebra formalized the 13 possible relationships between temporal intervals, providing a vocabulary for describing how loops can nest, overlap, and signal one another. PULSE combines these into a manifest standard: every loop in the [&amp;] portfolio declares its phases in the same vocabulary, and cross-loop signals use CloudEvents v1 envelopes so that loops can compose without bespoke adapters.</p>
+<p><strong>Design constraints for OS-010:</strong></p>
+<ul><li><p>5 canonical phase kinds (<code>retrieve</code>, <code>route</code>, <code>act</code>, <code>learn</code>, <code>consolidate</code>)</p></li></ul>
+<p>cover the closed-loop control archetype; custom phases extend it without breaking the schema</p>
+<ul><li><p>5 canonical cross-loop tokens (<code>TopologyContext</code>, <code>DeliberationResult</code>,</p></li></ul>
+<p><code>OutcomeSignal</code>, <code>ReputationUpdate</code>, <code>ConsolidationEvent</code>) cover the observed inter-system signaling needs</p>
+<ul><li><p>7 invariants (phase atomicity, feedback immutability, append-only audit,</p></li></ul>
+<p>kappa routing, quorum before commit, outcome grounding, trace ID propagation) encode the structural correctness conditions</p>
+<ul><li><p>A 12-test conformance suite makes &quot;PULSE-conforming&quot; objectively verifiable</p></li></ul>
+<h3 id="blk-75756">Open Research Questions</h3>
+<ol><li><p><strong>Cross-protocol interaction:</strong> How do attention biases (OS-004) affect</p></li></ol>
+<p>deliberation engagement thresholds (OS-003)? Should high goal salience lower the kappa threshold for deliberation?</p>
+<ol start="2"><li><p><strong>Consolidation and governance:</strong> Should memory consolidation events</p></li></ol>
+<p>(OS-001) be subject to governance (OS-006)? Can an agent with <code>graph_access:write</code> permission consolidate knowledge it cannot read?</p>
+<ol start="3"><li><p><strong>Multi-agent executive function:</strong> Miyake's model applies to individual</p></li></ol>
+<p>cognition. How does executive function work when governance spans multiple agents with different trust levels?</p>
+<ol start="4"><li><p><strong>Tier-aware governance:</strong> Should autonomy levels (OS-006) automatically</p></li></ol>
+<p>adjust based on model tier (OS-005)? A local_small model may warrant lower autonomy than a cloud_frontier model.</p>
+<ol start="5"><li><p><strong>Attention-governance feedback:</strong> Should the attention engine (OS-004)</p></li></ol>
+<p>flag agents whose audit trails show increasing denial rates?</p>
+<ol start="6"><li><p><strong>Temporal cognition:</strong> Is time-awareness a distinct cognitive capability</p></li></ol>
+<p>that warrants its own protocol, or is it a cross-cutting concern? <em>Status:</em> addressed by OS-010 PULSE as a temporal algebra (loop manifest standard) sitting above the cognitive primitives — a cross-cutting protocol rather than a ninth cognitive primitive.</p>
+<ol start="7"><li><p><strong>PRISM scenario evolution (OS-009):</strong> How aggressively should PRISM evolve</p></li></ol>
+<p>scenarios between cycles? Too aggressive and the system optimizes for adversarial noise; too conservative and learning improvement plateaus.</p>
+<ol start="8"><li><p><strong>PULSE nesting depth (OS-010):</strong> What is the practical maximum nesting</p></li></ol>
+<p>depth before cross-loop signal volume becomes a substrate burden? The triple-loop case (PRISM → Graphonomous → Deliberation) is well-understood; four- and five-loop nesting (e.g., adding OS-008 Harness as an outer layer) is an open empirical question.</p></div>
+<p class="src"><a href="/#/opensentience.org/docs/skills/07_COGNITIVE_SCIENCE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-75522" class="lvl2">Why This Matters</a><a href="#blk-75524" class="lvl2">OS-001: Hippocampal Consolidation</a><a href="#blk-75545" class="lvl2">OS-002: Working Memory Gating</a><a href="#blk-75569" class="lvl2">OS-003: Dual-Process Theory</a><a href="#blk-75592" class="lvl2">OS-004: Endogenous Attention</a><a href="#blk-75618" class="lvl2">OS-005: Resource Rationality</a><a href="#blk-75639" class="lvl2">OS-006: Executive Function</a><a href="#blk-75665" class="lvl2">OS-007: Adversarial Robustness — Self/Non-Self Discrimination</a><a href="#blk-75677" class="lvl2">OS-008: Supervisory Attentional System</a><a href="#blk-75691" class="lvl2">OS-009: PRISM — Meta-Cognition + Psychometrics</a><a href="#blk-75726" class="lvl2">OS-010: PULSE — Closed-Loop Control Theory + Temporal Cognition</a><a href="#blk-75756" class="lvl2">Open Research Questions</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/opensentience.org/docs/skills/SKILLS.md/">OpenSentience — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/docs/skills/01_PROTOCOLS_OVERVIEW.md/">Skill 01 — The Ten Protocols</a><a href="/opensentience.org/docs/skills/02_AGENT_LIFECYCLE.md/">Skill 02 — Agent Lifecycle</a><a href="/opensentience.org/docs/skills/03_PERMISSIONS.md/">Skill 03 — Permissions</a><a href="/opensentience.org/docs/skills/04_AUTONOMY_LEVELS.md/">Skill 04 — Autonomy Levels</a><a href="/opensentience.org/docs/skills/05_AUDIT_TRAILS.md/">Skill 05 — Audit Trails</a><a href="/opensentience.org/docs/skills/06_INTEGRATION.md/">Skill 06 — Integration</a><a href="/opensentience.org/docs/skills/08_ANTI_PATTERNS.md/">Skill 08 — Anti-Patterns</a><a href="/opensentience.org/docs/skills/SKILLS.md/">OpenSentience — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieranvet5w2mmt7jq57jkxzs5kjorqg3eqgrbx32zejhgydll3pqksca</div></div></div>
+</div></div>
+</body></html>

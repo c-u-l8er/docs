@@ -1,0 +1,394 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;reason.vote -- Consensus-Oriented Reasoning for the [&amp;] Protocol · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;reason.vote is the capability page for the &amp;reason.vote subtype in the [&amp;] Protocol.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.vote.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;reason.vote -- Consensus-Oriented Reasoning for the [&amp;] Protocol">
+<meta property="og:description" content="&amp;reason.vote is the capability page for the &amp;reason.vote subtype in the [&amp;] Protocol.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.vote.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&reason.vote -- Consensus-Oriented Reasoning for the [&] Protocol","name":"&reason.vote -- Consensus-Oriented Reasoning for the [&] Protocol","description":"&reason.vote is the capability page for the &reason.vote subtype in the [&] Protocol.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.vote.md/","identifier":"bagaaieranerzwiajchznslz2ipocmulgi7uizumaafmxxdeosaut4cmy3rpa","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. Where it fits in the protocol"},{"@type":"WebPageElement","name":"4. What makes reason.vote different from other reasoning subtypes"},{"@type":"WebPageElement","name":"Compared with reason.argument"},{"@type":"WebPageElement","name":"Compared with reason.deliberate"},{"@type":"WebPageElement","name":"Compared with reason.plan"},{"@type":"WebPageElement","name":"Compared with implicit model reasoning"},{"@type":"WebPageElement","name":"5. Capability contract"},{"@type":"WebPageElement","name":"Contract meaning"},{"@type":"WebPageElement","name":"6. Architecture diagram"},{"@type":"WebPageElement","name":"Interpretation"},{"@type":"WebPageElement","name":"7. Example ampersand.json usage"},{"@type":"WebPageElement","name":"Explicit provider binding"},{"@type":"WebPageElement","name":"Auto provider binding"},{"@type":"WebPageElement","name":"8. Example API surface"},{"@type":"WebPageElement","name":"propose"},{"@type":"WebPageElement","name":"vote"},{"@type":"WebPageElement","name":"aggregate"},{"@type":"WebPageElement","name":"select"},{"@type":"WebPageElement","name":"9. Composition patterns"},{"@type":"WebPageElement","name":"Pattern A: Argument -> Vote"},{"@type":"WebPageElement","name":"Pattern B: Memory -> Vote"},{"@type":"WebPageElement","name":"Pattern C: Time + Space -> Argument -> Vote"},{"@type":"WebPageElement","name":"Pattern D: Vote -> Memory"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"reason.vote.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.vote.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/reason.vote.md</span>
+
+</div></div>
+<div class="lead">&amp;reason.vote is the capability page for the &amp;reason.vote subtype in the [&amp;] Protocol.</div>
+<div class="prose"><h1 id="blk-12247"><code>&amp;reason.vote</code> -- Consensus-Oriented Reasoning for the [&amp;] Protocol</h1>
+<p><code>&amp;reason.vote</code> is the capability page for the <code>&amp;reason.vote</code> subtype in the [&amp;] Protocol.</p>
+<p>It represents a reasoning surface built for:</p>
+<ul><li><p>multi-agent proposal comparison</p></li><li><p>preference and ranking signal collection</p></li><li><p>ballot aggregation into consensus state</p></li><li><p>final selection from aggregated results</p></li><li><p>auditable group decision making</p></li></ul>
+<p>In short:</p>
+<blockquote><p><code>&amp;reason.vote</code> is the protocol capability for agents that must <strong>reach consensus across multiple perspectives, not merely reason alone</strong>.</p></blockquote>
+<h3 id="blk-12264">1. Definition</h3>
+<p><code>&amp;reason.vote</code> is a subtype of the <code>&amp;reason</code> primitive.</p>
+<p>It describes a reasoning capability that coordinates multiple agents or evaluation paths to produce:</p>
+<ul><li><p>a set of candidate proposals</p></li><li><p>a collection of preference or ranking signals</p></li><li><p>an aggregated consensus state</p></li><li><p>a final selection with provenance</p></li></ul>
+<p>Unlike <code>&amp;reason.argument</code>, which models a single agent evaluating evidence, <code>&amp;reason.vote</code> models the consensus mechanism across multiple agents or evaluation perspectives.</p>
+<h3 id="blk-12277">2. Why this capability exists</h3>
+<p>Many agent systems need more than one perspective.</p>
+<p>They need a way to:</p>
+<ul><li><p>generate and compare competing proposals</p></li><li><p>collect structured preference signals from multiple agents</p></li><li><p>aggregate those signals into a defensible consensus</p></li><li><p>select a final outcome from the aggregated state</p></li><li><p>preserve the full voting record for audit</p></li></ul>
+<p>That is the role of <code>&amp;reason.vote</code>.</p>
+<p>This capability is especially important for systems where decisions must be:</p>
+<ul><li><p>collectively endorsed</p></li><li><p>resistant to single-point failure of judgment</p></li><li><p>transparent about dissent and agreement</p></li><li><p>reproducible across different agent configurations</p></li><li><p>governed by explicit selection rules</p></li></ul>
+<p>Examples include:</p>
+<ul><li><p>ensemble model decisions where multiple agents evaluate the same problem</p></li><li><p>committee-style workflows with independent reviewers</p></li><li><p>multi-agent consensus on remediation strategy</p></li><li><p>ranking multiple candidate outputs before surfacing a final answer</p></li><li><p>governance decisions requiring quorum or supermajority</p></li></ul>
+<h3 id="blk-12316">3. Where it fits in the protocol</h3>
+<p>The [&amp;] Protocol organizes cognition, embodiment, and governance into six primitive families:</p>
+<ul><li><p><code>&amp;memory</code> -- what the agent knows</p></li><li><p><code>&amp;reason</code> -- how the agent decides</p></li><li><p><code>&amp;time</code> -- when things happen</p></li><li><p><code>&amp;space</code> -- where things are</p></li><li><p><code>&amp;body</code> -- how the agent is instantiated in an environment (perception, action, affordance)</p></li><li><p><code>&amp;govern</code> -- who is acting, under what rules, at what cost</p></li></ul>
+<p><code>&amp;reason.vote</code> lives under <code>&amp;reason</code> and is the subtype most directly associated with:</p>
+<ul><li><p>consensus</p></li><li><p>aggregation</p></li><li><p>candidate ranking</p></li><li><p>collective selection</p></li></ul>
+<p>It composes naturally with:</p>
+<ul><li><p><code>&amp;reason.argument</code> for upstream evidence-weighted evaluation</p></li><li><p><code>&amp;memory.*</code> for evidence retrieval and learning from past votes</p></li><li><p><code>&amp;time.*</code> for deadline-aware or time-bounded consensus</p></li><li><p><code>&amp;space.*</code> for region-scoped voting contexts</p></li></ul>
+<h3 id="blk-12351">4. What makes <code>reason.vote</code> different from other reasoning subtypes</h3>
+<h4 id="blk-12352">Compared with <code>reason.argument</code></h4>
+<ul><li><p><code>reason.argument</code> emphasizes evidence-weighted evaluation by a single agent</p></li><li><p><code>reason.vote</code> emphasizes aggregation and consensus across multiple agents or perspectives</p></li></ul>
+<p>A common composition: agents use <code>&amp;reason.argument</code> to evaluate evidence independently, then <code>&amp;reason.vote</code> aggregates their conclusions into a consensus.</p>
+<h4 id="blk-12359">Compared with <code>reason.deliberate</code></h4>
+<ul><li><p><code>reason.deliberate</code> is kappa-aware structured deliberation over cyclic knowledge</p></li><li><p><code>reason.vote</code> is the consensus mechanism that can operate within or after deliberation</p></li></ul>
+<h4 id="blk-12365">Compared with <code>reason.plan</code></h4>
+<ul><li><p><code>reason.plan</code> emphasizes goal decomposition and step sequencing</p></li><li><p><code>reason.vote</code> emphasizes selection among alternatives, not sequencing</p></li></ul>
+<h4 id="blk-12371">Compared with implicit model reasoning</h4>
+<ul><li><p><code>reason.vote</code> is explicit, typed, inspectable, and composable</p></li><li><p>implicit reasoning hides the consensus process inside application code or prompt engineering</p></li></ul>
+<h3 id="blk-12377">5. Capability contract</h3>
+<p>A representative contract for <code>&amp;reason.vote</code> looks like this:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.vote&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Consensus-oriented reasoning contract for multi-agent proposal comparison, preference aggregation, and auditable selection.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;propose&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;candidate_set&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Generate candidate proposals from enriched context or multiple agent outputs.&quot;</span>
+    },
+    <span class="t-key">&quot;vote&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;candidate_set&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;ballot_set&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Collect preference or ranking signals from participating agents.&quot;</span>
+    },
+    <span class="t-key">&quot;aggregate&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;ballot_set&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;consensus_state&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Merge ballots into an aggregated consensus state with support scores.&quot;</span>
+    },
+    <span class="t-key">&quot;select&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;consensus_state&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;decision&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Produce a final decision from the aggregated consensus state.&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;reason.argument&quot;</span>,
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;time.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.*&quot;</span>,
+    <span class="t-string">&quot;context&quot;</span>,
+    <span class="t-string">&quot;candidate_set&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;multi-agent-consensus&quot;</span>,
+    <span class="t-string">&quot;candidate-ranking&quot;</span>
+  ]
+}</code></pre>
+<h4 id="blk-12380">Contract meaning</h4>
+<p>This contract says:</p>
+<ul><li><p><code>propose</code> consumes <code>context</code> and outputs <code>candidate_set</code></p></li><li><p><code>vote</code> consumes <code>candidate_set</code> and outputs <code>ballot_set</code></p></li><li><p><code>aggregate</code> consumes <code>ballot_set</code> and outputs <code>consensus_state</code></p></li><li><p><code>select</code> consumes <code>consensus_state</code> and outputs <code>decision</code></p></li></ul>
+<p>It also says:</p>
+<ul><li><p>upstream inputs can come from argument reasoning, memory, time, space, or generic context</p></li><li><p>outputs can feed memory or final output surfaces</p></li><li><p>this capability may advertise A2A-facing skills such as <code>multi-agent-consensus</code></p></li></ul>
+<h3 id="blk-12399">6. Architecture diagram</h3>
+<p>A typical <code>&amp;reason.vote</code> pipeline looks like this:</p>
+<pre><code>raw_data
+  -&gt; &amp;memory.graph.enrich()
+  -&gt; &amp;reason.argument.evaluate()  [agent_1]
+  -&gt; &amp;reason.argument.evaluate()  [agent_2]
+  -&gt; &amp;reason.argument.evaluate()  [agent_3]
+  -&gt; &amp;reason.vote.propose()
+  -&gt; &amp;reason.vote.vote()
+  -&gt; &amp;reason.vote.aggregate()
+  -&gt; &amp;reason.vote.select()
+  -&gt; decision</code></pre>
+<p>Or, in a simpler ensemble workflow:</p>
+<pre><code>candidate_outputs
+  -&gt; &amp;reason.vote.vote()
+  -&gt; &amp;reason.vote.aggregate()
+  -&gt; &amp;reason.vote.select()
+  -&gt; decision</code></pre>
+<h4 id="blk-12404">Interpretation</h4>
+<ul><li><p>upstream capabilities generate and enrich candidate proposals</p></li><li><p><code>&amp;reason.vote</code> collects preferences, aggregates them, and selects</p></li><li><p>the result can be stored, surfaced, or escalated</p></li><li><p>provenance preserves the full chain from proposals through ballots to selection</p></li></ul>
+<h3 id="blk-12414">7. Example <code>ampersand.json</code> usage</h3>
+<h4 id="blk-12415">Explicit provider binding</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;ConsensusPanel&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;reason.vote&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;governance&quot;</span>: <span class="t-string">&quot;committee-safe&quot;</span>,
+        <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;evidence-first&quot;</span>
+      }
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h4 id="blk-12417">Auto provider binding</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;EnsembleReviewer&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;reason.vote&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+      <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;multi-agent consensus with ranked candidate selection&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;infer_from_goal&quot;</span>: <span class="t-lit">true</span>
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h3 id="blk-12419">8. Example API surface</h3>
+<p>A provider implementing <code>&amp;reason.vote</code> might expose operations like:</p>
+<h4 id="blk-12421"><code>propose</code></h4>
+<p>Input:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;context&quot;</span>: {
+    <span class="t-key">&quot;problem&quot;</span>: <span class="t-string">&quot;select-remediation-strategy&quot;</span>,
+    <span class="t-key">&quot;candidates_from&quot;</span>: [<span class="t-string">&quot;agent-alpha&quot;</span>, <span class="t-string">&quot;agent-beta&quot;</span>, <span class="t-string">&quot;agent-gamma&quot;</span>],
+    <span class="t-key">&quot;enrichment&quot;</span>: {
+      <span class="t-key">&quot;anomalies&quot;</span>: <span class="t-num">2</span>,
+      <span class="t-key">&quot;affected_regions&quot;</span>: [<span class="t-string">&quot;eu-west&quot;</span>],
+      <span class="t-key">&quot;historical_success_rates&quot;</span>: [<span class="t-num">0.85</span>, <span class="t-num">0.72</span>, <span class="t-num">0.91</span>]
+    }
+  }
+}</code></pre>
+<p>Output:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;candidate_set&quot;</span>: [
+    {<span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;proposal-1&quot;</span>, <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;agent-alpha&quot;</span>, <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;scale_horizontally&quot;</span>},
+    {<span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;proposal-2&quot;</span>, <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;agent-beta&quot;</span>, <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;failover_to_standby&quot;</span>},
+    {<span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;proposal-3&quot;</span>, <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;agent-gamma&quot;</span>, <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;throttle_and_monitor&quot;</span>}
+  ]
+}</code></pre>
+<h4 id="blk-12426"><code>vote</code></h4>
+<p>Input:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;candidate_set&quot;</span>: [
+    {<span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;proposal-1&quot;</span>, <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;scale_horizontally&quot;</span>},
+    {<span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;proposal-2&quot;</span>, <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;failover_to_standby&quot;</span>},
+    {<span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;proposal-3&quot;</span>, <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;throttle_and_monitor&quot;</span>}
+  ],
+  <span class="t-key">&quot;voters&quot;</span>: [<span class="t-string">&quot;agent-alpha&quot;</span>, <span class="t-string">&quot;agent-beta&quot;</span>, <span class="t-string">&quot;agent-gamma&quot;</span>]
+}</code></pre>
+<p>Output:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;ballot_set&quot;</span>: [
+    {<span class="t-key">&quot;voter&quot;</span>: <span class="t-string">&quot;agent-alpha&quot;</span>, <span class="t-key">&quot;ranking&quot;</span>: [<span class="t-string">&quot;proposal-3&quot;</span>, <span class="t-string">&quot;proposal-1&quot;</span>, <span class="t-string">&quot;proposal-2&quot;</span>]},
+    {<span class="t-key">&quot;voter&quot;</span>: <span class="t-string">&quot;agent-beta&quot;</span>, <span class="t-key">&quot;ranking&quot;</span>: [<span class="t-string">&quot;proposal-1&quot;</span>, <span class="t-string">&quot;proposal-3&quot;</span>, <span class="t-string">&quot;proposal-2&quot;</span>]},
+    {<span class="t-key">&quot;voter&quot;</span>: <span class="t-string">&quot;agent-gamma&quot;</span>, <span class="t-key">&quot;ranking&quot;</span>: [<span class="t-string">&quot;proposal-3&quot;</span>, <span class="t-string">&quot;proposal-1&quot;</span>, <span class="t-string">&quot;proposal-2&quot;</span>]}
+  ]
+}</code></pre>
+<h4 id="blk-12431"><code>aggregate</code></h4>
+<p>Input:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;ballot_set&quot;</span>: [
+    {<span class="t-key">&quot;voter&quot;</span>: <span class="t-string">&quot;agent-alpha&quot;</span>, <span class="t-key">&quot;ranking&quot;</span>: [<span class="t-string">&quot;proposal-3&quot;</span>, <span class="t-string">&quot;proposal-1&quot;</span>, <span class="t-string">&quot;proposal-2&quot;</span>]},
+    {<span class="t-key">&quot;voter&quot;</span>: <span class="t-string">&quot;agent-beta&quot;</span>, <span class="t-key">&quot;ranking&quot;</span>: [<span class="t-string">&quot;proposal-1&quot;</span>, <span class="t-string">&quot;proposal-3&quot;</span>, <span class="t-string">&quot;proposal-2&quot;</span>]},
+    {<span class="t-key">&quot;voter&quot;</span>: <span class="t-string">&quot;agent-gamma&quot;</span>, <span class="t-key">&quot;ranking&quot;</span>: [<span class="t-string">&quot;proposal-3&quot;</span>, <span class="t-string">&quot;proposal-1&quot;</span>, <span class="t-string">&quot;proposal-2&quot;</span>]}
+  ]
+}</code></pre>
+<p>Output:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;consensus_state&quot;</span>: {
+    <span class="t-key">&quot;scores&quot;</span>: {
+      <span class="t-key">&quot;proposal-3&quot;</span>: <span class="t-num">0.78</span>,
+      <span class="t-key">&quot;proposal-1&quot;</span>: <span class="t-num">0.67</span>,
+      <span class="t-key">&quot;proposal-2&quot;</span>: <span class="t-num">0.22</span>
+    },
+    <span class="t-key">&quot;agreement_level&quot;</span>: <span class="t-num">0.81</span>,
+    <span class="t-key">&quot;dissent_flags&quot;</span>: []
+  }
+}</code></pre>
+<h4 id="blk-12436"><code>select</code></h4>
+<p>Input:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;consensus_state&quot;</span>: {
+    <span class="t-key">&quot;scores&quot;</span>: {
+      <span class="t-key">&quot;proposal-3&quot;</span>: <span class="t-num">0.78</span>,
+      <span class="t-key">&quot;proposal-1&quot;</span>: <span class="t-num">0.67</span>,
+      <span class="t-key">&quot;proposal-2&quot;</span>: <span class="t-num">0.22</span>
+    },
+    <span class="t-key">&quot;agreement_level&quot;</span>: <span class="t-num">0.81</span>
+  }
+}</code></pre>
+<p>Output:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;decision&quot;</span>: <span class="t-string">&quot;throttle_and_monitor&quot;</span>,
+  <span class="t-key">&quot;confidence&quot;</span>: <span class="t-num">0.81</span>,
+  <span class="t-key">&quot;selected_proposal&quot;</span>: <span class="t-string">&quot;proposal-3&quot;</span>,
+  <span class="t-key">&quot;rationale&quot;</span>: [
+    <span class="t-string">&quot;Two of three voters ranked throttle_and_monitor first&quot;</span>,
+    <span class="t-string">&quot;Agreement level exceeds governance threshold&quot;</span>,
+    <span class="t-string">&quot;No dissent flags raised&quot;</span>
+  ]
+}</code></pre>
+<h3 id="blk-12441">9. Composition patterns</h3>
+<h4 id="blk-12442">Pattern A: Argument -&gt; Vote</h4>
+<p>Use when multiple agents should argue independently, then vote on conclusions.</p>
+<pre><code>&amp;reason.argument [agent_1] -&gt; &amp;reason.vote
+&amp;reason.argument [agent_2] -&gt;
+&amp;reason.argument [agent_3] -&gt;</code></pre>
+<p>Good for:</p>
+<ul><li><p>ensemble decisions</p></li><li><p>committee review panels</p></li><li><p>multi-perspective evaluation</p></li><li><p>reducing single-agent bias</p></li></ul>
+<h4 id="blk-12455">Pattern B: Memory -&gt; Vote</h4>
+<p>Use when the primary need is selecting among retrieved candidates or historical options.</p>
+<pre><code>&amp;memory.vector -&gt; &amp;reason.vote</code></pre>
+<p>Good for:</p>
+<ul><li><p>best-match selection from a candidate pool</p></li><li><p>ranking historical remediation strategies</p></li><li><p>selecting from cached policy responses</p></li></ul>
+<h4 id="blk-12466">Pattern C: Time + Space -&gt; Argument -&gt; Vote</h4>
+<p>Use when the system must evaluate candidates in both temporal and spatial context before reaching consensus.</p>
+<pre><code>&amp;time.forecast -&gt; &amp;space.fleet -&gt; &amp;reason.argument [per agent] -&gt; &amp;reason.vote</code></pre>
+<p>Good for:</p>
+<ul><li><p>fleet-wide remediation consensus</p></li><li><p>regional capacity planning with multiple stakeholders</p></li><li><p>time-bounded group decisions under operational pressure</p></li></ul>
+<h4 id="blk-12477">Pattern D: Vote -&gt; Memory</h4>
+<p>Use when the system should preserve consensus outcomes and ballot records for later recall.</p>
+<pre><code>&amp;reason.vote -&gt; &amp;memory.graph.learn</code></pre>
+<p>Good for:</p>
+<ul><li><p>audit trails for group decisions</p></li><li><p>post-decision analysis</p></li><li><p>improving future voting calibration</p></li><li><p>governance compliance records</p></li></ul>
+<h4 id="blk-12490">Pattern E: Deliberate -&gt; Vote</h4>
+<p>Use when structured deliberation produces candidates that require final consensus selection.</p>
+<pre><code>&amp;reason.deliberate -&gt; &amp;reason.vote</code></pre>
+<p>Good for:</p>
+<ul><li><p>kappa-aware deliberation followed by collective selection</p></li><li><p>resolving cyclic reasoning through group agreement</p></li><li><p>combining deep analysis with democratic finality</p></li></ul>
+<h3 id="blk-12501">10. Governance role</h3>
+<p><code>&amp;reason.vote</code> is one of the most governance-sensitive capabilities in the protocol.</p>
+<p>It is often the capability where:</p>
+<ul><li><p>quorum requirements are enforced</p></li><li><p>dissent is surfaced and recorded</p></li><li><p>selection rules are made explicit</p></li><li><p>escalation is triggered when agreement is too low</p></li></ul>
+<h4 id="blk-12513">Example governance block</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never select a proposal that violates safety constraints&quot;</span>,
+      <span class="t-string">&quot;Require at least three voters for any production decision&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer proposals with higher historical success rates&quot;</span>,
+      <span class="t-string">&quot;Prefer unanimous or near-unanimous outcomes&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;agreement_below&quot;</span>: <span class="t-num">0.5</span>,
+      <span class="t-key">&quot;dissent_count_above&quot;</span>: <span class="t-num">1</span>,
+      <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span>
+    }
+  }
+}</code></pre>
+<h4 id="blk-12515">Governance modes</h4>
+<p><code>&amp;reason.vote</code> supports several governance modes:</p>
+<ul><li><p><strong>constitutional</strong> -- selection is constrained by an explicit set of inviolable rules</p></li><li><p><strong>committee-safe</strong> -- voting requires quorum and records dissent for review</p></li><li><p><strong>evidence-first</strong> -- proposals must carry supporting evidence to be eligible for selection</p></li></ul>
+<h4 id="blk-12524">Why this matters</h4>
+<p>A consensus mechanism without explicit governance tends to collapse into majority-wins without accountability.</p>
+<p>A consensus mechanism with governance as data can:</p>
+<ul><li><p>enforce quorum and participation requirements</p></li><li><p>surface and preserve dissenting opinions</p></li><li><p>apply different selection rules to different risk levels</p></li><li><p>generate auditable records of collective reasoning</p></li></ul>
+<h3 id="blk-12536">11. Provenance role</h3>
+<p><code>&amp;reason.vote</code> should be provenance-visible.</p>
+<p>A representative provenance record for a consensus step might look like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;reason.vote&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;select&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-14T14:27:42Z&quot;</span>,
+  <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:4c1a...&quot;</span>,
+  <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:9f3e...&quot;</span>,
+  <span class="t-key">&quot;parent_hashes&quot;</span>: [
+    <span class="t-string">&quot;sha256:a3f8...&quot;</span>,
+    <span class="t-string">&quot;sha256:7b2c...&quot;</span>,
+    <span class="t-string">&quot;sha256:e1d0...&quot;</span>
+  ],
+  <span class="t-key">&quot;ballot_count&quot;</span>: <span class="t-num">3</span>,
+  <span class="t-key">&quot;agreement_level&quot;</span>: <span class="t-num">0.81</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;vote-sel-2a07...&quot;</span>
+}</code></pre>
+<p>This is important because <code>&amp;reason.vote</code> often produces the artifact that carries collective authority:</p>
+<ul><li><p>the selected proposal</p></li><li><p>the agreement level</p></li><li><p>the ballot record</p></li><li><p>the dissent summary</p></li></ul>
+<p>If you want to answer &quot;How did the agents agree on this?&quot;, this is the most important step in the chain.</p>
+<h3 id="blk-12551">12. Compatible providers</h3>
+<p>The protocol is provider-agnostic, but representative providers for <code>&amp;reason.vote</code> include:</p>
+<ul><li><p><code>deliberatic</code></p></li><li><p>custom ensemble orchestration engines</p></li><li><p>committee and quorum management services</p></li><li><p>ranked-choice and preference aggregation systems</p></li><li><p>domain-specific consensus engines</p></li></ul>
+<p>The key protocol rule is:</p>
+<blockquote><p>a provider may satisfy <code>&amp;reason.vote</code> if it honors the declared contract</p></blockquote>
+<p>The capability should not collapse into a single vendor identity.</p>
+<h3 id="blk-12568">13. Typical compatible upstream capabilities</h3>
+<p><code>&amp;reason.vote</code> often accepts input from:</p>
+<ul><li><p><code>&amp;reason.argument</code></p></li><li><p><code>&amp;reason.deliberate</code></p></li><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;memory.vector</code></p></li><li><p><code>&amp;memory.episodic</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;time.forecast</code></p></li><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;space.route</code></p></li></ul>
+<p>Typical upstream type tokens include:</p>
+<ul><li><p><code>context</code></p></li><li><p><code>candidate_set</code></p></li><li><p><code>ranked_options</code></p></li><li><p><code>enriched_context</code></p></li></ul>
+<h3 id="blk-12599">14. Typical downstream uses</h3>
+<p>Outputs from <code>&amp;reason.vote</code> often feed into:</p>
+<ul><li><p>final responses</p></li><li><p>action execution layers</p></li><li><p>escalation systems</p></li><li><p>audit logs</p></li><li><p>learning memory surfaces</p></li><li><p>A2A skill publication</p></li><li><p>dashboards and review workflows</p></li><li><p>governance compliance reports</p></li></ul>
+<p>Typical downstream type tokens include:</p>
+<ul><li><p><code>decision</code></p></li><li><p><code>consensus_state</code></p></li><li><p><code>ballot_set</code></p></li><li><p><code>output</code></p></li></ul>
+<h3 id="blk-12628">15. A2A skill mapping</h3>
+<p>A capability contract for <code>&amp;reason.vote</code> may advertise skills like:</p>
+<ul><li><p><code>multi-agent-consensus</code></p></li><li><p><code>candidate-ranking</code></p></li></ul>
+<p>This makes it possible to generate an A2A-style agent card that exposes not just &quot;reasoning,&quot; but a more meaningful external skill surface.</p>
+<p>Example interpretation:</p>
+<ul><li><p>an agent with <code>&amp;reason.vote</code> can advertise that it can coordinate consensus across multiple agents or perspectives</p></li><li><p>another agent can delegate group-decision tasks to it</p></li><li><p>the published skill can still be derived from one canonical capability declaration</p></li></ul>
+<h3 id="blk-12644">16. Example use cases</h3>
+<h4 id="blk-12645">Ensemble model decisions</h4>
+<p>Use <code>&amp;reason.vote</code> when:</p>
+<ul><li><p>multiple models or agents evaluate the same input</p></li><li><p>their outputs must be compared and ranked</p></li><li><p>a single best answer must be selected with confidence</p></li></ul>
+<h4 id="blk-12654">Committee-style review</h4>
+<p>Use <code>&amp;reason.vote</code> when:</p>
+<ul><li><p>independent reviewers assess a proposal</p></li><li><p>each reviewer provides a ranking or preference signal</p></li><li><p>the system must aggregate preferences into a final recommendation</p></li></ul>
+<h4 id="blk-12663">Multi-agent remediation consensus</h4>
+<p>Use <code>&amp;reason.vote</code> when:</p>
+<ul><li><p>several agents propose different remediation strategies</p></li><li><p>the system must select one strategy with collective endorsement</p></li><li><p>dissent must be recorded for post-incident review</p></li></ul>
+<h4 id="blk-12672">Ranking multiple outputs</h4>
+<p>Use <code>&amp;reason.vote</code> when:</p>
+<ul><li><p>a generation step produces multiple candidate outputs</p></li><li><p>quality signals must be collected and aggregated</p></li><li><p>the best candidate must be surfaced with justification</p></li></ul>
+<h3 id="blk-12681">17. Anti-patterns</h3>
+<h4 id="blk-12682">Anti-pattern 1: using vote for single-agent decisions</h4>
+<p>If only one agent is evaluating, <code>&amp;reason.argument</code> is the correct subtype. <code>&amp;reason.vote</code> adds unnecessary coordination overhead when there is no plurality of perspectives.</p>
+<h4 id="blk-12684">Anti-pattern 2: treating consensus as simple majority without governance</h4>
+<p>Without explicit governance, voting degrades into unreviewable majority-wins. Quorum, dissent recording, and escalation thresholds should be declared.</p>
+<h4 id="blk-12686">Anti-pattern 3: skipping the argument phase</h4>
+<p><code>&amp;reason.vote</code> is strongest when agents have already performed evidence-weighted evaluation. Voting on uninformed preferences produces weak consensus.</p>
+<h4 id="blk-12688">Anti-pattern 4: collapsing vote and deliberate into one opaque step</h4>
+<p><code>&amp;reason.deliberate</code> and <code>&amp;reason.vote</code> serve different roles. Deliberation explores and structures the problem space. Voting selects from the structured output. Merging them removes composability and provenance clarity.</p>
+<h3 id="blk-12690">18. Research connections</h3>
+<p><code>&amp;reason.vote</code> is aligned with several useful research and systems traditions:</p>
+<ul><li><p>social choice theory</p></li><li><p>preference aggregation and ranked-choice methods</p></li><li><p>ensemble methods in machine learning</p></li><li><p>multi-agent systems and collective intelligence</p></li><li><p>Byzantine fault tolerance and quorum protocols</p></li><li><p>deliberative democracy and committee decision theory</p></li><li><p>judgment aggregation</p></li></ul>
+<p>The protocol does not attempt to standardize one academic theory of voting or consensus.</p>
+<p>Instead, it provides a practical interface for consensus systems that must be:</p>
+<ul><li><p>composable</p></li><li><p>inspectable</p></li><li><p>governable</p></li><li><p>publishable</p></li><li><p>interoperable</p></li></ul>
+<h3 id="blk-12720">19. Summary</h3>
+<p><code>&amp;reason.vote</code> is the protocol capability for <strong>consensus-oriented, multi-agent decision making</strong>.</p>
+<p>It exists so that a system can say more than:</p>
+<ul><li><p>&quot;these agents voted&quot;</p></li></ul>
+<p>It can say:</p>
+<ul><li><p>what proposals were considered</p></li><li><p>who voted and how</p></li><li><p>how ballots were aggregated</p></li><li><p>what the agreement level was</p></li><li><p>how governance constrained the selection</p></li><li><p>how provenance preserves the full record</p></li><li><p>what A2A skills it can publish</p></li></ul>
+<p>That makes <code>&amp;reason.vote</code> the primary consensus surface in the [&amp;] Protocol.</p>
+<h3 id="blk-12743">20. Related pages</h3>
+<ul><li><p><code>docs/registry/reason.argument.md</code></p></li><li><p><code>docs/registry/reason.deliberate.md</code></p></li><li><p><code>capabilities/memory.graph.md</code></p></li><li><p><code>capabilities/memory.episodic.md</code></p></li><li><p><code>capabilities/time.forecast.md</code></p></li><li><p><code>capabilities/space.fleet.md</code></p></li><li><p><code>docs/capabilities/reason.md</code></p></li><li><p><code>docs/architecture.md</code></p></li><li><p><code>SPEC.md</code></p></li></ul></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/reason.vote.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-12264" class="lvl2">1. Definition</a><a href="#blk-12277" class="lvl2">2. Why this capability exists</a><a href="#blk-12316" class="lvl2">3. Where it fits in the protocol</a><a href="#blk-12351" class="lvl2">4. What makes reason.vote different from other reasoning subtypes</a><a href="#blk-12352" class="lvl3">Compared with reason.argument</a><a href="#blk-12359" class="lvl3">Compared with reason.deliberate</a><a href="#blk-12365" class="lvl3">Compared with reason.plan</a><a href="#blk-12371" class="lvl3">Compared with implicit model reasoning</a><a href="#blk-12377" class="lvl2">5. Capability contract</a><a href="#blk-12380" class="lvl3">Contract meaning</a><a href="#blk-12399" class="lvl2">6. Architecture diagram</a><a href="#blk-12404" class="lvl3">Interpretation</a><a href="#blk-12414" class="lvl2">7. Example ampersand.json usage</a><a href="#blk-12415" class="lvl3">Explicit provider binding</a><a href="#blk-12417" class="lvl3">Auto provider binding</a><a href="#blk-12419" class="lvl2">8. Example API surface</a><a href="#blk-12421" class="lvl3">propose</a><a href="#blk-12426" class="lvl3">vote</a><a href="#blk-12431" class="lvl3">aggregate</a><a href="#blk-12436" class="lvl3">select</a><a href="#blk-12441" class="lvl2">9. Composition patterns</a><a href="#blk-12442" class="lvl3">Pattern A: Argument -&gt; Vote</a><a href="#blk-12455" class="lvl3">Pattern B: Memory -&gt; Vote</a><a href="#blk-12466" class="lvl3">Pattern C: Time + Space -&gt; Argument -&gt; Vote</a><a href="#blk-12477" class="lvl3">Pattern D: Vote -&gt; Memory</a><a href="#blk-12490" class="lvl3">Pattern E: Deliberate -&gt; Vote</a><a href="#blk-12501" class="lvl2">10. Governance role</a><a href="#blk-12513" class="lvl3">Example governance block</a><a href="#blk-12515" class="lvl3">Governance modes</a><a href="#blk-12524" class="lvl3">Why this matters</a><a href="#blk-12536" class="lvl2">11. Provenance role</a><a href="#blk-12551" class="lvl2">12. Compatible providers</a><a href="#blk-12568" class="lvl2">13. Typical compatible upstream capabilities</a><a href="#blk-12599" class="lvl2">14. Typical downstream uses</a><a href="#blk-12628" class="lvl2">15. A2A skill mapping</a><a href="#blk-12644" class="lvl2">16. Example use cases</a><a href="#blk-12645" class="lvl3">Ensemble model decisions</a><a href="#blk-12654" class="lvl3">Committee-style review</a><a href="#blk-12663" class="lvl3">Multi-agent remediation consensus</a><a href="#blk-12672" class="lvl3">Ranking multiple outputs</a><a href="#blk-12681" class="lvl2">17. Anti-patterns</a><a href="#blk-12682" class="lvl3">Anti-pattern 1: using vote for single-agent decisions</a><a href="#blk-12684" class="lvl3">Anti-pattern 2: treating consensus as simple majority without governance</a><a href="#blk-12686" class="lvl3">Anti-pattern 3: skipping the argument phase</a><a href="#blk-12688" class="lvl3">Anti-pattern 4: collapsing vote and deliberate into one opaque step</a><a href="#blk-12690" class="lvl2">18. Research connections</a><a href="#blk-12720" class="lvl2">19. Summary</a><a href="#blk-12743" class="lvl2">20. Related pages</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieranerzwiajchznslz2ipocmulgi7uizumaafmxxdeosaut4cmy3rpa</div></div></div>
+</div></div>
+</body></html>

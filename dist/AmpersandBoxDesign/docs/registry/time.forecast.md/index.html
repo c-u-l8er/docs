@@ -1,0 +1,325 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;time.forecast — Forecasting as a Capability · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;time.forecast is a capability page for the [&amp;] Protocol&#39;s temporal forecasting subtype.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/time.forecast.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;time.forecast — Forecasting as a Capability">
+<meta property="og:description" content="&amp;time.forecast is a capability page for the [&amp;] Protocol&#39;s temporal forecasting subtype.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/time.forecast.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&time.forecast — Forecasting as a Capability","name":"&time.forecast — Forecasting as a Capability","description":"&time.forecast is a capability page for the [&] Protocol's temporal forecasting subtype.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/time.forecast.md/","identifier":"bagaaierajeezz4qk3jwc3bqnsmtdyilex6dm5bumkw3wyd6f3atbq5b2uzyq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability matters"},{"@type":"WebPageElement","name":"3. Capability role in the four-primitive model"},{"@type":"WebPageElement","name":"4. Typical use cases"},{"@type":"WebPageElement","name":"Capacity planning"},{"@type":"WebPageElement","name":"Staffing and support"},{"@type":"WebPageElement","name":"Infrastructure operations"},{"@type":"WebPageElement","name":"Logistics and fleet management"},{"@type":"WebPageElement","name":"Maintenance and reliability"},{"@type":"WebPageElement","name":"Research and trend monitoring"},{"@type":"WebPageElement","name":"5. Example declaration"},{"@type":"WebPageElement","name":"6. Compatible providers"},{"@type":"WebPageElement","name":"7. Example capability contract"},{"@type":"WebPageElement","name":"8. Example provider configuration patterns"},{"@type":"WebPageElement","name":"Horizon"},{"@type":"WebPageElement","name":"Granularity"},{"@type":"WebPageElement","name":"Targets"},{"@type":"WebPageElement","name":"Confidence threshold"},{"@type":"WebPageElement","name":"Region or segment scope"},{"@type":"WebPageElement","name":"9. Architecture patterns"},{"@type":"WebPageElement","name":"Pattern A: forecast -> reason"},{"@type":"WebPageElement","name":"Pattern B: forecast -> space -> reason"},{"@type":"WebPageElement","name":"Pattern C: memory -> forecast -> reason"},{"@type":"WebPageElement","name":"Pattern D: forecast -> memory.learn"},{"@type":"WebPageElement","name":"10. Architecture diagram"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"time.forecast.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/time.forecast.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/time.forecast.md</span>
+
+</div></div>
+<div class="lead">&amp;time.forecast is a capability page for the [&amp;] Protocol&#39;s temporal forecasting subtype.</div>
+<div class="prose"><h1 id="blk-14684"><code>&amp;time.forecast</code> — Forecasting as a Capability</h1>
+<p><code>&amp;time.forecast</code> is a capability page for the [&amp;] Protocol's temporal forecasting subtype.</p>
+<p>It describes a composable interface for agents that need to predict future state from historical or streaming temporal data. The goal is not to standardize one forecasting algorithm. The goal is to standardize how an agent declares, validates, and composes forecasting ability as part of its cognitive architecture.</p>
+<p>In protocol terms:</p>
+<ul><li><p>primitive: <code>&amp;time</code></p></li><li><p>subtype: <code>forecast</code></p></li><li><p>full capability id: <code>&amp;time.forecast</code></p></li></ul>
+<h3 id="blk-14695">1. Definition</h3>
+<p><code>&amp;time.forecast</code> is the protocol capability for <strong>predictive temporal inference</strong>.</p>
+<p>It answers questions like:</p>
+<ul><li><p>What is likely to happen next?</p></li><li><p>How much demand should we expect over the next hour, day, or week?</p></li><li><p>Which regions are likely to exceed capacity soon?</p></li><li><p>What future load should a planner or reasoner prepare for?</p></li><li><p>How confident is the system in its temporal prediction?</p></li></ul>
+<p>A provider that satisfies <code>&amp;time.forecast</code> should expose operations that turn temporal data into forecast-oriented artifacts that downstream capabilities can consume.</p>
+<p>This is distinct from:</p>
+<ul><li><p><code>&amp;time.anomaly</code> — detecting unusual current or recent behavior</p></li><li><p><code>&amp;time.pattern</code> — identifying recurring or structural behavior over time</p></li></ul>
+<p><code>&amp;time.forecast</code> is about <strong>future-oriented estimation</strong>.</p>
+<h3 id="blk-14717">2. Why this capability matters</h3>
+<p>A large class of useful agents need more than retrieval and reasoning over current context.</p>
+<p>They need to anticipate:</p>
+<ul><li><p>traffic spikes</p></li><li><p>incident volume</p></li><li><p>regional load</p></li><li><p>staffing demand</p></li><li><p>inventory or route pressure</p></li><li><p>support queue growth</p></li><li><p>resource exhaustion</p></li><li><p>maintenance windows</p></li><li><p>operational drift</p></li></ul>
+<p>Without an explicit forecasting capability, systems often hide predictive logic inside:</p>
+<ul><li><p>custom analytics code</p></li><li><p>prompts</p></li><li><p>ad hoc tool wrappers</p></li><li><p>vendor-specific integrations</p></li><li><p>application business logic</p></li></ul>
+<p>That makes architectures hard to compare, validate, and reuse.</p>
+<p>By treating forecasting as a protocol capability, the [&amp;] Protocol makes it possible to:</p>
+<ul><li><p>declare forecasting explicitly</p></li><li><p>bind it to a provider</p></li><li><p>validate pipelines that depend on forecast output</p></li><li><p>preserve provenance for forecast-driven decisions</p></li><li><p>generate downstream MCP and A2A artifacts from the same declaration</p></li></ul>
+<h3 id="blk-14764">3. Capability role in the four-primitive model</h3>
+<p>The [&amp;] Protocol organizes cognition around four top-level domains:</p>
+<ul><li><p><code>&amp;memory</code> — what the agent knows</p></li><li><p><code>&amp;reason</code> — how the agent decides</p></li><li><p><code>&amp;time</code> — when things happen</p></li><li><p><code>&amp;space</code> — where things are</p></li></ul>
+<p>Within that model, <code>&amp;time.forecast</code> provides the agent's ability to project temporal context forward.</p>
+<p>It often works best when composed with:</p>
+<ul><li><p><code>&amp;memory.*</code> for historical evidence</p></li><li><p><code>&amp;space.*</code> for region- or fleet-aware forecasting</p></li><li><p><code>&amp;reason.*</code> for turning predictions into decisions</p></li></ul>
+<p>A useful shorthand is:</p>
+<blockquote><p><code>&amp;time.forecast</code> tells the agent what future state is plausible enough to plan around.</p></blockquote>
+<h3 id="blk-14787">4. Typical use cases</h3>
+<h4 id="blk-14788">Capacity planning</h4>
+<p>Forecast expected demand or load before thresholds are crossed.</p>
+<h4 id="blk-14790">Staffing and support</h4>
+<p>Predict inbound ticket volume or call center load.</p>
+<h4 id="blk-14792">Infrastructure operations</h4>
+<p>Estimate future CPU, memory, traffic, or storage pressure.</p>
+<h4 id="blk-14794">Logistics and fleet management</h4>
+<p>Forecast regional fleet demand, route congestion, or service backlog.</p>
+<h4 id="blk-14796">Maintenance and reliability</h4>
+<p>Project failure likelihood, incident volume, or wear-related workload windows.</p>
+<h4 id="blk-14798">Research and trend monitoring</h4>
+<p>Predict likely changes in topic volume, signal growth, or event frequency.</p>
+<h3 id="blk-14800">5. Example declaration</h3>
+<p>A basic <code>ampersand.json</code> fragment using <code>&amp;time.forecast</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;time.forecast&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+    <span class="t-key">&quot;config&quot;</span>: {
+      <span class="t-key">&quot;horizon_hours&quot;</span>: <span class="t-num">24</span>,
+      <span class="t-key">&quot;granularity&quot;</span>: <span class="t-string">&quot;hourly&quot;</span>,
+      <span class="t-key">&quot;targets&quot;</span>: [<span class="t-string">&quot;regional_demand&quot;</span>, <span class="t-string">&quot;support_volume&quot;</span>]
+    }
+  }
+}</code></pre>
+<p>A goal-driven version using auto resolution:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;time.forecast&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+    <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;predict next-day support ticket demand by region&quot;</span>
+  }
+}</code></pre>
+<h3 id="blk-14805">6. Compatible providers</h3>
+<p>The protocol is provider-agnostic. The capability is the contract; providers are implementations.</p>
+<p>Representative providers for <code>&amp;time.forecast</code> may include:</p>
+<ul><li><p><code>ticktickclock</code></p></li><li><p>Prophet-based forecasting services</p></li><li><p>custom forecasting engines</p></li><li><p>time-series platforms with predictive APIs</p></li><li><p>domain-specific planning and prediction services</p></li></ul>
+<p>A provider should be considered compatible when it can satisfy the capability contract, not merely because it performs some predictive function in marketing language.</p>
+<h3 id="blk-14820">7. Example capability contract</h3>
+<p>A representative contract artifact for <code>&amp;time.forecast</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;time.forecast&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Temporal forecasting contract for predicting near-term demand, load, and trend-driven state changes.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;predict&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;time_series&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;forecast_set&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Generate a forecast over a requested horizon from historical or streaming temporal data.&quot;</span>,
+      <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+      <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">false</span>
+    },
+    <span class="t-key">&quot;explain&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;forecast_set&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;forecast_explanation&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Return an explanation of forecast drivers, confidence, and major contributing signals.&quot;</span>,
+      <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+      <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">false</span>
+    },
+    <span class="t-key">&quot;enrich&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;enriched_context&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Attach forecast-derived temporal context to an existing decision or planning payload.&quot;</span>,
+      <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+      <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">false</span>
+    },
+    <span class="t-key">&quot;learn&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;observation&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;ack&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Incorporate realized outcomes for later calibration or model improvement.&quot;</span>,
+      <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+      <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">true</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.*&quot;</span>,
+    <span class="t-string">&quot;raw_data&quot;</span>,
+    <span class="t-string">&quot;time_series&quot;</span>,
+    <span class="t-string">&quot;context&quot;</span>,
+    <span class="t-string">&quot;observation&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;reason.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.*&quot;</span>,
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;temporal-forecasting&quot;</span>,
+    <span class="t-string">&quot;demand-prediction&quot;</span>,
+    <span class="t-string">&quot;trend-explanation&quot;</span>
+  ]
+}</code></pre>
+<p>This contract matters because it makes forecasting composable in a typed system.</p>
+<h3 id="blk-14824">8. Example provider configuration patterns</h3>
+<p>The protocol does not hardcode one configuration shape, but these fields are common and useful.</p>
+<h4 id="blk-14826">Horizon</h4>
+<p>How far forward to predict.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;horizon_hours&quot;</span>: <span class="t-num">24</span>
+}</code></pre>
+<h4 id="blk-14829">Granularity</h4>
+<p>How coarse or fine the forecast should be.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;granularity&quot;</span>: <span class="t-string">&quot;hourly&quot;</span>
+}</code></pre>
+<h4 id="blk-14832">Targets</h4>
+<p>Which signals or domains are being forecast.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;targets&quot;</span>: [<span class="t-string">&quot;regional_demand&quot;</span>, <span class="t-string">&quot;support_volume&quot;</span>]
+}</code></pre>
+<h4 id="blk-14835">Confidence threshold</h4>
+<p>Useful when forecast output should trigger escalation or downstream filtering.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;min_confidence&quot;</span>: <span class="t-num">0.7</span>
+}</code></pre>
+<h4 id="blk-14838">Region or segment scope</h4>
+<p>Useful for spatially-aware forecasts.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>, <span class="t-string">&quot;eu-west&quot;</span>]
+}</code></pre>
+<p>These are implementation patterns, not mandatory protocol fields.</p>
+<h3 id="blk-14842">9. Architecture patterns</h3>
+<h4 id="blk-14843">Pattern A: forecast -&gt; reason</h4>
+<p>Use a forecast directly as decision input.</p>
+<pre><code>time_series
+|&gt; &amp;time.forecast.predict()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use when a forecast can directly support a decision, recommendation, or escalation.</p>
+<h4 id="blk-14847">Pattern B: forecast -&gt; space -&gt; reason</h4>
+<p>Add region or fleet state before deciding.</p>
+<pre><code>demand_history
+|&gt; &amp;time.forecast.predict()
+|&gt; &amp;space.fleet.enrich()
+|&gt; &amp;reason.plan.evaluate()</code></pre>
+<p>Use when future demand must be interpreted in spatial context.</p>
+<h4 id="blk-14851">Pattern C: memory -&gt; forecast -&gt; reason</h4>
+<p>Use historical memory before or alongside forecasting.</p>
+<pre><code>query_context
+|&gt; &amp;memory.graph.recall()
+|&gt; &amp;time.forecast.enrich()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use when forecast interpretation benefits from prior incidents, structural memory, or analogous cases.</p>
+<h4 id="blk-14855">Pattern D: forecast -&gt; memory.learn</h4>
+<p>Use realized outcomes to improve future behavior.</p>
+<pre><code>time_series
+|&gt; &amp;time.forecast.predict()
+|&gt; &amp;reason.argument.evaluate()
+|&gt; &amp;memory.graph.learn()</code></pre>
+<p>Use when forecast-driven decisions should become part of durable organizational memory.</p>
+<h3 id="blk-14859">10. Architecture diagram</h3>
+<p>A simple conceptual view of <code>&amp;time.forecast</code> in composition:</p>
+<pre><code>historical data / stream data
+            |
+            v
+   +----------------------+
+   |   &amp;time.forecast     |
+   |  predict / explain   |
+   +----------------------+
+            |
+            v
+      forecast_set
+            |
+     +------+------+
+     |             |
+     v             v
+&amp;space.*       &amp;reason.*
+ enrich         evaluate
+     |             |
+     +------+------+
+            |
+            v
+         output</code></pre>
+<p>This is why contract typing matters: downstream capabilities need to know what kind of artifact they are receiving.</p>
+<h3 id="blk-14863">11. Example API shape</h3>
+<p>A provider-specific API will vary, but a forecast provider commonly exposes a shape like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;predict&quot;</span>,
+  <span class="t-key">&quot;input&quot;</span>: {
+    <span class="t-key">&quot;series&quot;</span>: [
+      { <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T00:00:00Z&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-num">142</span> },
+      { <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T01:00:00Z&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-num">155</span> }
+    ],
+    <span class="t-key">&quot;horizon_hours&quot;</span>: <span class="t-num">24</span>,
+    <span class="t-key">&quot;granularity&quot;</span>: <span class="t-string">&quot;hourly&quot;</span>
+  }
+}</code></pre>
+<p>Representative response:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;forecast&quot;</span>: [
+    { <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-16T00:00:00Z&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-num">181</span>, <span class="t-key">&quot;confidence&quot;</span>: <span class="t-num">0.83</span> },
+    { <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-16T01:00:00Z&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-num">187</span>, <span class="t-key">&quot;confidence&quot;</span>: <span class="t-num">0.81</span> }
+  ],
+  <span class="t-key">&quot;summary&quot;</span>: <span class="t-string">&quot;Demand is likely to increase overnight with moderate confidence.&quot;</span>
+}</code></pre>
+<p>The protocol does not require this exact transport shape. It requires that the provider satisfy the declared capability contract.</p>
+<h3 id="blk-14869">12. Governance implications</h3>
+<p>Forecasts are often used to justify action before a situation fully materializes. That makes governance important.</p>
+<p>Common governance examples for forecast-driven systems:</p>
+<h4 id="blk-14872">Hard constraints</h4>
+<ul><li><p>never trigger irreversible action from a forecast alone</p></li><li><p>never exceed regional scale limits without human approval</p></li><li><p>never suppress audit logging for forecast-driven decisions</p></li></ul>
+<h4 id="blk-14880">Soft constraints</h4>
+<ul><li><p>prefer gradual changes over aggressive one-step responses</p></li><li><p>prefer conservative capacity increases when forecast confidence is moderate</p></li><li><p>prefer recent calibrated models over stale forecasting baselines</p></li></ul>
+<h4 id="blk-14888">Escalation rules</h4>
+<p>Forecast-heavy systems often combine well with:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;escalate_when&quot;</span>: {
+    <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span>,
+    <span class="t-key">&quot;cost_exceeds_usd&quot;</span>: <span class="t-num">1000</span>,
+    <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span>
+  }
+}</code></pre>
+<p>This is one reason <code>&amp;time.forecast</code> often composes closely with <code>&amp;reason.argument</code> or <code>&amp;reason.plan</code>.</p>
+<h3 id="blk-14892">13. Provenance implications</h3>
+<p>Forecasts can strongly influence planning, cost, and operational risk, so provenance should be explicit.</p>
+<p>A provenance record for a forecasting step may include:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;time.forecast&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;predict&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T12:00:00Z&quot;</span>,
+  <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:abcd1234...&quot;</span>,
+  <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:efgh5678...&quot;</span>,
+  <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:0000...&quot;</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;ttc-forecast-42&quot;</span>
+}</code></pre>
+<p>This helps answer questions like:</p>
+<ul><li><p>Why did the system scale this region?</p></li><li><p>Which forecast provider influenced the decision?</p></li><li><p>What horizon and confidence profile informed the action?</p></li><li><p>Which upstream context produced this prediction?</p></li></ul>
+<p>Forecasts without provenance are difficult to audit and easy to over-trust.</p>
+<h3 id="blk-14907">14. A2A implications</h3>
+<p>A forecast capability may map naturally to A2A-advertised skills such as:</p>
+<ul><li><p><code>temporal-forecasting</code></p></li><li><p><code>demand-prediction</code></p></li><li><p><code>trend-explanation</code></p></li></ul>
+<p>That means an agent card generated from an <code>ampersand.json</code> declaration can advertise forecasting as a reusable, discoverable coordination-facing skill.</p>
+<p>This is one example of how the [&amp;] Protocol complements A2A rather than replacing it.</p>
+<h3 id="blk-14918">15. MCP implications</h3>
+<p>A forecast provider may also compile into MCP-facing configuration if the implementation exposes a tool or service endpoint.</p>
+<p>For example, a declaration containing <code>&amp;time.forecast</code> may generate MCP configuration that wires in a forecasting provider alongside memory and reasoning providers.</p>
+<p>This is one example of how the [&amp;] Protocol complements MCP rather than replacing it.</p>
+<h3 id="blk-14922">16. Research references and grounding</h3>
+<p>The design of <code>&amp;time.forecast</code> is informed by overlapping areas of work:</p>
+<ul><li><p>time-series forecasting</p></li><li><p>predictive analytics</p></li><li><p>trend analysis</p></li><li><p>operational forecasting</p></li><li><p>demand planning</p></li><li><p>sequence-aware decision systems</p></li><li><p>temporal context in agent and planning architectures</p></li></ul>
+<p>The important protocol-level insight is not that forecasting is new. It is that <strong>forecasting should be represented explicitly as a composable capability</strong> rather than hidden in framework logic.</p>
+<p>That shift enables:</p>
+<ul><li><p>schema validation</p></li><li><p>typed pipelines</p></li><li><p>provider interchangeability</p></li><li><p>governance-aware decisions</p></li><li><p>provenance-preserving execution</p></li></ul>
+<h3 id="blk-14952">17. Anti-patterns</h3>
+<h4 id="blk-14953">Anti-pattern 1: treat forecasting as generic analytics</h4>
+<p>If forecasting is bundled into a broad &quot;analytics&quot; block, its contract and pipeline role become unclear.</p>
+<h4 id="blk-14955">Anti-pattern 2: treat forecast output as self-justifying</h4>
+<p>A forecast is often strong evidence, but not always enough for unsupervised action.</p>
+<h4 id="blk-14957">Anti-pattern 3: conflate anomaly detection and forecasting</h4>
+<p>They are related temporal capabilities, but they are not the same interface.</p>
+<h4 id="blk-14959">Anti-pattern 4: hardwire the protocol to one provider</h4>
+<p><code>&amp;time.forecast</code> should remain a portable capability contract.</p>
+<h3 id="blk-14961">18. Good default guidance</h3>
+<p>Use <code>&amp;time.forecast</code> when:</p>
+<ul><li><p>the system needs future-oriented temporal estimates</p></li><li><p>a planner or reasoner must act on projected state</p></li><li><p>demand, load, or trend pressure matters operationally</p></li><li><p>a declaration should express predictive temporal intelligence explicitly</p></li></ul>
+<p>Prefer composing it with:</p>
+<ul><li><p><code>&amp;space.*</code> when geography or regional state matters</p></li><li><p><code>&amp;memory.*</code> when historical structure improves interpretation</p></li><li><p><code>&amp;reason.*</code> when predictions influence action selection</p></li></ul>
+<h3 id="blk-14980">19. Summary</h3>
+<p><code>time.forecast</code> is the [&amp;] Protocol capability for forecasting future temporal state.</p>
+<p>It exists to make predictive temporal intelligence:</p>
+<ul><li><p>explicit</p></li><li><p>composable</p></li><li><p>contract-aware</p></li><li><p>provider-agnostic</p></li><li><p>governable</p></li><li><p>provenance-friendly</p></li><li><p>generatable into MCP and A2A surfaces</p></li></ul>
+<p>In short:</p>
+<blockquote><p><code>&amp;time.forecast</code> gives an agent a standard way to declare that it can project likely future state and use that projection safely within a composed cognitive system.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/time.forecast.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-14695" class="lvl2">1. Definition</a><a href="#blk-14717" class="lvl2">2. Why this capability matters</a><a href="#blk-14764" class="lvl2">3. Capability role in the four-primitive model</a><a href="#blk-14787" class="lvl2">4. Typical use cases</a><a href="#blk-14788" class="lvl3">Capacity planning</a><a href="#blk-14790" class="lvl3">Staffing and support</a><a href="#blk-14792" class="lvl3">Infrastructure operations</a><a href="#blk-14794" class="lvl3">Logistics and fleet management</a><a href="#blk-14796" class="lvl3">Maintenance and reliability</a><a href="#blk-14798" class="lvl3">Research and trend monitoring</a><a href="#blk-14800" class="lvl2">5. Example declaration</a><a href="#blk-14805" class="lvl2">6. Compatible providers</a><a href="#blk-14820" class="lvl2">7. Example capability contract</a><a href="#blk-14824" class="lvl2">8. Example provider configuration patterns</a><a href="#blk-14826" class="lvl3">Horizon</a><a href="#blk-14829" class="lvl3">Granularity</a><a href="#blk-14832" class="lvl3">Targets</a><a href="#blk-14835" class="lvl3">Confidence threshold</a><a href="#blk-14838" class="lvl3">Region or segment scope</a><a href="#blk-14842" class="lvl2">9. Architecture patterns</a><a href="#blk-14843" class="lvl3">Pattern A: forecast -&gt; reason</a><a href="#blk-14847" class="lvl3">Pattern B: forecast -&gt; space -&gt; reason</a><a href="#blk-14851" class="lvl3">Pattern C: memory -&gt; forecast -&gt; reason</a><a href="#blk-14855" class="lvl3">Pattern D: forecast -&gt; memory.learn</a><a href="#blk-14859" class="lvl2">10. Architecture diagram</a><a href="#blk-14863" class="lvl2">11. Example API shape</a><a href="#blk-14869" class="lvl2">12. Governance implications</a><a href="#blk-14872" class="lvl3">Hard constraints</a><a href="#blk-14880" class="lvl3">Soft constraints</a><a href="#blk-14888" class="lvl3">Escalation rules</a><a href="#blk-14892" class="lvl2">13. Provenance implications</a><a href="#blk-14907" class="lvl2">14. A2A implications</a><a href="#blk-14918" class="lvl2">15. MCP implications</a><a href="#blk-14922" class="lvl2">16. Research references and grounding</a><a href="#blk-14952" class="lvl2">17. Anti-patterns</a><a href="#blk-14953" class="lvl3">Anti-pattern 1: treat forecasting as generic analytics</a><a href="#blk-14955" class="lvl3">Anti-pattern 2: treat forecast output as self-justifying</a><a href="#blk-14957" class="lvl3">Anti-pattern 3: conflate anomaly detection and forecasting</a><a href="#blk-14959" class="lvl3">Anti-pattern 4: hardwire the protocol to one provider</a><a href="#blk-14961" class="lvl2">18. Good default guidance</a><a href="#blk-14980" class="lvl2">19. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajeezz4qk3jwc3bqnsmtdyilex6dm5bumkw3wyd6f3atbq5b2uzyq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,335 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;time.anomaly — Anomaly Detection as a Capability · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;time.anomaly is a capability page for the [&amp;] Protocol&#39;s temporal anomaly detection subtype.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/time.anomaly.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;time.anomaly — Anomaly Detection as a Capability">
+<meta property="og:description" content="&amp;time.anomaly is a capability page for the [&amp;] Protocol&#39;s temporal anomaly detection subtype.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/time.anomaly.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&time.anomaly — Anomaly Detection as a Capability","name":"&time.anomaly — Anomaly Detection as a Capability","description":"&time.anomaly is a capability page for the [&] Protocol's temporal anomaly detection subtype.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/time.anomaly.md/","identifier":"bagaaierawjingzvtlt7y5gxofrmodif6mhw2tzsohcnukvbhfw7gzk3ce46q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability matters"},{"@type":"WebPageElement","name":"3. Capability role in the four-primitive model"},{"@type":"WebPageElement","name":"4. Typical use cases"},{"@type":"WebPageElement","name":"Infrastructure incident detection"},{"@type":"WebPageElement","name":"Support volume spike detection"},{"@type":"WebPageElement","name":"Regional demand anomaly"},{"@type":"WebPageElement","name":"Fleet telemetry anomaly"},{"@type":"WebPageElement","name":"Operational drift detection"},{"@type":"WebPageElement","name":"Incident correlation"},{"@type":"WebPageElement","name":"5. Example declaration"},{"@type":"WebPageElement","name":"6. Compatible providers"},{"@type":"WebPageElement","name":"7. Example capability contract"},{"@type":"WebPageElement","name":"8. Example provider configuration patterns"},{"@type":"WebPageElement","name":"Streams"},{"@type":"WebPageElement","name":"Sensitivity"},{"@type":"WebPageElement","name":"Window"},{"@type":"WebPageElement","name":"Confidence threshold"},{"@type":"WebPageElement","name":"Region or segment scope"},{"@type":"WebPageElement","name":"9. Architecture patterns"},{"@type":"WebPageElement","name":"Pattern A: detect -> reason"},{"@type":"WebPageElement","name":"Pattern B: detect -> enrich -> reason"},{"@type":"WebPageElement","name":"Pattern C: detect -> space -> reason"},{"@type":"WebPageElement","name":"Pattern D: memory -> detect -> reason"},{"@type":"WebPageElement","name":"Pattern E: detect -> memory.learn"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"time.anomaly.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/time.anomaly.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/time.anomaly.md</span>
+
+</div></div>
+<div class="lead">&amp;time.anomaly is a capability page for the [&amp;] Protocol&#39;s temporal anomaly detection subtype.</div>
+<div class="prose"><h1 id="blk-14365"><code>&amp;time.anomaly</code> — Anomaly Detection as a Capability</h1>
+<p><code>&amp;time.anomaly</code> is a capability page for the [&amp;] Protocol's temporal anomaly detection subtype.</p>
+<p>It describes a composable interface for agents that need to detect unusual behavior in streaming or historical temporal signals. The goal is not to standardize one anomaly detection algorithm. The goal is to standardize how an agent declares, validates, and composes anomaly detection ability as part of its cognitive architecture.</p>
+<p>In protocol terms:</p>
+<ul><li><p>primitive: <code>&amp;time</code></p></li><li><p>subtype: <code>anomaly</code></p></li><li><p>full capability id: <code>&amp;time.anomaly</code></p></li></ul>
+<h3 id="blk-14376">1. Definition</h3>
+<p><code>&amp;time.anomaly</code> is the protocol capability for <strong>temporal anomaly detection</strong>.</p>
+<p>It answers questions like:</p>
+<ul><li><p>Is something unusual happening right now?</p></li><li><p>Did a metric spike, drop, or drift outside expected behavior?</p></li><li><p>Which signals are deviating from their historical norms?</p></li><li><p>When did this anomalous behavior begin, and is it still active?</p></li><li><p>How severe is this deviation relative to the system's baseline?</p></li></ul>
+<p>A provider that satisfies <code>&amp;time.anomaly</code> should expose operations that turn temporal data into anomaly-oriented artifacts that downstream capabilities can consume.</p>
+<p>This is distinct from:</p>
+<ul><li><p><code>&amp;time.forecast</code> — predicting likely future values</p></li><li><p><code>&amp;time.pattern</code> — identifying recurring or structural behavior over time</p></li></ul>
+<p><code>&amp;time.anomaly</code> is about <strong>detecting deviations from expected present or past behavior</strong>.</p>
+<h3 id="blk-14398">2. Why this capability matters</h3>
+<p>A large class of useful agents need more than prediction and pattern recognition over temporal signals.</p>
+<p>They need to detect:</p>
+<ul><li><p>infrastructure metric spikes</p></li><li><p>sudden drops in throughput or availability</p></li><li><p>unusual error rate behavior</p></li><li><p>support volume surges</p></li><li><p>regional demand anomalies</p></li><li><p>fleet telemetry deviations</p></li><li><p>latency drift</p></li><li><p>capacity threshold breaches</p></li><li><p>unexpected changes in operational cadence</p></li></ul>
+<p>Without an explicit anomaly detection capability, systems often hide detection logic inside:</p>
+<ul><li><p>custom monitoring code</p></li><li><p>static threshold alerts</p></li><li><p>vendor-specific observability platforms</p></li><li><p>ad hoc rule engines</p></li><li><p>application-layer heuristics</p></li></ul>
+<p>That makes architectures hard to compare, validate, and reuse.</p>
+<p>By treating anomaly detection as a protocol capability, the [&amp;] Protocol makes it possible to:</p>
+<ul><li><p>declare anomaly detection explicitly</p></li><li><p>bind it to a provider</p></li><li><p>validate pipelines that depend on anomaly output</p></li><li><p>preserve provenance for anomaly-driven decisions</p></li><li><p>generate downstream MCP and A2A artifacts from the same declaration</p></li></ul>
+<h3 id="blk-14445">3. Capability role in the four-primitive model</h3>
+<p>The [&amp;] Protocol organizes cognition around four top-level domains:</p>
+<ul><li><p><code>&amp;memory</code> — what the agent knows</p></li><li><p><code>&amp;reason</code> — how the agent decides</p></li><li><p><code>&amp;time</code> — when things happen</p></li><li><p><code>&amp;space</code> — where things are</p></li></ul>
+<p>Within that model, <code>&amp;time.anomaly</code> provides the agent's ability to surface unexpected deviations in temporal context.</p>
+<p>It often works best when composed with:</p>
+<ul><li><p><code>&amp;memory.*</code> for historical baselines and incident context</p></li><li><p><code>&amp;space.*</code> for region- or fleet-aware anomaly scoping</p></li><li><p><code>&amp;reason.*</code> for turning detected anomalies into decisions or escalations</p></li></ul>
+<p>A useful shorthand is:</p>
+<blockquote><p><code>&amp;time.anomaly</code> tells the agent that something unexpected is happening and provides structured context about the deviation.</p></blockquote>
+<h3 id="blk-14468">4. Typical use cases</h3>
+<h4 id="blk-14469">Infrastructure incident detection</h4>
+<p>Surface anomalous CPU, memory, latency, or error rate behavior before static thresholds fire.</p>
+<h4 id="blk-14471">Support volume spike detection</h4>
+<p>Detect unexpected surges in inbound support requests or ticket creation rates.</p>
+<h4 id="blk-14473">Regional demand anomaly</h4>
+<p>Identify unusual demand patterns in specific geographic regions or market segments.</p>
+<h4 id="blk-14475">Fleet telemetry anomaly</h4>
+<p>Detect deviations in vehicle, device, or node telemetry across a managed fleet.</p>
+<h4 id="blk-14477">Operational drift detection</h4>
+<p>Surface gradual shifts in throughput, response time, or error distribution that indicate systemic change.</p>
+<h4 id="blk-14479">Incident correlation</h4>
+<p>Provide anomaly context that downstream reasoning capabilities can use to correlate related events across signals.</p>
+<h3 id="blk-14481">5. Example declaration</h3>
+<p>A basic <code>ampersand.json</code> fragment using <code>&amp;time.anomaly</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;time.anomaly&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+    <span class="t-key">&quot;config&quot;</span>: {
+      <span class="t-key">&quot;streams&quot;</span>: [<span class="t-string">&quot;cpu&quot;</span>, <span class="t-string">&quot;mem&quot;</span>],
+      <span class="t-key">&quot;sensitivity&quot;</span>: <span class="t-string">&quot;medium&quot;</span>,
+      <span class="t-key">&quot;window_minutes&quot;</span>: <span class="t-num">15</span>
+    }
+  }
+}</code></pre>
+<p>A goal-driven version using auto resolution:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;time.anomaly&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+    <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;detect unusual latency or error rate behavior in production infrastructure&quot;</span>
+  }
+}</code></pre>
+<h3 id="blk-14486">6. Compatible providers</h3>
+<p>The protocol is provider-agnostic. The capability is the contract; providers are implementations.</p>
+<p>Representative providers for <code>&amp;time.anomaly</code> may include:</p>
+<ul><li><p><code>ticktickclock</code></p></li><li><p>statistical anomaly detection services</p></li><li><p>custom detection engines</p></li><li><p>time-series platforms with anomaly detection APIs</p></li><li><p>domain-specific monitoring and observability services</p></li></ul>
+<p>A provider should be considered compatible when it can satisfy the capability contract, not merely because it performs some anomaly-adjacent function in marketing language.</p>
+<h3 id="blk-14501">7. Example capability contract</h3>
+<p>A representative contract artifact for <code>&amp;time.anomaly</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;time.anomaly&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Temporal anomaly detection contract for surfacing unusual behavior in streaming or historical signals and enriching downstream decision context.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;detect&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;stream_data&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;anomaly_set&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Detect anomalous events, spikes, drops, or drift from temporal input signals.&quot;</span>,
+      <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+      <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">false</span>
+    },
+    <span class="t-key">&quot;enrich&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;enriched_context&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Attach anomaly-derived temporal context to an existing payload for downstream reasoning or routing.&quot;</span>,
+      <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+      <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">false</span>
+    },
+    <span class="t-key">&quot;learn&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;observation&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;ack&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Incorporate confirmed outcomes or operator feedback to improve later anomaly detection behavior.&quot;</span>,
+      <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+      <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">true</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.*&quot;</span>,
+    <span class="t-string">&quot;raw_data&quot;</span>,
+    <span class="t-string">&quot;stream_data&quot;</span>,
+    <span class="t-string">&quot;context&quot;</span>,
+    <span class="t-string">&quot;observation&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;reason.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.*&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;temporal-anomaly-detection&quot;</span>
+  ]
+}</code></pre>
+<p>This contract matters because it makes anomaly detection composable in a typed system.</p>
+<h3 id="blk-14505">8. Example provider configuration patterns</h3>
+<p>The protocol does not hardcode one configuration shape, but these fields are common and useful.</p>
+<h4 id="blk-14507">Streams</h4>
+<p>Which signals to monitor for anomalies.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;streams&quot;</span>: [<span class="t-string">&quot;cpu&quot;</span>, <span class="t-string">&quot;mem&quot;</span>, <span class="t-string">&quot;latency&quot;</span>, <span class="t-string">&quot;error_rate&quot;</span>, <span class="t-string">&quot;throughput&quot;</span>]
+}</code></pre>
+<h4 id="blk-14510">Sensitivity</h4>
+<p>How aggressively to flag deviations.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;sensitivity&quot;</span>: <span class="t-string">&quot;medium&quot;</span>
+}</code></pre>
+<h4 id="blk-14513">Window</h4>
+<p>How much recent history to consider when determining baseline behavior.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;window_minutes&quot;</span>: <span class="t-num">15</span>
+}</code></pre>
+<h4 id="blk-14516">Confidence threshold</h4>
+<p>Useful when anomaly output should trigger escalation or downstream filtering.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;min_confidence&quot;</span>: <span class="t-num">0.7</span>
+}</code></pre>
+<h4 id="blk-14519">Region or segment scope</h4>
+<p>Useful for spatially-aware anomaly detection.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>, <span class="t-string">&quot;eu-west&quot;</span>]
+}</code></pre>
+<p>These are implementation patterns, not mandatory protocol fields.</p>
+<h3 id="blk-14523">9. Architecture patterns</h3>
+<h4 id="blk-14524">Pattern A: detect -&gt; reason</h4>
+<p>Use a detected anomaly directly as decision input.</p>
+<pre><code>stream_data
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use when an anomaly can directly support a decision, escalation, or incident response action.</p>
+<h4 id="blk-14528">Pattern B: detect -&gt; enrich -&gt; reason</h4>
+<p>Attach anomaly context to graph memory before deciding.</p>
+<pre><code>stream_data
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;memory.graph.enrich()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use when anomaly context should be enriched with historical incidents or structural memory before a decision is made. This is the core anomaly enrichment pipeline.</p>
+<h4 id="blk-14532">Pattern C: detect -&gt; space -&gt; reason</h4>
+<p>Add region or fleet state before deciding.</p>
+<pre><code>fleet_telemetry
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;space.fleet.enrich()
+|&gt; &amp;reason.plan.evaluate()</code></pre>
+<p>Use when anomalies must be interpreted in spatial context, such as regional infrastructure or fleet-level behavior.</p>
+<h4 id="blk-14536">Pattern D: memory -&gt; detect -&gt; reason</h4>
+<p>Use historical memory alongside anomaly detection.</p>
+<pre><code>query_context
+|&gt; &amp;memory.graph.recall()
+|&gt; &amp;time.anomaly.enrich()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use when anomaly interpretation benefits from prior incidents, known failure modes, or analogous cases.</p>
+<h4 id="blk-14540">Pattern E: detect -&gt; memory.learn</h4>
+<p>Use confirmed outcomes to improve future detection.</p>
+<pre><code>stream_data
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;reason.argument.evaluate()
+|&gt; &amp;memory.graph.learn()</code></pre>
+<p>Use when anomaly-driven decisions should become part of durable organizational memory and future detection baselines.</p>
+<h3 id="blk-14544">10. Architecture diagram</h3>
+<p>A simple conceptual view of <code>&amp;time.anomaly</code> in composition:</p>
+<pre><code>streaming data / historical signals
+            |
+            v
+   +----------------------+
+   |   &amp;time.anomaly      |
+   |  detect / enrich     |
+   +----------------------+
+            |
+            v
+       anomaly_set
+            |
+     +------+------+
+     |             |
+     v             v
+&amp;memory.*      &amp;reason.*
+ enrich         evaluate
+     |             |
+     +------+------+
+            |
+            v
+         output</code></pre>
+<p>This is why contract typing matters: downstream capabilities need to know what kind of artifact they are receiving.</p>
+<h3 id="blk-14548">11. Example API shape</h3>
+<p>A provider-specific API will vary, but an anomaly detection provider commonly exposes a shape like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;detect&quot;</span>,
+  <span class="t-key">&quot;input&quot;</span>: {
+    <span class="t-key">&quot;stream&quot;</span>: <span class="t-string">&quot;cpu&quot;</span>,
+    <span class="t-key">&quot;data&quot;</span>: [
+      { <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T00:00:00Z&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-num">42.1</span> },
+      { <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T00:01:00Z&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-num">43.7</span> },
+      { <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T00:02:00Z&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-num">91.3</span> }
+    ],
+    <span class="t-key">&quot;window_minutes&quot;</span>: <span class="t-num">15</span>,
+    <span class="t-key">&quot;sensitivity&quot;</span>: <span class="t-string">&quot;medium&quot;</span>
+  }
+}</code></pre>
+<p>Representative response:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;anomalies&quot;</span>: [
+    {
+      <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T00:02:00Z&quot;</span>,
+      <span class="t-key">&quot;stream&quot;</span>: <span class="t-string">&quot;cpu&quot;</span>,
+      <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;spike&quot;</span>,
+      <span class="t-key">&quot;severity&quot;</span>: <span class="t-string">&quot;high&quot;</span>,
+      <span class="t-key">&quot;value&quot;</span>: <span class="t-num">91.3</span>,
+      <span class="t-key">&quot;baseline&quot;</span>: <span class="t-num">43.0</span>,
+      <span class="t-key">&quot;confidence&quot;</span>: <span class="t-num">0.92</span>
+    }
+  ],
+  <span class="t-key">&quot;summary&quot;</span>: <span class="t-string">&quot;CPU spike detected at 00:02 — value 91.3 vs baseline 43.0.&quot;</span>
+}</code></pre>
+<p>The protocol does not require this exact transport shape. It requires that the provider satisfy the declared capability contract.</p>
+<h3 id="blk-14554">12. Governance implications</h3>
+<p>Anomalies are often used to trigger automated responses before a human fully reviews the situation. That makes governance important.</p>
+<p>Common governance examples for anomaly-driven systems:</p>
+<h4 id="blk-14557">Hard constraints</h4>
+<ul><li><p>never trigger irreversible action from a single anomaly detection alone</p></li><li><p>never suppress audit logging for anomaly-driven responses</p></li><li><p>never escalate to external systems without provenance attached</p></li></ul>
+<h4 id="blk-14565">Soft constraints</h4>
+<ul><li><p>prefer investigation over immediate remediation when confidence is moderate</p></li><li><p>prefer correlating multiple signals before triggering high-severity responses</p></li><li><p>prefer recent baselines over stale detection models</p></li></ul>
+<h4 id="blk-14573">Escalation rules</h4>
+<p>Anomaly-heavy systems often combine well with:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;escalate_when&quot;</span>: {
+    <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span>,
+    <span class="t-key">&quot;severity_above&quot;</span>: <span class="t-string">&quot;high&quot;</span>,
+    <span class="t-key">&quot;correlated_anomalies_exceed&quot;</span>: <span class="t-num">3</span>,
+    <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span>
+  }
+}</code></pre>
+<p>This is one reason <code>&amp;time.anomaly</code> often composes closely with <code>&amp;reason.argument</code> or <code>&amp;reason.plan</code>.</p>
+<h3 id="blk-14577">13. Provenance implications</h3>
+<p>Anomalies can trigger automated incident response, scaling decisions, and operational escalations, so provenance should be explicit.</p>
+<p>A provenance record for an anomaly detection step may include:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;time.anomaly&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;detect&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T12:00:00Z&quot;</span>,
+  <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:abcd1234...&quot;</span>,
+  <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:efgh5678...&quot;</span>,
+  <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:0000...&quot;</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;ttc-anomaly-17&quot;</span>
+}</code></pre>
+<p>This helps answer questions like:</p>
+<ul><li><p>Why did the system trigger an incident response?</p></li><li><p>Which anomaly provider flagged the deviation?</p></li><li><p>What detection window and confidence profile informed the action?</p></li><li><p>Which upstream signals produced this anomaly event?</p></li></ul>
+<p>Anomalies without provenance are difficult to audit and easy to over-trust.</p>
+<h3 id="blk-14592">14. A2A implications</h3>
+<p>An anomaly detection capability may map naturally to A2A-advertised skills such as:</p>
+<ul><li><p><code>temporal-anomaly-detection</code></p></li></ul>
+<p>That means an agent card generated from an <code>ampersand.json</code> declaration can advertise anomaly detection as a reusable, discoverable coordination-facing skill.</p>
+<p>This is one example of how the [&amp;] Protocol complements A2A rather than replacing it.</p>
+<h3 id="blk-14599">15. MCP implications</h3>
+<p>An anomaly detection provider may also compile into MCP-facing configuration if the implementation exposes a tool or service endpoint.</p>
+<p>For example, a declaration containing <code>&amp;time.anomaly</code> may generate MCP configuration that wires in an anomaly detection provider alongside memory and reasoning providers.</p>
+<p>This is one example of how the [&amp;] Protocol complements MCP rather than replacing it.</p>
+<h3 id="blk-14603">16. Research references and grounding</h3>
+<p>The design of <code>&amp;time.anomaly</code> is informed by overlapping areas of work:</p>
+<ul><li><p>statistical anomaly detection</p></li><li><p>time-series outlier identification</p></li><li><p>change-point detection</p></li><li><p>operational monitoring and observability</p></li><li><p>streaming event detection</p></li><li><p>drift detection in production systems</p></li><li><p>temporal context in agent and planning architectures</p></li></ul>
+<p>The important protocol-level insight is not that anomaly detection is new. It is that <strong>anomaly detection should be represented explicitly as a composable capability</strong> rather than hidden in monitoring infrastructure.</p>
+<p>That shift enables:</p>
+<ul><li><p>schema validation</p></li><li><p>typed pipelines</p></li><li><p>provider interchangeability</p></li><li><p>governance-aware responses</p></li><li><p>provenance-preserving execution</p></li></ul>
+<h3 id="blk-14633">17. Anti-patterns</h3>
+<h4 id="blk-14634">Anti-pattern 1: treat anomaly detection as generic alerting</h4>
+<p>If anomaly detection is bundled into a broad &quot;alerting&quot; or &quot;monitoring&quot; block, its contract and pipeline role become unclear.</p>
+<h4 id="blk-14636">Anti-pattern 2: treat anomaly output as self-justifying</h4>
+<p>An anomaly is strong evidence that something unusual occurred, but not always enough for unsupervised remediation.</p>
+<h4 id="blk-14638">Anti-pattern 3: conflate forecasting and anomaly detection</h4>
+<p>They are related temporal capabilities, but they are not the same interface. Forecasting predicts future values. Anomaly detection surfaces unexpected present or past values.</p>
+<h4 id="blk-14640">Anti-pattern 4: conflate pattern recognition and anomaly detection</h4>
+<p>Pattern recognition identifies recurring structures such as seasonality or cycles. Anomaly detection identifies deviations from expected behavior.</p>
+<h4 id="blk-14642">Anti-pattern 5: hardwire the protocol to one provider</h4>
+<p><code>&amp;time.anomaly</code> should remain a portable capability contract.</p>
+<h3 id="blk-14644">18. Good default guidance</h3>
+<p>Use <code>&amp;time.anomaly</code> when:</p>
+<ul><li><p>the system needs to detect unexpected deviations in temporal signals</p></li><li><p>an incident response or escalation pipeline depends on anomaly context</p></li><li><p>infrastructure, fleet, or operational metrics require continuous monitoring for unusual behavior</p></li><li><p>a declaration should express temporal anomaly detection intelligence explicitly</p></li></ul>
+<p>Prefer composing it with:</p>
+<ul><li><p><code>&amp;memory.*</code> when historical baselines or prior incident context improves interpretation</p></li><li><p><code>&amp;space.*</code> when geography, fleet position, or regional state matters</p></li><li><p><code>&amp;reason.*</code> when anomalies influence action selection, escalation, or remediation</p></li></ul>
+<h3 id="blk-14663">19. Summary</h3>
+<p><code>&amp;time.anomaly</code> is the [&amp;] Protocol capability for detecting temporal anomalies.</p>
+<p>It exists to make temporal anomaly detection:</p>
+<ul><li><p>explicit</p></li><li><p>composable</p></li><li><p>contract-aware</p></li><li><p>provider-agnostic</p></li><li><p>governable</p></li><li><p>provenance-friendly</p></li><li><p>generatable into MCP and A2A surfaces</p></li></ul>
+<p>In short:</p>
+<blockquote><p><code>&amp;time.anomaly</code> gives an agent a standard way to declare that it can detect unexpected deviations in temporal signals and use that detection safely within a composed cognitive system.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/time.anomaly.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-14376" class="lvl2">1. Definition</a><a href="#blk-14398" class="lvl2">2. Why this capability matters</a><a href="#blk-14445" class="lvl2">3. Capability role in the four-primitive model</a><a href="#blk-14468" class="lvl2">4. Typical use cases</a><a href="#blk-14469" class="lvl3">Infrastructure incident detection</a><a href="#blk-14471" class="lvl3">Support volume spike detection</a><a href="#blk-14473" class="lvl3">Regional demand anomaly</a><a href="#blk-14475" class="lvl3">Fleet telemetry anomaly</a><a href="#blk-14477" class="lvl3">Operational drift detection</a><a href="#blk-14479" class="lvl3">Incident correlation</a><a href="#blk-14481" class="lvl2">5. Example declaration</a><a href="#blk-14486" class="lvl2">6. Compatible providers</a><a href="#blk-14501" class="lvl2">7. Example capability contract</a><a href="#blk-14505" class="lvl2">8. Example provider configuration patterns</a><a href="#blk-14507" class="lvl3">Streams</a><a href="#blk-14510" class="lvl3">Sensitivity</a><a href="#blk-14513" class="lvl3">Window</a><a href="#blk-14516" class="lvl3">Confidence threshold</a><a href="#blk-14519" class="lvl3">Region or segment scope</a><a href="#blk-14523" class="lvl2">9. Architecture patterns</a><a href="#blk-14524" class="lvl3">Pattern A: detect -&gt; reason</a><a href="#blk-14528" class="lvl3">Pattern B: detect -&gt; enrich -&gt; reason</a><a href="#blk-14532" class="lvl3">Pattern C: detect -&gt; space -&gt; reason</a><a href="#blk-14536" class="lvl3">Pattern D: memory -&gt; detect -&gt; reason</a><a href="#blk-14540" class="lvl3">Pattern E: detect -&gt; memory.learn</a><a href="#blk-14544" class="lvl2">10. Architecture diagram</a><a href="#blk-14548" class="lvl2">11. Example API shape</a><a href="#blk-14554" class="lvl2">12. Governance implications</a><a href="#blk-14557" class="lvl3">Hard constraints</a><a href="#blk-14565" class="lvl3">Soft constraints</a><a href="#blk-14573" class="lvl3">Escalation rules</a><a href="#blk-14577" class="lvl2">13. Provenance implications</a><a href="#blk-14592" class="lvl2">14. A2A implications</a><a href="#blk-14599" class="lvl2">15. MCP implications</a><a href="#blk-14603" class="lvl2">16. Research references and grounding</a><a href="#blk-14633" class="lvl2">17. Anti-patterns</a><a href="#blk-14634" class="lvl3">Anti-pattern 1: treat anomaly detection as generic alerting</a><a href="#blk-14636" class="lvl3">Anti-pattern 2: treat anomaly output as self-justifying</a><a href="#blk-14638" class="lvl3">Anti-pattern 3: conflate forecasting and anomaly detection</a><a href="#blk-14640" class="lvl3">Anti-pattern 4: conflate pattern recognition and anomaly detection</a><a href="#blk-14642" class="lvl3">Anti-pattern 5: hardwire the protocol to one provider</a><a href="#blk-14644" class="lvl2">18. Good default guidance</a><a href="#blk-14663" class="lvl2">19. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierawjingzvtlt7y5gxofrmodif6mhw2tzsohcnukvbhfw7gzk3ce46q</div></div></div>
+</div></div>
+</body></html>

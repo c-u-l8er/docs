@@ -1,0 +1,381 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;reason.plan -- Planning-Oriented Reasoning for the [&amp;] Protocol · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;reason.plan is the capability page for the &amp;reason.plan subtype in the [&amp;] Protocol.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.plan.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;reason.plan -- Planning-Oriented Reasoning for the [&amp;] Protocol">
+<meta property="og:description" content="&amp;reason.plan is the capability page for the &amp;reason.plan subtype in the [&amp;] Protocol.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.plan.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&reason.plan -- Planning-Oriented Reasoning for the [&] Protocol","name":"&reason.plan -- Planning-Oriented Reasoning for the [&] Protocol","description":"&reason.plan is the capability page for the &reason.plan subtype in the [&] Protocol.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.plan.md/","identifier":"bagaaieragrewbfwwja26gzezotrh3quyzmcnhymz4dughhiu6tjg2kc54i7q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. Where it fits in the protocol"},{"@type":"WebPageElement","name":"4. What makes reason.plan different from other reasoning subtypes"},{"@type":"WebPageElement","name":"Compared with reason.argument"},{"@type":"WebPageElement","name":"Compared with reason.vote"},{"@type":"WebPageElement","name":"Compared with implicit model reasoning"},{"@type":"WebPageElement","name":"5. Capability contract"},{"@type":"WebPageElement","name":"Contract meaning"},{"@type":"WebPageElement","name":"6. Architecture diagram"},{"@type":"WebPageElement","name":"Interpretation"},{"@type":"WebPageElement","name":"7. Example ampersand.json usage"},{"@type":"WebPageElement","name":"Explicit provider binding"},{"@type":"WebPageElement","name":"Auto provider binding"},{"@type":"WebPageElement","name":"8. Example API surface"},{"@type":"WebPageElement","name":"plan"},{"@type":"WebPageElement","name":"simulate"},{"@type":"WebPageElement","name":"9. Composition patterns"},{"@type":"WebPageElement","name":"Pattern A: Time + Space + Plan (demand-capacity planning)"},{"@type":"WebPageElement","name":"Pattern B: Plan -> Vote (generate then select)"},{"@type":"WebPageElement","name":"Pattern C: Memory -> Plan"},{"@type":"WebPageElement","name":"Pattern D: Plan -> Argument -> Plan (evaluate then revise)"},{"@type":"WebPageElement","name":"Pattern E: Plan -> Memory"},{"@type":"WebPageElement","name":"10. Governance role"},{"@type":"WebPageElement","name":"Example governance block"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"reason.plan.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.plan.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/reason.plan.md</span>
+
+</div></div>
+<div class="lead">&amp;reason.plan is the capability page for the &amp;reason.plan subtype in the [&amp;] Protocol.</div>
+<div class="prose"><h1 id="blk-11744"><code>&amp;reason.plan</code> -- Planning-Oriented Reasoning for the [&amp;] Protocol</h1>
+<p><code>&amp;reason.plan</code> is the capability page for the <code>&amp;reason.plan</code> subtype in the [&amp;] Protocol.</p>
+<p>It represents a reasoning surface built for:</p>
+<ul><li><p>goal decomposition into actionable steps</p></li><li><p>constrained plan generation</p></li><li><p>plan revision under feedback</p></li><li><p>outcome simulation and failure mode analysis</p></li><li><p>explicit commitment before execution</p></li></ul>
+<p>In short:</p>
+<blockquote><p><code>&amp;reason.plan</code> is the protocol capability for agents that must <strong>produce, refine, and commit action sequences under constraints</strong>.</p></blockquote>
+<h3 id="blk-11761">1. Definition</h3>
+<p><code>&amp;reason.plan</code> is a subtype of the <code>&amp;reason</code> primitive.</p>
+<p>It describes a reasoning capability that takes goals, constraints, and optional feedback and produces:</p>
+<ul><li><p>a candidate plan or set of candidate plans</p></li><li><p>a revised plan incorporating new information</p></li><li><p>a simulation of expected outcomes and failure modes</p></li><li><p>a committed plan ready for execution</p></li></ul>
+<p>Unlike a generic &quot;LLM generates steps&quot; approach, <code>&amp;reason.plan</code> is modeled as a distinct protocol capability with explicit contracts and composition rules.</p>
+<h3 id="blk-11774">2. Why this capability exists</h3>
+<p>Many agent systems need more than evaluation and judgment.</p>
+<p>They need a way to:</p>
+<ul><li><p>decompose goals into ordered steps</p></li><li><p>generate multiple candidate plans for comparison</p></li><li><p>revise plans when constraints change or feedback arrives</p></li><li><p>simulate outcomes before committing resources</p></li><li><p>commit a selected plan with clear provenance</p></li></ul>
+<p>That is the role of <code>&amp;reason.plan</code>.</p>
+<p>This capability is especially important for systems where plans must be:</p>
+<ul><li><p>inspectable</p></li><li><p>revisable</p></li><li><p>governed</p></li><li><p>simulated before execution</p></li><li><p>traceable from goal to action</p></li></ul>
+<p>Examples include:</p>
+<ul><li><p>workflow orchestration across tools and services</p></li><li><p>task decomposition for multi-step agent work</p></li><li><p>route and sequence planning under resource constraints</p></li><li><p>tool-using agents that must decide what to call and in what order</p></li><li><p>capacity and demand planning with explicit tradeoffs</p></li></ul>
+<h3 id="blk-11813">3. Where it fits in the protocol</h3>
+<p>The [&amp;] Protocol organizes cognition, embodiment, and governance into six primitive families:</p>
+<ul><li><p><code>&amp;memory</code> -- what the agent knows</p></li><li><p><code>&amp;reason</code> -- how the agent decides</p></li><li><p><code>&amp;time</code> -- when things happen</p></li><li><p><code>&amp;space</code> -- where things are</p></li><li><p><code>&amp;body</code> -- how the agent is instantiated in an environment (perception, action, affordance)</p></li><li><p><code>&amp;govern</code> -- who is acting, under what rules, at what cost</p></li></ul>
+<p><code>&amp;reason.plan</code> lives under <code>&amp;reason</code> and is the subtype most directly associated with:</p>
+<ul><li><p>goal decomposition</p></li><li><p>step sequencing</p></li><li><p>plan generation and revision</p></li><li><p>pre-execution simulation</p></li></ul>
+<p>It composes naturally with:</p>
+<ul><li><p><code>&amp;memory.*</code> for context and prior plan recall</p></li><li><p><code>&amp;time.*</code> for forecast and scheduling input</p></li><li><p><code>&amp;space.*</code> for spatial and resource constraints</p></li><li><p><code>&amp;reason.vote</code> for selecting among candidate plans</p></li><li><p><code>&amp;reason.argument</code> for evaluating plan tradeoffs</p></li></ul>
+<h3 id="blk-11850">4. What makes <code>reason.plan</code> different from other reasoning subtypes</h3>
+<h4 id="blk-11851">Compared with <code>reason.argument</code></h4>
+<ul><li><p><code>reason.plan</code> emphasizes producing and refining action sequences</p></li><li><p><code>reason.argument</code> emphasizes evaluating evidence and defending a decision</p></li></ul>
+<h4 id="blk-11857">Compared with <code>reason.vote</code></h4>
+<ul><li><p><code>reason.plan</code> generates candidate plans -- it creates the alternatives</p></li><li><p><code>reason.vote</code> selects among alternatives -- it aggregates preferences across candidates or agents</p></li></ul>
+<h4 id="blk-11863">Compared with implicit model reasoning</h4>
+<ul><li><p><code>reason.plan</code> is explicit, typed, inspectable, and composable</p></li><li><p>implicit reasoning is often hidden inside prompts or application code</p></li></ul>
+<h3 id="blk-11869">5. Capability contract</h3>
+<p>A representative contract for <code>&amp;reason.plan</code> looks like this:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.plan&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Planning-oriented reasoning contract for goal decomposition, constrained plan revision, outcome simulation, and plan commitment.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;plan&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;goals_and_constraints&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;candidate_plans&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Generate candidate plans from goals and constraints.&quot;</span>
+    },
+    <span class="t-key">&quot;revise&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;plan_and_feedback&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;revised_plan&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Revise an existing plan based on feedback, new constraints, or changed conditions.&quot;</span>
+    },
+    <span class="t-key">&quot;simulate&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;candidate_plan&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;simulation_result&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Simulate outcomes and failure modes for a candidate plan.&quot;</span>
+    },
+    <span class="t-key">&quot;commit&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;selected_plan&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;committed_plan&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Commit a selected plan for execution, producing an immutable execution artifact.&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;time.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.*&quot;</span>,
+    <span class="t-string">&quot;goals&quot;</span>,
+    <span class="t-string">&quot;constraints&quot;</span>,
+    <span class="t-string">&quot;feedback&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;reason.vote&quot;</span>,
+    <span class="t-string">&quot;&amp;reason.argument&quot;</span>,
+    <span class="t-string">&quot;execution&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;goal-plan-generation&quot;</span>,
+    <span class="t-string">&quot;plan-revision&quot;</span>
+  ]
+}</code></pre>
+<h4 id="blk-11872">Contract meaning</h4>
+<p>This contract says:</p>
+<ul><li><p><code>plan</code> consumes <code>goals_and_constraints</code> and outputs <code>candidate_plans</code></p></li><li><p><code>revise</code> consumes <code>plan_and_feedback</code> and outputs <code>revised_plan</code></p></li><li><p><code>simulate</code> consumes <code>candidate_plan</code> and outputs <code>simulation_result</code></p></li><li><p><code>commit</code> consumes <code>selected_plan</code> and outputs <code>committed_plan</code></p></li></ul>
+<p>It also says:</p>
+<ul><li><p>upstream inputs can come from memory, time, space, goals, constraints, or feedback</p></li><li><p>outputs can feed memory, voting, argument evaluation, execution layers, or final output</p></li><li><p>this capability may advertise A2A-facing skills such as <code>goal-plan-generation</code></p></li></ul>
+<h3 id="blk-11891">6. Architecture diagram</h3>
+<p>A typical <code>&amp;reason.plan</code> pipeline looks like this:</p>
+<pre><code>goal
+  -&gt; &amp;memory.graph.enrich()
+  -&gt; &amp;reason.plan.plan()
+  -&gt; candidate_plans
+  -&gt; &amp;reason.plan.simulate()
+  -&gt; &amp;reason.vote.select()
+  -&gt; &amp;reason.plan.commit()
+  -&gt; committed_plan</code></pre>
+<p>Or, in a demand-capacity workflow:</p>
+<pre><code>demand_signal
+  -&gt; &amp;time.forecast.predict()
+  -&gt; &amp;space.fleet.enrich()
+  -&gt; &amp;reason.plan.plan()
+  -&gt; candidate_plans
+  -&gt; &amp;reason.plan.revise()
+  -&gt; revised_plan
+  -&gt; &amp;reason.plan.commit()
+  -&gt; committed_plan</code></pre>
+<h4 id="blk-11896">Interpretation</h4>
+<ul><li><p>upstream capabilities gather context, forecasts, and constraints</p></li><li><p><code>&amp;reason.plan</code> generates, simulates, and refines candidate plans</p></li><li><p>selection among candidates can be delegated to <code>&amp;reason.vote</code></p></li><li><p>the committed plan can be stored, executed, or escalated</p></li><li><p>provenance can preserve the chain from goal to committed action sequence</p></li></ul>
+<h3 id="blk-11908">7. Example <code>ampersand.json</code> usage</h3>
+<h4 id="blk-11909">Explicit provider binding</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;WorkflowOrchestrator&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;reason.plan&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;governance&quot;</span>: <span class="t-string">&quot;goal-directed&quot;</span>,
+        <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;constrained-planning&quot;</span>
+      }
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h4 id="blk-11911">Auto provider binding</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;TaskDecomposer&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;reason.plan&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+      <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;goal decomposition with constrained plan revision and outcome simulation&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;infer_from_goal&quot;</span>: <span class="t-lit">true</span>
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h3 id="blk-11913">8. Example API surface</h3>
+<p>A provider implementing <code>&amp;reason.plan</code> might expose operations like:</p>
+<h4 id="blk-11915"><code>plan</code></h4>
+<p>Input:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;goal&quot;</span>: <span class="t-string">&quot;deploy-v2.3-to-production&quot;</span>,
+  <span class="t-key">&quot;constraints&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [<span class="t-string">&quot;Zero downtime&quot;</span>, <span class="t-string">&quot;Must pass staging validation before cutover&quot;</span>],
+    <span class="t-key">&quot;soft&quot;</span>: [<span class="t-string">&quot;Prefer blue-green over rolling if capacity allows&quot;</span>],
+    <span class="t-key">&quot;resources&quot;</span>: {
+      <span class="t-key">&quot;max_parallel_deploys&quot;</span>: <span class="t-num">3</span>,
+      <span class="t-key">&quot;available_regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>, <span class="t-string">&quot;eu-west&quot;</span>]
+    }
+  },
+  <span class="t-key">&quot;context&quot;</span>: {
+    <span class="t-key">&quot;current_version&quot;</span>: <span class="t-string">&quot;v2.2.1&quot;</span>,
+    <span class="t-key">&quot;active_incidents&quot;</span>: <span class="t-num">0</span>,
+    <span class="t-key">&quot;capacity_headroom&quot;</span>: <span class="t-num">0.35</span>
+  }
+}</code></pre>
+<p>Output:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;candidates&quot;</span>: [
+    {
+      <span class="t-key">&quot;plan_id&quot;</span>: <span class="t-string">&quot;plan-bg-01&quot;</span>,
+      <span class="t-key">&quot;strategy&quot;</span>: <span class="t-string">&quot;blue-green&quot;</span>,
+      <span class="t-key">&quot;steps&quot;</span>: [
+        <span class="t-string">&quot;provision green environment in us-east&quot;</span>,
+        <span class="t-string">&quot;deploy v2.3 to green&quot;</span>,
+        <span class="t-string">&quot;run staging validation suite&quot;</span>,
+        <span class="t-string">&quot;switch traffic to green&quot;</span>,
+        <span class="t-string">&quot;provision green environment in eu-west&quot;</span>,
+        <span class="t-string">&quot;deploy v2.3 to green&quot;</span>,
+        <span class="t-string">&quot;run staging validation suite&quot;</span>,
+        <span class="t-string">&quot;switch traffic to green&quot;</span>,
+        <span class="t-string">&quot;decommission blue environments&quot;</span>
+      ],
+      <span class="t-key">&quot;estimated_duration_minutes&quot;</span>: <span class="t-num">45</span>,
+      <span class="t-key">&quot;risk_score&quot;</span>: <span class="t-num">0.12</span>
+    },
+    {
+      <span class="t-key">&quot;plan_id&quot;</span>: <span class="t-string">&quot;plan-roll-01&quot;</span>,
+      <span class="t-key">&quot;strategy&quot;</span>: <span class="t-string">&quot;rolling&quot;</span>,
+      <span class="t-key">&quot;steps&quot;</span>: [
+        <span class="t-string">&quot;deploy v2.3 to us-east canary (10%)&quot;</span>,
+        <span class="t-string">&quot;validate canary health for 5 minutes&quot;</span>,
+        <span class="t-string">&quot;roll to us-east (100%)&quot;</span>,
+        <span class="t-string">&quot;deploy v2.3 to eu-west canary (10%)&quot;</span>,
+        <span class="t-string">&quot;validate canary health for 5 minutes&quot;</span>,
+        <span class="t-string">&quot;roll to eu-west (100%)&quot;</span>
+      ],
+      <span class="t-key">&quot;estimated_duration_minutes&quot;</span>: <span class="t-num">30</span>,
+      <span class="t-key">&quot;risk_score&quot;</span>: <span class="t-num">0.18</span>
+    }
+  ]
+}</code></pre>
+<h4 id="blk-11920"><code>simulate</code></h4>
+<p>Input:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;plan_id&quot;</span>: <span class="t-string">&quot;plan-bg-01&quot;</span>,
+  <span class="t-key">&quot;failure_scenarios&quot;</span>: [<span class="t-string">&quot;staging_validation_fails&quot;</span>, <span class="t-string">&quot;capacity_spike_during_cutover&quot;</span>]
+}</code></pre>
+<p>Output:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;plan_id&quot;</span>: <span class="t-string">&quot;plan-bg-01&quot;</span>,
+  <span class="t-key">&quot;simulations&quot;</span>: [
+    {
+      <span class="t-key">&quot;scenario&quot;</span>: <span class="t-string">&quot;staging_validation_fails&quot;</span>,
+      <span class="t-key">&quot;outcome&quot;</span>: <span class="t-string">&quot;rollback to blue; no traffic impact&quot;</span>,
+      <span class="t-key">&quot;severity&quot;</span>: <span class="t-string">&quot;low&quot;</span>,
+      <span class="t-key">&quot;recovery_time_minutes&quot;</span>: <span class="t-num">5</span>
+    },
+    {
+      <span class="t-key">&quot;scenario&quot;</span>: <span class="t-string">&quot;capacity_spike_during_cutover&quot;</span>,
+      <span class="t-key">&quot;outcome&quot;</span>: <span class="t-string">&quot;both blue and green absorb load during transition; brief latency increase&quot;</span>,
+      <span class="t-key">&quot;severity&quot;</span>: <span class="t-string">&quot;medium&quot;</span>,
+      <span class="t-key">&quot;recovery_time_minutes&quot;</span>: <span class="t-num">2</span>
+    }
+  ],
+  <span class="t-key">&quot;overall_resilience&quot;</span>: <span class="t-num">0.88</span>
+}</code></pre>
+<h3 id="blk-11925">9. Composition patterns</h3>
+<h4 id="blk-11926">Pattern A: Time + Space + Plan (demand-capacity planning)</h4>
+<p>Use when the system must generate plans informed by temporal forecasts and spatial resource constraints.</p>
+<pre><code>&amp;time.forecast -&gt; &amp;space.fleet -&gt; &amp;reason.plan</code></pre>
+<p>Good for:</p>
+<ul><li><p>demand-capacity planning</p></li><li><p>fleet scheduling</p></li><li><p>regional provisioning</p></li><li><p>supply chain sequencing</p></li></ul>
+<h4 id="blk-11939">Pattern B: Plan -&gt; Vote (generate then select)</h4>
+<p>Use when the system should generate multiple candidate plans, then select the best one through structured comparison.</p>
+<pre><code>&amp;reason.plan.plan() -&gt; &amp;reason.vote.select()</code></pre>
+<p>Good for:</p>
+<ul><li><p>multi-strategy evaluation</p></li><li><p>team or stakeholder consensus on approach</p></li><li><p>A/B deployment strategy selection</p></li><li><p>resource allocation tradeoffs</p></li></ul>
+<h4 id="blk-11952">Pattern C: Memory -&gt; Plan</h4>
+<p>Use when planning depends on prior context, past plans, or historical outcomes.</p>
+<pre><code>&amp;memory.graph -&gt; &amp;reason.plan</code></pre>
+<p>Good for:</p>
+<ul><li><p>incremental workflow refinement</p></li><li><p>learning from past execution failures</p></li><li><p>building on prior task decompositions</p></li><li><p>context-aware re-planning</p></li></ul>
+<h4 id="blk-11965">Pattern D: Plan -&gt; Argument -&gt; Plan (evaluate then revise)</h4>
+<p>Use when a generated plan should be stress-tested through evidence-weighted evaluation before revision.</p>
+<pre><code>&amp;reason.plan.plan() -&gt; &amp;reason.argument.evaluate() -&gt; &amp;reason.plan.revise()</code></pre>
+<p>Good for:</p>
+<ul><li><p>safety-critical planning</p></li><li><p>compliance-sensitive workflows</p></li><li><p>plans with governance review gates</p></li><li><p>iterative plan hardening</p></li></ul>
+<h4 id="blk-11978">Pattern E: Plan -&gt; Memory</h4>
+<p>Use when committed plans should be preserved for later recall, postmortem, or learning.</p>
+<pre><code>&amp;reason.plan.commit() -&gt; &amp;memory.graph.learn</code></pre>
+<p>Good for:</p>
+<ul><li><p>execution audit trails</p></li><li><p>plan replay and comparison</p></li><li><p>operational learning loops</p></li><li><p>postmortem analysis</p></li></ul>
+<h3 id="blk-11991">10. Governance role</h3>
+<p><code>&amp;reason.plan</code> is a governance-sensitive capability in the protocol.</p>
+<p>It is often the capability where:</p>
+<ul><li><p>hard constraints bound what plans may contain</p></li><li><p>soft preferences shape plan selection</p></li><li><p>simulation gates prevent commitment of high-risk plans</p></li><li><p>escalation decisions are triggered when no plan satisfies all constraints</p></li></ul>
+<h4 id="blk-12003">Example governance block</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never deploy to production without passing staging validation&quot;</span>,
+      <span class="t-string">&quot;Never exceed resource budget in a single plan step&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer reversible actions over irreversible ones&quot;</span>,
+      <span class="t-string">&quot;Prefer shorter plans when risk profiles are equivalent&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;no_plan_satisfies_hard_constraints&quot;</span>: <span class="t-lit">true</span>,
+      <span class="t-key">&quot;all_candidates_exceed_risk_threshold&quot;</span>: <span class="t-num">0.5</span>
+    }
+  }
+}</code></pre>
+<h4 id="blk-12005">Why this matters</h4>
+<p>A planning provider without explicit governance tends to generate plans that satisfy goals but violate unstated boundaries.</p>
+<p>A planning provider with governance as data can:</p>
+<ul><li><p>generate only constraint-satisfying candidates</p></li><li><p>surface when no feasible plan exists</p></li><li><p>preserve reviewable constraint context</p></li><li><p>produce safer execution artifacts</p></li></ul>
+<h3 id="blk-12017">11. Provenance role</h3>
+<p><code>&amp;reason.plan</code> should be provenance-visible.</p>
+<p>A representative provenance record for a planning step might look like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;reason.plan&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;commit&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-14T14:23:07Z&quot;</span>,
+  <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:7b2c...&quot;</span>,
+  <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:e1d0...&quot;</span>,
+  <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:a3f8...&quot;</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;plan-inv-1f02...&quot;</span>
+}</code></pre>
+<p>This is important because <code>&amp;reason.plan</code> produces artifacts that directly drive execution:</p>
+<ul><li><p>the committed plan</p></li><li><p>the step sequence</p></li><li><p>the constraint satisfaction record</p></li><li><p>the simulation results</p></li></ul>
+<p>If you want to answer &quot;What was the agent going to do, and why did it choose that approach?&quot;, this is usually the most important step in the chain.</p>
+<h3 id="blk-12032">12. Compatible providers</h3>
+<p>The protocol is provider-agnostic, but representative providers for <code>&amp;reason.plan</code> include:</p>
+<ul><li><p><code>deliberatic</code></p></li><li><p>custom workflow orchestration engines</p></li><li><p>hierarchical task network planners</p></li><li><p>constraint satisfaction planning services</p></li><li><p>domain-specific scheduling and sequencing engines</p></li></ul>
+<p>The key protocol rule is:</p>
+<blockquote><p>a provider may satisfy <code>&amp;reason.plan</code> if it honors the declared contract</p></blockquote>
+<p>The capability should not collapse into a single vendor identity.</p>
+<h3 id="blk-12049">13. Typical compatible upstream capabilities</h3>
+<p><code>&amp;reason.plan</code> often accepts input from:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;memory.vector</code></p></li><li><p><code>&amp;memory.episodic</code></p></li><li><p><code>&amp;time.forecast</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;space.route</code></p></li></ul>
+<p>Typical upstream type tokens include:</p>
+<ul><li><p><code>goals</code></p></li><li><p><code>constraints</code></p></li><li><p><code>feedback</code></p></li><li><p><code>context</code></p></li></ul>
+<h3 id="blk-12076">14. Typical downstream uses</h3>
+<p>Outputs from <code>&amp;reason.plan</code> often feed into:</p>
+<ul><li><p>execution layers</p></li><li><p><code>&amp;reason.vote</code> for plan selection</p></li><li><p><code>&amp;reason.argument</code> for plan evaluation</p></li><li><p>learning memory surfaces</p></li><li><p>audit logs</p></li><li><p>A2A skill publication</p></li><li><p>dashboards and review workflows</p></li></ul>
+<p>Typical downstream type tokens include:</p>
+<ul><li><p><code>candidate_plans</code></p></li><li><p><code>revised_plan</code></p></li><li><p><code>simulation_result</code></p></li><li><p><code>committed_plan</code></p></li><li><p><code>output</code></p></li></ul>
+<h3 id="blk-12105">15. A2A skill mapping</h3>
+<p>A capability contract for <code>&amp;reason.plan</code> may advertise skills like:</p>
+<ul><li><p><code>goal-plan-generation</code></p></li><li><p><code>plan-revision</code></p></li></ul>
+<p>This makes it possible to generate an A2A-style agent card that exposes not just &quot;planning,&quot; but a more meaningful external skill surface.</p>
+<p>Example interpretation:</p>
+<ul><li><p>an agent with <code>&amp;reason.plan</code> can advertise that it can decompose goals into executable plans under constraints</p></li><li><p>another agent can delegate planning-heavy tasks to it</p></li><li><p>the published skill can still be derived from one canonical capability declaration</p></li></ul>
+<h3 id="blk-12121">16. Example use cases</h3>
+<h4 id="blk-12122">Workflow orchestrator</h4>
+<p>Use <code>&amp;reason.plan</code> when deciding:</p>
+<ul><li><p>how to decompose a multi-step workflow into ordered tasks</p></li><li><p>which tools to invoke and in what sequence</p></li><li><p>how to revise a workflow when a step fails or conditions change</p></li></ul>
+<h4 id="blk-12131">Deployment operator</h4>
+<p>Use <code>&amp;reason.plan</code> when deciding:</p>
+<ul><li><p>which deployment strategy to use across regions</p></li><li><p>how to sequence rollout steps under zero-downtime constraints</p></li><li><p>what the rollback path looks like if validation fails</p></li></ul>
+<h4 id="blk-12140">Tool-using agent</h4>
+<p>Use <code>&amp;reason.plan</code> when deciding:</p>
+<ul><li><p>which APIs to call and in what order to satisfy a user goal</p></li><li><p>how to decompose a complex request into tool invocations</p></li><li><p>when to revise the plan based on intermediate results</p></li></ul>
+<h4 id="blk-12149">Supply chain planner</h4>
+<p>Use <code>&amp;reason.plan</code> when deciding:</p>
+<ul><li><p>how to sequence procurement and fulfillment steps</p></li><li><p>which routes and schedules minimize cost under delivery constraints</p></li><li><p>how to re-plan when a supplier or route becomes unavailable</p></li></ul>
+<h3 id="blk-12158">17. Anti-patterns</h3>
+<h4 id="blk-12159">Anti-pattern 1: treating planning as a single prompt call</h4>
+<p>This removes:</p>
+<ul><li><p>type clarity</p></li><li><p>provenance structure</p></li><li><p>governance visibility</p></li><li><p>contract validation</p></li><li><p>simulation and revision as distinct steps</p></li></ul>
+<h4 id="blk-12172">Anti-pattern 2: using <code>&amp;reason.plan</code> for pure evaluation</h4>
+<p>If the primary output is a judgment or ranking rather than an action sequence, <code>reason.argument</code> is usually the better subtype.</p>
+<h4 id="blk-12174">Anti-pattern 3: skipping simulation before commitment</h4>
+<p><code>&amp;reason.plan</code> is strongest when candidates are tested against failure modes before commitment. Committing the first candidate without simulation loses a key safety benefit.</p>
+<h4 id="blk-12176">Anti-pattern 4: generating plans without constraint input</h4>
+<p>Plans generated without explicit constraints tend to be optimistic and fragile. Governance and resource constraints should be first-class inputs, not afterthoughts.</p>
+<h3 id="blk-12178">18. Research connections</h3>
+<p><code>&amp;reason.plan</code> is aligned with several useful research and systems traditions:</p>
+<ul><li><p>hierarchical task network planning</p></li><li><p>constraint satisfaction and optimization</p></li><li><p>goal-oriented planning and decomposition</p></li><li><p>simulation-based plan evaluation</p></li><li><p>iterative plan repair and replanning</p></li><li><p>safe planning for autonomous systems</p></li></ul>
+<p>The protocol does not attempt to standardize one academic theory of planning.</p>
+<p>Instead, it provides a practical interface for planning systems that must be:</p>
+<ul><li><p>composable</p></li><li><p>inspectable</p></li><li><p>governable</p></li><li><p>publishable</p></li><li><p>interoperable</p></li></ul>
+<h3 id="blk-12206">19. Summary</h3>
+<p><code>&amp;reason.plan</code> is the protocol capability for <strong>goal decomposition, constrained plan generation, and pre-execution simulation</strong>.</p>
+<p>It exists so that a system can say more than:</p>
+<ul><li><p>&quot;this agent plans&quot;</p></li></ul>
+<p>It can say:</p>
+<ul><li><p>what kind of planning it performs</p></li><li><p>what inputs it accepts</p></li><li><p>what outputs it produces</p></li><li><p>what it can compose with</p></li><li><p>how it supports governance</p></li><li><p>how it preserves provenance</p></li><li><p>what A2A skills it can publish</p></li></ul>
+<p>That makes <code>&amp;reason.plan</code> one of the most important planning surfaces in the [&amp;] Protocol.</p>
+<h3 id="blk-12229">20. Related pages</h3>
+<ul><li><p><code>capabilities/memory.graph.md</code></p></li><li><p><code>capabilities/memory.episodic.md</code></p></li><li><p><code>capabilities/time.forecast.md</code></p></li><li><p><code>capabilities/space.fleet.md</code></p></li><li><p><code>docs/capabilities/reason.md</code></p></li><li><p><code>docs/registry/reason.argument.md</code></p></li><li><p><code>docs/architecture.md</code></p></li><li><p><code>SPEC.md</code></p></li></ul></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/reason.plan.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-11761" class="lvl2">1. Definition</a><a href="#blk-11774" class="lvl2">2. Why this capability exists</a><a href="#blk-11813" class="lvl2">3. Where it fits in the protocol</a><a href="#blk-11850" class="lvl2">4. What makes reason.plan different from other reasoning subtypes</a><a href="#blk-11851" class="lvl3">Compared with reason.argument</a><a href="#blk-11857" class="lvl3">Compared with reason.vote</a><a href="#blk-11863" class="lvl3">Compared with implicit model reasoning</a><a href="#blk-11869" class="lvl2">5. Capability contract</a><a href="#blk-11872" class="lvl3">Contract meaning</a><a href="#blk-11891" class="lvl2">6. Architecture diagram</a><a href="#blk-11896" class="lvl3">Interpretation</a><a href="#blk-11908" class="lvl2">7. Example ampersand.json usage</a><a href="#blk-11909" class="lvl3">Explicit provider binding</a><a href="#blk-11911" class="lvl3">Auto provider binding</a><a href="#blk-11913" class="lvl2">8. Example API surface</a><a href="#blk-11915" class="lvl3">plan</a><a href="#blk-11920" class="lvl3">simulate</a><a href="#blk-11925" class="lvl2">9. Composition patterns</a><a href="#blk-11926" class="lvl3">Pattern A: Time + Space + Plan (demand-capacity planning)</a><a href="#blk-11939" class="lvl3">Pattern B: Plan -&gt; Vote (generate then select)</a><a href="#blk-11952" class="lvl3">Pattern C: Memory -&gt; Plan</a><a href="#blk-11965" class="lvl3">Pattern D: Plan -&gt; Argument -&gt; Plan (evaluate then revise)</a><a href="#blk-11978" class="lvl3">Pattern E: Plan -&gt; Memory</a><a href="#blk-11991" class="lvl2">10. Governance role</a><a href="#blk-12003" class="lvl3">Example governance block</a><a href="#blk-12005" class="lvl3">Why this matters</a><a href="#blk-12017" class="lvl2">11. Provenance role</a><a href="#blk-12032" class="lvl2">12. Compatible providers</a><a href="#blk-12049" class="lvl2">13. Typical compatible upstream capabilities</a><a href="#blk-12076" class="lvl2">14. Typical downstream uses</a><a href="#blk-12105" class="lvl2">15. A2A skill mapping</a><a href="#blk-12121" class="lvl2">16. Example use cases</a><a href="#blk-12122" class="lvl3">Workflow orchestrator</a><a href="#blk-12131" class="lvl3">Deployment operator</a><a href="#blk-12140" class="lvl3">Tool-using agent</a><a href="#blk-12149" class="lvl3">Supply chain planner</a><a href="#blk-12158" class="lvl2">17. Anti-patterns</a><a href="#blk-12159" class="lvl3">Anti-pattern 1: treating planning as a single prompt call</a><a href="#blk-12172" class="lvl3">Anti-pattern 2: using &amp;reason.plan for pure evaluation</a><a href="#blk-12174" class="lvl3">Anti-pattern 3: skipping simulation before commitment</a><a href="#blk-12176" class="lvl3">Anti-pattern 4: generating plans without constraint input</a><a href="#blk-12178" class="lvl2">18. Research connections</a><a href="#blk-12206" class="lvl2">19. Summary</a><a href="#blk-12229" class="lvl2">20. Related pages</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieragrewbfwwja26gzezotrh3quyzmcnhymz4dughhiu6tjg2kc54i7q</div></div></div>
+</div></div>
+</body></html>

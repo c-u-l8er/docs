@@ -1,0 +1,123 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Graphonomous npm Publishing + Maintenance Runbook (Manual-First) · graphonomous · Ampersand Box</title>
+<meta name="description" content="This runbook is the manual release path for publishing graphonomous without relying on long-lived CI publish credentials.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/NPM_PUBLISH.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Graphonomous npm Publishing + Maintenance Runbook (Manual-First)">
+<meta property="og:description" content="This runbook is the manual release path for publishing graphonomous without relying on long-lived CI publish credentials.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/docs/NPM_PUBLISH.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graphonomous npm Publishing + Maintenance Runbook (Manual-First)","name":"Graphonomous npm Publishing + Maintenance Runbook (Manual-First)","description":"This runbook is the manual release path for publishing graphonomous without relying on long-lived CI publish credentials.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/NPM_PUBLISH.md/","identifier":"bagaaierasjptymeqvchzpagf27yoadjmjy5d3ex3f34aim3yqakuswj64tda","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"1) Goal"},{"@type":"WebPageElement","name":"2) Principles"},{"@type":"WebPageElement","name":"3) Required Local Tooling"},{"@type":"WebPageElement","name":"4) One-Time Setup"},{"@type":"WebPageElement","name":"4.1 npm auth"},{"@type":"WebPageElement","name":"4.2 Repo/package naming"},{"@type":"WebPageElement","name":"5) Release Asset Convention"},{"@type":"WebPageElement","name":"6) Full Manual Release Procedure (No GitHub Actions Publish Step)"},{"@type":"WebPageElement","name":"6.1 Create release branch"},{"@type":"WebPageElement","name":"6.2 Update versions"},{"@type":"WebPageElement","name":"6.3 Quality checks"},{"@type":"WebPageElement","name":"6.4 Build OTP release locally"},{"@type":"WebPageElement","name":"6.5 Create release assets locally"},{"@type":"WebPageElement","name":"6.6 Commit + tag"},{"@type":"WebPageElement","name":"6.7 Create GitHub Release manually"},{"@type":"WebPageElement","name":"6.8 npm pre-publish smoke test (local)"},{"@type":"WebPageElement","name":"6.9 Publish npm manually (local machine)"},{"@type":"WebPageElement","name":"6.10 Post-publish verification"},{"@type":"WebPageElement","name":"7) Zed Config (npm-installed command)"},{"@type":"WebPageElement","name":"8) Maintenance Routine"},{"@type":"WebPageElement","name":"9) Rollback / Hotfix Policy"},{"@type":"WebPageElement","name":"10) Security Notes (Manual Flow)"},{"@type":"WebPageElement","name":"11) Minimal Command Cheat Sheet"},{"@type":"WebPageElement","name":"12) Current Status"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"NPM_PUBLISH.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/NPM_PUBLISH.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/docs/NPM_PUBLISH.md</span>
+
+</div></div>
+<div class="lead">This runbook is the manual release path for publishing graphonomous without relying on long-lived CI publish credentials.</div>
+<div class="prose"><h1 id="blk-64230">Graphonomous npm Publishing + Maintenance Runbook (Manual-First)</h1>
+<p>This runbook is the <strong>manual release path</strong> for publishing <code>graphonomous</code> without relying on long-lived CI publish credentials.</p>
+<p>It is designed for the reality that npm credentials/tokens may rotate or expire frequently.</p>
+<h3 id="blk-64233">1) Goal</h3>
+<p>Publish Graphonomous so users can run:</p>
+<ul><li><p><code>npx graphonomous --help</code></p></li><li><p><code>npm i -g graphonomous</code></p></li><li><p><code>graphonomous --db ~/.graphonomous/knowledge.db --embedder-backend fallback</code></p></li></ul>
+<p>while keeping the Elixir implementation as source of truth.</p>
+<h3 id="blk-64243">2) Principles</h3>
+<ol><li><p><strong>Manual over automated publish</strong></p></li></ol>
+<ul><li><p>You run the release and npm publish commands locally.</p></li></ul>
+<ol start="2"><li><p><strong>No dependency on permanent CI tokens</strong></p></li></ol>
+<ul><li><p>No long-lived npm automation token required.</p></li></ul>
+<ol start="3"><li><p><strong>Version parity is strict</strong></p></li></ol>
+<ul><li><p><code>mix.exs</code>, <code>npm/package.json</code>, git tag, and release assets must all match.</p></li></ul>
+<ol start="4"><li><p><strong>Never overwrite versions</strong></p></li></ol>
+<ul><li><p>npm versions are immutable once published.</p></li></ul>
+<h3 id="blk-64268">3) Required Local Tooling</h3>
+<ul><li><p>Elixir <code>1.17.x</code></p></li><li><p>Erlang/OTP <code>27.x</code></p></li><li><p>Node.js <code>&gt;= 18</code></p></li><li><p>npm account with publish permission</p></li><li><p><code>git</code></p></li><li><p><code>tar</code> (for packaging release assets)</p></li><li><p>Optional: <code>gh</code> CLI (otherwise use GitHub web UI)</p></li></ul>
+<h3 id="blk-64284">4) One-Time Setup</h3>
+<h3 id="blk-64285">4.1 npm auth</h3>
+<ul><li><p>Run <code>npm login</code></p></li><li><p>Verify with <code>npm whoami</code></p></li></ul>
+<p>If your org/package requires 2FA, keep your authenticator available during <code>npm publish</code>.</p>
+<h3 id="blk-64292">4.2 Repo/package naming</h3>
+<p>Package is expected as:</p>
+<ul><li><p><code>graphonomous</code> (unscoped)</p></li></ul>
+<p>or</p>
+<ul><li><p><code>@your-org/graphonomous</code> (scoped)</p></li></ul>
+<h3 id="blk-64301">5) Release Asset Convention</h3>
+<p>Release assets are platform-specific <code>.tar.gz</code> files:</p>
+<ul><li><p><code>graphonomous-vX.Y.Z-linux-x64.tar.gz</code></p></li><li><p><code>graphonomous-vX.Y.Z-linux-arm64.tar.gz</code></p></li><li><p><code>graphonomous-vX.Y.Z-darwin-x64.tar.gz</code></p></li><li><p><code>graphonomous-vX.Y.Z-darwin-arm64.tar.gz</code></p></li></ul>
+<p>Each archive should contain the OTP release root:</p>
+<ul><li><p><code>graphonomous/</code></p></li><li><p><code>graphonomous/bin/graphonomous</code></p></li><li><p>required runtime dirs/files for BEAM + NIFs</p></li></ul>
+<h3 id="blk-64320">6) Full Manual Release Procedure (No GitHub Actions Publish Step)</h3>
+<p>Perform from repo root (<code>ProjectAmp2/graphonomous</code>).</p>
+<h3 id="blk-64322">6.1 Create release branch</h3>
+<p>git checkout -b release/vX.Y.Z</p>
+<h3 id="blk-64324">6.2 Update versions</h3>
+<ol><li><p><code>mix.exs</code> → <code>version: &quot;X.Y.Z&quot;</code></p></li><li><p><code>npm/package.json</code> → <code>&quot;version&quot;: &quot;X.Y.Z&quot;</code></p></li></ol>
+<h3 id="blk-64330">6.3 Quality checks</h3>
+<p>mix deps.get mix format --check-formatted mix compile --warnings-as-errors mix test</p>
+<h3 id="blk-64332">6.4 Build OTP release locally</h3>
+<p>MIX_ENV=prod mix release --overwrite</p>
+<p>Sanity check command path: _build/prod/rel/graphonomous/bin/graphonomous version</p>
+<p>CLI sanity check via eval entrypoint: _build/prod/rel/graphonomous/bin/graphonomous eval &quot;Graphonomous.CLI.main(System.argv())&quot; --help</p>
+<h3 id="blk-64336">6.5 Create release assets locally</h3>
+<p>Example for your current machine target: VERSION=X.Y.Z TARGET=linux-x64 mkdir -p dist tar -czf &quot;dist/graphonomous-v${VERSION}-${TARGET}.tar.gz&quot; -C &quot;_build/prod/rel&quot; graphonomous</p>
+<p>Repeat on each required OS/arch machine to produce all target artifacts:</p>
+<ul><li><p>linux x64</p></li><li><p>linux arm64</p></li><li><p>macOS x64</p></li><li><p>macOS arm64</p></li></ul>
+<h3 id="blk-64348">6.6 Commit + tag</h3>
+<p>git add . git commit -m &quot;release: vX.Y.Z&quot; git tag vX.Y.Z git push origin release/vX.Y.Z git push origin vX.Y.Z</p>
+<h3 id="blk-64350">6.7 Create GitHub Release manually</h3>
+<p>Option A: GitHub Web UI</p>
+<ol><li><p>Open Releases → Draft new release</p></li><li><p>Tag: <code>vX.Y.Z</code></p></li><li><p>Title: <code>vX.Y.Z</code></p></li><li><p>Upload all <code>dist/*.tar.gz</code> assets</p></li><li><p>Publish release</p></li></ol>
+<p>Option B: <code>gh</code> CLI gh release create &quot;vX.Y.Z&quot; dist/*.tar.gz --title &quot;vX.Y.Z&quot; --notes &quot;Manual release&quot;</p>
+<p>Verify uploaded assets match naming convention exactly.</p>
+<h3 id="blk-64365">6.8 npm pre-publish smoke test (local)</h3>
+<p>From <code>npm/</code>: cd npm npm pack --dry-run npm pack</p>
+<p>In a temporary directory: mkdir -p /tmp/graphonomous-npm-smoke cd /tmp/graphonomous-npm-smoke npm init -y npm i /absolute/path/to/ProjectAmp2/graphonomous/npm/graphonomous-X.Y.Z.tgz npx graphonomous --help</p>
+<h3 id="blk-64368">6.9 Publish npm manually (local machine)</h3>
+<p>From <code>ProjectAmp2/graphonomous/npm</code>: npm publish --access public</p>
+<p>If 2FA is enabled, complete OTP prompt.</p>
+<h3 id="blk-64371">6.10 Post-publish verification</h3>
+<p>npm view graphonomous version npx -y graphonomous --help npx -y graphonomous --db ~/.graphonomous/knowledge.db --embedder-backend fallback</p>
+<h3 id="blk-64373">7) Zed Config (npm-installed command)</h3>
+<p>Use in Zed settings JSON:</p>
+<p>{ &quot;context_servers&quot;: { &quot;graphonomous&quot;: { &quot;command&quot;: &quot;graphonomous&quot;, &quot;args&quot;: [&quot;--db&quot;, &quot;~/.graphonomous/knowledge.db&quot;, &quot;--embedder-backend&quot;, &quot;fallback&quot;], &quot;env&quot;: { &quot;GRAPHONOMOUS_EMBEDDING_MODEL&quot;: &quot;sentence-transformers/all-MiniLM-L6-v2&quot; } } } }</p>
+<p>Or one-off via <code>npx</code>:</p>
+<p>{ &quot;context_servers&quot;: { &quot;graphonomous&quot;: { &quot;command&quot;: &quot;npx&quot;, &quot;args&quot;: [&quot;-y&quot;, &quot;graphonomous&quot;, &quot;--db&quot;, &quot;~/.graphonomous/knowledge.db&quot;, &quot;--embedder-backend&quot;, &quot;fallback&quot;], &quot;env&quot;: {} } } }</p>
+<h3 id="blk-64378">8) Maintenance Routine</h3>
+<p>For each shipped change:</p>
+<ol><li><p>Update <code>PROGRESS.md</code>.</p></li><li><p>Update root <code>README.md</code> user docs.</p></li><li><p>Update <code>docs/ZED.md</code> if editor setup changed.</p></li><li><p>If CLI args changed, update:</p></li></ol>
+<ul><li><p><code>Graphonomous.CLI</code> help text</p></li><li><p><code>npm/README.md</code></p></li><li><p>this runbook if needed</p></li></ul>
+<ol start="5"><li><p>Cut next SemVer release (<code>X.Y.Z</code>).</p></li></ol>
+<p>Monthly:</p>
+<ul><li><p>Test <code>npx -y graphonomous --help</code> on Linux + macOS.</p></li><li><p>Verify GitHub release assets are accessible.</p></li><li><p>Verify fresh npm install works.</p></li></ul>
+<h3 id="blk-64407">9) Rollback / Hotfix Policy</h3>
+<p>If bad npm publish:</p>
+<ol><li><p>Do not republish same version.</p></li><li><p>Publish patch increment (<code>X.Y.(Z+1)</code>).</p></li><li><p>Deprecate broken version:</p></li></ol>
+<p>npm deprecate graphonomous@X.Y.Z &quot;Broken release; use X.Y.(Z+1)&quot;</p>
+<p>If release assets are missing:</p>
+<ol><li><p>Upload missing assets to the existing GitHub release for that version (if possible).</p></li><li><p>If npm installs are already broken, publish fixed patch version.</p></li></ol>
+<h3 id="blk-64423">10) Security Notes (Manual Flow)</h3>
+<ul><li><p>Do not commit tokens or credentials.</p></li><li><p>Use local <code>npm login</code> sessions only on trusted machines.</p></li><li><p>Keep local environment clean after release work.</p></li><li><p>Prefer short-lived credentials and explicit logout if needed:</p></li></ul>
+<p>npm logout</p>
+<ul><li><p>Use checksums/signatures for release artifacts when you add that capability.</p></li></ul>
+<h3 id="blk-64437">11) Minimal Command Cheat Sheet</h3>
+<p>From repo root: mix deps.get mix format --check-formatted mix compile --warnings-as-errors mix test MIX_ENV=prod mix release --overwrite</p>
+<p>Asset packaging: VERSION=X.Y.Z TARGET=linux-x64 mkdir -p dist tar -czf &quot;dist/graphonomous-v${VERSION}-${TARGET}.tar.gz&quot; -C &quot;_build/prod/rel&quot; graphonomous</p>
+<p>Tagging: git tag vX.Y.Z git push origin vX.Y.Z</p>
+<p>npm publish (manual): cd npm npm pack --dry-run npm publish --access public npm view graphonomous version</p>
+<h3 id="blk-64442">12) Current Status</h3>
+<p>Graphonomous already has:</p>
+<ul><li><p><code>Graphonomous.CLI</code> entrypoint</p></li><li><p>stdio MCP launch path</p></li><li><p>npm wrapper scaffold under <code>npm/</code></p></li><li><p>docs for bootstrap and Zed integration</p></li></ul>
+<p>This runbook is now explicitly optimized for <strong>manual releases and manual npm publish</strong>, with no dependency on permanent GitHub Actions publish credentials.</p></div>
+<p class="src"><a href="/#/graphonomous/docs/NPM_PUBLISH.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-64233" class="lvl2">1) Goal</a><a href="#blk-64243" class="lvl2">2) Principles</a><a href="#blk-64268" class="lvl2">3) Required Local Tooling</a><a href="#blk-64284" class="lvl2">4) One-Time Setup</a><a href="#blk-64285" class="lvl2">4.1 npm auth</a><a href="#blk-64292" class="lvl2">4.2 Repo/package naming</a><a href="#blk-64301" class="lvl2">5) Release Asset Convention</a><a href="#blk-64320" class="lvl2">6) Full Manual Release Procedure (No GitHub Actions Publish Step)</a><a href="#blk-64322" class="lvl2">6.1 Create release branch</a><a href="#blk-64324" class="lvl2">6.2 Update versions</a><a href="#blk-64330" class="lvl2">6.3 Quality checks</a><a href="#blk-64332" class="lvl2">6.4 Build OTP release locally</a><a href="#blk-64336" class="lvl2">6.5 Create release assets locally</a><a href="#blk-64348" class="lvl2">6.6 Commit + tag</a><a href="#blk-64350" class="lvl2">6.7 Create GitHub Release manually</a><a href="#blk-64365" class="lvl2">6.8 npm pre-publish smoke test (local)</a><a href="#blk-64368" class="lvl2">6.9 Publish npm manually (local machine)</a><a href="#blk-64371" class="lvl2">6.10 Post-publish verification</a><a href="#blk-64373" class="lvl2">7) Zed Config (npm-installed command)</a><a href="#blk-64378" class="lvl2">8) Maintenance Routine</a><a href="#blk-64407" class="lvl2">9) Rollback / Hotfix Policy</a><a href="#blk-64423" class="lvl2">10) Security Notes (Manual Flow)</a><a href="#blk-64437" class="lvl2">11) Minimal Command Cheat Sheet</a><a href="#blk-64442" class="lvl2">12) Current Status</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/ARITHMETIC_COMPLIANCE.md/">Graphonomous × box-and-box — Arithmetic Compliance Review</a><a href="/graphonomous/docs/BOOTSTRAP.md/">Graphonomous Local Bootstrap &amp; Verification Guide</a><a href="/graphonomous/docs/NPM_PACKAGE.md/">graphonomous — NPM Package Specification</a><a href="/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/">Graphonomous Technical Documentation</a><a href="/graphonomous/docs/ZED.md/">Graphonomous + Zed MCP Setup Guide</a><a href="/graphonomous/docs/architecture.md/">Graphonomous Architecture</a><a href="/graphonomous/docs/faq.md/">Graphonomous FAQ</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/mcp-tools.md/">Graphonomous MCP Tools Reference</a><a href="/graphonomous/docs/operations.md/">Operations &amp; Maintenance</a><a href="/graphonomous/docs/quickstart.md/">Graphonomous Quickstart</a><a href="/graphonomous/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierasjptymeqvchzpagf27yoadjmjy5d3ex3f34aim3yqakuswj64tda</div></div></div>
+</div></div>
+</body></html>

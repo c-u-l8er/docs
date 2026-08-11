@@ -1,0 +1,128 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Skill 04 — Capability Contracts · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Contracts are how the protocol enforces pipeline type safety. Without contracts, composition is just syntax. With contracts, the protocol can verify at…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill 04 — Capability Contracts">
+<meta property="og:description" content="Contracts are how the protocol enforces pipeline type safety. Without contracts, composition is just syntax. With contracts, the protocol can verify at…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 04 — Capability Contracts","name":"Skill 04 — Capability Contracts","description":"Contracts are how the protocol enforces pipeline type safety. Without contracts, composition is just syntax. With contracts, the protocol can verify at…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/","identifier":"bagaaieraoo5fklfgil52gcqzknhvkz6ug7hnwiih7h3pvopoq574kco4bilq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why This Matters"},{"@type":"WebPageElement","name":"Contract Schema Structure"},{"@type":"WebPageElement","name":"Operations Definition"},{"@type":"WebPageElement","name":"accepts_from and feeds_into"},{"@type":"WebPageElement","name":"Type token categories"},{"@type":"WebPageElement","name":"Wildcard Matching Rules"},{"@type":"WebPageElement","name":"A2A Skill Mapping"},{"@type":"WebPageElement","name":"How Providers Satisfy Contracts"},{"@type":"WebPageElement","name":"Real Contract Examples"},{"@type":"WebPageElement","name":"&memory.graph (Graphonomous)"},{"@type":"WebPageElement","name":"&reason.deliberate (Graphonomous)"},{"@type":"WebPageElement","name":"Contract Versioning"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/"},{"@type":"ListItem","position":5,"name":"04_CONTRACTS.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/skills/04_CONTRACTS.md</span>
+
+</div></div>
+<div class="lead">Contracts are how the protocol enforces pipeline type safety. Without contracts, composition is just syntax. With contracts, the protocol can verify at declaration time that you…</div>
+<div class="prose"><h1 id="blk-16549">Skill 04 — Capability Contracts</h1>
+<blockquote><p>How to read and write capability contracts — the typed interfaces that define what a capability does, what it accepts, and what it feeds into.</p></blockquote>
+<h3 id="blk-16552">Why This Matters</h3>
+<p>Contracts are how the protocol enforces pipeline type safety. Without contracts, composition is just syntax. With contracts, the protocol can verify at declaration time that your pipeline will work at runtime.</p>
+<h3 id="blk-16554">Contract Schema Structure</h3>
+<p>Every contract follows this shape:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;time.anomaly&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Temporal anomaly detection for streaming or historical signals.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: { ... },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [ ... ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [ ... ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [ ... ],
+  <span class="t-key">&quot;metadata&quot;</span>: { ... }
+}</code></pre>
+<table><thead><tr><th>Field</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>capability</code></td><td>Yes</td><td>The capability identifier (<code>&amp;primitive.subtype</code>)</td></tr><tr><td><code>provider</code></td><td>Yes</td><td>Provider that satisfies this contract</td></tr><tr><td><code>version</code></td><td>Yes</td><td>Contract version (semver)</td></tr><tr><td><code>description</code></td><td>Yes</td><td>Human-readable description</td></tr><tr><td><code>operations</code></td><td>Yes</td><td>Map of operation names to input/output types</td></tr><tr><td><code>accepts_from</code></td><td>Yes</td><td>Types this capability can receive as input</td></tr><tr><td><code>feeds_into</code></td><td>Yes</td><td>Types this capability can produce as output targets</td></tr><tr><td><code>a2a_skills</code></td><td>No</td><td>A2A skill identifiers this maps to</td></tr><tr><td><code>metadata</code></td><td>No</td><td>Additional structured data</td></tr></tbody></table>
+<h3 id="blk-16588">Operations Definition</h3>
+<p>Operations define what a capability can do. Each operation has typed input and output:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;operations&quot;</span>: {
+  <span class="t-key">&quot;detect&quot;</span>: {
+    <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;stream_data&quot;</span>,
+    <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;anomaly_set&quot;</span>,
+    <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Detect anomalous events from temporal input signals.&quot;</span>,
+    <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+    <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">false</span>
+  },
+  <span class="t-key">&quot;enrich&quot;</span>: {
+    <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>,
+    <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;enriched_context&quot;</span>,
+    <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Attach anomaly-derived context to an existing payload.&quot;</span>,
+    <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+    <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">false</span>
+  },
+  <span class="t-key">&quot;learn&quot;</span>: {
+    <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;observation&quot;</span>,
+    <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;ack&quot;</span>,
+    <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Incorporate feedback to improve detection.&quot;</span>,
+    <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+    <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">true</span>
+  }
+}</code></pre>
+<table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>in</code></td><td>Input type token this operation expects</td></tr><tr><td><code>out</code></td><td>Output type token this operation produces</td></tr><tr><td><code>description</code></td><td>What the operation does</td></tr><tr><td><code>deterministic</code></td><td>Whether same input always produces same output</td></tr><tr><td><code>side_effects</code></td><td>Whether the operation modifies state</td></tr></tbody></table>
+<h3 id="blk-16604">accepts_from and feeds_into</h3>
+<p>These fields define the <strong>type compatibility</strong> of a capability:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;accepts_from&quot;</span>: [<span class="t-string">&quot;&amp;memory.*&quot;</span>, <span class="t-string">&quot;&amp;space.*&quot;</span>, <span class="t-string">&quot;raw_data&quot;</span>, <span class="t-string">&quot;stream_data&quot;</span>, <span class="t-string">&quot;context&quot;</span>],
+<span class="t-key">&quot;feeds_into&quot;</span>: [<span class="t-string">&quot;&amp;memory.*&quot;</span>, <span class="t-string">&quot;&amp;reason.*&quot;</span>, <span class="t-string">&quot;&amp;space.*&quot;</span>, <span class="t-string">&quot;output&quot;</span>]</code></pre>
+<p><strong>`accepts_from`</strong> — What types can flow INTO this capability. Used to validate that the previous pipeline step's output is compatible.</p>
+<p><strong>`feeds_into`</strong> — What types can flow OUT of this capability. Used to validate that the next pipeline step can accept this output.</p>
+<h4 id="blk-16609">Type token categories</h4>
+<table><thead><tr><th>Category</th><th>Examples</th><th>Meaning</th></tr></thead><tbody><tr><td>Capability wildcards</td><td><code>&amp;memory.*</code>, <code>&amp;reason.*</code></td><td>Output from any capability in that domain</td></tr><tr><td>Literal types</td><td><code>raw_data</code>, <code>stream_data</code>, <code>context</code></td><td>Specific data shapes</td></tr><tr><td>Terminal</td><td><code>output</code></td><td>Pipeline result, no further steps</td></tr><tr><td>Acknowledgment</td><td><code>ack</code></td><td>Confirmation of a side-effecting operation</td></tr></tbody></table>
+<h3 id="blk-16626">Wildcard Matching Rules</h3>
+<p>Wildcards match any subtype within a primitive domain:</p>
+<table><thead><tr><th>Pattern</th><th>Matches</th><th>Does Not Match</th></tr></thead><tbody><tr><td><code>&amp;memory.*</code></td><td><code>&amp;memory.graph</code>, <code>&amp;memory.vector</code>, <code>&amp;memory.episodic</code></td><td><code>&amp;reason.argument</code>, <code>&amp;time.anomaly</code></td></tr><tr><td><code>&amp;reason.*</code></td><td><code>&amp;reason.argument</code>, <code>&amp;reason.deliberate</code>, <code>&amp;reason.attend</code></td><td><code>&amp;memory.graph</code></td></tr><tr><td><code>&amp;time.*</code></td><td><code>&amp;time.anomaly</code>, <code>&amp;time.forecast</code></td><td><code>&amp;space.fleet</code></td></tr><tr><td><code>&amp;space.*</code></td><td><code>&amp;space.fleet</code>, <code>&amp;space.geofence</code></td><td><code>&amp;memory.graph</code></td></tr></tbody></table>
+<p>A literal type like <code>&quot;stream_data&quot;</code> matches only itself — no wildcards.</p>
+<h3 id="blk-16645">A2A Skill Mapping</h3>
+<p>The <code>a2a_skills</code> field maps capability operations to A2A skill identifiers:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;a2a_skills&quot;</span>: [<span class="t-string">&quot;temporal-anomaly-detection&quot;</span>]</code></pre>
+<p>When generating an A2A agent card, these skill identifiers appear in the agent's skill registry. This allows other agents to discover capabilities via the A2A protocol.</p>
+<p>Multiple skills per contract are permitted:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;a2a_skills&quot;</span>: [
+  <span class="t-string">&quot;topology-aware-deliberation&quot;</span>,
+  <span class="t-string">&quot;knowledge-graph-reasoning&quot;</span>
+]</code></pre>
+<h3 id="blk-16651">How Providers Satisfy Contracts</h3>
+<p>A provider satisfies a contract when:</p>
+<ol><li><p>It implements all operations listed in the contract</p></li><li><p>Each operation accepts the declared input type</p></li><li><p>Each operation produces the declared output type</p></li><li><p>The provider responds via MCP transport (stdio or HTTP)</p></li></ol>
+<p>The contract is a promise. The provider is the implementation. The protocol validates the promise at composition time; the runtime enforces it at execution time.</p>
+<h3 id="blk-16663">Real Contract Examples</h3>
+<h4 id="blk-16664"><code>&amp;memory.graph</code> (Graphonomous)</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;memory.graph&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;recall&quot;</span>:   { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;query&quot;</span>,   <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;retrieval_result&quot;</span> },
+    <span class="t-key">&quot;store&quot;</span>:    { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;ack&quot;</span> },
+    <span class="t-key">&quot;enrich&quot;</span>:   { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;enriched_context&quot;</span> },
+    <span class="t-key">&quot;topology&quot;</span>: { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;node_set&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;topology_result&quot;</span> }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [<span class="t-string">&quot;&amp;time.*&quot;</span>, <span class="t-string">&quot;&amp;space.*&quot;</span>, <span class="t-string">&quot;&amp;reason.*&quot;</span>, <span class="t-string">&quot;query&quot;</span>, <span class="t-string">&quot;context&quot;</span>],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [<span class="t-string">&quot;&amp;reason.*&quot;</span>, <span class="t-string">&quot;&amp;time.*&quot;</span>, <span class="t-string">&quot;&amp;space.*&quot;</span>, <span class="t-string">&quot;output&quot;</span>]
+}</code></pre>
+<h4 id="blk-16666"><code>&amp;reason.deliberate</code> (Graphonomous)</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.deliberate&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;deliberate&quot;</span>: { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;topology_result&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;deliberation_result&quot;</span> },
+    <span class="t-key">&quot;decompose&quot;</span>:  { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;topology_result&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;partitions&quot;</span> },
+    <span class="t-key">&quot;reconcile&quot;</span>:  { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;intermediate_conclusions&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;deliberation_result&quot;</span> }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [<span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-string">&quot;&amp;memory.*&quot;</span>],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [<span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-string">&quot;&amp;reason.*&quot;</span>, <span class="t-string">&quot;output&quot;</span>]
+}</code></pre>
+<p>Full contracts are in <code>contracts/v0.1.0/</code> — one file per capability.</p>
+<h3 id="blk-16669">Contract Versioning</h3>
+<p>Contracts use semver. When a provider changes its operations, types, or compatibility:</p>
+<ul><li><p><strong>Patch</strong> (<code>0.1.1</code>): Bug fixes, no interface changes</p></li><li><p><strong>Minor</strong> (<code>0.2.0</code>): New operations added, existing operations unchanged</p></li><li><p><strong>Major</strong> (<code>1.0.0</code>): Breaking changes to existing operations or types</p></li></ul>
+<p>Declarations should pin contract versions to avoid unexpected breakage.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-16552" class="lvl2">Why This Matters</a><a href="#blk-16554" class="lvl2">Contract Schema Structure</a><a href="#blk-16588" class="lvl2">Operations Definition</a><a href="#blk-16604" class="lvl2">accepts_from and feeds_into</a><a href="#blk-16609" class="lvl3">Type token categories</a><a href="#blk-16626" class="lvl2">Wildcard Matching Rules</a><a href="#blk-16645" class="lvl2">A2A Skill Mapping</a><a href="#blk-16651" class="lvl2">How Providers Satisfy Contracts</a><a href="#blk-16663" class="lvl2">Real Contract Examples</a><a href="#blk-16664" class="lvl3">&amp;memory.graph (Graphonomous)</a><a href="#blk-16666" class="lvl3">&amp;reason.deliberate (Graphonomous)</a><a href="#blk-16669" class="lvl2">Contract Versioning</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/">Skill 01 — Writing Agent Declarations</a><a href="/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/">Skill 02 — Validation</a><a href="/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/">Skill 03 — Capability Composition</a><a href="/AmpersandBoxDesign/docs/skills/05_GENERATION.md/">Skill 05 — Generation</a><a href="/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/">Skill 06 — CLI Reference</a><a href="/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/">Skill 07 — Integration Patterns</a><a href="/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/">Skill 08 — Provider Implementation</a><a href="/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/">Skill 09 — Governance and Provenance</a><a href="/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/">Skill 10 — Anti-Patterns</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraoo5fklfgil52gcqzknhvkz6ug7hnwiih7h3pvopoq574kco4bilq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,334 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>[&amp;] Protocol Specification · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Status: draft v0.1.0 Scope: capability composition for AI agents Position in stack: compiles into MCP and A2A configurations">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/SPEC.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[&amp;] Protocol Specification">
+<meta property="og:description" content="Status: draft v0.1.0 Scope: capability composition for AI agents Position in stack: compiles into MCP and A2A configurations">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/SPEC.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] Protocol Specification","name":"[&] Protocol Specification","description":"Status: draft v0.1.0 Scope: capability composition for AI agents Position in stack: compiles into MCP and A2A configurations","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/SPEC.md/","identifier":"bagaaiera7m3brhxjlzznhvr7hqgbrz4whfpi4ydkteh2q4yn6m2m3axhrwha","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Purpose"},{"@type":"WebPageElement","name":"2. Design Goals"},{"@type":"WebPageElement","name":"3. Stack Position"},{"@type":"WebPageElement","name":"4. Cognitive and Sensorimotor Primitives"},{"@type":"WebPageElement","name":"4.1 &memory"},{"@type":"WebPageElement","name":"4.2 &reason"},{"@type":"WebPageElement","name":"4.3 &time"},{"@type":"WebPageElement","name":"4.4 &space"},{"@type":"WebPageElement","name":"4.5 &body"},{"@type":"WebPageElement","name":"4.6 &govern"},{"@type":"WebPageElement","name":"5. Namespaces and Capability Identifiers"},{"@type":"WebPageElement","name":"6. Operators"},{"@type":"WebPageElement","name":"6.1 Composition operator: &"},{"@type":"WebPageElement","name":"6.2 Pipeline operator: |>"},{"@type":"WebPageElement","name":"7. Formal Grammar Summary"},{"@type":"WebPageElement","name":"8. Canonical Agent Declaration"},{"@type":"WebPageElement","name":"8.1 Required fields"},{"@type":"WebPageElement","name":"$schema"},{"@type":"WebPageElement","name":"agent"},{"@type":"WebPageElement","name":"version"},{"@type":"WebPageElement","name":"capabilities"},{"@type":"WebPageElement","name":"8.2 Provider binding modes"},{"@type":"WebPageElement","name":"Explicit provider binding"},{"@type":"WebPageElement","name":"Auto provider binding"},{"@type":"WebPageElement","name":"8.3 Autonomy declaration (optional)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"SPEC.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/SPEC.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/SPEC.md</span>
+
+</div></div>
+<div class="lead">Status: draft v0.1.0 Scope: capability composition for AI agents Position in stack: compiles into MCP and A2A configurations</div>
+<div class="prose"><h1 id="blk-1042">[&amp;] Protocol Specification</h1>
+<p><strong>Status:</strong> draft <code>v0.1.0</code> <strong>Scope:</strong> capability composition for AI agents <strong>Position in stack:</strong> compiles into MCP and A2A configurations</p>
+<h3 id="blk-1044">1. Purpose</h3>
+<p>The [&amp;] Protocol defines a language-agnostic way to describe how an AI agent’s cognitive capabilities compose into a coherent system.</p>
+<p>It does <strong>not</strong> replace MCP or A2A.</p>
+<p>Instead:</p>
+<ul><li><p><strong>MCP</strong> defines agent-to-tool connectivity</p></li><li><p><strong>A2A</strong> defines agent-to-agent coordination</p></li><li><p><strong>[&amp;]</strong> defines capability declaration, compatibility, governance, and provenance before runtime wiring occurs</p></li></ul>
+<p>The canonical source artifact is <code>ampersand.json</code>.</p>
+<p>A conforming implementation should be able to:</p>
+<ol><li><p>validate an <code>ampersand.json</code> declaration</p></li><li><p>normalize a capability set</p></li><li><p>check capability contracts and pipeline compatibility</p></li><li><p>preserve context provenance</p></li><li><p>generate downstream MCP and A2A artifacts</p></li></ol>
+<h3 id="blk-1068">2. Design Goals</h3>
+<p>The protocol is designed to make agent composition:</p>
+<ul><li><p><strong>machine-readable</strong></p></li><li><p><strong>provider-agnostic</strong></p></li><li><p><strong>deterministic</strong></p></li><li><p><strong>portable across runtimes</strong></p></li><li><p><strong>compatible with existing agent protocols</strong></p></li><li><p><strong>auditable</strong></p></li></ul>
+<p>The protocol treats capabilities as interfaces rather than products. For example, <code>&amp;memory.graph</code> is a capability contract, while <code>graphonomous</code> is one possible provider that can satisfy it.</p>
+<h3 id="blk-1084">3. Stack Position</h3>
+<p>The current agent stack can be understood as four layers:</p>
+<ol><li><p><strong>UI layer</strong> — protocols for agent-to-user rendering and interaction</p></li><li><p><strong>Composition layer</strong> — capability declaration, validation, provenance, governance</p></li><li><p><strong>Coordination layer</strong> — agent-to-agent task exchange and discovery</p></li><li><p><strong>Context layer</strong> — agent-to-tool access and resource wiring</p></li></ol>
+<p>[&amp;] occupies the <strong>composition layer</strong>.</p>
+<p>A useful shorthand is:</p>
+<ul><li><p>UI: <code>A2UI</code>, <code>AG-UI</code>, related rendering protocols</p></li><li><p>Composition: <code>[&amp;]</code></p></li><li><p>Coordination: <code>A2A</code>, <code>ACP</code></p></li><li><p>Context: <code>MCP</code></p></li></ul>
+<p>The core claim of the protocol is simple: an agent should declare <strong>what kinds of cognition it has</strong> before a runtime decides <strong>how those capabilities are wired</strong>.</p>
+<h3 id="blk-1107">4. Cognitive and Sensorimotor Primitives</h3>
+<p>The protocol defines six primitive capability domains.</p>
+<h4 id="blk-1109">4.1 <code>&amp;memory</code></h4>
+<p>Describes what the agent can store, recall, enrich, replay, or consolidate.</p>
+<p>Common subtypes include:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;memory.vector</code></p></li><li><p><code>&amp;memory.episodic</code></p></li></ul>
+<h4 id="blk-1119">4.2 <code>&amp;reason</code></h4>
+<p>Describes how the agent decides, evaluates, plans, argues, or votes.</p>
+<p>Common subtypes include:</p>
+<ul><li><p><code>&amp;reason.argument</code></p></li><li><p><code>&amp;reason.vote</code></p></li><li><p><code>&amp;reason.plan</code></p></li><li><p><code>&amp;reason.chain</code></p></li><li><p><code>&amp;reason.deliberate</code></p></li><li><p><code>&amp;reason.attend</code></p></li></ul>
+<h4 id="blk-1135">4.3 <code>&amp;time</code></h4>
+<p>Describes temporal perception, forecasting, anomaly detection, and pattern recognition.</p>
+<p>Common subtypes include:</p>
+<ul><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;time.forecast</code></p></li><li><p><code>&amp;time.pattern</code></p></li></ul>
+<h4 id="blk-1145">4.4 <code>&amp;space</code></h4>
+<p>Describes spatial context, fleet state, routing, geofencing, and regional awareness.</p>
+<p>Common subtypes include:</p>
+<ul><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;space.route</code></p></li><li><p><code>&amp;space.geofence</code></p></li></ul>
+<h4 id="blk-1155">4.5 <code>&amp;body</code></h4>
+<p>Describes sensorimotor embodiment: how the agent perceives environmental state, enumerates currently-available typed actions (affordances), executes typed actions, and encodes state for deterministic replay. Distinct from <code>&amp;space</code> (which describes external spatial data) and <code>&amp;reason.plan</code> (which produces abstract plans): <code>&amp;body</code> describes the agent's actual instantiation in an environment.</p>
+<p>Common subtypes include:</p>
+<ul><li><p><code>&amp;body.browser</code></p></li><li><p><code>&amp;body.os</code></p></li><li><p><code>&amp;body.vision</code></p></li><li><p><code>&amp;body.voice</code></p></li><li><p><code>&amp;body.motor</code></p></li></ul>
+<p>Every <code>&amp;body.*</code> subtype SHOULD implement the four standard operations: <code>perceive</code>, <code>act</code>, <code>affordances</code>, <code>encode_state</code>. These are normative for OS-011 (Embodiment Protocol) conformance.</p>
+<h4 id="blk-1170">4.6 <code>&amp;govern</code></h4>
+<p>Describes cross-cutting governance concerns: telemetry, escalation, and identity.</p>
+<p>Common subtypes include:</p>
+<ul><li><p><code>&amp;govern.telemetry</code></p></li><li><p><code>&amp;govern.escalation</code></p></li><li><p><code>&amp;govern.identity</code></p></li></ul>
+<p>These primitives are intended to map to a practical cognitive + sensorimotor taxonomy:</p>
+<ul><li><p><strong>what</strong> → memory</p></li><li><p><strong>how</strong> → reason</p></li><li><p><strong>when</strong> → time</p></li><li><p><strong>where</strong> → space</p></li><li><p><strong>how embodied</strong> → body</p></li><li><p><strong>who/under what rules</strong> → govern</p></li></ul>
+<h3 id="blk-1194">5. Namespaces and Capability Identifiers</h3>
+<p>A capability identifier has the form:</p>
+<ul><li><p><code>&amp;primitive</code></p></li><li><p><code>&amp;primitive.subtype</code></p></li></ul>
+<p>Valid primitive roots are:</p>
+<ul><li><p><code>memory</code></p></li><li><p><code>reason</code></p></li><li><p><code>time</code></p></li><li><p><code>space</code></p></li><li><p><code>body</code></p></li><li><p><code>govern</code></p></li></ul>
+<p>Examples:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;reason.argument</code></p></li><li><p><code>&amp;reason.deliberate</code></p></li><li><p><code>&amp;reason.attend</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;body.browser</code></p></li><li><p><code>&amp;body.os</code></p></li><li><p><code>&amp;govern.telemetry</code></p></li><li><p><code>&amp;govern.escalation</code></p></li><li><p><code>&amp;govern.identity</code></p></li></ul>
+<p>Wildcard matching is used in contracts and compatibility rules. For example:</p>
+<ul><li><p><code>&amp;memory.*</code> matches any <code>&amp;memory</code> subtype</p></li><li><p><code>&amp;reason.*</code> matches any <code>&amp;reason</code> subtype</p></li><li><p><code>&amp;body.*</code> matches any <code>&amp;body</code> subtype</p></li><li><p><code>&amp;govern.*</code> matches any <code>&amp;govern</code> subtype</p></li></ul>
+<p>The protocol defines six primitive roots (<code>memory</code>, <code>reason</code>, <code>time</code>, <code>space</code>, <code>body</code>, <code>govern</code>). The first four map to cognitive domains; <code>body</code> is the sensorimotor primitive for perception, action, affordance, and state-encoding; <code>govern</code> is the cross-cutting primitive for telemetry, escalation, and identity that all capability providers may consume or emit.</p>
+<h3 id="blk-1250">6. Operators</h3>
+<p>The protocol defines two operators.</p>
+<h4 id="blk-1252">6.1 Composition operator: <code>&amp;</code></h4>
+<p><code>&amp;</code> combines capabilities into a set-like declaration.</p>
+<p>Example expression:</p>
+<p><code>&amp;memory.graph &amp; &amp;time.anomaly &amp; &amp;reason.argument</code></p>
+<p>This means the agent declares all three capabilities.</p>
+<h4 id="blk-1257">6.2 Pipeline operator: <code>|&gt;</code></h4>
+<p><code>|&gt;</code> flows data through capability operations.</p>
+<p>Example expression:</p>
+<p><code>stream_data |&gt; &amp;time.anomaly.detect() |&gt; &amp;memory.graph.enrich() |&gt; &amp;reason.argument.evaluate()</code></p>
+<p>This means output from one operation becomes input to the next, subject to contract checks.</p>
+<h3 id="blk-1262">7. Formal Grammar Summary</h3>
+<p>A conforming implementation should be able to parse a minimal capability grammar with these concepts:</p>
+<ul><li><p>an <strong>agent declaration</strong></p></li><li><p>a <strong>capability block</strong></p></li><li><p>an optional <strong>governance block</strong></p></li><li><p>a <strong>capability</strong> composed of:</p></li><li><p>a primitive</p></li><li><p>an optional subtype</p></li><li><p>a provider binding</p></li><li><p>an optional config payload</p></li><li><p>an optional <strong>pipeline</strong> composed of capability operations</p></li></ul>
+<p>At minimum, the grammar needs to express:</p>
+<ul><li><p><code>agent</code></p></li><li><p><code>capabilities</code></p></li><li><p><code>governance</code></p></li><li><p><code>provider</code></p></li><li><p><code>config</code></p></li><li><p><code>&amp;</code></p></li><li><p><code>|&gt;</code></p></li></ul>
+<p>The grammar is intentionally small. Most protocol power comes from the schema and the contract system rather than from a large syntax surface.</p>
+<h3 id="blk-1300">8. Canonical Agent Declaration</h3>
+<p>The canonical artifact is <code>ampersand.json</code>.</p>
+<p>A valid declaration contains:</p>
+<ul><li><p><code>$schema</code></p></li><li><p><code>agent</code></p></li><li><p><code>version</code></p></li><li><p><code>capabilities</code></p></li></ul>
+<p>Optional top-level fields include:</p>
+<ul><li><p><code>governance</code></p></li><li><p><code>provenance</code></p></li></ul>
+<h4 id="blk-1318">8.1 Required fields</h4>
+<h5 id="blk-1319"><code>$schema</code></h5>
+<p>Must reference the canonical agent declaration schema.</p>
+<p>Current value:</p>
+<p><code>https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json</code></p>
+<h5 id="blk-1323"><code>agent</code></h5>
+<p>A human-readable identifier for the agent.</p>
+<p>Examples:</p>
+<ul><li><p><code>InfraOperator</code></p></li><li><p><code>FleetManager</code></p></li><li><p><code>ResearchAgent</code></p></li></ul>
+<h5 id="blk-1333"><code>version</code></h5>
+<p>A semantic version string for the declaration.</p>
+<p>Examples:</p>
+<ul><li><p><code>1.0.0</code></p></li><li><p><code>0.1.0</code></p></li></ul>
+<h5 id="blk-1341"><code>capabilities</code></h5>
+<p>An object keyed by capability identifier.</p>
+<p>Each capability entry declares at least:</p>
+<ul><li><p><code>provider</code></p></li></ul>
+<p>It may also include:</p>
+<ul><li><p><code>config</code></p></li><li><p><code>need</code></p></li></ul>
+<h4 id="blk-1353">8.2 Provider binding modes</h4>
+<p>The protocol supports two broad binding styles.</p>
+<h5 id="blk-1355">Explicit provider binding</h5>
+<p>The declaration names the exact provider.</p>
+<p>Example idea:</p>
+<p><code>&quot;&amp;memory.graph&quot;: { &quot;provider&quot;: &quot;graphonomous&quot;, &quot;config&quot;: { ... } }</code></p>
+<h5 id="blk-1359">Auto provider binding</h5>
+<p>The declaration delegates provider resolution to a registry or runtime.</p>
+<p>Example idea:</p>
+<p><code>&quot;&amp;time.forecast&quot;: { &quot;provider&quot;: &quot;auto&quot;, &quot;need&quot;: &quot;demand spike prediction&quot; }</code></p>
+<p>When <code>provider</code> is <code>auto</code>, <code>need</code> should be present to preserve intent.</p>
+<h4 id="blk-1364">8.3 Autonomy declaration (optional)</h4>
+<p>A declaration may include <code>governance.autonomy</code> to express proactive runtime posture and budget defaults.</p>
+<p>Recommended fields:</p>
+<ul><li><p><code>level</code> — one of <code>observe</code>, <code>advise</code>, <code>act</code></p></li><li><p><code>model_tier</code> — one of <code>local_small</code>, <code>local_large</code>, <code>cloud_frontier</code></p></li><li><p><code>heartbeat_seconds</code> — integer cadence for proactive cycles, or <code>null</code> for demand-triggered operation</p></li><li><p><code>budget</code> — bounded autonomy controls (for example <code>max_actions_per_hour</code>, <code>max_deliberation_calls_per_query</code>, <code>require_approval_for</code>)</p></li></ul>
+<p>This block is declarative and runtime-agnostic. Implementations may downgrade autonomy based on policy.</p>
+<h3 id="blk-1377">9. Schema Suite</h3>
+<p>The protocol currently defines three core schema artifacts.</p>
+<h4 id="blk-1379">9.1 Agent declaration schema</h4>
+<p>File:</p>
+<p><code>protocol/schema/v0.1.0/ampersand.schema.json</code></p>
+<p>Purpose:</p>
+<ul><li><p>validate canonical <code>ampersand.json</code> documents</p></li></ul>
+<h4 id="blk-1386">9.2 Capability contract schema</h4>
+<p>File:</p>
+<p><code>protocol/schema/v0.1.0/capability-contract.schema.json</code></p>
+<p>Purpose:</p>
+<ul><li><p>validate capability contract artifacts describing operations, type signatures, adjacency, and skill mappings</p></li></ul>
+<h4 id="blk-1393">9.3 Registry schema</h4>
+<p>File:</p>
+<p><code>protocol/schema/v0.1.0/registry.schema.json</code></p>
+<p>Purpose:</p>
+<ul><li><p>validate provider registry artifacts describing primitive namespaces, subtypes, and provider entries</p></li></ul>
+<p>All schemas target JSON Schema draft <code>2020-12</code>.</p>
+<h3 id="blk-1401">10. Capability Composition Algebra</h3>
+<p>Capability composition is set-like and should satisfy deterministic normalization rules.</p>
+<p>A conforming implementation should preserve these properties where capability bindings do not conflict.</p>
+<h4 id="blk-1404">10.1 Commutative</h4>
+<p>Order of declaration does not change the normalized capability set.</p>
+<p><code>A &amp; B</code> is equivalent to <code>B &amp; A</code></p>
+<h4 id="blk-1407">10.2 Associative</h4>
+<p>Grouping of compatible declarations does not change the normalized capability set.</p>
+<p><code>(A &amp; B) &amp; C</code> is equivalent to <code>A &amp; (B &amp; C)</code></p>
+<h4 id="blk-1410">10.3 Idempotent</h4>
+<p>Declaring the same capability with the same binding more than once does not change the result.</p>
+<p><code>A &amp; A</code> is equivalent to <code>A</code></p>
+<h4 id="blk-1413">10.4 Identity</h4>
+<p>An empty capability set composes cleanly with a non-empty one.</p>
+<p><code>∅ &amp; A</code> is equivalent to <code>A</code></p>
+<h4 id="blk-1416">10.5 Conflict rule</h4>
+<p>If the same capability appears with incompatible bindings, composition should fail.</p>
+<p>Example conflict:</p>
+<ul><li><p><code>&amp;memory.graph -&gt; graphonomous</code></p></li><li><p><code>&amp;memory.graph -&gt; neo4j-memory</code></p></li></ul>
+<p>This is not a valid idempotent collapse; it is a binding conflict.</p>
+<h4 id="blk-1425">10.6 Arithmetic foundation (CC2)</h4>
+<p>The set-like algebra above is the structural layer. The <strong>box-and-box governance kernel</strong> re-expresses the <code>[&amp;]</code> operators as an eight-rung modal <em>arithmetic</em> — the bridge that turns a composed capability set into a governed verdict (<code>feasible ▸ permitted ▸ best</code>). See <strong>`docs/CC2-capability-composition.md`</strong> (the CC2 RFC) for the mapping between these operators and the arithmetic ladder, and <code>opensentience.org/box-and-box/</code> for the conformance-tested engine (103 property-tested laws).</p>
+<h3 id="blk-1427">11. Governance</h3>
+<p>Governance is declared as data rather than embedded in runtime-specific syntax.</p>
+<p>The top-level <code>governance</code> object may include:</p>
+<ul><li><p><code>hard</code></p></li><li><p><code>soft</code></p></li><li><p><code>escalate_when</code></p></li><li><p><code>infer_from_goal</code></p></li><li><p><code>autonomy</code></p></li></ul>
+<h4 id="blk-1441">11.1 Hard constraints</h4>
+<p>Hard constraints are inviolable boundaries.</p>
+<p>Examples:</p>
+<ul><li><p>never delete customer data without approval</p></li><li><p>never scale beyond a fixed threshold in one action</p></li><li><p>always preserve an audit trail</p></li></ul>
+<p>A conforming implementation should prevent actions that violate hard constraints.</p>
+<h4 id="blk-1452">11.2 Soft constraints</h4>
+<p>Soft constraints are preferences rather than absolute rules.</p>
+<p>Examples:</p>
+<ul><li><p>prefer gradual scaling over spikes</p></li><li><p>prefer recent peer-reviewed evidence</p></li><li><p>prefer concise policy-grounded responses</p></li></ul>
+<p>A conforming implementation may override soft constraints when evidence or policy justifies it.</p>
+<h4 id="blk-1463">11.3 Escalation rules</h4>
+<p><code>escalate_when</code> defines when the system should defer to a human or a higher-trust workflow.</p>
+<p>Common keys include:</p>
+<ul><li><p><code>confidence_below</code></p></li><li><p><code>cost_exceeds_usd</code></p></li><li><p><code>hard_boundary_approached</code></p></li></ul>
+<h4 id="blk-1473">11.4 Goal inference</h4>
+<p><code>infer_from_goal: true</code> signals that governance may be partially derived from a natural-language goal and runtime context.</p>
+<h4 id="blk-1475">11.5 Autonomy policy block</h4>
+<p><code>autonomy</code> declares proactive behavior bounds and operating posture.</p>
+<p>Typical fields:</p>
+<ul><li><p><code>level</code>: <code>observe</code>, <code>advise</code>, or <code>act</code></p></li><li><p><code>model_tier</code>: <code>local_small</code>, <code>local_large</code>, or <code>cloud_frontier</code></p></li><li><p><code>heartbeat_seconds</code>: cadence for autonomous cycles (or <code>null</code> for demand-triggered mode)</p></li><li><p><code>budget</code>: bounded controls such as:</p></li><li><p><code>max_actions_per_hour</code></p></li><li><p><code>max_deliberation_calls_per_query</code></p></li><li><p><code>max_tokens_per_task</code></p></li><li><p><code>max_cost_usd_per_task</code></p></li><li><p><code>max_tokens_per_period</code></p></li><li><p><code>max_cost_usd_per_period</code></p></li><li><p><code>max_compute_ms_per_task</code></p></li><li><p><code>require_approval_for</code></p></li></ul>
+<p>This enables tier-aware routing and budget enforcement while keeping governance declarative.</p>
+<h4 id="blk-1504">11.6 Governance Foundations</h4>
+<p>The protocol's governance model rests on four structural principles derived from graph topology.</p>
+<h5 id="blk-1506">11.6.1 Feedback topology determines deliberation rights</h5>
+<p>The κ invariant (computed via Tarjan SCC analysis on <code>&amp;memory.graph</code>) partitions a capability graph into two routing classes:</p>
+<ul><li><p><strong>κ = 0 (DAG regions)</strong>: No feedback loops. Context flows in one direction. Route: fast-path retrieval. No deliberation warranted.</p></li><li><p><strong>κ &gt; 0 (SCC regions)</strong>: Irreducible feedback loops present. Mutual influence exists between nodes. Route: iterative deliberation via <code>&amp;reason.deliberate</code>, bounded by κ-derived budgets.</p></li></ul>
+<p>This is not a performance optimization. It is a governance claim: <strong>deliberation rights are earned by feedback topology, not assigned by role</strong>. Nodes that cannot influence each other have no structural basis for joint deliberation.</p>
+<h5 id="blk-1514">11.6.2 Coherence through timescale separation</h5>
+<p>Autonomous agents face a tension between local autonomy and system-wide coherence. The protocol manages this through consolidation tiers that operate at separated timescales:</p>
+<ul><li><p><strong>Fast</strong> (seconds): inference-time learning, immediate context</p></li><li><p><strong>Medium</strong> (hours–days): pattern reinforcement, confidence updates</p></li><li><p><strong>Slow</strong> (days–weeks): structural reorganization, edge pruning</p></li><li><p><strong>Glacial</strong> (months): schema evolution, capability retirement</p></li></ul>
+<p>Each tier has independent budgets and governance bounds. Fast tiers preserve autonomy; slow tiers enforce coherence. The <code>governance.autonomy.heartbeat_seconds</code> field controls the proactive cycle cadence within this gradient.</p>
+<h5 id="blk-1526">11.6.3 Bidirectional influence as legitimacy</h5>
+<p>SCC membership means mutual influence: node A affects node B, and node B affects node A. This bidirectionality is what makes deliberation meaningful. Unidirectional flow (DAG structure) does not warrant deliberation because the downstream node cannot influence the upstream node's state. Governance participation requires the topology for it.</p>
+<h5 id="blk-1528">11.6.4 The bootstrapping lifecycle</h5>
+<p>A conforming ecosystem implements a feedback loop across the full agent lifecycle:</p>
+<ol><li><p>Specification (SpecPrompt)</p></li><li><p>Capability declaration ([&amp;] Protocol)</p></li><li><p>Agent generation (Agentelic)</p></li><li><p>Deployment (WebHost.Systems)</p></li><li><p>Autonomous operation (OpenSentience + Graphonomous)</p></li><li><p>Governance enforcement (Delegatic)</p></li><li><p>Outcome feedback into specification revision</p></li></ol>
+<p>Each stage produces artifacts consumed by the next. The cycle closes when outcome data revises the originating specification, creating the same SCC structure at the organizational level that κ detects at the graph level.</p>
+<h3 id="blk-1546">12. Provenance</h3>
+<p>The protocol treats provenance as a first-class concern.</p>
+<p>When <code>provenance</code> is enabled, capability operations should append provenance records to pipeline context.</p>
+<p>A provenance record should preserve at least:</p>
+<ul><li><p><code>source</code></p></li><li><p><code>provider</code></p></li><li><p><code>operation</code></p></li><li><p><code>timestamp</code></p></li><li><p><code>input_hash</code></p></li><li><p><code>output_hash</code></p></li><li><p><code>parent_hash</code></p></li><li><p><code>mcp_trace_id</code> when available</p></li></ul>
+<h4 id="blk-1567">12.1 Chain semantics</h4>
+<p>Provenance records are intended to form a hash-linked chain.</p>
+<p>This enables a runtime or auditor to answer questions such as:</p>
+<ul><li><p>why was a decision made</p></li><li><p>which capability produced a key datum</p></li><li><p>which prior artifact a result depended on</p></li><li><p>which external tool invocation corresponds to a pipeline step</p></li></ul>
+<h4 id="blk-1579">12.2 Protocol intent</h4>
+<p>The protocol does not mandate one hashing library, storage backend, or log format. It mandates the <strong>shape and role</strong> of provenance, not one implementation.</p>
+<h3 id="blk-1581">13. Capability Contracts</h3>
+<p>Capability contracts are how the protocol expresses type safety and adjacency rules.</p>
+<p>A contract should declare:</p>
+<ul><li><p><code>capability</code></p></li><li><p><code>operations</code></p></li><li><p><code>accepts_from</code></p></li><li><p><code>feeds_into</code></p></li><li><p>optional <code>a2a_skills</code></p></li></ul>
+<h4 id="blk-1595">13.1 Operations</h4>
+<p>Each operation describes typed input and output.</p>
+<p>Example operation ideas:</p>
+<ul><li><p><code>detect: in -&gt; out</code></p></li><li><p><code>enrich: in -&gt; out</code></p></li><li><p><code>learn: in -&gt; out</code></p></li><li><p><code>deliberate: in -&gt; out</code></p></li><li><p><code>decompose: in -&gt; out</code></p></li><li><p><code>reconcile: in -&gt; out</code></p></li><li><p><code>survey: in -&gt; out</code></p></li><li><p><code>triage: in -&gt; out</code></p></li><li><p><code>dispatch: in -&gt; out</code></p></li></ul>
+<p>The types are protocol-level tokens such as:</p>
+<ul><li><p><code>stream_data</code></p></li><li><p><code>anomaly_set</code></p></li><li><p><code>context</code></p></li><li><p><code>enriched_context</code></p></li><li><p><code>decision</code></p></li><li><p><code>ack</code></p></li><li><p><code>output</code></p></li><li><p><code>topology_result</code></p></li><li><p><code>deliberation_result</code></p></li><li><p><code>attention_map</code></p></li><li><p><code>attention_cycle</code></p></li><li><p><code>coverage_assessment</code></p></li></ul>
+<h4 id="blk-1643">13.2 <code>accepts_from</code></h4>
+<p>Defines which capability patterns or input sources may precede this capability.</p>
+<p>Examples:</p>
+<ul><li><p><code>&amp;memory.*</code></p></li><li><p><code>&amp;space.*</code></p></li><li><p><code>raw_data</code></p></li></ul>
+<h4 id="blk-1653">13.3 <code>feeds_into</code></h4>
+<p>Defines which capability patterns or outputs this capability may lead into.</p>
+<p>Examples:</p>
+<ul><li><p><code>&amp;reason.*</code></p></li><li><p><code>&amp;memory.*</code></p></li><li><p><code>output</code></p></li></ul>
+<h4 id="blk-1663">13.4 <code>a2a_skills</code></h4>
+<p>Maps a capability to portable A2A-facing skill identifiers.</p>
+<p>Example:</p>
+<ul><li><p><code>temporal-anomaly-detection</code></p></li></ul>
+<h4 id="blk-1669">13.5 Deliberation and attention contracts</h4>
+<p>Two important <code>&amp;reason</code> contracts for autonomous systems are:</p>
+<ul><li><p><code>&amp;reason.deliberate</code> — topology-aware focused reasoning over cyclic regions</p></li><li><p><code>&amp;reason.attend</code> — proactive survey/triage/dispatch of attention targets</p></li></ul>
+<p>These contracts allow runtime routing from retrieval/topology analysis into bounded deliberation and autonomous attention cycles.</p>
+<h3 id="blk-1677">14. Pipeline Validation</h3>
+<p>A conforming implementation should reject invalid pipelines.</p>
+<p>At minimum, pipeline checking should verify:</p>
+<ol><li><p>the capability exists in a contract registry</p></li><li><p>the referenced operation exists</p></li><li><p>the previous operation’s output type matches the next operation’s input type</p></li><li><p>the left capability’s <code>feeds_into</code> allows the right capability</p></li><li><p>the right capability’s <code>accepts_from</code> allows the left capability</p></li></ol>
+<p>This allows pipelines to be checked before deployment instead of relying only on runtime failure.</p>
+<h3 id="blk-1692">15. Capability Registry</h3>
+<p>The registry is the discovery layer for capability providers.</p>
+<p>A registry artifact groups entries by primitive root such as:</p>
+<ul><li><p><code>&amp;memory</code></p></li><li><p><code>&amp;reason</code></p></li><li><p><code>&amp;time</code></p></li><li><p><code>&amp;space</code></p></li><li><p><code>&amp;govern</code></p></li></ul>
+<p>Each primitive entry may define:</p>
+<ul><li><p>available subtypes</p></li><li><p>supported operations for each subtype</p></li><li><p>providers supporting those subtypes</p></li><li><p>transport or protocol identifiers</p></li><li><p>links to contracts or metadata</p></li></ul>
+<h4 id="blk-1718">15.1 Subtype entries</h4>
+<p>A subtype entry typically contains:</p>
+<ul><li><p><code>ops</code></p></li><li><p>optional <code>description</code></p></li><li><p>optional <code>contract_ref</code></p></li><li><p>optional <code>a2a_skills</code></p></li></ul>
+<h4 id="blk-1729">15.2 Provider entries</h4>
+<p>A provider entry typically contains:</p>
+<ul><li><p><code>id</code></p></li><li><p><code>subtypes</code></p></li><li><p><code>protocol</code></p></li><li><p>optional <code>command</code></p></li><li><p>optional <code>args</code></p></li><li><p>optional <code>env</code></p></li><li><p>optional <code>url</code></p></li><li><p>optional <code>status</code></p></li></ul>
+<h4 id="blk-1748">15.3 Registry role</h4>
+<p>The registry enables:</p>
+<ul><li><p>provider discovery</p></li><li><p>validation of <code>provider: &quot;auto&quot;</code> flows</p></li><li><p>MCP/A2A compilation support</p></li><li><p>capability publishing and compatibility analysis</p></li></ul>
+<h3 id="blk-1759">16. Autonomous Composition</h3>
+<p>The protocol is intended to work for both human-authored and machine-authored declarations.</p>
+<p>An autonomous agent may:</p>
+<ul><li><p>propose capabilities from a goal</p></li><li><p>choose <code>provider: &quot;auto&quot;</code> for unresolved needs</p></li><li><p>infer governance requirements from context</p></li><li><p>request contract and schema validation before execution</p></li><li><p>compile into downstream runtime artifacts</p></li></ul>
+<p>The protocol does <strong>not</strong> require an LLM to know concrete provider wiring ahead of time. It only requires enough structure for a runtime to resolve, validate, and materialize a declaration safely.</p>
+<h3 id="blk-1774">17. Downstream Compilation</h3>
+<p>A valid <code>ampersand.json</code> can be compiled into other protocol artifacts.</p>
+<h4 id="blk-1776">17.1 MCP generation</h4>
+<p>An implementation may transform capability bindings into MCP client or server configuration.</p>
+<p>Example outcomes:</p>
+<ul><li><p><code>graphonomous</code> resolved to a stdio MCP server entry</p></li><li><p>unresolved providers preserved as explicit metadata rather than guessed commands</p></li></ul>
+<h4 id="blk-1784">17.2 A2A generation</h4>
+<p>An implementation may transform a declaration into an A2A-style agent card.</p>
+<p>Typical outputs include:</p>
+<ul><li><p>agent identity</p></li><li><p>skill list derived from capability declarations</p></li><li><p>provider bindings</p></li><li><p>governance and provenance metadata</p></li></ul>
+<p>The protocol therefore acts as the higher-level source of truth from which runtime integration artifacts are derived.</p>
+<h3 id="blk-1797">18. Reference Implementation</h3>
+<p>The repository includes a minimal Elixir reference implementation under:</p>
+<p><code>reference/elixir/ampersand_core/</code></p>
+<p>Current responsibilities include:</p>
+<ul><li><p>schema validation</p></li><li><p>capability normalization and composition</p></li><li><p>contract-driven pipeline checks</p></li><li><p>MCP generation</p></li><li><p>A2A generation</p></li><li><p>CLI commands for <code>validate</code>, <code>compose</code>, and <code>generate</code></p></li></ul>
+<p>This implementation is intentionally small. It exists to prove the protocol can be grounded in runnable artifacts, not just described in prose.</p>
+<h3 id="blk-1815">19. CLI Surface</h3>
+<p>The current reference CLI exposes a minimal operator interface:</p>
+<ul><li><p><code>ampersand validate &lt;file&gt;</code></p></li><li><p><code>ampersand compose &lt;file&gt;</code></p></li><li><p><code>ampersand generate mcp &lt;file&gt;</code></p></li><li><p><code>ampersand generate a2a &lt;file&gt;</code></p></li></ul>
+<p>These commands correspond directly to the protocol lifecycle:</p>
+<ol><li><p>declare</p></li><li><p>validate</p></li><li><p>compose</p></li><li><p>compile</p></li></ol>
+<h3 id="blk-1836">20. Example Artifacts</h3>
+<p>Reference examples live in <code>examples/</code> and currently include:</p>
+<ul><li><p><code>infra-operator.ampersand.json</code></p></li><li><p><code>fleet-manager.ampersand.json</code></p></li><li><p><code>research-agent.ampersand.json</code></p></li><li><p><code>customer-support.ampersand.json</code></p></li></ul>
+<p>They are intended to serve as both documentation and validation fixtures.</p>
+<h3 id="blk-1848">21. Conformance Expectations</h3>
+<p>An implementation may differ in language, runtime model, storage backend, or transport details, but it should still preserve the protocol’s core invariants.</p>
+<p>A conforming implementation should:</p>
+<ul><li><p>accept valid canonical declarations</p></li><li><p>reject invalid declarations</p></li><li><p>normalize compatible capability sets deterministically</p></li><li><p>reject contract-invalid pipelines</p></li><li><p>preserve governance semantics</p></li><li><p>preserve provenance semantics</p></li><li><p>generate downstream artifacts without inventing unsupported provider details</p></li></ul>
+<h3 id="blk-1866">22. Non-Goals</h3>
+<p>The protocol does not attempt to standardize:</p>
+<ul><li><p>one agent framework</p></li><li><p>one programming language</p></li><li><p>one storage engine</p></li><li><p>one memory backend</p></li><li><p>one reasoning implementation</p></li><li><p>one deployment platform</p></li><li><p>one MCP runtime library</p></li><li><p>one A2A transport implementation</p></li></ul>
+<p>It standardizes the <strong>composition contract</strong>, not the entire agent runtime.</p>
+<h3 id="blk-1886">23. Repository Map</h3>
+<p>Important repository paths:</p>
+<ul><li><p><code>README.md</code> — overview</p></li><li><p><code>SPEC.md</code> — this document</p></li><li><p><code>protocol.html</code> — HTML spec</p></li><li><p><code>protocol/schema/v0.1.0/ampersand.schema.json</code></p></li><li><p><code>protocol/schema/v0.1.0/capability-contract.schema.json</code></p></li><li><p><code>protocol/schema/v0.1.0/registry.schema.json</code></p></li><li><p><code>examples/</code></p></li><li><p><code>reference/elixir/ampersand_core/</code></p></li><li><p><code>docs/positioning.md</code></p></li></ul>
+<h3 id="blk-1907">24. Summary</h3>
+<p>The [&amp;] Protocol defines a portable, machine-readable composition layer for AI agents.</p>
+<p>It contributes:</p>
+<ul><li><p>a canonical declaration format</p></li><li><p>a capability taxonomy</p></li><li><p>deterministic composition rules</p></li><li><p>typed capability contracts</p></li><li><p>governance as data</p></li><li><p>provenance as protocol structure</p></li><li><p>compilation targets for MCP and A2A</p></li></ul>
+<p>The protocol’s central idea is that agent systems should be declared and checked as composed cognitive systems before they are wired into tools, other agents, or UI surfaces.</p>
+<p>That is the missing layer this specification is intended to provide.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/SPEC.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-1044" class="lvl2">1. Purpose</a><a href="#blk-1068" class="lvl2">2. Design Goals</a><a href="#blk-1084" class="lvl2">3. Stack Position</a><a href="#blk-1107" class="lvl2">4. Cognitive and Sensorimotor Primitives</a><a href="#blk-1109" class="lvl3">4.1 &amp;memory</a><a href="#blk-1119" class="lvl3">4.2 &amp;reason</a><a href="#blk-1135" class="lvl3">4.3 &amp;time</a><a href="#blk-1145" class="lvl3">4.4 &amp;space</a><a href="#blk-1155" class="lvl3">4.5 &amp;body</a><a href="#blk-1170" class="lvl3">4.6 &amp;govern</a><a href="#blk-1194" class="lvl2">5. Namespaces and Capability Identifiers</a><a href="#blk-1250" class="lvl2">6. Operators</a><a href="#blk-1252" class="lvl3">6.1 Composition operator: &amp;</a><a href="#blk-1257" class="lvl3">6.2 Pipeline operator: |&gt;</a><a href="#blk-1262" class="lvl2">7. Formal Grammar Summary</a><a href="#blk-1300" class="lvl2">8. Canonical Agent Declaration</a><a href="#blk-1318" class="lvl3">8.1 Required fields</a><a href="#blk-1319" class="lvl4">$schema</a><a href="#blk-1323" class="lvl4">agent</a><a href="#blk-1333" class="lvl4">version</a><a href="#blk-1341" class="lvl4">capabilities</a><a href="#blk-1353" class="lvl3">8.2 Provider binding modes</a><a href="#blk-1355" class="lvl4">Explicit provider binding</a><a href="#blk-1359" class="lvl4">Auto provider binding</a><a href="#blk-1364" class="lvl3">8.3 Autonomy declaration (optional)</a><a href="#blk-1377" class="lvl2">9. Schema Suite</a><a href="#blk-1379" class="lvl3">9.1 Agent declaration schema</a><a href="#blk-1386" class="lvl3">9.2 Capability contract schema</a><a href="#blk-1393" class="lvl3">9.3 Registry schema</a><a href="#blk-1401" class="lvl2">10. Capability Composition Algebra</a><a href="#blk-1404" class="lvl3">10.1 Commutative</a><a href="#blk-1407" class="lvl3">10.2 Associative</a><a href="#blk-1410" class="lvl3">10.3 Idempotent</a><a href="#blk-1413" class="lvl3">10.4 Identity</a><a href="#blk-1416" class="lvl3">10.5 Conflict rule</a><a href="#blk-1425" class="lvl3">10.6 Arithmetic foundation (CC2)</a><a href="#blk-1427" class="lvl2">11. Governance</a><a href="#blk-1441" class="lvl3">11.1 Hard constraints</a><a href="#blk-1452" class="lvl3">11.2 Soft constraints</a><a href="#blk-1463" class="lvl3">11.3 Escalation rules</a><a href="#blk-1473" class="lvl3">11.4 Goal inference</a><a href="#blk-1475" class="lvl3">11.5 Autonomy policy block</a><a href="#blk-1504" class="lvl3">11.6 Governance Foundations</a><a href="#blk-1506" class="lvl4">11.6.1 Feedback topology determines deliberation rights</a><a href="#blk-1514" class="lvl4">11.6.2 Coherence through timescale separation</a><a href="#blk-1526" class="lvl4">11.6.3 Bidirectional influence as legitimacy</a><a href="#blk-1528" class="lvl4">11.6.4 The bootstrapping lifecycle</a><a href="#blk-1546" class="lvl2">12. Provenance</a><a href="#blk-1567" class="lvl3">12.1 Chain semantics</a><a href="#blk-1579" class="lvl3">12.2 Protocol intent</a><a href="#blk-1581" class="lvl2">13. Capability Contracts</a><a href="#blk-1595" class="lvl3">13.1 Operations</a><a href="#blk-1643" class="lvl3">13.2 accepts_from</a><a href="#blk-1653" class="lvl3">13.3 feeds_into</a><a href="#blk-1663" class="lvl3">13.4 a2a_skills</a><a href="#blk-1669" class="lvl3">13.5 Deliberation and attention contracts</a><a href="#blk-1677" class="lvl2">14. Pipeline Validation</a><a href="#blk-1692" class="lvl2">15. Capability Registry</a><a href="#blk-1718" class="lvl3">15.1 Subtype entries</a><a href="#blk-1729" class="lvl3">15.2 Provider entries</a><a href="#blk-1748" class="lvl3">15.3 Registry role</a><a href="#blk-1759" class="lvl2">16. Autonomous Composition</a><a href="#blk-1774" class="lvl2">17. Downstream Compilation</a><a href="#blk-1776" class="lvl3">17.1 MCP generation</a><a href="#blk-1784" class="lvl3">17.2 A2A generation</a><a href="#blk-1797" class="lvl2">18. Reference Implementation</a><a href="#blk-1815" class="lvl2">19. CLI Surface</a><a href="#blk-1836" class="lvl2">20. Example Artifacts</a><a href="#blk-1848" class="lvl2">21. Conformance Expectations</a><a href="#blk-1866" class="lvl2">22. Non-Goals</a><a href="#blk-1886" class="lvl2">23. Repository Map</a><a href="#blk-1907" class="lvl2">24. Summary</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/AGENTS.md/">[&amp;] Protocol — AmpersandBoxDesign</a><a href="/AmpersandBoxDesign/CLAUDE.md/">[&amp;] Protocol — AmpersandBoxDesign</a><a href="/AmpersandBoxDesign/CONTRIBUTING.md/">Contributing to the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/DEPLOY.md/">DEPLOY.md</a><a href="/AmpersandBoxDesign/README.md/">[&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera7m3brhxjlzznhvr7hqgbrz4whfpi4ydkteh2q4yn6m2m3axhrwha</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,206 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>κ-Topology QA &amp; SHR Optimization — Session Prompt · graphonomous · Ampersand Box</title>
+<meta name="description" content="Push Graphonomous LongMemEval from 73% QA / 90.4% SHR → 95%+ QA / 97%+ SHR by leveraging the κ-invariant topology that no other memory system has, and…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/prompts/KAPPA_QA_OPTIMIZATION_PROMPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="κ-Topology QA &amp; SHR Optimization — Session Prompt">
+<meta property="og:description" content="Push Graphonomous LongMemEval from 73% QA / 90.4% SHR → 95%+ QA / 97%+ SHR by leveraging the κ-invariant topology that no other memory system has, and…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/prompts/KAPPA_QA_OPTIMIZATION_PROMPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"κ-Topology QA & SHR Optimization — Session Prompt","name":"κ-Topology QA & SHR Optimization — Session Prompt","description":"Push Graphonomous LongMemEval from 73% QA / 90.4% SHR → 95%+ QA / 97%+ SHR by leveraging the κ-invariant topology that no other memory system has, and…","url":"https://docs.ampersandboxdesign.com/graphonomous/prompts/KAPPA_QA_OPTIMIZATION_PROMPT.md/","identifier":"bagaaierajimfttd4isyaws4hid32qxbzl5kjzugghitfr7mkacvwztewaypq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Mission"},{"@type":"WebPageElement","name":"Current Baseline (as of 2026-04-02)"},{"@type":"WebPageElement","name":"Competitive Landscape"},{"@type":"WebPageElement","name":"Part A: SHR Optimization Goals (tag: shr-optimization)"},{"@type":"WebPageElement","name":"SHR Phase 1 — Structural Fixes (Implement First)"},{"@type":"WebPageElement","name":"S1. Session-Aware Edge Linking at Ingestion (CRITICAL, +3-5pp SHR)"},{"@type":"WebPageElement","name":"S2. Cross-Session Entity Edges (HIGH, +3-4pp SHR)"},{"@type":"WebPageElement","name":"S3. Session-Level Summary Nodes (HIGH, +3-5pp SHR)"},{"@type":"WebPageElement","name":"S4. Increase Retrieval Limits (HIGH, +2-3pp SHR)"},{"@type":"WebPageElement","name":"SHR Phase 2 — Retrieval Refinements"},{"@type":"WebPageElement","name":"S5. Session Diversity Re-ranking (MEDIUM, +2-3pp SHR)"},{"@type":"WebPageElement","name":"S6. Multi-Hop Expansion for Multi-Session (MEDIUM, +2-3pp SHR)"},{"@type":"WebPageElement","name":"S7. Temporal Metadata Indexing (MEDIUM, +1-2pp SHR, +5-8pp temporal QA)"},{"@type":"WebPageElement","name":"S8. Abstention Calibration (MEDIUM, +2-3pp overall QA)"},{"@type":"WebPageElement","name":"Part B: κ-Topology QA Optimization Goals (tag: kappa-optimization)"},{"@type":"WebPageElement","name":"κ Phase 1 — High Impact, Implement First"},{"@type":"WebPageElement","name":"K1. Iterative Retrieval in Deliberation (CRITICAL, +8-12pp QA)"},{"@type":"WebPageElement","name":"K2. κ-Guided Adaptive Retrieval Depth (HIGH, +3-5pp QA)"},{"@type":"WebPageElement","name":"K3. Temporal Contradiction Detection via κ (HIGH, +5-8pp QA)"},{"@type":"WebPageElement","name":"κ Phase 2 — Medium Impact"},{"@type":"WebPageElement","name":"K4. κ-Modulated Hop Decay (MEDIUM, +2-3pp QA)"},{"@type":"WebPageElement","name":"K5. Fault-Line-Aware Retrieval Boosting (MEDIUM, +2-4pp QA)"},{"@type":"WebPageElement","name":"K6. κ-Bucketed Answer Strategies (MEDIUM, +3-5pp QA)"},{"@type":"WebPageElement","name":"κ Phase 3 — Polish"},{"@type":"WebPageElement","name":"K7. SCC Confidence Propagation (LOW, +1-2pp QA)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/graphonomous/prompts/"},{"@type":"ListItem","position":4,"name":"KAPPA_QA_OPTIMIZATION_PROMPT.md","item":"https://docs.ampersandboxdesign.com/graphonomous/prompts/KAPPA_QA_OPTIMIZATION_PROMPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/prompts/KAPPA_QA_OPTIMIZATION_PROMPT.md</span>
+
+</div></div>
+<div class="lead">Push Graphonomous LongMemEval from 73% QA / 90.4% SHR → 95%+ QA / 97%+ SHR by leveraging the κ-invariant topology that no other memory system has, and fixing structural retrieva…</div>
+<div class="prose"><h1 id="blk-71116">κ-Topology QA &amp; SHR Optimization — Session Prompt</h1>
+<h3 id="blk-71117">Mission</h3>
+<p>Push Graphonomous LongMemEval from <strong>73% QA / 90.4% SHR → 95%+ QA / 97%+ SHR</strong> by leveraging the κ-invariant topology that no other memory system has, and fixing structural retrieval gaps.</p>
+<h3 id="blk-71119">Current Baseline (as of 2026-04-02)</h3>
+<table><thead><tr><th>Metric</th><th>Value</th><th>Gap to Target</th></tr></thead><tbody><tr><td>Session Hit Rate (SHR)</td><td>90.4%</td><td>+6.6pp to 97%</td></tr><tr><td>QA Proxy Score</td><td>73.04%</td><td>+22pp to 95%</td></tr><tr><td>Multi-session SHR</td><td><strong>85.0%</strong></td><td>worst category</td></tr><tr><td>Multi-session recall</td><td><strong>60.5%</strong></td><td>only finding 60% of needed sessions</td></tr><tr><td>Temporal SHR</td><td>95.0%</td><td>strong</td></tr><tr><td>Temporal QA proxy</td><td>74.2%</td><td>gap despite good SHR</td></tr><tr><td>Abstention accuracy</td><td><strong>0.0%</strong></td><td>broken threshold</td></tr><tr><td>Retrieval: similarity_limit</td><td>10</td><td>too few for multi-session</td></tr><tr><td>Retrieval: final_limit</td><td>20</td><td></td></tr><tr><td>Retrieval: expansion_hops</td><td>1</td><td>can't reach cross-session nodes</td></tr><tr><td>Retrieval: hop_decay</td><td>0.85 (flat)</td><td>not topology-aware</td></tr><tr><td>Deliberation</td><td>single-pass decompose-focus-reconcile</td><td>no iterative retrieval</td></tr><tr><td>Temporal indexing</td><td>none</td><td>biggest gap vs Chronos</td></tr><tr><td>Session edges at ingestion</td><td><strong>none</strong></td><td>turns stored as isolated nodes</td></tr><tr><td>Cross-session entity edges</td><td><strong>none</strong></td><td>BFS can't bridge sessions</td></tr></tbody></table>
+<h3 id="blk-71169">Competitive Landscape</h3>
+<table><thead><tr><th>System</th><th>Score</th><th>Key Technique</th></tr></thead><tbody><tr><td>Supermemory ASMR</td><td>~99%</td><td>8 parallel LLM agents, majority vote (very expensive)</td></tr><tr><td>Chronos</td><td>95.6%</td><td>Event tuples + temporal index + iterative tool-calling</td></tr><tr><td>Mastra OM</td><td>94.87%</td><td>Observer/Reflector compression, no retrieval needed</td></tr><tr><td><strong>Graphonomous</strong></td><td><strong>73% QA / 90.4% SHR</strong></td><td>Graph expansion + κ routing + deliberation</td></tr><tr><td>Emergence AI</td><td>86%</td><td>Well-tuned RAG only</td></tr><tr><td>Hindsight (Vectorize)</td><td>91.4% SHR</td><td>Current SHR SOTA for vector-based</td></tr></tbody></table>
+<h3 id="blk-71192">Part A: SHR Optimization Goals (tag: <code>shr-optimization</code>)</h3>
+<p>The SHR gap is primarily driven by <strong>multi-session questions (85% SHR, 60.5% session recall)</strong>. Root cause: turns are ingested as isolated nodes with no intra-session or cross-session edges, so BFS expansion can't bridge sessions.</p>
+<h4 id="blk-71194">SHR Phase 1 — Structural Fixes (Implement First)</h4>
+<h5 id="blk-71195">S1. Session-Aware Edge Linking at Ingestion (CRITICAL, +3-5pp SHR)</h5>
+<p><strong>Goal ID:</strong> <code>goal_d98cc02a3043693529a881b5d754dd0d</code> <strong>File:</strong> <code>lib/mix/tasks/benchmark/longmemeval.ex</code> → <code>ingest_session/2</code></p>
+<p>Currently <code>ingest_session/2</code> stores each turn as an isolated node. Fix:</p>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> ingest_session(session_id, turns) <span class="t-kw">when</span> is_list(turns) <span class="t-kw">do</span>
+  node_ids =
+    turns
+    |&gt; <span class="t-type">Enum</span>.with_index()
+    |&gt; <span class="t-type">Enum</span>.map(<span class="t-kw">fn</span> {turn, turn_idx} -&gt;
+      <span class="t-comment"># ... existing store_node code ...</span>
+      <span class="t-comment"># Return the node_id</span>
+      node_id
+    <span class="t-kw">end</span>)
+
+  <span class="t-comment"># Add sequential edges between consecutive turns</span>
+  node_ids
+  |&gt; <span class="t-type">Enum</span>.chunk_every(<span class="t-num">2</span>, <span class="t-num">1</span>, <span class="t-atom">:discard</span>)
+  |&gt; <span class="t-type">Enum</span>.each(<span class="t-kw">fn</span> [prev, curr] -&gt;
+    <span class="t-type">Graphonomous</span>.store_edge(%{
+      source_id: prev,
+      target_id: curr,
+      edge_type: <span class="t-atom">:sequence</span>,
+      weight: <span class="t-num">0.9</span>,
+      metadata: %{<span class="t-string">&quot;session_id&quot;</span> =&gt; session_id}
+    })
+  <span class="t-kw">end</span>)
+<span class="t-kw">end</span></code></pre>
+<p>This alone should improve multi-session SHR because BFS expansion from one turn now reaches all turns in the same session.</p>
+<h5 id="blk-71200">S2. Cross-Session Entity Edges (HIGH, +3-4pp SHR)</h5>
+<p><strong>Goal ID:</strong> <code>goal_676413bfeb49f07f502e5756e2c522ea</code> <strong>File:</strong> <code>lib/mix/tasks/benchmark/longmemeval.ex</code> (new post-ingestion phase)</p>
+<p>After all sessions are ingested, run a second pass:</p>
+<ul><li><p>Extract named entities (people, places, preferences) from each turn node</p></li><li><p>For turns in different sessions mentioning the same entity, create <code>:related</code> edges</p></li><li><p>Weight by entity specificity (proper nouns &gt; common nouns)</p></li><li><p>This creates the cross-session graph bridges that BFS needs</p></li></ul>
+<p>Implementation approach:</p>
+<ul><li><p>Simple: keyword/regex entity extraction (fast, no LLM)</p></li><li><p>Better: use existing <code>learn_from_interaction</code> which already does edge extraction</p></li><li><p>Add as &quot;Phase 1.5&quot; in the benchmark task between ingestion and evaluation</p></li></ul>
+<h5 id="blk-71220">S3. Session-Level Summary Nodes (HIGH, +3-5pp SHR)</h5>
+<p><strong>Goal ID:</strong> <code>goal_43634453e8fa66e51bda30b5365ed73c</code> <strong>File:</strong> <code>lib/mix/tasks/benchmark/longmemeval.ex</code></p>
+<p>After ingesting all turns for a session, create one summary node:</p>
+<pre data-lang="elixir"><code>summary_content = turns
+  |&gt; <span class="t-type">Enum</span>.map(<span class="t-kw">fn</span> t -&gt; <span class="t-string">&quot;[#{t[&quot;</span>role<span class="t-string">&quot;]}] #{String.slice(t[&quot;</span>content<span class="t-string">&quot;], 0, 200)}&quot;</span> <span class="t-kw">end</span>)
+  |&gt; <span class="t-type">Enum</span>.join(<span class="t-string">&quot; | &quot;</span>)
+
+summary_id = <span class="t-type">Graphonomous</span>.store_node(%{
+  content: <span class="t-string">&quot;Session summary: #{summary_content}&quot;</span>,
+  node_type: <span class="t-atom">:semantic</span>,
+  confidence: <span class="t-num">0.80</span>,
+  source: <span class="t-string">&quot;longmemeval&quot;</span>,
+  metadata: %{<span class="t-string">&quot;session_id&quot;</span> =&gt; session_id, <span class="t-string">&quot;is_summary&quot;</span> =&gt; <span class="t-lit">true</span>, <span class="t-string">&quot;turn_count&quot;</span> =&gt; length(turns)}
+})
+
+<span class="t-comment"># Link summary to all turn nodes</span>
+<span class="t-type">Enum</span>.each(turn_node_ids, <span class="t-kw">fn</span> nid -&gt;
+  <span class="t-type">Graphonomous</span>.store_edge(%{source_id: summary_id, target_id: nid, edge_type: <span class="t-atom">:contains</span>, weight: <span class="t-num">0.85</span>})
+<span class="t-kw">end</span>)</code></pre>
+<p>Creates LiCoMemory-style two-level hierarchy. Retrieval hits the summary, BFS expands to specific turns.</p>
+<h5 id="blk-71225">S4. Increase Retrieval Limits (HIGH, +2-3pp SHR)</h5>
+<p><strong>Goal ID:</strong> <code>goal_30d212e4e8f40406bcf69499447cb8a9</code> <strong>File:</strong> <code>lib/mix/tasks/benchmark/longmemeval.ex</code> → <code>evaluate_question/1</code></p>
+<p>Change retrieval call from:</p>
+<pre data-lang="elixir"><code><span class="t-type">Graphonomous</span>.retrieve_context(question_text, limit: <span class="t-num">10</span>, expansion_hops: <span class="t-num">1</span>, neighbors_per_node: <span class="t-num">5</span>)</code></pre>
+<p>To:</p>
+<pre data-lang="elixir"><code><span class="t-type">Graphonomous</span>.retrieve_context(question_text,
+  similarity_limit: <span class="t-num">20</span>,
+  final_limit: <span class="t-num">40</span>,
+  expansion_hops: <span class="t-num">1</span>,
+  neighbors_per_node: <span class="t-num">5</span>
+)</code></pre>
+<p>For even better results, make limits adaptive:</p>
+<pre data-lang="elixir"><code>{sim_limit, final_limit} =
+  <span class="t-kw">if</span> question_type <span class="t-kw">in</span> [<span class="t-string">&quot;multi-session&quot;</span>, <span class="t-string">&quot;temporal-reasoning&quot;</span>],
+    <span class="t-kw">do</span>: {<span class="t-num">25</span>, <span class="t-num">50</span>},
+    <span class="t-kw">else</span>: {<span class="t-num">10</span>, <span class="t-num">20</span>}</code></pre>
+<h4 id="blk-71233">SHR Phase 2 — Retrieval Refinements</h4>
+<h5 id="blk-71234">S5. Session Diversity Re-ranking (MEDIUM, +2-3pp SHR)</h5>
+<p><strong>Goal ID:</strong> <code>goal_ea328d4b1ac438e428f8664ac7a9ded6</code> <strong>File:</strong> <code>lib/graphonomous/retriever.ex</code></p>
+<p>Add session-aware diversity penalty alongside existing domain diversity:</p>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> apply_session_diversity(entries) <span class="t-kw">do</span>
+  session_counts = <span class="t-type">Enum</span>.frequencies_by(entries, <span class="t-kw">fn</span> e -&gt;
+    get_in(e, [<span class="t-atom">:metadata</span>, <span class="t-string">&quot;session_id&quot;</span>]) || <span class="t-string">&quot;unknown&quot;</span>
+  <span class="t-kw">end</span>)
+
+  <span class="t-type">Enum</span>.map(entries, <span class="t-kw">fn</span> entry -&gt;
+    sid = get_in(entry, [<span class="t-atom">:metadata</span>, <span class="t-string">&quot;session_id&quot;</span>]) || <span class="t-string">&quot;unknown&quot;</span>
+    count = <span class="t-type">Map</span>.get(session_counts, sid, <span class="t-num">1</span>)
+    penalty = <span class="t-atom">:math</span>.pow(<span class="t-num">0.90</span>, count - <span class="t-num">1</span>)
+    %{entry | score: entry.score * penalty}
+  <span class="t-kw">end</span>)
+<span class="t-kw">end</span></code></pre>
+<p>This spreads results across sessions, directly targeting the 60.5% multi-session recall.</p>
+<h5 id="blk-71239">S6. Multi-Hop Expansion for Multi-Session (MEDIUM, +2-3pp SHR)</h5>
+<p><strong>Goal ID:</strong> <code>goal_a8dd4b2bcd66e6c583a18ba47564bb38</code> <strong>File:</strong> <code>lib/graphonomous/retriever.ex</code></p>
+<p>After session-aware edges exist (S1, S2), increase expansion_hops to 2 for multi-session queries. One hop reaches same-session turns, two hops reaches cross-session entity bridges.</p>
+<h5 id="blk-71242">S7. Temporal Metadata Indexing (MEDIUM, +1-2pp SHR, +5-8pp temporal QA)</h5>
+<p><strong>Goal ID:</strong> <code>goal_ef2897d27e15bd7a94ff2ec0983e8982</code> <strong>Files:</strong> <code>lib/mix/tasks/benchmark/longmemeval.ex</code>, <code>lib/graphonomous/retriever.ex</code></p>
+<p>Store resolved timestamps in node metadata during ingestion. Add temporal range filtering to retrieval for temporal-reasoning questions.</p>
+<h5 id="blk-71245">S8. Abstention Calibration (MEDIUM, +2-3pp overall QA)</h5>
+<p><strong>Goal ID:</strong> <code>goal_aac9a2f1d9b4e93f49c39a2ab88ac75c</code> <strong>File:</strong> <code>lib/mix/tasks/benchmark/longmemeval.ex</code> → <code>evaluate_question/1</code></p>
+<p>Current abstention threshold (<code>avg_score &lt; 0.15 or length(results) &lt; 3</code>) gives 0% accuracy. Fix:</p>
+<ul><li><p>Use confidence gap: <code>top_score - mean_score &lt; 0.05</code> → likely no clear answer</p></li><li><p>Use topology signal: no coherent SCC in results → likely abstention</p></li><li><p>Raise score threshold to <code>avg_score &lt; 0.25</code></p></li><li><p>All 6 abstention questions flipping = +3.6pp on overall QA proxy</p></li></ul>
+<h3 id="blk-71257">Part B: κ-Topology QA Optimization Goals (tag: <code>kappa-optimization</code>)</h3>
+<p>These goals specifically leverage the κ-invariant to improve answer quality on questions where retrieval already finds the right sessions.</p>
+<h4 id="blk-71259">κ Phase 1 — High Impact, Implement First</h4>
+<h5 id="blk-71260">K1. Iterative Retrieval in Deliberation (CRITICAL, +8-12pp QA)</h5>
+<p><strong>Goal ID:</strong> <code>goal_ab2e008d496aa8ae6bef4d161e425c90</code> <strong>File:</strong> <code>lib/graphonomous/deliberator.ex</code></p>
+<p>Current deliberation is single-pass: decompose → focus → reconcile. Change focus steps to issue <strong>follow-up graph traversals</strong> scoped to each SCC partition. The κ value already sets the iteration budget via <code>deliberation_budget/1</code>. Model after Chronos iterative tool-calling loops.</p>
+<p>Implementation:</p>
+<ul><li><p>In <code>build_focused_prompt/5</code>, after building the initial prompt, add a <code>retrieve_for_partition/3</code> call that queries Graph for nodes within the partition's node set</p></li><li><p>In the main <code>deliberate_scc/6</code> loop, after each intermediate conclusion, check if confidence &lt; threshold and issue another scoped retrieval</p></li><li><p>Use <code>fault_line_edges</code> to decide which partition side needs more evidence</p></li><li><p>Wire through <code>Retriever.retrieve/2</code> with a <code>scope_to_node_ids</code> option</p></li></ul>
+<p>Test: Run <code>mix benchmark.longmemeval --split oracle</code> before and after. QA proxy score should increase.</p>
+<h5 id="blk-71274">K2. κ-Guided Adaptive Retrieval Depth (HIGH, +3-5pp QA)</h5>
+<p><strong>Goal ID:</strong> <code>goal_eae521c4f46b1a8e172f1474667e99f1</code> <strong>File:</strong> <code>lib/graphonomous/retriever.ex</code></p>
+<p>After initial seed retrieval and topology analysis, adjust expansion depth:</p>
+<pre data-lang="elixir"><code>effective_hops = <span class="t-kw">case</span> topology.max_kappa <span class="t-kw">do</span>
+  <span class="t-num">0</span> -&gt; opts[<span class="t-atom">:expansion_hops</span>] || <span class="t-attr">@default_expansion_hops</span>  <span class="t-comment"># keep default (1)</span>
+  k <span class="t-kw">when</span> k &gt;= <span class="t-num">1</span> -&gt; min(k + <span class="t-num">1</span>, <span class="t-num">3</span>)                         <span class="t-comment"># 2-3 hops for cyclic regions</span>
+<span class="t-kw">end</span></code></pre>
+<p>This requires restructuring <code>do_retrieve/3</code> to:</p>
+<ol><li><p>Run similarity search (seeds)</p></li><li><p>Do a preliminary 1-hop expansion</p></li><li><p>Run topology analysis on the expanded set</p></li><li><p>If κ &gt; 0, do additional hops up to <code>effective_hops</code></p></li></ol>
+<h5 id="blk-71288">K3. Temporal Contradiction Detection via κ (HIGH, +5-8pp QA)</h5>
+<p><strong>Goal ID:</strong> <code>goal_b3613e912f86927f10a0f2a7f2470d6f</code> <strong>Files:</strong> <code>lib/graphonomous/retriever.ex</code>, <code>lib/graphonomous/deliberator.ex</code>, edge types</p>
+<p>Knowledge updates create contradictions: old fact ↔ new fact. When both exist with <code>contradicts</code> edges, they form a 2-node SCC with κ=1. The deliberator should detect these &quot;temporal contradiction SCCs&quot; and resolve to the temporally newer node.</p>
+<p>Implementation:</p>
+<ul><li><p>In <code>Deliberator.deliberate_scc/6</code>, detect 2-node SCCs with κ=1 where edges are <code>:contradicts</code></p></li><li><p>For these, skip full decompose-focus-reconcile — just compare <code>inserted_at</code> timestamps</p></li><li><p>Boost the newer node's confidence, decay the older one</p></li><li><p>Return conclusion favoring the newer fact</p></li><li><p>Add <code>:supersedes</code> edge type if not present</p></li></ul>
+<h4 id="blk-71303">κ Phase 2 — Medium Impact</h4>
+<h5 id="blk-71304">K4. κ-Modulated Hop Decay (MEDIUM, +2-3pp QA)</h5>
+<p><strong>Goal ID:</strong> <code>goal_d5f5b195ed91d6fcc459179c1dc0480f</code> <strong>File:</strong> <code>lib/graphonomous/retriever.ex</code></p>
+<p>Replace flat <code>@default_hop_decay 0.85</code> with κ-aware decay during BFS expansion:</p>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> effective_hop_decay(base_decay, local_kappa) <span class="t-kw">do</span>
+  base_decay + min(local_kappa * <span class="t-num">0.02</span>, <span class="t-num">0.10</span>)
+<span class="t-kw">end</span></code></pre>
+<ul><li><p>DAG regions (κ=0): use base decay (0.85)</p></li><li><p>Cyclic regions: gentler decay (up to 0.95) because cycles mean distant nodes may circle back</p></li></ul>
+<p>Requires passing topology info into the BFS expansion step, which currently doesn't have it. May need a two-pass approach: expand → analyze topology → re-score with κ-aware decay.</p>
+<h5 id="blk-71314">K5. Fault-Line-Aware Retrieval Boosting (MEDIUM, +2-4pp QA)</h5>
+<p><strong>Goal ID:</strong> <code>goal_3ce56e41b144cba14d4971ed0c02fc56</code> <strong>File:</strong> <code>lib/graphonomous/retriever.ex</code></p>
+<p>After topology analysis, boost scores of nodes adjacent to <code>fault_line_edges</code>:</p>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> apply_fault_line_boost(entries, topology) <span class="t-kw">do</span>
+  fault_nodes = topology.sccs
+    |&gt; <span class="t-type">Enum</span>.flat_map(&amp; &amp;<span class="t-num">1</span>.fault_line_edges)
+    |&gt; <span class="t-type">Enum</span>.flat_map(<span class="t-kw">fn</span> %{source: s, target: t} -&gt; [s, t] <span class="t-kw">end</span>)
+    |&gt; <span class="t-type">MapSet</span>.new()
+
+  <span class="t-type">Enum</span>.map(entries, <span class="t-kw">fn</span> entry -&gt;
+    <span class="t-kw">if</span> <span class="t-type">MapSet</span>.member?(fault_nodes, entry.node_id),
+      <span class="t-kw">do</span>: %{entry | score: entry.score * <span class="t-num">1.15</span>},
+      <span class="t-kw">else</span>: entry
+  <span class="t-kw">end</span>)
+<span class="t-kw">end</span></code></pre>
+<h5 id="blk-71318">K6. κ-Bucketed Answer Strategies (MEDIUM, +3-5pp QA)</h5>
+<p><strong>Goal ID:</strong> <code>goal_1d658ad0a747cebb8f44a31d74f32fa8</code> <strong>File:</strong> <code>lib/graphonomous/retriever.ex</code> (or new module)</p>
+<p>Route the entire answer strategy by κ profile:</p>
+<ul><li><p>κ=0 everywhere → fast path, direct answer from top results</p></li><li><p>κ=1 (contradiction pattern) → resolve contradictions first, then answer</p></li><li><p>κ≥2 → full multi-pass deliberation</p></li></ul>
+<p>This builds on goals K1 and K3. Implement after those are done.</p>
+<h4 id="blk-71329">κ Phase 3 — Polish</h4>
+<h5 id="blk-71330">K7. SCC Confidence Propagation (LOW, +1-2pp QA)</h5>
+<p><strong>Goal ID:</strong> <code>goal_7464c6c4b2d84f46c2c80e3e8044927c</code></p>
+<p>Propagate confidence through SCC edges during retrieval. High-confidence nodes boost low-confidence neighbors. Scale boost by 1/κ.</p>
+<h5 id="blk-71333">K8. Query-Time Edge Impact (LOW, +1-2pp QA)</h5>
+<p><strong>Goal ID:</strong> <code>goal_d4334f3f76ffa2c9fd07b98f2aa82632</code></p>
+<p>Use <code>Topology.preview_edge_impact/3</code> at query time to detect semantically related but unlinked result nodes. Synthesize bridge reasoning in deliberation.</p>
+<h3 id="blk-71336">Recommended Implementation Order</h3>
+<p>Do SHR structural fixes first (they unlock the κ optimizations), then κ QA work:</p>
+<table><thead><tr><th>Order</th><th>Goal</th><th>Tag</th><th>Expected Impact</th></tr></thead><tbody><tr><td>1</td><td>S1: Session-Aware Edge Linking</td><td>shr</td><td>+3-5pp SHR</td></tr><tr><td>2</td><td>S4: Increase Retrieval Limits</td><td>shr</td><td>+2-3pp SHR</td></tr><tr><td>3</td><td>S3: Session Summary Nodes</td><td>shr</td><td>+3-5pp SHR</td></tr><tr><td>4</td><td>S2: Cross-Session Entity Edges</td><td>shr</td><td>+3-4pp SHR</td></tr><tr><td>5</td><td>S5: Session Diversity Re-ranking</td><td>shr</td><td>+2-3pp SHR</td></tr><tr><td>6</td><td>S8: Abstention Calibration</td><td>shr</td><td>+2-3pp QA</td></tr><tr><td>7</td><td>K1: Iterative Retrieval in Deliberation</td><td>κ</td><td>+8-12pp QA</td></tr><tr><td>8</td><td>K2: κ-Adaptive Retrieval Depth</td><td>κ</td><td>+3-5pp QA</td></tr><tr><td>9</td><td>K3: Temporal Contradiction via κ</td><td>κ</td><td>+5-8pp QA</td></tr><tr><td>10</td><td>K4: κ-Modulated Hop Decay</td><td>κ</td><td>+2-3pp QA</td></tr><tr><td>11</td><td>K5: Fault-Line Boosting</td><td>κ</td><td>+2-4pp QA</td></tr><tr><td>12</td><td>S7: Temporal Metadata Indexing</td><td>shr</td><td>+5-8pp temporal QA</td></tr><tr><td>13</td><td>S6: Multi-Hop for Multi-Session</td><td>shr</td><td>+2-3pp SHR</td></tr><tr><td>14</td><td>K6: κ-Bucketed Answer Strategies</td><td>κ</td><td>+3-5pp QA</td></tr><tr><td>15</td><td>K7: SCC Confidence Propagation</td><td>κ</td><td>+1-2pp QA</td></tr><tr><td>16</td><td>K8: Query-Time Edge Impact</td><td>κ</td><td>+1-2pp QA</td></tr></tbody></table>
+<p><strong>Benchmark after each change</strong> to track incremental impact.</p>
+<h3 id="blk-71408">Key Source Files</h3>
+<table><thead><tr><th>File</th><th>Purpose</th></tr></thead><tbody><tr><td><code>lib/graphonomous/retriever.ex</code></td><td>Retrieval pipeline (similarity → BFS → rerank → topology → deliberate)</td></tr><tr><td><code>lib/graphonomous/deliberator.ex</code></td><td>κ-driven decompose-focus-reconcile</td></tr><tr><td><code>lib/graphonomous/topology.ex</code></td><td>Tarjan SCC, κ computation, fault lines, edge impact preview</td></tr><tr><td><code>lib/graphonomous/graph.ex</code></td><td>Node/edge CRUD, similarity search, BFS</td></tr><tr><td><code>lib/graphonomous/store.ex</code></td><td>SQLite persistence layer</td></tr><tr><td><code>lib/graphonomous/types/edge.ex</code></td><td>Edge type definitions (16 types)</td></tr><tr><td><code>lib/mix/tasks/benchmark/longmemeval.ex</code></td><td>LongMemEval benchmark task (ingestion + evaluation)</td></tr><tr><td><code>lib/mix/tasks/benchmark/retrieval.ex</code></td><td>Retrieval quality benchmark (graph vs flat)</td></tr><tr><td><code>test/graphonomous/retriever_test.exs</code></td><td>Retriever tests</td></tr><tr><td><code>test/graphonomous/deliberator_test.exs</code></td><td>Deliberator tests</td></tr><tr><td><code>test/graphonomous/topology_test.exs</code></td><td>Topology tests</td></tr></tbody></table>
+<h3 id="blk-71434">Development Workflow</h3>
+<ol><li><p>Read the spec: <code>docs/spec/README.md</code></p></li><li><p>Read the current implementation of the target module</p></li><li><p>Write the change</p></li><li><p>Run <code>mix compile --warnings-as-errors &amp;&amp; mix format --check-formatted</code></p></li><li><p>Run <code>mix test</code> (full suite)</p></li><li><p>Run <code>mix benchmark.longmemeval --split oracle</code> to measure impact</p></li><li><p>Compare before/after SHR + QA proxy scores per category</p></li><li><p>Update the Graphonomous goal progress via <code>manage_goal</code> → <code>set_progress</code></p></li><li><p>Update <code>opensentience.org/docs/spec/OS-E001-EMPIRICAL-EVALUATION.md</code> and <code>.html</code> with new numbers</p></li><li><p>Update <code>AmpersandBoxDesign/site/portfolio-review.html</code> competitive table</p></li></ol>
+<h3 id="blk-71456">Research References</h3>
+<ul><li><p><strong>Chronos</strong> (95.6%): Event tuple decomposition, dual calendar index, iterative tool-calling. arxiv.org/abs/2603.16862</p></li><li><p><strong>Mastra OM</strong> (94.87%): Observer/Reflector agents, three-date temporal model. mastra.ai/research/observational-memory</p></li><li><p><strong>Supermemory ASMR</strong> (~99%): 8 parallel prompt variants, majority vote. blog.supermemory.ai</p></li><li><p><strong>MAGMA</strong>: Multi-graph (semantic/temporal/causal/entity), policy-guided traversal. arxiv.org/abs/2601.03236</p></li><li><p><strong>LiCoMemory CogniGraph</strong> (73.8%): Three-layer hierarchy, cross-layer hyperlinks. arxiv.org/abs/2511.01448</p></li><li><p><strong>AssoMem</strong>: Clue anchoring, MI-driven fusion. arxiv.org/abs/2510.10397</p></li><li><p><strong>RECoT</strong>: Decompose questions via triple extraction, hop-by-hop retrieval refinement</p></li></ul>
+<h3 id="blk-71472">Success Criteria</h3>
+<ul><li><p>SHR ≥ 97% on oracle split (100 questions)</p></li><li><p>SHR ≥ 95% on full 500-question set</p></li><li><p>Multi-session SHR ≥ 95% (up from 85%)</p></li><li><p>Multi-session recall ≥ 85% (up from 60.5%)</p></li><li><p>QA proxy score ≥ 90% on oracle split</p></li><li><p>QA proxy score ≥ 85% on full 500-question set</p></li><li><p>Abstention accuracy ≥ 80%</p></li><li><p>All existing tests pass</p></li><li><p>No regression in retrieval latency (&lt; 5s per query at 27K nodes)</p></li></ul></div>
+<p class="src"><a href="/#/graphonomous/prompts/KAPPA_QA_OPTIMIZATION_PROMPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-71117" class="lvl2">Mission</a><a href="#blk-71119" class="lvl2">Current Baseline (as of 2026-04-02)</a><a href="#blk-71169" class="lvl2">Competitive Landscape</a><a href="#blk-71192" class="lvl2">Part A: SHR Optimization Goals (tag: shr-optimization)</a><a href="#blk-71194" class="lvl3">SHR Phase 1 — Structural Fixes (Implement First)</a><a href="#blk-71195" class="lvl4">S1. Session-Aware Edge Linking at Ingestion (CRITICAL, +3-5pp SHR)</a><a href="#blk-71200" class="lvl4">S2. Cross-Session Entity Edges (HIGH, +3-4pp SHR)</a><a href="#blk-71220" class="lvl4">S3. Session-Level Summary Nodes (HIGH, +3-5pp SHR)</a><a href="#blk-71225" class="lvl4">S4. Increase Retrieval Limits (HIGH, +2-3pp SHR)</a><a href="#blk-71233" class="lvl3">SHR Phase 2 — Retrieval Refinements</a><a href="#blk-71234" class="lvl4">S5. Session Diversity Re-ranking (MEDIUM, +2-3pp SHR)</a><a href="#blk-71239" class="lvl4">S6. Multi-Hop Expansion for Multi-Session (MEDIUM, +2-3pp SHR)</a><a href="#blk-71242" class="lvl4">S7. Temporal Metadata Indexing (MEDIUM, +1-2pp SHR, +5-8pp temporal QA)</a><a href="#blk-71245" class="lvl4">S8. Abstention Calibration (MEDIUM, +2-3pp overall QA)</a><a href="#blk-71257" class="lvl2">Part B: κ-Topology QA Optimization Goals (tag: kappa-optimization)</a><a href="#blk-71259" class="lvl3">κ Phase 1 — High Impact, Implement First</a><a href="#blk-71260" class="lvl4">K1. Iterative Retrieval in Deliberation (CRITICAL, +8-12pp QA)</a><a href="#blk-71274" class="lvl4">K2. κ-Guided Adaptive Retrieval Depth (HIGH, +3-5pp QA)</a><a href="#blk-71288" class="lvl4">K3. Temporal Contradiction Detection via κ (HIGH, +5-8pp QA)</a><a href="#blk-71303" class="lvl3">κ Phase 2 — Medium Impact</a><a href="#blk-71304" class="lvl4">K4. κ-Modulated Hop Decay (MEDIUM, +2-3pp QA)</a><a href="#blk-71314" class="lvl4">K5. Fault-Line-Aware Retrieval Boosting (MEDIUM, +2-4pp QA)</a><a href="#blk-71318" class="lvl4">K6. κ-Bucketed Answer Strategies (MEDIUM, +3-5pp QA)</a><a href="#blk-71329" class="lvl3">κ Phase 3 — Polish</a><a href="#blk-71330" class="lvl4">K7. SCC Confidence Propagation (LOW, +1-2pp QA)</a><a href="#blk-71333" class="lvl4">K8. Query-Time Edge Impact (LOW, +1-2pp QA)</a><a href="#blk-71336" class="lvl2">Recommended Implementation Order</a><a href="#blk-71408" class="lvl2">Key Source Files</a><a href="#blk-71434" class="lvl2">Development Workflow</a><a href="#blk-71456" class="lvl2">Research References</a><a href="#blk-71472" class="lvl2">Success Criteria</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/prompts/BENCHMARK_EXPANSION_PROMPT.md/">Benchmark Expansion Prompt — Graphonomous v0.3.3+</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_P1_PROMPT.md/">Graphonomous v0.3 — P1 Implementation Prompt (Week 3-4)</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_P2_PROMPT.md/">Graphonomous v0.3 — P2 Implementation Prompt (Week 5+)</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_P3_PROMPT.md/">Graphonomous v0.3 — P3 Implementation Prompt (Week 6+)</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_V03_PROMPT.md/">Graphonomous v0.3 Continual Learning Implementation Prompt</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajimfttd4isyaws4hid32qxbzl5kjzugghitfr7mkacvwztewaypq</div></div></div>
+</div></div>
+</body></html>

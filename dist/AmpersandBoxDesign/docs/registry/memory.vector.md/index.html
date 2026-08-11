@@ -1,0 +1,208 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;memory.vector -- Semantic Vector Retrieval Capability · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;memory.vector is a concrete capability page for the [&amp;] Protocol&#39;s &amp;memory primitive.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/memory.vector.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;memory.vector -- Semantic Vector Retrieval Capability">
+<meta property="og:description" content="&amp;memory.vector is a concrete capability page for the [&amp;] Protocol&#39;s &amp;memory primitive.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/memory.vector.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&memory.vector -- Semantic Vector Retrieval Capability","name":"&memory.vector -- Semantic Vector Retrieval Capability","description":"&memory.vector is a concrete capability page for the [&] Protocol's &memory primitive.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/memory.vector.md/","identifier":"bagaaierahplibqdqqqpjv4vkk6y5vtwdvjwisbsyezy3xnjtkspblf3pepya","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. Capability family position"},{"@type":"WebPageElement","name":"4. Capability contract summary"},{"@type":"WebPageElement","name":"Interpretation"},{"@type":"WebPageElement","name":"5. Operations"},{"@type":"WebPageElement","name":"search"},{"@type":"WebPageElement","name":"upsert"},{"@type":"WebPageElement","name":"enrich"},{"@type":"WebPageElement","name":"6. Architecture patterns"},{"@type":"WebPageElement","name":"Pattern A: policy-grounded support"},{"@type":"WebPageElement","name":"Pattern B: hybrid retrieval"},{"@type":"WebPageElement","name":"Pattern C: corpus ingestion"},{"@type":"WebPageElement","name":"7. Architecture diagram"},{"@type":"WebPageElement","name":"8. Example declaration"},{"@type":"WebPageElement","name":"9. Example API shape"},{"@type":"WebPageElement","name":"Search request"},{"@type":"WebPageElement","name":"Search response"},{"@type":"WebPageElement","name":"Enrich request"},{"@type":"WebPageElement","name":"Enrich response"},{"@type":"WebPageElement","name":"10. Compatible providers"},{"@type":"WebPageElement","name":"Current default ecosystem fit"},{"@type":"WebPageElement","name":"Alternative provider: Weaviate"},{"@type":"WebPageElement","name":"11. A2A-facing skills"},{"@type":"WebPageElement","name":"12. Governance implications"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"memory.vector.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/memory.vector.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/memory.vector.md</span>
+
+</div></div>
+<div class="lead">&amp;memory.vector is a concrete capability page for the [&amp;] Protocol&#39;s &amp;memory primitive.</div>
+<div class="prose"><h1 id="blk-10510"><code>&amp;memory.vector</code> -- Semantic Vector Retrieval Capability</h1>
+<p><code>&amp;memory.vector</code> is a concrete capability page for the [&amp;] Protocol's <code>&amp;memory</code> primitive.</p>
+<p>It describes the capability interface for <strong>semantic vector retrieval</strong>: a memory system that embeds documents and knowledge corpora into vector space and retrieves them by similarity. This is the canonical approach for corpus-level semantic search, knowledge-base lookup, and context enrichment over large unstructured or semi-structured document sets.</p>
+<p>This page is part of the capability registry and documentation hub. It is intended to be useful both to humans and to downstream generation systems.</p>
+<h3 id="blk-10514">1. Definition</h3>
+<p><code>&amp;memory.vector</code> is the capability for:</p>
+<ul><li><p>semantic similarity retrieval over embedded documents</p></li><li><p>corpus-level knowledge-base lookup</p></li><li><p>context enrichment with semantically relevant material</p></li><li><p>inserting and updating embedded documents for future retrieval</p></li></ul>
+<p>Unlike graph memory, vector memory operates over a <strong>flat embedding space</strong>. There is no explicit relationship structure. Retrieval is based on proximity in vector space: what is semantically similar to the query, not what is structurally connected.</p>
+<p>That makes it especially useful when an agent must answer questions like:</p>
+<ul><li><p>What documents in this corpus are most relevant to this query?</p></li><li><p>Which support articles best match this customer question?</p></li><li><p>What prior research material is semantically closest to this claim?</p></li><li><p>What context should be injected to ground this response?</p></li></ul>
+<p>In protocol terms, the canonical capability identifier is:</p>
+<ul><li><p><code>&amp;memory.vector</code></p></li></ul>
+<h3 id="blk-10540">2. Why this capability exists</h3>
+<p>A large share of important agent workloads involve retrieval over document corpora that do not have explicit relational structure. The documents exist as text, and the retrieval problem is: find what is semantically relevant.</p>
+<p>Examples:</p>
+<ul><li><p>support knowledge bases where articles must be matched to customer questions</p></li><li><p>research corpora where papers, notes, and claims must be surfaced by meaning</p></li><li><p>policy and compliance libraries where the right section must be found for a given situation</p></li><li><p>product documentation where the answer to a technical question lives somewhere in a large set of pages</p></li></ul>
+<p>A vector retrieval capability is useful whenever:</p>
+<ol><li><p>the corpus is large enough that keyword search alone is insufficient</p></li><li><p>retrieval should be based on meaning, not just exact terms</p></li><li><p>the agent needs grounded context from a knowledge base before reasoning</p></li><li><p>documents should be retrievable without requiring manual tagging or graph construction</p></li></ol>
+<p>This is why <code>&amp;memory.vector</code> is a distinct capability rather than just a provider detail.</p>
+<h3 id="blk-10563">3. Capability family position</h3>
+<p><code>&amp;memory.vector</code> sits inside the <code>&amp;memory</code> namespace.</p>
+<p>Related memory capabilities include:</p>
+<ul><li><p><code>&amp;memory.graph</code> -- graph-structured relationship memory</p></li><li><p><code>&amp;memory.episodic</code> -- replayable prior experiences or sessions</p></li></ul>
+<p>A useful shorthand:</p>
+<ul><li><p><code>memory.vector</code> = semantic similarity retrieval</p></li><li><p><code>memory.graph</code> = connected durable knowledge</p></li><li><p><code>memory.episodic</code> = prior experience replay</p></li></ul>
+<p>How these differ in practice:</p>
+<ul><li><p><code>&amp;memory.vector</code> finds what is <strong>similar</strong>. It operates over embeddings in a flat space. There is no topology, no edges, no relationship structure. Results are ranked by distance.</p></li><li><p><code>&amp;memory.graph</code> finds what is <strong>connected</strong>. It operates over nodes and edges. It can traverse dependency chains, identify feedback loops, and use kappa-aware routing to decide whether cyclic structure requires deliberation.</p></li><li><p><code>&amp;memory.episodic</code> finds what <strong>happened before</strong>. It stores session-level history and replayable experience. It is scoped to temporal sequences, not corpus-level knowledge.</p></li></ul>
+<p>In many real systems, these capabilities compose rather than compete.</p>
+<h3 id="blk-10588">4. Capability contract summary</h3>
+<p>Below is a representative contract for <code>&amp;memory.vector</code>.</p>
+<p>~~~json { &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;, &quot;capability&quot;: &quot;&amp;memory.vector&quot;, &quot;provider&quot;: &quot;pgvector&quot;, &quot;version&quot;: &quot;0.1.0&quot;, &quot;description&quot;: &quot;Semantic vector retrieval contract for similarity search, document upsert, and context enrichment over embedded knowledge corpora.&quot;, &quot;operations&quot;: { &quot;search&quot;: { &quot;in&quot;: &quot;query_context&quot;, &quot;out&quot;: &quot;retrieval_hits&quot;, &quot;description&quot;: &quot;Retrieve semantically similar documents from the vector store given a query context.&quot;, &quot;deterministic&quot;: false, &quot;side_effects&quot;: false }, &quot;upsert&quot;: { &quot;in&quot;: &quot;document_payload&quot;, &quot;out&quot;: &quot;ack&quot;, &quot;description&quot;: &quot;Insert or update an embedded document in the vector store.&quot;, &quot;deterministic&quot;: true, &quot;side_effects&quot;: true }, &quot;enrich&quot;: { &quot;in&quot;: &quot;query_context&quot;, &quot;out&quot;: &quot;enriched_context&quot;, &quot;description&quot;: &quot;Augment an existing context object with semantically relevant material from the corpus.&quot;, &quot;deterministic&quot;: false, &quot;side_effects&quot;: false } }, &quot;accepts_from&quot;: [ &quot;&amp;reason.*&quot;, &quot;&amp;memory.episodic&quot;, &quot;query_context&quot;, &quot;document_payload&quot; ], &quot;feeds_into&quot;: [ &quot;&amp;reason.*&quot;, &quot;&amp;memory.graph&quot;, &quot;output&quot; ], &quot;a2a_skills&quot;: [ &quot;semantic-retrieval&quot;, &quot;knowledge-base-enrichment&quot; ] } ~~~</p>
+<h4 id="blk-10591">Interpretation</h4>
+<p>This contract says that <code>&amp;memory.vector</code> can:</p>
+<ul><li><p>search for semantically similar documents from a query context</p></li><li><p>upsert new or updated documents into the vector store</p></li><li><p>enrich an existing context with relevant semantic material for downstream use</p></li></ul>
+<p>It also says that it composes especially naturally with:</p>
+<ul><li><p>reasoning capabilities downstream</p></li><li><p>graph memory downstream (for hybrid retrieval)</p></li><li><p>episodic memory upstream (to ground retrieval in session context)</p></li></ul>
+<h3 id="blk-10608">5. Operations</h3>
+<h4 id="blk-10609"><code>search</code></h4>
+<p>Purpose:</p>
+<ul><li><p>retrieve documents or passages that are semantically similar to the query</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>query_context</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>retrieval_hits</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>the agent needs to find relevant material from a corpus based on meaning</p></li></ul>
+<h4 id="blk-10626"><code>upsert</code></h4>
+<p>Purpose:</p>
+<ul><li><p>insert a new document or update an existing one in the vector store</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>document_payload</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>ack</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>the agent should add or refresh knowledge in the corpus</p></li></ul>
+<h4 id="blk-10643"><code>enrich</code></h4>
+<p>Purpose:</p>
+<ul><li><p>augment an existing context object with semantically relevant material from the corpus</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>query_context</code> or compatible context object</p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>enriched_context</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>another capability has already produced a signal and semantic context should make it more useful</p></li></ul>
+<h3 id="blk-10660">6. Architecture patterns</h3>
+<h4 id="blk-10661">Pattern A: policy-grounded support</h4>
+<p>~~~text customer_query</p>
+<p>~~~</p>
+<p>What happens:</p>
+<ol><li><p>vector memory retrieves relevant support articles and policy documents</p></li><li><p>episodic memory adds prior session context for this customer</p></li><li><p>reasoning evaluates the best response grounded in policy</p></li></ol>
+<p>This is one of the strongest <code>&amp;memory.vector</code> patterns for customer-facing agents.</p>
+<h4 id="blk-10673">Pattern B: hybrid retrieval</h4>
+<p>~~~text research_query</p>
+<p>~~~</p>
+<p>What happens:</p>
+<ol><li><p>vector memory retrieves semantically relevant documents</p></li><li><p>graph memory adds relationship and dependency context</p></li><li><p>reasoning synthesizes evidence from both retrieval modes</p></li></ol>
+<p>This combines breadth (vector) with structure (graph).</p>
+<h4 id="blk-10685">Pattern C: corpus ingestion</h4>
+<p>~~~text new_document</p>
+<p>~~~</p>
+<p>What happens:</p>
+<ol><li><p>the document is embedded and stored for future retrieval</p></li></ol>
+<p>This is the write path. It keeps the corpus current.</p>
+<h3 id="blk-10693">7. Architecture diagram</h3>
+<p>A simple mental model for <code>&amp;memory.vector</code>:</p>
+<p>~~~text +---------------------+</p>
+<p>+---------+-----------+</p>
+<p>v +---------------------+</p>
+<p>+---------+-----------+</p>
+<p>+--------------+--------------+</p>
+<p>v              v              v +----------------+ +------------+ +---------------+</p>
+<p>+------+---------+ +------------+ +---------------+</p>
+<p>v +---------------------+</p>
+<p>+---------------------+ ~~~</p>
+<h3 id="blk-10704">8. Example declaration</h3>
+<p>A concrete <code>ampersand.json</code> fragment:</p>
+<p>~~~json { &quot;&amp;memory.vector&quot;: { &quot;provider&quot;: &quot;pgvector&quot;, &quot;config&quot;: { &quot;instance&quot;: &quot;support-kb&quot; } } } ~~~</p>
+<p>A fuller declaration (<code>customer-support.ampersand.json</code>):</p>
+<p>~~~json { &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;, &quot;agent&quot;: &quot;SupportAgent&quot;, &quot;version&quot;: &quot;1.0.0&quot;, &quot;capabilities&quot;: { &quot;&amp;memory.vector&quot;: { &quot;provider&quot;: &quot;pgvector&quot;, &quot;config&quot;: { &quot;instance&quot;: &quot;support-kb&quot; } }, &quot;&amp;memory.episodic&quot;: { &quot;provider&quot;: &quot;default&quot;, &quot;config&quot;: { &quot;session_scope&quot;: &quot;customer&quot; } }, &quot;&amp;reason.argument&quot;: { &quot;provider&quot;: &quot;deliberatic&quot;, &quot;config&quot;: { &quot;governance&quot;: &quot;standard&quot; } } }, &quot;provenance&quot;: true } ~~~</p>
+<p>A research-oriented declaration (<code>research-agent.ampersand.json</code>):</p>
+<p>~~~json { &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;, &quot;agent&quot;: &quot;ResearchAgent&quot;, &quot;version&quot;: &quot;1.0.0&quot;, &quot;capabilities&quot;: { &quot;&amp;memory.vector&quot;: { &quot;provider&quot;: &quot;weaviate&quot;, &quot;config&quot;: { &quot;instance&quot;: &quot;research-corpus&quot; } }, &quot;&amp;memory.graph&quot;: { &quot;provider&quot;: &quot;graphonomous&quot;, &quot;config&quot;: { &quot;instance&quot;: &quot;research-kg&quot; } }, &quot;&amp;reason.argument&quot;: { &quot;provider&quot;: &quot;deliberatic&quot;, &quot;config&quot;: { &quot;governance&quot;: &quot;constitutional&quot; } } }, &quot;provenance&quot;: true } ~~~</p>
+<h3 id="blk-10711">9. Example API shape</h3>
+<p>A provider-specific API may vary, but the protocol-level shape can look like this.</p>
+<h4 id="blk-10713">Search request</h4>
+<p>~~~json { &quot;capability&quot;: &quot;&amp;memory.vector&quot;, &quot;operation&quot;: &quot;search&quot;, &quot;input&quot;: { &quot;query_context&quot;: { &quot;query&quot;: &quot;how to reset account password after lockout&quot;, &quot;top_k&quot;: 5 } } } ~~~</p>
+<h4 id="blk-10715">Search response</h4>
+<p>~~~json { &quot;capability&quot;: &quot;&amp;memory.vector&quot;, &quot;operation&quot;: &quot;search&quot;, &quot;output&quot;: { &quot;retrieval_hits&quot;: [ { &quot;document_id&quot;: &quot;kb-article-2041&quot;, &quot;title&quot;: &quot;Account lockout recovery procedure&quot;, &quot;score&quot;: 0.94, &quot;snippet&quot;: &quot;When an account is locked after repeated failed login attempts...&quot; }, { &quot;document_id&quot;: &quot;kb-article-1893&quot;, &quot;title&quot;: &quot;Password reset flow for enterprise accounts&quot;, &quot;score&quot;: 0.87, &quot;snippet&quot;: &quot;Enterprise accounts use a separate reset pathway...&quot; } ] } } ~~~</p>
+<h4 id="blk-10717">Enrich request</h4>
+<p>~~~json { &quot;capability&quot;: &quot;&amp;memory.vector&quot;, &quot;operation&quot;: &quot;enrich&quot;, &quot;input&quot;: { &quot;query_context&quot;: { &quot;query&quot;: &quot;customer reports inability to access dashboard after migration&quot;, &quot;top_k&quot;: 3 } } } ~~~</p>
+<h4 id="blk-10719">Enrich response</h4>
+<p>~~~json { &quot;capability&quot;: &quot;&amp;memory.vector&quot;, &quot;operation&quot;: &quot;enrich&quot;, &quot;output&quot;: { &quot;enriched_context&quot;: { &quot;relevant_articles&quot;: [ &quot;kb-article-3102&quot;, &quot;kb-article-2891&quot; ], &quot;relevant_policies&quot;: [ &quot;migration-access-policy-v2&quot; ], &quot;semantic_summary&quot;: &quot;Two knowledge base articles and one migration policy document are relevant to post-migration dashboard access issues.&quot; } } } ~~~</p>
+<h3 id="blk-10721">10. Compatible providers</h3>
+<p><code>&amp;memory.vector</code> is a capability interface. Compatible providers are implementations that can satisfy the contract.</p>
+<p>Representative providers:</p>
+<ul><li><p><code>pgvector</code> (default)</p></li><li><p><code>weaviate</code></p></li><li><p>custom embedding-backed retrieval services wrapped behind a protocol-compatible surface</p></li><li><p>managed vector database services with a compatible API shape</p></li></ul>
+<h4 id="blk-10733">Current default ecosystem fit</h4>
+<ul><li><p><code>pgvector</code> is the default provider in this repository</p></li></ul>
+<p>Why it fits:</p>
+<ul><li><p>widely deployed and operationally simple</p></li><li><p>embeds directly into PostgreSQL infrastructure many teams already run</p></li><li><p>suitable for search, upsert, and enrichment workflows</p></li><li><p>no separate cluster required for moderate-scale corpora</p></li></ul>
+<h4 id="blk-10747">Alternative provider: Weaviate</h4>
+<p>Why it fits:</p>
+<ul><li><p>purpose-built for vector search at scale</p></li><li><p>supports hybrid search (vector + keyword)</p></li><li><p>suitable for larger corpora or workloads requiring dedicated vector infrastructure</p></li></ul>
+<h3 id="blk-10756">11. A2A-facing skills</h3>
+<p>A <code>&amp;memory.vector</code> capability may advertise skills such as:</p>
+<ul><li><p><code>semantic-retrieval</code></p></li><li><p><code>knowledge-base-enrichment</code></p></li></ul>
+<p>These skills are useful when generating A2A agent cards from a declaration, because they let an externally visible agent surface say more than just &quot;has memory.&quot; A downstream agent or orchestrator can discover that this agent offers semantic retrieval as a specific skill.</p>
+<h3 id="blk-10764">12. Governance implications</h3>
+<p>Vector retrieval often serves as the grounding layer for agent responses, so governance matters.</p>
+<p>Examples of governance constraints that commonly pair with <code>&amp;memory.vector</code>:</p>
+<h4 id="blk-10767">Hard constraints</h4>
+<ul><li><p>never return restricted or access-controlled documents outside authorized workflows</p></li><li><p>never surface confidential knowledge-base content to unauthorized callers</p></li><li><p>always preserve audit trail for retrieval-grounded decision support</p></li></ul>
+<h4 id="blk-10775">Soft constraints</h4>
+<ul><li><p>prefer higher-confidence retrieval hits when multiple results are available</p></li><li><p>prefer recent documents when relevance scores are similar</p></li><li><p>prefer policy-tagged documents over untagged material in compliance-sensitive domains</p></li></ul>
+<h4 id="blk-10783">Escalation triggers</h4>
+<ul><li><p>escalate when no retrieval hits meet the minimum relevance threshold</p></li><li><p>escalate when retrieved material conflicts with known policy</p></li></ul>
+<p>Standard retrieval governance applies: the governance mode for <code>&amp;memory.vector</code> is straightforward compared to graph or reasoning capabilities, because the operation is read-heavy and the primary risk is surfacing wrong or restricted content rather than taking irreversible action.</p>
+<h3 id="blk-10790">13. Provenance implications</h3>
+<p><code>&amp;memory.vector</code> should participate in the provenance chain.</p>
+<p>Representative provenance record:</p>
+<p>~~~json { &quot;source&quot;: &quot;&amp;memory.vector&quot;, &quot;provider&quot;: &quot;pgvector&quot;, &quot;operation&quot;: &quot;search&quot;, &quot;timestamp&quot;: &quot;2026-03-14T14:23:07Z&quot;, &quot;input_hash&quot;: &quot;sha256:3e4f...&quot;, &quot;output_hash&quot;: &quot;sha256:9a1b...&quot;, &quot;parent_hash&quot;: &quot;sha256:0000...&quot; } ~~~</p>
+<p>This matters because vector retrieval results often directly ground downstream reasoning. If an agent responds to a customer based on a retrieved article, or if a research agent cites a retrieved paper, the retrieval step should be auditable. Provenance makes it possible to trace which documents were surfaced and when.</p>
+<h3 id="blk-10795">14. Typical use cases</h3>
+<p><code>&amp;memory.vector</code> is especially strong in the following domains.</p>
+<h4 id="blk-10797">Customer support</h4>
+<ul><li><p>knowledge-base article retrieval for customer questions</p></li><li><p>policy document lookup for escalation decisions</p></li><li><p>grounding agent responses in approved content</p></li></ul>
+<h4 id="blk-10805">Research systems</h4>
+<ul><li><p>corpus-level semantic search over papers, notes, and claims</p></li><li><p>literature retrieval for evidence synthesis</p></li><li><p>semantic matching of new findings against prior work</p></li></ul>
+<h4 id="blk-10813">Compliance and policy</h4>
+<ul><li><p>regulatory document retrieval</p></li><li><p>policy section lookup for audit or review workflows</p></li><li><p>grounding decisions in authoritative source material</p></li></ul>
+<h4 id="blk-10821">General agent grounding</h4>
+<ul><li><p>semantic context enrichment before reasoning</p></li><li><p>document retrieval for RAG (retrieval-augmented generation) pipelines</p></li><li><p>knowledge-base maintenance through upsert workflows</p></li></ul>
+<h3 id="blk-10829">15. Anti-patterns</h3>
+<p>Avoid these mistakes when modeling <code>&amp;memory.vector</code>.</p>
+<h4 id="blk-10831">Anti-pattern 1: treating vector retrieval as relationship-aware</h4>
+<p>Vector memory finds what is similar in embedding space. It does not know how things connect. If relationship structure matters, use <code>&amp;memory.graph</code> instead or alongside.</p>
+<h4 id="blk-10833">Anti-pattern 2: collapsing provider and capability</h4>
+<p><code>pgvector</code> is not the protocol capability. <code>&amp;memory.vector</code> is.</p>
+<h4 id="blk-10835">Anti-pattern 3: using vector retrieval without provenance</h4>
+<p>If retrieved content influences action, the retrieval step should be preserved in the provenance chain.</p>
+<h4 id="blk-10837">Anti-pattern 4: using vector memory as the only memory capability</h4>
+<p>Vector retrieval is strong for corpus search but does not replace session history (<code>&amp;memory.episodic</code>) or structured relationship memory (<code>&amp;memory.graph</code>). In many systems, <code>&amp;memory.vector</code> works best as one layer in a multi-memory architecture.</p>
+<h4 id="blk-10839">Anti-pattern 5: assuming embedding quality is uniform</h4>
+<p>Different embedding models produce different quality results for different domains. The capability abstraction is stable, but provider configuration (embedding model, chunking strategy, distance metric) affects retrieval quality significantly.</p>
+<h3 id="blk-10841">16. Related capabilities</h3>
+<p>Closest related protocol capabilities:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;memory.episodic</code></p></li><li><p><code>&amp;reason.argument</code></p></li></ul>
+<p>Common high-value compositions:</p>
+<ul><li><p><code>&amp;memory.vector</code> + <code>&amp;memory.episodic</code> + <code>&amp;reason.argument</code> (policy-grounded support)</p></li><li><p><code>&amp;memory.vector</code> + <code>&amp;memory.graph</code> (hybrid retrieval)</p></li><li><p><code>&amp;memory.vector</code> + <code>&amp;reason.argument</code> (grounded reasoning over retrieved evidence)</p></li></ul>
+<h3 id="blk-10858">17. Research references</h3>
+<p>This capability is informed by both information retrieval research and modern retrieval-augmented generation architecture.</p>
+<p>Useful reference directions:</p>
+<ul><li><p>dense passage retrieval and bi-encoder models</p></li><li><p>approximate nearest neighbor search (HNSW, IVF, product quantization)</p></li><li><p>retrieval-augmented generation (RAG) systems</p></li><li><p>hybrid search combining vector and keyword retrieval</p></li><li><p>embedding model evaluation and domain adaptation</p></li><li><p>vector database architecture and scaling patterns</p></li><li><p>chunking and document segmentation strategies for retrieval quality</p></li></ul>
+<p>The protocol does not prescribe a specific embedding model or retrieval algorithm. The value of this capability is in the stable interface, not the implementation details.</p>
+<h3 id="blk-10877">18. Summary</h3>
+<p><code>&amp;memory.vector</code> is the [&amp;] Protocol capability for semantic vector retrieval.</p>
+<p>It is the right capability when an agent needs:</p>
+<ul><li><p>corpus-level semantic search</p></li><li><p>knowledge-base grounding for responses</p></li><li><p>document retrieval by meaning rather than exact terms</p></li><li><p>context enrichment from embedded corpora</p></li><li><p>a write path for keeping the knowledge base current</p></li></ul>
+<p>In one sentence:</p>
+<blockquote><p><code>&amp;memory.vector</code> lets an agent find what is semantically relevant across a knowledge corpus.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/memory.vector.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-10514" class="lvl2">1. Definition</a><a href="#blk-10540" class="lvl2">2. Why this capability exists</a><a href="#blk-10563" class="lvl2">3. Capability family position</a><a href="#blk-10588" class="lvl2">4. Capability contract summary</a><a href="#blk-10591" class="lvl3">Interpretation</a><a href="#blk-10608" class="lvl2">5. Operations</a><a href="#blk-10609" class="lvl3">search</a><a href="#blk-10626" class="lvl3">upsert</a><a href="#blk-10643" class="lvl3">enrich</a><a href="#blk-10660" class="lvl2">6. Architecture patterns</a><a href="#blk-10661" class="lvl3">Pattern A: policy-grounded support</a><a href="#blk-10673" class="lvl3">Pattern B: hybrid retrieval</a><a href="#blk-10685" class="lvl3">Pattern C: corpus ingestion</a><a href="#blk-10693" class="lvl2">7. Architecture diagram</a><a href="#blk-10704" class="lvl2">8. Example declaration</a><a href="#blk-10711" class="lvl2">9. Example API shape</a><a href="#blk-10713" class="lvl3">Search request</a><a href="#blk-10715" class="lvl3">Search response</a><a href="#blk-10717" class="lvl3">Enrich request</a><a href="#blk-10719" class="lvl3">Enrich response</a><a href="#blk-10721" class="lvl2">10. Compatible providers</a><a href="#blk-10733" class="lvl3">Current default ecosystem fit</a><a href="#blk-10747" class="lvl3">Alternative provider: Weaviate</a><a href="#blk-10756" class="lvl2">11. A2A-facing skills</a><a href="#blk-10764" class="lvl2">12. Governance implications</a><a href="#blk-10767" class="lvl3">Hard constraints</a><a href="#blk-10775" class="lvl3">Soft constraints</a><a href="#blk-10783" class="lvl3">Escalation triggers</a><a href="#blk-10790" class="lvl2">13. Provenance implications</a><a href="#blk-10795" class="lvl2">14. Typical use cases</a><a href="#blk-10797" class="lvl3">Customer support</a><a href="#blk-10805" class="lvl3">Research systems</a><a href="#blk-10813" class="lvl3">Compliance and policy</a><a href="#blk-10821" class="lvl3">General agent grounding</a><a href="#blk-10829" class="lvl2">15. Anti-patterns</a><a href="#blk-10831" class="lvl3">Anti-pattern 1: treating vector retrieval as relationship-aware</a><a href="#blk-10833" class="lvl3">Anti-pattern 2: collapsing provider and capability</a><a href="#blk-10835" class="lvl3">Anti-pattern 3: using vector retrieval without provenance</a><a href="#blk-10837" class="lvl3">Anti-pattern 4: using vector memory as the only memory capability</a><a href="#blk-10839" class="lvl3">Anti-pattern 5: assuming embedding quality is uniform</a><a href="#blk-10841" class="lvl2">16. Related capabilities</a><a href="#blk-10858" class="lvl2">17. Research references</a><a href="#blk-10877" class="lvl2">18. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.plan.md/">&amp;reason.plan -- Planning-Oriented Reasoning for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierahplibqdqqqpjv4vkk6y5vtwdvjwisbsyezy3xnjtkspblf3pepya</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,138 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>note: bump version here, in mix.exs, and npm/package.json too · graphonomous · Ampersand Box</title>
+<meta name="description" content="BUILD ========">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/BUILD.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="note: bump version here, in mix.exs, and npm/package.json too">
+<meta property="og:description" content="BUILD ========">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/BUILD.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"note: bump version here, in mix.exs, and npm/package.json too","name":"note: bump version here, in mix.exs, and npm/package.json too","description":"BUILD ========","url":"https://docs.ampersandboxdesign.com/graphonomous/BUILD.md/","identifier":"bagaaieral4cgwhbhpgz6mkprkjpor2rlpfxhkwpl7ltvoycrvag4rdhbtb7q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"A) gh release create ... says tag is missing"},{"@type":"WebPageElement","name":"B) Permission error on release create/upload"},{"@type":"WebPageElement","name":"C) npm still fails with 404"},{"@type":"WebPageElement","name":"D) Zed shows \"context server request timeout\""}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"BUILD.md","item":"https://docs.ampersandboxdesign.com/graphonomous/BUILD.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/BUILD.md</span>
+
+</div></div>
+<div class="lead">BUILD ========</div>
+<div class="prose"><h1>note: bump version here, in mix.exs, and npm/package.json too</h1><p>BUILD ========</p>
+<p>Manual npm Publish Path (No CI Token Dependency) ------------------------------------------------</p>
+<p>This guide handles the exact case where <code>npm i -g graphonomous</code> fails because the expected GitHub release asset does not exist yet.</p>
+<p>Error pattern:</p>
+<ul><li><p>npm postinstall tries to download:</p></li></ul>
+<p><code>https://github.com/c-u-l8er/graphonomous/releases/download/vX.Y.Z/graphonomous-vX.Y.Z-linux-x64.tar.gz</code></p>
+<ul><li><p>install fails with <code>HTTP 404</code> when release/tag/assets are missing.</p></li></ul>
+<p>Prerequisites -------------</p>
+<ul><li><p>You are in this repo: <code>ProjectAmp2/graphonomous</code></p></li><li><p><code>gh auth status</code> is valid for the target GitHub account/org</p></li><li><p><code>npm whoami</code> is valid for the npm publisher account</p></li><li><p>Local toolchain is installed (Elixir/OTP, Node/npm, git, tar)</p></li></ul>
+<ol><li><p>Set version once (important)</p></li></ol>
+<p>Pick one version and use it consistently in all commands below.</p>
+<pre data-lang="bash"><code>VERSION=<span class="t-string">&quot;0.1.1&quot;</span>
+TAG=<span class="t-string">&quot;v${VERSION}&quot;</span>
+TARGET=<span class="t-string">&quot;linux-x64&quot;</span>
+ASSET=<span class="t-string">&quot;graphonomous-v${VERSION}-${TARGET}.tar.gz&quot;</span></code></pre>
+<ol><li><p>Ensure local project version matches</p></li></ol>
+<p>Confirm versions:</p>
+<ul><li><p><code>mix.exs</code> -&gt; <code>version: &quot;0.1.1&quot;</code></p></li><li><p><code>npm/package.json</code> -&gt; <code>&quot;version&quot;: &quot;0.1.1&quot;</code></p></li></ul>
+<p>Quick checks:</p>
+<pre data-lang="bash"><code>grep<span class="t-flag"> -n</span> <span class="t-string">'version:'</span> mix.exs
+node<span class="t-flag"> -p</span> <span class="t-string">&quot;require('./npm/package.json').version&quot;</span></code></pre>
+<ol start="2"><li><p>Build OTP release and package asset</p></li></ol>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> /home/travis/ProjectAmp2/graphonomous
+MIX_ENV=prod mix release<span class="t-flag"> --overwrite</span>
+mkdir<span class="t-flag"> -p</span> dist
+tar<span class="t-flag"> -czf</span> <span class="t-string">&quot;dist/${ASSET}&quot;</span><span class="t-flag"> --exclude</span>=<span class="t-string">'*/priv/beam'</span><span class="t-flag"> -C</span> _build/prod/rel graphonomous
+ls<span class="t-flag"> -lh</span> <span class="t-string">&quot;dist/${ASSET}&quot;</span></code></pre>
+<p>Sanity check the release command:</p>
+<pre data-lang="bash"><code>_build/prod/rel/graphonomous/bin/graphonomous version
+_build/prod/rel/graphonomous/bin/graphonomous eval <span class="t-string">&quot;Graphonomous.CLI.main(System.argv())&quot;</span><span class="t-flag"> --help</span></code></pre>
+<ol start="3"><li><p>Create tag if missing and push it</p></li></ol>
+<p>Check if the tag exists locally/remotely:</p>
+<pre data-lang="bash"><code>git tag<span class="t-flag"> --list</span> <span class="t-string">&quot;${TAG}&quot;</span>
+git ls-remote<span class="t-flag"> --tags</span> origin <span class="t-string">&quot;${TAG}&quot;</span></code></pre>
+<p>If missing locally:</p>
+<pre data-lang="bash"><code>git tag <span class="t-string">&quot;${TAG}&quot;</span></code></pre>
+<p>Push tag (safe if already present remotely; it will fail noisily if conflicting):</p>
+<pre data-lang="bash"><code>git push origin <span class="t-string">&quot;${TAG}&quot;</span></code></pre>
+<ol start="4"><li><p>Create GitHub release if missing</p></li></ol>
+<p>Your previous error <code>release not found</code> means this step is required.</p>
+<p>Create release and upload first asset in one command:</p>
+<pre data-lang="bash"><code>gh release create <span class="t-string">&quot;${TAG}&quot;</span> <span class="t-string">&quot;dist/${ASSET}&quot;</span> \
+ <span class="t-flag"> --title</span> <span class="t-string">&quot;${TAG}&quot;</span> \
+ <span class="t-flag"> --notes</span> <span class="t-string">&quot;Manual release assets upload&quot;</span></code></pre>
+<p>If release already exists, upload (or replace) asset:</p>
+<pre data-lang="bash"><code>gh release upload <span class="t-string">&quot;${TAG}&quot;</span> <span class="t-string">&quot;dist/${ASSET}&quot;</span><span class="t-flag"> --clobber</span></code></pre>
+<p>Verify release + assets:</p>
+<pre data-lang="bash"><code>gh release view <span class="t-string">&quot;${TAG}&quot;</span>
+gh release view <span class="t-string">&quot;${TAG}&quot;</span><span class="t-flag"> --json</span> assets<span class="t-flag"> --jq</span> <span class="t-string">'.assets[].name'</span></code></pre>
+<ol start="5"><li><p>Re-test npm install</p></li></ol>
+<pre data-lang="bash"><code>npm i<span class="t-flag"> -g</span> graphonomous
+graphonomous<span class="t-flag"> --help</span></code></pre>
+<p>If global install was partially broken earlier, clean and retry:</p>
+<pre data-lang="bash"><code>npm uninstall<span class="t-flag"> -g</span> graphonomous
+npm cache verify
+npm i<span class="t-flag"> -g</span> graphonomous</code></pre>
+<ol start="6"><li><p>Optional: Quick runtime smoke test</p></li></ol>
+<pre data-lang="bash"><code>mkdir<span class="t-flag"> -p</span> ~/.graphonomous
+graphonomous<span class="t-flag"> --db</span> ~/.graphonomous/knowledge.db<span class="t-flag"> --embedder-backend</span> fallback</code></pre>
+<p>(Stop with <code>Ctrl+C</code> after startup confirmation.)</p>
+<p>If release creation still fails -------------------------------</p>
+<h4 id="blk-62968">A) <code>gh release create ...</code> says tag is missing</h4>
+<p>Push the tag first:</p>
+<pre data-lang="bash"><code>git push origin <span class="t-string">&quot;${TAG}&quot;</span></code></pre>
+<h4 id="blk-62971">B) Permission error on release create/upload</h4>
+<p>Check GitHub auth/account:</p>
+<pre data-lang="bash"><code>gh auth status
+gh repo view</code></pre>
+<p>Ensure you have write access to <code>c-u-l8er/graphonomous</code>.</p>
+<h4 id="blk-62975">C) npm still fails with 404</h4>
+<p>Confirm asset naming exactly matches what installer expects:</p>
+<pre data-lang="bash"><code><span class="t-kw">echo</span> <span class="t-string">&quot;Expected: ${ASSET}&quot;</span>
+gh release view <span class="t-string">&quot;${TAG}&quot;</span><span class="t-flag"> --json</span> assets<span class="t-flag"> --jq</span> <span class="t-string">'.assets[].name'</span></code></pre>
+<p>Name must match exactly: <code>graphonomous-vX.Y.Z-linux-x64.tar.gz</code></p>
+<h4 id="blk-62979">D) Zed shows &quot;context server request timeout&quot;</h4>
+<p>This can occur if your runtime is using older stdio transport behavior from upstream Anubis MCP (decoded message list handling / stdio response write issues).</p>
+<p>Graphonomous production path uses a vendored Anubis patch:</p>
+<ul><li><p>dependency is pinned to <code>vendor/anubis_mcp</code></p></li><li><p>stdio transport fixes are in:</p></li><li><p><code>vendor/anubis_mcp/lib/anubis/server/transport/stdio.ex</code></p></li></ul>
+<p>Verify your runtime is actually using vendored dependency code (not stale compiled deps):</p>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> /home/travis/ProjectAmp2/graphonomous
+mix deps.get
+mix clean
+rm<span class="t-flag"> -rf</span> _build deps
+mix deps.get
+mix compile<span class="t-flag"> --warnings-as-errors</span>
+mix test test/mcp_integration_test.exs</code></pre>
+<p>If timeout persists in Zed:</p>
+<ol><li><p>Restart Zed completely.</p></li><li><p>Confirm your MCP command points at the expected <code>graphonomous</code> binary/version.</p></li><li><p>Run <code>graphonomous --help</code> in shell from the same environment as Zed launch.</p></li><li><p>Re-check npm package version and release source:</p></li></ol>
+<ul><li><p><code>npm view graphonomous version</code></p></li><li><p><code>npm ls -g --depth=0 graphonomous</code></p></li></ul>
+<p>Multi-platform publishing (later) ---------------------------------</p>
+<p>For broader support, repeat asset build/upload on each target machine:</p>
+<ul><li><p><code>linux-x64</code></p></li><li><p><code>linux-arm64</code></p></li><li><p><code>darwin-x64</code></p></li><li><p><code>darwin-arm64</code></p></li></ul>
+<p>Asset names must follow:</p>
+<ul><li><p><code>graphonomous-vX.Y.Z-linux-x64.tar.gz</code></p></li><li><p><code>graphonomous-vX.Y.Z-linux-arm64.tar.gz</code></p></li><li><p><code>graphonomous-vX.Y.Z-darwin-x64.tar.gz</code></p></li><li><p><code>graphonomous-vX.Y.Z-darwin-arm64.tar.gz</code></p></li></ul>
+<p>Minimal command checklist -------------------------</p>
+<pre data-lang="bash"><code><span class="t-comment"># note: bump version here, in mix.exs, and npm/package.json too</span>
+<span class="t-comment"># then git push with version as commit name after running:</span>
+<span class="t-kw">cd</span> /home/travis/ProjectAmp2/graphonomous
+VERSION=<span class="t-string">&quot;0.1.10&quot;</span>; TAG=<span class="t-string">&quot;v${VERSION}&quot;</span>; TARGET=<span class="t-string">&quot;linux-x64&quot;</span>; ASSET=<span class="t-string">&quot;graphonomous-v${VERSION}-${TARGET}.tar.gz&quot;</span>
+MIX_ENV=prod mix release<span class="t-flag"> --overwrite</span>
+mkdir<span class="t-flag"> -p</span> dist
+tar<span class="t-flag"> -czf</span> <span class="t-string">&quot;dist/${ASSET}&quot;</span><span class="t-flag"> --exclude</span>=<span class="t-string">'*/priv/beam'</span><span class="t-flag"> -C</span> _build/prod/rel graphonomous
+git tag <span class="t-string">&quot;${TAG}&quot;</span> <span class="t-undefined">2</span>&gt;/dev/null || true
+git push origin <span class="t-string">&quot;${TAG}&quot;</span>
+gh release create <span class="t-string">&quot;${TAG}&quot;</span> <span class="t-string">&quot;dist/${ASSET}&quot;</span><span class="t-flag"> --title</span> <span class="t-string">&quot;${TAG}&quot;</span><span class="t-flag"> --notes</span> <span class="t-string">&quot;Manual release assets upload&quot;</span> || gh release upload <span class="t-string">&quot;${TAG}&quot;</span> <span class="t-string">&quot;dist/${ASSET}&quot;</span><span class="t-flag"> --clobber</span>
+npm i<span class="t-flag"> -g</span> graphonomous
+graphonomous<span class="t-flag"> --help</span>
+<span class="t-kw">cd</span> ./npm
+npm publish</code></pre></div>
+<p class="src"><a href="/#/graphonomous/BUILD.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-62968" class="lvl3">A) gh release create ... says tag is missing</a><a href="#blk-62971" class="lvl3">B) Permission error on release create/upload</a><a href="#blk-62975" class="lvl3">C) npm still fails with 404</a><a href="#blk-62979" class="lvl3">D) Zed shows &quot;context server request timeout&quot;</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/AGENTS.md/">Graphonomous — AGENTS Instructions</a><a href="/graphonomous/CHANGELOG.md/">Changelog</a><a href="/graphonomous/CLAUDE.md/">Graphonomous — CLAUDE Instructions</a><a href="/graphonomous/README.md/">Graphonomous</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieral4cgwhbhpgz6mkprkjpor2rlpfxhkwpl7ltvoycrvag4rdhbtb7q</div></div></div>
+</div></div>
+</body></html>

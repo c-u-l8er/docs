@@ -1,0 +1,301 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;govern.identity — Agent Identity, Verification, and Trust · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;govern.identity is the [&amp;] Protocol capability for cross-runtime agent identity and trust verification.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/govern.identity.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;govern.identity — Agent Identity, Verification, and Trust">
+<meta property="og:description" content="&amp;govern.identity is the [&amp;] Protocol capability for cross-runtime agent identity and trust verification.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/govern.identity.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&govern.identity — Agent Identity, Verification, and Trust","name":"&govern.identity — Agent Identity, Verification, and Trust","description":"&govern.identity is the [&] Protocol capability for cross-runtime agent identity and trust verification.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/govern.identity.md/","identifier":"bagaaiera5o66vwtzio4a3ymsrsdbojhk5f4fzrohacf6nqsg52dmjzayeria","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. What problems &govern.identity solves"},{"@type":"WebPageElement","name":"4. Capability role in the &govern namespace"},{"@type":"WebPageElement","name":"5. Typical use cases"},{"@type":"WebPageElement","name":"A2A handshake verification"},{"@type":"WebPageElement","name":"Agent registration"},{"@type":"WebPageElement","name":"Marketplace trust evaluation"},{"@type":"WebPageElement","name":"Provenance attribution"},{"@type":"WebPageElement","name":"Governance audit"},{"@type":"WebPageElement","name":"Cross-runtime continuity"},{"@type":"WebPageElement","name":"6. Example capability contract"},{"@type":"WebPageElement","name":"What this contract means"},{"@type":"WebPageElement","name":"7. Core operations"},{"@type":"WebPageElement","name":"resolve"},{"@type":"WebPageElement","name":"verify"},{"@type":"WebPageElement","name":"register"},{"@type":"WebPageElement","name":"8. Identity fields"},{"@type":"WebPageElement","name":"Core identity"},{"@type":"WebPageElement","name":"Integrity hashes"},{"@type":"WebPageElement","name":"Organizational binding"},{"@type":"WebPageElement","name":"Capability declaration"},{"@type":"WebPageElement","name":"Governance summary"},{"@type":"WebPageElement","name":"Runtime bindings"},{"@type":"WebPageElement","name":"Trust metadata"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"govern.identity.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/govern.identity.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/govern.identity.md</span>
+
+</div></div>
+<div class="lead">&amp;govern.identity is the [&amp;] Protocol capability for cross-runtime agent identity and trust verification.</div>
+<div class="prose"><h1 id="blk-8869"><code>&amp;govern.identity</code> — Agent Identity, Verification, and Trust</h1>
+<p><code>&amp;govern.identity</code> is the [&amp;] Protocol capability for <strong>cross-runtime agent identity and trust verification</strong>.</p>
+<p>It describes an agent's ability to:</p>
+<ul><li><p>establish a portable, verifiable identity</p></li><li><p>prove that identity to other agents and governance systems</p></li><li><p>register and update identity in a shared registry</p></li><li><p>carry trust metadata that informs collaboration and delegation decisions</p></li><li><p>maintain identity continuity across runtimes, sessions, and deployments</p></li></ul>
+<p>In the protocol's five-primitive model:</p>
+<ul><li><p><code>&amp;memory</code> answers <strong>what</strong> the agent knows</p></li><li><p><code>&amp;reason</code> answers <strong>how</strong> the agent decides</p></li><li><p><code>&amp;time</code> answers <strong>when</strong> things change</p></li><li><p><code>&amp;space</code> answers <strong>where</strong> things are</p></li><li><p><code>&amp;govern</code> answers <strong>who approves, what limits apply, and how decisions are audited</strong></p></li></ul>
+<p><code>&amp;govern.identity</code> is the subtype that answers the foundational question: <strong>who is this agent, and can it be trusted?</strong></p>
+<h3 id="blk-8896">1. Definition</h3>
+<p><code>&amp;govern.identity</code> is the capability interface for <strong>agent identity resolution, verification, and registration</strong>.</p>
+<p>It is used when a system must:</p>
+<ul><li><p>resolve an agent's identity from its ID, returning manifest, capabilities, and trust metadata</p></li><li><p>verify that an agent's claimed identity matches its registered manifest</p></li><li><p>register or update an agent's identity in the shared registry</p></li><li><p>link identity to governance policy, org membership, and runtime bindings</p></li><li><p>provide trust scores that inform delegation and collaboration decisions</p></li></ul>
+<p>Without portable identity, multi-agent systems cannot answer basic questions:</p>
+<ul><li><p>Is this agent who it claims to be?</p></li><li><p>What capabilities does it actually have?</p></li><li><p>Which organization published it?</p></li><li><p>What governance constraints apply to it?</p></li><li><p>Should I trust its outputs?</p></li></ul>
+<p><code>&amp;govern.identity</code> makes these answers explicit, verifiable, and protocol-native.</p>
+<h3 id="blk-8923">2. Why this capability exists</h3>
+<p>Many agent systems assume trust implicitly.</p>
+<p>That works in single-agent demos, but it breaks down in production multi-agent workflows:</p>
+<ul><li><p>An agent receives a task delegation from another agent, but cannot verify the sender's identity or authority.</p></li><li><p>A governance system needs to audit which agent produced a decision, but agent identity is tied to a specific runtime and not portable.</p></li><li><p>A marketplace lists agents for hire, but has no standard way to verify that an agent's declared capabilities match its actual manifest.</p></li><li><p>Two agents from different organizations need to collaborate, but neither can verify the other's governance policy or trust level.</p></li></ul>
+<p>In all of these cases, the missing layer is <strong>verifiable, portable agent identity</strong>.</p>
+<p>The OpenSentience OS-007 threat model identifies agent impersonation as a critical risk in multi-agent systems. <code>&amp;govern.identity</code> is the protocol's answer to that threat.</p>
+<h3 id="blk-8937">3. What problems <code>&amp;govern.identity</code> solves</h3>
+<p><code>&amp;govern.identity</code> is useful when an agent or system needs to answer questions like:</p>
+<ul><li><p>Who is this agent, and what is its manifest hash?</p></li><li><p>Does this agent's claimed identity match its registered manifest?</p></li><li><p>Which organization published this agent?</p></li><li><p>What capabilities does this agent declare?</p></li><li><p>What autonomy level and governance constraints apply?</p></li><li><p>What is this agent's trust score, and who computed it?</p></li><li><p>Which runtimes is this agent currently bound to?</p></li><li><p>Has this agent's manifest changed since registration?</p></li></ul>
+<p>Without this capability, identity management tends to get buried inside:</p>
+<ul><li><p>runtime-specific authentication systems</p></li><li><p>custom API key and token exchanges</p></li><li><p>implicit trust assumptions in orchestration code</p></li><li><p>vendor-specific agent directories with no interoperability</p></li></ul>
+<p>The protocol makes it explicit instead.</p>
+<h3 id="blk-8967">4. Capability role in the <code>&amp;govern</code> namespace</h3>
+<p>The <code>&amp;govern</code> primitive supports multiple subtypes, including:</p>
+<ul><li><p><code>&amp;govern.escalation</code></p></li><li><p><code>&amp;govern.identity</code></p></li><li><p><code>&amp;govern.telemetry</code></p></li></ul>
+<p>A helpful distinction is:</p>
+<ul><li><p><code>&amp;govern.escalation</code> = decision handoff when thresholds are crossed</p></li><li><p><code>&amp;govern.identity</code> = agent authentication and trust verification</p></li><li><p><code>&amp;govern.telemetry</code> = observability, cost tracking, and budget enforcement</p></li></ul>
+<p><code>&amp;govern.identity</code> is the right subtype when the main problem is <strong>establishing and verifying who an agent is</strong> before trusting its actions, delegations, or outputs.</p>
+<h3 id="blk-8985">5. Typical use cases</h3>
+<h4 id="blk-8986">A2A handshake verification</h4>
+<p>Before two agents collaborate, each verifies the other's identity and governance policy via <code>&amp;govern.identity.verify()</code>.</p>
+<h4 id="blk-8988">Agent registration</h4>
+<p>A newly deployed agent registers its identity, linking its <code>ampersand.json</code> declaration, SpecPrompt spec, and Delegatic org membership.</p>
+<h4 id="blk-8990">Marketplace trust evaluation</h4>
+<p>FleetPrompt computes trust scores based on registered identity metadata. Consumers use <code>resolve</code> to inspect an agent's trust profile before delegation.</p>
+<h4 id="blk-8992">Provenance attribution</h4>
+<p>Every capability operation records the agent's identity in its provenance chain. <code>&amp;govern.identity</code> provides the authoritative source for that attribution.</p>
+<h4 id="blk-8994">Governance audit</h4>
+<p>Auditors query identity records to verify that agents operating within an org match their registered manifests and governance constraints.</p>
+<h4 id="blk-8996">Cross-runtime continuity</h4>
+<p>An agent migrates between runtimes (e.g., from local development to cloud deployment). Identity persists across the transition because it is bound to the manifest, not the runtime.</p>
+<h3 id="blk-8998">6. Example capability contract</h3>
+<p>The authoritative contract is at <code>contracts/v0.1.0/govern.identity.contract.json</code>.</p>
+<p>A representative summary:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;govern.identity&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Cross-runtime agent identity contract for resolution, verification, and registration.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;resolve&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;identity_query&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;agent_identity&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Resolve an agent's identity by ID, returning manifest, capabilities, and trust metadata.&quot;</span>
+    },
+    <span class="t-key">&quot;verify&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;verification_request&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;verification_result&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Verify that an agent's claimed identity matches its registered manifest.&quot;</span>
+    },
+    <span class="t-key">&quot;register&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;agent_manifest&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;registration_ack&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Register or update an agent's identity in the shared registry.&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;govern.*&quot;</span>,
+    <span class="t-string">&quot;identity_query&quot;</span>,
+    <span class="t-string">&quot;identity_claim&quot;</span>,
+    <span class="t-string">&quot;agent_manifest&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;govern.escalation&quot;</span>,
+    <span class="t-string">&quot;&amp;govern.telemetry&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;agent-identity-verification&quot;</span>,
+    <span class="t-string">&quot;manifest-attestation&quot;</span>
+  ]
+}</code></pre>
+<h4 id="blk-9002">What this contract means</h4>
+<p>This contract says that <code>&amp;govern.identity</code> can:</p>
+<ul><li><p>resolve agent identities from queries</p></li><li><p>verify claimed identities against registered manifests</p></li><li><p>register new agents or update existing registrations</p></li></ul>
+<p>It also says that this capability composes well with:</p>
+<ul><li><p><code>&amp;govern.escalation</code> downstream, where escalation requests must be attributed to verified identities</p></li><li><p><code>&amp;govern.telemetry</code> downstream, where telemetry events must be attributed to known agents</p></li><li><p><code>&amp;govern.*</code> upstream, where other governance capabilities may trigger identity checks</p></li></ul>
+<h3 id="blk-9019">7. Core operations</h3>
+<h4 id="blk-9020"><code>resolve</code></h4>
+<p>Purpose:</p>
+<ul><li><p>look up an agent's full identity record by ID</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>identity_query</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>agent_identity</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>another agent or system needs to inspect an agent's capabilities, governance policy, trust score, or runtime bindings before interacting with it</p></li></ul>
+<h4 id="blk-9037"><code>verify</code></h4>
+<p>Purpose:</p>
+<ul><li><p>confirm that an agent's claimed identity matches its registered manifest</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>verification_request</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>verification_result</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>an A2A handshake requires mutual identity verification</p></li><li><p>an escalation request must be attributed to a verified agent</p></li><li><p>a governance audit checks that operating agents match their registrations</p></li></ul>
+<h4 id="blk-9058"><code>register</code></h4>
+<p>Purpose:</p>
+<ul><li><p>create or update an agent's identity in the registry</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>agent_manifest</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>registration_ack</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>a new agent is deployed and needs to establish its identity</p></li><li><p>an agent's manifest, capabilities, or governance policy has changed</p></li><li><p>an agent is linking to a new SpecPrompt spec or Delegatic org</p></li></ul>
+<h3 id="blk-9079">8. Identity fields</h3>
+<p>The identity record contains the following fields:</p>
+<h4 id="blk-9081">Core identity</h4>
+<ul><li><p><code>agent_id</code> — globally unique identifier (UUIDv7)</p></li><li><p><code>agent_name</code> — human-readable name from <code>ampersand.json</code></p></li><li><p><code>version</code> — semver from <code>ampersand.json</code></p></li></ul>
+<h4 id="blk-9089">Integrity hashes</h4>
+<ul><li><p><code>manifest_hash</code> — SHA-256 of the <code>ampersand.json</code> declaration at registration time</p></li><li><p><code>spec_hash</code> — SHA-256 of the linked SpecPrompt <code>SPEC.md</code> (if applicable)</p></li></ul>
+<h4 id="blk-9095">Organizational binding</h4>
+<ul><li><p><code>org_id</code> — Delegatic org reference</p></li><li><p><code>publisher_id</code> — FleetPrompt publisher reference</p></li></ul>
+<h4 id="blk-9101">Capability declaration</h4>
+<ul><li><p><code>capabilities</code> — list of declared <code>&amp;</code>-prefixed capability keys</p></li></ul>
+<h4 id="blk-9105">Governance summary</h4>
+<ul><li><p><code>autonomy_level</code> — observe, advise, or act</p></li><li><p><code>model_tier</code> — local_small, local_large, or cloud_frontier</p></li><li><p><code>hard_constraints_count</code> — number of hard governance constraints</p></li><li><p><code>escalation_configured</code> — whether <code>&amp;govern.escalation</code> is declared</p></li></ul>
+<h4 id="blk-9115">Runtime bindings</h4>
+<ul><li><p><code>runtime</code> — runtime provider (cloudflare, agentcore, opensentience, custom)</p></li><li><p><code>deployment_ref</code> — deployment reference within the runtime</p></li><li><p><code>status</code> — active, inactive, or deploying</p></li></ul>
+<h4 id="blk-9123">Trust metadata</h4>
+<ul><li><p><code>trust_score</code> — FleetPrompt-computed trust score (0.0 to 1.0)</p></li><li><p><code>registered_at</code> — ISO 8601 registration timestamp</p></li><li><p><code>updated_at</code> — ISO 8601 last update timestamp</p></li></ul>
+<h3 id="blk-9131">9. Architecture patterns</h3>
+<h4 id="blk-9132">Pattern A: A2A handshake with mutual verification</h4>
+<pre><code>agent_a
+|&gt; &amp;govern.identity.resolve(agent_b_id)
+|&gt; &amp;govern.identity.verify(agent_b_claim)
+|&gt; proceed_if_verified()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>two agents need to establish mutual trust before collaborating</p></li></ul>
+<h4 id="blk-9138">Pattern B: identity-gated escalation</h4>
+<pre><code>escalation_request
+|&gt; &amp;govern.identity.verify(requester)
+|&gt; &amp;govern.escalation.escalate()
+|&gt; &amp;govern.telemetry.emit()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>an escalation request must be attributed to a verified agent before it is surfaced to a human operator</p></li></ul>
+<h4 id="blk-9144">Pattern C: registration at deployment</h4>
+<pre><code>ampersand_json
+|&gt; &amp;govern.identity.register()
+|&gt; &amp;govern.telemetry.emit()
+|&gt; deploy_to_runtime()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>a new agent is being deployed and needs to establish its registry identity before becoming operational</p></li></ul>
+<h4 id="blk-9150">Pattern D: trust-aware delegation</h4>
+<pre><code>task_request
+|&gt; &amp;govern.identity.resolve(candidate_agent)
+|&gt; check_trust_score()
+|&gt; delegate_if_trusted()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>a task needs to be delegated to another agent and the trust score should inform the delegation decision</p></li></ul>
+<h3 id="blk-9156">10. Example declaration</h3>
+<p>A concrete <code>ampersand.json</code> fragment:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;govern.identity&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+    <span class="t-key">&quot;config&quot;</span>: {
+      <span class="t-key">&quot;registry&quot;</span>: <span class="t-string">&quot;fleetprompt&quot;</span>,
+      <span class="t-key">&quot;verify_on_a2a&quot;</span>: <span class="t-lit">true</span>
+    }
+  }
+}</code></pre>
+<p>A fuller declaration:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;DataAnalyst&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;continual-learning&quot;</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;reason.plan&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+      <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;data analysis planning with policy-aware access controls&quot;</span>
+    },
+    <span class="t-key">&quot;&amp;govern.identity&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;registry&quot;</span>: <span class="t-string">&quot;fleetprompt&quot;</span>,
+        <span class="t-key">&quot;verify_on_a2a&quot;</span>: <span class="t-lit">true</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;govern.escalation&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;timeout_seconds&quot;</span>: <span class="t-num">1800</span>
+      }
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never access data outside the agent's authorized scope&quot;</span>,
+      <span class="t-string">&quot;Always verify collaborating agent identity before sharing results&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer agents with trust_score above 0.8 for delegation&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span>,
+      <span class="t-key">&quot;collaborator_trust_below&quot;</span>: <span class="t-num">0.6</span>
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h3 id="blk-9161">11. Governance and provenance implications</h3>
+<p>Agent identity is foundational to the entire governance stack. Every other governance capability depends on knowing who the agent is.</p>
+<h4 id="blk-9163">Cross-references</h4>
+<ul><li><p><strong>OpenSentience OS-006</strong>: defines autonomy levels that are part of the identity governance summary</p></li><li><p><strong>OpenSentience OS-007</strong>: identifies agent impersonation as a critical threat — <code>&amp;govern.identity</code> is the primary defense against this threat</p></li><li><p><strong>Delegatic org policies</strong>: org_id in the identity record links the agent to Delegatic budget and governance constraints</p></li><li><p><strong>FleetPrompt trust scores</strong>: publisher_id and trust_score connect the agent to FleetPrompt's trust computation system</p></li></ul>
+<h4 id="blk-9173">Representative provenance record</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;govern.identity&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;verify&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T12:00:00Z&quot;</span>,
+  <span class="t-key">&quot;agent_id&quot;</span>: <span class="t-string">&quot;agt-01JQ7...&quot;</span>,
+  <span class="t-key">&quot;manifest_hash&quot;</span>: <span class="t-string">&quot;sha256:ab3f...&quot;</span>,
+  <span class="t-key">&quot;verification_result&quot;</span>: <span class="t-string">&quot;verified&quot;</span>,
+  <span class="t-key">&quot;trust_score&quot;</span>: <span class="t-num">0.91</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;os-id-422&quot;</span>
+}</code></pre>
+<p>Provenance should help answer questions like:</p>
+<ul><li><p>Which agent produced this output?</p></li><li><p>Was the agent's identity verified at the time of the operation?</p></li><li><p>What was the agent's trust score when it was delegated this task?</p></li><li><p>Has the agent's manifest changed since this operation was recorded?</p></li><li><p>Which organization was the agent registered under?</p></li></ul>
+<h3 id="blk-9187">12. Compatible providers</h3>
+<p>Representative compatible providers include:</p>
+<ul><li><p><code>opensentience</code> (primary runtime verification provider)</p></li><li><p><code>fleetprompt</code> (registry and trust score computation)</p></li><li><p>custom identity and authentication services exposed behind MCP-compatible surfaces</p></li><li><p>enterprise agent directory systems with structured manifest verification</p></li></ul>
+<h4 id="blk-9198">Default ecosystem fit</h4>
+<p>The most natural default ecosystem pairing is:</p>
+<ul><li><p><code>opensentience</code> for runtime identity verification</p></li><li><p><code>fleetprompt</code> for the agent registry and trust scoring</p></li></ul>
+<p>Why they fit together:</p>
+<ul><li><p>OpenSentience provides the verification runtime that checks claims against registered manifests</p></li><li><p>FleetPrompt maintains the registry and computes trust scores from agent history and attestations</p></li><li><p>Together they form the complete identity and trust stack</p></li></ul>
+<p>The protocol stance remains:</p>
+<blockquote><p><code>&amp;govern.identity</code> is the capability. <code>opensentience</code> and <code>fleetprompt</code> are providers that may satisfy it.</p></blockquote>
+<h3 id="blk-9216">13. A2A-facing skills</h3>
+<p>A <code>&amp;govern.identity</code> capability may advertise skills such as:</p>
+<ul><li><p><code>agent-identity-verification</code></p></li><li><p><code>manifest-attestation</code></p></li></ul>
+<p>These are useful when generating A2A-style agent cards, because they let an external coordination surface say more than &quot;has identity support.&quot;</p>
+<p>Instead, it can say the agent can:</p>
+<ul><li><p>verify other agents' identities before collaboration</p></li><li><p>attest its own manifest for mutual trust establishment</p></li></ul>
+<h3 id="blk-9230">14. Anti-patterns</h3>
+<h4 id="blk-9231">Anti-pattern 1: assume trust without verification</h4>
+<p>In multi-agent systems, implicit trust is a security vulnerability. Always verify identity before accepting delegated tasks or sharing results. OS-007 documents the agent impersonation threat this prevents.</p>
+<h4 id="blk-9233">Anti-pattern 2: bind identity to a single runtime</h4>
+<p>Agent identity should be portable across runtimes and deployments. Tying identity to a specific runtime creates fragile trust relationships that break during migration.</p>
+<h4 id="blk-9235">Anti-pattern 3: skip manifest hashing</h4>
+<p>The manifest hash is the integrity anchor. Without it, there is no way to detect if an agent's declaration has been modified after registration.</p>
+<h4 id="blk-9237">Anti-pattern 4: ignore trust scores in delegation</h4>
+<p>Trust scores exist to inform delegation decisions. Delegating sensitive tasks to agents with low or missing trust scores undermines the purpose of the identity system.</p>
+<h4 id="blk-9239">Anti-pattern 5: register once and never update</h4>
+<p>Agent capabilities and governance policies evolve. Stale identity records create a gap between what the registry says and what the agent actually does.</p>
+<h3 id="blk-9241">15. Summary</h3>
+<p><code>&amp;govern.identity</code> is the [&amp;] Protocol capability for <strong>cross-runtime agent identity and trust verification</strong>.</p>
+<p>It is the right capability when a system needs to:</p>
+<ul><li><p>establish verifiable agent identity that persists across runtimes</p></li><li><p>verify that agents are who they claim to be before collaboration</p></li><li><p>link agents to organizations, publishers, and governance policies</p></li><li><p>carry trust metadata that informs delegation and escalation decisions</p></li><li><p>maintain an auditable registry of all agent identities</p></li></ul>
+<p>In one sentence:</p>
+<blockquote><p><code>&amp;govern.identity</code> gives agents a protocol-native way to prove who they are and verify who they are working with.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/govern.identity.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-8896" class="lvl2">1. Definition</a><a href="#blk-8923" class="lvl2">2. Why this capability exists</a><a href="#blk-8937" class="lvl2">3. What problems &amp;govern.identity solves</a><a href="#blk-8967" class="lvl2">4. Capability role in the &amp;govern namespace</a><a href="#blk-8985" class="lvl2">5. Typical use cases</a><a href="#blk-8986" class="lvl3">A2A handshake verification</a><a href="#blk-8988" class="lvl3">Agent registration</a><a href="#blk-8990" class="lvl3">Marketplace trust evaluation</a><a href="#blk-8992" class="lvl3">Provenance attribution</a><a href="#blk-8994" class="lvl3">Governance audit</a><a href="#blk-8996" class="lvl3">Cross-runtime continuity</a><a href="#blk-8998" class="lvl2">6. Example capability contract</a><a href="#blk-9002" class="lvl3">What this contract means</a><a href="#blk-9019" class="lvl2">7. Core operations</a><a href="#blk-9020" class="lvl3">resolve</a><a href="#blk-9037" class="lvl3">verify</a><a href="#blk-9058" class="lvl3">register</a><a href="#blk-9079" class="lvl2">8. Identity fields</a><a href="#blk-9081" class="lvl3">Core identity</a><a href="#blk-9089" class="lvl3">Integrity hashes</a><a href="#blk-9095" class="lvl3">Organizational binding</a><a href="#blk-9101" class="lvl3">Capability declaration</a><a href="#blk-9105" class="lvl3">Governance summary</a><a href="#blk-9115" class="lvl3">Runtime bindings</a><a href="#blk-9123" class="lvl3">Trust metadata</a><a href="#blk-9131" class="lvl2">9. Architecture patterns</a><a href="#blk-9132" class="lvl3">Pattern A: A2A handshake with mutual verification</a><a href="#blk-9138" class="lvl3">Pattern B: identity-gated escalation</a><a href="#blk-9144" class="lvl3">Pattern C: registration at deployment</a><a href="#blk-9150" class="lvl3">Pattern D: trust-aware delegation</a><a href="#blk-9156" class="lvl2">10. Example declaration</a><a href="#blk-9161" class="lvl2">11. Governance and provenance implications</a><a href="#blk-9163" class="lvl3">Cross-references</a><a href="#blk-9173" class="lvl3">Representative provenance record</a><a href="#blk-9187" class="lvl2">12. Compatible providers</a><a href="#blk-9198" class="lvl3">Default ecosystem fit</a><a href="#blk-9216" class="lvl2">13. A2A-facing skills</a><a href="#blk-9230" class="lvl2">14. Anti-patterns</a><a href="#blk-9231" class="lvl3">Anti-pattern 1: assume trust without verification</a><a href="#blk-9233" class="lvl3">Anti-pattern 2: bind identity to a single runtime</a><a href="#blk-9235" class="lvl3">Anti-pattern 3: skip manifest hashing</a><a href="#blk-9237" class="lvl3">Anti-pattern 4: ignore trust scores in delegation</a><a href="#blk-9239" class="lvl3">Anti-pattern 5: register once and never update</a><a href="#blk-9241" class="lvl2">15. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.plan.md/">&amp;reason.plan -- Planning-Oriented Reasoning for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera5o66vwtzio4a3ymsrsdbojhk5f4fzrohacf6nqsg52dmjzayeria</div></div></div>
+</div></div>
+</body></html>

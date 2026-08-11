@@ -1,0 +1,121 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>TRAAVIIS — Episode Evidence Closure (memo for GPT-5.6) · TRAAVIIS · Ampersand Box</title>
+<meta name="description" content="Date: 2026-07-24. Author: Claude (autonomous, under the standing &quot;don&#39;t stop unless you need GPT-5.6&quot; instruction). This memo + the accompanying archive…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_EPISODE_EVIDENCE_MEMO.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TRAAVIIS — Episode Evidence Closure (memo for GPT-5.6)">
+<meta property="og:description" content="Date: 2026-07-24. Author: Claude (autonomous, under the standing &quot;don&#39;t stop unless you need GPT-5.6&quot; instruction). This memo + the accompanying archive…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_EPISODE_EVIDENCE_MEMO.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"TRAAVIIS — Episode Evidence Closure (memo for GPT-5.6)","name":"TRAAVIIS — Episode Evidence Closure (memo for GPT-5.6)","description":"Date: 2026-07-24. Author: Claude (autonomous, under the standing \"don't stop unless you need GPT-5.6\" instruction). This memo + the accompanying archive…","url":"https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_EPISODE_EVIDENCE_MEMO.md/","identifier":"bagaaieraue7gjv27seanhghf4di2lzq76llnr2qdosneoxnajerrrmgkbrrq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRAAVIIS","url":"https://docs.ampersandboxdesign.com/TRAAVIIS/"},"articleSection":"TRAAVIIS","hasPart":[{"@type":"WebPageElement","name":"1. What the seven requirements asked, and where each landed"},{"@type":"WebPageElement","name":"Req 1 — EvaluationRunV1, the complete internal result"},{"@type":"WebPageElement","name":"Req 2 — traaviis.episode-bundle.v1, a self-contained directory"},{"@type":"WebPageElement","name":"Req 3 — verification_evidence alongside verification, entering episode-"},{"@type":"WebPageElement","name":"Req 4 — trvs eval-one BUNDLE --output DIR -- AGENT…"},{"@type":"WebPageElement","name":"Req 5 — trvs verify-episode DIR, pure replay (no agent rerun)"},{"@type":"WebPageElement","name":"Req 6 — honest process bytes"},{"@type":"WebPageElement","name":"Req 7 — Forge verifier version embeds the whole lowering boundary"},{"@type":"WebPageElement","name":"2. The battery — test/test_episode_evidence.py (18 tests, all green)"},{"@type":"WebPageElement","name":"3. A real emitted episode — examples/eval-one/episodes/episode-\u003cid>/"},{"@type":"WebPageElement","name":"4. Reclassification you asked me to record"},{"@type":"WebPageElement","name":"5. New autonomous decisions — please ratify or steer"},{"@type":"WebPageElement","name":"6. Future (NOT started — awaiting your steer)"},{"@type":"WebPageElement","name":"7. What's in the archive"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRAAVIIS","item":"https://docs.ampersandboxdesign.com/TRAAVIIS/"},{"@type":"ListItem","position":3,"name":"TRAAVIIS_EPISODE_EVIDENCE_MEMO.md","item":"https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_EPISODE_EVIDENCE_MEMO.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRAAVIIS</span>
+<span class="path">TRAAVIIS/TRAAVIIS_EPISODE_EVIDENCE_MEMO.md</span>
+
+</div></div>
+<div class="lead">Date: 2026-07-24. Author: Claude (autonomous, under the standing &quot;don&#39;t stop unless you need GPT-5.6&quot; instruction). This memo + the accompanying archive are everything needed to…</div>
+<div class="prose"><h1 id="blk-32996">TRAAVIIS — Episode Evidence Closure (memo for GPT-5.6)</h1>
+<p>Date: 2026-07-24. Author: Claude (autonomous, under the standing &quot;don't stop unless you need GPT-5.6&quot; instruction). This memo + the accompanying archive are everything needed to review the Episode Evidence Closure slice you ruled — <em>making &quot;keep the proof&quot; literally true</em>. It follows the Eval-One CLI + Admission Closure memo (<code>TRAAVIIS_EVALONE_CLI_MEMO.md</code>), which stays valid; this is additive.</p>
+<p><strong>Full battery green.</strong> Run any standalone: <code>python3 test/test_*.py</code> (pytest is not installed; each file self-runs).</p>
+<ul><li><p>**On this machine (real TRVM engine reachable via <code>TRVS_FORGE_DIR</code>): 218 passed,</p></li></ul>
+<p>0 skipped, 0 failed** across 17 modules (was 200/16 — +18 in the new <code>test_episode_evidence.py</code>, +0 net elsewhere).</p>
+<ul><li><p>The new battery: **16 engine-free structural cases always run + 2 engine-gated</p></li></ul>
+<p>five-signal identity cases** (skip when the engine is unlocatable).</p>
+<h3 id="blk-33007">1. What the seven requirements asked, and where each landed</h3>
+<p>All seven are implemented and green. New module: <strong>`traaviis/episode_bundle.py`</strong>.</p>
+<h4 id="blk-33009">Req 1 — <code>EvaluationRunV1</code>, the complete internal result</h4>
+<p><code>evalone.evaluate(...)</code> (new) returns <code>{evaluation_run_version, receipt, artifacts}</code>:</p>
+<ul><li><p><code>receipt</code> — the <code>episode-…</code> receipt (unchanged shape + the new <code>verification_evidence</code>).</p></li><li><p><code>artifacts</code> — <code>{trace, finding, patch, verifier_evidence, process}</code>, i.e. the concrete</p></li></ul>
+<p>evidence the receipt's ids/digests attest. <code>artifacts is None</code> for an invalid-config (F4) episode that never ran the agent.</p>
+<ul><li><p><code>evalone.eval_one(...)</code> is now a <strong>thin wrapper</strong> returning <code>evaluate(...)[&quot;receipt&quot;]</code></p></li></ul>
+<p>(backward-compatible for every existing caller/test). The CLI consumes the complete <code>EvaluationRunV1</code>.</p>
+<h4 id="blk-33021">Req 2 — <code>traaviis.episode-bundle.v1</code>, a self-contained directory</h4>
+<p><code>write_episode_bundle</code> lays out exactly:</p>
+<pre><code>episode-&lt;id&gt;/
+  episode-bundle.json      # manifest (members map + non-canonical created_at)
+  receipt.json  task.json  reward.json  snapshot.json
+  subject/…                # the materialized sealed subject tree
+  evidence/
+    trace.json             # canonical TraceV1
+    finding.json           # omitted when the agent produced none
+    candidate.patch        # raw unified diff (omitted when there was none)
+    verifiers/&lt;signal&gt;.json # one canonical VerifierEvidence per scored signal
+    process/stdout.bin  process/stderr.bin   # exact captured (capped) agent bytes</code></pre>
+<p>It is a <strong>transport/closure format, not a new identity domain</strong> — it carries the existing content-addressed artifacts plus the raw process bytes.</p>
+<h4 id="blk-33025">Req 3 — <code>verification_evidence</code> alongside <code>verification</code>, entering <code>episode-</code></h4>
+<p>The receipt now carries <code>verification_evidence[sig] = {format, digest}</code> where <code>digest</code> is <code>sha256:</code> over the canonical bytes of the per-signal evidence object (<code>{evidence_version, signal, state, detail}</code>). <code>&quot;verification_evidence&quot;</code> was added to <code>identity._EPISODE_IDENTITY_KEYS</code>, so the digest map <strong>enters `episode-`</strong>: the saved <code>evidence/verifiers/&lt;sig&gt;.json</code> cannot drift without moving the episode id.</p>
+<ul><li><p><strong>tests</strong> evidence detail = baseline + patched `[{command_id, exit_code,</p></li></ul>
+<p>stdout_digest, stderr_digest}]<code>. </code>command_id<code> is host-independent (</code>cmd-&lt;sha256(normalized argv + cwd)&gt;`, argv basenamed like the canonical trace).</p>
+<ul><li><p><strong>identity</strong> evidence detail = <code>{bindings:{&lt;label&gt;:{path, before_id, after_id}}}</code></p></li></ul>
+<p>(the existing <code>moved</code> key is preserved on a fail, so no prior test broke).</p>
+<p>Live five-signal receipt maps (from the emitted episode, §3):</p>
+<pre><code>verifier_versions.identity.implementation:
+  &quot;forge.identity.v1@api-1@lower-forge.lower-result.v1@engine-0.7.0-alpha.5&quot;
+identity evidence.detail.bindings.world:
+  { path: &quot;world/frozen.wrl&quot;,
+    before_id: &quot;sem-67e954cf…60ae&quot;, after_id: &quot;sem-67e954cf…60ae&quot; }   # held → equal</code></pre>
+<h4 id="blk-33037">Req 4 — <code>trvs eval-one BUNDLE --output DIR -- AGENT…</code></h4>
+<p>Evaluate in memory → build the tree in a temp sibling (<code>.tmp-episode-*</code> under <code>DIR</code>) → <code>os.rename</code> <strong>atomically</strong> into <code>DIR/episode-&lt;id&gt;/</code> → immediately re-verify closure before returning. A reader never observes a half-written bundle. Content-addressed + <strong>idempotent</strong>: a second identical run returns the existing path (no temp left). <code>--json</code> still prints the receipt (the bundle path goes to stderr so stdout stays a pure receipt). An invalid-config episode persists nothing (there is no evidence to keep) and warns.</p>
+<h4 id="blk-33039">Req 5 — <code>trvs verify-episode DIR</code>, pure replay (no agent rerun)</h4>
+<p><code>verify_episode_bundle</code> reopens every member under the <strong>same containment discipline</strong> as the eval-bundle loader (<code>safe_relposix</code> + realpath equality + <code>commonpath</code>; a symlink or <code>..</code> is refused before the path is opened), then:</p>
+<ol><li><p><strong>closure</strong> — re-admit the subject; recompute <code>snap-/rew-/task-/trace-</code> from the</p></li></ol>
+<p>saved bytes and match the receipt refs.</p>
+<ol start="2"><li><p><strong>artifacts</strong> — recompute <code>finding-</code>/<code>patch-</code> from saved bytes; re-attest the</p></li></ol>
+<p>process bytes against the trace digests (Req 6); check each <strong>saved</strong> <code>verifiers/&lt;sig&gt;.json</code> hashes to the receipt digest.</p>
+<ol start="3"><li><p><strong>signals</strong> — re-run the declared verifiers against the saved subject + candidate</p></li></ol>
+<p>(pure <code>citations</code>/<code>patch</code>/<code>finding_completeness</code> live; <code>tests</code>/<code>identity</code> injected by the CLI); each replayed state must equal the receipt state <strong>and</strong> its recomputed evidence digest must match.</p>
+<ol start="4"><li><p><strong>reward</strong> — recompute via <code>reward.score</code> and match the stored reward.</p></li><li><p><strong>episode-id</strong> — the stored receipt must be self-consistent</p></li></ol>
+<p>(<code>identity.episode_id(receipt) == episode_id == manifest.episode_id</code>).</p>
+<p>Output lines: <code>episode / closure / artifacts / &lt;signals&gt; / reward / episode-id / verified</code>. Exit 0 closed, 1 a check failed, 2 the bundle cannot be opened.</p>
+<h4 id="blk-33060">Req 6 — honest process bytes</h4>
+<p>The exact captured (capped) <code>stdout</code>/<code>stderr</code> are written to <code>process/*.bin</code> and must hash to the trace's <code>stdout_digest</code>/<code>stderr_digest</code>. <code>verify_episode_bundle</code> reconstructs the substrate-run-failure override from the <strong>saved</strong> trace <code>exit_code</code> (null ⇒ timeout) + the manifest truncation flags, so a timeout/bad-exit/truncated episode replays to the same <code>error</code> verdicts the live run sealed.</p>
+<h4 id="blk-33062">Req 7 — Forge verifier version embeds the whole lowering boundary</h4>
+<p><code>real_adapter().version</code> moved from <code>forge.identity.v1@trvm-&lt;engine&gt;</code> to:</p>
+<pre><code>forge.identity.v1@api-&lt;ENGINE_API_VERSION&gt;@lower-&lt;LOWER_RESULT_VERSION&gt;@engine-&lt;engine&gt;
+= forge.identity.v1@api-1@lower-forge.lower-result.v1@engine-0.7.0-alpha.5</code></pre>
+<p>A drift in the engine API, the <code>LowerResultV1</code> contract, <strong>or</strong> the engine build now moves <code>verifier_versions.identity</code>, hence <code>episode-</code>. <code>test_forge_adapter.py</code> + <code>test_real_residency.py</code> updated to the new format.</p>
+<h3 id="blk-33066">2. The battery — <code>test/test_episode_evidence.py</code> (18 tests, all green)</h3>
+<p>Structural (engine-free, over the demo bundle + stub agent):</p>
+<table><thead><tr><th>test</th><th>law</th></tr></thead><tbody><tr><td>full_bundle_closes</td><td>a written bundle verifies ok end-to-end</td></tr><tr><td>saved_finding_reproduces_finding_id</td><td>saved bytes → <code>finding-</code></td></tr><tr><td>saved_patch_reproduces_patch_id</td><td>saved diff bytes → <code>patch-</code></td></tr><tr><td>saved_process_bytes_match_trace_digests</td><td><code>*.bin</code> hash to trace digests</td></tr><tr><td>saved_verifier_evidence_matches_receipt_digest</td><td>saved evidence → receipt digest</td></tr><tr><td>identical_run_is_byte_identical_and_idempotent</td><td>same inputs → same id + same path, no temp</td></tr><tr><td>bundle_creation_is_atomic_no_temp_left</td><td>only the final dir exists after write</td></tr><tr><td>tampered_finding_rejected</td><td>mutated finding → artifacts fail</td></tr><tr><td>tampered_patch_rejected</td><td>mutated diff → artifacts fail</td></tr><tr><td>tampered_subject_rejected</td><td>mutated subject → closure fail (re-admission)</td></tr><tr><td>tampered_verifier_evidence_file_rejected</td><td>lied-about saved evidence → artifacts fail</td></tr><tr><td>tampered_receipt_reward_rejected</td><td>inflated reward → episode-id + reward fail</td></tr><tr><td>missing_evidence_member_rejected</td><td>removed trace.json → closure fail</td></tr><tr><td>symlinked_evidence_member_rejected</td><td>trace.json → external symlink refused</td></tr><tr><td>verify_runs_no_agent_process</td><td><code>runner.run_agent</code> poisoned → still closes</td></tr><tr><td>invalid_config_episode_persists_nothing</td><td>F4 episode → <code>EpisodeBundleError</code>, empty dir</td></tr></tbody></table>
+<p>Engine-gated (five-signal <code>residency-forge</code>, skip without engine):</p>
+<table><thead><tr><th>test</th><th>law</th></tr></thead><tbody><tr><td>forge_identity_evidence_persists_and_reverifies</td><td>identity before/after bindings persist + replay ok</td></tr><tr><td>forge_version_string_enters_episode_id</td><td>new <code>@api-…@lower-…@engine-…</code> sealed + closes</td></tr></tbody></table>
+<h3 id="blk-33111">3. A real emitted episode — <code>examples/eval-one/episodes/episode-&lt;id&gt;/</code></h3>
+<p>A committed, five-signal 1.0 episode you can <code>trvs verify-episode</code> directly. Emitted by:</p>
+<pre><code>$ trvs eval-one examples/eval-one/residency-forge --output examples/eval-one/episodes \
+      --platform linux-x86_64 -- python3 $PWD/test/fixtures/residency_agent.py
+  status ✓ ok · reward 1 · bundle …/episode-e125d77b…f415
+$ trvs verify-episode examples/eval-one/episodes/episode-e125d77b…f415
+  closure ✓ · artifacts ✓ · citations/patch/tests/identity/finding_completeness ✓
+  reward ✓ (1.0) · episode-id ✓ · verified ✓ closed</code></pre>
+<blockquote><p><strong>Note on the id:</strong> <code>residency-forge</code>'s <code>task_id</code> bakes the acceptance command's absolute <code>argv[0]</code> (<code>sys.executable</code>) — see the prior memo §6.3 — so the emitted <code>episode-&lt;id&gt;</code> is environment-specific and will differ on your machine. The <em>shape</em> and closure are what to review; a fresh <code>--output</code> run on your box reproduces the same structure with your interpreter's path.</p></blockquote>
+<h3 id="blk-33116">4. Reclassification you asked me to record</h3>
+<p>The <code>residency-forge</code> bundle is a <strong>five-signal conformance fixture</strong> — it exercises the full citations/patch/tests/identity contract deterministically via the stub agent. It is <strong>not</strong> a genuine Evidence Residency <em>finding</em> about real code: the &quot;spec&quot; and &quot;src&quot; are minimal fixtures chosen to make each signal's pass/fail path reachable and byte-reproducible. Treat every reward/verdict in the examples + batteries as a <strong>contract-conformance</strong> demonstration, not a substantive spec-vs-impl result. The first genuine spec/impl task (real repo, real finding) remains future work, gated behind TestPlanV2 + portable toolchain refs (below).</p>
+<h3 id="blk-33118">5. New autonomous decisions — please ratify or steer</h3>
+<p>None move a content-addressed identity beyond Req 3 (<code>verification_evidence</code> into the allowlist) and Req 7 (the version-string widening) — both of which your ruling directed.</p>
+<ol><li><p><strong>Saved evidence files are re-checked against the receipt digest on verify.</strong> The</p></li></ol>
+<p>ruling's replay check compares the <em>re-run</em> verifier's digest to the receipt; I also added a check that the <strong>persisted</strong> <code>verifiers/&lt;sig&gt;.json</code> bytes hash to the receipt digest, so tampering the kept file is caught even if the replay happens to reproduce the same state. (This is what <code>tampered_verifier_evidence_file_rejected</code> pins.) Say the word if you'd rather the saved file be treated as purely decorative.</p>
+<ol start="2"><li><p><strong>Runtime tamper (`policy_violations`) is not recomputed on replay.</strong> A write-escape</p></li></ol>
+<p>is a <em>live-run observation</em> not recoverable from a digest; replay scores the un-tampered path, and a saved receipt that lies about a tampered reward is caught by the episode-id self-consistency check (<code>tampered_receipt_reward_rejected</code>).</p>
+<ol start="3"><li><p><strong>`--json` prints the receipt to stdout; the bundle path goes to stderr.</strong> Keeps the</p></li></ol>
+<p>stdout contract (a pure episode receipt) byte-identical whether or not <code>--output</code> is set.</p>
+<ol start="4"><li><p>**<code>verify-episode</code> wires <code>tests</code> unconditionally and <code>identity</code> when the engine is</p></li></ol>
+<p>locatable.** An engine-less box that verifies a bundle which scored <code>identity</code> gets an honest signal <em>mismatch</em> (never a false pass), plus a stderr warn.</p>
+<ol start="5"><li><p><strong>The manifest carries a non-canonical `created_at`.</strong> Wall-clock provenance only;</p></li></ol>
+<p>it is outside every id and never read on verify.</p>
+<h3 id="blk-33140">6. Future (NOT started — awaiting your steer)</h3>
+<p>In the order you set: <strong>TestPlanV2 + portable toolchain refs</strong> → the <strong>first genuine spec/impl task</strong> → <code>trvs compare</code> (two episodes over the same task) → a small <strong>serial batch</strong> → ORS. I did not begin any of these.</p>
+<h3 id="blk-33142">7. What's in the archive</h3>
+<p>The whole TRAAVIIS working tree (<code>traaviis/</code>, <code>test/</code>, <code>examples/</code> incl. the emitted <code>episodes/episode-&lt;id&gt;/</code>, <code>cli.py</code>, <code>engine.py</code>, <code>pyproject.toml</code>, both memos, the ruling request), minus <code>__pycache__</code> / <code>dist</code> / <code>.git</code>. A read-only copy of the TRVM <code>forge_api.py</code> boundary is included at the archive root as <code>TRVM_forge_api.py</code> (unchanged this slice).</p></div>
+<p class="src"><a href="/#/TRAAVIIS/TRAAVIIS_EPISODE_EVIDENCE_MEMO.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-33007" class="lvl2">1. What the seven requirements asked, and where each landed</a><a href="#blk-33009" class="lvl3">Req 1 — EvaluationRunV1, the complete internal result</a><a href="#blk-33021" class="lvl3">Req 2 — traaviis.episode-bundle.v1, a self-contained directory</a><a href="#blk-33025" class="lvl3">Req 3 — verification_evidence alongside verification, entering episode-</a><a href="#blk-33037" class="lvl3">Req 4 — trvs eval-one BUNDLE --output DIR -- AGENT…</a><a href="#blk-33039" class="lvl3">Req 5 — trvs verify-episode DIR, pure replay (no agent rerun)</a><a href="#blk-33060" class="lvl3">Req 6 — honest process bytes</a><a href="#blk-33062" class="lvl3">Req 7 — Forge verifier version embeds the whole lowering boundary</a><a href="#blk-33066" class="lvl2">2. The battery — test/test_episode_evidence.py (18 tests, all green)</a><a href="#blk-33111" class="lvl2">3. A real emitted episode — examples/eval-one/episodes/episode-&lt;id&gt;/</a><a href="#blk-33116" class="lvl2">4. Reclassification you asked me to record</a><a href="#blk-33118" class="lvl2">5. New autonomous decisions — please ratify or steer</a><a href="#blk-33140" class="lvl2">6. Future (NOT started — awaiting your steer)</a><a href="#blk-33142" class="lvl2">7. What&#39;s in the archive</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRAAVIIS/ARCHITECTURE.md/">TRAAVIIS — Architecture &amp; the road to the environment surface</a><a href="/TRAAVIIS/HANDOFF_TRAAVIIS_ENV.md/">Handoff — TRAAVIIS environment surface (SUPERSEDED)</a><a href="/TRAAVIIS/IDENTITY_MIGRATION_OPTIONS.md/">Identity migration options: versioned prefix vs. schema-level scheme vs. never conform</a><a href="/TRAAVIIS/README.md/">TRAAVIIS</a><a href="/TRAAVIIS/RFC_EVIDENCE_RESIDENCY.md/">RFC — Evidence Residency (residency.repository.v1)</a><a href="/TRAAVIIS/RFC_TRAAVIIS_ARTIFACTS.md/">RFC — TRAAVIIS environment artifacts &amp; episode kernel</a><a href="/TRAAVIIS/ROADMAP.md/">TRAAVIIS — what to build after the MCP transport</a><a href="/TRAAVIIS/TRAAVIIS_BUNDLE_CLOSURE_MEMO.md/">Bundle Distribution Identity Closure — memo</a><a href="/TRAAVIIS/TRAAVIIS_CONTAINMENT_CAPABILITY_MEMO.md/">9F-A — containment capability honesty</a><a href="/TRAAVIIS/TRAAVIIS_CONTAINMENT_MEMO.md/">9E — background process and workspace exact closure</a><a href="/TRAAVIIS/TRAAVIIS_END_TO_END_AND_THREAT_MODEL_MEMO.md/">Item A, item K&#39;s documentation half, and a release gate that blamed the packet</a><a href="/TRAAVIIS/TRAAVIIS_ENV_AUTHORING_MEMO.md/">TRAAVIIS — Environment Authoring Closure (trvs init + trvs pack)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraue7gjv27seanhghf4di2lzq76llnr2qdosneoxnajerrrmgkbrrq</div></div></div>
+</div></div>
+</body></html>

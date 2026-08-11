@@ -1,0 +1,313 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;govern.escalation is the [&amp;] Protocol capability for governance-mandated escalation.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/govern.escalation.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff">
+<meta property="og:description" content="&amp;govern.escalation is the [&amp;] Protocol capability for governance-mandated escalation.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/govern.escalation.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&govern.escalation — Human-in-the-Loop Escalation and Governance Handoff","name":"&govern.escalation — Human-in-the-Loop Escalation and Governance Handoff","description":"&govern.escalation is the [&] Protocol capability for governance-mandated escalation.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/govern.escalation.md/","identifier":"bagaaiera5g3zxhldvarf6kmr4mvowuzyl6bubdzrw2aj3mjdjy2l34nlgndq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. What problems &govern.escalation solves"},{"@type":"WebPageElement","name":"4. Capability role in the &govern namespace"},{"@type":"WebPageElement","name":"5. Typical use cases"},{"@type":"WebPageElement","name":"Confidence-based escalation"},{"@type":"WebPageElement","name":"Cost-based escalation"},{"@type":"WebPageElement","name":"Hard boundary escalation"},{"@type":"WebPageElement","name":"Policy-required approval"},{"@type":"WebPageElement","name":"Cross-agent escalation"},{"@type":"WebPageElement","name":"Audit-driven escalation"},{"@type":"WebPageElement","name":"6. Example capability contract"},{"@type":"WebPageElement","name":"What this contract means"},{"@type":"WebPageElement","name":"7. Core operations"},{"@type":"WebPageElement","name":"escalate"},{"@type":"WebPageElement","name":"respond"},{"@type":"WebPageElement","name":"query"},{"@type":"WebPageElement","name":"8. Trigger types"},{"@type":"WebPageElement","name":"confidence_below"},{"@type":"WebPageElement","name":"cost_exceeds"},{"@type":"WebPageElement","name":"hard_boundary"},{"@type":"WebPageElement","name":"policy_requires_approval"},{"@type":"WebPageElement","name":"9. Timeout behavior"},{"@type":"WebPageElement","name":"observe autonomy level"},{"@type":"WebPageElement","name":"advise autonomy level"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"govern.escalation.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/govern.escalation.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/govern.escalation.md</span>
+
+</div></div>
+<div class="lead">&amp;govern.escalation is the [&amp;] Protocol capability for governance-mandated escalation.</div>
+<div class="prose"><h1 id="blk-8510"><code>&amp;govern.escalation</code> — Human-in-the-Loop Escalation and Governance Handoff</h1>
+<p><code>&amp;govern.escalation</code> is the [&amp;] Protocol capability for <strong>governance-mandated escalation</strong>.</p>
+<p>It describes an agent's ability to:</p>
+<ul><li><p>detect when a decision exceeds its authorized autonomy</p></li><li><p>surface that decision to a human operator or governance layer</p></li><li><p>pause execution until a response is received or timeout expires</p></li><li><p>resume with an approved, rejected, or modified action</p></li><li><p>maintain a queryable history of all escalation events</p></li></ul>
+<p>In the protocol's five-primitive model:</p>
+<ul><li><p><code>&amp;memory</code> answers <strong>what</strong> the agent knows</p></li><li><p><code>&amp;reason</code> answers <strong>how</strong> the agent decides</p></li><li><p><code>&amp;time</code> answers <strong>when</strong> things change</p></li><li><p><code>&amp;space</code> answers <strong>where</strong> things are</p></li><li><p><code>&amp;govern</code> answers <strong>who approves, what limits apply, and how decisions are audited</strong></p></li></ul>
+<p><code>&amp;govern.escalation</code> is the subtype that handles the critical handoff between autonomous agent action and human oversight.</p>
+<h3 id="blk-8537">1. Definition</h3>
+<p><code>&amp;govern.escalation</code> is the capability interface for <strong>human-in-the-loop decision escalation</strong>.</p>
+<p>It is used when an agent must:</p>
+<ul><li><p>pause before executing an action that crosses a governance threshold</p></li><li><p>present a proposed action with rationale to a human reviewer</p></li><li><p>wait for approval, rejection, or modification</p></li><li><p>handle timeout behavior according to autonomy level</p></li><li><p>record the full escalation lifecycle for audit</p></li></ul>
+<p>Escalation is NOT failure. It is a governance-mandated handoff when agent confidence or cost crosses thresholds defined by policy.</p>
+<p>This distinction matters because agents that treat escalation as error will:</p>
+<ul><li><p>suppress legitimate governance signals</p></li><li><p>avoid surfacing uncertainty</p></li><li><p>degrade trust over time</p></li></ul>
+<p>The protocol treats escalation as a first-class capability, not an exception path.</p>
+<h3 id="blk-8561">2. Why this capability exists</h3>
+<p>Many agent systems either operate fully autonomously or halt completely when uncertainty arises.</p>
+<p>Neither extreme is acceptable in production governance:</p>
+<ul><li><p>A logistics agent proposes a high-cost reallocation but has no mechanism to ask a human before committing.</p></li><li><p>An infrastructure agent detects a hard boundary violation but silently logs it instead of requesting approval.</p></li><li><p>A support agent encounters a policy-sensitive case but lacks a structured way to surface it to a supervisor.</p></li><li><p>A planning agent operates below its confidence threshold but proceeds anyway because no escalation path exists.</p></li></ul>
+<p>In all of these cases, the missing layer is <strong>structured escalation with defined trigger conditions, timeout behavior, and response semantics</strong>.</p>
+<p><code>&amp;govern.escalation</code> gives the protocol a standard way to declare that capability.</p>
+<h3 id="blk-8575">3. What problems <code>&amp;govern.escalation</code> solves</h3>
+<p><code>&amp;govern.escalation</code> is useful when an agent needs to answer questions like:</p>
+<ul><li><p>Should I proceed with this action given my current confidence level?</p></li><li><p>Does this action exceed the cost threshold defined by Delegatic policy?</p></li><li><p>Am I approaching a hard boundary that requires human sign-off?</p></li><li><p>Does the current autonomy level (observe, advise, act) permit this operation?</p></li><li><p>What should happen if no human responds within the timeout window?</p></li><li><p>How do I resume execution after receiving approval or modification?</p></li></ul>
+<p>Without this capability, escalation logic tends to get buried inside:</p>
+<ul><li><p>ad-hoc if/else blocks in application code</p></li><li><p>implicit confidence thresholds with no auditability</p></li><li><p>custom notification systems with no structured response path</p></li><li><p>provider-specific approval workflows with no interoperability</p></li></ul>
+<p>The protocol makes it explicit instead.</p>
+<h3 id="blk-8601">4. Capability role in the <code>&amp;govern</code> namespace</h3>
+<p>The <code>&amp;govern</code> primitive supports multiple subtypes, including:</p>
+<ul><li><p><code>&amp;govern.escalation</code></p></li><li><p><code>&amp;govern.identity</code></p></li><li><p><code>&amp;govern.telemetry</code></p></li></ul>
+<p>A helpful distinction is:</p>
+<ul><li><p><code>&amp;govern.escalation</code> = decision handoff when thresholds are crossed</p></li><li><p><code>&amp;govern.identity</code> = agent authentication and trust verification</p></li><li><p><code>&amp;govern.telemetry</code> = observability, cost tracking, and budget enforcement</p></li></ul>
+<p><code>&amp;govern.escalation</code> is the right subtype when the main problem is <strong>controlling what happens at the boundary between autonomous action and human oversight</strong>.</p>
+<h3 id="blk-8619">5. Typical use cases</h3>
+<h4 id="blk-8620">Confidence-based escalation</h4>
+<p>Agent confidence drops below the configured threshold during reasoning. The proposed action is surfaced for human review before execution.</p>
+<h4 id="blk-8622">Cost-based escalation</h4>
+<p>A planned action would exceed the per-task or per-period cost budget defined in Delegatic policy. The agent requests approval before committing resources.</p>
+<h4 id="blk-8624">Hard boundary escalation</h4>
+<p>The agent approaches a governance hard constraint (e.g., &quot;never deploy to production without approval&quot;). The boundary rule triggers mandatory human review.</p>
+<h4 id="blk-8626">Policy-required approval</h4>
+<p>The autonomy level or org policy requires human sign-off for certain capability operations regardless of confidence or cost.</p>
+<h4 id="blk-8628">Cross-agent escalation</h4>
+<p>In multi-agent workflows, one agent escalates to another agent's human operator when a collaborative decision crosses governance boundaries.</p>
+<h4 id="blk-8630">Audit-driven escalation</h4>
+<p>Retrospective analysis of telemetry reveals that an action should have been escalated. The system flags it for review and updates escalation policy.</p>
+<h3 id="blk-8632">6. Example capability contract</h3>
+<p>The authoritative contract is at <code>contracts/v0.1.0/govern.escalation.contract.json</code>.</p>
+<p>A representative summary:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;govern.escalation&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Human-in-the-loop escalation contract for governance-mandated decision handoff.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;escalate&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;escalation_request&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;escalation_ack&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Submit an action for human review. Agent pauses until response or timeout.&quot;</span>
+    },
+    <span class="t-key">&quot;respond&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;escalation_response&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;resolution&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Human operator approves, rejects, or modifies the escalated action.&quot;</span>
+    },
+    <span class="t-key">&quot;query&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;escalation_query&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;escalation_history&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Query pending, resolved, or expired escalations by agent, org, goal, or time range.&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;reason.*&quot;</span>,
+    <span class="t-string">&quot;&amp;govern.telemetry&quot;</span>,
+    <span class="t-string">&quot;escalation_request&quot;</span>,
+    <span class="t-string">&quot;escalation_response&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;reason.*&quot;</span>,
+    <span class="t-string">&quot;&amp;govern.telemetry&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;human-escalation-bridge&quot;</span>,
+    <span class="t-string">&quot;approval-workflow&quot;</span>
+  ]
+}</code></pre>
+<h4 id="blk-8636">What this contract means</h4>
+<p>This contract says that <code>&amp;govern.escalation</code> can:</p>
+<ul><li><p>accept escalation requests from reasoning capabilities or telemetry triggers</p></li><li><p>present them to a human operator via the escalation bridge</p></li><li><p>return structured resolutions (approve, reject, modify)</p></li><li><p>feed resolution outcomes back into reasoning and telemetry</p></li></ul>
+<p>It also says that this capability composes well with:</p>
+<ul><li><p><code>&amp;reason.*</code> upstream, where reasoning produces actions that may require approval</p></li><li><p><code>&amp;govern.telemetry</code> upstream, where cost or usage signals trigger escalation</p></li><li><p><code>&amp;reason.*</code> downstream, where approved or modified actions resume execution</p></li></ul>
+<h3 id="blk-8655">7. Core operations</h3>
+<h4 id="blk-8656"><code>escalate</code></h4>
+<p>Purpose:</p>
+<ul><li><p>submit a proposed action for human review</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>escalation_request</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>escalation_ack</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>the agent's confidence is below the configured threshold</p></li><li><p>the estimated cost exceeds Delegatic policy limits</p></li><li><p>a hard boundary constraint is approaching</p></li><li><p>the autonomy level requires approval for this operation type</p></li></ul>
+<h4 id="blk-8679"><code>respond</code></h4>
+<p>Purpose:</p>
+<ul><li><p>deliver a human operator's decision back to the requesting agent</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>escalation_response</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>resolution</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>a human has reviewed the escalated action and chosen to approve, reject, or modify it</p></li></ul>
+<h4 id="blk-8696"><code>query</code></h4>
+<p>Purpose:</p>
+<ul><li><p>inspect the history and status of escalation events</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>escalation_query</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>escalation_history</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>auditing past escalation decisions</p></li><li><p>checking for pending escalations that need attention</p></li><li><p>analyzing escalation patterns across agents or time ranges</p></li></ul>
+<h3 id="blk-8717">8. Trigger types</h3>
+<p><code>&amp;govern.escalation</code> defines four trigger types that cause an escalation event:</p>
+<h4 id="blk-8719"><code>confidence_below</code></h4>
+<p>The agent's confidence in the proposed action falls below the threshold configured in the governance block of its <code>ampersand.json</code> declaration.</p>
+<h4 id="blk-8721"><code>cost_exceeds</code></h4>
+<p>The estimated cost of the proposed action exceeds Delegatic budget limits (per-task or per-period).</p>
+<h4 id="blk-8723"><code>hard_boundary</code></h4>
+<p>A governance hard constraint is about to be violated. Hard boundaries are never overridable by the agent — they always require human review.</p>
+<h4 id="blk-8725"><code>policy_requires_approval</code></h4>
+<p>The agent's autonomy level or org-level policy mandates human sign-off for this category of action, regardless of confidence or cost.</p>
+<h3 id="blk-8727">9. Timeout behavior</h3>
+<p>When an escalation times out without a human response, behavior depends on the agent's autonomy level:</p>
+<h4 id="blk-8729"><code>observe</code> autonomy level</h4>
+<p>Timeout action: <strong>auto-reject</strong>. The agent logs the escalation as expired and does not execute the proposed action. Rationale: observe-mode agents should never act autonomously.</p>
+<h4 id="blk-8731"><code>advise</code> autonomy level</h4>
+<p>Timeout action: <strong>auto-escalate</strong>. The escalation is re-routed to a higher-priority channel or fallback operator. The agent does not act. Rationale: advise-mode agents should surface decisions but not resolve them unilaterally.</p>
+<h4 id="blk-8733"><code>act</code> autonomy level</h4>
+<p>Timeout action: <strong>auto-approve with audit</strong>. If the agent's confidence exceeds a fallback threshold, it proceeds with execution and logs a full audit trail. If confidence is below the fallback threshold, the action is rejected. Rationale: act-mode agents are authorized to proceed under defined conditions, but every timeout-triggered action must be auditable.</p>
+<h3 id="blk-8735">10. Response decisions</h3>
+<p>Human operators can respond to an escalation with one of three decisions:</p>
+<h4 id="blk-8737"><code>approve</code></h4>
+<p>The proposed action is authorized. The agent resumes execution with the original input.</p>
+<h4 id="blk-8739"><code>reject</code></h4>
+<p>The proposed action is denied. The agent must not execute it and should log the rejection reason.</p>
+<h4 id="blk-8741"><code>modify</code></h4>
+<p>The proposed action is partially authorized with changes. The human provides a modified input, and the agent resumes with the modified version.</p>
+<h3 id="blk-8743">11. Architecture patterns</h3>
+<h4 id="blk-8744">Pattern A: reasoning -&gt; escalation -&gt; execution</h4>
+<pre><code>context
+|&gt; &amp;reason.plan.plan()
+|&gt; &amp;govern.escalation.escalate()
+|&gt; execute_if_approved()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>the reasoning step produces a plan that may exceed governance thresholds</p></li></ul>
+<h4 id="blk-8750">Pattern B: telemetry -&gt; escalation -&gt; reasoning</h4>
+<pre><code>telemetry_event
+|&gt; &amp;govern.telemetry.budget_check()
+|&gt; &amp;govern.escalation.escalate()
+|&gt; &amp;reason.plan.replan()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>a budget threshold is crossed and the agent needs human input before adjusting its plan</p></li></ul>
+<h4 id="blk-8756">Pattern C: multi-agent escalation bridge</h4>
+<pre><code>agent_a_action
+|&gt; &amp;govern.identity.verify()
+|&gt; &amp;govern.escalation.escalate()
+|&gt; agent_b_respond()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>one agent's proposed action requires approval from another agent's governance context</p></li></ul>
+<h4 id="blk-8762">Pattern D: escalation with audit trail</h4>
+<pre><code>proposed_action
+|&gt; &amp;govern.escalation.escalate()
+|&gt; &amp;govern.telemetry.emit()
+|&gt; execute_or_skip()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>every escalation event, including its outcome, must be recorded in the telemetry stream</p></li></ul>
+<h3 id="blk-8768">12. Example declaration</h3>
+<p>A concrete <code>ampersand.json</code> fragment:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;govern.escalation&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+    <span class="t-key">&quot;config&quot;</span>: {
+      <span class="t-key">&quot;timeout_seconds&quot;</span>: <span class="t-num">3600</span>,
+      <span class="t-key">&quot;fallback_threshold&quot;</span>: <span class="t-num">0.85</span>
+    }
+  }
+}</code></pre>
+<p>A fuller declaration:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;InfraRemediation&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;reason.plan&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+      <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;infrastructure remediation planning with policy-aware tradeoffs&quot;</span>
+    },
+    <span class="t-key">&quot;&amp;govern.escalation&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;timeout_seconds&quot;</span>: <span class="t-num">3600</span>,
+        <span class="t-key">&quot;fallback_threshold&quot;</span>: <span class="t-num">0.85</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;govern.telemetry&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;emit_all_operations&quot;</span>: <span class="t-lit">true</span>
+      }
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never deploy to production without human approval&quot;</span>,
+      <span class="t-string">&quot;Never modify security groups without escalation&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer least-disruption remediation paths&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.75</span>,
+      <span class="t-key">&quot;cost_exceeds_usd&quot;</span>: <span class="t-num">500</span>,
+      <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span>,
+      <span class="t-key">&quot;policy_requires_approval&quot;</span>: [<span class="t-string">&quot;deploy&quot;</span>, <span class="t-string">&quot;security_modify&quot;</span>]
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h3 id="blk-8773">13. Governance and provenance implications</h3>
+<p>Escalation events are themselves governance artifacts and must participate in the provenance chain.</p>
+<h4 id="blk-8775">Cross-references</h4>
+<ul><li><p><strong>OpenSentience OS-006</strong>: defines autonomy levels (observe, advise, act) that determine escalation behavior and timeout semantics</p></li><li><p><strong>OpenSentience OS-007</strong>: addresses threat model for agent impersonation — escalation requests must be attributable to verified agent identities via <code>&amp;govern.identity</code></p></li><li><p><strong>Delegatic budget policies</strong>: cost-based escalation triggers are derived from Delegatic org-level and agent-level budget limits</p></li></ul>
+<h4 id="blk-8783">Representative provenance record</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;govern.escalation&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;escalate&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T12:00:00Z&quot;</span>,
+  <span class="t-key">&quot;escalation_id&quot;</span>: <span class="t-string">&quot;esc-01JQ7...&quot;</span>,
+  <span class="t-key">&quot;trigger&quot;</span>: <span class="t-string">&quot;confidence_below&quot;</span>,
+  <span class="t-key">&quot;trigger_detail&quot;</span>: {
+    <span class="t-key">&quot;confidence&quot;</span>: <span class="t-num">0.62</span>,
+    <span class="t-key">&quot;threshold&quot;</span>: <span class="t-num">0.75</span>
+  },
+  <span class="t-key">&quot;decision&quot;</span>: <span class="t-string">&quot;approve&quot;</span>,
+  <span class="t-key">&quot;responder&quot;</span>: <span class="t-string">&quot;ops-lead-42&quot;</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;os-esc-301&quot;</span>
+}</code></pre>
+<p>This matters because escalation decisions can fundamentally alter the execution path.</p>
+<p>Provenance should help answer questions like:</p>
+<ul><li><p>Why was this action escalated instead of executed directly?</p></li><li><p>Which trigger condition fired?</p></li><li><p>Who approved or rejected it, and when?</p></li><li><p>Did the action execute under timeout-based auto-approval?</p></li><li><p>Which Delegatic budget policy caused the cost-based trigger?</p></li></ul>
+<h3 id="blk-8798">14. Compatible providers</h3>
+<p>Representative compatible providers include:</p>
+<ul><li><p><code>opensentience</code> (primary runtime provider for escalation bridge)</p></li><li><p><code>delegatic</code> (policy source for cost and approval thresholds)</p></li><li><p>custom human-review UX systems exposed behind MCP-compatible surfaces</p></li><li><p>enterprise approval workflow engines with structured response semantics</p></li></ul>
+<h4 id="blk-8809">Default ecosystem fit</h4>
+<p>The most natural default ecosystem pairing is:</p>
+<ul><li><p><code>opensentience</code> for the escalation runtime</p></li><li><p><code>delegatic</code> for the policy definitions that trigger escalation</p></li></ul>
+<p>Why they fit together:</p>
+<ul><li><p>OpenSentience defines autonomy levels and timeout semantics</p></li><li><p>Delegatic defines org-level budget and approval policies</p></li><li><p>Together they form the complete escalation governance stack</p></li></ul>
+<p>The protocol stance remains:</p>
+<blockquote><p><code>&amp;govern.escalation</code> is the capability. <code>opensentience</code> is one provider that may satisfy it.</p></blockquote>
+<h3 id="blk-8827">15. A2A-facing skills</h3>
+<p>A <code>&amp;govern.escalation</code> capability may advertise skills such as:</p>
+<ul><li><p><code>human-escalation-bridge</code></p></li><li><p><code>approval-workflow</code></p></li></ul>
+<p>These are useful when generating A2A-style agent cards, because they let an external coordination surface say more than &quot;has escalation support.&quot;</p>
+<p>Instead, it can say the agent can:</p>
+<ul><li><p>bridge decisions to human operators when governance thresholds are crossed</p></li><li><p>participate in structured approval workflows with approve/reject/modify semantics</p></li></ul>
+<h3 id="blk-8841">16. Anti-patterns</h3>
+<h4 id="blk-8842">Anti-pattern 1: treat escalation as error handling</h4>
+<p>Escalation is a governance mechanism, not an exception path. Agents that only escalate on errors miss the core purpose: structured human oversight of normal decisions that cross thresholds.</p>
+<h4 id="blk-8844">Anti-pattern 2: escalate everything</h4>
+<p>If every action is escalated, the human operator becomes a bottleneck and trust in the agent degrades. Escalation thresholds should be calibrated to surface only meaningful decisions.</p>
+<h4 id="blk-8846">Anti-pattern 3: ignore timeout semantics</h4>
+<p>Timeout behavior varies by autonomy level for good reasons. Implementing a single timeout policy across all levels defeats the purpose of differentiated autonomy.</p>
+<h4 id="blk-8848">Anti-pattern 4: escalate without context</h4>
+<p>An escalation request without rationale, confidence scores, or trigger details forces the human to reconstruct the decision context. Always include the agent's reasoning and the specific trigger condition.</p>
+<h4 id="blk-8850">Anti-pattern 5: skip provenance on auto-approved timeouts</h4>
+<p>When an act-mode agent auto-approves on timeout, the audit trail is especially important. Skipping provenance on these events creates governance blind spots.</p>
+<h3 id="blk-8852">17. Summary</h3>
+<p><code>&amp;govern.escalation</code> is the [&amp;] Protocol capability for <strong>governance-mandated decision handoff</strong>.</p>
+<p>It is the right capability when an agent needs to:</p>
+<ul><li><p>pause before executing actions that cross confidence, cost, or policy thresholds</p></li><li><p>present proposed actions to human operators with full context</p></li><li><p>handle timeout behavior differently based on autonomy level</p></li><li><p>maintain auditable records of every escalation lifecycle</p></li><li><p>compose escalation with reasoning, telemetry, and identity capabilities</p></li></ul>
+<p>In one sentence:</p>
+<blockquote><p><code>&amp;govern.escalation</code> gives an agent a protocol-native way to hand off decisions to humans when governance thresholds require it.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/govern.escalation.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-8537" class="lvl2">1. Definition</a><a href="#blk-8561" class="lvl2">2. Why this capability exists</a><a href="#blk-8575" class="lvl2">3. What problems &amp;govern.escalation solves</a><a href="#blk-8601" class="lvl2">4. Capability role in the &amp;govern namespace</a><a href="#blk-8619" class="lvl2">5. Typical use cases</a><a href="#blk-8620" class="lvl3">Confidence-based escalation</a><a href="#blk-8622" class="lvl3">Cost-based escalation</a><a href="#blk-8624" class="lvl3">Hard boundary escalation</a><a href="#blk-8626" class="lvl3">Policy-required approval</a><a href="#blk-8628" class="lvl3">Cross-agent escalation</a><a href="#blk-8630" class="lvl3">Audit-driven escalation</a><a href="#blk-8632" class="lvl2">6. Example capability contract</a><a href="#blk-8636" class="lvl3">What this contract means</a><a href="#blk-8655" class="lvl2">7. Core operations</a><a href="#blk-8656" class="lvl3">escalate</a><a href="#blk-8679" class="lvl3">respond</a><a href="#blk-8696" class="lvl3">query</a><a href="#blk-8717" class="lvl2">8. Trigger types</a><a href="#blk-8719" class="lvl3">confidence_below</a><a href="#blk-8721" class="lvl3">cost_exceeds</a><a href="#blk-8723" class="lvl3">hard_boundary</a><a href="#blk-8725" class="lvl3">policy_requires_approval</a><a href="#blk-8727" class="lvl2">9. Timeout behavior</a><a href="#blk-8729" class="lvl3">observe autonomy level</a><a href="#blk-8731" class="lvl3">advise autonomy level</a><a href="#blk-8733" class="lvl3">act autonomy level</a><a href="#blk-8735" class="lvl2">10. Response decisions</a><a href="#blk-8737" class="lvl3">approve</a><a href="#blk-8739" class="lvl3">reject</a><a href="#blk-8741" class="lvl3">modify</a><a href="#blk-8743" class="lvl2">11. Architecture patterns</a><a href="#blk-8744" class="lvl3">Pattern A: reasoning -&gt; escalation -&gt; execution</a><a href="#blk-8750" class="lvl3">Pattern B: telemetry -&gt; escalation -&gt; reasoning</a><a href="#blk-8756" class="lvl3">Pattern C: multi-agent escalation bridge</a><a href="#blk-8762" class="lvl3">Pattern D: escalation with audit trail</a><a href="#blk-8768" class="lvl2">12. Example declaration</a><a href="#blk-8773" class="lvl2">13. Governance and provenance implications</a><a href="#blk-8775" class="lvl3">Cross-references</a><a href="#blk-8783" class="lvl3">Representative provenance record</a><a href="#blk-8798" class="lvl2">14. Compatible providers</a><a href="#blk-8809" class="lvl3">Default ecosystem fit</a><a href="#blk-8827" class="lvl2">15. A2A-facing skills</a><a href="#blk-8841" class="lvl2">16. Anti-patterns</a><a href="#blk-8842" class="lvl3">Anti-pattern 1: treat escalation as error handling</a><a href="#blk-8844" class="lvl3">Anti-pattern 2: escalate everything</a><a href="#blk-8846" class="lvl3">Anti-pattern 3: ignore timeout semantics</a><a href="#blk-8848" class="lvl3">Anti-pattern 4: escalate without context</a><a href="#blk-8850" class="lvl3">Anti-pattern 5: skip provenance on auto-approved timeouts</a><a href="#blk-8852" class="lvl2">17. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.plan.md/">&amp;reason.plan -- Planning-Oriented Reasoning for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera5g3zxhldvarf6kmr4mvowuzyl6bubdzrw2aj3mjdjy2l34nlgndq</div></div></div>
+</div></div>
+</body></html>

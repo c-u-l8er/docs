@@ -1,0 +1,427 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;space.geofence --- Boundary Membership, Zone Logic, and Compliance Awareness · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;space.geofence is the [&amp;] Protocol capability for geofence-aware spatial contracts.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/space.geofence.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;space.geofence --- Boundary Membership, Zone Logic, and Compliance Awareness">
+<meta property="og:description" content="&amp;space.geofence is the [&amp;] Protocol capability for geofence-aware spatial contracts.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/space.geofence.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&space.geofence --- Boundary Membership, Zone Logic, and Compliance Awareness","name":"&space.geofence --- Boundary Membership, Zone Logic, and Compliance Awareness","description":"&space.geofence is the [&] Protocol capability for geofence-aware spatial contracts.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/space.geofence.md/","identifier":"bagaaierabwo2g67txxlpbm5sdin3ucfn5lvazyjtbqoooyw6udvcw74al3ca","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. What problems &space.geofence solves"},{"@type":"WebPageElement","name":"4. Capability role in the &space namespace"},{"@type":"WebPageElement","name":"5. Typical use cases"},{"@type":"WebPageElement","name":"Compliance zone enforcement"},{"@type":"WebPageElement","name":"Facility access control"},{"@type":"WebPageElement","name":"Service area validation"},{"@type":"WebPageElement","name":"Regulatory jurisdiction mapping"},{"@type":"WebPageElement","name":"Exclusion zone monitoring"},{"@type":"WebPageElement","name":"Environmental compliance"},{"@type":"WebPageElement","name":"Insurance and liability boundaries"},{"@type":"WebPageElement","name":"6. Example capability contract"},{"@type":"WebPageElement","name":"What this contract means"},{"@type":"WebPageElement","name":"7. Core operations"},{"@type":"WebPageElement","name":"contains"},{"@type":"WebPageElement","name":"enter_exit"},{"@type":"WebPageElement","name":"enrich"},{"@type":"WebPageElement","name":"8. Architecture patterns"},{"@type":"WebPageElement","name":"Pattern A: fleet state -> geofence check -> reasoning"},{"@type":"WebPageElement","name":"Pattern B: crossing event -> geofence enrichment -> alerting"},{"@type":"WebPageElement","name":"Pattern C: route planning -> geofence constraint -> route validation"},{"@type":"WebPageElement","name":"Pattern D: anomaly -> geofence enrichment -> compliance reasoning"},{"@type":"WebPageElement","name":"9. Architecture diagram"},{"@type":"WebPageElement","name":"10. Example declaration"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"space.geofence.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/space.geofence.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/space.geofence.md</span>
+
+</div></div>
+<div class="lead">&amp;space.geofence is the [&amp;] Protocol capability for geofence-aware spatial contracts.</div>
+<div class="prose"><h1 id="blk-13293"><code>&amp;space.geofence</code> --- Boundary Membership, Zone Logic, and Compliance Awareness</h1>
+<p><code>&amp;space.geofence</code> is the [&amp;] Protocol capability for <strong>geofence-aware spatial contracts</strong>.</p>
+<p>It describes an agent's ability to reason about:</p>
+<ul><li><p>whether an entity is inside or outside a boundary</p></li><li><p>when boundary crossings occur</p></li><li><p>which compliance or service-area zones apply</p></li><li><p>how zone membership should constrain downstream decisions</p></li><li><p>how geofence context should enrich upstream artifacts</p></li></ul>
+<p>In the protocol's four-primitive model:</p>
+<ul><li><p><code>&amp;memory</code> answers <strong>what</strong> the agent knows</p></li><li><p><code>&amp;reason</code> answers <strong>how</strong> the agent decides</p></li><li><p><code>&amp;time</code> answers <strong>when</strong> things change</p></li><li><p><code>&amp;space</code> answers <strong>where</strong> things are</p></li></ul>
+<p><code>&amp;space.geofence</code> is one of the most compliance-relevant <code>&amp;space</code> subtypes because many real agents operate over:</p>
+<ul><li><p>restricted operating zones</p></li><li><p>service area boundaries</p></li><li><p>regulatory jurisdictions</p></li><li><p>facility perimeters</p></li><li><p>exclusion zones</p></li><li><p>delivery coverage areas</p></li><li><p>environmental or safety regions</p></li></ul>
+<h3 id="blk-13333">1. Definition</h3>
+<p><code>&amp;space.geofence</code> is the capability interface for <strong>boundary membership and zone-compliance logic</strong>.</p>
+<p>It is used when an agent must work with:</p>
+<ul><li><p>spatial boundaries that define allowed or restricted areas</p></li><li><p>membership evaluation for entities against those boundaries</p></li><li><p>enter and exit event detection at zone edges</p></li><li><p>compliance constraints tied to geographic or logical zones</p></li><li><p>service-area enrichment for upstream artifacts</p></li><li><p>zone-aware decision support</p></li></ul>
+<p>This capability is not limited to literal geographic fences.</p>
+<p>It can also apply to:</p>
+<ul><li><p>regulatory jurisdictions</p></li><li><p>network security perimeters</p></li><li><p>airspace restrictions</p></li><li><p>emissions or environmental zones</p></li><li><p>insurance coverage areas</p></li><li><p>operational authority boundaries</p></li><li><p>logical partitions with spatial semantics</p></li></ul>
+<p>The key idea is that the system is evaluating <strong>membership within bounded regions</strong>.</p>
+<h3 id="blk-13367">2. Why this capability exists</h3>
+<p>Many agent systems treat spatial constraints as simple metadata or post-hoc filters.</p>
+<p>That works for demos, but it breaks down quickly in regulated or safety-critical workflows.</p>
+<p>Examples:</p>
+<ul><li><p>A dispatch agent routes a vehicle into a restricted zone because boundary logic was not part of the decision chain.</p></li><li><p>A compliance agent cannot determine whether a field team is operating within its authorized service area.</p></li><li><p>A facility management agent detects motion near a perimeter, but has no structured way to classify the crossing event.</p></li><li><p>A logistics agent builds a plan that violates emissions-zone restrictions because zone boundaries were never consulted.</p></li></ul>
+<p>In all of these cases, the missing layer is <strong>boundary-aware spatial evaluation</strong>.</p>
+<p><code>&amp;space.geofence</code> gives the protocol a standard way to declare that capability.</p>
+<h3 id="blk-13382">3. What problems <code>&amp;space.geofence</code> solves</h3>
+<p><code>&amp;space.geofence</code> is useful when an agent needs to answer questions like:</p>
+<ul><li><p>Is this entity inside the permitted zone?</p></li><li><p>Has this asset crossed a restricted boundary?</p></li><li><p>Which compliance region does this location fall within?</p></li><li><p>Which service area applies to this request?</p></li><li><p>Did a boundary crossing event just occur?</p></li><li><p>Which zone constraints should apply to this planned action?</p></li><li><p>How does zone membership change the recommended decision?</p></li></ul>
+<p>Without this capability, boundary logic tends to get buried inside:</p>
+<ul><li><p>one-off geospatial queries</p></li><li><p>custom application logic</p></li><li><p>hardcoded coordinate checks</p></li><li><p>vendor-specific geofencing APIs</p></li></ul>
+<p>The protocol makes it explicit instead.</p>
+<h3 id="blk-13410">4. Capability role in the <code>&amp;space</code> namespace</h3>
+<p>The <code>&amp;space</code> primitive can support multiple subtypes, including:</p>
+<ul><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;space.route</code></p></li><li><p><code>&amp;space.geofence</code></p></li></ul>
+<p>A helpful distinction is:</p>
+<ul><li><p><code>&amp;space.fleet</code> = distributed assets and regional state</p></li><li><p><code>&amp;space.route</code> = path and route computation</p></li><li><p><code>&amp;space.geofence</code> = boundary and zone membership logic</p></li></ul>
+<p><code>&amp;space.geofence</code> is the right subtype when the main problem is <strong>whether entities are inside or outside defined boundaries</strong>, not tracking distributed fleet state or computing paths between points.</p>
+<h3 id="blk-13428">5. Typical use cases</h3>
+<h4 id="blk-13429">Compliance zone enforcement</h4>
+<p>Evaluate whether service vehicles, field agents, or autonomous systems are operating within their authorized zones.</p>
+<h4 id="blk-13431">Facility access control</h4>
+<p>Detect and classify enter and exit events at facility perimeters, restricted areas, or secure zones.</p>
+<h4 id="blk-13433">Service area validation</h4>
+<p>Determine whether a request, delivery, or dispatch falls within the applicable service area before committing resources.</p>
+<h4 id="blk-13435">Regulatory jurisdiction mapping</h4>
+<p>Attach jurisdiction or regulatory-zone context to upstream artifacts so downstream reasoning respects local rules.</p>
+<h4 id="blk-13437">Exclusion zone monitoring</h4>
+<p>Continuously evaluate whether tracked entities have entered prohibited or hazardous areas.</p>
+<h4 id="blk-13439">Environmental compliance</h4>
+<p>Check whether operations are occurring within emissions zones, protected habitats, or other environmentally regulated boundaries.</p>
+<h4 id="blk-13441">Insurance and liability boundaries</h4>
+<p>Determine which coverage area applies to a given location or event for liability and claims processing.</p>
+<h3 id="blk-13443">6. Example capability contract</h3>
+<p>A representative contract for <code>&amp;space.geofence</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;space.geofence&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Geofence-aware spatial contract for boundary membership evaluation, crossing detection, and compliance-context enrichment.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;contains&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;location_query&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;membership_result&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Evaluate whether a location or entity is within one or more defined boundaries.&quot;</span>
+    },
+    <span class="t-key">&quot;enter_exit&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;crossing_query&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;crossing_event&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Detect and classify boundary crossing events for tracked entities.&quot;</span>
+    },
+    <span class="t-key">&quot;enrich&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;geofence_context&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Attach geofence, service-area, or compliance-zone context to an upstream artifact.&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;time.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.fleet&quot;</span>,
+    <span class="t-string">&quot;raw_data&quot;</span>,
+    <span class="t-string">&quot;context&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;reason.*&quot;</span>,
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.route&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;geofence-membership-evaluation&quot;</span>,
+    <span class="t-string">&quot;boundary-alerting&quot;</span>
+  ]
+}</code></pre>
+<h4 id="blk-13446">What this contract means</h4>
+<p>This contract says that <code>&amp;space.geofence</code> can:</p>
+<ul><li><p>evaluate location membership against defined boundaries</p></li><li><p>detect boundary crossing events</p></li><li><p>enrich upstream context with zone and compliance information</p></li></ul>
+<p>It also says that this capability composes well with:</p>
+<ul><li><p><code>&amp;time.*</code> upstream, where temporal signals must be evaluated against zone boundaries</p></li><li><p><code>&amp;space.fleet</code> upstream, where fleet positions must be checked against permitted zones</p></li><li><p><code>&amp;reason.*</code> downstream, where zone membership affects action selection</p></li><li><p><code>&amp;space.route</code> downstream, where routes must respect zone constraints</p></li></ul>
+<h3 id="blk-13465">7. Core operations</h3>
+<h4 id="blk-13466"><code>contains</code></h4>
+<p>Purpose:</p>
+<ul><li><p>evaluate whether a location or entity falls within one or more defined boundaries</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>location_query</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>membership_result</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>the agent needs to know whether something is inside or outside a specific zone</p></li></ul>
+<h4 id="blk-13483"><code>enter_exit</code></h4>
+<p>Purpose:</p>
+<ul><li><p>detect and classify boundary crossing events</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>crossing_query</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>crossing_event</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>the system must respond to entities entering or leaving defined zones</p></li></ul>
+<h4 id="blk-13500"><code>enrich</code></h4>
+<p>Purpose:</p>
+<ul><li><p>attach geofence, service-area, or compliance-zone context to another artifact</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>context</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>geofence_context</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>another capability has already produced a useful signal and zone-boundary grounding is required before a decision</p></li></ul>
+<h3 id="blk-13517">8. Architecture patterns</h3>
+<h4 id="blk-13518">Pattern A: fleet state -&gt; geofence check -&gt; reasoning</h4>
+<pre><code>fleet_positions
+|&gt; &amp;space.fleet.locate()
+|&gt; &amp;space.geofence.contains()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>current fleet positions must be validated against permitted operating zones before action is chosen</p></li></ul>
+<p>Example:</p>
+<ul><li><p>locate service vehicles</p></li><li><p>check whether any are inside restricted zones</p></li><li><p>decide whether to recall, reroute, or escalate</p></li></ul>
+<h4 id="blk-13532">Pattern B: crossing event -&gt; geofence enrichment -&gt; alerting</h4>
+<pre><code>position_stream
+|&gt; &amp;space.geofence.enter_exit()
+|&gt; &amp;space.geofence.enrich()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>real-time or near-real-time boundary crossings must trigger zone-aware responses</p></li></ul>
+<p>Example:</p>
+<ul><li><p>detect that a vehicle has entered a restricted area</p></li><li><p>enrich the event with zone classification and compliance requirements</p></li><li><p>evaluate whether the crossing requires an alert, recall, or escalation</p></li></ul>
+<h4 id="blk-13546">Pattern C: route planning -&gt; geofence constraint -&gt; route validation</h4>
+<pre><code>route_candidate
+|&gt; &amp;space.geofence.contains()
+|&gt; &amp;space.route.plan()
+|&gt; &amp;reason.plan.evaluate()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>planned routes must be validated against zone boundaries before commitment</p></li></ul>
+<p>Example:</p>
+<ul><li><p>check whether a proposed route passes through restricted zones</p></li><li><p>replan the route to avoid prohibited areas</p></li><li><p>evaluate the adjusted plan against operational constraints</p></li></ul>
+<h4 id="blk-13560">Pattern D: anomaly -&gt; geofence enrichment -&gt; compliance reasoning</h4>
+<pre><code>anomaly_signal
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;space.geofence.enrich()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>a temporal anomaly must be evaluated in the context of zone boundaries and compliance requirements</p></li></ul>
+<p>Example:</p>
+<ul><li><p>detect an anomalous boundary crossing pattern</p></li><li><p>enrich with zone classification and historical crossing data</p></li><li><p>determine whether this represents a compliance violation or expected behavior</p></li></ul>
+<h3 id="blk-13574">9. Architecture diagram</h3>
+<p>A simplified conceptual flow for <code>&amp;space.geofence</code>:</p>
+<pre><code>incoming signal / location / crossing event
+              |
+              v
+      +-------------------+
+      | &amp;space.geofence   |
+      |                   |
+      | contains          |
+      | enter_exit        |
+      | enrich            |
+      +---------+---------+
+                |
+                v
+      +-------------------+
+      | membership_result |
+      | crossing_event    |
+      | geofence_context  |
+      +---------+---------+
+                |
+                v
+      +-------------------+
+      | &amp;reason.* /       |
+      | &amp;space.route /    |
+      | &amp;memory.* /       |
+      | output            |
+      +-------------------+</code></pre>
+<p>The capability's job is to turn location data into <strong>boundary-aware, compliance-grounded spatial context</strong>.</p>
+<h3 id="blk-13578">10. Example declaration</h3>
+<p>A concrete <code>ampersand.json</code> fragment:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;space.geofence&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+    <span class="t-key">&quot;config&quot;</span>: {
+      <span class="t-key">&quot;zones&quot;</span>: [<span class="t-string">&quot;restricted-ops&quot;</span>, <span class="t-string">&quot;service-area-west&quot;</span>],
+      <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;compliance-boundary-enforcement&quot;</span>
+    }
+  }
+}</code></pre>
+<p>A fuller declaration:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;ZoneComplianceAgent&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;space.fleet&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>, <span class="t-string">&quot;us-central&quot;</span>],
+        <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;regional-capacity-awareness&quot;</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;space.geofence&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;zones&quot;</span>: [<span class="t-string">&quot;restricted-ops&quot;</span>, <span class="t-string">&quot;service-area-west&quot;</span>, <span class="t-string">&quot;emissions-zone-a&quot;</span>],
+        <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;compliance-boundary-enforcement&quot;</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;reason.argument&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+      <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;compliance evaluation with boundary-aware constraint checking&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never allow operations inside restricted zones without explicit authorization&quot;</span>,
+      <span class="t-string">&quot;Never suppress boundary crossing alerts for compliance-critical zones&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer early warning when an entity approaches a restricted boundary&quot;</span>,
+      <span class="t-string">&quot;Prefer zone-local remediation before cross-zone escalation&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.8</span>,
+      <span class="t-key">&quot;hard_boundary_crossed&quot;</span>: <span class="t-lit">true</span>
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h3 id="blk-13583">11. Example API shape</h3>
+<p>A provider-specific API will vary, but a typical <code>contains</code> request might look like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;contains&quot;</span>,
+  <span class="t-key">&quot;input&quot;</span>: {
+    <span class="t-key">&quot;entity_id&quot;</span>: <span class="t-string">&quot;veh_102&quot;</span>,
+    <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">40.7128</span>,
+    <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-74.0060</span>,
+    <span class="t-key">&quot;zones&quot;</span>: [<span class="t-string">&quot;restricted-ops&quot;</span>, <span class="t-string">&quot;service-area-west&quot;</span>]
+  }
+}</code></pre>
+<p>Representative response:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;membership_result&quot;</span>: {
+    <span class="t-key">&quot;entity_id&quot;</span>: <span class="t-string">&quot;veh_102&quot;</span>,
+    <span class="t-key">&quot;evaluations&quot;</span>: [
+      {
+        <span class="t-key">&quot;zone&quot;</span>: <span class="t-string">&quot;restricted-ops&quot;</span>,
+        <span class="t-key">&quot;inside&quot;</span>: <span class="t-lit">false</span>,
+        <span class="t-key">&quot;distance_to_boundary_m&quot;</span>: <span class="t-num">340</span>
+      },
+      {
+        <span class="t-key">&quot;zone&quot;</span>: <span class="t-string">&quot;service-area-west&quot;</span>,
+        <span class="t-key">&quot;inside&quot;</span>: <span class="t-lit">true</span>,
+        <span class="t-key">&quot;compliance_status&quot;</span>: <span class="t-string">&quot;compliant&quot;</span>
+      }
+    ]
+  }
+}</code></pre>
+<p>An <code>enter_exit</code> request might look like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;enter_exit&quot;</span>,
+  <span class="t-key">&quot;input&quot;</span>: {
+    <span class="t-key">&quot;entity_id&quot;</span>: <span class="t-string">&quot;veh_104&quot;</span>,
+    <span class="t-key">&quot;zone&quot;</span>: <span class="t-string">&quot;restricted-ops&quot;</span>,
+    <span class="t-key">&quot;position_history&quot;</span>: [
+      { <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">40.7120</span>, <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-74.0050</span>, <span class="t-key">&quot;ts&quot;</span>: <span class="t-string">&quot;2026-03-15T11:58:00Z&quot;</span> },
+      { <span class="t-key">&quot;lat&quot;</span>: <span class="t-num">40.7135</span>, <span class="t-key">&quot;lon&quot;</span>: <span class="t-num">-74.0070</span>, <span class="t-key">&quot;ts&quot;</span>: <span class="t-string">&quot;2026-03-15T12:00:00Z&quot;</span> }
+    ]
+  }
+}</code></pre>
+<p>Representative response:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;crossing_event&quot;</span>: {
+    <span class="t-key">&quot;entity_id&quot;</span>: <span class="t-string">&quot;veh_104&quot;</span>,
+    <span class="t-key">&quot;zone&quot;</span>: <span class="t-string">&quot;restricted-ops&quot;</span>,
+    <span class="t-key">&quot;event_type&quot;</span>: <span class="t-string">&quot;enter&quot;</span>,
+    <span class="t-key">&quot;crossing_time&quot;</span>: <span class="t-string">&quot;2026-03-15T11:59:12Z&quot;</span>,
+    <span class="t-key">&quot;confidence&quot;</span>: <span class="t-num">0.94</span>
+  }
+}</code></pre>
+<p>The protocol does not standardize this exact transport payload. It standardizes the capability contract.</p>
+<h3 id="blk-13593">12. Compatible providers</h3>
+<p>Representative compatible providers include:</p>
+<ul><li><p><code>geofleetic</code></p></li><li><p>custom geofencing and boundary management services</p></li><li><p>compliance and regulatory zone databases exposed behind MCP-compatible surfaces</p></li><li><p>facility management and access control systems with stable contract wrappers</p></li><li><p>environmental zone registries that expose boundary membership as a capability</p></li></ul>
+<h4 id="blk-13606">Default ecosystem fit</h4>
+<p>The most natural default ecosystem example in this repository is:</p>
+<ul><li><p><code>geofleetic</code></p></li></ul>
+<p>Why it fits:</p>
+<ul><li><p>boundary-aware domain model</p></li><li><p>zone membership and compliance semantics</p></li><li><p>strong compatibility with logistics, fleet, and regulatory use cases</p></li></ul>
+<p>The protocol stance remains:</p>
+<blockquote><p><code>&amp;space.geofence</code> is the capability. <code>geofleetic</code> is one provider that may satisfy it.</p></blockquote>
+<h3 id="blk-13622">13. Governance implications</h3>
+<p>Geofence decisions are often directly tied to compliance, making governance especially important for this capability.</p>
+<h4 id="blk-13624">Common hard constraints</h4>
+<p>Examples:</p>
+<ul><li><p>Never allow operations inside restricted zones without explicit authorization.</p></li><li><p>Never suppress or delay boundary crossing alerts for safety-critical zones.</p></li><li><p>Never override compliance-zone restrictions based on soft preferences alone.</p></li><li><p>Never disclose sensitive zone boundary definitions outside authorized workflows.</p></li></ul>
+<h4 id="blk-13635">Common soft constraints</h4>
+<p>Examples:</p>
+<ul><li><p>Prefer early warning when entities approach restricted boundaries.</p></li><li><p>Prefer zone-local remediation before cross-zone escalation.</p></li><li><p>Prefer conservative boundary classification when confidence is moderate.</p></li><li><p>Prefer maintaining buffer distances from hard boundaries when feasible.</p></li></ul>
+<h4 id="blk-13646">Common escalation rules</h4>
+<p>Examples:</p>
+<ul><li><p>escalate when a hard boundary is crossed</p></li><li><p>escalate when an entity approaches a restricted zone within a configurable threshold</p></li><li><p>escalate when zone membership status is ambiguous or conflicting</p></li><li><p>escalate when a compliance-critical crossing event cannot be classified with high confidence</p></li></ul>
+<p>Representative governance block:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never permit operations inside restricted zones without authorization&quot;</span>,
+      <span class="t-string">&quot;Never suppress compliance-zone crossing alerts&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer early boundary-approach warnings over post-crossing alerts&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;hard_boundary_crossed&quot;</span>: <span class="t-lit">true</span>,
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.8</span>
+    }
+  }
+}</code></pre>
+<h3 id="blk-13659">14. Provenance implications</h3>
+<p>Geofence evaluation should participate in the provenance chain.</p>
+<p>Representative provenance record:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;space.geofence&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;contains&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T12:00:00Z&quot;</span>,
+  <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:4c11...&quot;</span>,
+  <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:e83a...&quot;</span>,
+  <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:7b2c...&quot;</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;gfence-contains-107&quot;</span>
+}</code></pre>
+<p>This matters because zone membership can directly determine whether an action is permitted or prohibited.</p>
+<p>Provenance should help answer questions like:</p>
+<ul><li><p>Why was this entity classified as inside the restricted zone?</p></li><li><p>Which boundary definition was used for the evaluation?</p></li><li><p>Which provider produced the membership or crossing result?</p></li><li><p>Which upstream fleet position or anomaly triggered the geofence query?</p></li></ul>
+<h3 id="blk-13674">15. A2A-facing skills</h3>
+<p>A <code>&amp;space.geofence</code> capability may advertise skills such as:</p>
+<ul><li><p><code>geofence-membership-evaluation</code></p></li><li><p><code>boundary-alerting</code></p></li></ul>
+<p>These are useful when generating A2A-style agent cards, because they let an external coordination surface say more than &quot;has boundary awareness.&quot;</p>
+<p>Instead, it can say the agent can:</p>
+<ul><li><p>evaluate zone membership for entities and locations</p></li><li><p>detect and alert on boundary crossing events</p></li></ul>
+<h3 id="blk-13688">16. MCP-facing implications</h3>
+<p>A declaration containing <code>&amp;space.geofence</code> may compile into MCP-facing configuration for a compatible geofence provider.</p>
+<p>That makes <code>&amp;space.geofence</code> a good example of the protocol's overall claim:</p>
+<ul><li><p>the declaration captures capability composition</p></li><li><p>downstream tools can generate runtime config from that declaration</p></li></ul>
+<p>In other words:</p>
+<blockquote><p>[&amp;] declares the geofence-aware spatial capability MCP can carry the provider-facing integration</p></blockquote>
+<h3 id="blk-13699">17. Research grounding</h3>
+<p><code>&amp;space.geofence</code> is supported by several overlapping research and systems traditions:</p>
+<ul><li><p>geospatial information systems</p></li><li><p>computational geometry and point-in-polygon evaluation</p></li><li><p>geofencing and location-based services</p></li><li><p>regulatory and compliance automation</p></li><li><p>facility and perimeter security systems</p></li><li><p>environmental monitoring and zone management</p></li><li><p>situated decision systems with spatial constraints</p></li></ul>
+<p>The important protocol-level insight is not that geofencing is new.</p>
+<p>It is that <strong>boundary-aware zone logic should be explicit in the agent's capability declaration</strong>, rather than buried in framework code or provider-specific APIs.</p>
+<p>That explicitness enables:</p>
+<ul><li><p>schema validation</p></li><li><p>contract checking</p></li><li><p>provider interchangeability</p></li><li><p>governance-aware composition</p></li><li><p>provenance-preserving decisions</p></li><li><p>downstream MCP and A2A generation</p></li></ul>
+<h3 id="blk-13732">18. Anti-patterns</h3>
+<h4 id="blk-13733">Anti-pattern 1: collapse geofence logic into fleet state</h4>
+<p>Fleet state tracks where assets are. Geofence logic evaluates whether those positions satisfy boundary constraints. They are related but distinct interfaces.</p>
+<h4 id="blk-13735">Anti-pattern 2: treat zone boundaries as static configuration only</h4>
+<p>Boundaries may change over time (temporary restrictions, seasonal zones, emergency exclusions). The capability should support dynamic boundary definitions.</p>
+<h4 id="blk-13737">Anti-pattern 3: let reasoning infer boundary membership from coordinates alone</h4>
+<p>A reasoner may estimate proximity, but authoritative zone membership should come from a dedicated boundary evaluation, not text-based spatial guessing.</p>
+<h4 id="blk-13739">Anti-pattern 4: use geofence decisions without provenance</h4>
+<p>If zone membership or a crossing event affects the outcome, lineage should be preserved. Compliance audits depend on it.</p>
+<h3 id="blk-13741">19. Practical guidance</h3>
+<p>Use <code>&amp;space.geofence</code> when:</p>
+<ul><li><p>the system must evaluate whether entities are inside or outside defined zones</p></li><li><p>boundary crossing events must be detected and classified</p></li><li><p>compliance, safety, or regulatory constraints are tied to geographic boundaries</p></li><li><p>zone membership should influence downstream action selection</p></li></ul>
+<p>Prefer composing it with:</p>
+<ul><li><p><code>&amp;space.fleet</code> when fleet positions must be checked against zone boundaries</p></li><li><p><code>&amp;space.route</code> when routes must respect zone constraints</p></li><li><p><code>&amp;time.anomaly</code> when anomalous boundary crossings need detection</p></li><li><p><code>&amp;reason.*</code> when action selection depends on zone membership or compliance status</p></li></ul>
+<p>Common high-value compositions:</p>
+<ul><li><p><code>&amp;space.fleet</code> + <code>&amp;space.geofence</code> + <code>&amp;reason.argument</code></p></li><li><p><code>&amp;space.geofence</code> + <code>&amp;space.route</code> + <code>&amp;reason.plan</code></p></li><li><p><code>&amp;time.anomaly</code> + <code>&amp;space.geofence</code> + <code>&amp;reason.argument</code></p></li></ul>
+<h3 id="blk-13770">20. Example scenarios</h3>
+<h4 id="blk-13771">Restricted zone compliance</h4>
+<ul><li><p>locate service vehicles</p></li><li><p>evaluate zone membership against restricted areas</p></li><li><p>flag violations and trigger recall or reroute</p></li></ul>
+<h4 id="blk-13779">Facility enter/exit monitoring</h4>
+<ul><li><p>stream entity positions near facility perimeters</p></li><li><p>detect crossing events at controlled boundaries</p></li><li><p>classify and log each event for security and audit</p></li></ul>
+<h4 id="blk-13787">Compliance-boundary enrichment</h4>
+<ul><li><p>receive upstream dispatch or routing artifact</p></li><li><p>enrich with applicable compliance zones and restrictions</p></li><li><p>pass enriched context to reasoning for constraint-aware planning</p></li></ul>
+<h4 id="blk-13795">Anomalous boundary crossing detection</h4>
+<ul><li><p>detect unusual crossing patterns via temporal anomaly</p></li><li><p>evaluate crossing against zone classification and historical baselines</p></li><li><p>escalate or alert when crossing is unexplained or policy-violating</p></li></ul>
+<h3 id="blk-13803">21. Summary</h3>
+<p><code>&amp;space.geofence</code> is the [&amp;] Protocol capability for <strong>boundary-aware zone logic and compliance evaluation</strong>.</p>
+<p>It is the right capability when an agent needs to know:</p>
+<ul><li><p>whether entities are inside or outside defined boundaries</p></li><li><p>when boundary crossings occur</p></li><li><p>which compliance or service-area zones apply</p></li><li><p>how zone membership should constrain downstream decisions</p></li><li><p>how geofence context should enrich upstream artifacts</p></li></ul>
+<p>In one sentence:</p>
+<blockquote><p><code>&amp;space.geofence</code> gives an agent a protocol-native way to evaluate and enforce spatial boundary constraints.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/space.geofence.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-13333" class="lvl2">1. Definition</a><a href="#blk-13367" class="lvl2">2. Why this capability exists</a><a href="#blk-13382" class="lvl2">3. What problems &amp;space.geofence solves</a><a href="#blk-13410" class="lvl2">4. Capability role in the &amp;space namespace</a><a href="#blk-13428" class="lvl2">5. Typical use cases</a><a href="#blk-13429" class="lvl3">Compliance zone enforcement</a><a href="#blk-13431" class="lvl3">Facility access control</a><a href="#blk-13433" class="lvl3">Service area validation</a><a href="#blk-13435" class="lvl3">Regulatory jurisdiction mapping</a><a href="#blk-13437" class="lvl3">Exclusion zone monitoring</a><a href="#blk-13439" class="lvl3">Environmental compliance</a><a href="#blk-13441" class="lvl3">Insurance and liability boundaries</a><a href="#blk-13443" class="lvl2">6. Example capability contract</a><a href="#blk-13446" class="lvl3">What this contract means</a><a href="#blk-13465" class="lvl2">7. Core operations</a><a href="#blk-13466" class="lvl3">contains</a><a href="#blk-13483" class="lvl3">enter_exit</a><a href="#blk-13500" class="lvl3">enrich</a><a href="#blk-13517" class="lvl2">8. Architecture patterns</a><a href="#blk-13518" class="lvl3">Pattern A: fleet state -&gt; geofence check -&gt; reasoning</a><a href="#blk-13532" class="lvl3">Pattern B: crossing event -&gt; geofence enrichment -&gt; alerting</a><a href="#blk-13546" class="lvl3">Pattern C: route planning -&gt; geofence constraint -&gt; route validation</a><a href="#blk-13560" class="lvl3">Pattern D: anomaly -&gt; geofence enrichment -&gt; compliance reasoning</a><a href="#blk-13574" class="lvl2">9. Architecture diagram</a><a href="#blk-13578" class="lvl2">10. Example declaration</a><a href="#blk-13583" class="lvl2">11. Example API shape</a><a href="#blk-13593" class="lvl2">12. Compatible providers</a><a href="#blk-13606" class="lvl3">Default ecosystem fit</a><a href="#blk-13622" class="lvl2">13. Governance implications</a><a href="#blk-13624" class="lvl3">Common hard constraints</a><a href="#blk-13635" class="lvl3">Common soft constraints</a><a href="#blk-13646" class="lvl3">Common escalation rules</a><a href="#blk-13659" class="lvl2">14. Provenance implications</a><a href="#blk-13674" class="lvl2">15. A2A-facing skills</a><a href="#blk-13688" class="lvl2">16. MCP-facing implications</a><a href="#blk-13699" class="lvl2">17. Research grounding</a><a href="#blk-13732" class="lvl2">18. Anti-patterns</a><a href="#blk-13733" class="lvl3">Anti-pattern 1: collapse geofence logic into fleet state</a><a href="#blk-13735" class="lvl3">Anti-pattern 2: treat zone boundaries as static configuration only</a><a href="#blk-13737" class="lvl3">Anti-pattern 3: let reasoning infer boundary membership from coordinates alone</a><a href="#blk-13739" class="lvl3">Anti-pattern 4: use geofence decisions without provenance</a><a href="#blk-13741" class="lvl2">19. Practical guidance</a><a href="#blk-13770" class="lvl2">20. Example scenarios</a><a href="#blk-13771" class="lvl3">Restricted zone compliance</a><a href="#blk-13779" class="lvl3">Facility enter/exit monitoring</a><a href="#blk-13787" class="lvl3">Compliance-boundary enrichment</a><a href="#blk-13795" class="lvl3">Anomalous boundary crossing detection</a><a href="#blk-13803" class="lvl2">21. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierabwo2g67txxlpbm5sdin3ucfn5lvazyjtbqoooyw6udvcw74al3ca</div></div></div>
+</div></div>
+</body></html>

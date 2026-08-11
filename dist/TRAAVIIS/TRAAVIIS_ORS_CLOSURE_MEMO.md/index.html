@@ -1,0 +1,143 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Residency Submission ORS Profile v1 — memo · TRAAVIIS · Ampersand Box</title>
+<meta name="description" content="Slice: trvs serve --ors. Give the Episode Kernel its first transport: an HTTP surface that accepts a candidate finding+patch, scores it against a packed…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_ORS_CLOSURE_MEMO.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Residency Submission ORS Profile v1 — memo">
+<meta property="og:description" content="Slice: trvs serve --ors. Give the Episode Kernel its first transport: an HTTP surface that accepts a candidate finding+patch, scores it against a packed…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_ORS_CLOSURE_MEMO.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Residency Submission ORS Profile v1 — memo","name":"Residency Submission ORS Profile v1 — memo","description":"Slice: trvs serve --ors. Give the Episode Kernel its first transport: an HTTP surface that accepts a candidate finding+patch, scores it against a packed…","url":"https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_ORS_CLOSURE_MEMO.md/","identifier":"bagaaieralxorbjalsi5ykxg66rihh5eym6r5a2ctstl7snlz6cwzu6vzbowa","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRAAVIIS","url":"https://docs.ampersandboxdesign.com/TRAAVIIS/"},"articleSection":"TRAAVIIS","hasPart":[{"@type":"WebPageElement","name":"1. What a transport is allowed to be"},{"@type":"WebPageElement","name":"2. One tool, because the substrate has one"},{"@type":"WebPageElement","name":"3. The exact key set is a trust boundary, not a schema nicety"},{"@type":"WebPageElement","name":"4. Nothing was executed, and the receipt says so"},{"@type":"WebPageElement","name":"5. finished: true is a durability claim"},{"@type":"WebPageElement","name":"6. Admission precedes binding"},{"@type":"WebPageElement","name":"7. Idempotency is a transport concern, so it lives in a header"},{"@type":"WebPageElement","name":"8. Concurrency is §4a exercised, not re-solved"},{"@type":"WebPageElement","name":"9. Loopback by default"},{"@type":"WebPageElement","name":"10. Two defects this slice found"},{"@type":"WebPageElement","name":"The publish race (found by O23)"},{"@type":"WebPageElement","name":"The shutdown hang (found by O26)"},{"@type":"WebPageElement","name":"11. A correction this slice made to its own laws"},{"@type":"WebPageElement","name":"12. A law that expired"},{"@type":"WebPageElement","name":"13. Live end-to-end"},{"@type":"WebPageElement","name":"14. Autonomous decisions (flagged for review)"},{"@type":"WebPageElement","name":"15. Cost"},{"@type":"WebPageElement","name":"16. Not started (deferred)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRAAVIIS","item":"https://docs.ampersandboxdesign.com/TRAAVIIS/"},{"@type":"ListItem","position":3,"name":"TRAAVIIS_ORS_CLOSURE_MEMO.md","item":"https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_ORS_CLOSURE_MEMO.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRAAVIIS</span>
+<span class="path">TRAAVIIS/TRAAVIIS_ORS_CLOSURE_MEMO.md</span>
+
+</div></div>
+<div class="lead">Slice: trvs serve --ors. Give the Episode Kernel its first transport: an HTTP surface that accepts a candidate finding+patch, scores it against a packed environment, publishes t…</div>
+<div class="prose"><h1 id="blk-34254">Residency Submission ORS Profile v1 — memo</h1>
+<p><strong>Slice:</strong> <code>trvs serve --ors</code>. Give the Episode Kernel its first transport: an HTTP surface that accepts a candidate finding+patch, scores it against a packed environment, publishes the evidence, and returns the reward. <strong>Status:</strong> shipped.</p>
+<p><strong>Battery.</strong> O1–O30: <strong>30 passed / 0 skipped / 0 failed</strong>. Whole tree: <strong>532 passed / 0 skipped / 0 failed</strong> across 28 files, up from 502/27.</p>
+<p>Unblocked by the previous slice. The seventh GPT-5.6 ruling froze the ORS profile — one tool, the exact key set, the non-executing runner profile, the <code>finished</code> durability rule, admission-before-binding, and laws O1–O30 — and blocked it on the finalize race, which the linearization slice closed. This slice implements that ruling and nothing else.</p>
+<h3 id="blk-34258">1. What a transport is allowed to be</h3>
+<p>The kernel was extracted (§4a) so that a transport could be a <strong>translation layer</strong> rather than a second implementation. This slice is the first test of whether that was true, and the answer is legible in the shape of the diff: <code>traaviis/ors.py</code> is 740 lines of <em>validation and translation</em>, and it computes no reward, opens no episode, and writes no bundle. Every one of those is a kernel call.</p>
+<p>The strongest statement of this is O3. The three interactive routes — <code>observe</code>, <code>step</code>, <code>reset</code> — do not have a transport-level &quot;not implemented&quot; branch. They call the kernel, the kernel raises <code>KERNEL_OPERATION_UNSUPPORTED</code> because the Residency substrate is one-shot, and the transport maps that to 501 and relays the code verbatim. <strong>The refusal is in the substrate's words, not the transport's.</strong> A transport that owned the refusal would keep answering <code>501</code> on the day a substrate learned to step.</p>
+<h3 id="blk-34261">2. One tool, because the substrate has one</h3>
+<p><code>submit_candidate</code> is the entire tool surface. The banner and <code>/describe</code> advertise exactly that, plus the three operations this substrate refuses, by name.</p>
+<p>There is a real temptation to publish a richer vocabulary and stub the rest, because catalogs are cheap and clients like options. It is the same temptation as fabricating an exit code, and it fails the same way: an advertised capability is a <em>claim</em>, and a claim the substrate cannot honour is the kind of thing that gets discovered by a client's retry loop at 3am rather than by a law.</p>
+<h3 id="blk-34264">3. The exact key set is a trust boundary, not a schema nicety</h3>
+<p><code>RemoteSubmissionV1</code> (<code>traaviis.remote-submission.v1</code>) is validated by <strong>exact key set</strong> — <code>{submission_version, finding, patch}</code> — not by &quot;these keys are required&quot;. The difference is the whole point.</p>
+<p>Everything else in an <code>EvaluationRunV1</code> is <em>server-determined</em>: the task, the environment, the toolchain, the platform, the verifier versions, the reward, the execution facts. A client that could set any of them could mint an episode that verifies closed and says something false. So:</p>
+<ul><li><p><code>CLIENT_FORBIDDEN_FIELDS</code> are refused <strong>by name</strong> (O5), because &quot;unknown</p></li></ul>
+<p>field&quot; is a bad error message for <code>reward</code>;</p>
+<ul><li><p>any <em>other</em> unexpected key is refused too (O6), because the forbidden list is</p></li></ul>
+<p>a courtesy and the exact key set is the actual gate — a field nobody foresaw must not slip through on the grounds that nobody foresaw it;</p>
+<ul><li><p><code>submission_version</code> is checked <strong>first</strong> (O7), so a v2 client gets told it is</p></li></ul>
+<p>a v2 client rather than being told its v2 fields are unknown.</p>
+<p>O9 is the law that states the boundary directly: a client-supplied <code>run_result</code> cannot reach the kernel under any spelling.</p>
+<h3 id="blk-34280">4. Nothing was executed, and the receipt says so</h3>
+<p>The server runs no agent. A candidate arrives already written. That is a genuinely different provenance from <code>trvs eval-one</code>, where an agent ran under a recorded toolchain on a recorded platform, and the receipt has to be able to say which one it is.</p>
+<p>Hence the runner profile <code>traaviis.ors-submission.v1</code>, in <code>execfacts.NON_EXECUTING_PROFILES</code>:</p>
+<pre><code>filesystem   not_applicable
+network      not_applicable
+termination  not_executed
+exit_code    null</code></pre>
+<p><code>not_applicable</code> is not <code>none</code>, and <code>not_executed</code> is not <code>exited</code>. A sandbox policy of <code>none</code> asserts that a program ran unsandboxed; <code>not_applicable</code> asserts there was no program to sandbox. Likewise <code>exit_code: null</code> — O13 is the law that a null exit code is <strong>not</strong> read downstream as a failed run, which is exactly the misreading that would have followed from fabricating a <code>0</code>.</p>
+<p>O11 pins the other half: the adapter profile is a <em>new key</em>, and it moved no existing episode. Every previously minted <code>episode-…</code> is byte-identical.</p>
+<h3 id="blk-34286">5. <code>finished: true</code> is a durability claim</h3>
+<p>The tool result reports <code>finished: true</code> only after the episode has been staged, <strong>re-verified as a reader would verify it</strong>, fsynced, and published by rename into <code>episode-&lt;id&gt;/</code>. If publication fails, the response is a failure — not a finish with a warning (O18).</p>
+<p>This is the one place where the transport is allowed to be opinionated, and it should be: a client that reads <code>finished: true</code> and drops its local copy has to be right. A &quot;scored but not yet durable&quot; state would be a lie with a latency.</p>
+<h3 id="blk-34289">6. Admission precedes binding</h3>
+<p>The whole admission path — open the packed environment, verify its closure, resolve the split, confirm the episode output directory is writable — runs <strong>before the socket binds</strong> (O24, O25).</p>
+<p>A server that binds first and admits later has a window in which it is reachable and cannot serve. That window is where clients learn to retry, and retry loops outlive the bug that caused them. Failing before the port exists means a misconfigured <code>serve</code> is a message on stderr and a non-zero exit, which is what an operator can act on.</p>
+<h3 id="blk-34292">7. Idempotency is a transport concern, so it lives in a header</h3>
+<p>Retry safety is a property of the wire, not of the episode. <code>Idempotency-Key</code> is therefore an HTTP <strong>header</strong>, not a submission field — putting it in the body would have made it part of <code>RemoteSubmissionV1</code>, which is content the identity ladder would then have to have an opinion about.</p>
+<p>The rules are three laws:</p>
+<table><thead><tr><th>law</th><th>statement</th></tr></thead><tbody><tr><td>O19</td><td>the same key replays the stored answer instead of re-scoring</td></tr><tr><td>O20</td><td>a <em>different</em> key after a finish is refused by name</td></tr><tr><td>O21</td><td>a <strong>keyless</strong> second submission is refused too</td></tr></tbody></table>
+<p>O21 is the one worth arguing about. The permissive reading — no key means no idempotency contract, so just score it — turns a client that forgot the header into a client that silently double-executes a candidate's test suite. A session gets one shot; a missing key does not buy a second one.</p>
+<h3 id="blk-34305">8. Concurrency is §4a exercised, not re-solved</h3>
+<p>O22 (two concurrent submissions to one session score exactly once) and O23 (two different sessions score simultaneously) are the kernel's K19–K26 seen through the wire. The transport adds no locking of its own; it inherits the linearization.</p>
+<p>O23 is also where this slice found a real defect — see §10.</p>
+<h3 id="blk-34308">9. Loopback by default</h3>
+<p>The default bind is <code>127.0.0.1</code>. Leaving loopback requires <code>--allow-remote</code>, explicitly (O26). The server accepts unauthenticated submissions that execute a candidate's test suite against a packed environment; that is a perfectly reasonable thing to do on a developer's machine and a completely unreasonable thing to do on an interface by accident. The banner ends with <code>loopback only.</code> so the state is visible without reading flags.</p>
+<p>Body size is capped at 8 MiB.</p>
+<h3 id="blk-34311">10. Two defects this slice found</h3>
+<p>Both were found by the battery, not by the smoke test — which is the argument for writing the battery first.</p>
+<h4 id="blk-34313">The publish race (found by O23)</h4>
+<p>Two sessions scoring the <strong>same deterministic content</strong> each passed the <code>os.path.exists(final)</code> check, each staged a complete bundle, and the loser's <code>os.rename</code> hit <code>ENOTEMPTY</code>:</p>
+<pre><code>OrsError: the episode scored but its evidence could not be published
+  OSError: [Errno 39] Directory not empty:
+    '.../.tmp-episode-dkka32nk' -&gt; '.../episode-54d52ddf…'</code></pre>
+<p>The check-then-rename was TOCTOU. The fix does <strong>not</strong> add a lock — content addressing already makes a collision a no-op — it takes the race as a signal:</p>
+<pre data-lang="python"><code>try:
+    os.rename(tmp, final)
+except OSError as exc:
+    if exc.errno not in _RACE_ERRNOS or not os.path.exists(final):
+        raise
+    shutil.rmtree(tmp, ignore_errors=True)
+    return _accept_existing()</code></pre>
+<p><code>_accept_existing()</code> is the <em>same</em> idempotent-reuse path the existence check takes, extracted so both routes share it. It re-verifies the winner and accepts it only if it verifies closed <strong>with this episode's id</strong> — the loser never trusts the winner by name. Renaming a directory onto a non-empty one fails rather than clobbering, so the loser still holds a complete staged tree at the moment it decides; nothing is lost either way.</p>
+<p>This was reachable only from a concurrent transport, and it is the second defect in two slices of that exact shape.</p>
+<h4 id="blk-34320">The shutdown hang (found by O26)</h4>
+<p><code>OrsHttpServer.shutdown()</code> called <code>self._httpd.shutdown()</code> unconditionally, and <code>socketserver.BaseServer.shutdown()</code> waits on an event that only <code>serve_forever</code> sets. A server that was <strong>bound but never served</strong> — which is precisely what O26 constructs, and what any code path that binds to report a port and then fails would produce — blocked forever in its own cleanup.</p>
+<p>Binding and serving are separate here by design, so releasing a bound-only socket has to be possible. A <code>threading.Event</code> now records whether <code>serve_forever</code> is actually running; <code>shutdown</code> only waits if it is, and closes the socket either way. <code>start_background</code> waits on the same event, so it returns once the server is genuinely serving rather than once the thread exists.</p>
+<h3 id="blk-34323">11. A correction this slice made to its own laws</h3>
+<p>O30's first form scanned <code>identity.py</code> as raw text for words the module is forbidden to know, and reported that it mentions <code>ors</code> — inside <code>separators</code>, from a <code>json.dumps</code> call.</p>
+<p>This is the <strong>fifth</strong> time in this codebase that a text scan has made a claim about structure it could not see (K10, K12, K18, K28). The rule these have converged on: <em>a module is allowed to name a seam it deliberately does not cross, so a law about a seam has to parse rather than grep.</em> O30 now tokenizes identifiers and compares whole words:</p>
+<pre data-lang="python"><code>ident_words = set()
+for token in re.findall(r&quot;[A-Za-z_]+&quot;, inspect.getsource(I)):
+    ident_words.update(p for p in token.lower().split(&quot;_&quot;) if p)</code></pre>
+<p>A word this module is forbidden to know is a word, and the check has to be able to tell one from a syllable.</p>
+<p>The second harness fix was a latent crash: the law-numbering completeness check read <code>int(n.split(&quot;_&quot;)[0][6:])</code> where <code>n</code> is <code>test_o30_…</code>, so it parsed <code>&quot;test&quot;</code> and sliced it to <code>&quot;&quot;</code>. It had never been reached because the assertion above it always failed first — which is its own small lesson about assertion order.</p>
+<h3 id="blk-34329">12. A law that expired</h3>
+<p><code>test_kernel.py</code>'s K18 asserted, among other things, that no CLI verb reached the kernel — with the comment &quot;<code>trvs serve --ors</code> is the next slice, not this one&quot;. Shipping this slice made that clause false, correctly.</p>
+<p>It was not deleted. What must not expire is <em>how</em> the kernel is reached, so the clause was re-scoped: <code>cli.py</code> may not name <code>kernel</code> or <code>EpisodeKernelV1</code> at all. It imports <code>ors</code> and <code>ors_server</code>. The CLI drives an adapter and the adapter drives the kernel; a command that constructed a kernel itself would make the CLI a second transport, and the two would drift.</p>
+<h3 id="blk-34332">13. Live end-to-end</h3>
+<p>A fresh scaffold, no fixtures:</p>
+<pre><code>trvs init env --template evidence-residency     8 files
+trvs pack env pkg                                env-a38ec4c04532be25…
+                                                 snap-c66198ab… task-3b4b2599…
+                                                 rew-25c4ce12… bundle-214fb799…
+trvs serve pkg --ors --split all --output episodes --port 8791
+
+POST /sessions                                   201
+POST /sessions/&lt;id&gt;/call_tool                    200  reward 1.0  finished true
+  Idempotency-Key: demo-1                        episode-0a258d6e4976ffd1…
+  (repeat, same key)                             identical response
+POST /sessions/&lt;id&gt;/observe                      501  KERNEL_OPERATION_UNSUPPORTED
+
+trvs verify-episode episodes/episode-0a258d6e…   7/7 replay == receipt
+                                                 reward 1.0 vs 1.0
+                                                 verified ✓ closed</code></pre>
+<p>The last line is the point of the whole stack: the episode a remote client produced replays offline, with no agent and no server, to the same reward.</p>
+<h3 id="blk-34336">14. Autonomous decisions (flagged for review)</h3>
+<p>Everything structural was ruled. Four choices were not:</p>
+<ol><li><p><strong>`_accept_existing()` is shared by both the check path and the race path.</strong></p></li></ol>
+<p>The alternative — let the race path raise and make the caller retry — pushes a filesystem detail into the transport. Content addressing makes reuse correct; the only requirement is that reuse never trusts a name, and it does not.</p>
+<ol start="2"><li><p><strong>`shutdown()` closes the socket even when never served.</strong> The alternative is</p></li></ol>
+<p>to require <code>serve_forever</code> before <code>shutdown</code>, which makes every failure between bind and serve leak a socket.</p>
+<ol start="3"><li><p><strong>`start_background()` waits (5s) for the serving event.</strong> Returning a server</p></li></ol>
+<p>that is not yet accepting makes every caller write its own poll loop.</p>
+<ol start="4"><li><p><strong>The banner label is `runner`, not `runner profile`.</strong> Cosmetic: <code>_field</code></p></li></ol>
+<p>pads to 13 characters and the longer label overflowed the column.</p>
+<h3 id="blk-34354">15. Cost</h3>
+<p>Two new modules (<code>traaviis/ors.py</code> 740, <code>traaviis/ors_server.py</code> 336), one new battery (<code>test/test_ors.py</code> 1248), one new CLI verb (<code>cmd_serve</code>, +110 in <code>cli.py</code>), and one bug fix in <code>episode_bundle.py</code>. <code>execfacts.py</code> gained the non-executing runner profile. No new dependency — <code>http.server</code> and <code>socketserver</code> are standard library. No new identity rung, no new receipt field, no schema migration, no change to any existing episode.</p>
+<h3 id="blk-34356">16. Not started (deferred)</h3>
+<ul><li><p><code>trvs serve --mcp</code> — the same kernel behind the MCP wire vocabulary</p></li></ul>
+<p>(tools / resources / prompts). Deferred by ruling; the kernel and this adapter together are what make it a translation layer rather than a rewrite.</p>
+<ul><li><p>Authentication, TLS, and multi-tenant session quotas. Loopback is the current</p></li></ul>
+<p>answer and <code>--allow-remote</code> is deliberately blunt.</p>
+<ul><li><p>The REPL, <code>EvaluationV2</code>, <code>eval-…</code>, <code>agent-…</code>, and batch-evidence</p></li></ul>
+<p>distribution identity remain deferred.</p></div>
+<p class="src"><a href="/#/TRAAVIIS/TRAAVIIS_ORS_CLOSURE_MEMO.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-34258" class="lvl2">1. What a transport is allowed to be</a><a href="#blk-34261" class="lvl2">2. One tool, because the substrate has one</a><a href="#blk-34264" class="lvl2">3. The exact key set is a trust boundary, not a schema nicety</a><a href="#blk-34280" class="lvl2">4. Nothing was executed, and the receipt says so</a><a href="#blk-34286" class="lvl2">5. finished: true is a durability claim</a><a href="#blk-34289" class="lvl2">6. Admission precedes binding</a><a href="#blk-34292" class="lvl2">7. Idempotency is a transport concern, so it lives in a header</a><a href="#blk-34305" class="lvl2">8. Concurrency is §4a exercised, not re-solved</a><a href="#blk-34308" class="lvl2">9. Loopback by default</a><a href="#blk-34311" class="lvl2">10. Two defects this slice found</a><a href="#blk-34313" class="lvl3">The publish race (found by O23)</a><a href="#blk-34320" class="lvl3">The shutdown hang (found by O26)</a><a href="#blk-34323" class="lvl2">11. A correction this slice made to its own laws</a><a href="#blk-34329" class="lvl2">12. A law that expired</a><a href="#blk-34332" class="lvl2">13. Live end-to-end</a><a href="#blk-34336" class="lvl2">14. Autonomous decisions (flagged for review)</a><a href="#blk-34354" class="lvl2">15. Cost</a><a href="#blk-34356" class="lvl2">16. Not started (deferred)</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRAAVIIS/ARCHITECTURE.md/">TRAAVIIS — Architecture &amp; the road to the environment surface</a><a href="/TRAAVIIS/HANDOFF_TRAAVIIS_ENV.md/">Handoff — TRAAVIIS environment surface (SUPERSEDED)</a><a href="/TRAAVIIS/IDENTITY_MIGRATION_OPTIONS.md/">Identity migration options: versioned prefix vs. schema-level scheme vs. never conform</a><a href="/TRAAVIIS/README.md/">TRAAVIIS</a><a href="/TRAAVIIS/RFC_EVIDENCE_RESIDENCY.md/">RFC — Evidence Residency (residency.repository.v1)</a><a href="/TRAAVIIS/RFC_TRAAVIIS_ARTIFACTS.md/">RFC — TRAAVIIS environment artifacts &amp; episode kernel</a><a href="/TRAAVIIS/ROADMAP.md/">TRAAVIIS — what to build after the MCP transport</a><a href="/TRAAVIIS/TRAAVIIS_BUNDLE_CLOSURE_MEMO.md/">Bundle Distribution Identity Closure — memo</a><a href="/TRAAVIIS/TRAAVIIS_CONTAINMENT_CAPABILITY_MEMO.md/">9F-A — containment capability honesty</a><a href="/TRAAVIIS/TRAAVIIS_CONTAINMENT_MEMO.md/">9E — background process and workspace exact closure</a><a href="/TRAAVIIS/TRAAVIIS_END_TO_END_AND_THREAT_MODEL_MEMO.md/">Item A, item K&#39;s documentation half, and a release gate that blamed the packet</a><a href="/TRAAVIIS/TRAAVIIS_ENV_AUTHORING_MEMO.md/">TRAAVIIS — Environment Authoring Closure (trvs init + trvs pack)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieralxorbjalsi5ykxg66rihh5eym6r5a2ctstl7snlz6cwzu6vzbowa</div></div></div>
+</div></div>
+</body></html>

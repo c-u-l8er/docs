@@ -1,0 +1,168 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;govern: Cross-Cutting Governance for Agents · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="The &amp;govern capability family represents an agent&#39;s ability to enforce policy, verify identity, emit telemetry, manage cost budgets, and escalate to…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/govern.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;govern: Cross-Cutting Governance for Agents">
+<meta property="og:description" content="The &amp;govern capability family represents an agent&#39;s ability to enforce policy, verify identity, emit telemetry, manage cost budgets, and escalate to…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/govern.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&govern: Cross-Cutting Governance for Agents","name":"&govern: Cross-Cutting Governance for Agents","description":"The &govern capability family represents an agent's ability to enforce policy, verify identity, emit telemetry, manage cost budgets, and escalate to…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/govern.md/","identifier":"bagaaierabcfxjgmiw5aon6rqg6ms4mbb73knfi6ojctc4pqwabz46wzd3zha","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why &govern exists as a first-class primitive"},{"@type":"WebPageElement","name":"What &govern means in the protocol"},{"@type":"WebPageElement","name":"Common &govern subtypes"},{"@type":"WebPageElement","name":"&govern.telemetry"},{"@type":"WebPageElement","name":"&govern.escalation"},{"@type":"WebPageElement","name":"&govern.identity"},{"@type":"WebPageElement","name":"Future subtype candidates"},{"@type":"WebPageElement","name":"What problems &govern solves"},{"@type":"WebPageElement","name":"How &govern differs from the governance block"},{"@type":"WebPageElement","name":"How &govern composes with the other primitives"},{"@type":"WebPageElement","name":"&govern + &memory"},{"@type":"WebPageElement","name":"&govern + &reason"},{"@type":"WebPageElement","name":"&govern + &time"},{"@type":"WebPageElement","name":"&govern + &space"},{"@type":"WebPageElement","name":"Full composition: all six primitives"},{"@type":"WebPageElement","name":"Typical providers"},{"@type":"WebPageElement","name":"opensentience"},{"@type":"WebPageElement","name":"delegatic"},{"@type":"WebPageElement","name":"fleetprompt"},{"@type":"WebPageElement","name":"Anti-patterns"},{"@type":"WebPageElement","name":"Anti-pattern 1: Treating governance as optional"},{"@type":"WebPageElement","name":"Anti-pattern 2: Hardcoding budget limits in application code"},{"@type":"WebPageElement","name":"Anti-pattern 3: Identity verification only at deploy time"},{"@type":"WebPageElement","name":"Anti-pattern 4: Escalation as error handling"},{"@type":"WebPageElement","name":"Anti-pattern 5: Telemetry without structured schemas"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"capabilities","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/"},{"@type":"ListItem","position":5,"name":"govern.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/govern.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/capabilities/govern.md</span>
+
+</div></div>
+<div class="lead">The &amp;govern capability family represents an agent&#39;s ability to enforce policy, verify identity, emit telemetry, manage cost budgets, and escalate to humans — the cross-cutting g…</div>
+<div class="prose"><h1 id="blk-3224"><code>&amp;govern</code>: Cross-Cutting Governance for Agents</h1>
+<p>The <code>&amp;govern</code> capability family represents an agent's ability to <strong>enforce policy, verify identity, emit telemetry, manage cost budgets, and escalate to humans</strong> — the cross-cutting governance concerns that apply to every other primitive.</p>
+<p>In the [&amp;] Protocol, <code>&amp;govern</code> is the sixth primitive (cross-cutting over four cognitive + one sensorimotor):</p>
+<ul><li><p><code>&amp;memory</code> — what the agent knows</p></li><li><p><code>&amp;reason</code> — how the agent decides</p></li><li><p><code>&amp;time</code> — when things happen</p></li><li><p><code>&amp;space</code> — where things are</p></li><li><p><code>&amp;body</code> — how the agent is instantiated in an environment (perception, action, affordance)</p></li><li><p><code>&amp;govern</code> — who is acting, under what rules, at what cost</p></li></ul>
+<p>Unlike the five other primitives, which each model a distinct cognitive or sensorimotor domain, <code>&amp;govern</code> is <strong>cross-cutting</strong>. It does not exist in isolation — it wraps, constrains, and observes the others. Every <code>&amp;memory</code> operation can emit telemetry. Every <code>&amp;reason</code> decision can trigger escalation. Every <code>&amp;space</code> action can be identity-verified. Every <code>&amp;time</code> forecast can be budget-checked. Every <code>&amp;body</code> action can be affordance-filtered and authorization-gated.</p>
+<h3 id="blk-3241">Why <code>&amp;govern</code> exists as a first-class primitive</h3>
+<p>Agent governance is the most underfunded and underspecified area of AI infrastructure. As of 2025, only $414M has been invested across all dedicated AI safety/governance startups — less than 5% of total AI security investment.</p>
+<p>Yet Gartner predicts 40% of agentic AI projects will be scrapped by 2027, primarily due to governance failures:</p>
+<ul><li><p>agents that exceed cost budgets with no enforcement mechanism</p></li><li><p>agents that impersonate other agents with no identity verification</p></li><li><p>agents that make high-stakes decisions with no human escalation path</p></li><li><p>agents that operate opaquely with no telemetry or audit trail</p></li><li><p>multi-agent systems where no one knows which agent did what</p></li></ul>
+<p>These are not feature requests. They are <strong>enterprise-blocking gaps</strong>.</p>
+<p>Treating governance as a first-class capability — rather than an afterthought bolted onto application code — allows the protocol to express:</p>
+<ul><li><p>that an agent has governance constraints at all</p></li><li><p>what kind of governance it has (telemetry, escalation, identity)</p></li><li><p>which provider implements each governance concern</p></li><li><p>how governance composes with memory, reasoning, time, space, and body</p></li><li><p>what events, budgets, and escalation rules are enforced</p></li></ul>
+<p>Without <code>&amp;govern</code>, governance tends to be hidden inside ad hoc middleware, provider-specific plugins, or manual compliance processes. The result is architecture that works in demos but fails in production.</p>
+<h3 id="blk-3269">What <code>&amp;govern</code> means in the protocol</h3>
+<p>At the protocol level, <code>&amp;govern</code> is not a vendor, dashboard, or compliance tool.</p>
+<p>It is a <strong>capability interface family</strong>.</p>
+<p>That means:</p>
+<ul><li><p><code>&amp;govern.telemetry</code> is a protocol capability</p></li><li><p><code>opensentience</code> is one provider that may satisfy it</p></li><li><p>another provider could also satisfy <code>&amp;govern.telemetry</code> if it implements the same contract</p></li></ul>
+<p>This separation is important.</p>
+<p>If governance were modeled only as provider-specific configuration, then changing your observability stack would require rewriting your agent declarations. By modeling <code>&amp;govern</code> as an interface family, the protocol stays portable.</p>
+<h3 id="blk-3282">Common <code>&amp;govern</code> subtypes</h3>
+<h4 id="blk-3283"><code>&amp;govern.telemetry</code></h4>
+<p>Represents the observability backbone: structured event emission, metric queries, and budget enforcement.</p>
+<p>Typical concerns:</p>
+<ul><li><p>emitting structured telemetry events (OpenTelemetry-compatible)</p></li><li><p>tracking token consumption and cost per task and per period</p></li><li><p>enforcing budget limits from Delegatic policy trees</p></li><li><p>querying historical telemetry for audit and analysis</p></li><li><p>detecting anomalous agent behavior via cost or usage patterns</p></li></ul>
+<p>This is the subtype most relevant to cost management, observability, and compliance.</p>
+<h4 id="blk-3298"><code>&amp;govern.escalation</code></h4>
+<p>Represents the human-in-the-loop bridge: structured handoff from autonomous operation to human review.</p>
+<p>Typical concerns:</p>
+<ul><li><p>escalating when confidence falls below a threshold</p></li><li><p>escalating when cost exceeds a budget</p></li><li><p>escalating when a hard governance boundary is approached</p></li><li><p>escalating when policy explicitly requires human approval</p></li><li><p>tracking escalation history and response patterns</p></li></ul>
+<p>This subtype matters whenever autonomous operation must have a safety valve.</p>
+<h4 id="blk-3313"><code>&amp;govern.identity</code></h4>
+<p>Represents cross-runtime agent identity: verification, registration, and trust.</p>
+<p>Typical concerns:</p>
+<ul><li><p>verifying that an agent is who it claims to be (manifest hash, spec hash)</p></li><li><p>registering agent identity on publish or deployment</p></li><li><p>resolving agent identity from an ID or manifest reference</p></li><li><p>preventing agent impersonation in multi-agent systems</p></li><li><p>associating governance policies with verified identities</p></li></ul>
+<p>This subtype is essential for multi-agent systems where trust between agents is not assumed.</p>
+<h4 id="blk-3328">Future subtype candidates</h4>
+<p>As the protocol evolves, additional governance subtypes may emerge:</p>
+<ul><li><p><code>&amp;govern.audit</code> — dedicated audit trail management</p></li><li><p><code>&amp;govern.consent</code> — user consent and data governance</p></li><li><p><code>&amp;govern.compliance</code> — regulatory compliance checks</p></li><li><p><code>&amp;govern.rate_limit</code> — fine-grained rate limiting per capability</p></li></ul>
+<p>The protocol should stay conservative at the primitive level and extensible at the subtype level.</p>
+<h3 id="blk-3340">What problems <code>&amp;govern</code> solves</h3>
+<p><code>&amp;govern</code> gives the protocol a standard place to express capabilities like:</p>
+<ul><li><p>tracking what every agent does and what it costs</p></li><li><p>enforcing budget limits across an org hierarchy</p></li><li><p>verifying agent identity before allowing collaboration</p></li><li><p>escalating to humans when confidence or cost thresholds are crossed</p></li><li><p>auditing the full provenance chain of a decision</p></li><li><p>detecting and preventing adversarial behavior (OS-007)</p></li></ul>
+<p>These are especially important when agents operate autonomously, at scale, across organizational boundaries.</p>
+<p>Example:</p>
+<p>A fleet management agent optimizes delivery routes. Without <code>&amp;govern</code>:</p>
+<ul><li><p>No one knows how many tokens it consumed this month</p></li><li><p>No one can verify it's the same agent that was tested and approved</p></li><li><p>If it encounters an edge case it can't handle, it either hallucinates or fails silently</p></li><li><p>If it exceeds the cost budget, there's no enforcement mechanism</p></li></ul>
+<p>With <code>&amp;govern.telemetry + &amp;govern.identity + &amp;govern.escalation</code>:</p>
+<ul><li><p>Every route optimization emits a telemetry event with token count and cost</p></li><li><p>The agent's identity is verified against its FleetPrompt manifest on deployment</p></li><li><p>When confidence drops below 0.6, it escalates to a human dispatcher</p></li><li><p>When cost exceeds <code>max_cost_usd_per_task</code>, the operation is rejected with a clear budget error</p></li></ul>
+<h3 id="blk-3377">How <code>&amp;govern</code> differs from the governance block</h3>
+<p>The <code>ampersand.json</code> <code>governance</code> block declares <strong>what rules apply</strong> (hard constraints, soft preferences, escalation thresholds).</p>
+<p>The <code>&amp;govern</code> capability declares <strong>which systems enforce those rules</strong>.</p>
+<p>They are complementary:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;govern.telemetry&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;org_id&quot;</span>: <span class="t-string">&quot;org_acme&quot;</span> }
+    },
+    <span class="t-key">&quot;&amp;govern.escalation&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;timeout_seconds&quot;</span>: <span class="t-num">300</span> }
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [<span class="t-string">&quot;Never exceed $50 per task&quot;</span>],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span>,
+      <span class="t-key">&quot;cost_exceeds_usd&quot;</span>: <span class="t-num">50</span>
+    },
+    <span class="t-key">&quot;autonomy&quot;</span>: {
+      <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;advise&quot;</span>,
+      <span class="t-key">&quot;budget&quot;</span>: {
+        <span class="t-key">&quot;max_cost_usd_per_task&quot;</span>: <span class="t-num">50</span>,
+        <span class="t-key">&quot;max_tokens_per_period&quot;</span>: <span class="t-num">1000000</span>
+      }
+    }
+  }
+}</code></pre>
+<p>The <code>governance</code> block is the <strong>policy declaration</strong>. The <code>&amp;govern</code> capabilities are the <strong>enforcement mechanisms</strong>.</p>
+<h3 id="blk-3383">How <code>&amp;govern</code> composes with the other primitives</h3>
+<h4 id="blk-3384"><code>&amp;govern</code> + <code>&amp;memory</code></h4>
+<p>Every memory operation can emit telemetry. Memory consolidation cycles can be budget-checked. Knowledge graph mutations can trigger identity verification for the writing agent.</p>
+<p>Together they support:</p>
+<ul><li><p>tracking which agent wrote which knowledge</p></li><li><p>enforcing storage budgets</p></li><li><p>auditing knowledge provenance</p></li></ul>
+<h4 id="blk-3394"><code>&amp;govern</code> + <code>&amp;reason</code></h4>
+<p>Every deliberation can be cost-tracked. High-stakes decisions can trigger escalation. Voting agents can be identity-verified before participating.</p>
+<p>Together they support:</p>
+<ul><li><p>budget-bounded deliberation</p></li><li><p>human review of critical decisions</p></li><li><p>preventing impersonation in multi-agent voting</p></li></ul>
+<h4 id="blk-3404"><code>&amp;govern</code> + <code>&amp;time</code></h4>
+<p>Temporal forecasts and anomaly detections can emit telemetry. Expensive SSM inference can be budget-checked. Anomaly thresholds can trigger escalation when they exceed governance bounds.</p>
+<p>Together they support:</p>
+<ul><li><p>cost tracking for temporal intelligence operations</p></li><li><p>degraded-mode fallback when compute budget is exhausted</p></li><li><p>human review of high-impact temporal predictions</p></li></ul>
+<h4 id="blk-3414"><code>&amp;govern</code> + <code>&amp;space</code></h4>
+<p>Route optimizations can emit telemetry with compute cost. Geofence boundary crossings can trigger escalation. Fleet operations agents can be identity-verified before accessing sensitive location data.</p>
+<p>Together they support:</p>
+<ul><li><p>spatial operation cost tracking</p></li><li><p>compliance escalation on boundary violations</p></li><li><p>identity-gated access to fleet data</p></li></ul>
+<h4 id="blk-3424">Full composition: all six primitives</h4>
+<pre><code>stream_data
+  |&gt; &amp;time.anomaly.detect()
+  |&gt; &amp;govern.telemetry.emit()
+  |&gt; &amp;space.fleet.enrich()
+  |&gt; &amp;govern.telemetry.budget_check()
+  |&gt; &amp;memory.graph.enrich()
+  |&gt; &amp;reason.argument.evaluate()
+  |&gt; &amp;body.browser.affordances()     # policy-filtered action set
+  |&gt; &amp;govern.escalation.authorize()  # authorize destructive body actions
+  |&gt; &amp;body.browser.act()
+  |&gt; &amp;govern.escalation.escalate()   # if confidence &lt; threshold</code></pre>
+<p>This pipeline shows how <code>&amp;govern</code> weaves through the other five primitives — not as a separate stage, but as an observability and enforcement layer that accompanies every operation, including <code>&amp;body.*</code> affordance filtering and action authorization.</p>
+<h3 id="blk-3427">Typical providers</h3>
+<h4 id="blk-3428"><code>opensentience</code></h4>
+<p>The primary runtime enforcement provider. Implements:</p>
+<ul><li><p>OS-006: Agent Governance Shim (permission engine, lifecycle, autonomy levels)</p></li><li><p>OS-007: Adversarial Robustness (identity verification, budget enforcement, circuit breakers)</p></li><li><p>OS-008: Agent Harness (pipeline enforcement, quality gates, sprint contracts, context management)</p></li></ul>
+<h4 id="blk-3437"><code>delegatic</code></h4>
+<p>The policy source provider. Provides:</p>
+<ul><li><p>Monotonic policy inheritance (budget limits flow from root to leaf orgs)</p></li><li><p>Budget fields: <code>max_tokens_per_task</code>, <code>max_cost_usd_per_period</code>, etc.</p></li><li><p>Policy merge semantics: AND for booleans, MIN for numerics, INTERSECTION for allow-lists</p></li></ul>
+<h4 id="blk-3446"><code>fleetprompt</code></h4>
+<p>The identity registry provider. Provides:</p>
+<ul><li><p>Agent manifest registration on publish</p></li><li><p>Identity verification for marketplace agents</p></li><li><p>Trust score computation from test coverage + spec compliance + usage history</p></li></ul>
+<h3 id="blk-3455">Anti-patterns</h3>
+<h4 id="blk-3456">Anti-pattern 1: Treating governance as optional</h4>
+<p>If an agent operates autonomously, governance is not optional. Skipping <code>&amp;govern</code> declarations doesn't remove governance concerns — it just makes them invisible.</p>
+<h4 id="blk-3458">Anti-pattern 2: Hardcoding budget limits in application code</h4>
+<p>Budget limits should flow from Delegatic policy trees, not be hardcoded per agent. Use <code>&amp;govern.telemetry.budget_check()</code> against the policy tree.</p>
+<h4 id="blk-3460">Anti-pattern 3: Identity verification only at deploy time</h4>
+<p>Agent identity should be verified continuously — not just when first deployed. Use <code>&amp;govern.identity.verify()</code> before accepting collaboration requests.</p>
+<h4 id="blk-3462">Anti-pattern 4: Escalation as error handling</h4>
+<p>Escalation is a governance-mandated handoff, not an error. Design escalation paths as first-class workflows, not exception handlers.</p>
+<h4 id="blk-3464">Anti-pattern 5: Telemetry without structured schemas</h4>
+<p>Unstructured log messages are not telemetry. Use the OpenTelemetry-compatible event schema with typed fields (trace_id, agent_id, capability, tokens_consumed, cost_usd_estimated).</p>
+<h3 id="blk-3466">Summary</h3>
+<p><code>&amp;govern</code> is the protocol's answer to the question:</p>
+<p><strong>How does an agent operate safely, transparently, and within bounds?</strong></p>
+<p>It matters because autonomous agents without governance are demos, not products.</p>
+<p><code>&amp;govern</code> makes governance:</p>
+<ul><li><p>explicit in the declaration</p></li><li><p>separable from providers</p></li><li><p>contract-aware</p></li><li><p>composable with memory, time, space, and reason</p></li><li><p>enforceable</p></li><li><p>auditable</p></li><li><p>compilable into downstream agent artifacts</p></li></ul>
+<p>If <code>&amp;memory</code> helps the agent remember, and <code>&amp;reason</code> helps it decide, and <code>&amp;time</code> helps it understand change, and <code>&amp;space</code> helps it stay grounded in the world,</p>
+<p>then <code>&amp;govern</code> ensures it does all of that <strong>safely, transparently, and within the rules</strong>.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/capabilities/govern.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-3241" class="lvl2">Why &amp;govern exists as a first-class primitive</a><a href="#blk-3269" class="lvl2">What &amp;govern means in the protocol</a><a href="#blk-3282" class="lvl2">Common &amp;govern subtypes</a><a href="#blk-3283" class="lvl3">&amp;govern.telemetry</a><a href="#blk-3298" class="lvl3">&amp;govern.escalation</a><a href="#blk-3313" class="lvl3">&amp;govern.identity</a><a href="#blk-3328" class="lvl3">Future subtype candidates</a><a href="#blk-3340" class="lvl2">What problems &amp;govern solves</a><a href="#blk-3377" class="lvl2">How &amp;govern differs from the governance block</a><a href="#blk-3383" class="lvl2">How &amp;govern composes with the other primitives</a><a href="#blk-3384" class="lvl3">&amp;govern + &amp;memory</a><a href="#blk-3394" class="lvl3">&amp;govern + &amp;reason</a><a href="#blk-3404" class="lvl3">&amp;govern + &amp;time</a><a href="#blk-3414" class="lvl3">&amp;govern + &amp;space</a><a href="#blk-3424" class="lvl3">Full composition: all six primitives</a><a href="#blk-3427" class="lvl2">Typical providers</a><a href="#blk-3428" class="lvl3">opensentience</a><a href="#blk-3437" class="lvl3">delegatic</a><a href="#blk-3446" class="lvl3">fleetprompt</a><a href="#blk-3455" class="lvl2">Anti-patterns</a><a href="#blk-3456" class="lvl3">Anti-pattern 1: Treating governance as optional</a><a href="#blk-3458" class="lvl3">Anti-pattern 2: Hardcoding budget limits in application code</a><a href="#blk-3460" class="lvl3">Anti-pattern 3: Identity verification only at deploy time</a><a href="#blk-3462" class="lvl3">Anti-pattern 4: Escalation as error handling</a><a href="#blk-3464" class="lvl3">Anti-pattern 5: Telemetry without structured schemas</a><a href="#blk-3466" class="lvl2">Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/capabilities/memory.md/">&amp;memory: Capability Deep Dive</a><a href="/AmpersandBoxDesign/docs/capabilities/reason.md/">&amp;reason: Deliberation, Evaluation, and Decision-Making</a><a href="/AmpersandBoxDesign/docs/capabilities/space.md/">&amp;space: Spatial Intelligence for Agents</a><a href="/AmpersandBoxDesign/docs/capabilities/time.md/">&amp;time: Temporal Intelligence in the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierabcfxjgmiw5aon6rqg6ms4mbb73knfi6ojctc4pqwabz46wzd3zha</div></div></div>
+</div></div>
+</body></html>

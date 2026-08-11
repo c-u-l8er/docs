@@ -1,0 +1,146 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>The Missing Layer: Capability Composition in the Agent Protocol Stack · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="The current agent ecosystem is converging on a recognizable protocol stack.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/positioning.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Missing Layer: Capability Composition in the Agent Protocol Stack">
+<meta property="og:description" content="The current agent ecosystem is converging on a recognizable protocol stack.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/positioning.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"The Missing Layer: Capability Composition in the Agent Protocol Stack","name":"The Missing Layer: Capability Composition in the Agent Protocol Stack","description":"The current agent ecosystem is converging on a recognizable protocol stack.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/positioning.md/","identifier":"bagaaierawibz2qrk7lwrpqjp2ge42kczuxqx25rvj5bcbd7q7lx446s5w3ra","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Introduction"},{"@type":"WebPageElement","name":"1. The Current Stack"},{"@type":"WebPageElement","name":"MCP: context and tools"},{"@type":"WebPageElement","name":"A2A: coordination and delegation"},{"@type":"WebPageElement","name":"ACP and adjacent work"},{"@type":"WebPageElement","name":"2. The Gap"},{"@type":"WebPageElement","name":"3. What Composition Means"},{"@type":"WebPageElement","name":"Capability declaration"},{"@type":"WebPageElement","name":"Formal grammar"},{"@type":"WebPageElement","name":"Algebraic properties"},{"@type":"WebPageElement","name":"Type-safe pipelines"},{"@type":"WebPageElement","name":"Hash-linked provenance"},{"@type":"WebPageElement","name":"Declarative governance"},{"@type":"WebPageElement","name":"Governance from topology"},{"@type":"WebPageElement","name":"4. The [&] Protocol"},{"@type":"WebPageElement","name":"Six primitives"},{"@type":"WebPageElement","name":"Capability interfaces, not product names"},{"@type":"WebPageElement","name":"Canonical declaration: ampersand.json"},{"@type":"WebPageElement","name":"Compiles into MCP + A2A"},{"@type":"WebPageElement","name":"Reference implementation"},{"@type":"WebPageElement","name":"5. Try It"},{"@type":"WebPageElement","name":"Conclusion"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"positioning.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/positioning.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/positioning.md</span>
+
+</div></div>
+<div class="lead">The current agent ecosystem is converging on a recognizable protocol stack.</div>
+<div class="prose"><h1 id="blk-7660">The Missing Layer: Capability Composition in the Agent Protocol Stack</h1>
+<h3 id="blk-7661">Introduction</h3>
+<p>The current agent ecosystem is converging on a recognizable protocol stack.</p>
+<p>At the context layer, <strong>MCP</strong> defines how agents discover and invoke tools, resources, and prompts. At the coordination layer, <strong>A2A</strong> defines how agents discover each other and exchange work. Other protocols are emerging around UI rendering, transport, evaluation, and deployment. This is healthy. It means the ecosystem is beginning to separate concerns and stabilize interfaces.</p>
+<p>But there is still a missing layer.</p>
+<p>None of the existing protocols gives developers a standard way to declare <strong>how an agent’s cognitive capabilities compose into a coherent system before runtime wiring begins</strong>. They do not describe what kinds of memory an agent has, what form of reasoning it applies, what temporal intelligence it relies on, what spatial model it uses, what governance policies constrain it, whether those components are compatible, how data moves between them, or how provenance travels with that composition.</p>
+<p>That is the problem the [&amp;] Protocol addresses.</p>
+<p>The goal is not to replace MCP or A2A. The goal is to provide a higher-level declaration layer that can <strong>compile into MCP + A2A configurations</strong>. In that sense, the protocol is less like another transport standard and more like a source-of-truth artifact for agent architecture.</p>
+<h3 id="blk-7668">1. The Current Stack</h3>
+<p>A useful way to understand the problem is to look at what the current layers already do well.</p>
+<h4 id="blk-7670">MCP: context and tools</h4>
+<p>MCP solves a real and important problem: it gives agents a common way to connect to external tools and resources. A model or runtime does not need custom glue code for every tool provider. Instead, a server can expose tools, resources, and prompts through a shared interface.</p>
+<p>This is a major step forward for interoperability. It reduces bespoke integrations and makes tool access portable across runtimes.</p>
+<p>But MCP is deliberately focused on <strong>agent-to-tool connectivity</strong>. It tells you <em>how</em> a tool is called. It does not tell you <em>which cognitive capabilities should exist in the first place</em>, or whether a graph memory provider and a temporal anomaly detector compose safely with a specific reasoning strategy.</p>
+<h4 id="blk-7674">A2A: coordination and delegation</h4>
+<p>A2A solves a different problem. It standardizes how agents discover one another, advertise capabilities, and delegate tasks. That matters for multi-agent systems, marketplaces, and enterprise orchestration. Agent cards and skill metadata are useful coordination primitives.</p>
+<p>But A2A is about <strong>agent-to-agent coordination</strong>. It tells you how one agent exposes itself to another. It does not tell you how that agent is internally composed. If two agents both publish skills, A2A does not specify whether those skills are backed by durable memory, auditable reasoning, temporal prediction, or any other cognitive architecture.</p>
+<h4 id="blk-7677">ACP and adjacent work</h4>
+<p>Other protocols such as ACP address communication surfaces. Evaluation and operations projects such as ScaleMCP and MCPEval improve runtime quality, observability, and deployment discipline. These are valuable contributions.</p>
+<p>But they still do not define the composition layer.</p>
+<p>They do not answer questions like:</p>
+<ul><li><p>What are the canonical cognitive primitives an agent should declare?</p></li><li><p>How are capability interfaces separated from providers?</p></li><li><p>How are capability sets normalized and validated?</p></li><li><p>How does pipeline type safety work across capability operations?</p></li><li><p>How is provenance preserved across composed decisions?</p></li><li><p>How are governance constraints expressed as portable data rather than framework-specific code?</p></li></ul>
+<p>Those questions sit between architecture and runtime. That is the missing layer.</p>
+<h3 id="blk-7695">2. The Gap</h3>
+<p>Saying &quot;an agent has memory and reasoning&quot; is not enough.</p>
+<p>That statement is too vague to validate, too vague to generate from, and too vague to interoperate around. In practice, agent systems differ not only in <em>whether</em> they have memory, but in <em>what kind</em> of memory they have, how it is wired to other capabilities, what contracts it satisfies, and what guarantees the surrounding system provides.</p>
+<p>This gap is becoming more important as agent systems move from demos to infrastructure.</p>
+<p>A research assistant, incident responder, fleet optimizer, and customer support agent may all involve memory and reasoning, but they do not compose those capabilities in the same way. Some need graph recall. Some need vector retrieval. Some need temporal anomaly detection. Some need spatial fleet state. Some need argumentative or constitutional reasoning with escalation rules. Some need explicit governance — telemetry, identity management, or policy enforcement — as a first-class capability rather than a bolted-on afterthought. Without a shared way to represent those choices, each project reinvents its own private architecture language.</p>
+<p>Academic work points in the same direction. The <strong>CoALA</strong> taxonomy is useful because it breaks agent cognition into meaningful functional categories rather than treating &quot;the agent&quot; as a single black box. Likewise, work such as <strong>DALIA</strong> is relevant because it reinforces the need for explicit structure in agent architectures rather than informal prompt-only assembly.</p>
+<p>The practical consequence is straightforward:</p>
+<ul><li><p>runtimes can call tools,</p></li><li><p>agents can call other agents,</p></li><li><p>but developers still lack a portable contract for how cognitive capabilities compose.</p></li></ul>
+<p>The [&amp;] Protocol treats that as a protocol problem rather than just an implementation detail.</p>
+<h3 id="blk-7710">3. What Composition Means</h3>
+<p>In this context, composition is not a branding metaphor. It is a formal property of how an agent is assembled.</p>
+<h4 id="blk-7712">Capability declaration</h4>
+<p>An agent should be able to declare its capabilities in a machine-readable artifact such as <code>ampersand.json</code>. Those capabilities are expressed as protocol interfaces:</p>
+<ul><li><p><code>&amp;memory</code></p></li><li><p><code>&amp;reason</code></p></li><li><p><code>&amp;time</code></p></li><li><p><code>&amp;space</code></p></li><li><p><code>&amp;govern</code></p></li></ul>
+<p>Each primitive can be refined into namespaced subtypes such as:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;memory.episodic</code></p></li><li><p><code>&amp;reason.argument</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;time.forecast</code></p></li><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;body.browser</code></p></li><li><p><code>&amp;body.os</code></p></li><li><p><code>&amp;govern.telemetry</code></p></li><li><p><code>&amp;govern.escalation</code></p></li><li><p><code>&amp;govern.identity</code></p></li></ul>
+<p>This gives the protocol a vocabulary for cognition that is both small and extensible. The first four primitives map to cognitive domains; <code>&amp;body</code> is the sensorimotor primitive (perception, action, affordance); <code>&amp;govern</code> is the cross-cutting primitive for telemetry, escalation, and identity that all capability providers may consume or emit.</p>
+<h4 id="blk-7750">Formal grammar</h4>
+<p>Composition should be parseable, not implied.</p>
+<p>The protocol defines two operators:</p>
+<ul><li><p><code>&amp;</code> for composing capabilities into a set</p></li><li><p><code>|&gt;</code> for flowing data through capability operations</p></li></ul>
+<p>That distinction matters. A capability set answers &quot;what this agent contains.&quot; A pipeline answers &quot;how data moves across those capabilities at execution time.&quot;</p>
+<p>This is the difference between static declaration and operational flow.</p>
+<h4 id="blk-7760">Algebraic properties</h4>
+<p>Capability composition should behave predictably. The protocol therefore treats capability sets with algebraic discipline:</p>
+<ul><li><p><strong>commutative</strong>: declaration order should not change meaning</p></li><li><p><strong>associative</strong>: grouping should not change meaning</p></li><li><p><strong>idempotent</strong>: duplicates should collapse</p></li><li><p><strong>identity-safe</strong>: empty composition should behave cleanly</p></li></ul>
+<p>This sounds abstract, but it matters operationally. If different tools, humans, or agents assemble the same set in different orders, they should converge on the same result.</p>
+<h4 id="blk-7772">Type-safe pipelines</h4>
+<p>Composition is not just set membership. It is also contract compatibility.</p>
+<p>A capability contract declares:</p>
+<ul><li><p>supported operations</p></li><li><p>input and output types</p></li><li><p>what the capability can accept input from</p></li><li><p>what it can feed into</p></li><li><p>optional A2A skill mappings</p></li></ul>
+<p>For example, a temporal anomaly detector might output <code>anomaly_set</code>, while a graph memory enricher expects <code>anomaly_set</code> as input. A protocol-aware implementation can validate that pipeline before runtime. It can also reject invalid adjacency such as feeding a capability into another one that does not declare compatibility.</p>
+<p>This is the difference between &quot;plausible-looking architecture&quot; and validated architecture.</p>
+<h4 id="blk-7788">Hash-linked provenance</h4>
+<p>Composition should preserve where data came from.</p>
+<p>The protocol therefore treats provenance as a first-class concept. Each capability operation can append a provenance record describing:</p>
+<ul><li><p>source capability</p></li><li><p>provider</p></li><li><p>operation</p></li><li><p>timestamp</p></li><li><p>input hash</p></li><li><p>output hash</p></li><li><p>parent hash</p></li><li><p>optional runtime trace identifiers</p></li></ul>
+<p>This creates a hash-linked chain across the decision path. That matters for debugging, auditability, trust, and governance.</p>
+<h4 id="blk-7809">Declarative governance</h4>
+<p>Constraints should not live only in framework code.</p>
+<p>The protocol expresses governance in data:</p>
+<ul><li><p><code>hard</code> constraints that must not be violated</p></li><li><p><code>soft</code> preferences that can guide reasoning</p></li><li><p><code>escalate_when</code> conditions that require deferral to a human or another authority</p></li></ul>
+<p>This makes governance portable. It can travel with the declaration rather than disappearing when the implementation language changes.</p>
+<h4 id="blk-7820">Governance from topology</h4>
+<p>The protocol makes a stronger claim about governance than &quot;constraints as data.&quot;</p>
+<p>In any composed system, some regions have feedback loops and some do not. The κ invariant — computed from Tarjan's strongly connected component (SCC) analysis on the capability graph — distinguishes these regions mechanically. When κ = 0, the subgraph is acyclic: data flows in one direction, and single-pass retrieval is sufficient. When κ &gt; 0, irreducible feedback loops exist: nodes influence each other mutually, and deliberation is both warranted and bounded by the loop's complexity.</p>
+<p>This is a governance principle, not a routing heuristic. Deliberation rights derive from the topology of mutual influence. A node that cannot be influenced by a decision has no structural basis for participating in that decision. Conversely, nodes within a feedback loop have both the right and the obligation to deliberate, because their states are interdependent.</p>
+<p>The practical consequence: governance is not layered on top of architecture. It emerges from the architecture's own feedback structure. The κ invariant is computable, verifiable, and deterministic — it does not depend on role hierarchies, trust scores, or human judgment about who should participate.</p>
+<p>Coherence across the system is maintained through timescale separation. Fast memory operations (seconds) preserve local autonomy; slow consolidation cycles (days to months) enforce system-wide coherence. This gradient — from autonomous local action to coherent global structure — is the core tension that governance manages, and the protocol makes it explicit through the <code>governance.autonomy</code> block and consolidation tier declarations.</p>
+<h3 id="blk-7826">4. The [&amp;] Protocol</h3>
+<p>The [&amp;] Protocol is a language-agnostic composition layer for agent cognition.</p>
+<p>It sits between architecture design and downstream runtime configuration. Its purpose is to make an agent declaration:</p>
+<ul><li><p>machine-validatable,</p></li><li><p>provider-agnostic,</p></li><li><p>composition-aware,</p></li><li><p>provenance-aware,</p></li><li><p>governance-aware,</p></li><li><p>and translatable into other protocol surfaces.</p></li></ul>
+<h4 id="blk-7842">Six primitives</h4>
+<p>The protocol starts from six primitives that map cleanly onto common cognitive, sensorimotor, and operational categories:</p>
+<ul><li><p><strong>memory</strong> — what the agent stores and recalls</p></li><li><p><strong>reason</strong> — how the agent evaluates and decides</p></li><li><p><strong>time</strong> — how the agent models trends, forecasts, and anomalies</p></li><li><p><strong>space</strong> — how the agent models regions, fleets, routes, or topology</p></li><li><p><strong>body</strong> — how the agent is instantiated in an environment: perception, typed action, affordance enumeration, state-encoding for replay</p></li><li><p><strong>govern</strong> — who is acting, under what rules, at what cost</p></li></ul>
+<p>The first four are cognitive domains. The fifth — <code>&amp;body</code> — is the sensorimotor primitive (added in draft v0.1.0); subtypes include <code>&amp;body.browser</code> (web DOM), <code>&amp;body.os</code> (operating system), <code>&amp;body.vision</code>, <code>&amp;body.voice</code>, <code>&amp;body.motor</code>. See OS-011 (Embodiment Protocol) for the behavioral loop. The sixth — <code>&amp;govern</code> — is the cross-cutting primitive that makes governance a declared, composable capability rather than an afterthought. <code>&amp;govern.telemetry</code> tracks operational metrics, <code>&amp;govern.escalation</code> defines deferral policies, and <code>&amp;govern.identity</code> manages agent authentication and authorization.</p>
+<p>This is intentionally compact. A smaller primitive set is easier to standardize, while namespaces allow specialization.</p>
+<h4 id="blk-7859">Capability interfaces, not product names</h4>
+<p>A key design choice is that capabilities are interfaces, not vendors.</p>
+<p><code>&amp;memory.graph</code> is a protocol capability. <code>graphonomous</code> is one provider that may satisfy it. The same capability might also be implemented by another provider if it satisfies the same contract.</p>
+<p>This keeps the protocol open and avoids collapsing architecture into brand names.</p>
+<h4 id="blk-7863">Canonical declaration: <code>ampersand.json</code></h4>
+<p>A declaration such as <code>ampersand.json</code> becomes the canonical source of truth for an agent’s capability architecture. It can express:</p>
+<ul><li><p>agent identity</p></li><li><p>version</p></li><li><p>capability bindings</p></li><li><p>provider-specific config</p></li><li><p>auto-resolved needs</p></li><li><p>governance</p></li><li><p>provenance preferences</p></li></ul>
+<p>That declaration can then be validated against a JSON Schema and processed by tooling.</p>
+<h4 id="blk-7881">Compiles into MCP + A2A</h4>
+<p>This is the adoption story.</p>
+<p>The protocol does not ask developers to abandon MCP or A2A. Instead, it treats those protocols as downstream targets.</p>
+<p>From one declaration, a conforming toolchain should be able to generate:</p>
+<ul><li><p>MCP client/server configuration for declared providers</p></li><li><p>A2A-style agent cards that advertise composed capabilities as skills</p></li></ul>
+<p>This makes the protocol complementary to the ecosystem rather than competitive with it.</p>
+<h4 id="blk-7891">Reference implementation</h4>
+<p>A useful protocol needs more than prose. It needs runnable artifacts.</p>
+<p>A minimal reference stack should therefore include:</p>
+<ul><li><p>a schema for <code>ampersand.json</code></p></li><li><p>example declarations</p></li><li><p>contract validation logic</p></li><li><p>composition checks</p></li><li><p>MCP config generation</p></li><li><p>A2A card generation</p></li><li><p>a CLI for validate / compose / generate flows</p></li></ul>
+<p>Once those exist, documentation and AI-assisted development become much more reliable because they are grounded in real structures.</p>
+<h3 id="blk-7910">5. Try It</h3>
+<p>The easiest way to understand the protocol is to interact with the actual artifacts.</p>
+<p>Start with the schema:</p>
+<ul><li><p><code>protocol/schema/v0.1.0/ampersand.schema.json</code></p></li></ul>
+<p>Then inspect example declarations:</p>
+<ul><li><p><code>examples/infra-operator.ampersand.json</code></p></li><li><p><code>examples/research-agent.ampersand.json</code></p></li><li><p><code>examples/fleet-manager.ampersand.json</code></p></li><li><p><code>examples/customer-support.ampersand.json</code></p></li></ul>
+<p>Then use the CLI from the Elixir reference implementation:</p>
+<ul><li><p><code>ampersand validate &lt;file&gt;</code></p></li><li><p><code>ampersand compose &lt;file&gt;</code></p></li><li><p><code>ampersand generate mcp &lt;file&gt;</code></p></li><li><p><code>ampersand generate a2a &lt;file&gt;</code></p></li></ul>
+<p>That workflow shows the intended developer experience:</p>
+<ol><li><p>declare the agent once</p></li><li><p>validate the declaration</p></li><li><p>check composition semantics</p></li><li><p>generate downstream protocol configuration</p></li></ol>
+<h3 id="blk-7946">Conclusion</h3>
+<p>The agent ecosystem already has strong momentum around tool connectivity and agent coordination. That is necessary, but it is not sufficient.</p>
+<p>There is still no widely shared, machine-readable way to describe how an agent’s internal cognitive capabilities compose into a valid, governable, auditable system. That gap becomes more painful as systems become more complex, more regulated, and more distributed.</p>
+<p>The [&amp;] Protocol treats composition as a first-class protocol concern.</p>
+<p>It gives developers a compact vocabulary for memory, reasoning, time, space, and governance. It gives implementations a schema to validate against. It gives tooling a way to check contracts and preserve provenance. And it gives the broader ecosystem a source-of-truth declaration that can compile into MCP and A2A surfaces.</p>
+<p>That is the missing layer.</p>
+<p>Not another runtime. Not another transport. A composition layer.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/positioning.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-7661" class="lvl2">Introduction</a><a href="#blk-7668" class="lvl2">1. The Current Stack</a><a href="#blk-7670" class="lvl3">MCP: context and tools</a><a href="#blk-7674" class="lvl3">A2A: coordination and delegation</a><a href="#blk-7677" class="lvl3">ACP and adjacent work</a><a href="#blk-7695" class="lvl2">2. The Gap</a><a href="#blk-7710" class="lvl2">3. What Composition Means</a><a href="#blk-7712" class="lvl3">Capability declaration</a><a href="#blk-7750" class="lvl3">Formal grammar</a><a href="#blk-7760" class="lvl3">Algebraic properties</a><a href="#blk-7772" class="lvl3">Type-safe pipelines</a><a href="#blk-7788" class="lvl3">Hash-linked provenance</a><a href="#blk-7809" class="lvl3">Declarative governance</a><a href="#blk-7820" class="lvl3">Governance from topology</a><a href="#blk-7826" class="lvl2">4. The [&amp;] Protocol</a><a href="#blk-7842" class="lvl3">Six primitives</a><a href="#blk-7859" class="lvl3">Capability interfaces, not product names</a><a href="#blk-7863" class="lvl3">Canonical declaration: ampersand.json</a><a href="#blk-7881" class="lvl3">Compiles into MCP + A2A</a><a href="#blk-7891" class="lvl3">Reference implementation</a><a href="#blk-7910" class="lvl2">5. Try It</a><a href="#blk-7946" class="lvl2">Conclusion</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/CC2-capability-composition.md/">[&amp;] / CC2 — Capability Composition, v2 (Coalitional)</a><a href="/AmpersandBoxDesign/docs/COMPOSE_RUNTIME.md/">The Compose Runtime — CC2 compose, made authorable (design note)</a><a href="/AmpersandBoxDesign/docs/UMBRELLA.md/">The [&amp;] Umbrella — one stack: declare → … → observe</a><a href="/AmpersandBoxDesign/docs/architecture.md/">Architecture Guide</a><a href="/AmpersandBoxDesign/docs/comparison-table.md/">[&amp;] vs MCP vs A2A vs DALIA vs ACP</a><a href="/AmpersandBoxDesign/docs/competitive-landscape.md/">Competitive Landscape: Machine Cognition</a><a href="/AmpersandBoxDesign/docs/ecosystem-overview.md/">[&amp;] Ecosystem Overview — How Everything Ties Together</a><a href="/AmpersandBoxDesign/docs/faq.md/">FAQ</a><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/quickstart.md/">Five-Minute Quickstart (Elixir Reference CLI)</a><a href="/AmpersandBoxDesign/docs/research.md/">Research Overview</a><a href="/AmpersandBoxDesign/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierawibz2qrk7lwrpqjp2ge42kczuxqx25rvj5bcbd7q7lx446s5w3ra</div></div></div>
+</div></div>
+</body></html>

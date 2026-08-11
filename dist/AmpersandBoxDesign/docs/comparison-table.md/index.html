@@ -1,0 +1,111 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>[&amp;] vs MCP vs A2A vs DALIA vs ACP · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="This document positions the [&amp;] Protocol relative to adjacent standards, research efforts, and ecosystem protocols.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/comparison-table.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[&amp;] vs MCP vs A2A vs DALIA vs ACP">
+<meta property="og:description" content="This document positions the [&amp;] Protocol relative to adjacent standards, research efforts, and ecosystem protocols.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/comparison-table.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] vs MCP vs A2A vs DALIA vs ACP","name":"[&] vs MCP vs A2A vs DALIA vs ACP","description":"This document positions the [&] Protocol relative to adjacent standards, research efforts, and ecosystem protocols.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/comparison-table.md/","identifier":"bagaaiera24vawwocyf3righnf2fnmrxpnkkn5z3o246xdloz6mat5odfzhda","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Comparison Table"},{"@type":"WebPageElement","name":"Quick Definitions"},{"@type":"WebPageElement","name":"[&] Protocol"},{"@type":"WebPageElement","name":"MCP"},{"@type":"WebPageElement","name":"A2A"},{"@type":"WebPageElement","name":"ACP"},{"@type":"WebPageElement","name":"DALIA"},{"@type":"WebPageElement","name":"The Stack View"},{"@type":"WebPageElement","name":"Where MCP Is Strong"},{"@type":"WebPageElement","name":"Where A2A Is Strong"},{"@type":"WebPageElement","name":"Where ACP Is Strong"},{"@type":"WebPageElement","name":"Why DALIA Matters Here"},{"@type":"WebPageElement","name":"Decision Guide"},{"@type":"WebPageElement","name":"\"How does my agent call tools?\""},{"@type":"WebPageElement","name":"\"How do my agents find and delegate to each other?\""},{"@type":"WebPageElement","name":"\"How do my agent services communicate over network APIs?\""},{"@type":"WebPageElement","name":"\"How should I think about intelligence as a compositional architecture?\""},{"@type":"WebPageElement","name":"\"How do I declare, validate, govern, and compile an agent's cognitive capabilities?\""},{"@type":"WebPageElement","name":"Side-by-Side by Concern"},{"@type":"WebPageElement","name":"The Important Non-Competitive Framing"},{"@type":"WebPageElement","name":"Practical Example"},{"@type":"WebPageElement","name":"Summary"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"comparison-table.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/comparison-table.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/comparison-table.md</span>
+
+</div></div>
+<div class="lead">This document positions the [&amp;] Protocol relative to adjacent standards, research efforts, and ecosystem protocols.</div>
+<div class="prose"><h1 id="blk-5733">[&amp;] vs MCP vs A2A vs DALIA vs ACP</h1>
+<p>This document positions the [&amp;] Protocol relative to adjacent standards, research efforts, and ecosystem protocols.</p>
+<p>The short version:</p>
+<ul><li><p><strong>MCP</strong> standardizes agent-to-tool connectivity.</p></li><li><p><strong>A2A</strong> standardizes agent-to-agent coordination.</p></li><li><p><strong>ACP</strong> standardizes lightweight agent communication over network APIs.</p></li><li><p><strong>DALIA</strong> highlights the need for compositional intelligence architectures at the research level.</p></li><li><p><strong>[&amp;]</strong> defines the <strong>capability composition layer</strong>: how an agent declares, validates, binds, and governs its cognitive capabilities before compiling into runtime protocols.</p></li></ul>
+<p>The right framing is not replacement, but composition:</p>
+<blockquote><p>[&amp;] compiles into MCP + A2A configurations.</p></blockquote>
+<h3 id="blk-5750">Comparison Table</h3>
+<table><thead><tr><th>System</th><th>Primary Scope</th><th>Layer in the Stack</th><th>Main Unit of Abstraction</th><th>What It Standardizes Well</th><th>What It Does <strong>Not</strong> Standardize</th><th>Relationship to [&amp;]</th></tr></thead><tbody><tr><td><strong>[&amp;] Protocol</strong></td><td>Capability composition for agents</td><td>Composition</td><td>Capability declarations, contracts, provenance, governance</td><td>How memory, reasoning, time, space, and governance capabilities are declared, validated, composed, and compiled into downstream configs</td><td>Low-level transport protocols, direct tool RPC semantics, agent network communication</td><td>Source-of-truth layer</td></tr><tr><td><strong>MCP</strong></td><td>Agent-to-tool connectivity</td><td>Context / Tooling</td><td>Tools, resources, prompts, client-server interaction</td><td>Tool discovery, tool invocation, structured context access, resource exposure</td><td>How an agent's cognitive capabilities are selected, composed, governed, or provenance-linked</td><td>[&amp;] can generate MCP configuration</td></tr><tr><td><strong>A2A</strong></td><td>Agent-to-agent coordination</td><td>Coordination</td><td>Agent cards, skills, tasks, delegation flows</td><td>Agent discovery, advertised skills, delegation and inter-agent interaction</td><td>How internal cognitive capabilities are composed or validated before publication</td><td>[&amp;] can generate A2A agent cards</td></tr><tr><td><strong>ACP</strong></td><td>Lightweight agent communication</td><td>Communication</td><td>HTTP/REST-style agent endpoints and message exchange</td><td>Inter-agent messaging and integration patterns over standard web infrastructure</td><td>Capability algebra, provenance semantics, governance-as-data, typed capability composition</td><td>Adjacent network protocol; [&amp;] sits at a different concern boundary</td></tr><tr><td><strong>DALIA</strong></td><td>Research framework for compositional intelligence</td><td>Research / Theory</td><td>Cognitive architecture model</td><td>Why modular, compositional agent intelligence matters; academic framing for layered capability systems</td><td>A production-ready protocol artifact, schema, CLI, registry, or runtime config format</td><td>Independent conceptual validation of the gap [&amp;] addresses</td></tr></tbody></table>
+<h3 id="blk-5794">Quick Definitions</h3>
+<h4 id="blk-5795">[&amp;] Protocol</h4>
+<p>An open, language-agnostic protocol for composing agent cognitive capabilities. It defines:</p>
+<ul><li><p>canonical <code>ampersand.json</code></p></li><li><p>capability primitives like <code>&amp;memory</code>, <code>&amp;reason</code>, <code>&amp;time</code>, <code>&amp;space</code>, and <code>&amp;govern</code></p></li><li><p>namespaced subtypes like <code>&amp;memory.graph</code> and <code>&amp;time.anomaly</code></p></li><li><p>capability contracts with typed operations</p></li><li><p>composition algebra properties</p></li><li><p>provenance records</p></li><li><p>governance constraints</p></li><li><p>compilation targets such as MCP and A2A artifacts</p></li></ul>
+<h4 id="blk-5814">MCP</h4>
+<p>The Model Context Protocol focuses on connecting agents to tools, resources, and prompts. It standardizes the agent-to-tool interface, not the internal capability model of the agent.</p>
+<h4 id="blk-5816">A2A</h4>
+<p>The Agent-to-Agent Protocol focuses on how agents discover each other, advertise skills, and coordinate tasks. It assumes an agent already exists and exposes an interaction surface.</p>
+<h4 id="blk-5818">ACP</h4>
+<p>The Agent Communication Protocol focuses on interoperable communication between agents or agent-like services, often through lightweight network-native interfaces.</p>
+<h4 id="blk-5820">DALIA</h4>
+<p>A research effort that treats intelligence as compositional and layered. DALIA helps articulate why capability composition matters, but it is not itself a deployable protocol specification in the same sense.</p>
+<h3 id="blk-5822">The Stack View</h3>
+<p>A useful mental model is:</p>
+<table><thead><tr><th>Layer</th><th>Question</th><th>Example Protocols</th></tr></thead><tbody><tr><td>UI</td><td>How does the agent render and interact with users?</td><td>AG-UI, A2UI</td></tr><tr><td><strong>Composition</strong></td><td>What capabilities make up this agent, and how do they fit together?</td><td><strong>[&amp;]</strong></td></tr><tr><td>Coordination</td><td>How do agents discover and delegate to each other?</td><td>A2A</td></tr><tr><td>Context</td><td>How does an agent access tools and resources?</td><td>MCP</td></tr><tr><td>Communication</td><td>How do services and agents exchange messages over networks?</td><td>ACP, HTTP, gRPC</td></tr></tbody></table>
+<p>This is why [&amp;] should not be framed as &quot;above&quot; MCP or A2A in a political or replacement sense. A better and more accurate statement is:</p>
+<blockquote><p>[&amp;] defines the composition layer and compiles into MCP + A2A configurations.</p></blockquote>
+<h3 id="blk-5846">Where MCP Is Strong</h3>
+<p>MCP is strong when you need:</p>
+<ul><li><p>a standard way to expose tools</p></li><li><p>structured resources and prompts</p></li><li><p>agent access to external systems</p></li><li><p>clear client/server boundaries</p></li><li><p>tool interoperability across runtimes</p></li></ul>
+<p>MCP is not trying to answer questions like:</p>
+<ul><li><p>Should this agent have episodic memory or graph memory?</p></li><li><p>Is <code>&amp;time.anomaly</code> compatible with <code>&amp;reason.argument</code> in this pipeline?</p></li><li><p>What governance rules constrain this agent's actions?</p></li><li><p>How do I preserve a provenance chain across composed cognition?</p></li></ul>
+<p>Those are composition-layer concerns, which is exactly why [&amp;] exists.</p>
+<h3 id="blk-5870">Where A2A Is Strong</h3>
+<p>A2A is strong when you need:</p>
+<ul><li><p>agent discovery</p></li><li><p>advertised skills</p></li><li><p>task delegation</p></li><li><p>multi-agent workflow handoff</p></li><li><p>machine-readable agent cards</p></li></ul>
+<p>A2A starts from the perspective that an agent has already been built and is now publishing its capabilities outward.</p>
+<p>[&amp;] starts earlier. It defines how the agent is composed in the first place.</p>
+<p>That makes the relationship complementary:</p>
+<ul><li><p><strong>[&amp;]</strong> describes internal composition</p></li><li><p><strong>A2A</strong> describes external coordination</p></li></ul>
+<h3 id="blk-5891">Where ACP Is Strong</h3>
+<p>ACP is strong when you need:</p>
+<ul><li><p>lightweight inter-agent communication</p></li><li><p>simple network-native interfaces</p></li><li><p>integration over common web patterns</p></li><li><p>deployable communication surfaces without requiring tool-specific semantics</p></li></ul>
+<p>ACP is closest to a communications substrate. It is useful for transport and interoperability, but it does not define:</p>
+<ul><li><p>capability primitives</p></li><li><p>capability subtypes</p></li><li><p>composition algebra</p></li><li><p>provenance chain structure</p></li><li><p>governance constraints as portable data</p></li></ul>
+<p>So ACP and [&amp;] solve different problems.</p>
+<h3 id="blk-5915">Why DALIA Matters Here</h3>
+<p>DALIA is important because it strengthens the claim that there is a real conceptual gap in the ecosystem.</p>
+<p>It supports ideas like:</p>
+<ul><li><p>intelligence as composition rather than monolith</p></li><li><p>modular cognitive systems</p></li><li><p>layered capabilities</p></li><li><p>architectural clarity between memory, reasoning, planning, governance, and execution</p></li></ul>
+<p>That is useful because [&amp;] is not just inventing a product category. It is operationalizing a real architectural need into:</p>
+<ul><li><p>schema artifacts</p></li><li><p>machine-readable contracts</p></li><li><p>validation logic</p></li><li><p>generation tools</p></li><li><p>protocol-ready outputs</p></li></ul>
+<p>DALIA is a research signal; [&amp;] is a protocol implementation strategy.</p>
+<h3 id="blk-5940">Decision Guide</h3>
+<p>If your question is:</p>
+<h4 id="blk-5942">&quot;How does my agent call tools?&quot;</h4>
+<p>Use <strong>MCP</strong>.</p>
+<h4 id="blk-5944">&quot;How do my agents find and delegate to each other?&quot;</h4>
+<p>Use <strong>A2A</strong>.</p>
+<h4 id="blk-5946">&quot;How do my agent services communicate over network APIs?&quot;</h4>
+<p>Use <strong>ACP</strong>.</p>
+<h4 id="blk-5948">&quot;How should I think about intelligence as a compositional architecture?&quot;</h4>
+<p>Read <strong>DALIA</strong>.</p>
+<h4 id="blk-5950">&quot;How do I declare, validate, govern, and compile an agent's cognitive capabilities?&quot;</h4>
+<p>Use <strong>[&amp;]</strong>.</p>
+<h3 id="blk-5952">Side-by-Side by Concern</h3>
+<table><thead><tr><th>Concern</th><th>[&amp;]</th><th>MCP</th><th>A2A</th><th>ACP</th><th>DALIA</th></tr></thead><tbody><tr><td>Capability declaration</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>Conceptually</td></tr><tr><td>Capability composition algebra</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>Conceptually</td></tr><tr><td>Typed capability contracts</td><td>Yes</td><td>Partial at tool boundary</td><td>Skill-level only</td><td>No</td><td>Conceptually</td></tr><tr><td>Governance as portable data</td><td>Yes</td><td>No</td><td>Limited / indirect</td><td>No</td><td>Conceptually</td></tr><tr><td>Provenance chain semantics</td><td>Yes</td><td>Not core</td><td>Not core</td><td>No</td><td>Conceptually</td></tr><tr><td>Tool invocation protocol</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>No</td></tr><tr><td>Agent discovery / delegation</td><td>No</td><td>No</td><td>Yes</td><td>Partial</td><td>No</td></tr><tr><td>Network communication substrate</td><td>No</td><td>Partial</td><td>Partial</td><td>Yes</td><td>No</td></tr><tr><td>Schema-first source of truth</td><td>Yes</td><td>Yes, but for tool interfaces</td><td>Yes, for agent cards</td><td>Varies</td><td>No</td></tr><tr><td>Runtime configuration generation</td><td>Yes</td><td>N/A</td><td>N/A</td><td>N/A</td><td>No</td></tr></tbody></table>
+<h3 id="blk-6020">The Important Non-Competitive Framing</h3>
+<p>This repository should consistently avoid the claim that [&amp;] competes with MCP or A2A.</p>
+<p>The accurate position is:</p>
+<ul><li><p>MCP and A2A are valuable standards</p></li><li><p>they solve different layers of the stack</p></li><li><p>neither standardizes internal capability composition</p></li><li><p>[&amp;] fills that missing concern</p></li><li><p>[&amp;] produces artifacts that are useful to MCP and A2A ecosystems</p></li></ul>
+<p>The safest one-line framing is:</p>
+<blockquote><p>[&amp;] is the source-of-truth composition layer that compiles into MCP + A2A configurations.</p></blockquote>
+<h3 id="blk-6037">Practical Example</h3>
+<p>A developer may start with this declaration:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;reason.argument</code></p></li><li><p><code>&amp;govern.escalation</code></p></li></ul>
+<p>From that, [&amp;] can produce:</p>
+<ol><li><p>a validated <code>ampersand.json</code></p></li><li><p>composition checks and compatibility validation</p></li><li><p>governance metadata</p></li><li><p>provenance requirements</p></li><li><p>an MCP config for tool-facing runtime integration</p></li><li><p>an A2A agent card for coordination-facing publication</p></li></ol>
+<p>MCP alone does not give you the declaration model. A2A alone does not give you the declaration model. ACP alone does not give you the declaration model.</p>
+<p>That declaration model is the missing layer.</p>
+<h3 id="blk-6066">Summary</h3>
+<p>The five systems are best understood as different answers to different questions:</p>
+<ul><li><p><strong>MCP</strong>: how an agent uses tools</p></li><li><p><strong>A2A</strong>: how agents work with other agents</p></li><li><p><strong>ACP</strong>: how agents communicate over APIs</p></li><li><p><strong>DALIA</strong>: why compositional intelligence matters</p></li><li><p><strong>[&amp;]</strong>: how an agent's capabilities are declared, composed, validated, governed, and compiled</p></li></ul>
+<p>That distinction is the core positioning of the [&amp;] Protocol.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/comparison-table.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-5750" class="lvl2">Comparison Table</a><a href="#blk-5794" class="lvl2">Quick Definitions</a><a href="#blk-5795" class="lvl3">[&amp;] Protocol</a><a href="#blk-5814" class="lvl3">MCP</a><a href="#blk-5816" class="lvl3">A2A</a><a href="#blk-5818" class="lvl3">ACP</a><a href="#blk-5820" class="lvl3">DALIA</a><a href="#blk-5822" class="lvl2">The Stack View</a><a href="#blk-5846" class="lvl2">Where MCP Is Strong</a><a href="#blk-5870" class="lvl2">Where A2A Is Strong</a><a href="#blk-5891" class="lvl2">Where ACP Is Strong</a><a href="#blk-5915" class="lvl2">Why DALIA Matters Here</a><a href="#blk-5940" class="lvl2">Decision Guide</a><a href="#blk-5942" class="lvl3">&quot;How does my agent call tools?&quot;</a><a href="#blk-5944" class="lvl3">&quot;How do my agents find and delegate to each other?&quot;</a><a href="#blk-5946" class="lvl3">&quot;How do my agent services communicate over network APIs?&quot;</a><a href="#blk-5948" class="lvl3">&quot;How should I think about intelligence as a compositional architecture?&quot;</a><a href="#blk-5950" class="lvl3">&quot;How do I declare, validate, govern, and compile an agent&#39;s cognitive capabilities?&quot;</a><a href="#blk-5952" class="lvl2">Side-by-Side by Concern</a><a href="#blk-6020" class="lvl2">The Important Non-Competitive Framing</a><a href="#blk-6037" class="lvl2">Practical Example</a><a href="#blk-6066" class="lvl2">Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/CC2-capability-composition.md/">[&amp;] / CC2 — Capability Composition, v2 (Coalitional)</a><a href="/AmpersandBoxDesign/docs/COMPOSE_RUNTIME.md/">The Compose Runtime — CC2 compose, made authorable (design note)</a><a href="/AmpersandBoxDesign/docs/UMBRELLA.md/">The [&amp;] Umbrella — one stack: declare → … → observe</a><a href="/AmpersandBoxDesign/docs/architecture.md/">Architecture Guide</a><a href="/AmpersandBoxDesign/docs/competitive-landscape.md/">Competitive Landscape: Machine Cognition</a><a href="/AmpersandBoxDesign/docs/ecosystem-overview.md/">[&amp;] Ecosystem Overview — How Everything Ties Together</a><a href="/AmpersandBoxDesign/docs/faq.md/">FAQ</a><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/positioning.md/">The Missing Layer: Capability Composition in the Agent Protocol Stack</a><a href="/AmpersandBoxDesign/docs/quickstart.md/">Five-Minute Quickstart (Elixir Reference CLI)</a><a href="/AmpersandBoxDesign/docs/research.md/">Research Overview</a><a href="/AmpersandBoxDesign/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera24vawwocyf3righnf2fnmrxpnkkn5z3o246xdloz6mat5odfzhda</div></div></div>
+</div></div>
+</body></html>

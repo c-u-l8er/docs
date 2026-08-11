@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>ProjectAmp2 · (root) · Ampersand Box</title>
+<meta name="description" content="Multi-project portfolio for the [&amp;] Protocol ecosystem. This repo contains the protocol spec, reference implementations, portfolio company sites, and the…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ProjectAmp2">
+<meta property="og:description" content="Multi-project portfolio for the [&amp;] Protocol ecosystem. This repo contains the protocol spec, reference implementations, portfolio company sites, and the…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"ProjectAmp2","name":"ProjectAmp2","description":"Multi-project portfolio for the [&] Protocol ecosystem. This repo contains the protocol spec, reference implementations, portfolio company sites, and the…","url":"https://docs.ampersandboxdesign.com/README.md/","identifier":"bagaaierafqhxwsielyk5amlff7zswemasb4d26aolwewxvhcusvmwnvcegvq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"(root)","url":"https://docs.ampersandboxdesign.com/(root)/"},"articleSection":"(root)","hasPart":[{"@type":"WebPageElement","name":"Repository map"},{"@type":"WebPageElement","name":"Quick start"},{"@type":"WebPageElement","name":"Project scripts"},{"@type":"WebPageElement","name":"Supabase (shared data layer)"},{"@type":"WebPageElement","name":"Per-site dev servers"},{"@type":"WebPageElement","name":"Run everything at once"},{"@type":"WebPageElement","name":"Build / test"},{"@type":"WebPageElement","name":"Individual project commands (for reference)"},{"@type":"WebPageElement","name":"Environment setup per site"},{"@type":"WebPageElement","name":"Conventions"},{"@type":"WebPageElement","name":"Troubleshooting"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"README.md","item":"https://docs.ampersandboxdesign.com/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">(root)</span>
+<span class="path">README.md</span>
+
+</div></div>
+<div class="lead">Multi-project portfolio for the [&amp;] Protocol ecosystem. This repo contains the protocol spec, reference implementations, portfolio company sites, and the shared Supabase data la…</div>
+<div class="prose"><h1 id="blk-26180">ProjectAmp2</h1>
+<p>Multi-project portfolio for the <strong>[&amp;] Protocol</strong> ecosystem. This repo contains the protocol spec, reference implementations, portfolio company sites, and the shared Supabase data layer that ties them together.</p>
+<p>See <a href="#/CLAUDE.md" data-link>CLAUDE.md</a> for the authoritative architecture reference (spec folders per product, PULSE loop manifests, Graphonomous memory-loop policy, etc.).</p>
+<h3 id="blk-26183">Repository map</h3>
+<table><thead><tr><th>Area</th><th>Purpose</th></tr></thead><tbody><tr><td><code>AmpersandBoxDesign/</code></td><td>[&amp;] Protocol spec, JSON schemas, Elixir reference impl, npm/Python SDKs</td></tr><tr><td><code>graphonomous/</code></td><td>Elixir/OTP continual-learning engine + MCP server + npm wrapper</td></tr><tr><td><code>PRISM/</code></td><td>OS-009 PRISM Elixir/OTP benchmark engine (Fly.io deploy)</td></tr><tr><td><code>PULSE/</code></td><td>OS-010 PULSE manifest standard (<code>schemas/</code>, <code>manifests/</code>, <code>docs/</code>)</td></tr><tr><td><code>WebHost.Systems/</code></td><td>Node.js monorepo (Supabase backend + Vite/React frontend)</td></tr><tr><td><code>bendscript.com/</code></td><td>SvelteKit + Supabase knowledge-graph editor + KAG server</td></tr><tr><td><code>runefort.com/</code></td><td>SvelteKit + Svelte Flow spatial-cognition UI</td></tr><tr><td><code>specprompt.com/</code></td><td>Elixir/Phoenix spec registry</td></tr><tr><td><code>ampersand-supabase/</code></td><td>Shared Supabase instance (all product schemas, migrations, Edge Functions)</td></tr><tr><td><code>ampersand-plugins/</code></td><td>Claude Code skills shared across the ecosystem</td></tr><tr><td><code>*.com/</code> / <code>*.org/</code></td><td>Marketing sites (mostly static HTML) with <code>docs/spec/</code> folders</td></tr></tbody></table>
+<h3 id="blk-26209">Quick start</h3>
+<p>Everything below assumes you are in the repo root (<code>/home/travis/ProjectAmp2</code>).</p>
+<pre data-lang="bash"><code><span class="t-comment"># 1. Start the shared Supabase data layer (Postgres, Auth, PostgREST, Storage, Studio)</span>
+npm run db:start
+
+<span class="t-comment"># 2. Start any preview site (examples)</span>
+npm run dev:runefort      <span class="t-comment"># SvelteKit  → http://localhost:8093</span>
+npm run dev:bendscript    <span class="t-comment"># SvelteKit  → http://localhost:5174</span>
+npm run dev:webhost       <span class="t-comment"># Vite/React → http://localhost:5173</span>
+
+<span class="t-comment"># 3. Or start everything in one shot (Supabase + every site/service)</span>
+npm run dev:all
+
+<span class="t-comment"># Shut down</span>
+npm run stop:all</code></pre>
+<h3 id="blk-26212">Project scripts</h3>
+<p>A top-level <code>package.json</code> exposes these orchestration commands. Each wraps the appropriate subproject command — nothing fancy, just convenience wrappers so you don't have to remember ports and working directories.</p>
+<h4 id="blk-26214">Supabase (shared data layer)</h4>
+<table><thead><tr><th>Command</th><th>What it does</th></tr></thead><tbody><tr><td><code>npm run db:start</code></td><td><code>supabase start</code> from <code>ampersand-supabase/</code> — boots Postgres, Auth, PostgREST, Studio, Edge Functions</td></tr><tr><td><code>npm run db:stop</code></td><td><code>supabase stop</code> — shut down the full stack (data preserved in Docker volumes)</td></tr><tr><td><code>npm run db:status</code></td><td><code>supabase status</code> — show ports, anon key, publishable key, service-role key</td></tr><tr><td><code>npm run db:reset</code></td><td><code>supabase db reset</code> — re-apply all migrations + seed (destroys data)</td></tr><tr><td><code>npm run db:migrate</code></td><td><code>supabase migration up --local --include-all</code> — apply pending migrations without resetting</td></tr><tr><td><code>npm run db:studio</code></td><td>Opens Studio at http://127.0.0.1:54323</td></tr></tbody></table>
+<p>Endpoints after <code>db:start</code>:</p>
+<ul><li><p>API / PostgREST → http://127.0.0.1:54321</p></li><li><p>Postgres → <code>postgresql://postgres:postgres@127.0.0.1:54322/postgres</code></p></li><li><p>Studio → http://127.0.0.1:54323</p></li><li><p>Mailpit → http://127.0.0.1:54324</p></li></ul>
+<p>Exposed schemas (from <code>ampersand-supabase/config.toml</code>): <code>public, amp, kag, webhost, fleet, geo, temporal, orchestrate, govern, agentelic, rune</code>.</p>
+<h4 id="blk-26241">Per-site dev servers</h4>
+<table><thead><tr><th>Command</th><th>Target</th><th>URL</th></tr></thead><tbody><tr><td><code>npm run dev:webhost</code></td><td><code>WebHost.Systems/</code> (Vite/React)</td><td>http://localhost:5173</td></tr><tr><td><code>npm run dev:bendscript</code></td><td><code>bendscript.com/</code> (SvelteKit)</td><td>http://localhost:5174</td></tr><tr><td><code>npm run dev:runefort</code></td><td><code>runefort.com/</code> (SvelteKit)</td><td>http://localhost:8093</td></tr><tr><td><code>npm run dev:graphonomous-site</code></td><td><code>graphonomous.com/</code> static</td><td>http://localhost:8090</td></tr><tr><td><code>npm run dev:pulse-site</code></td><td><code>PULSE/site/</code> static</td><td>http://localhost:8091</td></tr><tr><td><code>npm run dev:opensentience</code></td><td><code>opensentience.org/</code> static</td><td>http://localhost:8092</td></tr><tr><td><code>npm run dev:prism</code></td><td><code>PRISM/</code> Phoenix</td><td>http://localhost:4000</td></tr><tr><td><code>npm run dev:specprompt</code></td><td><code>specprompt.com/</code> Phoenix</td><td>http://localhost:4200</td></tr></tbody></table>
+<h4 id="blk-26270">Run everything at once</h4>
+<table><thead><tr><th>Command</th><th>What it does</th></tr></thead><tbody><tr><td><code>npm run dev:all</code></td><td>Starts Supabase, then every dev server above in parallel (uses <code>concurrently</code>). Press Ctrl+C to terminate all.</td></tr><tr><td><code>npm run stop:all</code></td><td>Stops Supabase and kills any lingering dev-server processes on the ports above.</td></tr></tbody></table>
+<h4 id="blk-26278">Build / test</h4>
+<table><thead><tr><th>Command</th><th>What it does</th></tr></thead><tbody><tr><td><code>npm run build:all</code></td><td>Runs the build step in every buildable project (<code>WebHost.Systems</code>, <code>bendscript.com</code>, <code>runefort.com</code>, <code>graphonomous</code>, <code>PRISM</code>, <code>specprompt.com</code>).</td></tr><tr><td><code>npm run test:all</code></td><td>Runs the test suite in every project that has one.</td></tr><tr><td><code>npm run lint:all</code></td><td>Lints the Node projects; runs <code>mix format --check-formatted</code> on Elixir projects.</td></tr><tr><td><code>npm run typecheck:all</code></td><td><code>svelte-check</code> + <code>tsc</code> + <code>mix compile --warnings-as-errors</code> across the relevant projects.</td></tr></tbody></table>
+<h4 id="blk-26290">Individual project commands (for reference)</h4>
+<p>If you'd rather run commands directly:</p>
+<pre data-lang="bash"><code><span class="t-comment"># graphonomous (Elixir)</span>
+<span class="t-kw">cd</span> graphonomous &amp;&amp; mix deps.get &amp;&amp; mix compile<span class="t-flag"> --warnings-as-errors</span> &amp;&amp; mix test
+
+<span class="t-comment"># WebHost.Systems (Node monorepo)</span>
+<span class="t-kw">cd</span> WebHost.Systems &amp;&amp; npm install &amp;&amp; npm run dev
+
+<span class="t-comment"># AmpersandBoxDesign reference impl</span>
+<span class="t-kw">cd</span> AmpersandBoxDesign/reference/elixir/ampersand_core &amp;&amp; mix deps.get &amp;&amp; mix escript.build
+
+<span class="t-comment"># PRISM / SpecPrompt (Phoenix)</span>
+<span class="t-kw">cd</span> PRISM &amp;&amp; mix deps.get &amp;&amp; mix phx.server
+<span class="t-kw">cd</span> specprompt.com &amp;&amp; mix deps.get &amp;&amp; mix phx.server
+
+<span class="t-comment"># Any SvelteKit / Vite site</span>
+<span class="t-kw">cd</span> runefort.com &amp;&amp; npm install &amp;&amp; npm run dev</code></pre>
+<h3 id="blk-26293">Environment setup per site</h3>
+<p>Most sites need a <code>.env.local</code> pointing at local Supabase. The minimum required:</p>
+<pre data-lang="env"><code>VITE_SUPABASE_URL=http://127.0.0.1:54321
+VITE_SUPABASE_ANON_KEY=&lt;ANON_KEY from `npm run db:status`&gt;</code></pre>
+<p><code>npm run db:status -- -o env</code> prints every key ready to paste. (The local anon key is deterministic for <code>supabase-demo</code>, so the same key works across rebuilds.)</p>
+<h3 id="blk-26297">Conventions</h3>
+<ul><li><p>Never commit secrets, API keys, or credentials.</p></li><li><p>Elixir code follows <code>mix format</code>; TypeScript uses ESLint + Prettier.</p></li><li><p>Each product has a spec under <code>&lt;project&gt;/docs/spec/README.md</code> (or <code>prompts/</code> for AmpersandBoxDesign / BendScript). <strong>Always read the spec before changing code.</strong></p></li><li><p>Graphonomous MCP is the always-on memory loop for every session in this repo — see the &quot;Graphonomous session policy&quot; section in <a href="#/CLAUDE.md" data-link>CLAUDE.md</a>.</p></li><li><p>Per-product schema ranges in <code>ampersand-supabase/migrations/</code>: <code>000–009</code> shared <code>amp.*</code>, <code>010–019</code> <code>kag.*</code>, <code>020–029</code> <code>webhost.*</code>, <code>030–039</code> <code>fleet.*</code>, <code>040–049</code> <code>geo.*</code>, <code>050–059</code> <code>temporal.*</code>, <code>060–069</code> <code>orchestrate.*</code>, <code>070–079</code> <code>govern.*</code>, <code>080–089</code> <code>agentelic.*</code>, <code>090–099</code> <code>rune.*</code>, <code>100–109</code> <code>spec.*</code>.</p></li></ul>
+<h3 id="blk-26309">Troubleshooting</h3>
+<ul><li><p><strong>`Invalid schema: rune` (or similar) from PostgREST</strong> → new schema added to <code>config.toml</code> but Supabase not restarted. Run <code>npm run db:stop &amp;&amp; npm run db:start</code>.</p></li><li><p><strong>Pending migrations</strong> → <code>npm run db:migrate</code> applies them without wiping data.</p></li><li><p><strong>A site can't reach Supabase</strong> → check its <code>.env.local</code> points at <code>http://127.0.0.1:54321</code> (not the cloud URL) and that <code>supabase status</code> is green.</p></li><li><p><strong>Port already in use</strong> → each site uses a dedicated port (see table above); <code>npm run stop:all</code> clears them.</p></li></ul></div>
+<p class="src"><a href="/#/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-26183" class="lvl2">Repository map</a><a href="#blk-26209" class="lvl2">Quick start</a><a href="#blk-26212" class="lvl2">Project scripts</a><a href="#blk-26214" class="lvl3">Supabase (shared data layer)</a><a href="#blk-26241" class="lvl3">Per-site dev servers</a><a href="#blk-26270" class="lvl3">Run everything at once</a><a href="#blk-26278" class="lvl3">Build / test</a><a href="#blk-26290" class="lvl3">Individual project commands (for reference)</a><a href="#blk-26293" class="lvl2">Environment setup per site</a><a href="#blk-26297" class="lvl2">Conventions</a><a href="#blk-26309" class="lvl2">Troubleshooting</a></nav></div><div class="card"><div class="lab">links to</div><a href="/CLAUDE.md/">ProjectAmp2</a></div><div class="card"><div class="lab">referenced by</div><a href="/ECOSYSTEM.md/">The [&amp;] Protocol Ecosystem</a></div><div class="card"><div class="lab">in this folder</div><a href="/AGENTS.md/">ProjectAmp2</a><a href="/CLAUDE.md/">ProjectAmp2</a><a href="/ECOSYSTEM.md/">The [&amp;] Protocol Ecosystem</a><a href="/STACK_ARCHITECTURE_GAP_REVIEW.md/">[&amp;] Stack Architecture Gap Review</a><a href="/STACK_COMPLETION.md/">[&amp;] Stack Completion Status</a><a href="/STACK_PLANNING.md/">[&amp;] Stack Planning</a><a href="/STACK_SITEMAP.md/">[&amp;] Stack Sitemap</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierafqhxwsielyk5amlff7zswemasb4d26aolwewxvhcusvmwnvcegvq</div></div></div>
+</div></div>
+</body></html>

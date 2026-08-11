@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>DEPLOY.md · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Release runbook for publishing all v0.1.0 artifacts in this repository:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/DEPLOY.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DEPLOY.md">
+<meta property="og:description" content="Release runbook for publishing all v0.1.0 artifacts in this repository:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/DEPLOY.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"DEPLOY.md","name":"DEPLOY.md","description":"Release runbook for publishing all v0.1.0 artifacts in this repository:","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/DEPLOY.md/","identifier":"bagaaieravfrtjyefyks6mmz3mq64slnlbbuixfvs6wv72xvcb5apppwi4z2q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"0) Preflight (do this once)"},{"@type":"WebPageElement","name":"1) Publish @ampersand-protocol/validate to npm (v0.1.0)"},{"@type":"WebPageElement","name":"Path"},{"@type":"WebPageElement","name":"Commands"},{"@type":"WebPageElement","name":"Verify"},{"@type":"WebPageElement","name":"2) Publish ampersand-protocol to PyPI (v0.1.0)"},{"@type":"WebPageElement","name":"Path"},{"@type":"WebPageElement","name":"Commands"},{"@type":"WebPageElement","name":"Verify"},{"@type":"WebPageElement","name":"3) Publish ampersand_core to hex.pm (v0.1.0)"},{"@type":"WebPageElement","name":"Path"},{"@type":"WebPageElement","name":"Prerequisite (first-time Hex publish)"},{"@type":"WebPageElement","name":"Commands"},{"@type":"WebPageElement","name":"Verify"},{"@type":"WebPageElement","name":"4) Submit VS Code extension to Marketplace (@AmpersandBoxDesign)"},{"@type":"WebPageElement","name":"Path"},{"@type":"WebPageElement","name":"Important publisher note"},{"@type":"WebPageElement","name":"Commands"},{"@type":"WebPageElement","name":"Verify"},{"@type":"WebPageElement","name":"5) Post-release checks"},{"@type":"WebPageElement","name":"Troubleshooting quick notes"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"DEPLOY.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/DEPLOY.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/DEPLOY.md</span>
+
+</div></div>
+<div class="lead">Release runbook for publishing all v0.1.0 artifacts in this repository:</div>
+<div class="prose"><h1 id="blk-525">DEPLOY.md</h1>
+<p>Release runbook for publishing all <code>v0.1.0</code> artifacts in this repository:</p>
+<ol><li><p><code>@ampersand-protocol/validate</code> to npm</p></li><li><p><code>ampersand-protocol</code> to PyPI</p></li><li><p><code>ampersand_core</code> to hex.pm</p></li><li><p>VS Code extension to Marketplace as <code>@AmpersandBoxDesign</code></p></li></ol>
+<h3 id="blk-536">0) Preflight (do this once)</h3>
+<ul><li><p>From repo root: <code>ProjectAmp2/AmpersandBoxDesign</code></p></li><li><p>Ensure clean git state: <code>git status</code></p></li><li><p>Ensure you are on the intended release commit/tag.</p></li><li><p>Verify versions are <code>0.1.0</code>:</p></li><li><p>npm: <code>sdk/npm/validate/package.json</code> → <code>&quot;version&quot;: &quot;0.1.0&quot;</code></p></li><li><p>PyPI: <code>sdk/python/ampersand_protocol/pyproject.toml</code> → <code>version = &quot;0.1.0&quot;</code></p></li><li><p>Hex: <code>reference/elixir/ampersand_core/mix.exs</code> → <code>version: &quot;0.1.0&quot;</code></p></li><li><p>VS Code: <code>vscode/ampersand-json/package.json</code> → <code>&quot;version&quot;: &quot;0.1.0&quot;</code></p></li></ul>
+<h3 id="blk-554">1) Publish <code>@ampersand-protocol/validate</code> to npm (<code>v0.1.0</code>)</h3>
+<h4 id="blk-555">Path</h4>
+<ul><li><p><code>sdk/npm/validate</code></p></li></ul>
+<h4 id="blk-559">Commands</h4>
+<ul><li><p><code>cd sdk/npm/validate</code></p></li><li><p><code>npm ci</code></p></li><li><p><code>npm test</code></p></li><li><p><code>npm whoami</code> (must be logged in to the correct npm org/account)</p></li><li><p>Dry run: <code>npm publish --access public --dry-run</code></p></li><li><p>Publish: <code>npm publish --access public</code></p></li></ul>
+<h4 id="blk-573">Verify</h4>
+<ul><li><p><code>npm view @ampersand-protocol/validate version</code></p></li><li><p>Expected: <code>0.1.0</code></p></li></ul>
+<h3 id="blk-579">2) Publish <code>ampersand-protocol</code> to PyPI (<code>v0.1.0</code>)</h3>
+<h4 id="blk-580">Path</h4>
+<ul><li><p><code>sdk/python/ampersand_protocol</code></p></li></ul>
+<h4 id="blk-584">Commands</h4>
+<ul><li><p><code>cd sdk/python/ampersand_protocol</code></p></li><li><p><code>python -m pip install --upgrade pip build twine</code></p></li><li><p><code>python -m build</code></p></li><li><p><code>python -m twine check dist/*</code></p></li><li><p>(Optional TestPyPI) <code>python -m twine upload --repository testpypi dist/*</code></p></li><li><p>Publish: <code>python -m twine upload dist/*</code></p></li></ul>
+<h4 id="blk-598">Verify</h4>
+<ul><li><p><code>python -m pip index versions ampersand-protocol</code></p></li><li><p>Expected latest: <code>0.1.0</code></p></li></ul>
+<h3 id="blk-604">3) Publish <code>ampersand_core</code> to hex.pm (<code>v0.1.0</code>)</h3>
+<h4 id="blk-605">Path</h4>
+<ul><li><p><code>reference/elixir/ampersand_core</code></p></li></ul>
+<h4 id="blk-609">Prerequisite (first-time Hex publish)</h4>
+<p>Before first publish, ensure package metadata is set in <code>mix.exs</code> under <code>project</code>:</p>
+<ul><li><p><code>description</code></p></li><li><p><code>package</code> (at minimum: <code>licenses</code>, <code>links</code>, and maintainers as needed)</p></li></ul>
+<p>Without this metadata, <code>mix hex.publish</code> may fail validation.</p>
+<h4 id="blk-617">Commands</h4>
+<ul><li><p><code>cd reference/elixir/ampersand_core</code></p></li><li><p><code>mix deps.get</code></p></li><li><p><code>mix test</code></p></li><li><p><code>mix hex.info</code> (or authenticate first with <code>mix hex.user auth</code>)</p></li><li><p>Dry run (optional): <code>mix hex.build</code></p></li><li><p>Publish package: <code>mix hex.publish</code></p></li><li><p>Publish docs (optional but recommended): <code>mix docs &amp;&amp; mix hex.publish docs</code></p></li></ul>
+<h4 id="blk-633">Verify</h4>
+<ul><li><p><code>mix hex.info ampersand_core</code></p></li><li><p>Expected version includes: <code>0.1.0</code></p></li></ul>
+<h3 id="blk-639">4) Submit VS Code extension to Marketplace (<code>@AmpersandBoxDesign</code>)</h3>
+<h4 id="blk-640">Path</h4>
+<ul><li><p><code>vscode/ampersand-json</code></p></li></ul>
+<h4 id="blk-644">Important publisher note</h4>
+<p>Current extension manifest has <code>&quot;publisher&quot;: &quot;ampersand-protocol&quot;</code>. If you want Marketplace publisher <code>AmpersandBoxDesign</code>, update:</p>
+<ul><li><p><code>vscode/ampersand-json/package.json</code></p></li><li><p>set <code>&quot;publisher&quot;: &quot;AmpersandBoxDesign&quot;</code></p></li></ul>
+<p>Publisher in manifest must match your Marketplace publisher ID.</p>
+<h4 id="blk-652">Commands</h4>
+<ul><li><p><code>cd vscode/ampersand-json</code></p></li><li><p><code>npm install</code></p></li><li><p><code>npm install -g @vscode/vsce</code></p></li><li><p><code>vsce --version</code></p></li><li><p>Create/login publisher in Azure DevOps + generate Personal Access Token (Marketplace publish scope).</p></li><li><p><code>vsce login AmpersandBoxDesign</code></p></li><li><p>Package check: <code>vsce package</code></p></li><li><p>Publish: <code>vsce publish 0.1.0</code></p></li></ul>
+<h4 id="blk-670">Verify</h4>
+<ul><li><p>Check extension listing in Visual Studio Marketplace.</p></li><li><p>Confirm version is <code>0.1.0</code>.</p></li><li><p>Confirm install from VS Code Extensions UI works.</p></li></ul>
+<h3 id="blk-678">5) Post-release checks</h3>
+<ul><li><p>Tag release commit: <code>git tag v0.1.0 &amp;&amp; git push origin v0.1.0</code></p></li><li><p>Update changelog/release notes if applicable.</p></li><li><p>Smoke-test installs:</p></li><li><p>npm: <code>npx @ampersand-protocol/validate --help</code></p></li><li><p>PyPI: <code>pip install ampersand-protocol==0.1.0</code></p></li><li><p>Hex: add <code>{:ampersand_core, &quot;~&gt; 0.1.0&quot;}</code> in a test project and run <code>mix deps.get</code></p></li><li><p>VS Code: install marketplace extension and validate <code>*.ampersand.json</code></p></li></ul>
+<h3 id="blk-694">Troubleshooting quick notes</h3>
+<ul><li><p>npm <code>403</code>/ownership errors: verify org/package access and <code>npm whoami</code>.</p></li><li><p>PyPI upload conflict: version already exists; bump version and rebuild.</p></li><li><p>Hex auth issues: rerun <code>mix hex.user auth</code>.</p></li><li><p>VS Code publish fails on publisher mismatch: <code>package.json.publisher</code> must exactly match your publisher ID.</p></li></ul></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/DEPLOY.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-536" class="lvl2">0) Preflight (do this once)</a><a href="#blk-554" class="lvl2">1) Publish @ampersand-protocol/validate to npm (v0.1.0)</a><a href="#blk-555" class="lvl3">Path</a><a href="#blk-559" class="lvl3">Commands</a><a href="#blk-573" class="lvl3">Verify</a><a href="#blk-579" class="lvl2">2) Publish ampersand-protocol to PyPI (v0.1.0)</a><a href="#blk-580" class="lvl3">Path</a><a href="#blk-584" class="lvl3">Commands</a><a href="#blk-598" class="lvl3">Verify</a><a href="#blk-604" class="lvl2">3) Publish ampersand_core to hex.pm (v0.1.0)</a><a href="#blk-605" class="lvl3">Path</a><a href="#blk-609" class="lvl3">Prerequisite (first-time Hex publish)</a><a href="#blk-617" class="lvl3">Commands</a><a href="#blk-633" class="lvl3">Verify</a><a href="#blk-639" class="lvl2">4) Submit VS Code extension to Marketplace (@AmpersandBoxDesign)</a><a href="#blk-640" class="lvl3">Path</a><a href="#blk-644" class="lvl3">Important publisher note</a><a href="#blk-652" class="lvl3">Commands</a><a href="#blk-670" class="lvl3">Verify</a><a href="#blk-678" class="lvl2">5) Post-release checks</a><a href="#blk-694" class="lvl2">Troubleshooting quick notes</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/AGENTS.md/">[&amp;] Protocol — AmpersandBoxDesign</a><a href="/AmpersandBoxDesign/CLAUDE.md/">[&amp;] Protocol — AmpersandBoxDesign</a><a href="/AmpersandBoxDesign/CONTRIBUTING.md/">Contributing to the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/README.md/">[&amp;] Protocol</a><a href="/AmpersandBoxDesign/SPEC.md/">[&amp;] Protocol Specification</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieravfrtjyefyks6mmz3mq64slnlbbuixfvs6wv72xvcb5apppwi4z2q</div></div></div>
+</div></div>
+</body></html>

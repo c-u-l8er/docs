@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>[&amp;] Protocol — AmpersandBoxDesign · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Open specification for capability composition in AI agents. Defines memory, reasoning, time, space, and governance primitives that compile into MCP and…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/AGENTS.md/">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[&amp;] Protocol — AmpersandBoxDesign">
+<meta property="og:description" content="Open specification for capability composition in AI agents. Defines memory, reasoning, time, space, and governance primitives that compile into MCP and…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/AGENTS.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] Protocol — AmpersandBoxDesign","name":"[&] Protocol — AmpersandBoxDesign","description":"Open specification for capability composition in AI agents. Defines memory, reasoning, time, space, and governance primitives that compile into MCP and…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/AGENTS.md/","identifier":"bagaaieraw7d7dbrqwzbfvhcj6ni5f6fiu5dqcpcjxwkdkn2kernrgapic27q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Implementation prompts"},{"@type":"WebPageElement","name":"Build and test"},{"@type":"WebPageElement","name":"CLI"},{"@type":"WebPageElement","name":"Structure"},{"@type":"WebPageElement","name":"Constraints"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"AGENTS.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/AGENTS.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/AGENTS.md</span>
+
+</div></div>
+<div class="lead">Open specification for capability composition in AI agents. Defines memory, reasoning, time, space, and governance primitives that compile into MCP and A2A configurations.</div>
+<div class="prose"><h1 id="blk-112">[&amp;] Protocol — AmpersandBoxDesign</h1>
+<p>Open specification for capability composition in AI agents. Defines memory, reasoning, time, space, and governance primitives that compile into MCP and A2A configurations.</p>
+<h3 id="blk-114">Implementation prompts</h3>
+<ul><li><p><code>prompts/PROTOCOL_PROMPT.md</code> — implementation prompt for generating [&amp;] Protocol code (project identity, architecture, formal grammar, coding standards)</p></li><li><p><code>prompts/GRAPHONOMOUS_PROMPT.md</code> — autonomous traversal prompt for Graphonomous MCP</p></li></ul>
+<p>These serve the same role as <code>docs/spec/</code> in other portfolio projects. Read before modifying the reference implementation.</p>
+<h3 id="blk-121">Build and test</h3>
+<pre><code>cd reference/elixir/ampersand_core &amp;&amp; mix deps.get &amp;&amp; mix escript.build &amp;&amp; mix test</code></pre>
+<h3 id="blk-123">CLI</h3>
+<pre><code>cd reference/elixir/ampersand_core
+./ampersand validate ../../../examples/infra-operator.ampersand.json
+./ampersand compose ../../../examples/infra-operator.ampersand.json
+./ampersand generate mcp ../../../examples/infra-operator.ampersand.json
+./ampersand generate a2a ../../../examples/infra-operator.ampersand.json</code></pre>
+<h3 id="blk-125">Structure</h3>
+<ul><li><p><code>SPEC.md</code> — protocol specification</p></li><li><p><code>protocol/schema/v0.1.0/</code> — JSON Schema artifacts</p></li><li><p><code>examples/</code> — reference *.ampersand.json declarations</p></li><li><p><code>contracts/v0.1.0/</code> — capability contracts</p></li><li><p><code>reference/elixir/ampersand_core/</code> — Elixir reference impl + CLI</p></li><li><p><code>sdk/npm/validate/</code> — npm validator</p></li><li><p><code>sdk/python/ampersand_protocol/</code> — Python SDK</p></li><li><p><code>docs/</code> — guides and documentation</p></li></ul>
+<h3 id="blk-143">Constraints</h3>
+<ul><li><p>Protocol changes must update schema, examples, reference impl, and docs together</p></li><li><p>JSON Schema targets draft 2020-12</p></li><li><p>Capabilities are interfaces, not products (<code>&amp;memory.graph</code> is a contract, <code>graphonomous</code> is a provider)</p></li><li><p>[&amp;] complements MCP and A2A — it compiles into them, does not replace them</p></li><li><p>Examples must be realistic and validate successfully</p></li><li><p>See CONTRIBUTING.md for full guidelines</p></li></ul></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/AGENTS.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-114" class="lvl2">Implementation prompts</a><a href="#blk-121" class="lvl2">Build and test</a><a href="#blk-123" class="lvl2">CLI</a><a href="#blk-125" class="lvl2">Structure</a><a href="#blk-143" class="lvl2">Constraints</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/CLAUDE.md/">[&amp;] Protocol — AmpersandBoxDesign</a><a href="/AmpersandBoxDesign/CONTRIBUTING.md/">Contributing to the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/DEPLOY.md/">DEPLOY.md</a><a href="/AmpersandBoxDesign/README.md/">[&amp;] Protocol</a><a href="/AmpersandBoxDesign/SPEC.md/">[&amp;] Protocol Specification</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraw7d7dbrqwzbfvhcj6ni5f6fiu5dqcpcjxwkdkn2kernrgapic27q</div></div></div>
+</div></div>
+</body></html>

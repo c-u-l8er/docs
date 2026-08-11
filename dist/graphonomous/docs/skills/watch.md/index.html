@@ -1,0 +1,60 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Watch Directory — Continuous Filesystem Sync · graphonomous · Ampersand Box</title>
+<meta name="description" content="Start a polling loop that detects filesystem changes and ingests them into Graphonomous.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/watch.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Watch Directory — Continuous Filesystem Sync">
+<meta property="og:description" content="Start a polling loop that detects filesystem changes and ingests them into Graphonomous.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/watch.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Watch Directory — Continuous Filesystem Sync","name":"Watch Directory — Continuous Filesystem Sync","description":"Start a polling loop that detects filesystem changes and ingests them into Graphonomous.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/watch.md/","identifier":"bagaaierayttvn4hdlfdl55az5rct4lligbfxiivarxkxe32zijluhnsjfs6q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Arguments"},{"@type":"WebPageElement","name":"How It Works"},{"@type":"WebPageElement","name":"Starting the Watcher"},{"@type":"WebPageElement","name":"What Gets Watched"},{"@type":"WebPageElement","name":"Watcher Configuration"},{"@type":"WebPageElement","name":"Important Notes"},{"@type":"WebPageElement","name":"Native CLI Alternative"},{"@type":"WebPageElement","name":"Anti-patterns to avoid"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/"},{"@type":"ListItem","position":5,"name":"watch.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/watch.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/docs/skills/watch.md</span>
+
+</div></div>
+<div class="lead">Start a polling loop that detects filesystem changes and ingests them into Graphonomous.</div>
+<div class="prose"><h1 id="blk-68244">Watch Directory — Continuous Filesystem Sync</h1>
+<p>Start a polling loop that detects filesystem changes and ingests them into Graphonomous.</p>
+<h3 id="blk-68246">Arguments</h3>
+<p>Required path and optional flags: $ARGUMENTS</p>
+<ul><li><p><code>&lt;path&gt;</code>: directory to watch (required)</p></li><li><p><code>--interval &lt;ms&gt;</code>: poll interval in milliseconds (default: 5000)</p></li><li><p><code>--extensions &lt;list&gt;</code>: comma-separated extensions to watch (default: .ex,.exs,.ts,.js,.tsx,.md,.html,.css,.json,.svelte)</p></li></ul>
+<h3 id="blk-68255">How It Works</h3>
+<p>Graphonomous has a built-in <code>watch_directory</code> feature that polls for file changes using snapshot diffing (size + mtime + content SHA256). This skill wires that into the Claude Code session.</p>
+<h4 id="blk-68257">Starting the Watcher</h4>
+<ol><li><p>Note the target directory and configuration</p></li><li><p>Inform the user that watching is active</p></li><li><p>On each detected change, use <code>/graphonomous:sync &lt;changed_file_path&gt;</code> to ingest</p></li></ol>
+<p><strong>Example — watch the graphonomous lib directory:</strong></p>
+<pre><code>/graphonomous:watch graphonomous/lib/ --interval 3000</code></pre>
+<p><strong>Example — watch with specific extensions:</strong></p>
+<pre><code>/graphonomous:watch WebHost.Systems/src/ --extensions .ts,.tsx,.js</code></pre>
+<h4 id="blk-68269">What Gets Watched</h4>
+<p>The watcher tracks:</p>
+<ul><li><p><strong>Added files</strong>: new files matching the extension filter -&gt; <code>act(action: &quot;store_node&quot;, ...)</code></p></li><li><p><strong>Modified files</strong>: changed content (SHA256 differs) -&gt; update existing node or store new</p></li><li><p><strong>Removed files</strong>: deleted files -&gt; optionally mark node confidence to 0.0</p></li></ul>
+<h4 id="blk-68278">Watcher Configuration</h4>
+<table><thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>path</code></td><td>(required)</td><td>Root directory to watch</td></tr><tr><td><code>interval</code></td><td>5000ms</td><td>How often to check for changes</td></tr><tr><td><code>extensions</code></td><td>.ex,.exs,.ts,.js,.tsx,.md,.html,.css,.json,.svelte</td><td>File types to include</td></tr><tr><td><code>recursive</code></td><td>true</td><td>Watch subdirectories</td></tr><tr><td><code>respect_gitignore</code></td><td>true</td><td>Skip .gitignore'd files</td></tr><tr><td><code>max_file_size</code></td><td>1MB</td><td>Skip files larger than this</td></tr></tbody></table>
+<h4 id="blk-68301">Important Notes</h4>
+<ul><li><p>The watcher runs as a <strong>conceptual loop within the conversation</strong> — Claude checks for changes when prompted or between tasks</p></li><li><p>For true background watching, use Graphonomous's native CLI: <code>graphonomous watch &lt;path&gt;</code></p></li><li><p>The watcher does NOT automatically run edge extraction (use <code>/graphonomous:sync --full</code> periodically for that)</p></li><li><p>Stop watching by saying &quot;stop watching&quot; or ending the session</p></li></ul>
+<h3 id="blk-68311">Native CLI Alternative</h3>
+<p>For continuous background watching outside of Claude Code sessions:</p>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> graphonomous
+mix run<span class="t-flag"> --no-halt</span> -- watch /home/travis/ProjectAmp2 \
+ <span class="t-flag"> --poll-interval-ms</span> <span class="t-undefined">5000</span> \
+ <span class="t-flag"> --extensions</span> .ex,.exs,.ts,.js,.tsx,.md,.html,.css,.json,.svelte \
+ <span class="t-flag"> --ingest-on-start</span> \
+ <span class="t-flag"> --consolidation-cadence</span> <span class="t-undefined">100</span></code></pre>
+<p>This runs as a persistent process and is the recommended approach for always-on filesystem sync.</p>
+<h3 id="blk-68315">Anti-patterns to avoid</h3>
+<ul><li><p>Don't set poll interval below 1000ms — excessive polling wastes resources</p></li><li><p>Don't watch node_modules, _build, deps, or .git directories</p></li><li><p>Don't expect real-time sub-second latency — this is polling-based, not inotify</p></li><li><p>Don't run multiple watchers on overlapping directories — you'll get duplicate nodes</p></li></ul></div>
+<p class="src"><a href="/#/graphonomous/docs/skills/watch.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-68246" class="lvl2">Arguments</a><a href="#blk-68255" class="lvl2">How It Works</a><a href="#blk-68257" class="lvl3">Starting the Watcher</a><a href="#blk-68269" class="lvl3">What Gets Watched</a><a href="#blk-68278" class="lvl3">Watcher Configuration</a><a href="#blk-68301" class="lvl3">Important Notes</a><a href="#blk-68311" class="lvl2">Native CLI Alternative</a><a href="#blk-68315" class="lvl2">Anti-patterns to avoid</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a><a href="/graphonomous/docs/skills/attention.md/">Attention Engine</a><a href="/graphonomous/docs/skills/belief.md/">Belief Revision</a><a href="/graphonomous/docs/skills/bootstrap.md/">Graphonomous Bootstrap</a><a href="/graphonomous/docs/skills/consolidate.md/">Consolidation</a><a href="/graphonomous/docs/skills/deliberate.md/">Topology and Deliberation</a><a href="/graphonomous/docs/skills/epistemic-frontier.md/">Epistemic Frontier — Uncertainty-Guided Investigation</a><a href="/graphonomous/docs/skills/forgetting.md/">Intentional Forgetting — Structured Knowledge Removal</a><a href="/graphonomous/docs/skills/goals.md/">Goal Management</a><a href="/graphonomous/docs/skills/graph-health.md/">Graph Health Check</a><a href="/graphonomous/docs/skills/inspect.md/">Graph Inspection</a><a href="/graphonomous/docs/skills/learn.md/">Learning Loop</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierayttvn4hdlfdl55az5rct4lligbfxiivarxkxe32zijluhnsjfs6q</div></div></div>
+</div></div>
+</body></html>

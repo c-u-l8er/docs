@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>ProjectAmp2 · (root) · Ampersand Box</title>
+<meta name="description" content="Multi-project portfolio for the [&amp;] Protocol ecosystem — an open standard for capability composition in AI agents.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AGENTS.md/">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ProjectAmp2">
+<meta property="og:description" content="Multi-project portfolio for the [&amp;] Protocol ecosystem — an open standard for capability composition in AI agents.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AGENTS.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"ProjectAmp2","name":"ProjectAmp2","description":"Multi-project portfolio for the [&] Protocol ecosystem — an open standard for capability composition in AI agents.","url":"https://docs.ampersandboxdesign.com/AGENTS.md/","identifier":"bagaaiera6lzokh5wxmko6kmtsio4kn5q3xci4erxupti57ri2qtlbigsemdq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"(root)","url":"https://docs.ampersandboxdesign.com/(root)/"},"articleSection":"(root)","hasPart":[{"@type":"WebPageElement","name":"Repository layout"},{"@type":"WebPageElement","name":"Spec-driven development"},{"@type":"WebPageElement","name":"Build and test"},{"@type":"WebPageElement","name":"graphonomous (Elixir ~> 1.17, OTP)"},{"@type":"WebPageElement","name":"WebHost.Systems (Node >= 20)"},{"@type":"WebPageElement","name":"AmpersandBoxDesign reference impl (Elixir)"},{"@type":"WebPageElement","name":"Agent prompt policy (ALL ProjectAmp2 sessions)"},{"@type":"WebPageElement","name":"MCP server surface (v0.4 — Dual-Loop Machine Architecture)"},{"@type":"WebPageElement","name":"Default loop"},{"@type":"WebPageElement","name":"Required context"},{"@type":"WebPageElement","name":"Key conventions"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AGENTS.md","item":"https://docs.ampersandboxdesign.com/AGENTS.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">(root)</span>
+<span class="path">AGENTS.md</span>
+
+</div></div>
+<div class="lead">Multi-project portfolio for the [&amp;] Protocol ecosystem — an open standard for capability composition in AI agents.</div>
+<div class="prose"><h1 id="blk-1">ProjectAmp2</h1>
+<p>Multi-project portfolio for the [&amp;] Protocol ecosystem — an open standard for capability composition in AI agents.</p>
+<h3 id="blk-3">Repository layout</h3>
+<p>Active codebases with real code:</p>
+<ul><li><p><code>graphonomous/</code> — Elixir/OTP continual learning engine, MCP server, npm distribution</p></li><li><p><code>WebHost.Systems/</code> — Node.js monorepo (Convex + Vite/React/Clerk)</p></li><li><p><code>AmpersandBoxDesign/</code> — Protocol spec, JSON schemas, reference implementations, SDKs</p></li></ul>
+<p>Marketing sites (static HTML) with authoritative specs:</p>
+<ul><li><p><code>agentelic.com/</code>, <code>agentromatic.com/</code>, <code>bendscript.com/</code>, <code>delegatic.com/</code>, <code>deliberatic.com/</code>, <code>fleetprompt.com/</code>, <code>geofleetic.com/</code>, <code>graphonomous.com/</code>, <code>opensentience.org/</code>, <code>specprompt.com/</code>, <code>ticktickclock.com/</code></p></li></ul>
+<p>Build artifacts (do not edit):</p>
+<ul><li><p><code>_build/</code>, <code>deps/</code>, <code>mix.lock</code></p></li></ul>
+<h3 id="blk-20">Spec-driven development</h3>
+<p>Implementation is driven by specs. Always read the relevant spec before building or modifying code:</p>
+<ul><li><p><code>graphonomous/docs/spec/README.md</code> — source-of-truth for <code>graphonomous/</code> engine code</p></li><li><p><code>WebHost.Systems/docs/spec/README.md</code> — master spec for WebHost (plus numbered section files and ADRs alongside it)</p></li><li><p>Each <code>*.com/</code> and <code>*.org/</code> site has <code>docs/spec/README.md</code> with the product/protocol spec</p></li><li><p><code>AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md</code> — implementation prompt used to generate [&amp;] Protocol code</p></li><li><p><code>AmpersandBoxDesign/prompts/GRAPHONOMOUS_PROMPT.md</code> — autonomous traversal prompt for Graphonomous MCP</p></li><li><p><code>old_scrap/</code> dirs are historical, not authoritative</p></li></ul>
+<h3 id="blk-35">Build and test</h3>
+<h4 id="blk-36">graphonomous (Elixir ~&gt; 1.17, OTP)</h4>
+<pre><code>cd graphonomous &amp;&amp; mix deps.get &amp;&amp; mix compile --warnings-as-errors &amp;&amp; mix test &amp;&amp; mix format --check-formatted</code></pre>
+<h4 id="blk-38">WebHost.Systems (Node &gt;= 20)</h4>
+<pre><code>cd WebHost.Systems &amp;&amp; npm install &amp;&amp; npm run typecheck &amp;&amp; npm run lint</code></pre>
+<h4 id="blk-40">AmpersandBoxDesign reference impl (Elixir)</h4>
+<pre><code>cd AmpersandBoxDesign/reference/elixir/ampersand_core &amp;&amp; mix deps.get &amp;&amp; mix escript.build</code></pre>
+<h3 id="blk-42">Agent prompt policy (ALL ProjectAmp2 sessions)</h3>
+<p>Graphonomous MCP is the always-on memory and learning loop for every agent session in this repository — not just graphonomous/-scoped tasks. Load the skills pack at session start.</p>
+<h4 id="blk-44">MCP server surface (v0.4 — Dual-Loop Machine Architecture)</h4>
+<p>Graphonomous exposes <strong>5 loop-phase machines</strong> instead of 29 individual tools. Each machine accepts an <code>action</code> parameter:</p>
+<table><thead><tr><th>Machine</th><th>Phase</th><th>Key Actions</th></tr></thead><tbody><tr><td><code>retrieve</code></td><td>&quot;What do I know?&quot;</td><td>context, episodic, procedural, coverage, trace_evidence, frontier</td></tr><tr><td><code>route</code></td><td>&quot;What should I do?&quot;</td><td>topology, deliberate, attention_survey, attention_cycle, review_goal</td></tr><tr><td><code>act</code></td><td>&quot;Do it&quot;</td><td>store_node, store_edge, manage_goal, belief_revise, forget_node, gdpr_erase</td></tr><tr><td><code>learn</code></td><td>&quot;Did it work?&quot;</td><td>from_outcome, from_feedback, detect_novelty, from_interaction, contradictions</td></tr><tr><td><code>consolidate</code></td><td>&quot;Clean up&quot;</td><td>run, stats, query, traverse</td></tr></tbody></table>
+<p>When PRISM (OS-009) also runs in the session, 6 PRISM machines join: compose, interact, observe, reflect, diagnose, config. Total: <strong>11 tools</strong> (down from 76). See <code>AmpersandBoxDesign/prompts/DUAL_LOOP_MACHINES.md</code>.</p>
+<h4 id="blk-66">Default loop</h4>
+<p>For every non-trivial task: <code>retrieve</code> → <code>route</code> → <code>act</code> → <code>learn</code> → <code>consolidate</code>.</p>
+<h4 id="blk-68">Required context</h4>
+<p>Minimum:</p>
+<ul><li><p><code>graphonomous/docs/skills/AGENT_BOOTSTRAP_PROMPT.md</code></p></li><li><p><code>graphonomous/docs/skills/SKILLS.md</code></p></li></ul>
+<p>Recommended full context:</p>
+<ul><li><p><code>graphonomous/docs/skills/01_RETRIEVE_AND_REMEMBER.md</code></p></li><li><p><code>graphonomous/docs/skills/02_LEARNING_LOOP.md</code></p></li><li><p><code>graphonomous/docs/skills/03_GRAPH_INSPECTION.md</code></p></li><li><p><code>graphonomous/docs/skills/04_GOAL_MANAGEMENT.md</code></p></li><li><p><code>graphonomous/docs/skills/05_COVERAGE_AND_REVIEW.md</code></p></li><li><p><code>graphonomous/docs/skills/06_TOPOLOGY_AND_DELIBERATION.md</code></p></li><li><p><code>graphonomous/docs/skills/07_CONSOLIDATION.md</code></p></li><li><p><code>graphonomous/docs/skills/08_ATTENTION.md</code></p></li><li><p><code>graphonomous/docs/skills/09_WORKFLOWS.md</code></p></li><li><p><code>graphonomous/docs/skills/10_ANTI_PATTERNS.md</code></p></li></ul>
+<p>This policy applies to all subdirectories (graphonomous/, WebHost.Systems/, AmpersandBoxDesign/, bendscript.com/, portfolio sites).</p>
+<h3 id="blk-98">Key conventions</h3>
+<ul><li><p>Elixir: <code>mix format</code> enforced, warnings-as-errors in CI</p></li><li><p>TypeScript: ESLint + Prettier</p></li><li><p>graphonomous uses a vendored MCP dependency (<code>vendor/anubis_mcp</code>) — do not replace with upstream</p></li><li><p>EXLA is intentionally omitted from graphonomous (NIF/CUDA compatibility)</p></li><li><p>Protocol changes in AmpersandBoxDesign must update schema, examples, and docs together</p></li><li><p>Never commit secrets or credentials</p></li></ul></div>
+<p class="src"><a href="/#/AGENTS.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-3" class="lvl2">Repository layout</a><a href="#blk-20" class="lvl2">Spec-driven development</a><a href="#blk-35" class="lvl2">Build and test</a><a href="#blk-36" class="lvl3">graphonomous (Elixir ~&gt; 1.17, OTP)</a><a href="#blk-38" class="lvl3">WebHost.Systems (Node &gt;= 20)</a><a href="#blk-40" class="lvl3">AmpersandBoxDesign reference impl (Elixir)</a><a href="#blk-42" class="lvl2">Agent prompt policy (ALL ProjectAmp2 sessions)</a><a href="#blk-44" class="lvl3">MCP server surface (v0.4 — Dual-Loop Machine Architecture)</a><a href="#blk-66" class="lvl3">Default loop</a><a href="#blk-68" class="lvl3">Required context</a><a href="#blk-98" class="lvl2">Key conventions</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/ECOSYSTEM.md/">The [&amp;] Protocol Ecosystem</a></div><div class="card"><div class="lab">in this folder</div><a href="/CLAUDE.md/">ProjectAmp2</a><a href="/ECOSYSTEM.md/">The [&amp;] Protocol Ecosystem</a><a href="/README.md/">ProjectAmp2</a><a href="/STACK_ARCHITECTURE_GAP_REVIEW.md/">[&amp;] Stack Architecture Gap Review</a><a href="/STACK_COMPLETION.md/">[&amp;] Stack Completion Status</a><a href="/STACK_PLANNING.md/">[&amp;] Stack Planning</a><a href="/STACK_SITEMAP.md/">[&amp;] Stack Sitemap</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera6lzokh5wxmko6kmtsio4kn5q3xci4erxupti57ri2qtlbigsemdq</div></div></div>
+</div></div>
+</body></html>

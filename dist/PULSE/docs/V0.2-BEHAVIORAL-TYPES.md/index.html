@@ -1,0 +1,284 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>PULSE v0.2 — Behavioral Loop Types · PULSE · Ampersand Box</title>
+<meta name="description" content="Status: Design proposal (2026-05-27) — for review before implementation.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/PULSE/docs/V0.2-BEHAVIORAL-TYPES.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PULSE v0.2 — Behavioral Loop Types">
+<meta property="og:description" content="Status: Design proposal (2026-05-27) — for review before implementation.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/PULSE/docs/V0.2-BEHAVIORAL-TYPES.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"PULSE v0.2 — Behavioral Loop Types","name":"PULSE v0.2 — Behavioral Loop Types","description":"Status: Design proposal (2026-05-27) — for review before implementation.","url":"https://docs.ampersandboxdesign.com/PULSE/docs/V0.2-BEHAVIORAL-TYPES.md/","identifier":"bagaaieratf2rk47zieuytxokotnfx3w2ttx6vpx56fvjma7crzgeqpr4rjxa","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"PULSE","url":"https://docs.ampersandboxdesign.com/PULSE/"},"articleSection":"PULSE","hasPart":[{"@type":"WebPageElement","name":"Why"},{"@type":"WebPageElement","name":"What it buys (scorecard delta)"},{"@type":"WebPageElement","name":"The six additions"},{"@type":"WebPageElement","name":"1. Typed token registry"},{"@type":"WebPageElement","name":"Token evolution rules (registry-level subtyping only)"},{"@type":"WebPageElement","name":"2. Phase signatures with effect rows"},{"@type":"WebPageElement","name":"3. Local session type (derived, validated)"},{"@type":"WebPageElement","name":"4. Global choreography + projection"},{"@type":"WebPageElement","name":"5. Behavioral subtyping for version compatibility"},{"@type":"WebPageElement","name":"6. Conformance checker (offline + runtime)"},{"@type":"WebPageElement","name":"Token canon update"},{"@type":"WebPageElement","name":"Backwards compatibility"},{"@type":"WebPageElement","name":"Non-goals"},{"@type":"WebPageElement","name":"Resolved design questions (closed 2026-05-27)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"PULSE","item":"https://docs.ampersandboxdesign.com/PULSE/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/PULSE/docs/"},{"@type":"ListItem","position":4,"name":"V0.2-BEHAVIORAL-TYPES.md","item":"https://docs.ampersandboxdesign.com/PULSE/docs/V0.2-BEHAVIORAL-TYPES.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">PULSE</span>
+<span class="path">PULSE/docs/V0.2-BEHAVIORAL-TYPES.md</span>
+
+</div></div>
+<div class="lead">Status: Design proposal (2026-05-27) — for review before implementation.</div>
+<div class="prose"><h1 id="blk-23222">PULSE v0.2 — Behavioral Loop Types</h1>
+<p><strong>Status:</strong> Design proposal (2026-05-27) — for review before implementation.</p>
+<p><strong>Goal:</strong> Promote PULSE from a <em>structural schema</em> (named phases + named tokens) to a <em>typed protocol</em> (session-typed phases + linear tokens + projected choreography). Bring formal-spec quality to the level of behavioral type systems without losing the implementation maturity of v0.1.1.</p>
+<h3 id="blk-23225">Why</h3>
+<p>PULSE v0.1.1 declares 5 phase kinds, 6 cross-loop tokens, and 7 invariants. The schema validates <em>names and shapes</em> but cannot answer:</p>
+<table><thead><tr><th>Question v0.1.1 cannot answer</th><th>What's needed</th></tr></thead><tbody><tr><td>Is this manifest deadlock-free?</td><td>Session-typed phase graph</td></tr><tr><td>Will every emitted <code>SurpriseSignal</code> be consumed?</td><td>Linear token typing</td></tr><tr><td>Is <code>loop@v2</code> a safe drop-in replacement for <code>loop@v1</code>?</td><td>Behavioral subtyping</td></tr><tr><td>If loop A sends X, will loop B receive a compatible X?</td><td>Multiparty choreography + projection</td></tr><tr><td>Does this phase's declared effect match its runtime behavior?</td><td>Effect rows + runtime fidelity check</td></tr><tr><td>Are the declared invariants actually true of this manifest?</td><td>Refinement-type checker</td></tr></tbody></table>
+<p>Behavioral type systems (session types, multiparty session types, behavioral contracts) answer exactly these questions — but as preprints, not as running software. PULSE v0.2 ports the answers into a JSON-Schema-grounded substrate that already has 5 reference manifests and a conformance suite.</p>
+<h3 id="blk-23243">What it buys (scorecard delta)</h3>
+<table><thead><tr><th>Axis</th><th>v0.1.1</th><th>v0.2</th><th>Why</th></tr></thead><tbody><tr><td>Formality</td><td>8</td><td><strong>10</strong></td><td>Session-type-grade; refinement types on cadence/invariants; effect rows on phases</td></tr><tr><td>Compositionality</td><td>7</td><td><strong>10</strong></td><td>Choreography + projection; linear tokens; behavioral subtyping</td></tr><tr><td>Substrate independence</td><td>9</td><td><strong>10</strong></td><td>Typed protocol portable to any language with a type system</td></tr><tr><td>Closure</td><td>7</td><td><strong>9</strong></td><td>Liveness + fidelity machine-checked; loses 1 for new verifier dependency</td></tr><tr><td><strong>Total / 40</strong></td><td><strong>31</strong></td><td><strong>39</strong></td><td></td></tr></tbody></table>
+<p>For external context see <code>docs/V0.2-BEHAVIORAL-TYPES-RATIONALE.md</code> (planned) which compares this against Agent Behavioral Contracts (preprint), AgentRFC, and the CCS/CSP ceiling.</p>
+<h3 id="blk-23270">The six additions</h3>
+<h4 id="blk-23271">1. Typed token registry</h4>
+<p><strong>File:</strong> <code>schemas/pulse-tokens.v0.2.json</code> (new)</p>
+<p>Each canonical token gets a payload schema, a linearity annotation, a variance annotation, and a TTL.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://json-schema.org/draft/2020-12/schema&quot;</span>,
+  <span class="t-key">&quot;tokens&quot;</span>: {
+    <span class="t-key">&quot;TopologyContext&quot;</span>: {
+      <span class="t-key">&quot;payload_schema&quot;</span>: <span class="t-string">&quot;schemas/tokens/topology_context.v0.2.json&quot;</span>,
+      <span class="t-key">&quot;linearity&quot;</span>: <span class="t-string">&quot;linear&quot;</span>,
+      <span class="t-key">&quot;variance&quot;</span>: <span class="t-string">&quot;covariant&quot;</span>,
+      <span class="t-key">&quot;ttl_ms&quot;</span>: <span class="t-num">60000</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Emitted by retrieve, consumed by route. Loss would blind routing — must be consumed.&quot;</span>
+    },
+    <span class="t-key">&quot;DeliberationRequest&quot;</span>: {
+      <span class="t-key">&quot;payload_schema&quot;</span>: <span class="t-string">&quot;schemas/tokens/deliberation_request.v0.2.json&quot;</span>,
+      <span class="t-key">&quot;linearity&quot;</span>: <span class="t-string">&quot;linear&quot;</span>,
+      <span class="t-key">&quot;variance&quot;</span>: <span class="t-string">&quot;invariant&quot;</span>,
+      <span class="t-key">&quot;ttl_ms&quot;</span>: <span class="t-num">300000</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Triggers an inner deliberation loop. Loss would silently skip κ-resolution.&quot;</span>
+    },
+    <span class="t-key">&quot;DeliberationResult&quot;</span>: {
+      <span class="t-key">&quot;payload_schema&quot;</span>: <span class="t-string">&quot;schemas/tokens/deliberation_result.v0.2.json&quot;</span>,
+      <span class="t-key">&quot;linearity&quot;</span>: <span class="t-string">&quot;linear&quot;</span>,
+      <span class="t-key">&quot;variance&quot;</span>: <span class="t-string">&quot;invariant&quot;</span>,
+      <span class="t-key">&quot;ttl_ms&quot;</span>: <span class="t-num">300000</span>
+    },
+    <span class="t-key">&quot;OutcomeSignal&quot;</span>: {
+      <span class="t-key">&quot;payload_schema&quot;</span>: <span class="t-string">&quot;schemas/tokens/outcome_signal.v0.2.json&quot;</span>,
+      <span class="t-key">&quot;linearity&quot;</span>: <span class="t-string">&quot;linear&quot;</span>,
+      <span class="t-key">&quot;variance&quot;</span>: <span class="t-string">&quot;covariant&quot;</span>,
+      <span class="t-key">&quot;ttl_ms&quot;</span>: <span class="t-num">3600000</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Audit primitive. Every action result must produce one — drop = audit failure.&quot;</span>
+    },
+    <span class="t-key">&quot;ReputationUpdate&quot;</span>: {
+      <span class="t-key">&quot;payload_schema&quot;</span>: <span class="t-string">&quot;schemas/tokens/reputation_update.v0.2.json&quot;</span>,
+      <span class="t-key">&quot;linearity&quot;</span>: <span class="t-string">&quot;affine&quot;</span>,
+      <span class="t-key">&quot;variance&quot;</span>: <span class="t-string">&quot;covariant&quot;</span>,
+      <span class="t-key">&quot;ttl_ms&quot;</span>: <span class="t-num">86400000</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Long-window aggregation; tolerates loss (drop down from linear because the next update overrides anyway).&quot;</span>
+    },
+    <span class="t-key">&quot;ConsolidationEvent&quot;</span>: {
+      <span class="t-key">&quot;payload_schema&quot;</span>: <span class="t-string">&quot;schemas/tokens/consolidation_event.v0.2.json&quot;</span>,
+      <span class="t-key">&quot;linearity&quot;</span>: <span class="t-string">&quot;affine&quot;</span>,
+      <span class="t-key">&quot;variance&quot;</span>: <span class="t-string">&quot;covariant&quot;</span>,
+      <span class="t-key">&quot;ttl_ms&quot;</span>: <span class="t-num">3600000</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Housekeeping signal; consolidate is idempotent.&quot;</span>
+    },
+    <span class="t-key">&quot;SurpriseSignal&quot;</span>: {
+      <span class="t-key">&quot;payload_schema&quot;</span>: <span class="t-string">&quot;schemas/tokens/surprise_signal.v0.2.json&quot;</span>,
+      <span class="t-key">&quot;linearity&quot;</span>: <span class="t-string">&quot;linear&quot;</span>,
+      <span class="t-key">&quot;variance&quot;</span>: <span class="t-string">&quot;invariant&quot;</span>,
+      <span class="t-key">&quot;ttl_ms&quot;</span>: <span class="t-num">60000</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;OS-011 forward-model-prediction-error. Must be consumed.&quot;</span>
+    },
+    <span class="t-key">&quot;SessionFidelityViolation&quot;</span>: {
+      <span class="t-key">&quot;payload_schema&quot;</span>: <span class="t-string">&quot;schemas/tokens/session_fidelity_violation.v0.2.json&quot;</span>,
+      <span class="t-key">&quot;linearity&quot;</span>: <span class="t-string">&quot;linear&quot;</span>,
+      <span class="t-key">&quot;variance&quot;</span>: <span class="t-string">&quot;invariant&quot;</span>,
+      <span class="t-key">&quot;ttl_ms&quot;</span>: <span class="t-num">86400000</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Runtime-observed protocol violation. Must be reported, never silently dropped.&quot;</span>
+    }
+  }
+}</code></pre>
+<p><strong>Default for new canonical tokens: `linear`.</strong> Authors must explicitly opt down to <code>affine</code> only when the token is observational, idempotent, or inherently lossy-tolerant (next emission overrides previous). This default flows from OS-010's &quot;every consequential signal must be audited&quot; thesis — silent loss is an audit failure; duplication is detected via idempotency keys at the substrate boundary.</p>
+<p><strong>Linearity values:</strong></p>
+<table><thead><tr><th>Value</th><th>Meaning</th><th>Checker enforces</th></tr></thead><tbody><tr><td><code>linear</code></td><td>Exactly-once consumption</td><td>Emit ⇒ exactly one consumer; consumer is unique</td></tr><tr><td><code>affine</code></td><td>At-most-once consumption</td><td>Emit ⇒ at most one consumer (may drop)</td></tr><tr><td><code>relevant</code></td><td>At-least-once consumption</td><td>Emit ⇒ at least one consumer (may duplicate)</td></tr><tr><td><code>unrestricted</code></td><td>Any consumption</td><td>No constraint</td></tr></tbody></table>
+<p><strong>Variance values:</strong></p>
+<table><thead><tr><th>Value</th><th>Meaning</th></tr></thead><tbody><tr><td><code>covariant</code></td><td>Subtype payloads acceptable on the consumer side</td></tr><tr><td><code>contravariant</code></td><td>Supertype payloads acceptable on the producer side</td></tr><tr><td><code>invariant</code></td><td>Exact payload schema match required</td></tr></tbody></table>
+<p><strong>Required payload schemas:</strong> Each token gets its own JSON Schema under <code>schemas/tokens/</code>. <strong>Eight</strong> new schema files (the six v0.1.1 canonical tokens + two added in v0.2: <code>DeliberationRequest</code>, <code>SessionFidelityViolation</code>).</p>
+<h5 id="blk-23304">Token evolution rules (registry-level subtyping only)</h5>
+<p>Token payload evolution happens <strong>in the global registry, never per-loop</strong>. This flows from OS-010 §1019–1051 (&quot;canonical tokens stable through v1.0; additive-only without minor bump; vendor-namespacing for custom tokens&quot;).</p>
+<ol><li><p><strong>Additive-only within a minor version.</strong> Adding optional fields to a</p></li></ol>
+<p>token's payload schema is allowed without bumping the token's version. Removing or renaming fields requires a minor version bump and 12-month notice (per OS-010 stability policy).</p>
+<ol start="2"><li><p><strong>Registry tracks the partial order.</strong> The registry asserts</p></li></ol>
+<p><code>topology_context.v0.2 &lt;: topology_context.v0.1</code> when the v0.2 schema is an additive extension of v0.1. The behavioral subtyping checker (§5) consults the registry rather than re-deriving compatibility.</p>
+<ol start="3"><li><p><strong>No per-loop token variants.</strong> A loop that needs a custom payload</p></li></ol>
+<p>must register a vendor-namespaced token (e.g. <code>acme.v1.AcmeOutcome</code>) in the registry and reference it canonically from its manifest. Loops never declare local subtypes of canonical tokens — that would explode the cross-loop vocabulary and break PRISM's ability to benchmark heterogeneous systems against a shared evaluation grammar.</p>
+<h4 id="blk-23318">2. Phase signatures with effect rows</h4>
+<p><strong>Change:</strong> Extend the existing <code>phases[]</code> entries in <code>pulse-loop-manifest.v0.2.json</code> with <code>inputs</code>, <code>outputs</code>, <code>effects</code>, <code>successors</code>, and <code>refinements</code>.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;phases&quot;</span>: [
+    {
+      <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;retrieve_context&quot;</span>,
+      <span class="t-key">&quot;kind&quot;</span>: <span class="t-string">&quot;retrieve&quot;</span>,
+      <span class="t-key">&quot;inputs&quot;</span>:  { <span class="t-key">&quot;tokens&quot;</span>: [], <span class="t-key">&quot;substrates&quot;</span>: [<span class="t-string">&quot;memory&quot;</span>] },
+      <span class="t-key">&quot;outputs&quot;</span>: { <span class="t-key">&quot;tokens&quot;</span>: [<span class="t-string">&quot;TopologyContext&quot;</span>] },
+      <span class="t-key">&quot;effects&quot;</span>: {
+        <span class="t-key">&quot;calls&quot;</span>:    [<span class="t-string">&quot;memory.retrieve_context&quot;</span>, <span class="t-string">&quot;memory.topology_analyze&quot;</span>],
+        <span class="t-key">&quot;mutates&quot;</span>:  [],
+        <span class="t-key">&quot;may_emit&quot;</span>: [],
+        <span class="t-key">&quot;external&quot;</span>: []
+      },
+      <span class="t-key">&quot;successors&quot;</span>: [<span class="t-string">&quot;route_topology&quot;</span>],
+      <span class="t-key">&quot;refinements&quot;</span>: {
+        <span class="t-key">&quot;latency_ms_max&quot;</span>: <span class="t-num">200</span>,
+        <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>
+      }
+    },
+    {
+      <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;route_topology&quot;</span>,
+      <span class="t-key">&quot;kind&quot;</span>: <span class="t-string">&quot;route&quot;</span>,
+      <span class="t-key">&quot;inputs&quot;</span>:  { <span class="t-key">&quot;tokens&quot;</span>: [<span class="t-string">&quot;TopologyContext&quot;</span>], <span class="t-key">&quot;substrates&quot;</span>: [] },
+      <span class="t-key">&quot;outputs&quot;</span>: { <span class="t-key">&quot;tokens&quot;</span>: [] },
+      <span class="t-key">&quot;effects&quot;</span>: {
+        <span class="t-key">&quot;calls&quot;</span>:    [],
+        <span class="t-key">&quot;mutates&quot;</span>:  [],
+        <span class="t-key">&quot;may_emit&quot;</span>: [<span class="t-string">&quot;DeliberationRequest&quot;</span>],
+        <span class="t-key">&quot;external&quot;</span>: []
+      },
+      <span class="t-key">&quot;successors&quot;</span>: [<span class="t-string">&quot;deliberate&quot;</span>, <span class="t-string">&quot;act_node_write&quot;</span>],
+      <span class="t-key">&quot;refinements&quot;</span>: {
+        <span class="t-key">&quot;branch_predicate&quot;</span>: <span class="t-string">&quot;topology.routing&quot;</span>
+      }
+    }
+  ]
+}</code></pre>
+<p><strong>Effect row fields:</strong></p>
+<table><thead><tr><th>Field</th><th>What it tracks</th></tr></thead><tbody><tr><td><code>calls</code></td><td>Substrate operation IDs invoked (e.g. <code>memory.retrieve_context</code>, <code>policy.check_policy</code>)</td></tr><tr><td><code>mutates</code></td><td>Substrate operation IDs that change state (e.g. <code>memory.store_node</code>, <code>audit.append_event</code>)</td></tr><tr><td><code>may_emit</code></td><td>Token names this phase may produce</td></tr><tr><td><code>external</code></td><td>External resources touched (e.g. <code>http://*</code>, <code>mcp://prism</code>)</td></tr></tbody></table>
+<p><strong>Granularity is operation-level, not storage-level.</strong> Effect rows reference the substrate API surface defined in OS-010 §9 (e.g. <code>memory.retrieve_context</code>, <code>audit.append_event</code>), never specific storage paths like <code>sqlite.kg.nodes</code>. This flows from the &quot;substrate independence&quot; thesis: the spec must not assume a relational backend, and graphonomous swapping SQLite for Postgres should not require manifest changes.</p>
+<p><strong>Refinement values:</strong> key-value predicates. A small vendored evaluator handles the supported subset; unknown keys are passed through as documentation.</p>
+<p><strong>Supported refinement predicates (vendored mini-evaluator):</strong></p>
+<ul><li><p>Comparison: <code>≤</code>, <code>&lt;</code>, <code>≥</code>, <code>&gt;</code>, <code>==</code>, <code>!=</code> on numeric or string literals</p></li><li><p>Boolean conjunction (<code>∧</code> / <code>&amp;&amp;</code>) and disjunction (<code>∨</code> / <code>||</code>) over the above</p></li><li><p>Set membership: <code>value in [a, b, c]</code></p></li><li><p>Negation of any of the above</p></li></ul>
+<p>No Z3, no external SMT solver, no optional peer dependency. The vendored evaluator is a few hundred lines of TypeScript in <code>src/refinement.ts</code> and runs in any environment that runs npm. The ≤25KB processor target from STACK_ARCHITECTURE_GAP_REVIEW.md applies here too.</p>
+<p>Recognized refinement keys in v0.2:</p>
+<ul><li><p><code>latency_ms_max</code> (number) — checker emits a benchmark assertion</p></li><li><p><code>deterministic</code> (boolean) — flagged in conformance T-DET</p></li><li><p><code>branch_predicate</code> (string) — referenced expression must appear in a</p></li></ul>
+<p>consumed token's payload schema</p>
+<ul><li><p><code>idempotent</code> (boolean) — extends existing T03 phase-idempotency check</p></li><li><p><code>requires_kappa</code> (string, e.g. <code>&quot;== 0&quot;</code>, <code>&quot;&gt; 0&quot;</code>) — routing precondition</p></li></ul>
+<h4 id="blk-23360">3. Local session type (derived, validated)</h4>
+<p><strong>Not stored in the manifest</strong> — derived by the checker from the phase graph. Expressed internally as a regular expression over phase IDs (or an equivalent finite automaton).</p>
+<p>For graphonomous.continual_learning the derived session type is:</p>
+<pre><code>loop = retrieve_context · route_topology
+     · ( deliberate · act_node_write
+       | act_node_write )
+     · learn_outcome
+     · ( consolidate )?</code></pre>
+<p><strong>Checker proves:</strong></p>
+<table><thead><tr><th>Property</th><th>How</th></tr></thead><tbody><tr><td><strong>Reachability</strong></td><td>Every declared phase is reachable from an entry phase</td></tr><tr><td><strong>Progress</strong></td><td>From any reachable phase a successor exists, or the loop terminates explicitly</td></tr><tr><td><strong>No deadlock</strong></td><td>The successor relation has no cycles that can't make progress</td></tr><tr><td><strong>Token discipline</strong></td><td>Every linear token emit has exactly one matching consumer reachable downstream; every affine has at most one</td></tr><tr><td><strong>Effect monotonicity</strong></td><td>A phase's declared effect row is a superset of its successors' assumed reads</td></tr></tbody></table>
+<p>Output of <code>pulse check &lt;manifest&gt;</code>:</p>
+<pre><code>✓ session type derives: retrieve · route · (deliberate? · act) · learn · consolidate?
+✓ all 8 canonical token consumers resolved
+✓ all linear tokens have unique consumers
+✓ all 7 invariants hold under refinement (vendored evaluator)
+✓ progress: from any reachable phase, a successor exists
+✓ liveness: retrieve is reachable from all phases</code></pre>
+<h4 id="blk-23380">4. Global choreography + projection</h4>
+<p><strong>Schema:</strong> <code>schemas/pulse-choreography.v0.2.json</code> (new) <strong>File pattern:</strong> <code>manifests/&lt;name&gt;.choreography.json</code></p>
+<p>Choreographies live <strong>alongside loop manifests in `manifests/`</strong>, not in a separate top-level directory. This flows from the &quot;Topology as Authority&quot; thesis: a choreography is a higher-arity topology declaration (3+ participants) but still the same kind of artifact. Co-location keeps the authority for cross-loop topology in one place. No new <code>choreographies/</code> directory is created.</p>
+<p>Currently each manifest is local. v0.2 adds an optional <strong>global type</strong> that describes the cross-loop dance and projects to per-loop connection blocks.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://opensentience.org/schemas/pulse-choreography.v0.2.json&quot;</span>,
+  <span class="t-key">&quot;choreography_id&quot;</span>: <span class="t-string">&quot;ecosystem.continual_learning_with_prism&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.2.0&quot;</span>,
+  <span class="t-key">&quot;participants&quot;</span>: [
+    <span class="t-string">&quot;graphonomous.continual_learning&quot;</span>,
+    <span class="t-string">&quot;prism.benchmark&quot;</span>,
+    <span class="t-string">&quot;agentromatic.deliberation&quot;</span>
+  ],
+  <span class="t-key">&quot;global_type&quot;</span>: [
+    {
+      <span class="t-key">&quot;step&quot;</span>: <span class="t-num">1</span>,
+      <span class="t-key">&quot;from&quot;</span>: <span class="t-string">&quot;graphonomous.continual_learning&quot;</span>,
+      <span class="t-key">&quot;to&quot;</span>:   <span class="t-string">&quot;agentromatic.deliberation&quot;</span>,
+      <span class="t-key">&quot;token&quot;</span>: <span class="t-string">&quot;DeliberationRequest&quot;</span>,
+      <span class="t-key">&quot;guard&quot;</span>: <span class="t-string">&quot;topology.kappa &gt; 0&quot;</span>
+    },
+    {
+      <span class="t-key">&quot;step&quot;</span>: <span class="t-num">2</span>,
+      <span class="t-key">&quot;from&quot;</span>: <span class="t-string">&quot;agentromatic.deliberation&quot;</span>,
+      <span class="t-key">&quot;to&quot;</span>:   <span class="t-string">&quot;graphonomous.continual_learning&quot;</span>,
+      <span class="t-key">&quot;token&quot;</span>: <span class="t-string">&quot;DeliberationResult&quot;</span>,
+      <span class="t-key">&quot;after&quot;</span>: [<span class="t-num">1</span>]
+    },
+    {
+      <span class="t-key">&quot;step&quot;</span>: <span class="t-num">3</span>,
+      <span class="t-key">&quot;from&quot;</span>: <span class="t-string">&quot;graphonomous.continual_learning&quot;</span>,
+      <span class="t-key">&quot;to&quot;</span>:   <span class="t-string">&quot;prism.benchmark&quot;</span>,
+      <span class="t-key">&quot;token&quot;</span>: <span class="t-string">&quot;OutcomeSignal&quot;</span>,
+      <span class="t-key">&quot;cadence&quot;</span>: <span class="t-string">&quot;per_action&quot;</span>,
+      <span class="t-key">&quot;after&quot;</span>:  [<span class="t-num">2</span>]
+    }
+  ]
+}</code></pre>
+<p><strong>Projection algorithm.</strong> Given a choreography C and participant P, produce the local view C↓P — a sequence of &quot;emit X&quot; / &quot;expect X&quot; obligations that the participant's PULSE manifest must satisfy. The checker then verifies each participant's <code>connections</code> block is consistent with its projection.</p>
+<p><strong>Soundness theorem (informal, follows MPST canon):</strong> If every participant locally type-checks against its projection, the choreography is <em>deadlock-free, communication-safe, and progresses to termination</em>.</p>
+<p>A choreography can declare nesting (sub-choreographies) and parallel branches (<code>parallel: [step_a, step_b]</code>) using existing PULSE primitives.</p>
+<h4 id="blk-23388">5. Behavioral subtyping for version compatibility</h4>
+<p><strong>New CLI:</strong> <code>pulse compat &lt;loop_a@v&gt; &lt;loop_b@v&gt;</code></p>
+<p>Replaces the de-facto policy of &quot;bump the version and pray&quot; with a machine-checked subtyping relation:</p>
+<pre><code>A &lt;: B iff
+  phases:        A.phases ⊇ B.phases                       (extension allowed)
+  inputs:        ∀ p ∈ B: p_A.inputs    ⊆ p_B.inputs        (contravariant)
+  outputs:       ∀ p ∈ B: p_A.outputs   ⊇ p_B.outputs       (covariant)
+  effects:       ∀ p ∈ B: p_A.effects   ⊆ p_B.effects       (subeffecting)
+  linearity:     A.linear_tokens ⊇ B.linear_tokens          (no relaxation)
+  invariants:    A.invariants ⊇ B.invariants                (only added, not dropped)
+  cadence:       A.cadence refines B.cadence                (tighter, not looser)</code></pre>
+<p>Output:</p>
+<pre><code>$ pulse compat graphonomous.continual_learning@0.4.3 \
+              graphonomous.continual_learning@0.4.4
+
+✓ phases: superset (added: episodic_replay)
+✓ inputs: contravariant (no widenings broken)
+✓ outputs: covariant
+✓ effects: subeffecting holds
+✓ linearity: SurpriseSignal added as linear (additive)
+✓ invariants: superset (added: I7-episodic-monotonic)
+✓ cadence: unchanged
+
+VERDICT: 0.4.4 IS a safe behavioral subtype of 0.4.3.</code></pre>
+<p>Failed-compat verdict includes a counterexample trace.</p>
+<h4 id="blk-23395">6. Conformance checker (offline + runtime)</h4>
+<p><strong>Existing:</strong> <code>src/conformance.ts</code> already runs the 12 v0.1 tests. v0.2 adds:</p>
+<p><strong>Offline checks (new):</strong></p>
+<table><thead><tr><th>ID</th><th>Test</th></tr></thead><tbody><tr><td>T13</td><td>Session-type derivation succeeds</td></tr><tr><td>T14</td><td>Reachability of all declared phases</td></tr><tr><td>T15</td><td>Progress (no stuck states)</td></tr><tr><td>T16</td><td>Linear-token consumer uniqueness</td></tr><tr><td>T17</td><td>Affine-token consumer cap</td></tr><tr><td>T18</td><td>Effect row monotonicity</td></tr><tr><td>T19</td><td>Refinement satisfiability (vendored mini-evaluator)</td></tr><tr><td>T20</td><td>Choreography projection consistency (if member)</td></tr></tbody></table>
+<p><strong>Runtime checks (new):</strong></p>
+<table><thead><tr><th>ID</th><th>Test</th></tr></thead><tbody><tr><td>T21</td><td>Session fidelity — observed phase trace matches derived session type</td></tr><tr><td>T22</td><td>Linear-token actually-consumed-once (over trace window)</td></tr><tr><td>T23</td><td>Effect-row honesty — observed substrate calls ⊆ declared <code>calls</code> + <code>mutates</code></td></tr></tbody></table>
+<p>On violation the checker emits a new canonical token, <code>SessionFidelityViolation</code>, itself PULSE-typed, so violations flow through the same envelope plumbing as other signals.</p>
+<h3 id="blk-23428">Token canon update</h3>
+<p>v0.2 adds two tokens to the canonical set:</p>
+<table><thead><tr><th>Token</th><th>Phase emitter</th><th>Linearity</th><th>Purpose</th></tr></thead><tbody><tr><td><code>DeliberationRequest</code></td><td><code>route</code></td><td>linear</td><td>Triggers an inner deliberation loop (split out of overloaded routing)</td></tr><tr><td><code>SessionFidelityViolation</code></td><td>conformance runtime</td><td>linear</td><td>Reports a runtime-observed protocol violation</td></tr></tbody></table>
+<p>Total canonical tokens in v0.2: <strong>8</strong> (was 6 in v0.1.1).</p>
+<h3 id="blk-23444">Backwards compatibility</h3>
+<p>v0.1.1 manifests <strong>continue to validate</strong> under v0.2 — every new field is optional. A v0.1.1 manifest validated under v0.2 schema receives:</p>
+<table><thead><tr><th>Field</th><th>Default when absent</th></tr></thead><tbody><tr><td><code>phases[].inputs</code></td><td><code>{ &quot;tokens&quot;: [], &quot;substrates&quot;: [] }</code></td></tr><tr><td><code>phases[].outputs</code></td><td><code>{ &quot;tokens&quot;: [] }</code></td></tr><tr><td><code>phases[].effects</code></td><td><code>{ &quot;calls&quot;: [], &quot;mutates&quot;: [], &quot;may_emit&quot;: [], &quot;external&quot;: [] }</code></td></tr><tr><td><code>phases[].refinements</code></td><td><code>{}</code></td></tr><tr><td>Token registry lookups</td><td>Falls back to v0.1.1 implicit semantics (linear by default for canonical tokens, invariant, TTL = ∞)</td></tr></tbody></table>
+<p>The checker reports v0.1.1-default manifests with <code>degraded_checks: true</code> — they pass T01–T12 but cannot pass T13–T23. Owners are nudged to enrich.</p>
+<h3 id="blk-23460">Non-goals</h3>
+<ol><li><p><strong>Not</strong> a process-algebra spec. PULSE v0.2 is session-typed, not</p></li></ol>
+<p>CCS/CSP-modeled. Process-algebra-grade deadlock-freedom across parallel sub-agents is a future v0.3 question.</p>
+<ol start="2"><li><p><strong>Not</strong> an SMT/Z3 dependency. The refinement checker is a vendored</p></li></ol>
+<p>mini-evaluator over ≤/≥/==/membership/conjunction/disjunction. Z3 is neither a runtime dependency nor an optional peer dep. If a complex constraint can't be evaluated locally, the checker emits a warning and runtime fidelity (T21–T23) catches violations.</p>
+<ol start="3"><li><p><strong>Not</strong> an MPST formalization paper. v0.2 follows MPST principles but</p></li></ol>
+<p>targets working software, not formal verification literature.</p>
+<h3 id="blk-23473">Resolved design questions (closed 2026-05-27)</h3>
+<p>All five open questions are resolved against the project's stated thesis (see <code>docs/V0.2-RATIONALE.md</code> for the per-question evidence trail across OS-010, STACK_ARCHITECTURE_GAP_REVIEW.md, STACK_PLANNING.md, and the prompt set).</p>
+<ol><li><p><strong>Linearity default.</strong> <strong>Resolved: `linear`</strong> for new canonical tokens.</p></li></ol>
+<p>Authors opt down to <code>affine</code> only for observational/idempotent/lossy- tolerant tokens. Flows from OS-010 §7.3 + §10.2 (&quot;fail loud, leave a trace; silent loss is an audit failure&quot;).</p>
+<ol start="2"><li><p><strong>Choreography artifact location.</strong> **Resolved: co-located in</p></li></ol>
+<p><code>manifests/</code>.** No new top-level directory. Flows from STACK_TOPOLOGY_AS_AUTHORITY thesis — a choreography is a higher-arity topology artifact, same kind as a loop manifest.</p>
+<ol start="3"><li><p><strong>Effect row granularity.</strong> **Resolved: operation-level, not</p></li></ol>
+<p>storage-level.** Effect rows reference substrate API operations from OS-010 §9 (e.g. <code>memory.retrieve_context</code>), never storage paths. Flows from &quot;substrate independence&quot; (OS-010 §3.4) and the &quot;falsifiable processor&quot; gate (STACK_ARCHITECTURE_GAP_REVIEW Finding 1).</p>
+<ol start="4"><li><p><strong>Refinement checker dependency.</strong> **Resolved: vendor a tiny</p></li></ol>
+<p>evaluator.** No Z3, no SMT, no optional peer dep. Covers ≤/≥/==/ membership/∧/∨/¬. Flows from &quot;tiny core, max portability&quot; and the ≤25KB processor target (STACK_ARCHITECTURE_GAP_REVIEW Finding 2).</p>
+<ol start="5"><li><p><strong>Per-loop token subtyping.</strong> <strong>Resolved: prohibited.</strong> Token payload</p></li></ol>
+<p>evolution happens only in the global registry, by additive-only rules. Custom payloads must vendor-namespace (e.g. <code>acme.v1.X</code>). Flows from OS-010 §1019–1051 (ecosystem-wide vocabulary stability) and STACK_PLANNING.md vendor-namespace pattern.</p></div>
+<p class="src"><a href="/#/PULSE/docs/V0.2-BEHAVIORAL-TYPES.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-23225" class="lvl2">Why</a><a href="#blk-23243" class="lvl2">What it buys (scorecard delta)</a><a href="#blk-23270" class="lvl2">The six additions</a><a href="#blk-23271" class="lvl3">1. Typed token registry</a><a href="#blk-23304" class="lvl4">Token evolution rules (registry-level subtyping only)</a><a href="#blk-23318" class="lvl3">2. Phase signatures with effect rows</a><a href="#blk-23360" class="lvl3">3. Local session type (derived, validated)</a><a href="#blk-23380" class="lvl3">4. Global choreography + projection</a><a href="#blk-23388" class="lvl3">5. Behavioral subtyping for version compatibility</a><a href="#blk-23395" class="lvl3">6. Conformance checker (offline + runtime)</a><a href="#blk-23428" class="lvl2">Token canon update</a><a href="#blk-23444" class="lvl2">Backwards compatibility</a><a href="#blk-23460" class="lvl2">Non-goals</a><a href="#blk-23473" class="lvl2">Resolved design questions (closed 2026-05-27)</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/PULSE/docs/THREE_PROTOCOL_STACK.md/">The Three-Protocol Stack: [&amp;], PULSE, PRISM</a></div><div class="card"><div class="lab">in this folder</div><a href="/PULSE/docs/ARITHMETIC_INTEGRATION.md/">PULSE × box-and-box — Arithmetic Integration Review</a><a href="/PULSE/docs/NPM_PACKAGE.md/">os-pulse — NPM Package Specification</a><a href="/PULSE/docs/THREE_PROTOCOL_STACK.md/">The Three-Protocol Stack: [&amp;], PULSE, PRISM</a><a href="/PULSE/docs/V0.2-IMPLEMENTATION-PLAN.md/">PULSE v0.2 — Implementation Plan</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieratf2rk47zieuytxokotnfx3w2ttx6vpx56fvjma7crzgeqpr4rjxa</div></div></div>
+</div></div>
+</body></html>

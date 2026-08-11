@@ -1,0 +1,1012 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Attention Engine — Build Prompt v1 · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="The Attention Engine is a periodic loop that examines the knowledge graph&#39;s topology, coverage gaps, and active goals to decide what the system should…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/ATTENTION_ENGINE_PROMPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Attention Engine — Build Prompt v1">
+<meta property="og:description" content="The Attention Engine is a periodic loop that examines the knowledge graph&#39;s topology, coverage gaps, and active goals to decide what the system should…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/ATTENTION_ENGINE_PROMPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Attention Engine — Build Prompt v1","name":"Attention Engine — Build Prompt v1","description":"The Attention Engine is a periodic loop that examines the knowledge graph's topology, coverage gaps, and active goals to decide what the system should…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/ATTENTION_ENGINE_PROMPT.md/","identifier":"bagaaierarbhys4r7o6dqjetlj23mpaa5dqzuai6w3sli5pwtvgoui2piihtq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"0. The One-Sentence Idea"},{"@type":"WebPageElement","name":"1. Why This Exists (The Final Gap)"},{"@type":"WebPageElement","name":"The Three Functions of Attention"},{"@type":"WebPageElement","name":"1.1 Current API Conventions (READ BEFORE IMPLEMENTING)"},{"@type":"WebPageElement","name":"2. Architecture"},{"@type":"WebPageElement","name":"2.1 The Attention Loop"},{"@type":"WebPageElement","name":"2.2 Triggers"},{"@type":"WebPageElement","name":"2.3 The Attention Map"},{"@type":"WebPageElement","name":"2.4 Compute Budget"},{"@type":"WebPageElement","name":"3. What to Build"},{"@type":"WebPageElement","name":"3.1 Module: Graphonomous.Attention"},{"@type":"WebPageElement","name":"3.1.1 Survey Phase"},{"@type":"WebPageElement","name":"3.1.2 Triage Phase"},{"@type":"WebPageElement","name":"3.1.3 Dispatch Phase"},{"@type":"WebPageElement","name":"3.2 Dispatch Mode Implementations"},{"@type":"WebPageElement","name":"3.2.1 EXPLORE — Domain Bootstrap"},{"@type":"WebPageElement","name":"3.2.2 FOCUS — Trigger Deliberator"},{"@type":"WebPageElement","name":"3.2.3 ACT — Execute via OpenSentience"},{"@type":"WebPageElement","name":"3.2.4 PROPOSE — Autonomous Goal Generation"},{"@type":"WebPageElement","name":"3.3 MCP Tool: AttentionSurvey"},{"@type":"WebPageElement","name":"3.4 MCP Tool: AttentionRunCycle"},{"@type":"WebPageElement","name":"3.5 Telemetry"},{"@type":"WebPageElement","name":"4. [&] Protocol Amendments"},{"@type":"WebPageElement","name":"4.1 The Four Cognitive Primitives Still Hold For Attention"},{"@type":"WebPageElement","name":"4.2 New Subtypes"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/"},{"@type":"ListItem","position":4,"name":"ATTENTION_ENGINE_PROMPT.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/ATTENTION_ENGINE_PROMPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/prompts/ATTENTION_ENGINE_PROMPT.md</span>
+
+</div></div>
+<div class="lead">The Attention Engine is a periodic loop that examines the knowledge graph&#39;s topology, coverage gaps, and active goals to decide what the system should reason about, learn about,…</div>
+<div class="prose"><h1 id="blk-18152">Attention Engine — Build Prompt v1</h1>
+<blockquote><p><strong>Purpose:</strong> Implementation prompt for the proactive attention loop that makes the [&amp;] ecosystem autonomous. The KAPPA_BUILD_PROMPT detects <em>when</em> to think. The KAPPA_DELIBERATOR_PROMPT defines <em>how</em> to think. This prompt defines <em>what</em> to think about next — without being asked.  <strong>Depends on:</strong> KAPPA_BUILD_PROMPT.md (κ computation), KAPPA_DELIBERATOR_PROMPT.md (deliberation loop)  <strong>Target agent:</strong> ChatGPT-5.3-Codex (or any coding agent with file access)  <strong>Author:</strong> Travis / [&amp;] Ampersand Box Design  <strong>Date:</strong> 2026-03-21  <strong>Version:</strong> 1.0</p></blockquote>
+<h3 id="blk-18155">0. The One-Sentence Idea</h3>
+<p><strong>The Attention Engine is a periodic loop that examines the knowledge graph's topology, coverage gaps, and active goals to decide what the system should reason about, learn about, or act on next — without waiting for a query.</strong></p>
+<h3 id="blk-18157">1. Why This Exists (The Final Gap)</h3>
+<p>After the KAPPA_BUILD_PROMPT and KAPPA_DELIBERATOR_PROMPT, the ecosystem has:</p>
+<table><thead><tr><th>Capability</th><th>Status</th><th>Limitation</th></tr></thead><tbody><tr><td><strong>Sense</strong> — retrieve relevant knowledge</td><td>Complete (Graphonomous Retriever)</td><td>Only fires when queried</td></tr><tr><td><strong>Understand</strong> — detect circular dependencies</td><td>Complete (κ topology)</td><td>Only fires when queried</td></tr><tr><td><strong>Think</strong> — deliberate through feedback loops</td><td>Complete (Deliberator)</td><td>Only fires when κ &gt; 0 is detected</td></tr><tr><td><strong>Act</strong> — execute and report outcomes</td><td>Complete (OpenSentience)</td><td>Only fires when told to act</td></tr><tr><td><strong>Learn</strong> — update beliefs from outcomes</td><td>Complete (learn_from_outcome + Consolidator)</td><td>Only fires after actions</td></tr><tr><td><strong>Govern</strong> — enforce policy boundaries</td><td>Complete (Delegatic)</td><td>Only fires when checked</td></tr><tr><td><strong>Decide what to do next</strong></td><td><strong>MISSING</strong></td><td>Nothing is proactive</td></tr></tbody></table>
+<p>Every piece works. None of them initiates. The system is a complete reactive loop with no ignition.</p>
+<p>The Attention Engine is the ignition. It is the component that asks: <em>&quot;Given everything I know, everything I don't know, and everything I'm trying to accomplish — what should I do right now?&quot;</em></p>
+<h4 id="blk-18186">The Three Functions of Attention</h4>
+<table><thead><tr><th>Function</th><th>Question</th><th>Mechanism</th></tr></thead><tbody><tr><td><strong>Explore</strong></td><td>&quot;What don't I know that I should?&quot;</td><td>Coverage gaps → domain bootstrap</td></tr><tr><td><strong>Plan</strong></td><td>&quot;What should I do next toward my goals?&quot;</td><td>Goal state + coverage → strategic planning</td></tr><tr><td><strong>Focus</strong></td><td>&quot;Where should I spend compute right now?&quot;</td><td>κ topology + goal urgency → deliberation routing</td></tr></tbody></table>
+<p>These are not three separate systems. They are three modes of one loop — analogous to how human attention shifts between exploration (curiosity), planning (intention), and focus (concentration) depending on context.</p>
+<h3 id="blk-18201">1.1 Current API Conventions (READ BEFORE IMPLEMENTING)</h3>
+<p>The Graphonomous codebase has specific API patterns. New code MUST follow these:</p>
+<table><thead><tr><th>Pattern</th><th>Convention</th><th>Example</th></tr></thead><tbody><tr><td><strong>Public wrappers</strong></td><td><code>Graphonomous.foo/N</code> unwraps <code>{:ok, val}</code> and returns <code>val</code> directly</td><td><code>Graphonomous.retrieve_context(&quot;query&quot;)</code> returns a map, not <code>{:ok, map}</code></td></tr><tr><td><strong>GenServer calls</strong></td><td>Internal modules return <code>{:ok, val}</code> or <code>{:error, reason}</code> tuples</td><td><code>GoalGraph.list_goals(%{status: :active})</code> returns <code>{:ok, [Goal.t()]}</code></td></tr><tr><td><strong>Coverage</strong></td><td><code>Coverage.recommend/2</code> is the orchestration-friendly function</td><td>Returns <code>%{decision: :act/:learn/:escalate, decision_confidence: float, coverage_score: float, ...}</code></td></tr><tr><td><strong>Goal listing</strong></td><td>No <code>list_active/0</code> — use <code>list_goals/1</code> with filter map</td><td><code>GoalGraph.list_goals(%{status: :active})</code></td></tr><tr><td><strong>Goal linked nodes</strong></td><td>Stored on the Goal struct as <code>goal.linked_node_ids</code></td><td>Not a separate function — access the field directly</td></tr><tr><td><strong>MCP components</strong></td><td><code>use Anubis.Server.Component, type: :tool</code> with <code>schema do...end</code></td><td>See <code>TopologyAnalyze</code> for reference pattern</td></tr><tr><td><strong>Supervision</strong></td><td>Children listed in <code>application.ex</code> with <code>strategy: :one_for_one</code></td><td>Add Attention after Consolidator</td></tr></tbody></table>
+<h3 id="blk-18228">2. Architecture</h3>
+<h4 id="blk-18229">2.1 The Attention Loop</h4>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│                        ATTENTION ENGINE                              │
+│                                                                      │
+│  Triggers: periodic heartbeat | goal deadline | external event       │
+│                                                                      │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │ 1. SURVEY — What is the state of the world?                 │    │
+│  │                                                              │    │
+│  │    a. List active goals                                      │    │
+│  │       (GoalGraph.list_goals(%{status: :active}))            │    │
+│  │    b. For each goal, run Coverage.recommend/2                │    │
+│  │    c. For each goal's knowledge region, get κ topology       │    │
+│  │    d. Check goal deadlines / urgency                         │    │
+│  │    e. Check recent outcomes (successes, failures, surprises) │    │
+│  │                                                              │    │
+│  │    Output: attention_map — ranked list of &quot;attention items&quot;  │    │
+│  └──────────────────────────┬──────────────────────────────────┘    │
+│                              │                                       │
+│  ┌──────────────────────────▼──────────────────────────────────┐    │
+│  │ 2. TRIAGE — What matters most right now?                    │    │
+│  │                                                              │    │
+│  │    Score each attention item by:                             │    │
+│  │      urgency  = goal deadline proximity × priority           │    │
+│  │      gap      = 1.0 - coverage_score                        │    │
+│  │      friction = κ value (higher = harder to resolve)         │    │
+│  │      surprise = recent contradiction or unexpected outcome   │    │
+│  │                                                              │    │
+│  │    attention_score = urgency × gap + surprise_bonus          │    │
+│  │    (friction is a cost factor, not a score — high κ means    │    │
+│  │     more compute needed, factored into budget, not priority) │    │
+│  │                                                              │    │
+│  │    Output: ranked attention queue                            │    │
+│  └──────────────────────────┬──────────────────────────────────┘    │
+│                              │                                       │
+│  ┌──────────────────────────▼──────────────────────────────────┐    │
+│  │ 3. DISPATCH — What action does each item need?              │    │
+│  │                                                              │    │
+│  │    For the top-N items (N = available compute budget):       │    │
+│  │                                                              │    │
+│  │    coverage.decision == :learn + low coverage                │    │
+│  │      → EXPLORE mode: bootstrap domain knowledge             │    │
+│  │        (fetch docs, research, seed graph)                    │    │
+│  │                                                              │    │
+│  │    coverage.decision == :act + κ &gt; 0                         │    │
+│  │      → FOCUS mode: trigger Deliberator on the SCC region    │    │
+│  │        (fault-line reasoning, crystallization)               │    │
+│  │                                                              │    │
+│  │    coverage.decision == :act + κ = 0                         │    │
+│  │      → ACT mode: execute next action toward goal            │    │
+│  │        (dispatch via OpenSentience)                          │    │
+│  │                                                              │    │
+│  │    coverage.decision == :escalate                            │    │
+│  │      → ESCALATE mode: flag for human or Deliberatic         │    │
+│  │        (formal multi-agent deliberation)                     │    │
+│  │                                                              │    │
+│  │    no active goals + coverage gaps exist                     │    │
+│  │      → PROPOSE mode: generate goal from coverage gap        │    │
+│  │        (autonomous goal generation — see §3.4)              │    │
+│  │                                                              │    │
+│  │    no active goals + no coverage gaps                        │    │
+│  │      → IDLE: run Consolidator, wait for next heartbeat      │    │
+│  │                                                              │    │
+│  └──────────────────────────┬──────────────────────────────────┘    │
+│                              │                                       │
+│  ┌──────────────────────────▼──────────────────────────────────┐    │
+│  │ 4. EXECUTE — Do the thing, observe the result               │    │
+│  │                                                              │    │
+│  │    Dispatches to the appropriate subsystem:                  │    │
+│  │      EXPLORE → Domain Explorer (§3.3)                       │    │
+│  │      FOCUS   → Deliberator (KAPPA_DELIBERATOR_PROMPT)       │    │
+│  │      ACT     → OpenSentience.execute_action                 │    │
+│  │      ESCALATE→ Deliberatic or human notification            │    │
+│  │      PROPOSE → GoalGraph.create_goal (with source: :inferred)│    │
+│  │                                                              │    │
+│  │    All outcomes feed back via learn_from_outcome             │    │
+│  │                                                              │    │
+│  └──────────────────────────┬──────────────────────────────────┘    │
+│                              │                                       │
+│  ┌──────────────────────────▼──────────────────────────────────┐    │
+│  │ 5. REFLECT — Did it work? What changed?                     │    │
+│  │                                                              │    │
+│  │    After execution:                                          │    │
+│  │      - Record outcome (learn_from_outcome)                   │    │
+│  │      - Check if goal status should change                    │    │
+│  │      - Check if topology shifted (κ decreased after          │    │
+│  │        crystallization?)                                     │    │
+│  │      - Check if new coverage gaps opened                     │    │
+│  │      - Update attention_map for next cycle                   │    │
+│  │                                                              │    │
+│  │    Emit telemetry for the full cycle                         │    │
+│  └──────────────────────────────────────────────────────────────┘    │
+│                                                                      │
+│  Wait for next trigger → loop                                        │
+└─────────────────────────────────────────────────────────────────────┘</code></pre>
+<h4 id="blk-18231">2.2 Triggers</h4>
+<p>The Attention Engine fires on three trigger types:</p>
+<table><thead><tr><th>Trigger</th><th>When</th><th>Example</th></tr></thead><tbody><tr><td><strong>Heartbeat</strong></td><td>Periodic cadence (configurable, default 5 min)</td><td>&quot;Check all goals every 5 minutes&quot;</td></tr><tr><td><strong>Deadline</strong></td><td>Goal deadline approaching (configurable threshold)</td><td>&quot;Goal due in 2 hours, escalate priority&quot;</td></tr><tr><td><strong>Event</strong></td><td>External signal or significant outcome</td><td>&quot;Action failed unexpectedly — re-assess&quot;</td></tr></tbody></table>
+<p>The heartbeat is the default. It runs even when no one is asking questions. This is what makes the system proactive.</p>
+<h4 id="blk-18247">2.3 The Attention Map</h4>
+<p>The core data structure — a ranked snapshot of &quot;what needs attention&quot;:</p>
+<pre data-lang="elixir"><code>%<span class="t-type">AttentionItem</span>{
+  goal_id: <span class="t-string">&quot;goal-123&quot;</span> | <span class="t-lit">nil</span>,
+  goal_title: <span class="t-string">&quot;Increase Q2 market share&quot;</span>,
+  region_node_ids: [<span class="t-string">&quot;market-share&quot;</span>, <span class="t-string">&quot;revenue&quot;</span>, <span class="t-string">&quot;r-and-d&quot;</span>, ...],
+  <span class="t-comment"># Fields from Coverage.recommend/2:</span>
+  coverage: %{
+    decision: <span class="t-atom">:learn</span>,
+    decision_confidence: <span class="t-num">0.71</span>,
+    coverage_score: <span class="t-num">0.54</span>,
+    uncertainty_score: <span class="t-num">0.42</span>,
+    risk_score: <span class="t-num">0.38</span>,
+    rationale: [<span class="t-string">&quot;customer retention data is stale&quot;</span>, <span class="t-string">&quot;competitor pricing unknown&quot;</span>]
+  },
+  topology: %{
+    max_kappa: <span class="t-num">1</span>,
+    scc_count: <span class="t-num">1</span>,
+    routing: <span class="t-atom">:deliberate</span>
+  },
+  urgency: <span class="t-num">0.78</span>,      <span class="t-comment"># deadline proximity × priority</span>
+  gap: <span class="t-num">0.46</span>,          <span class="t-comment"># 1.0 - coverage_score</span>
+  surprise: <span class="t-num">0.0</span>,      <span class="t-comment"># recent contradiction bonus</span>
+  friction: <span class="t-num">1</span>,        <span class="t-comment"># κ value (compute cost factor)</span>
+  attention_score: <span class="t-num">0.62</span>,
+  dispatch_mode: <span class="t-atom">:focus</span>  <span class="t-comment"># :explore | :focus | :act | :escalate | :propose | :idle</span>
+}</code></pre>
+<h4 id="blk-18250">2.4 Compute Budget</h4>
+<p>The Attention Engine has a per-cycle compute budget that prevents runaway execution:</p>
+<pre data-lang="elixir"><code>%<span class="t-type">AttentionBudget</span>{
+  max_items_per_cycle: <span class="t-num">3</span>,          <span class="t-comment"># process at most 3 attention items per heartbeat</span>
+  max_explore_calls: <span class="t-num">5</span>,            <span class="t-comment"># limit domain exploration API calls</span>
+  max_deliberation_sccs: <span class="t-num">2</span>,        <span class="t-comment"># limit concurrent SCC deliberations</span>
+  max_action_dispatches: <span class="t-num">1</span>,        <span class="t-comment"># limit real-world actions per cycle</span>
+  total_timeout_ms: <span class="t-num">60_000</span>,        <span class="t-comment"># hard timeout for entire attention cycle</span>
+  escalation_cooldown_ms: <span class="t-num">300_000</span>  <span class="t-comment"># don't re-escalate same goal within 5 min</span>
+}</code></pre>
+<p>The budget is governed by Delegatic policy. An organization can set: &quot;this agent may take at most 1 autonomous action per hour&quot; or &quot;exploration is unlimited but actions require approval.&quot;</p>
+<h3 id="blk-18254">3. What to Build</h3>
+<h4 id="blk-18255">3.1 Module: <code>Graphonomous.Attention</code></h4>
+<p><strong>File:</strong> <code>graphonomous/lib/graphonomous/attention.ex</code></p>
+<p>The core attention loop, implemented as a GenServer with periodic timer.</p>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Graphonomous.Attention</span> <span class="t-kw">do</span>
+  <span class="t-attr">@moduledoc</span> <span class="t-string">&quot;&quot;&quot;
+  Proactive attention engine. Periodically surveys active goals,
+  coverage gaps, and κ topology to decide what the system should
+  reason about, learn about, or act on next.
+
+  ## Configuration
+
+      config :graphonomous, Graphonomous.Attention,
+        heartbeat_ms: 300_000,       # 5 minutes
+        budget: %{
+          max_items_per_cycle: 3,
+          max_explore_calls: 5,
+          max_deliberation_sccs: 2,
+          max_action_dispatches: 1,
+          total_timeout_ms: 60_000
+        },
+        enabled: false               # OFF by default — opt-in
+
+  ## Starting
+
+  The Attention Engine is started as part of the Graphonomous supervision
+  tree but only activates when `enabled: true` in config or when
+  explicitly started via `Attention.activate/1`.
+
+  ## Autonomy Levels
+
+  The engine supports three autonomy levels, controlled by Delegatic policy:
+
+    - :observe  — survey and log, but take no action (audit mode)
+    - :advise   — survey and propose actions, but wait for approval
+    - :act      — survey and execute (full autonomy within budget)
+  &quot;&quot;&quot;</span>
+
+  <span class="t-kw">use</span> <span class="t-type">GenServer</span>
+
+  <span class="t-attr">@type</span> autonomy_level :: <span class="t-atom">:observe</span> | <span class="t-atom">:advise</span> | <span class="t-atom">:act</span>
+  <span class="t-attr">@type</span> dispatch_mode :: <span class="t-atom">:explore</span> | <span class="t-atom">:focus</span> | <span class="t-atom">:act</span> | <span class="t-atom">:escalate</span> | <span class="t-atom">:propose</span> | <span class="t-atom">:idle</span>
+
+  <span class="t-attr">@type</span> attention_item :: %{
+    goal_id: binary() | <span class="t-lit">nil</span>,
+    goal_title: binary() | <span class="t-lit">nil</span>,
+    region_node_ids: [binary()],
+    coverage: map(),
+    topology: map(),
+    urgency: float(),
+    gap: float(),
+    surprise: float(),
+    friction: non_neg_integer(),
+    attention_score: float(),
+    dispatch_mode: dispatch_mode()
+  }
+
+  <span class="t-attr">@type</span> attention_cycle_result :: %{
+    cycle_id: binary(),
+    timestamp: <span class="t-type">DateTime</span>.t(),
+    items_surveyed: non_neg_integer(),
+    items_dispatched: non_neg_integer(),
+    dispatches: [%{
+      item: attention_item(),
+      mode: dispatch_mode(),
+      result: <span class="t-atom">:ok</span> | <span class="t-atom">:escalated</span> | <span class="t-atom">:deferred</span> | {<span class="t-atom">:error</span>, term()},
+      duration_ms: float()
+    }],
+    next_heartbeat_ms: non_neg_integer()
+  }
+
+  <span class="t-comment"># --- Client API ---</span>
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Start the attention engine (usually called by supervisor)&quot;</span>
+  <span class="t-kw">def</span> start_link(opts \\ [])
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Activate the engine (transitions from dormant to active)&quot;</span>
+  <span class="t-attr">@spec</span> activate(autonomy_level()) :: <span class="t-atom">:ok</span>
+  <span class="t-kw">def</span> activate(level \\ <span class="t-atom">:observe</span>)
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Deactivate the engine (stops heartbeat, keeps GenServer alive)&quot;</span>
+  <span class="t-attr">@spec</span> deactivate() :: <span class="t-atom">:ok</span>
+  <span class="t-kw">def</span> deactivate()
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Run one attention cycle immediately (for testing or manual trigger)&quot;</span>
+  <span class="t-attr">@spec</span> run_cycle(keyword()) :: {<span class="t-atom">:ok</span>, attention_cycle_result()}
+  <span class="t-kw">def</span> run_cycle(opts \\ [])
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Get the current attention map without dispatching&quot;</span>
+  <span class="t-attr">@spec</span> survey() :: {<span class="t-atom">:ok</span>, [attention_item()]}
+  <span class="t-kw">def</span> survey()
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Get the engine's current state (for observability)&quot;</span>
+  <span class="t-attr">@spec</span> status() :: map()
+  <span class="t-kw">def</span> status()
+<span class="t-kw">end</span></code></pre>
+<h5 id="blk-18259">3.1.1 Survey Phase</h5>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> survey_goals <span class="t-kw">do</span>
+  <span class="t-comment"># 1. Get all active goals from GoalGraph</span>
+  <span class="t-comment">#    NOTE: GoalGraph.list_goals/1 returns {:ok, [Goal.t()]}</span>
+  <span class="t-comment">#    Use Graphonomous.list_goals/1 for unwrapped version</span>
+  {<span class="t-atom">:ok</span>, goals} = <span class="t-type">Graphonomous.GoalGraph</span>.list_goals(%{status: <span class="t-atom">:active</span>})
+
+  <span class="t-comment"># 2. For each goal, compute coverage and topology</span>
+  <span class="t-type">Enum</span>.map(goals, <span class="t-kw">fn</span> goal -&gt;
+    <span class="t-comment"># Get knowledge region for this goal</span>
+    node_ids = goal_region_nodes(goal)
+
+    <span class="t-comment"># Run coverage assessment</span>
+    <span class="t-comment">#    NOTE: Coverage.recommend/2 returns a map (not {:ok, map})</span>
+    <span class="t-comment">#    with keys: decision, decision_confidence, coverage_score,</span>
+    <span class="t-comment">#    uncertainty_score, risk_score, rationale</span>
+    coverage = <span class="t-type">Graphonomous.Coverage</span>.recommend(
+      %{task_description: goal.title, node_ids: node_ids},
+      []
+    )
+
+    <span class="t-comment"># Get topology (if nodes exist)</span>
+    topology = <span class="t-kw">if</span> length(node_ids) &gt; <span class="t-num">1</span> <span class="t-kw">do</span>
+      {<span class="t-atom">:ok</span>, edges} = <span class="t-type">Graphonomous.Store</span>.list_edges_between(node_ids)
+      adjacency = <span class="t-type">Graphonomous.Topology</span>.build_adjacency(node_ids, edges)
+      <span class="t-type">Graphonomous.Topology</span>.analyze(adjacency)
+    <span class="t-kw">else</span>
+      %{max_kappa: <span class="t-num">0</span>, scc_count: <span class="t-num">0</span>, routing: <span class="t-atom">:fast</span>, sccs: [], dag_nodes: node_ids}
+    <span class="t-kw">end</span>
+
+    <span class="t-comment"># Check for recent surprising outcomes</span>
+    surprise = compute_surprise(goal, node_ids)
+
+    build_attention_item(goal, coverage, topology, surprise)
+  <span class="t-kw">end</span>)
+<span class="t-kw">end</span>
+
+<span class="t-kw">defp</span> goal_region_nodes(goal) <span class="t-kw">do</span>
+  <span class="t-comment"># Get nodes linked to this goal (stored as goal.linked_node_ids on the Goal struct)</span>
+  <span class="t-comment"># + nodes retrieved by goal description</span>
+  linked = goal.linked_node_ids || []
+
+  <span class="t-comment"># NOTE: Graphonomous.retrieve_context/2 returns an unwrapped map (not {:ok, map})</span>
+  retrieved = <span class="t-type">Graphonomous</span>.retrieve_context(goal.title, limit: <span class="t-num">20</span>)
+  retrieved_ids = <span class="t-type">Enum</span>.map(retrieved.results, &amp; &amp;<span class="t-num">1</span>.id)
+
+  <span class="t-type">Enum</span>.uniq(linked ++ retrieved_ids)
+<span class="t-kw">end</span></code></pre>
+<h5 id="blk-18261">3.1.2 Triage Phase</h5>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> triage(attention_items) <span class="t-kw">do</span>
+  attention_items
+  |&gt; <span class="t-type">Enum</span>.map(<span class="t-kw">fn</span> item -&gt;
+    urgency = compute_urgency(item)
+    <span class="t-comment"># Coverage.recommend/2 returns coverage_score (not .score)</span>
+    gap = <span class="t-num">1.0</span> - item.coverage.coverage_score
+    surprise = item.surprise
+
+    <span class="t-comment"># Attention score: urgency × gap + surprise bonus</span>
+    <span class="t-comment"># Friction (κ) is NOT in the score — it's a cost factor for budgeting</span>
+    score = urgency * gap + surprise * <span class="t-num">0.3</span>
+
+    dispatch_mode = determine_dispatch_mode(item)
+
+    %{item | urgency: urgency, gap: gap, attention_score: score, dispatch_mode: dispatch_mode}
+  <span class="t-kw">end</span>)
+  |&gt; <span class="t-type">Enum</span>.sort_by(&amp; &amp;<span class="t-num">1</span>.attention_score, <span class="t-atom">:desc</span>)
+<span class="t-kw">end</span>
+
+<span class="t-kw">defp</span> compute_urgency(item) <span class="t-kw">do</span>
+  <span class="t-kw">case</span> item.goal_id <span class="t-kw">do</span>
+    <span class="t-lit">nil</span> -&gt; <span class="t-num">0.1</span>  <span class="t-comment"># no goal — low base urgency</span>
+    _goal_id -&gt;
+      <span class="t-comment"># Deadline proximity: 1.0 at deadline, decays to 0.0 at 7+ days out</span>
+      deadline_factor = deadline_proximity(item)
+      <span class="t-comment"># Priority weight: high=1.0, medium=0.6, low=0.3</span>
+      priority_factor = priority_weight(item)
+      deadline_factor * priority_factor
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span>
+
+<span class="t-kw">defp</span> determine_dispatch_mode(item) <span class="t-kw">do</span>
+  <span class="t-comment"># Coverage.recommend/2 returns :decision field (not :recommendation)</span>
+  <span class="t-comment"># with values :act | :learn | :escalate</span>
+  <span class="t-kw">cond</span> <span class="t-kw">do</span>
+    item.coverage.decision == <span class="t-atom">:escalate</span> -&gt;
+      <span class="t-atom">:escalate</span>
+
+    item.coverage.decision == <span class="t-atom">:learn</span> <span class="t-kw">and</span> item.coverage.coverage_score &lt; <span class="t-num">0.45</span> -&gt;
+      <span class="t-atom">:explore</span>
+
+    item.coverage.decision == <span class="t-atom">:learn</span> -&gt;
+      <span class="t-atom">:focus</span>  <span class="t-comment"># enough to deliberate, not enough to act</span>
+
+    item.topology.routing == <span class="t-atom">:deliberate</span> -&gt;
+      <span class="t-atom">:focus</span>
+
+    item.coverage.decision == <span class="t-atom">:act</span> -&gt;
+      <span class="t-atom">:act</span>
+
+    item.goal_id == <span class="t-lit">nil</span> <span class="t-kw">and</span> item.gap &gt; <span class="t-num">0.3</span> -&gt;
+      <span class="t-atom">:propose</span>
+
+    <span class="t-lit">true</span> -&gt;
+      <span class="t-atom">:idle</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h5 id="blk-18263">3.1.3 Dispatch Phase</h5>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> dispatch(ranked_items, budget, autonomy_level) <span class="t-kw">do</span>
+  ranked_items
+  |&gt; <span class="t-type">Enum</span>.take(budget.max_items_per_cycle)
+  |&gt; <span class="t-type">Enum</span>.reject(&amp; &amp;<span class="t-num">1</span>.dispatch_mode == <span class="t-atom">:idle</span>)
+  |&gt; <span class="t-type">Enum</span>.map(<span class="t-kw">fn</span> item -&gt;
+    <span class="t-kw">case</span> {item.dispatch_mode, autonomy_level} <span class="t-kw">do</span>
+      <span class="t-comment"># Observe mode: log everything, do nothing</span>
+      {_mode, <span class="t-atom">:observe</span>} -&gt;
+        log_attention_item(item, <span class="t-atom">:observed</span>)
+        %{item: item, mode: item.dispatch_mode, result: <span class="t-atom">:deferred</span>, duration_ms: <span class="t-num">0.0</span>}
+
+      <span class="t-comment"># Advise mode: propose but don't execute</span>
+      {mode, <span class="t-atom">:advise</span>} -&gt;
+        proposal = build_proposal(item, mode)
+        notify_proposal(proposal)
+        %{item: item, mode: mode, result: <span class="t-atom">:deferred</span>, duration_ms: <span class="t-num">0.0</span>}
+
+      <span class="t-comment"># Act mode: execute within budget</span>
+      {<span class="t-atom">:explore</span>, <span class="t-atom">:act</span>} -&gt;
+        execute_explore(item, budget)
+
+      {<span class="t-atom">:focus</span>, <span class="t-atom">:act</span>} -&gt;
+        execute_focus(item, budget)
+
+      {<span class="t-atom">:act</span>, <span class="t-atom">:act</span>} -&gt;
+        execute_action(item, budget)
+
+      {<span class="t-atom">:escalate</span>, _} -&gt;
+        execute_escalate(item)
+
+      {<span class="t-atom">:propose</span>, <span class="t-atom">:act</span>} -&gt;
+        execute_propose(item)
+    <span class="t-kw">end</span>
+  <span class="t-kw">end</span>)
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-18265">3.2 Dispatch Mode Implementations</h4>
+<h5 id="blk-18266">3.2.1 EXPLORE — Domain Bootstrap</h5>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> execute_explore(item, budget) <span class="t-kw">do</span>
+  <span class="t-comment"># The Domain Explorer seeds the knowledge graph with new information</span>
+  <span class="t-comment"># about a region where coverage is low.</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># This is the &quot;OpenClaws&quot; function — the system reaches out to learn.</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># Exploration strategies (in order of preference):</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># 1. Internal expansion: BFS from known nodes to discover</span>
+  <span class="t-comment">#    connected knowledge already in the graph but not linked to this goal</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># 2. Consolidation-driven: trigger Consolidator to merge/promote</span>
+  <span class="t-comment">#    related nodes that might increase coverage</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># 3. Agent-assisted: call agent_fn with a research prompt</span>
+  <span class="t-comment">#    scoped to the coverage gaps identified by coverage_query</span>
+  <span class="t-comment">#    (e.g., &quot;What is the current state of customer retention</span>
+  <span class="t-comment">#     for mid-size SaaS companies? Cite sources.&quot;)</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># 4. Goal decomposition: if the goal is too broad for current</span>
+  <span class="t-comment">#    coverage, decompose it into subgoals that can be addressed</span>
+  <span class="t-comment">#    individually</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># All new knowledge is stored via Graph.store_node and Graph.store_edge.</span>
+  <span class="t-comment"># The explore pass does NOT make decisions or take real-world actions —</span>
+  <span class="t-comment"># it only enriches the graph.</span>
+
+  {duration_us, result} = <span class="t-atom">:timer</span>.tc(<span class="t-kw">fn</span> -&gt;
+    gaps = item.coverage.gaps
+
+    <span class="t-comment"># Strategy 1: Internal expansion</span>
+    expanded = expand_internally(item.region_node_ids, gaps)
+
+    <span class="t-comment"># Strategy 2: Agent-assisted research (if budget allows)</span>
+    researched = <span class="t-kw">if</span> length(gaps) &gt; <span class="t-num">0</span> <span class="t-kw">and</span> budget.max_explore_calls &gt; <span class="t-num">0</span> <span class="t-kw">do</span>
+      research_gaps(gaps, item.goal_title, budget.max_explore_calls)
+    <span class="t-kw">else</span>
+      []
+    <span class="t-kw">end</span>
+
+    <span class="t-comment"># Store new knowledge</span>
+    store_exploration_results(expanded ++ researched, item.goal_id)
+  <span class="t-kw">end</span>)
+
+  %{
+    item: item,
+    mode: <span class="t-atom">:explore</span>,
+    result: <span class="t-atom">:ok</span>,
+    duration_ms: duration_us / <span class="t-num">1000.0</span>
+  }
+<span class="t-kw">end</span></code></pre>
+<h5 id="blk-18268">3.2.2 FOCUS — Trigger Deliberator</h5>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> execute_focus(item, budget) <span class="t-kw">do</span>
+  <span class="t-comment"># Delegate to the Deliberator (KAPPA_DELIBERATOR_PROMPT)</span>
+  <span class="t-comment"># The Deliberator handles fault-line decomposition, focused passes,</span>
+  <span class="t-comment"># reconciliation, and crystallization.</span>
+
+  topology = item.topology
+  query = item.goal_title || <span class="t-string">&quot;Analyze this knowledge region&quot;</span>
+
+  <span class="t-comment"># NOTE: Graphonomous.retrieve_context/2 returns unwrapped map</span>
+  retrieval = <span class="t-type">Graphonomous</span>.retrieve_context(query, limit: <span class="t-num">50</span>)
+
+  <span class="t-kw">case</span> <span class="t-type">Graphonomous.Deliberator</span>.deliberate(topology, query, retrieval.results,
+    agent_fn: &amp;default_agent_fn/<span class="t-num">1</span>,
+    write_back: <span class="t-lit">true</span>
+  ) <span class="t-kw">do</span>
+    {<span class="t-atom">:ok</span>, result} -&gt;
+      <span class="t-comment"># Deliberation succeeded — graph may have crystallized</span>
+      learn_from_deliberation(item, result)
+      %{item: item, mode: <span class="t-atom">:focus</span>, result: <span class="t-atom">:ok</span>, duration_ms: result.duration_ms}
+
+    {<span class="t-atom">:escalated</span>, _} -&gt;
+      <span class="t-comment"># Deliberator couldn't converge — escalate to Deliberatic</span>
+      execute_escalate(item)
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h5 id="blk-18270">3.2.3 ACT — Execute via OpenSentience</h5>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> execute_action(item, budget) <span class="t-kw">do</span>
+  <span class="t-comment"># Coverage is high, topology is DAG (κ=0), goal is active.</span>
+  <span class="t-comment"># The system has enough knowledge and confidence to act.</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># Action selection uses the agent_fn to decide what to do:</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># Prompt: &quot;Given [goal] and [retrieved context], what is the</span>
+  <span class="t-comment">#          single most impactful next action? Respond with a</span>
+  <span class="t-comment">#          tool call specification.&quot;</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># The action is dispatched via OpenSentience.execute_action,</span>
+  <span class="t-comment"># which handles outcome classification and learn_from_outcome.</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># Budget constraint: max 1 action dispatch per cycle.</span>
+  <span class="t-comment"># Delegatic policy may further restrict.</span>
+
+  <span class="t-kw">if</span> budget.max_action_dispatches &lt;= <span class="t-num">0</span> <span class="t-kw">do</span>
+    %{item: item, mode: <span class="t-atom">:act</span>, result: <span class="t-atom">:deferred</span>, duration_ms: <span class="t-num">0.0</span>}
+  <span class="t-kw">else</span>
+    {duration_us, result} = <span class="t-atom">:timer</span>.tc(<span class="t-kw">fn</span> -&gt;
+      action = select_action(item)
+      execute_via_opensentience(action, item.goal_id)
+    <span class="t-kw">end</span>)
+
+    %{item: item, mode: <span class="t-atom">:act</span>, result: result, duration_ms: duration_us / <span class="t-num">1000.0</span>}
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h5 id="blk-18272">3.2.4 PROPOSE — Autonomous Goal Generation</h5>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> execute_propose(item) <span class="t-kw">do</span>
+  <span class="t-comment"># No active goal covers this knowledge region, but there's a</span>
+  <span class="t-comment"># significant coverage gap. The Attention Engine proposes a goal.</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># Proposed goals have source_type: :inferred and start in</span>
+  <span class="t-comment"># status: :proposed (not :active). They require either:</span>
+  <span class="t-comment">#   - Human approval (autonomy_level :advise)</span>
+  <span class="t-comment">#   - Auto-activation (autonomy_level :act, if Delegatic policy allows)</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># Goal generation uses the coverage gaps to formulate the goal:</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># Coverage gap: &quot;customer retention data is stale&quot;</span>
+  <span class="t-comment"># → Proposed goal: &quot;Refresh customer retention knowledge&quot;</span>
+  <span class="t-comment">#   - timescale: :short</span>
+  <span class="t-comment">#   - priority: :medium</span>
+  <span class="t-comment">#   - completion_criteria: &quot;coverage_score &gt;= 0.72 for retention-related nodes&quot;</span>
+
+  gaps = item.coverage.gaps
+
+  <span class="t-comment"># GOAL COHERENCE CHECK: Before proposing, verify the coverage gap</span>
+  <span class="t-comment"># is semantically related to at least one existing user-created or</span>
+  <span class="t-comment"># system-created goal. This prevents the attention engine from</span>
+  <span class="t-comment"># wandering into regions the user never cared about.</span>
+  <span class="t-comment"># Without this check, the explore→propose→explore loop could drift</span>
+  <span class="t-comment"># into self-generated work with no connection to actual objectives.</span>
+  {<span class="t-atom">:ok</span>, existing_goals} = <span class="t-type">Graphonomous.GoalGraph</span>.list_goals(%{})
+  user_or_system_goals = <span class="t-type">Enum</span>.filter(existing_goals, <span class="t-kw">fn</span> g -&gt;
+    g.source_type <span class="t-kw">in</span> [<span class="t-atom">:user</span>, <span class="t-atom">:system</span>]
+  <span class="t-kw">end</span>)
+
+  <span class="t-kw">unless</span> coherent_with_existing?(gaps, user_or_system_goals) <span class="t-kw">do</span>
+    <span class="t-comment"># Not related to anything the user cares about — skip</span>
+    return %{item: item, mode: <span class="t-atom">:propose</span>, result: <span class="t-atom">:deferred</span>, duration_ms: <span class="t-num">0.0</span>}
+  <span class="t-kw">end</span>
+
+  <span class="t-comment"># GoalGraph.create_goal/1 accepts a map with these validated fields:</span>
+  <span class="t-comment">#   title, description, status (from @valid_statuses),</span>
+  <span class="t-comment">#   source_type (from @valid_sources: :user/:system/:inferred/:policy),</span>
+  <span class="t-comment">#   timescale (from @valid_timescales: :immediate/:short_term/:medium_term/:long_term),</span>
+  <span class="t-comment">#   priority (from @valid_priorities: :low/:normal/:high/:critical),</span>
+  <span class="t-comment">#   completion_criteria (map), metadata (map), linked_node_ids (list of binaries)</span>
+  goal_attrs = %{
+    title: synthesize_goal_title(gaps),
+    description: synthesize_goal_description(gaps, item),
+    status: <span class="t-atom">:proposed</span>,
+    source_type: <span class="t-atom">:inferred</span>,
+    timescale: infer_timescale(gaps),
+    priority: infer_priority(item.attention_score),
+    linked_node_ids: item.region_node_ids,
+    completion_criteria: %{
+      coverage_threshold: <span class="t-num">0.72</span>,
+      target_node_ids: item.region_node_ids
+    },
+    metadata: %{
+      generated_by: <span class="t-atom">:attention_engine</span>,
+      coverage_at_proposal: item.coverage.coverage_score,
+      kappa_at_proposal: item.topology.max_kappa,
+      gaps: gaps
+    }
+  }
+
+  <span class="t-comment"># Returns {:ok, Goal.t()} | {:error, term()}</span>
+  {<span class="t-atom">:ok</span>, _goal} = <span class="t-type">Graphonomous.GoalGraph</span>.create_goal(goal_attrs)
+
+  %{item: item, mode: <span class="t-atom">:propose</span>, result: <span class="t-atom">:ok</span>, duration_ms: <span class="t-num">0.0</span>}
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-18274">3.3 MCP Tool: <code>AttentionSurvey</code></h4>
+<p><strong>File:</strong> <code>graphonomous/lib/graphonomous/mcp/attention_survey.ex</code></p>
+<p>Exposes the attention map via MCP so external agents can see what the system is &quot;thinking about.&quot;</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;attention_survey&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Get the current attention map — a ranked list of what the system believes needs attention, based on active goals, coverage gaps, and κ topology. Does not execute actions. Use this to understand what the system would do if given autonomy.&quot;</span>,
+  <span class="t-key">&quot;inputSchema&quot;</span>: {
+    <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;object&quot;</span>,
+    <span class="t-key">&quot;properties&quot;</span>: {
+      <span class="t-key">&quot;include_idle&quot;</span>: {
+        <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;boolean&quot;</span>,
+        <span class="t-key">&quot;default&quot;</span>: <span class="t-lit">false</span>,
+        <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Include items that don't need attention (dispatch_mode: idle)&quot;</span>
+      }
+    }
+  }
+}</code></pre>
+<p><strong>Response:</strong></p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;status&quot;</span>: <span class="t-string">&quot;ok&quot;</span>,
+  <span class="t-key">&quot;attention_items&quot;</span>: [
+    {
+      <span class="t-key">&quot;goal_id&quot;</span>: <span class="t-string">&quot;goal-123&quot;</span>,
+      <span class="t-key">&quot;goal_title&quot;</span>: <span class="t-string">&quot;Increase Q2 market share&quot;</span>,
+      <span class="t-key">&quot;attention_score&quot;</span>: <span class="t-num">0.62</span>,
+      <span class="t-key">&quot;dispatch_mode&quot;</span>: <span class="t-string">&quot;focus&quot;</span>,
+      <span class="t-key">&quot;coverage_score&quot;</span>: <span class="t-num">0.54</span>,
+      <span class="t-key">&quot;coverage_decision&quot;</span>: <span class="t-string">&quot;learn&quot;</span>,
+      <span class="t-key">&quot;decision_confidence&quot;</span>: <span class="t-num">0.71</span>,
+      <span class="t-key">&quot;max_kappa&quot;</span>: <span class="t-num">1</span>,
+      <span class="t-key">&quot;routing&quot;</span>: <span class="t-string">&quot;deliberate&quot;</span>,
+      <span class="t-key">&quot;coverage_rationale&quot;</span>: [<span class="t-string">&quot;customer retention data is stale&quot;</span>, <span class="t-string">&quot;competitor pricing unknown&quot;</span>],
+      <span class="t-key">&quot;attention_rationale&quot;</span>: <span class="t-string">&quot;Goal has medium urgency (deadline in 12 days), significant coverage gap (0.46), and circular dependencies (κ=1) requiring deliberation before action.&quot;</span>
+    }
+  ],
+  <span class="t-key">&quot;autonomy_level&quot;</span>: <span class="t-string">&quot;observe&quot;</span>,
+  <span class="t-key">&quot;next_heartbeat_in_ms&quot;</span>: <span class="t-num">245000</span>
+}</code></pre>
+<h4 id="blk-18280">3.4 MCP Tool: <code>AttentionRunCycle</code></h4>
+<p><strong>File:</strong> <code>graphonomous/lib/graphonomous/mcp/attention_run_cycle.ex</code></p>
+<p>Allows an external agent to trigger one attention cycle on demand.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;attention_run_cycle&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Trigger one attention cycle. Surveys goals and coverage, triages, and dispatches actions according to the current autonomy level. Returns the cycle result including what was dispatched and outcomes.&quot;</span>,
+  <span class="t-key">&quot;inputSchema&quot;</span>: {
+    <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;object&quot;</span>,
+    <span class="t-key">&quot;properties&quot;</span>: {
+      <span class="t-key">&quot;autonomy_override&quot;</span>: {
+        <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;string&quot;</span>,
+        <span class="t-key">&quot;enum&quot;</span>: [<span class="t-string">&quot;observe&quot;</span>, <span class="t-string">&quot;advise&quot;</span>, <span class="t-string">&quot;act&quot;</span>],
+        <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Override the configured autonomy level for this cycle only. Must not exceed Delegatic policy maximum.&quot;</span>
+      }
+    }
+  }
+}</code></pre>
+<p>Register both tools in <code>lib/graphonomous/mcp/server.ex</code> (follows existing Anubis pattern):</p>
+<pre data-lang="elixir"><code>component(<span class="t-type">Graphonomous.MCP.AttentionSurvey</span>)
+component(<span class="t-type">Graphonomous.MCP.AttentionRunCycle</span>)</code></pre>
+<p><strong>MCP component implementation note:</strong> Follow the existing <code>Anubis.Server.Component</code> pattern:</p>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Graphonomous.MCP.AttentionSurvey</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Anubis.Server.Component</span>, type: <span class="t-atom">:tool</span>
+
+  schema <span class="t-kw">do</span>
+    field(<span class="t-atom">:include_idle</span>, <span class="t-atom">:boolean</span>, description: <span class="t-string">&quot;Include items with dispatch_mode: idle&quot;</span>)
+  <span class="t-kw">end</span>
+
+  <span class="t-attr">@impl</span> <span class="t-lit">true</span>
+  <span class="t-kw">def</span> execute(params, frame) <span class="t-kw">do</span>
+    include_idle = p(params, <span class="t-atom">:include_idle</span>, <span class="t-lit">false</span>)
+    {<span class="t-atom">:ok</span>, items} = <span class="t-type">Graphonomous.Attention</span>.survey()
+    items = <span class="t-kw">if</span> include_idle, <span class="t-kw">do</span>: items, <span class="t-kw">else</span>: <span class="t-type">Enum</span>.reject(items, &amp;(&amp;<span class="t-num">1</span>.dispatch_mode == <span class="t-atom">:idle</span>))
+    {<span class="t-atom">:reply</span>, tool_response(%{status: <span class="t-string">&quot;ok&quot;</span>, attention_items: items}), frame}
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<p>Use the <code>p(params, key, default)</code> helper (from existing components) for string/atom key access.</p>
+<h4 id="blk-18289">3.5 Telemetry</h4>
+<pre data-lang="elixir"><code><span class="t-comment"># Attention cycle started</span>
+<span class="t-atom">:telemetry</span>.execute(
+  [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:attention</span>, <span class="t-atom">:cycle_start</span>],
+  %{items_surveyed: count},
+  %{trigger: <span class="t-atom">:heartbeat</span> | <span class="t-atom">:deadline</span> | <span class="t-atom">:event</span>, autonomy: level}
+)
+
+<span class="t-comment"># Item dispatched</span>
+<span class="t-atom">:telemetry</span>.execute(
+  [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:attention</span>, <span class="t-atom">:dispatch</span>],
+  %{duration_ms: duration, attention_score: score},
+  %{mode: mode, goal_id: goal_id, kappa: kappa, coverage: coverage}
+)
+
+<span class="t-comment"># Cycle completed</span>
+<span class="t-atom">:telemetry</span>.execute(
+  [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:attention</span>, <span class="t-atom">:cycle_complete</span>],
+  %{total_duration_ms: duration, items_dispatched: count},
+  %{modes: %{explore: n, focus: n, act: n, escalate: n, propose: n}}
+)
+
+<span class="t-comment"># Goal proposed</span>
+<span class="t-atom">:telemetry</span>.execute(
+  [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:attention</span>, <span class="t-atom">:goal_proposed</span>],
+  %{},
+  %{goal_id: id, coverage_at_proposal: score, kappa_at_proposal: kappa}
+)</code></pre>
+<h3 id="blk-18291">4. [&amp;] Protocol Amendments</h3>
+<p>The Attention Engine introduces capabilities that the current protocol grammar and spec don't fully express. This section defines the required amendments to <code>SPEC.md</code> and <code>PROTOCOL_PROMPT.md</code>.</p>
+<h4 id="blk-18293">4.1 The Four Cognitive Primitives Still Hold For Attention</h4>
+<p>No new primitive is needed for attention. Here's why:</p>
+<table><thead><tr><th>New Concept</th><th>Where It Lives</th><th>Rationale</th></tr></thead><tbody><tr><td>κ topology</td><td><code>&amp;memory.graph</code> operation</td><td>Topology is a structural property of the graph — it's computed from memory, not a separate capability</td></tr><tr><td>Deliberation</td><td><code>&amp;reason.deliberate</code> operation</td><td>Deliberation is reasoning — focused, topology-driven, but still reasoning</td></tr><tr><td>Attention/planning</td><td><code>&amp;reason.attend</code> operation</td><td>Attention is a meta-reasoning operation — deciding what to reason about</td></tr><tr><td>Domain exploration</td><td><code>&amp;memory.graph</code> operation</td><td>Exploration enriches the graph — it's a memory write operation</td></tr><tr><td>Goal generation</td><td><code>&amp;reason.plan</code> operation</td><td>Goal generation is planning — a reasoning output</td></tr></tbody></table>
+<p>The insight: <strong>attention is meta-reasoning</strong>. It sits within <code>&amp;reason</code>, not alongside it. The protocol's four cognitive primitives map to the fundamental cognitive axes (what/how/when/where). Attention is &quot;how&quot; applied reflexively — reasoning about reasoning.</p>
+<blockquote><p><strong>Historical note (v0.1.0):</strong> This section argues that attention does NOT warrant a new primitive, and that conclusion remains correct. Separately, in protocol draft v0.1.0 a sensorimotor primitive <code>&amp;body</code> was added to close the perception-action gap (subtypes <code>.browser</code>, <code>.os</code>, <code>.vision</code>, <code>.voice</code>, <code>.motor</code>). <code>&amp;body</code> is distinct from attention: attention is meta-reasoning (stays in <code>&amp;reason</code>), while <code>&amp;body</code> is sensorimotor embodiment (a different cognitive axis entirely). The protocol now has six primitives total: four cognitive (memory/reason/time/space), one sensorimotor (body), and one cross-cutting (govern). See OS-011 (Embodiment Protocol) and <code>PROTOCOL_PROMPT.md</code> for current framing.</p></blockquote>
+<h4 id="blk-18317">4.2 New Subtypes</h4>
+<p>Add to the existing subtype list:</p>
+<pre><code>&amp;reason subtypes (additions):
+  .deliberate  — κ-driven focused reasoning through feedback loops
+  .attend      — proactive attention / meta-reasoning / &quot;what to think about&quot;
+
+&amp;memory.graph operations (additions):
+  .topology()  — compute κ topology of a subgraph
+  .explore()   — expand knowledge in a region (domain bootstrap)</code></pre>
+<h4 id="blk-18320">4.3 New Pipeline Types</h4>
+<p>Add to the protocol's type vocabulary:</p>
+<table><thead><tr><th>Type Token</th><th>Description</th><th>Produced By</th><th>Consumed By</th></tr></thead><tbody><tr><td><code>topology_result</code></td><td>κ analysis with SCCs, routing, fault lines</td><td><code>&amp;memory.graph.topology()</code></td><td><code>&amp;reason.deliberate()</code>, <code>&amp;reason.attend()</code></td></tr><tr><td><code>deliberation_result</code></td><td>Conclusions from focused reasoning</td><td><code>&amp;reason.deliberate()</code></td><td><code>&amp;memory.graph.store()</code>, <code>output</code></td></tr><tr><td><code>attention_map</code></td><td>Ranked items needing attention</td><td><code>&amp;reason.attend.survey()</code></td><td><code>&amp;reason.attend.dispatch()</code>, <code>output</code></td></tr><tr><td><code>attention_cycle</code></td><td>Full cycle result with outcomes</td><td><code>&amp;reason.attend.dispatch()</code></td><td><code>&amp;memory.graph.store()</code>, <code>output</code></td></tr><tr><td><code>coverage_assessment</code></td><td>Epistemic coverage score + recommendation</td><td><code>&amp;memory.graph.coverage()</code></td><td><code>&amp;reason.attend()</code>, <code>&amp;reason.deliberate()</code></td></tr></tbody></table>
+<h4 id="blk-18347">4.4 New Capability Contracts</h4>
+<p><strong>`&amp;reason.deliberate` contract:</strong></p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.deliberate&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;deliberate&quot;</span>: { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;topology_result&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;deliberation_result&quot;</span> },
+    <span class="t-key">&quot;decompose&quot;</span>:  { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;topology_result&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;partitions&quot;</span> },
+    <span class="t-key">&quot;reconcile&quot;</span>:  { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;intermediate_conclusions&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;deliberation_result&quot;</span> }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [<span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-string">&quot;&amp;memory.*&quot;</span>],
+  <span class="t-key">&quot;feeds_into&quot;</span>:   [<span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-string">&quot;&amp;reason.*&quot;</span>, <span class="t-string">&quot;output&quot;</span>],
+  <span class="t-key">&quot;a2a_skills&quot;</span>:   [<span class="t-string">&quot;topology-aware-deliberation&quot;</span>]
+}</code></pre>
+<p><strong>`&amp;reason.attend` contract:</strong></p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.attend&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;survey&quot;</span>:   { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>,        <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;attention_map&quot;</span> },
+    <span class="t-key">&quot;triage&quot;</span>:   { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;attention_map&quot;</span>,   <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;attention_map&quot;</span> },
+    <span class="t-key">&quot;dispatch&quot;</span>: { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;attention_map&quot;</span>,   <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;attention_cycle&quot;</span> }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [<span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-string">&quot;&amp;reason.*&quot;</span>, <span class="t-string">&quot;context&quot;</span>],
+  <span class="t-key">&quot;feeds_into&quot;</span>:   [<span class="t-string">&quot;&amp;reason.deliberate&quot;</span>, <span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-string">&quot;output&quot;</span>],
+  <span class="t-key">&quot;a2a_skills&quot;</span>:   [<span class="t-string">&quot;proactive-attention&quot;</span>, <span class="t-string">&quot;autonomous-planning&quot;</span>]
+}</code></pre>
+<h4 id="blk-18352">4.5 The Autonomous Pipeline</h4>
+<p>The full autonomous loop as a [&amp;] pipeline:</p>
+<pre><code># The reactive path (what exists today, extended):
+query
+  |&gt; &amp;memory.graph.recall()
+  |&gt; &amp;memory.graph.topology()
+  |&gt; &amp;reason.deliberate(budget: :κ)
+  |&gt; &amp;memory.graph.store()
+
+# The proactive path (what the Attention Engine adds):
+heartbeat
+  |&gt; &amp;reason.attend.survey()
+  |&gt; &amp;reason.attend.triage()
+  |&gt; &amp;reason.attend.dispatch()
+  |&gt; &amp;memory.graph.store()</code></pre>
+<p><strong>Note on loops:</strong> The <code>|&gt;</code> operator is linear — it doesn't express cycles. The Attention Engine's heartbeat loop is a <strong>runtime scheduling concern</strong>, not a pipeline concern. The pipeline describes one pass through the attention cycle. The heartbeat triggers repeated passes. This is analogous to how a web server's request handler is a pipeline, but the HTTP listen loop is runtime infrastructure.</p>
+<p>This means the protocol grammar does NOT need a loop construct. The heartbeat is declared in governance (see §4.6).</p>
+<h4 id="blk-18357">4.6 Governance Extension: Autonomy Declaration</h4>
+<p>Add to the <code>governance</code> block in <code>ampersand.json</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [<span class="t-string">&quot;...&quot;</span>],
+    <span class="t-key">&quot;soft&quot;</span>: [<span class="t-string">&quot;...&quot;</span>],
+    <span class="t-key">&quot;escalate_when&quot;</span>: { <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span> },
+    <span class="t-key">&quot;autonomy&quot;</span>: {
+      <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;observe&quot;</span>,
+      <span class="t-key">&quot;heartbeat_seconds&quot;</span>: <span class="t-num">300</span>,
+      <span class="t-key">&quot;budget&quot;</span>: {
+        <span class="t-key">&quot;max_actions_per_hour&quot;</span>: <span class="t-num">5</span>,
+        <span class="t-key">&quot;max_explore_calls_per_cycle&quot;</span>: <span class="t-num">5</span>,
+        <span class="t-key">&quot;max_deliberation_sccs_per_cycle&quot;</span>: <span class="t-num">2</span>,
+        <span class="t-key">&quot;require_approval_for&quot;</span>: [<span class="t-string">&quot;act&quot;</span>]
+      }
+    }
+  }
+}</code></pre>
+<p>This makes autonomy <strong>declarative and governed</strong> — the same way capabilities and constraints are. An agent's autonomy level, heartbeat cadence, and action budget are validated at composition time, not buried in runtime config.</p>
+<p>The <code>autonomy.level</code> field maps to Delegatic policy. A Delegatic organization can set a maximum autonomy level for all agents in its tree. An agent declaring <code>&quot;level&quot;: &quot;act&quot;</code> within an org that caps at <code>&quot;advise&quot;</code> will be downgraded at composition time.</p>
+<h4 id="blk-18362">4.7 Updated Portfolio Company Table</h4>
+<p>Update PROTOCOL_PROMPT.md portfolio section:</p>
+<pre data-lang="markdown"><code>| Company | Domain | Capability | URL |
+|---------|--------|------------|-----|
+| Graphonomous | Graph memory + κ topology | `&amp;memory.graph`, `&amp;memory.episodic` | graphonomous.com |
+| Deliberatic | Multi-agent argumentation | `&amp;reason.argument`, `&amp;reason.vote` | deliberatic.com |
+| AgenTroMatic | Task decomposition + orchestration | Agent automation | agentromatic.com |
+| Delegatic | Governance + authorization | Agent delegation + policy | delegatic.com |
+| OpenSentience | Execution + outcome feedback | Runtime + research | opensentience.org |
+| SpecPrompt | Specification standard | Spec tooling | specprompt.com |
+| Agentelic | Agent engineering pipeline | Agent infra | agentelic.com |
+| FleetPrompt | Fleet-scale prompt orchestration | `&amp;space.fleet` | fleetprompt.com |
+| WebHost Systems | Hosting infrastructure | Runtime | webhost.systems |</code></pre>
+<h4 id="blk-18365">4.8 Updated Canonical Agent Example</h4>
+<p>The InfraOperator example in PROTOCOL_PROMPT.md should be extended:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;InfraOperator&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;2.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>:        { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;instance&quot;</span>: <span class="t-string">&quot;infra-ops&quot;</span> } },
+    <span class="t-key">&quot;&amp;time.anomaly&quot;</span>:        { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;streams&quot;</span>: [<span class="t-string">&quot;cpu&quot;</span>, <span class="t-string">&quot;mem&quot;</span>] } },
+    <span class="t-key">&quot;&amp;space.fleet&quot;</span>:         { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>] } },
+    <span class="t-key">&quot;&amp;reason.argument&quot;</span>:     { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;governance&quot;</span>: <span class="t-string">&quot;constitutional&quot;</span> } },
+    <span class="t-key">&quot;&amp;reason.deliberate&quot;</span>:   { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;budget&quot;</span>: <span class="t-string">&quot;kappa&quot;</span> } },
+    <span class="t-key">&quot;&amp;reason.attend&quot;</span>:       { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [<span class="t-string">&quot;Never scale beyond 3x in a single action&quot;</span>],
+    <span class="t-key">&quot;soft&quot;</span>: [<span class="t-string">&quot;Prefer gradual scaling over spikes&quot;</span>],
+    <span class="t-key">&quot;escalate_when&quot;</span>: { <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span>, <span class="t-key">&quot;cost_exceeds_usd&quot;</span>: <span class="t-num">1000</span> },
+    <span class="t-key">&quot;autonomy&quot;</span>: {
+      <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;advise&quot;</span>,
+      <span class="t-key">&quot;heartbeat_seconds&quot;</span>: <span class="t-num">300</span>,
+      <span class="t-key">&quot;budget&quot;</span>: {
+        <span class="t-key">&quot;max_actions_per_hour&quot;</span>: <span class="t-num">5</span>,
+        <span class="t-key">&quot;require_approval_for&quot;</span>: [<span class="t-string">&quot;act&quot;</span>, <span class="t-string">&quot;propose&quot;</span>]
+      }
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h4 id="blk-18368">4.9 Updated Pipeline Example</h4>
+<pre data-lang="elixir"><code><span class="t-comment"># Reactive path (query-triggered):</span>
+stream_data
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;memory.graph.enrich()
+|&gt; &amp;memory.graph.topology()           <span class="t-comment"># NEW: κ analysis</span>
+|&gt; &amp;reason.deliberate(budget: :κ)     <span class="t-comment"># NEW: deliberation if κ &gt; 0</span>
+|&gt; &amp;space.fleet.locate()
+|&gt; &amp;reason.argument.evaluate()
+
+<span class="t-comment"># Proactive path (heartbeat-triggered):</span>
+heartbeat
+|&gt; &amp;reason.attend.survey()            <span class="t-comment"># NEW: what needs attention?</span>
+|&gt; &amp;reason.attend.triage()            <span class="t-comment"># NEW: what matters most?</span>
+|&gt; &amp;reason.attend.dispatch()          <span class="t-comment"># NEW: do the thing</span></code></pre>
+<h4 id="blk-18370">4.10 Summary of SPEC.md Changes Needed</h4>
+<table><thead><tr><th>Section</th><th>Change</th><th>Type</th></tr></thead><tbody><tr><td>§4.2 <code>&amp;reason</code></td><td>Add <code>.deliberate</code> and <code>.attend</code> subtypes</td><td>Addition</td></tr><tr><td>§6.2 Pipeline</td><td>Add pipeline examples with topology and attention</td><td>Addition</td></tr><tr><td>§11 Governance</td><td>Add <code>autonomy</code> block with level, heartbeat, budget</td><td>Addition</td></tr><tr><td>§13 Contracts</td><td>Add contracts for <code>&amp;reason.deliberate</code> and <code>&amp;reason.attend</code></td><td>Addition</td></tr><tr><td>§14 Pipeline Validation</td><td>Add new type tokens to vocabulary</td><td>Addition</td></tr><tr><td>§16 Autonomous Composition</td><td>Expand with heartbeat, attention, goal inference details</td><td>Extension</td></tr><tr><td>New §X</td><td>Autonomy Levels (observe/advise/act)</td><td>New section</td></tr></tbody></table>
+<h4 id="blk-18396">4.11 Summary of PROTOCOL_PROMPT.md Changes Needed</h4>
+<table><thead><tr><th>Section</th><th>Change</th></tr></thead><tbody><tr><td>Namespaced Subtypes</td><td>Add <code>&amp;reason.deliberate</code>, <code>&amp;reason.attend</code></td></tr><tr><td>Portfolio Companies table</td><td>Update with κ, topology, attention capabilities</td></tr><tr><td>Canonical Agent Declaration</td><td>Add <code>autonomy</code> to governance, add new capabilities</td></tr><tr><td>Pipeline usage examples</td><td>Add topology + deliberation + attention examples</td></tr><tr><td>Capability Contracts section</td><td>Add new contracts for deliberate and attend</td></tr><tr><td>New section: Autonomy Levels</td><td>Document observe/advise/act and their governance</td></tr></tbody></table>
+<h3 id="blk-18412">5. The Full Autonomous Picture</h3>
+<p>With all three prompts implemented and the protocol amended, here is the complete system:</p>
+<pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                        [&amp;] PROTOCOL                              │
+│    Declares: capabilities, governance, autonomy, provenance      │
+│    Compiles into: MCP configs + A2A agent cards                  │
+│                                                                  │
+│    ampersand.json → validate → compose → generate                │
+└──────────────┬───────────────────────────────────────────────────┘
+               │
+               │ declares capabilities + autonomy level
+               │
+┌──────────────▼───────────────────────────────────────────────────┐
+│                     ATTENTION ENGINE                              │
+│              (&amp;reason.attend — this prompt)                       │
+│                                                                  │
+│    Heartbeat → Survey → Triage → Dispatch → Reflect              │
+│                                                                  │
+│    &quot;What should I think about next?&quot;                             │
+│                                                                  │
+│    Modes: EXPLORE | FOCUS | ACT | ESCALATE | PROPOSE | IDLE      │
+│                                                                  │
+│    Governed by: Delegatic policy + autonomy budget               │
+└────────┬──────────┬──────────┬──────────┬───────────────────────┘
+         │          │          │          │
+    EXPLORE     FOCUS       ACT      ESCALATE
+         │          │          │          │
+         ▼          ▼          ▼          ▼
+┌─────────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐
+│ Graphonomous│ │Deliber-│ │Open-    │ │Deliber-  │
+│ (expand     │ │ator    │ │Sentience│ │atic      │
+│  graph,     │ │(KAPPA  │ │(execute,│ │(formal   │
+│  research,  │ │DELIB   │ │ report  │ │ argumen- │
+│  seed)      │ │PROMPT) │ │ outcome)│ │ tation)  │
+│             │ │        │ │         │ │          │
+│ &amp;memory     │ │&amp;reason │ │ runtime │ │&amp;reason   │
+│ .graph      │ │.delib  │ │         │ │.argument │
+└──────┬──────┘ └───┬────┘ └────┬────┘ └────┬─────┘
+       │            │           │            │
+       │     crystallize        │     consensus
+       │     (write back)       │     verdict
+       │            │           │            │
+       ▼            ▼           ▼            ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                      GRAPHONOMOUS                                 │
+│              (&amp;memory.graph — knowledge graph)                    │
+│                                                                  │
+│    Retriever → κ Topology → Learner → Consolidator               │
+│                                                                  │
+│    Nodes: episodic, semantic, procedural, outcome, goal          │
+│    Edges: causal, temporal, derived_from, supports, contradicts  │
+│                                                                  │
+│    κ = 0: DAG (fast retrieval)                                   │
+│    κ &gt; 0: SCC (deliberation needed)                              │
+│    Crystallization: κ decreases as conclusions settle            │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                    learn_from_outcome
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                      GOVERNANCE                                   │
+│                                                                  │
+│    Delegatic: who can do what (org tree + policy)                │
+│    [&amp;] governance block: hard/soft constraints + autonomy level  │
+│    SpecPrompt: agent behavior specs                              │
+│    Agentelic: build pipeline (spec → test → deploy)              │
+│    AgenTroMatic: multi-agent task decomposition (when needed)    │
+└──────────────────────────────────────────────────────────────────┘</code></pre>
+<h4 id="blk-18415">The Complete Autonomous Cycle (One Heartbeat)</h4>
+<pre><code>1. HEARTBEAT fires (5 min cadence)
+2. SURVEY: Check 3 active goals
+   - Goal A: &quot;Increase market share&quot; → coverage 0.54, κ=1, mode: FOCUS
+   - Goal B: &quot;Reduce churn&quot; → coverage_score 0.31, κ=0, mode: EXPLORE
+   - Goal C: &quot;Ship feature X&quot; → coverage 0.88, κ=0, mode: ACT
+3. TRIAGE: Rank by attention_score
+   - Goal B: 0.71 (high gap, approaching deadline)
+   - Goal A: 0.62 (medium gap, circular dependencies)
+   - Goal C: 0.34 (low gap, ready to act)
+4. DISPATCH (budget: 3 items):
+   - Goal B → EXPLORE: research churn patterns, seed 12 new nodes
+   - Goal A → FOCUS: Deliberator runs on market-share SCC,
+     crystallizes conclusion about R&amp;D ROI, writes back to graph
+   - Goal C → ACT: dispatch &quot;deploy feature branch&quot; via OpenSentience
+5. REFLECT:
+   - Goal B: coverage rose from 0.31 to 0.48 (learn more next cycle)
+   - Goal A: κ effectively reduced for that query region (crystallized)
+   - Goal C: action succeeded, outcome recorded, goal → :completed
+6. WAIT for next heartbeat</code></pre>
+<h4 id="blk-18417">What You Can Assign to This System</h4>
+<p>With all pieces implemented:</p>
+<table><thead><tr><th>Assignment</th><th>What Happens</th></tr></thead><tbody><tr><td>&quot;Learn about the SaaS market&quot;</td><td>Attention Engine generates goals from coverage gaps. Explorer seeds the graph. Deliberator reasons through circular dependencies (pricing ↔ retention ↔ growth). Conclusions crystallize.</td></tr><tr><td>&quot;Manage our infrastructure&quot;</td><td>Agent watches anomalies (<code>&amp;time</code>), tracks fleet state (<code>&amp;space</code>), deliberates on scaling decisions (κ &gt; 0 when scaling is circular: more users → more infra → more cost → pricing changes → user count changes).</td></tr><tr><td>&quot;Run this project&quot;</td><td>Goals decomposed via AgenTroMatic. Each subgoal tracked by Attention Engine. Coverage gaps trigger exploration. Circular dependencies trigger deliberation. Actions dispatched via OpenSentience. Outcomes update beliefs.</td></tr></tbody></table>
+<p>The system doesn't need to be told what to do for each step. It needs to be told <strong>what to care about</strong> (goals), and the topology of its own knowledge tells it everything else.</p>
+<h3 id="blk-18429">6. Tests</h3>
+<h4 id="blk-18430">File: <code>test/graphonomous/attention_test.exs</code></h4>
+<pre><code>[x] survey/0 returns attention items for all active goals
+[x] survey/0 includes coverage and topology for each item
+[ ] triage/1 ranks items by attention_score (urgency × gap + surprise)
+[ ] triage/1 assigns correct dispatch_mode based on coverage + topology
+[x] dispatch with autonomy :observe → logs but takes no action
+[ ] dispatch with autonomy :advise → proposes but doesn't execute
+[ ] dispatch with autonomy :act → executes within budget
+[ ] budget.max_items_per_cycle respected
+[ ] budget.max_action_dispatches respected
+[ ] budget.total_timeout_ms kills long-running cycles
+[ ] escalation_cooldown_ms prevents re-escalation spam
+[ ] explore mode enriches graph (new nodes created)
+[ ] focus mode triggers Deliberator
+[ ] act mode dispatches via agent_fn / OpenSentience interface
+[ ] propose mode creates goal with source_type: :inferred, status: :proposed
+[x] heartbeat timer fires at configured cadence
+[ ] deadline trigger fires when goal deadline approaches
+[x] deactivate/0 stops heartbeat but keeps GenServer alive
+[ ] telemetry events emitted at each phase
+[x] run_cycle/1 works as manual trigger
+[x] attention_survey MCP tool returns valid response
+[x] attention_run_cycle MCP tool triggers one cycle</code></pre>
+<h4 id="blk-18432">File: <code>test/graphonomous/attention_integration_test.exs</code></h4>
+<pre><code>[ ] End-to-end: create goal → wait for heartbeat → coverage gap detected → explore dispatched → graph enriched
+[ ] End-to-end: cyclic knowledge → attention focus → deliberator → crystallization → lower effective κ on next survey
+[ ] Autonomy escalation: act mode blocked by Delegatic policy → downgraded to advise
+[ ] Goal proposal: no active goal + coverage gap → goal proposed with :inferred source
+[ ] Multiple cycles: attention map updates correctly after each cycle</code></pre>
+<h3 id="blk-18434">7. File Manifest</h3>
+<h4 id="blk-18435">New files to create:</h4>
+<table><thead><tr><th>File</th><th>Language</th><th>Purpose</th></tr></thead><tbody><tr><td><code>graphonomous/lib/graphonomous/attention.ex</code></td><td>Elixir</td><td>Core attention engine (GenServer)</td></tr><tr><td><code>graphonomous/lib/graphonomous/mcp/attention_survey.ex</code></td><td>Elixir</td><td>MCP tool: survey attention map</td></tr><tr><td><code>graphonomous/lib/graphonomous/mcp/attention_run_cycle.ex</code></td><td>Elixir</td><td>MCP tool: trigger attention cycle</td></tr><tr><td><code>graphonomous/test/graphonomous/attention_test.exs</code></td><td>Elixir</td><td>Unit tests</td></tr><tr><td><code>graphonomous/test/graphonomous/attention_integration_test.exs</code></td><td>Elixir</td><td>Integration tests</td></tr></tbody></table>
+<h4 id="blk-18455">Files to modify:</h4>
+<table><thead><tr><th>File</th><th>Change</th></tr></thead><tbody><tr><td><code>graphonomous/lib/graphonomous/mcp/server.ex</code></td><td>Register <code>AttentionSurvey</code> and <code>AttentionRunCycle</code> components</td></tr><tr><td><code>graphonomous/lib/graphonomous/application.ex</code></td><td>Add <code>Attention</code> to supervision tree (dormant by default)</td></tr></tbody></table>
+<h4 id="blk-18463">Protocol files to amend (see §4 for details):</h4>
+<table><thead><tr><th>File</th><th>Change</th></tr></thead><tbody><tr><td><code>AmpersandBoxDesign/SPEC.md</code></td><td>Add subtypes, autonomy governance, contracts, type tokens</td></tr><tr><td><code>AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md</code></td><td>Update subtypes, portfolio table, examples, pipeline, autonomy section</td></tr><tr><td><code>AmpersandBoxDesign/protocol/schema/v0.1.0/ampersand.schema.json</code></td><td>Add <code>autonomy</code> to governance schema</td></tr><tr><td><code>AmpersandBoxDesign/protocol/schema/v0.1.0/capability-contract.schema.json</code></td><td>Add new type tokens</td></tr></tbody></table>
+<h4 id="blk-18475">Depends on (must exist first):</h4>
+<table><thead><tr><th>File</th><th>Required Function</th><th>Notes</th></tr></thead><tbody><tr><td><code>graphonomous/lib/graphonomous/topology.ex</code></td><td><code>analyze/1</code>, <code>build_adjacency/2</code></td><td>From KAPPA_BUILD_PROMPT</td></tr><tr><td><code>graphonomous/lib/graphonomous/deliberator.ex</code></td><td><code>deliberate/4</code></td><td>From KAPPA_DELIBERATOR_PROMPT</td></tr><tr><td><code>graphonomous/lib/graphonomous/coverage.ex</code></td><td><code>recommend/2</code> (returns <code>%{decision, decision_confidence, coverage_score, ...}</code>)</td><td>Existing. NOT <code>coverage_query/1</code> — that doesn't exist</td></tr><tr><td><code>graphonomous/lib/graphonomous/goal_graph.ex</code></td><td><code>list_goals/1</code> (accepts <code>%{status: :active}</code>), <code>create_goal/1</code></td><td>Existing. NOT <code>list_active/0</code> — use <code>list_goals(%{status: :active})</code></td></tr><tr><td><code>graphonomous/lib/graphonomous.ex</code></td><td><code>retrieve_context/2</code> (returns unwrapped map, not <code>{:ok, map}</code>)</td><td>Existing. Public wrapper API</td></tr></tbody></table>
+<h3 id="blk-18495">8. Success Criteria</h3>
+<h4 id="blk-18496">Gate A — Survey Correctness (MUST PASS)</h4>
+<ol><li><p>All active goals appear in attention map</p></li><li><p>Coverage and topology computed correctly for each goal region</p></li><li><p>Attention scores are deterministic for same inputs</p></li><li><p>Dispatch modes match expected logic (coverage × topology → mode)</p></li></ol>
+<h4 id="blk-18506">Gate B — Autonomy Levels (MUST PASS)</h4>
+<ol><li><p><code>:observe</code> mode never mutates the graph or dispatches actions</p></li><li><p><code>:advise</code> mode produces proposals but never executes</p></li><li><p><code>:act</code> mode executes within budget constraints</p></li><li><p>Delegatic policy caps are respected (can't exceed org max autonomy)</p></li></ol>
+<h4 id="blk-18516">Gate C — Budget Enforcement (MUST PASS)</h4>
+<ol><li><p><code>max_items_per_cycle</code> never exceeded</p></li><li><p><code>max_action_dispatches</code> never exceeded</p></li><li><p><code>total_timeout_ms</code> kills runaway cycles</p></li><li><p><code>escalation_cooldown_ms</code> prevents spam</p></li></ol>
+<h4 id="blk-18526">Gate D — Integration (SHOULD PASS)</h4>
+<ol><li><p>Explore mode creates new nodes in graph</p></li><li><p>Focus mode triggers Deliberator successfully</p></li><li><p>Act mode integrates with OpenSentience (or mock)</p></li><li><p>Propose mode creates goals with correct metadata</p></li><li><p>MCP tools return valid responses</p></li></ol>
+<h4 id="blk-18538">Gate E — Protocol Compliance (SHOULD PASS)</h4>
+<ol><li><p>Attention capabilities expressible in ampersand.json</p></li><li><p>Autonomy governance validates against updated schema</p></li><li><p>Pipeline examples type-check against updated contracts</p></li><li><p>No new primitive needed for attention (attention stays within <code>&amp;reason</code>); see note in §4.1 about the separate <code>&amp;body</code> addition for sensorimotor embodiment</p></li></ol>
+<h3 id="blk-18548">9. Architectural Notes</h3>
+<h4 id="blk-18549">Why not a new primitive for attention?</h4>
+<p>It's tempting to add <code>&amp;attend</code> or <code>&amp;agency</code> as a primitive. But attention is <strong>meta-reasoning</strong> — reasoning about what to reason about. It takes the same inputs (knowledge graph, goals, coverage) and produces the same outputs (decisions, actions) as <code>&amp;reason</code>. The distinction is that attention is <em>self-directed</em> rather than <em>query-directed</em>. This is a mode of reasoning, not a new cognitive axis.</p>
+<p>The four cognitive primitives map to the fundamental axes of cognition:</p>
+<ul><li><p><strong>What</strong> → <code>&amp;memory</code></p></li><li><p><strong>How</strong> → <code>&amp;reason</code> (including meta-reasoning / attention)</p></li><li><p><strong>When</strong> → <code>&amp;time</code></p></li><li><p><strong>Where</strong> → <code>&amp;space</code></p></li></ul>
+<p>There is no &quot;why&quot; primitive because &quot;why&quot; is answered by the composition of memory (what happened), reasoning (how it connects), and time (when it happened). Similarly, &quot;what next&quot; is answered by reasoning over memory and time — which is exactly what the Attention Engine does.</p>
+<p>Note: separately from attention, protocol draft v0.1.0 added <code>&amp;body</code> as a sensorimotor primitive (perception, action, affordance) to close the perception-action gap. That is not an attention primitive; it models the agent's instantiation in an environment. See OS-011 (Embodiment Protocol).</p>
+<h4 id="blk-18563">Why heartbeat and not event-driven?</h4>
+<p>Both. The heartbeat is the default trigger (catch-all, ensures nothing is forgotten). Events are additional triggers (deadline approaching, surprising outcome, external signal). The heartbeat prevents the system from going silent if no events fire. Events prevent the system from being slow when something urgent happens.</p>
+<h4 id="blk-18565">Why three autonomy levels?</h4>
+<p>They map to real-world trust scenarios:</p>
+<ul><li><p><strong>:observe</strong> — New deployment, debugging, audit mode. &quot;Show me what you'd do, but don't do it.&quot; This is the safe default.</p></li><li><p><strong>:advise</strong> — Established agent, human-in-the-loop. &quot;Propose actions, I'll approve.&quot; This is the typical production mode.</p></li><li><p><strong>:act</strong> — High-trust agent within strict budget. &quot;Do it, but stay within limits.&quot; This is the target for fully autonomous operation.</p></li></ul>
+<p>The levels are not a ladder to climb. Some agents should stay at <code>:advise</code> forever (high-stakes domains). Some can start at <code>:act</code> (low-stakes, well-governed). The level is a governance decision, not a maturity metric.</p>
+<h4 id="blk-18575">Why is the Attention Engine in Graphonomous?</h4>
+<p>Because it's fundamentally a <strong>graph operation</strong> — it surveys the graph's coverage and topology to make decisions. It could theoretically live in its own service, but it needs tight access to:</p>
+<ul><li><p>GoalGraph (for active goals)</p></li><li><p>Coverage (for epistemic assessment)</p></li><li><p>Topology (for κ analysis)</p></li><li><p>Retriever (for goal region discovery)</p></li><li><p>Store (for exploration write-back)</p></li></ul>
+<p>All of these are Graphonomous internals. Pulling Attention into a separate service would require exposing all of them via MCP, adding latency to the tightest loop in the system. Keep it co-located.</p>
+<h4 id="blk-18589">How does this relate to AgenTroMatic?</h4>
+<p>AgenTroMatic is <strong>multi-agent task orchestration</strong> — it decomposes tasks across multiple agents with different capabilities, runs bidding/election, and coordinates execution.</p>
+<p>The Attention Engine is <strong>single-agent self-direction</strong> — one agent deciding what to focus on within its own knowledge graph.</p>
+<p>When the Attention Engine determines that a task requires multiple agents (e.g., the goal spans capabilities the current agent doesn't have), it escalates to AgenTroMatic. AgenTroMatic then runs its 7-phase protocol (bid → negotiate → elect → execute → consensus → reputation) to distribute the work.</p>
+<p>The escalation path:</p>
+<pre><code>Attention Engine (what to do) →
+  Deliberator (how to think about it) →
+    Deliberatic (formal consensus, if needed) →
+      AgenTroMatic (distribute work, if multi-agent)</code></pre>
+<p>Each layer only fires when the previous one can't handle it alone.</p>
+<p><em>The trilogy: KAPPA_BUILD_PROMPT.md detects topology. KAPPA_DELIBERATOR_PROMPT.md reasons through it. ATTENTION_ENGINE_PROMPT.md decides what to reason about. Together with the [&amp;] Protocol amendments in §4, they complete the autonomous loop: an agent that knows what it knows, knows what it doesn't know, and decides what to do about it — without being asked.</em></p>
+<p><em>Reference documents: `graphonomous.com/project_spec/README.md` (coverage_query, GoalGraph), `deliberatic.com/project_spec/README.md` (formal argumentation), `agentromatic.com/project_spec/README.md` (multi-agent orchestration), `delegatic.com/project_spec/README.md` (governance), `opensentience.org/project_spec/README.md` (execution + outcomes).</em></p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/prompts/ATTENTION_ENGINE_PROMPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-18155" class="lvl2">0. The One-Sentence Idea</a><a href="#blk-18157" class="lvl2">1. Why This Exists (The Final Gap)</a><a href="#blk-18186" class="lvl3">The Three Functions of Attention</a><a href="#blk-18201" class="lvl2">1.1 Current API Conventions (READ BEFORE IMPLEMENTING)</a><a href="#blk-18228" class="lvl2">2. Architecture</a><a href="#blk-18229" class="lvl3">2.1 The Attention Loop</a><a href="#blk-18231" class="lvl3">2.2 Triggers</a><a href="#blk-18247" class="lvl3">2.3 The Attention Map</a><a href="#blk-18250" class="lvl3">2.4 Compute Budget</a><a href="#blk-18254" class="lvl2">3. What to Build</a><a href="#blk-18255" class="lvl3">3.1 Module: Graphonomous.Attention</a><a href="#blk-18259" class="lvl4">3.1.1 Survey Phase</a><a href="#blk-18261" class="lvl4">3.1.2 Triage Phase</a><a href="#blk-18263" class="lvl4">3.1.3 Dispatch Phase</a><a href="#blk-18265" class="lvl3">3.2 Dispatch Mode Implementations</a><a href="#blk-18266" class="lvl4">3.2.1 EXPLORE — Domain Bootstrap</a><a href="#blk-18268" class="lvl4">3.2.2 FOCUS — Trigger Deliberator</a><a href="#blk-18270" class="lvl4">3.2.3 ACT — Execute via OpenSentience</a><a href="#blk-18272" class="lvl4">3.2.4 PROPOSE — Autonomous Goal Generation</a><a href="#blk-18274" class="lvl3">3.3 MCP Tool: AttentionSurvey</a><a href="#blk-18280" class="lvl3">3.4 MCP Tool: AttentionRunCycle</a><a href="#blk-18289" class="lvl3">3.5 Telemetry</a><a href="#blk-18291" class="lvl2">4. [&amp;] Protocol Amendments</a><a href="#blk-18293" class="lvl3">4.1 The Four Cognitive Primitives Still Hold For Attention</a><a href="#blk-18317" class="lvl3">4.2 New Subtypes</a><a href="#blk-18320" class="lvl3">4.3 New Pipeline Types</a><a href="#blk-18347" class="lvl3">4.4 New Capability Contracts</a><a href="#blk-18352" class="lvl3">4.5 The Autonomous Pipeline</a><a href="#blk-18357" class="lvl3">4.6 Governance Extension: Autonomy Declaration</a><a href="#blk-18362" class="lvl3">4.7 Updated Portfolio Company Table</a><a href="#blk-18365" class="lvl3">4.8 Updated Canonical Agent Example</a><a href="#blk-18368" class="lvl3">4.9 Updated Pipeline Example</a><a href="#blk-18370" class="lvl3">4.10 Summary of SPEC.md Changes Needed</a><a href="#blk-18396" class="lvl3">4.11 Summary of PROTOCOL_PROMPT.md Changes Needed</a><a href="#blk-18412" class="lvl2">5. The Full Autonomous Picture</a><a href="#blk-18415" class="lvl3">The Complete Autonomous Cycle (One Heartbeat)</a><a href="#blk-18417" class="lvl3">What You Can Assign to This System</a><a href="#blk-18429" class="lvl2">6. Tests</a><a href="#blk-18430" class="lvl3">File: test/graphonomous/attention_test.exs</a><a href="#blk-18432" class="lvl3">File: test/graphonomous/attention_integration_test.exs</a><a href="#blk-18434" class="lvl2">7. File Manifest</a><a href="#blk-18435" class="lvl3">New files to create:</a><a href="#blk-18455" class="lvl3">Files to modify:</a><a href="#blk-18463" class="lvl3">Protocol files to amend (see §4 for details):</a><a href="#blk-18475" class="lvl3">Depends on (must exist first):</a><a href="#blk-18495" class="lvl2">8. Success Criteria</a><a href="#blk-18496" class="lvl3">Gate A — Survey Correctness (MUST PASS)</a><a href="#blk-18506" class="lvl3">Gate B — Autonomy Levels (MUST PASS)</a><a href="#blk-18516" class="lvl3">Gate C — Budget Enforcement (MUST PASS)</a><a href="#blk-18526" class="lvl3">Gate D — Integration (SHOULD PASS)</a><a href="#blk-18538" class="lvl3">Gate E — Protocol Compliance (SHOULD PASS)</a><a href="#blk-18548" class="lvl2">9. Architectural Notes</a><a href="#blk-18549" class="lvl3">Why not a new primitive for attention?</a><a href="#blk-18563" class="lvl3">Why heartbeat and not event-driven?</a><a href="#blk-18565" class="lvl3">Why three autonomy levels?</a><a href="#blk-18575" class="lvl3">Why is the Attention Engine in Graphonomous?</a><a href="#blk-18589" class="lvl3">How does this relate to AgenTroMatic?</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/prompts/CODEX_GUIDE.md/">[&amp;] Ecosystem — Codex Prompt Guide</a><a href="/AmpersandBoxDesign/prompts/DUAL_LOOP_MACHINES.md/">Dual- and Triple-Loop Machine Architecture</a><a href="/AmpersandBoxDesign/prompts/GRAPHONOMOUS_PROMPT.md/">GRAPHONOMOUS_PROMPT</a><a href="/AmpersandBoxDesign/prompts/KAPPA_BUILD_PROMPT.md/">κ-Aware Routing — Build Prompt v2 for Graphonomous + BendScript</a><a href="/AmpersandBoxDesign/prompts/KAPPA_DELIBERATOR_PROMPT.md/">κ-Driven Deliberation Orchestrator — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/MODEL_TIER_PROMPT.md/">Model Tier Adaptation — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md/">[&amp;] Protocol — Zed AI Coder Prompt</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierarbhys4r7o6dqjetlj23mpaa5dqzuai6w3sli5pwtvgoui2piihtq</div></div></div>
+</div></div>
+</body></html>

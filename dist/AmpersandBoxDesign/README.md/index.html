@@ -1,0 +1,179 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>[&amp;] Protocol · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="The [&amp;] Protocol is an open, language-agnostic specification for capability composition in AI agents.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[&amp;] Protocol">
+<meta property="og:description" content="The [&amp;] Protocol is an open, language-agnostic specification for capability composition in AI agents.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] Protocol","name":"[&] Protocol","description":"The [&] Protocol is an open, language-agnostic specification for capability composition in AI agents.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/README.md/","identifier":"bagaaiera7bh6jhregq2vkygkoryur4xl4xjceir6nelweysdex6ytksjjlca","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why this exists"},{"@type":"WebPageElement","name":"Core model"},{"@type":"WebPageElement","name":"Example declaration"},{"@type":"WebPageElement","name":"What the repository contains"},{"@type":"WebPageElement","name":"Specification"},{"@type":"WebPageElement","name":"Schemas"},{"@type":"WebPageElement","name":"Examples"},{"@type":"WebPageElement","name":"Contracts"},{"@type":"WebPageElement","name":"Registry"},{"@type":"WebPageElement","name":"Capability pages (status)"},{"@type":"WebPageElement","name":"Reference implementation"},{"@type":"WebPageElement","name":"Documentation"},{"@type":"WebPageElement","name":"Ecosystem SDKs and tooling"},{"@type":"WebPageElement","name":"Website source"},{"@type":"WebPageElement","name":"Quick start"},{"@type":"WebPageElement","name":"Option A — MCP servers (three-protocol stack)"},{"@type":"WebPageElement","name":"Option B — Elixir reference CLI (for protocol development)"},{"@type":"WebPageElement","name":"2. Check composition"},{"@type":"WebPageElement","name":"3. Generate MCP config"},{"@type":"WebPageElement","name":"4. Generate an A2A agent card"},{"@type":"WebPageElement","name":"Current implementation status"},{"@type":"WebPageElement","name":"Design principles"},{"@type":"WebPageElement","name":"1. Capabilities are interfaces, not products"},{"@type":"WebPageElement","name":"2. Composition should be deterministic"},{"@type":"WebPageElement","name":"3. Governance belongs in data"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/README.md</span>
+
+</div></div>
+<div class="lead">The [&amp;] Protocol is an open, language-agnostic specification for capability composition in AI agents.</div>
+<div class="prose"><h1 id="blk-704">[&amp;] Protocol</h1>
+<p>The <strong>[&amp;] Protocol</strong> is an open, language-agnostic specification for <strong>capability composition in AI agents</strong>.</p>
+<p>It defines how an agent declares:</p>
+<ul><li><p>what it can <strong>remember</strong></p></li><li><p>how it can <strong>reason</strong></p></li><li><p>how it understands <strong>time</strong></p></li><li><p>how it understands <strong>space</strong></p></li><li><p>how it is <strong>embodied</strong> — perception, action, affordance</p></li><li><p>how those capabilities <strong>compose</strong></p></li><li><p>how decisions retain <strong>provenance</strong></p></li><li><p>how constraints are expressed as <strong>governance</strong></p></li><li><p>how declarations compile into <strong>MCP</strong> and <strong>A2A</strong> configurations</p></li></ul>
+<p>The ampersand (<code>&amp;</code>) is not branding syntax. It is the protocol’s core operator for composition.</p>
+<h3 id="blk-727">Why this exists</h3>
+<p>The current agent stack has useful protocol layers already:</p>
+<ul><li><p><strong>MCP</strong> for agent-to-tool connectivity</p></li><li><p><strong>A2A</strong> for agent-to-agent coordination</p></li><li><p><strong>UI protocols</strong> for rendering and interaction</p></li></ul>
+<p>What is still missing is a shared way to describe <strong>how an agent’s cognitive capabilities fit together before runtime wiring begins</strong>.</p>
+<p>The [&amp;] Protocol fills that gap.</p>
+<p>It provides a source-of-truth artifact, <code>ampersand.json</code>, that can be:</p>
+<ul><li><p>validated against a schema</p></li><li><p>checked for composition correctness</p></li><li><p>transformed into runtime configuration</p></li><li><p>audited through provenance metadata</p></li><li><p>extended across implementations and providers</p></li></ul>
+<p>In short:</p>
+<blockquote><p>MCP defines how agents call tools.   A2A defines how agents call agents.   [&amp;] defines how capabilities compose into a coherent agent.</p></blockquote>
+<h3 id="blk-753">Core model</h3>
+<p>The protocol starts from six capability primitives:</p>
+<ul><li><p><code>&amp;memory</code> — what the agent knows</p></li><li><p><code>&amp;reason</code> — how the agent decides</p></li><li><p><code>&amp;time</code> — when things happen</p></li><li><p><code>&amp;space</code> — where things are</p></li><li><p><code>&amp;body</code> — how the agent is instantiated in an environment (perception, action, affordance)</p></li><li><p><code>&amp;govern</code> — who is acting, under what rules, at what cost</p></li></ul>
+<p>Each primitive can be refined with namespaced subtypes:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;memory.episodic</code></p></li><li><p><code>&amp;reason.argument</code></p></li><li><p><code>&amp;reason.vote</code></p></li><li><p><code>&amp;reason.plan</code></p></li><li><p><code>&amp;reason.chain</code></p></li><li><p><code>&amp;reason.deliberate</code></p></li><li><p><code>&amp;reason.attend</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;time.forecast</code></p></li><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;space.route</code></p></li><li><p><code>&amp;body.browser</code></p></li><li><p><code>&amp;body.os</code></p></li><li><p><code>&amp;govern.telemetry</code></p></li><li><p><code>&amp;govern.escalation</code></p></li><li><p><code>&amp;govern.identity</code></p></li></ul>
+<p>The protocol has exactly six primitive roots (<code>&amp;memory</code>, <code>&amp;reason</code>, <code>&amp;time</code>, <code>&amp;space</code>, <code>&amp;body</code>, <code>&amp;govern</code>). Topology analysis and κ-routing are derived operations from <code>&amp;memory.graph</code>, not a separate primitive. <code>&amp;body</code> is the sensorimotor primitive added in draft v0.1.0; see OS-011 (Embodiment Protocol) for the behavioral loop that consumes it.</p>
+<p>Composition is defined with two operators:</p>
+<ul><li><p><code>&amp;</code> — combine capabilities into a set</p></li><li><p><code>|&gt;</code> — flow data through capability operations</p></li></ul>
+<h3 id="blk-811">Example declaration</h3>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;InfraOperator&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;instance&quot;</span>: <span class="t-string">&quot;infra-ops&quot;</span> }
+    },
+    <span class="t-key">&quot;&amp;time.anomaly&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;streams&quot;</span>: [<span class="t-string">&quot;cpu&quot;</span>, <span class="t-string">&quot;mem&quot;</span>] }
+    },
+    <span class="t-key">&quot;&amp;space.fleet&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>] }
+    },
+    <span class="t-key">&quot;&amp;reason.argument&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;governance&quot;</span>: <span class="t-string">&quot;constitutional&quot;</span> }
+    },
+    <span class="t-key">&quot;&amp;reason.deliberate&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;budget&quot;</span>: <span class="t-string">&quot;kappa&quot;</span> }
+    },
+    <span class="t-key">&quot;&amp;reason.attend&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {}
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [<span class="t-string">&quot;Never scale beyond 3x in a single action&quot;</span>],
+    <span class="t-key">&quot;soft&quot;</span>: [<span class="t-string">&quot;Prefer gradual scaling over spikes&quot;</span>],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span>,
+      <span class="t-key">&quot;cost_exceeds_usd&quot;</span>: <span class="t-num">1000</span>
+    },
+    <span class="t-key">&quot;autonomy&quot;</span>: {
+      <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;advise&quot;</span>,
+      <span class="t-key">&quot;model_tier&quot;</span>: <span class="t-string">&quot;local_small&quot;</span>,
+      <span class="t-key">&quot;heartbeat_seconds&quot;</span>: <span class="t-num">300</span>,
+      <span class="t-key">&quot;budget&quot;</span>: {
+        <span class="t-key">&quot;max_actions_per_hour&quot;</span>: <span class="t-num">5</span>,
+        <span class="t-key">&quot;max_deliberation_calls_per_query&quot;</span>: <span class="t-num">1</span>,
+        <span class="t-key">&quot;require_approval_for&quot;</span>: [<span class="t-string">&quot;act&quot;</span>, <span class="t-string">&quot;propose&quot;</span>]
+      }
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h3 id="blk-813">What the repository contains</h3>
+<p>This repository is the canonical home for the protocol and its reference artifacts.</p>
+<h4 id="blk-815">Specification</h4>
+<ul><li><p><code>site/protocol.html</code> — current HTML specification</p></li><li><p><code>SPEC.md</code> — markdown protocol specification</p></li><li><p><code>prompts/PROTOCOL_PROMPT.md</code> — implementation-oriented protocol prompt</p></li></ul>
+<h4 id="blk-823">Schemas</h4>
+<ul><li><p><code>protocol/schema/v0.1.0/ampersand.schema.json</code> — canonical schema for <code>ampersand.json</code></p></li><li><p><code>protocol/schema/v0.1.0/capability-contract.schema.json</code> — schema for capability contracts</p></li><li><p><code>protocol/schema/v0.1.0/registry.schema.json</code> — schema for capability registry documents</p></li></ul>
+<h4 id="blk-831">Examples</h4>
+<ul><li><p><code>examples/infra-operator.ampersand.json</code></p></li><li><p><code>examples/research-agent.ampersand.json</code></p></li><li><p><code>examples/fleet-manager.ampersand.json</code></p></li><li><p><code>examples/customer-support.ampersand.json</code></p></li><li><p><code>examples/README.md</code> — explains the reference declarations and how to use them</p></li></ul>
+<h4 id="blk-843">Contracts</h4>
+<ul><li><p><code>contracts/v0.1.0/memory.graph.contract.json</code></p></li><li><p><code>contracts/v0.1.0/memory.vector.contract.json</code></p></li><li><p><code>contracts/v0.1.0/memory.episodic.contract.json</code></p></li><li><p><code>contracts/v0.1.0/reason.argument.contract.json</code></p></li><li><p><code>contracts/v0.1.0/reason.vote.contract.json</code></p></li><li><p><code>contracts/v0.1.0/reason.plan.contract.json</code></p></li><li><p><code>contracts/v0.1.0/reason.deliberate.contract.json</code></p></li><li><p><code>contracts/v0.1.0/reason.attend.contract.json</code></p></li><li><p><code>contracts/v0.1.0/time.anomaly.contract.json</code></p></li><li><p><code>contracts/v0.1.0/time.forecast.contract.json</code></p></li><li><p><code>contracts/v0.1.0/time.pattern.contract.json</code></p></li><li><p><code>contracts/v0.1.0/space.fleet.contract.json</code></p></li><li><p><code>contracts/v0.1.0/space.route.contract.json</code></p></li><li><p><code>contracts/v0.1.0/space.geofence.contract.json</code></p></li><li><p><code>contracts/v0.1.0/body.browser.contract.json</code></p></li><li><p><code>contracts/v0.1.0/body.os.contract.json</code></p></li></ul>
+<p>Schema-aligned contract examples for <code>&amp;reason.deliberate</code> and <code>&amp;reason.attend</code> are included in:</p>
+<ul><li><p><code>protocol/schema/v0.1.0/capability-contract.schema.json</code> (<code>examples</code> section)</p></li></ul>
+<h4 id="blk-881">Registry</h4>
+<ul><li><p><code>protocol/registry/v0.1.0/capabilities.registry.json</code> — capability registry artifact with subtype, provider, and contract metadata</p></li></ul>
+<h4 id="blk-885">Capability pages (status)</h4>
+<p>Capability-specific markdown pages are not currently published in this repository.</p>
+<p>Authoritative locations for capability details are:</p>
+<ul><li><p><code>SPEC.md</code> — normative protocol specification</p></li><li><p><code>prompts/PROTOCOL_PROMPT.md</code> — implementation-oriented prompt</p></li><li><p><code>contracts/v0.1.0/</code> — capability contract artifacts (including <code>reason.deliberate</code> and <code>reason.attend</code>)</p></li><li><p><code>protocol/schema/v0.1.0/capability-contract.schema.json</code> — contract schema and examples</p></li><li><p><code>protocol/registry/v0.1.0/capabilities.registry.json</code> — subtype/provider registry mappings</p></li></ul>
+<h4 id="blk-899">Reference implementation</h4>
+<ul><li><p><code>reference/elixir/ampersand_core/</code> — minimal Elixir implementation with:</p></li><li><p>schema validation</p></li><li><p>capability composition</p></li><li><p>contract checking</p></li><li><p>MCP generation</p></li><li><p>A2A generation</p></li><li><p><code>ampersand</code> CLI</p></li></ul>
+<h4 id="blk-915">Documentation</h4>
+<ul><li><p><code>docs/quickstart.md</code></p></li><li><p><code>docs/runtime-walkthrough.md</code></p></li><li><p><code>docs/positioning.md</code></p></li><li><p><code>docs/faq.md</code></p></li><li><p><code>docs/comparison-table.md</code></p></li></ul>
+<h4 id="blk-927">Ecosystem SDKs and tooling</h4>
+<ul><li><p><code>sdk/npm/validate/</code> — <code>@ampersand-protocol/validate</code> npm validator + CLI</p></li><li><p><code>sdk/python/ampersand_protocol/</code> — <code>ampersand-protocol</code> Python SDK + CLI</p></li><li><p><code>.github/actions/ampersand-validate/</code> — reusable GitHub Action for declaration validation/composition/check</p></li><li><p><code>vscode/ampersand-json/</code> — VS Code schema/snippet extension for <code>*.ampersand.json</code></p></li><li><p><code>playground/</code> — browser playground for live validation/composition/MCP/A2A previews</p></li></ul>
+<h4 id="blk-939">Website source</h4>
+<ul><li><p><code>site/index.html</code></p></li><li><p><code>site/protocol.html</code></p></li><li><p><code>site/portfolio_company_complete_research.html</code></p></li></ul>
+<h3 id="blk-947">Quick start</h3>
+<blockquote><p><strong>Note — the `box-and-box` name.</strong> It now belongs to the <strong>governance kernel</strong> of the [&amp;] stack (the eight-rung arithmetic ladder · 103 property-tested laws — see <code>opensentience.org/box-and-box/</code> and <code>https://ampersandboxdesign.com</code>). The previous <code>box-and-box</code> — the v0.1.0 [&amp;] Protocol validator/composer MCP server — was removed in the clean-break stack upgrade. Validate and compose <code>*.ampersand.json</code> specs via the Elixir reference CLI (below) or the language SDKs instead.</p></blockquote>
+<h4 id="blk-950">Option A — MCP servers (three-protocol stack)</h4>
+<p>The [&amp;] ecosystem ships three MCP servers, each installing identically with <code>npx</code> and carrying its own embedded SQLite + sqlite-vec database:</p>
+<pre data-lang="jsonc"><code><span class="t-comment">// .mcp.json</span>
+{
+  <span class="t-key">&quot;mcpServers&quot;</span>: {
+    <span class="t-key">&quot;graphonomous&quot;</span>: { <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;npx&quot;</span>, <span class="t-key">&quot;args&quot;</span>: [<span class="t-string">&quot;-y&quot;</span>, <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-string">&quot;--db&quot;</span>, <span class="t-string">&quot;~/.graphonomous/knowledge.db&quot;</span>] },
+    <span class="t-key">&quot;prism&quot;</span>:        { <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;npx&quot;</span>, <span class="t-key">&quot;args&quot;</span>: [<span class="t-string">&quot;-y&quot;</span>, <span class="t-string">&quot;os-prism&quot;</span>,     <span class="t-string">&quot;--db&quot;</span>, <span class="t-string">&quot;~/.os-prism/benchmarks.db&quot;</span>] },
+    <span class="t-key">&quot;pulse&quot;</span>:        { <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;npx&quot;</span>, <span class="t-key">&quot;args&quot;</span>: [<span class="t-string">&quot;-y&quot;</span>, <span class="t-string">&quot;os-pulse&quot;</span>,     <span class="t-string">&quot;--db&quot;</span>, <span class="t-string">&quot;~/.os-pulse/manifests.db&quot;</span>] }
+  }
+}</code></pre>
+<h4 id="blk-953">Option B — Elixir reference CLI (for protocol development)</h4>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> reference/elixir/ampersand_core
+mix escript.build
+./ampersand validate ../../../examples/infra-operator.ampersand.json</code></pre>
+<h4 id="blk-955">2. Check composition</h4>
+<pre data-lang="bash"><code>./ampersand compose ../../../examples/infra-operator.ampersand.json</code></pre>
+<h4 id="blk-957">3. Generate MCP config</h4>
+<pre data-lang="bash"><code>./ampersand generate mcp ../../../examples/infra-operator.ampersand.json</code></pre>
+<h4 id="blk-959">4. Generate an A2A agent card</h4>
+<pre data-lang="bash"><code>./ampersand generate a2a ../../../examples/infra-operator.ampersand.json</code></pre>
+<h3 id="blk-961">Current implementation status</h3>
+<p>The repository currently includes working foundations for:</p>
+<ul><li><p>canonical protocol schema + contract + registry artifacts</p></li><li><p>validating example declarations</p></li><li><p>Elixir reference runtime (validation, composition algebra, contract checks, runtime planning/execution, governance, provenance)</p></li><li><p>MCP config generation and A2A card generation</p></li><li><p>CLI commands for validate / compose / check / plan / run / generate / registry / diff</p></li><li><p>ecosystem scaffolds for npm, Python, CI action, VS Code, and playground workflows</p></li></ul>
+<p>This is still an early protocol implementation, but it is grounded in machine-checkable artifacts and now includes cross-ecosystem entry points for adoption.</p>
+<h3 id="blk-977">Design principles</h3>
+<h4 id="blk-978">1. Capabilities are interfaces, not products</h4>
+<p><code>&amp;memory.graph</code> is a protocol capability. <code>graphonomous</code> is one provider that may satisfy it.</p>
+<h4 id="blk-980">2. Composition should be deterministic</h4>
+<p>Capability sets should behave like algebraic sets: order and duplication should not change the result.</p>
+<h4 id="blk-982">3. Governance belongs in data</h4>
+<p>Constraints should be portable across implementations, not trapped in one runtime.</p>
+<h4 id="blk-984">4. Provenance is part of the protocol</h4>
+<p>A conforming implementation should preserve where context came from and how decisions were derived.</p>
+<h4 id="blk-986">5. The protocol complements the ecosystem</h4>
+<p>[&amp;] does not replace MCP or A2A.</p>
+<p>It compiles into them.</p>
+<h3 id="blk-989">Roadmap</h3>
+<p>Roadmap (implementation phases):</p>
+<h4 id="blk-991">Phase 1 — adoption unblockers</h4>
+<ol><li><p>quickstart docs with reproducible CLI output</p></li><li><p>escript build verification</p></li><li><p>provider <code>auto</code> resolution</p></li><li><p>second real provider resolver</p></li><li><p>runtime governance enforcement</p></li></ol>
+<h4 id="blk-1003">Phase 2 — protocol story hardening</h4>
+<ol start="6"><li><p>multi-file compose in CLI</p></li><li><p>pipeline-in-declaration schema + named pipeline CLI support</p></li><li><p>generate command output writing + MCP format flag</p></li><li><p>declaration diff command</p></li><li><p>property-based tests for composition algebra</p></li></ol>
+<h4 id="blk-1015">Phase 3 — ecosystem growth</h4>
+<ol start="11"><li><p>npm validator package (<code>@ampersand-protocol/validate</code>)</p></li><li><p>Python SDK (<code>ampersand-protocol</code>)</p></li><li><p>GitHub Action for CI declaration validation</p></li><li><p>VS Code extension for <code>*.ampersand.json</code></p></li><li><p>interactive web playground</p></li></ol>
+<h3 id="blk-1027">Intended audience</h3>
+<p>This project is for:</p>
+<ul><li><p>protocol designers</p></li><li><p>agent framework authors</p></li><li><p>infrastructure engineers</p></li><li><p>AI platform teams</p></li><li><p>researchers working on memory, reasoning, planning, provenance, and agent safety</p></li></ul>
+<h3 id="blk-1040">Status</h3>
+<p><strong>Status:</strong> active design + implementation <strong>Scope:</strong> open protocol + reference implementation <strong>Goal:</strong> a portable composition layer for the agent ecosystem</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-727" class="lvl2">Why this exists</a><a href="#blk-753" class="lvl2">Core model</a><a href="#blk-811" class="lvl2">Example declaration</a><a href="#blk-813" class="lvl2">What the repository contains</a><a href="#blk-815" class="lvl3">Specification</a><a href="#blk-823" class="lvl3">Schemas</a><a href="#blk-831" class="lvl3">Examples</a><a href="#blk-843" class="lvl3">Contracts</a><a href="#blk-881" class="lvl3">Registry</a><a href="#blk-885" class="lvl3">Capability pages (status)</a><a href="#blk-899" class="lvl3">Reference implementation</a><a href="#blk-915" class="lvl3">Documentation</a><a href="#blk-927" class="lvl3">Ecosystem SDKs and tooling</a><a href="#blk-939" class="lvl3">Website source</a><a href="#blk-947" class="lvl2">Quick start</a><a href="#blk-950" class="lvl3">Option A — MCP servers (three-protocol stack)</a><a href="#blk-953" class="lvl3">Option B — Elixir reference CLI (for protocol development)</a><a href="#blk-955" class="lvl3">2. Check composition</a><a href="#blk-957" class="lvl3">3. Generate MCP config</a><a href="#blk-959" class="lvl3">4. Generate an A2A agent card</a><a href="#blk-961" class="lvl2">Current implementation status</a><a href="#blk-977" class="lvl2">Design principles</a><a href="#blk-978" class="lvl3">1. Capabilities are interfaces, not products</a><a href="#blk-980" class="lvl3">2. Composition should be deterministic</a><a href="#blk-982" class="lvl3">3. Governance belongs in data</a><a href="#blk-984" class="lvl3">4. Provenance is part of the protocol</a><a href="#blk-986" class="lvl3">5. The protocol complements the ecosystem</a><a href="#blk-989" class="lvl2">Roadmap</a><a href="#blk-991" class="lvl3">Phase 1 — adoption unblockers</a><a href="#blk-1003" class="lvl3">Phase 2 — protocol story hardening</a><a href="#blk-1015" class="lvl3">Phase 3 — ecosystem growth</a><a href="#blk-1027" class="lvl2">Intended audience</a><a href="#blk-1040" class="lvl2">Status</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/AGENTS.md/">[&amp;] Protocol — AmpersandBoxDesign</a><a href="/AmpersandBoxDesign/CLAUDE.md/">[&amp;] Protocol — AmpersandBoxDesign</a><a href="/AmpersandBoxDesign/CONTRIBUTING.md/">Contributing to the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/DEPLOY.md/">DEPLOY.md</a><a href="/AmpersandBoxDesign/SPEC.md/">[&amp;] Protocol Specification</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera7bh6jhregq2vkygkoryur4xl4xjceir6nelweysdex6ytksjjlca</div></div></div>
+</div></div>
+</body></html>

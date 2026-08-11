@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>FleetPrompt — The Open Agent Marketplace · fleetprompt.com · Ampersand Box</title>
+<meta name="description" content="Discover, publish, and install production-ready AI agents. Built on trust scores, versioned manifests, and one-click deployment.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/fleetprompt.com/CLAUDE.md/">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FleetPrompt — The Open Agent Marketplace">
+<meta property="og:description" content="Discover, publish, and install production-ready AI agents. Built on trust scores, versioned manifests, and one-click deployment.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/fleetprompt.com/CLAUDE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"FleetPrompt — The Open Agent Marketplace","name":"FleetPrompt — The Open Agent Marketplace","description":"Discover, publish, and install production-ready AI agents. Built on trust scores, versioned manifests, and one-click deployment.","url":"https://docs.ampersandboxdesign.com/fleetprompt.com/CLAUDE.md/","identifier":"bagaaieraf72q3abqzju336ns4hodwujsc2hgb7cuwqpnxg62y3c6obj7wpua","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"fleetprompt.com","url":"https://docs.ampersandboxdesign.com/fleetprompt.com/"},"articleSection":"fleetprompt.com","hasPart":[{"@type":"WebPageElement","name":"Source-of-truth spec"},{"@type":"WebPageElement","name":"Stack"},{"@type":"WebPageElement","name":"Build commands"},{"@type":"WebPageElement","name":"Key modules"},{"@type":"WebPageElement","name":"Supabase schema"},{"@type":"WebPageElement","name":"LiveView pages"},{"@type":"WebPageElement","name":"API endpoints"},{"@type":"WebPageElement","name":"Role in [&] Ecosystem"},{"@type":"WebPageElement","name":"Key constraints"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"fleetprompt.com","item":"https://docs.ampersandboxdesign.com/fleetprompt.com/"},{"@type":"ListItem","position":3,"name":"CLAUDE.md","item":"https://docs.ampersandboxdesign.com/fleetprompt.com/CLAUDE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">fleetprompt.com</span>
+<span class="path">fleetprompt.com/CLAUDE.md</span>
+
+</div></div>
+<div class="lead">Discover, publish, and install production-ready AI agents. Built on trust scores, versioned manifests, and one-click deployment.</div>
+<div class="prose"><h1 id="blk-60337">FleetPrompt — The Open Agent Marketplace</h1>
+<p>Discover, publish, and install production-ready AI agents. Built on trust scores, versioned manifests, and one-click deployment.</p>
+<h3 id="blk-60339">Source-of-truth spec</h3>
+<ul><li><p><code>docs/spec/README.md</code> — FleetPrompt technical specification</p></li><li><p><code>prompts/BUILD.md</code> — Implementation build prompt (9 phases)</p></li></ul>
+<h3 id="blk-60345">Stack</h3>
+<pre><code>Language:     Elixir 1.17+ / OTP 27
+Framework:    Phoenix 1.8 (LiveView for UI, PubSub for trust broadcasts)
+Database:     PostgreSQL via shared Supabase (fleet.* schema, migrations 030-039)
+Search:       pg_trgm + ts_vector (no external search infra)
+Hot Cache:    ETS (:fp_manifests, :fp_trust_scores, :fp_search_index, :fp_categories)
+Background:   Oban (trust recompute, webhook delivery, search index refresh)
+Auth:         Supabase Auth (shared [&amp;] ecosystem — amp.profiles, amp.workspaces)
+Deploy:       Mix release + Docker on Fly.io</code></pre>
+<h3 id="blk-60347">Build commands</h3>
+<pre data-lang="bash"><code>mix deps.get
+mix compile<span class="t-flag"> --warnings-as-errors</span>
+mix format<span class="t-flag"> --check-formatted</span>
+mix test                          <span class="t-comment"># requires running Supabase for DB tests</span>
+mix test test/fleet_prompt/       <span class="t-comment"># unit tests (no DB required for most)</span></code></pre>
+<h3 id="blk-60349">Key modules</h3>
+<table><thead><tr><th>Module</th><th>Purpose</th></tr></thead><tbody><tr><td><code>FleetPrompt.Registry</code></td><td>Agent + manifest CRUD, version immutability, status transitions</td></tr><tr><td><code>FleetPrompt.Trust.Engine</code></td><td>4-signal weighted trust computation (test 30%, spec 25%, usage 25%, audit 20%)</td></tr><tr><td><code>FleetPrompt.Trust.Worker</code></td><td>GenServer per agent — recomputes, caches in ETS, broadcasts via PubSub</td></tr><tr><td><code>FleetPrompt.Trust.Supervisor</code></td><td>DynamicSupervisor managing TrustWorkers</td></tr><tr><td><code>FleetPrompt.Search</code></td><td>pg_trgm + ts_vector full-text search with filters</td></tr><tr><td><code>FleetPrompt.Forks</code></td><td>Fork-and-customize with provenance tracking</td></tr><tr><td><code>FleetPrompt.PipelineIntake</code></td><td>ConsolidationEvent processing from Agentelic</td></tr><tr><td><code>FleetPrompt.InstallEngine</code></td><td>Install flow with permission checks</td></tr><tr><td><code>FleetPrompt.AuditWriter</code></td><td>Append-only audit event recording</td></tr><tr><td><code>FleetPrompt.WebhookDispatcher</code></td><td>Oban worker for async webhook delivery</td></tr><tr><td><code>FleetPrompt.Cache</code></td><td>ETS GenServer with 4 named tables</td></tr><tr><td><code>FleetPrompt.MCP.Server</code></td><td>MCP JSON-RPC server (7 tools)</td></tr></tbody></table>
+<h3 id="blk-60377">Supabase schema</h3>
+<p>Tables live in <code>fleet.*</code> schema (migrations 030-039 in <code>ampersand-supabase/migrations/</code>):</p>
+<ul><li><p><code>fleet.publishers</code> — marketplace publisher profiles</p></li><li><p><code>fleet.agents</code> — agent listings with search_vector</p></li><li><p><code>fleet.agent_versions</code> — semver-versioned releases with JSONB manifest</p></li><li><p><code>fleet.manifests</code> — typed manifest records (dedicated table, migration 032)</p></li><li><p><code>fleet.trust_scores</code> — computed trust per agent</p></li><li><p><code>fleet.installs</code> — installation records</p></li><li><p><code>fleet.categories</code> — agent taxonomy</p></li><li><p><code>fleet.audit_events</code> — append-only audit log</p></li></ul>
+<h3 id="blk-60396">LiveView pages</h3>
+<ul><li><p><code>/</code> — SearchLive (⌘K agent search with real-time results)</p></li><li><p><code>/agents/:id</code> — AgentDetailLive (manifest, trust, version history, permissions)</p></li><li><p><code>/publishers</code> — PublisherLive (publisher listing and profiles)</p></li><li><p><code>/trust</code> — TrustDashboardLive (trust scores with tier filtering, PubSub updates)</p></li></ul>
+<h3 id="blk-60406">API endpoints</h3>
+<ul><li><p><code>GET /api/health</code> — health check</p></li><li><p><code>GET /api/agents/search?q=...</code> — search with min_trust, category, runtime filters</p></li><li><p><code>GET /api/agents/:id</code> — agent detail</p></li><li><p><code>GET /api/agents/:id/manifests</code> — version history</p></li><li><p><code>GET /api/agents/:id/manifests/:version</code> — specific manifest</p></li><li><p><code>POST /api/pipeline/intake</code> — Agentelic ConsolidationEvent intake</p></li></ul>
+<h3 id="blk-60420">Role in [&amp;] Ecosystem</h3>
+<p>FleetPrompt is the <strong>distribution layer</strong> and <strong>canonical trust broker</strong>:</p>
+<pre><code>SpecPrompt (spec) → Agentelic (build) → OS-008 (enforce) → FleetPrompt (distribute) → RuneFort (observe)</code></pre>
+<h3 id="blk-60423">Key constraints</h3>
+<ul><li><p>Trust scores are computed, never self-reported (4-signal weighted)</p></li><li><p>Published versions are immutable (fix via new version)</p></li><li><p>Fork trust starts at 0 (forks earn trust independently)</p></li><li><p>FleetPrompt does NOT make LLM calls (trust computation is deterministic)</p></li><li><p>Install requires explicit permission acceptance</p></li><li><p>All tables workspace-scoped with RLS</p></li></ul></div>
+<p class="src"><a href="/#/fleetprompt.com/CLAUDE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-60339" class="lvl2">Source-of-truth spec</a><a href="#blk-60345" class="lvl2">Stack</a><a href="#blk-60347" class="lvl2">Build commands</a><a href="#blk-60349" class="lvl2">Key modules</a><a href="#blk-60377" class="lvl2">Supabase schema</a><a href="#blk-60396" class="lvl2">LiveView pages</a><a href="#blk-60406" class="lvl2">API endpoints</a><a href="#blk-60420" class="lvl2">Role in [&amp;] Ecosystem</a><a href="#blk-60423" class="lvl2">Key constraints</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/fleetprompt.com/AGENTS.md/">FleetPrompt — Agent Interface</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraf72q3abqzju336ns4hodwujsc2hgb7cuwqpnxg62y3c6obj7wpua</div></div></div>
+</div></div>
+</body></html>

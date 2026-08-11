@@ -1,0 +1,291 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>webhost.systems — MASTER ENGINEERING SPEC (v1) · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="Version: 1.1 Status: Implementation-ready draft Audience: Engineering (primary), Product/Security (secondary) Last updated: 2026-03-28">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/00_MASTER_SPEC.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webhost.systems — MASTER ENGINEERING SPEC (v1)">
+<meta property="og:description" content="Version: 1.1 Status: Implementation-ready draft Audience: Engineering (primary), Product/Security (secondary) Last updated: 2026-03-28">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/00_MASTER_SPEC.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"webhost.systems — MASTER ENGINEERING SPEC (v1)","name":"webhost.systems — MASTER ENGINEERING SPEC (v1)","description":"Version: 1.1 Status: Implementation-ready draft Audience: Engineering (primary), Product/Security (secondary) Last updated: 2026-03-28","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/00_MASTER_SPEC.md/","identifier":"bagaaieragmvfg4bsampuarvq7mnds2g64uvewzxkdn7i5anwj3emj5iek37q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"0) Executive summary"},{"@type":"WebPageElement","name":"1) Scope, goals, non-goals"},{"@type":"WebPageElement","name":"1.1 Goals (MVP -> v1)"},{"@type":"WebPageElement","name":"1.2 Non-goals (explicit)"},{"@type":"WebPageElement","name":"1.3 Assumptions"},{"@type":"WebPageElement","name":"2) Key decisions (ADR-style summaries)"},{"@type":"WebPageElement","name":"ADR-0001: Multi-runtime architecture"},{"@type":"WebPageElement","name":"ADR-0002: Supabase for control plane"},{"@type":"WebPageElement","name":"ADR-0003: Secrets strategy"},{"@type":"WebPageElement","name":"ADR-0004: Usage and cost"},{"@type":"WebPageElement","name":"ADR-0005: Deployment immutability + active pointer"},{"@type":"WebPageElement","name":"3) Glossary (canonical terms)"},{"@type":"WebPageElement","name":"4) System architecture"},{"@type":"WebPageElement","name":"4.1 High-level components"},{"@type":"WebPageElement","name":"4.2 Data plane vs control plane boundary (hard rule)"},{"@type":"WebPageElement","name":"4.3 Request flows (canonical)"},{"@type":"WebPageElement","name":"Flow A — Create agent"},{"@type":"WebPageElement","name":"Flow B — Deploy agent"},{"@type":"WebPageElement","name":"Flow C — Invoke agent"},{"@type":"WebPageElement","name":"Flow D — Usage aggregation / billing"},{"@type":"WebPageElement","name":"5) Product requirements (engineering-focused)"},{"@type":"WebPageElement","name":"5.1 Agent management"},{"@type":"WebPageElement","name":"5.2 Deployments"},{"@type":"WebPageElement","name":"5.3 Invocation semantics"},{"@type":"WebPageElement","name":"5.4 Observability"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/"},{"@type":"ListItem","position":5,"name":"00_MASTER_SPEC.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/00_MASTER_SPEC.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/docs/spec/00_MASTER_SPEC.md</span>
+
+</div></div>
+<div class="lead">Version: 1.1 Status: Implementation-ready draft Audience: Engineering (primary), Product/Security (secondary) Last updated: 2026-03-28</div>
+<div class="prose"><h1 id="blk-44239">webhost.systems — MASTER ENGINEERING SPEC (v1)</h1>
+<p>Version: 1.1 Status: Implementation-ready draft Audience: Engineering (primary), Product/Security (secondary) Last updated: 2026-03-28</p>
+<blockquote><p>Goal: This document is intended to be sufficient context for an engineer (or coding agent) to implement webhost.systems from scratch without needing additional specs.</p></blockquote>
+<h3 id="blk-44243">0) Executive summary</h3>
+<p>webhost.systems is a multi-runtime AI agent deployment and hosting platform. It provides:</p>
+<ul><li><p>a <strong>control plane</strong> (UI + APIs) for creating agents, deploying code, managing configuration/secrets, viewing logs/metrics, and billing;</p></li><li><p>a <strong>data plane</strong> for executing agents on one of multiple runtime providers:</p></li><li><p><strong>Cloudflare Workers + Durable Objects</strong> (default; global edge, strong economics; TypeScript-native),</p></li><li><p><strong>AWS Bedrock AgentCore</strong> (premium/enterprise; long-running sessions, enterprise isolation and built-in tools ecosystem; <strong>TypeScript-native</strong> via <code>@aws-sdk/client-bedrock-agentcore</code> (runtime/control) and <code>bedrock-agentcore</code> (tools ecosystem, incl. Code Interpreter + Browser integrations)).</p></li></ul>
+<p>A third system, <strong>Supabase (PostgreSQL DB + Edge Functions + Realtime + Auth)</strong>, is used for control plane logic and dashboard automation—not primary agent hosting.</p>
+<p>Core differentiator: <strong>runtime portability under a single abstraction</strong>, plus <strong>first-class metering and limit enforcement</strong>, delivered with a <strong>TypeScript-first, end-to-end developer experience</strong>.</p>
+<h3 id="blk-44256">1) Scope, goals, non-goals</h3>
+<h4 id="blk-44257">1.1 Goals (MVP -&gt; v1)</h4>
+<p>The platform MUST support:</p>
+<ol><li><p><strong>User auth</strong> and per-tenant isolation for all data and actions.</p></li><li><p><strong>Agent CRUD</strong>: create/edit/delete agents with runtime selection.</p></li><li><p><strong>Deployment pipeline</strong>:</p></li></ol>
+<ul><li><p>upload/pull code bundle,</p></li><li><p>validate and deploy to selected runtime provider,</p></li><li><p>maintain immutable deployment history,</p></li><li><p>support rollback (set active deployment).</p></li></ul>
+<ol start="4"><li><p><strong>Invocation</strong>:</p></li></ol>
+<ul><li><p>provide a stable invocation API (HTTP/SDK-ready),</p></li><li><p>support both stateless and sessionful invocations (session id as opaque string),</p></li><li><p>optional streaming (SHOULD where feasible across both runtimes; MAY be emulated by the gateway when a provider does not support true streaming).</p></li></ul>
+<ol start="5"><li><p><strong>Observability</strong>:</p></li></ol>
+<ul><li><p>per-agent and per-deployment metrics (requests, tokens, compute ms, errors),</p></li><li><p>logs access (at least basic; better with structured events).</p></li></ul>
+<ol start="6"><li><p><strong>Billing &amp; limits</strong>:</p></li></ol>
+<ul><li><p>subscription tiers,</p></li><li><p>plan enforcement (hard limit at MVP),</p></li><li><p>billing provider integration (checkout + webhook activation).</p></li></ul>
+<ol start="7"><li><p><strong>Dashboard assistant</strong> (optional but recommended):</p></li></ol>
+<ul><li><p>can deploy agents and answer usage questions,</p></li><li><p>scoped to the authenticated user resources only,</p></li><li><p>MUST NOT run untrusted customer agent code.</p></li></ul>
+<h4 id="blk-44313">1.2 Non-goals (explicit)</h4>
+<ul><li><p>Building an LLM provider (users bring their own model credentials or use runtime-native integrations).</p></li><li><p>Running arbitrary customer containers on the control plane.</p></li><li><p>Perfect cost accuracy at MVP (cost can be &quot;estimated&quot; until reconciled with provider billing exports).</p></li><li><p>Team/org/roles/SCIM in MVP (can be post-MVP unless required).</p></li></ul>
+<h4 id="blk-44323">1.3 Assumptions</h4>
+<ul><li><p>Control plane uses <strong>Supabase</strong> as primary database (PostgreSQL), backend functions (Edge Functions + PostgREST RPC), and realtime subscriptions (or an equivalent serverless backend; if substituted, preserve schema + invariants).</p></li><li><p>Auth uses <strong>Supabase Auth</strong> (email + OAuth providers: Google, GitHub); provides JWT tokens, user management, and Row-Level Security (RLS) integration out of the box.</p></li><li><p>Billing uses <strong>LemonSqueezy</strong> (or equivalent); spec assumes webhook-driven entitlement.</p></li><li><p>Runtime providers initially: Cloudflare Workers/DO and AWS AgentCore.</p></li></ul>
+<h3 id="blk-44333">2) Key decisions (ADR-style summaries)</h3>
+<h4 id="blk-44334">ADR-0001: Multi-runtime architecture</h4>
+<p><strong>Decision:</strong> Support multiple runtime providers behind a single abstraction. <strong>Rationale:</strong> Avoid lock-in, optimize for cost/global edge for most users, offer enterprise-grade long-running isolation for premium customers. <strong>Consequences:</strong> Requires a Runtime Provider Interface (RPI), consistent telemetry schema, and deployment packaging that can target multiple runtimes.</p>
+<h4 id="blk-44336">ADR-0002: Supabase for control plane</h4>
+<p><strong>Decision:</strong> Use Supabase (PostgreSQL + Edge Functions + Realtime) for data + backend functions; optional dashboard assistant for automation. <strong>Rationale:</strong> Full PostgreSQL power (transactions, RLS, foreign keys, pg_cron), built-in auth, realtime subscriptions, Edge Functions for server-only logic, Supabase Vault for encrypted secret storage. Single platform replaces what previously required Convex + Clerk. <strong>Constraint:</strong> Supabase Edge Functions are not used for primary agent hosting due to runtime/time limits and differing execution model.</p>
+<h4 id="blk-44338">ADR-0003: Secrets strategy</h4>
+<p><strong>Decision:</strong> Do not store plaintext secrets in the primary database. Use <strong>Supabase Vault</strong> for encrypted secret storage and push secret values to provider secret mechanisms at deploy time. <strong>Rationale:</strong> Reduce breach impact and align with best practices.</p>
+<h4 id="blk-44340">ADR-0004: Usage and cost</h4>
+<p><strong>Decision:</strong> Capture near-real-time usage events; compute <strong>estimated cost</strong> via provider-specific calculators at MVP; add reconciliation later. <strong>Rationale:</strong> Enables limits, billing UX, and pricing iteration early.</p>
+<h4 id="blk-44342">ADR-0005: Deployment immutability + active pointer</h4>
+<p><strong>Decision:</strong> Deployments are immutable records; an agent has an <code>activeDeploymentId</code> pointer. <strong>Rationale:</strong> Rollbacks, audits, reproducibility, and safer operations.</p>
+<h3 id="blk-44344">3) Glossary (canonical terms)</h3>
+<ul><li><p><strong>User</strong>: authenticated account holder (Supabase Auth user).</p></li><li><p><strong>Agent</strong>: a logical AI service owned by a user; has a selected runtime provider and configuration.</p></li><li><p><strong>Deployment</strong>: immutable version of an agent published to a runtime provider.</p></li><li><p><strong>Runtime Provider</strong>: execution environment; initially <code>cloudflare</code> and <code>agentcore</code>.</p></li><li><p><strong>Invocation</strong>: a request to execute an agent (stateless or sessionful).</p></li><li><p><strong>Session</strong>: provider-specific stateful context; represented as opaque <code>sessionId</code>.</p></li><li><p><strong>Control Plane</strong>: dashboard + APIs + DB + billing + deployment orchestration.</p></li><li><p><strong>Data Plane</strong>: runtime execution environments.</p></li><li><p><strong>Telemetry Event</strong>: per-invocation metrics emitted from data plane to control plane.</p></li><li><p><strong>Edge Function</strong>: Supabase Edge Function (Deno-based); used for server-only control plane operations.</p></li><li><p><strong>RLS</strong>: Row-Level Security; PostgreSQL policy enforcement for tenant isolation.</p></li></ul>
+<h3 id="blk-44368">4) System architecture</h3>
+<h4 id="blk-44369">4.1 High-level components</h4>
+<ol><li><p><strong>Web UI</strong> (Vite + React)</p></li></ol>
+<ul><li><p>Agents list/detail</p></li><li><p>Deploy flow</p></li><li><p>Logs/metrics view</p></li><li><p>Billing/plan view</p></li></ul>
+<ol start="2"><li><p><strong>Auth provider</strong> (Supabase Auth — email, Google OAuth, GitHub OAuth)</p></li><li><p><strong>Control plane backend</strong> (Supabase: PostgreSQL + PostgREST + Edge Functions)</p></li></ol>
+<ul><li><p>agent CRUD (PostgREST / RPC functions)</p></li><li><p>deployment orchestration (Edge Functions)</p></li><li><p>billing entitlement + enforcement (Edge Functions + pg_cron)</p></li><li><p>telemetry ingestion + aggregation (Edge Functions + pg_cron)</p></li><li><p>dashboard assistant (optional)</p></li></ul>
+<ol start="4"><li><p><strong>Realtime</strong> (Supabase Realtime — PostgreSQL LISTEN/NOTIFY)</p></li></ol>
+<ul><li><p>Dashboard live updates for deployment status, metrics</p></li></ul>
+<ol start="5"><li><p><strong>Runtime providers</strong></p></li></ol>
+<ul><li><p>Cloudflare Workers + Durable Objects (TypeScript)</p></li><li><p>AWS Bedrock AgentCore (TypeScript; AWS SDK: <code>@aws-sdk/client-bedrock-agentcore</code>; tools SDK: <code>bedrock-agentcore</code>)</p></li></ul>
+<ol start="6"><li><p><strong>Billing provider</strong></p></li></ol>
+<ul><li><p>checkout sessions</p></li><li><p>webhooks for subscription lifecycle</p></li></ul>
+<h4 id="blk-44420">4.2 Data plane vs control plane boundary (hard rule)</h4>
+<ul><li><p>Control plane:</p></li><li><p>stores metadata and non-secret config</p></li><li><p>coordinates deployments</p></li><li><p>authorizes invocations</p></li><li><p>aggregates usage/billing</p></li><li><p>Data plane:</p></li><li><p>executes customer agent code</p></li><li><p>emits telemetry events</p></li><li><p>never has broad access to other tenants' data</p></li></ul>
+<h4 id="blk-44440">4.3 Request flows (canonical)</h4>
+<h5 id="blk-44441">Flow A — Create agent</h5>
+<ol><li><p>UI calls control plane: <code>POST /rest/v1/rpc/create_agent</code></p></li><li><p>Control plane creates <code>agents</code> row (status: <code>created</code>)</p></li><li><p>UI shows agent detail page</p></li></ol>
+<h5 id="blk-44449">Flow B — Deploy agent</h5>
+<ol><li><p>UI uploads bundle OR provides repo reference (MVP can start with uploaded bundle)</p></li><li><p>UI calls Edge Function: <code>POST /functions/v1/deploy</code></p></li><li><p>Edge Function:</p></li></ol>
+<ul><li><p>validates inputs (size, required files, allowed runtime)</p></li><li><p>creates immutable <code>deployments</code> row (status: <code>deploying</code>)</p></li><li><p>invokes runtime provider adapter to deploy</p></li><li><p>updates deployment status; sets <code>agents.active_deployment_id</code> on success</p></li></ul>
+<h5 id="blk-44466">Flow C — Invoke agent</h5>
+<ol><li><p>Client calls <code>POST /functions/v1/invoke/:agentId</code> (Edge Function gateway)</p></li><li><p>Edge Function:</p></li></ol>
+<ul><li><p>authenticates/authorizes via Supabase Auth JWT</p></li><li><p>checks plan limits and agent status</p></li><li><p>routes to runtime provider invocation endpoint</p></li></ul>
+<ol start="3"><li><p>Data plane runs agent, returns response (optionally streaming)</p></li><li><p>Data plane emits telemetry event to control plane ingestion endpoint</p></li></ol>
+<h5 id="blk-44484">Flow D — Usage aggregation / billing</h5>
+<ol><li><p>Telemetry events stored in <code>metrics_events</code> table (raw)</p></li><li><p>pg_cron scheduled job aggregates into <code>billing_usage</code> by user + period</p></li><li><p>UI reads <code>billing_usage</code> and shows limits/overages</p></li></ol>
+<h3 id="blk-44492">5) Product requirements (engineering-focused)</h3>
+<h4 id="blk-44493">5.1 Agent management</h4>
+<p>MUST:</p>
+<ul><li><p>Create agent with:</p></li><li><p><code>name</code> (unique per user, or unique within user namespace),</p></li><li><p><code>description</code> (optional),</p></li><li><p><code>framework</code> (enum/string; informational at MVP),</p></li><li><p><code>runtime_provider</code> (<code>cloudflare</code> | <code>agentcore</code>),</p></li><li><p><code>env_var_keys</code> (list of keys; values handled separately via Supabase Vault),</p></li><li><p><code>status</code> (<code>created</code> | <code>deploying</code> | <code>active</code> | <code>error</code> | <code>disabled</code>).</p></li><li><p>Edit agent metadata (name/description/framework/default runtime settings).</p></li><li><p>Disable an agent (invocations rejected).</p></li></ul>
+<p>SHOULD:</p>
+<ul><li><p>&quot;Clone agent&quot; (copy config + latest deployment reference).</p></li></ul>
+<h4 id="blk-44518">5.2 Deployments</h4>
+<p>MUST:</p>
+<ul><li><p>Keep immutable deployment history.</p></li><li><p>Store deployment inputs:</p></li><li><p><code>version</code> (semver or monotonic int),</p></li><li><p><code>commit_hash</code> (optional),</p></li><li><p><code>runtime_provider</code>,</p></li><li><p>provider-specific reference fields,</p></li><li><p>timestamps, status transitions, and error messages.</p></li><li><p>Support rollback by switching <code>active_deployment_id</code>.</p></li></ul>
+<h4 id="blk-44537">5.3 Invocation semantics</h4>
+<p>MUST:</p>
+<ul><li><p>Provide a single canonical request shape for invocations:</p></li><li><p><code>agentId</code></p></li><li><p><code>input</code> (see section 7)</p></li><li><p><code>sessionId</code> (optional)</p></li><li><p><code>metadata</code> (optional; tracing info)</p></li><li><p>Return:</p></li><li><p><code>output</code> (text + optional structured data)</p></li><li><p><code>sessionId</code> (if created/continued)</p></li><li><p><code>usage</code> (tokens/compute/time/toolCalls if available)</p></li><li><p><code>traceId</code></p></li></ul>
+<p>MAY:</p>
+<ul><li><p>Support streaming responses via SSE or chunked fetch (recommended).</p></li></ul>
+<h4 id="blk-44564">5.4 Observability</h4>
+<p>MUST:</p>
+<ul><li><p>Capture and display:</p></li><li><p>requests count</p></li><li><p>token usage (actual if provider reports; otherwise estimated)</p></li><li><p>compute ms</p></li><li><p>errors count (with category)</p></li><li><p>runtime provider</p></li><li><p>time series over selectable windows</p></li><li><p>Support per-agent and per-deployment views.</p></li></ul>
+<h4 id="blk-44583">5.5 Billing and enforcement</h4>
+<p>MUST:</p>
+<ul><li><p>Support subscription tiers that gate:</p></li><li><p>max requests per period</p></li><li><p>token budget per period</p></li><li><p>compute budget per period</p></li><li><p>log retention days</p></li><li><p>access to AgentCore runtime (typically higher tiers)</p></li><li><p>Enforce limits at request-time (hard stop at MVP).</p></li><li><p>Integrate billing provider:</p></li><li><p>create checkout</p></li><li><p>handle webhook events</p></li><li><p>update <code>users.subscription_tier</code> and entitlements</p></li></ul>
+<h3 id="blk-44608">6) Data model (PostgreSQL) — required schema + invariants</h3>
+<blockquote><p>The schema below is normative. Field names can vary, but semantics and invariants must be preserved. Full DDL is in <code>30_DATA_MODEL.md</code>.</p></blockquote>
+<h4 id="blk-44611">6.1 <code>users</code></h4>
+<p>Fields:</p>
+<ul><li><p><code>id</code> (UUID, PK, default <code>auth.uid()</code>)</p></li><li><p><code>email</code></p></li><li><p><code>name</code></p></li><li><p><code>subscription_tier</code> (<code>free</code> | <code>starter</code> | <code>pro</code> | <code>enterprise</code>)</p></li><li><p><code>default_runtime_provider</code> (<code>cloudflare</code> | <code>agentcore</code>)</p></li><li><p><code>created_at</code>, <code>updated_at</code></p></li></ul>
+<p>Indexes:</p>
+<ul><li><p>by <code>email</code> (unique)</p></li></ul>
+<p>Invariants:</p>
+<ul><li><p>One user row per Supabase Auth identity (linked via <code>auth.uid()</code>).</p></li><li><p>RLS policy: users can only read/update their own row.</p></li></ul>
+<h4 id="blk-44636">6.2 <code>agents</code></h4>
+<p>Fields:</p>
+<ul><li><p><code>id</code> (UUID, PK)</p></li><li><p><code>user_id</code> (FK -&gt; <code>users</code>)</p></li><li><p><code>name</code></p></li><li><p><code>description</code> (optional)</p></li><li><p><code>framework</code> (string)</p></li><li><p><code>runtime_provider</code> (<code>cloudflare</code> | <code>agentcore</code>)</p></li><li><p><code>active_deployment_id</code> (FK -&gt; <code>deployments</code>, optional)</p></li><li><p><code>status</code> (<code>created</code> | <code>deploying</code> | <code>active</code> | <code>error</code> | <code>disabled</code>)</p></li><li><p><code>env_var_keys</code> (text[])</p></li><li><p><code>provider_config</code> (JSONB)</p></li><li><p><code>created_at</code>, <code>updated_at</code>, <code>last_deployed_at</code> (optional)</p></li></ul>
+<p>Indexes:</p>
+<ul><li><p>by <code>user_id</code></p></li><li><p>by <code>(user_id, name)</code> unique</p></li></ul>
+<p>Invariants:</p>
+<ul><li><p><code>user_id</code> must exist.</p></li><li><p><code>active_deployment_id</code> (if present) must reference a deployment for this agent.</p></li><li><p>RLS policy: <code>auth.uid() = user_id</code>.</p></li></ul>
+<h4 id="blk-44675">6.3 <code>deployments</code></h4>
+<p>Fields:</p>
+<ul><li><p><code>id</code> (UUID, PK)</p></li><li><p><code>agent_id</code> (FK -&gt; <code>agents</code>)</p></li><li><p><code>user_id</code> (FK -&gt; <code>users</code>, denormalized)</p></li><li><p><code>version</code> (monotonic per agent)</p></li><li><p><code>runtime_provider</code></p></li><li><p><code>status</code> (<code>deploying</code> | <code>active</code> | <code>failed</code> | <code>rolled_back</code>)</p></li><li><p><code>commit_hash</code> (optional)</p></li><li><p><code>artifact</code> (JSONB)</p></li><li><p><code>provider_ref</code> (JSONB)</p></li><li><p><code>error_message</code> (optional)</p></li><li><p><code>deployed_at</code>, <code>finished_at</code> (optional)</p></li><li><p><code>deployed_by_user_id</code> (FK -&gt; <code>users</code>)</p></li><li><p><code>created_at</code></p></li></ul>
+<p>Indexes:</p>
+<ul><li><p>by <code>(agent_id, created_at)</code></p></li><li><p>by <code>(agent_id, version)</code> unique</p></li></ul>
+<p>Invariants:</p>
+<ul><li><p>Deployment records are immutable after creation except status/error fields and provider_ref.</p></li><li><p>RLS policy: <code>auth.uid() = user_id</code>.</p></li></ul>
+<h4 id="blk-44716">6.4 <code>metrics_events</code> (raw telemetry events)</h4>
+<p>Fields:</p>
+<ul><li><p><code>id</code> (UUID, PK)</p></li><li><p><code>user_id</code>, <code>agent_id</code>, <code>deployment_id</code></p></li><li><p><code>runtime_provider</code></p></li><li><p><code>timestamp_ms</code> (bigint)</p></li><li><p><code>requests</code> (int), <code>llm_tokens</code> (int), <code>compute_ms</code> (int)</p></li><li><p><code>errors</code> (int), <code>error_class</code></p></li><li><p><code>provider_details</code> (JSONB)</p></li><li><p><code>cost_usd_estimated</code> (numeric)</p></li><li><p><code>trace_id</code></p></li><li><p><code>created_at</code></p></li></ul>
+<p>Indexes:</p>
+<ul><li><p>by <code>(agent_id, timestamp_ms)</code></p></li><li><p>by <code>(user_id, timestamp_ms)</code></p></li></ul>
+<h4 id="blk-44745">6.5 <code>billing_usage</code> (aggregated)</h4>
+<p>Fields:</p>
+<ul><li><p><code>id</code> (UUID, PK)</p></li><li><p><code>user_id</code> (FK -&gt; <code>users</code>)</p></li><li><p><code>period_key</code> (e.g., <code>2026-01</code>)</p></li><li><p>totals: <code>total_requests</code>, <code>total_tokens</code>, <code>total_compute_ms</code>, <code>total_cost_usd_estimated</code></p></li><li><p>per-runtime breakdown (JSONB)</p></li><li><p><code>paid</code> (boolean)</p></li><li><p><code>invoice_id</code> (optional)</p></li><li><p><code>created_at</code>, <code>updated_at</code></p></li></ul>
+<p>Indexes:</p>
+<ul><li><p>by <code>(user_id, period_key)</code> unique</p></li></ul>
+<h3 id="blk-44768">7) Canonical invocation protocol (normative)</h3>
+<h4 id="blk-44769">7.1 Request shape</h4>
+<p><code>InvokeRequest</code> MUST be supported by all runtime adapters:</p>
+<ul><li><p><code>input</code>:</p></li><li><p><code>messages</code>: array of <code>{ role: 'system'|'user'|'assistant'|'tool', content: string }</code></p></li><li><p>OR <code>prompt: string</code> (if provided, control plane converts to messages)</p></li><li><p><code>sessionId?</code>: string (opaque)</p></li><li><p><code>options?</code>:</p></li><li><p><code>maxSteps?</code>: number</p></li><li><p><code>temperature?</code>: number</p></li><li><p><code>toolPolicy?</code>: allow/deny list (optional)</p></li><li><p><code>metadata?</code>:</p></li><li><p><code>traceId?</code></p></li><li><p><code>client?</code> (sdk version, etc.)</p></li></ul>
+<h4 id="blk-44794">7.2 Response shape</h4>
+<p><code>InvokeResponse</code>:</p>
+<ul><li><p><code>output</code>:</p></li><li><p><code>text</code>: string</p></li><li><p><code>messages?</code>: optional transcript</p></li><li><p><code>sessionId?</code>: string</p></li><li><p><code>usage</code>:</p></li><li><p><code>tokens?</code></p></li><li><p><code>computeMs?</code></p></li><li><p><code>toolCalls?</code></p></li><li><p><code>traceId</code>: string</p></li><li><p><code>error?</code>: normalized error object if failed</p></li></ul>
+<h4 id="blk-44817">7.3 Error normalization</h4>
+<p>All errors MUST be mapped to:</p>
+<ul><li><p><code>code</code>: <code>UNAUTHENTICATED</code> | <code>UNAUTHORIZED</code> | <code>NOT_FOUND</code> | <code>LIMIT_EXCEEDED</code> | <code>DEPLOYMENT_FAILED</code> | <code>RUNTIME_ERROR</code> | <code>INVALID_REQUEST</code></p></li><li><p><code>message</code>: safe, user-displayable</p></li><li><p><code>details?</code>: internal-only; never return secrets</p></li></ul>
+<h3 id="blk-44826">8) Runtime Provider Interface (RPI)</h3>
+<h4 id="blk-44827">8.1 Required capabilities</h4>
+<p>Every runtime provider adapter MUST implement:</p>
+<ul><li><p><code>deploy(deployInput) -&gt; deployOutput</code></p></li><li><p><code>invoke(invokeInput) -&gt; invokeOutput</code> (optionally streaming)</p></li><li><p><code>healthcheck() -&gt; status</code></p></li><li><p><code>estimateCost(usage) -&gt; costUsd</code> (MVP can be approximate)</p></li><li><p><code>emitTelemetry(event)</code> or ensure data plane emits telemetry to control plane</p></li></ul>
+<h4 id="blk-44840">8.2 Deploy contract</h4>
+<p>Deploy input MUST include:</p>
+<ul><li><p>agent identity (agentId, userId)</p></li><li><p>deployment identity (deploymentId/version)</p></li><li><p>code artifact reference</p></li><li><p>non-secret env config</p></li><li><p>secret keys list (values already stored in provider secret store)</p></li></ul>
+<p>Deploy output MUST include:</p>
+<ul><li><p>provider reference sufficient to invoke</p></li><li><p>any session/state configuration needed</p></li><li><p>status and normalized error (if failed)</p></li></ul>
+<h4 id="blk-44861">8.3 Invoke contract</h4>
+<p>Invoke MUST:</p>
+<ul><li><p>validate deployment is active/allowed</p></li><li><p>accept <code>sessionId?</code> and return <code>sessionId?</code></p></li><li><p>return usage metrics if possible</p></li><li><p>never block indefinitely; enforce provider runtime max and internal timeouts</p></li></ul>
+<h3 id="blk-44872">9) Cloudflare runtime (implementation spec)</h3>
+<h4 id="blk-44873">9.1 Execution model</h4>
+<ul><li><p>Worker receives invocation requests and routes them to a Durable Object instance for stateful sessions (if needed).</p></li><li><p>DO stores conversation history and session state.</p></li><li><p>Worker/DO calls model provider (either via BYOK key or Cloudflare AI if chosen).</p></li></ul>
+<h4 id="blk-44881">9.2 Session mapping</h4>
+<ul><li><p><code>sessionId</code> maps to DO id (opaque string to client).</p></li><li><p>If <code>sessionId</code> absent, create a new DO id and return it.</p></li></ul>
+<h4 id="blk-44887">9.3 Telemetry</h4>
+<ul><li><p>DO MUST send telemetry to control plane ingestion endpoint after each invocation:</p></li><li><p>tokens (estimated if needed)</p></li><li><p>computeMs (wall time)</p></li><li><p>errors (0/1)</p></li><li><p>provider-specific counters</p></li></ul>
+<h4 id="blk-44899">9.4 Secrets</h4>
+<ul><li><p>Secrets are stored as Worker secrets bound at deploy time.</p></li><li><p>Control plane must set secrets via Cloudflare API; never persist plaintext.</p></li></ul>
+<h3 id="blk-44905">10) AWS Bedrock AgentCore runtime (implementation spec)</h3>
+<h4 id="blk-44906">10.1 Execution model</h4>
+<ul><li><p>Control plane deploys agent runtime resources via AWS SDK.</p></li><li><p>Invocations use the AgentCore runtime invoke APIs.</p></li><li><p>Optional: integrate AgentCore tools SDK (code interpreter, browser tools) for premium features.</p></li></ul>
+<h4 id="blk-44914">10.2 Session mapping</h4>
+<ul><li><p><code>sessionId</code> corresponds to AgentCore runtime session id.</p></li><li><p>If absent, create/init a session as required by AgentCore patterns and return it.</p></li></ul>
+<h4 id="blk-44920">10.3 Telemetry</h4>
+<ul><li><p>Capture:</p></li><li><p>session duration</p></li><li><p>tool invocations</p></li><li><p>tokens (provider-reported if available)</p></li><li><p>errors</p></li><li><p>Emit normalized telemetry events to control plane.</p></li></ul>
+<h4 id="blk-44934">10.4 Secrets</h4>
+<ul><li><p>Use AWS-native secret injection (e.g., Secrets Manager) or AgentCore secret mechanism.</p></li><li><p>Control plane should store references, not values.</p></li></ul>
+<h3 id="blk-44940">11) Control plane API surface (normative)</h3>
+<blockquote><p>Control plane is implemented via Supabase: PostgREST for CRUD, RPC functions for business logic, Edge Functions for server-only operations.</p></blockquote>
+<h4 id="blk-44943">11.1 Auth</h4>
+<ul><li><p><code>auth.getUser()</code> -&gt; user profile + tier (via Supabase Auth JWT + <code>users</code> table)</p></li></ul>
+<h4 id="blk-44947">11.2 Agents</h4>
+<ul><li><p><code>agents.create({ name, description?, framework, runtime_provider, env_var_keys })</code> — RPC function</p></li><li><p><code>agents.update({ agent_id, ...fields })</code> — RPC function</p></li><li><p><code>agents.list()</code> — PostgREST query (RLS-filtered)</p></li><li><p><code>agents.get({ agent_id })</code> — PostgREST query (RLS-filtered)</p></li><li><p><code>agents.disable({ agent_id })</code> — RPC function</p></li><li><p><code>agents.delete({ agent_id })</code> — RPC function (soft delete; should also revoke provider resources if possible)</p></li></ul>
+<h4 id="blk-44961">11.3 Deployments</h4>
+<ul><li><p><code>deployments.createAndDeploy({ agent_id, artifact_ref, commit_hash?, version? })</code> — Edge Function</p></li><li><p><code>deployments.list({ agent_id })</code> — PostgREST query (RLS-filtered)</p></li><li><p><code>deployments.rollback({ agent_id, deployment_id })</code> — Edge Function</p></li><li><p><code>deployments.getLogs({ deployment_id })</code> — RPC function (can be stubbed in MVP)</p></li></ul>
+<h4 id="blk-44971">11.4 Invocation gateway</h4>
+<ul><li><p><code>invoke({ agentId, input, sessionId?, options?, metadata? })</code> — Edge Function</p></li><li><p>MUST:</p></li><li><p>authorize user (via Supabase Auth JWT)</p></li><li><p>check entitlements and limits</p></li><li><p>route to active deployment's runtime provider adapter</p></li></ul>
+<h4 id="blk-44983">11.5 Telemetry ingestion</h4>
+<ul><li><p><code>metrics.report(event)</code> — Edge Function (authenticated with shared secret or signed token from runtime)</p></li><li><p>MUST validate:</p></li><li><p>event attribution</p></li><li><p>prevent spoofing (HMAC signature or runtime-specific auth)</p></li></ul>
+<h4 id="blk-44993">11.6 Billing</h4>
+<ul><li><p><code>billing.createCheckout({ tier })</code> — Edge Function</p></li><li><p><code>billing.handleWebhook(payload)</code> — Edge Function (server-only)</p></li><li><p><code>billing.getUsage({ period? })</code> — RPC function</p></li></ul>
+<h3 id="blk-45001">12) Plan limits and enforcement (normative)</h3>
+<h4 id="blk-45002">12.1 Limit types</h4>
+<ul><li><p>requests per billing period</p></li><li><p>tokens per billing period</p></li><li><p>compute ms per billing period</p></li><li><p>runtime access (AgentCore gated)</p></li></ul>
+<h4 id="blk-45012">12.2 Enforcement points</h4>
+<ul><li><p>At invocation time in Edge Function gateway:</p></li><li><p>read <code>billing_usage</code> current period (or a fast cached counter)</p></li><li><p>reject with <code>LIMIT_EXCEEDED</code> when over limit</p></li><li><p>At deploy time:</p></li><li><p>enforce runtime gating (e.g., free tier cannot deploy to AgentCore)</p></li></ul>
+<h4 id="blk-45024">12.3 Overages (post-MVP option)</h4>
+<ul><li><p>Start with hard-stop.</p></li><li><p>Later add pay-as-you-go and reconciled billing.</p></li></ul>
+<h3 id="blk-45030">13) Security requirements (implementation-grade)</h3>
+<h4 id="blk-45031">13.1 Tenant isolation</h4>
+<p>MUST:</p>
+<ul><li><p>Every control plane query/mutation uses RLS policies enforcing <code>auth.uid() = user_id</code>.</p></li><li><p>Runtime provider resources are namespaced per user (naming convention + tags).</p></li></ul>
+<h4 id="blk-45038">13.2 Secrets handling</h4>
+<p>MUST:</p>
+<ul><li><p>Never log secret values.</p></li><li><p>Never store plaintext secrets in PostgreSQL tables (use Supabase Vault for encrypted storage).</p></li><li><p>Provide secret rotation workflow (at least manual replace in UI).</p></li></ul>
+<h4 id="blk-45047">13.3 Telemetry integrity</h4>
+<p>MUST:</p>
+<ul><li><p>Telemetry endpoint rejects unauthenticated events.</p></li><li><p>Use one of:</p></li><li><p>per-deployment HMAC key</p></li><li><p>signed JWT minted by control plane and embedded in runtime config</p></li><li><p>provider identity validation (where feasible)</p></li></ul>
+<h4 id="blk-45060">13.4 Abuse and safety</h4>
+<p>SHOULD:</p>
+<ul><li><p>Rate limit invocation endpoint per user and per agent.</p></li><li><p>Validate payload sizes; prevent prompt bombing.</p></li></ul>
+<h4 id="blk-45067">13.5 Supply chain</h4>
+<p>SHOULD:</p>
+<ul><li><p>Validate uploaded bundles (size limits, file allowlist).</p></li><li><p>Optional: scan dependencies post-MVP.</p></li></ul>
+<h3 id="blk-45074">14) Observability and logging</h3>
+<h4 id="blk-45075">14.1 Logs</h4>
+<p>MVP MUST:</p>
+<ul><li><p>record deployment failures and statuses</p></li><li><p>show last N invocation errors per agent (can be from metrics events)</p></li></ul>
+<p>SHOULD:</p>
+<ul><li><p>store structured logs in an external store with retention policies</p></li></ul>
+<h4 id="blk-45086">14.2 Tracing</h4>
+<p>MVP SHOULD:</p>
+<ul><li><p>generate a <code>traceId</code> for each invocation</p></li><li><p>include <code>traceId</code> in telemetry events and UI</p></li></ul>
+<h3 id="blk-45093">15) Build/deploy packaging (MVP design)</h3>
+<p>This section defines how an <strong>uploaded bundle</strong> becomes a runnable deployment on each runtime provider. The v1 goal is: users upload one bundle format, and the control plane produces the correct runtime-specific artifact (Worker bundle vs AgentCore container image).</p>
+<h4 id="blk-45095">15.1 Artifact types (control-plane inputs)</h4>
+<ul><li><p><code>uploaded_bundle</code> (v1 primary): zip/tar containing:</p></li><li><p><code>agent.config.json</code> (required)</p></li><li><p>entrypoint file (required; referenced by <code>agent.config.json</code>)</p></li><li><p>source and dependencies required to build/run the agent</p></li><li><p><code>repo_ref</code> (optional/post-MVP): <code>{ githubUrl, ref }</code></p></li></ul>
+<h4 id="blk-45107">15.2 Runtime-specific build targets (what the control plane produces)</h4>
+<h5 id="blk-45108">15.2.1 Cloudflare target (Worker bundle)</h5>
+<p>For <code>runtime=cloudflare</code>, the control plane produces:</p>
+<ul><li><p>a Worker script bundle suitable for deployment to Cloudflare Workers</p></li><li><p>Durable Object bindings (if sessionful)</p></li><li><p>secret bindings (telemetry signing key + user secrets) injected via Cloudflare secret mechanisms</p></li></ul>
+<h5 id="blk-45117">15.2.2 AgentCore target (container image pipeline)</h5>
+<p>For <code>runtime=agentcore</code>, the control plane produces:</p>
+<ul><li><p>an OCI container image that implements the <code>invoke/v1</code> handler contract</p></li><li><p>pushes the image to a registry (e.g., ECR) and deploys AgentCore runtime referencing the container image URI</p></li><li><p>injects environment variables (telemetry signing key + user secrets) via AgentCore Runtime environment variable injection (v1 default)</p></li></ul>
+<p>Key v1 implication:</p>
+<ul><li><p>Even though the user uploads a zip/tar, AgentCore deployment is container-based; the platform MUST provide a deterministic build pipeline that converts the bundle into a runnable container artifact.</p></li></ul>
+<h4 id="blk-45130">15.3 Required manifest (<code>agent.config.json</code>)</h4>
+<p>Fields:</p>
+<ul><li><p><code>name</code> (optional; informational)</p></li><li><p><code>entrypoint</code> (e.g., <code>src/index.ts</code>)</p></li><li><p><code>runtime</code> (<code>cloudflare</code> | <code>agentcore</code>)</p></li><li><p><code>protocol</code> (<code>invoke/v1</code>)</p></li><li><p><code>env</code>:</p></li><li><p><code>requiredKeys</code>: string[]</p></li><li><p><code>optionalKeys</code>: string[]</p></li><li><p><code>capabilities</code>:</p></li><li><p><code>streaming</code>: boolean</p></li><li><p><code>tools</code>: boolean</p></li><li><p><code>agentcore</code> (optional, only meaningful when <code>runtime=agentcore</code>):</p></li><li><p><code>container</code> (optional):</p></li><li><p><code>port</code> (optional; default chosen by platform)</p></li><li><p><code>healthcheckPath</code> (optional; default chosen by platform)</p></li><li><p><code>lifecycle</code> (optional):</p></li><li><p><code>idleTimeoutSeconds</code> (optional)</p></li><li><p><code>maxLifetimeSeconds</code> (optional)</p></li><li><p><code>network</code> (optional):</p></li><li><p><code>mode</code> (optional; platform-defined default)</p></li></ul>
+<p>Notes:</p>
+<ul><li><p>The platform MAY extend this schema over time; additive fields are allowed.</p></li><li><p>The platform MUST reject manifests that claim <code>runtime=agentcore</code> but also require Cloudflare-only bindings (and vice versa).</p></li></ul>
+<h4 id="blk-45177">15.4 AgentCore build pipeline (v1 normative behavior)</h4>
+<p>When deploying <code>runtime=agentcore</code> from an <code>uploaded_bundle</code>, the control plane MUST:</p>
+<ol><li><p>Validate and safely extract the archive (see security rules in the security spec).</p></li><li><p>Build the user code into a Node.js 20 compatible artifact (TypeScript compile/bundle as applicable).</p></li><li><p>Generate or include a thin HTTP wrapper that:</p></li></ol>
+<ul><li><p>accepts an <code>invoke/v1</code> request payload (messages/prompt + sessionId + metadata),</p></li><li><p>calls the user entrypoint,</p></li><li><p>returns a JSON response containing at least <code>output.text</code>, and optionally usage fields.</p></li></ul>
+<ol start="4"><li><p>Build an OCI image containing the runtime wrapper + built user artifact.</p></li><li><p>Push the image to a registry and record the resulting image URI in provider deployment configuration.</p></li><li><p>Create/update the AgentCore runtime referencing that container image artifact.</p></li><li><p>Inject environment variables (telemetry + user secrets) at deploy/update time using provider mechanisms.</p></li></ol>
+<p>The control plane MUST treat this pipeline as idempotent per deploymentId (retries must not create inconsistent provider state).</p>
+<h4 id="blk-45203">15.5 Validation rules (MUST)</h4>
+<p>MUST:</p>
+<ul><li><p>enforce max artifact size (compressed and extracted) and max file count</p></li><li><p>enforce required files present:</p></li><li><p><code>agent.config.json</code> exists and parses</p></li><li><p><code>entrypoint</code> exists</p></li><li><p>enforce runtime compatibility:</p></li><li><p><code>agent.config.json.runtime</code> matches the selected deployment runtime</p></li><li><p><code>agent.config.json.protocol</code> is supported (<code>invoke/v1</code>)</p></li><li><p>enforce archive safety:</p></li><li><p>reject path traversal entries and unsafe symlinks</p></li><li><p>enforce AgentCore container pipeline prerequisites when <code>runtime=agentcore</code>:</p></li><li><p>build step succeeds deterministically</p></li><li><p>produced container image includes the wrapper and built entrypoint artifact</p></li><li><p>healthcheck/port expectations are satisfied (platform-defined)</p></li><li><p>enforce Cloudflare deployment prerequisites when <code>runtime=cloudflare</code>:</p></li><li><p>bundle size and bindings are within provider constraints</p></li></ul>
+<p>SHOULD:</p>
+<ul><li><p>produce actionable error messages on validation/build failures (sanitized, no secrets)</p></li><li><p>keep build outputs deterministic (same input bundle + config =&gt; same build artifact hash), where practical</p></li></ul>
+<h3 id="blk-45242">16) Dashboard assistant (optional module)</h3>
+<h4 id="blk-45243">16.1 Purpose</h4>
+<p>A control-plane agent that can:</p>
+<ul><li><p>deploy/redeploy based on user instructions,</p></li><li><p>summarize usage,</p></li><li><p>explain errors from deployment logs/metrics,</p></li><li><p>recommend runtimes.</p></li></ul>
+<h4 id="blk-45254">16.2 Constraints</h4>
+<p>MUST:</p>
+<ul><li><p>only access the authenticated user's resources (enforced by RLS)</p></li><li><p>never execute user agent bundles</p></li><li><p>never expose secrets</p></li></ul>
+<h3 id="blk-45263">17) Testing strategy (minimum viable)</h3>
+<h4 id="blk-45264">17.1 Unit tests</h4>
+<ul><li><p>RPI adapters: deploy/invoke error mapping, request/response normalization</p></li><li><p>limit checks and billing period calculations</p></li><li><p>schema invariants helpers</p></li></ul>
+<h4 id="blk-45272">17.2 Integration tests</h4>
+<ul><li><p>deploy to Cloudflare in a test account and invoke</p></li><li><p>telemetry event ingestion and aggregation</p></li><li><p>billing webhook flow (mocked provider payloads)</p></li></ul>
+<h4 id="blk-45280">17.3 End-to-end (E2E)</h4>
+<ul><li><p>user signup</p></li><li><p>create agent -&gt; deploy -&gt; invoke -&gt; view metrics -&gt; upgrade tier</p></li></ul>
+<h3 id="blk-45286">18) Milestones (implementation plan)</h3>
+<h4 id="blk-45287">Phase 1 — Control plane foundation</h4>
+<ul><li><p>Supabase Auth integration</p></li><li><p>PostgreSQL schema + RLS policies + CRUD functions</p></li><li><p>Basic dashboard UI (Vite + React)</p></li><li><p>Billing tier model stub (no payment yet)</p></li></ul>
+<h4 id="blk-45297">Phase 2 — Cloudflare runtime</h4>
+<ul><li><p>Cloudflare deploy adapter</p></li><li><p>Invocation gateway routing to Cloudflare (Edge Function)</p></li><li><p>Telemetry ingestion from DO/Worker</p></li><li><p>Usage UI</p></li></ul>
+<h4 id="blk-45307">Phase 3 — Billing + enforcement</h4>
+<ul><li><p>Checkout + webhooks (Edge Functions)</p></li><li><p>Limit enforcement on invoke and deploy</p></li><li><p>Retention policies (pg_cron jobs)</p></li></ul>
+<h4 id="blk-45315">Phase 4 — AgentCore runtime</h4>
+<ul><li><p>AgentCore deploy/invoke adapter (TypeScript)</p></li><li><p>Runtime gating by tier</p></li><li><p>Telemetry normalization</p></li></ul>
+<h4 id="blk-45323">Phase 5 — Polish / assistant / reliability</h4>
+<ul><li><p>dashboard assistant tools</p></li><li><p>improved logs</p></li><li><p>alerts/notifications (post-MVP)</p></li></ul>
+<h3 id="blk-45331">19) Open questions (must be answered before final sign-off)</h3>
+<ol><li><p><strong>Public agents</strong>: Are invocations always authenticated, or will agents optionally be publicly callable (API keys)?</p></li><li><p><strong>Model strategy</strong>: BYOK only, or do you provide a hosted model option?</p></li><li><p><strong>Streaming</strong>: Is streaming required for v1?</p></li><li><p><strong>Teams/orgs</strong>: Do you need organizations and roles now?</p></li><li><p><strong>Artifact input</strong>: Upload-only for MVP, or GitHub integration required?</p></li><li><p><strong>Compliance</strong>: Any required compliance targets (SOC2, HIPAA) for enterprise roadmap?</p></li></ol>
+<h3 id="blk-45345">20) Acceptance criteria (definition of done for v1)</h3>
+<p>The implementation is considered v1-complete when:</p>
+<ul><li><p>A user can sign up (via Supabase Auth), create an agent, deploy to Cloudflare, invoke it, and see metrics in the dashboard.</p></li><li><p>A paid tier user can deploy to AgentCore (if enabled) and invoke successfully.</p></li><li><p>Limits are enforced reliably and errors are normalized.</p></li><li><p>No plaintext secrets are stored in the primary database (Supabase Vault used for encrypted storage).</p></li><li><p>Deployments are immutable and rollback works.</p></li><li><p>Telemetry events are authenticated and attributable to user/agent/deployment.</p></li><li><p>RLS policies enforce tenant isolation on every table.</p></li></ul></div>
+<p class="src"><a href="/#/WebHost.Systems/docs/spec/00_MASTER_SPEC.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-44243" class="lvl2">0) Executive summary</a><a href="#blk-44256" class="lvl2">1) Scope, goals, non-goals</a><a href="#blk-44257" class="lvl3">1.1 Goals (MVP -&gt; v1)</a><a href="#blk-44313" class="lvl3">1.2 Non-goals (explicit)</a><a href="#blk-44323" class="lvl3">1.3 Assumptions</a><a href="#blk-44333" class="lvl2">2) Key decisions (ADR-style summaries)</a><a href="#blk-44334" class="lvl3">ADR-0001: Multi-runtime architecture</a><a href="#blk-44336" class="lvl3">ADR-0002: Supabase for control plane</a><a href="#blk-44338" class="lvl3">ADR-0003: Secrets strategy</a><a href="#blk-44340" class="lvl3">ADR-0004: Usage and cost</a><a href="#blk-44342" class="lvl3">ADR-0005: Deployment immutability + active pointer</a><a href="#blk-44344" class="lvl2">3) Glossary (canonical terms)</a><a href="#blk-44368" class="lvl2">4) System architecture</a><a href="#blk-44369" class="lvl3">4.1 High-level components</a><a href="#blk-44420" class="lvl3">4.2 Data plane vs control plane boundary (hard rule)</a><a href="#blk-44440" class="lvl3">4.3 Request flows (canonical)</a><a href="#blk-44441" class="lvl4">Flow A — Create agent</a><a href="#blk-44449" class="lvl4">Flow B — Deploy agent</a><a href="#blk-44466" class="lvl4">Flow C — Invoke agent</a><a href="#blk-44484" class="lvl4">Flow D — Usage aggregation / billing</a><a href="#blk-44492" class="lvl2">5) Product requirements (engineering-focused)</a><a href="#blk-44493" class="lvl3">5.1 Agent management</a><a href="#blk-44518" class="lvl3">5.2 Deployments</a><a href="#blk-44537" class="lvl3">5.3 Invocation semantics</a><a href="#blk-44564" class="lvl3">5.4 Observability</a><a href="#blk-44583" class="lvl3">5.5 Billing and enforcement</a><a href="#blk-44608" class="lvl2">6) Data model (PostgreSQL) — required schema + invariants</a><a href="#blk-44611" class="lvl3">6.1 users</a><a href="#blk-44636" class="lvl3">6.2 agents</a><a href="#blk-44675" class="lvl3">6.3 deployments</a><a href="#blk-44716" class="lvl3">6.4 metrics_events (raw telemetry events)</a><a href="#blk-44745" class="lvl3">6.5 billing_usage (aggregated)</a><a href="#blk-44768" class="lvl2">7) Canonical invocation protocol (normative)</a><a href="#blk-44769" class="lvl3">7.1 Request shape</a><a href="#blk-44794" class="lvl3">7.2 Response shape</a><a href="#blk-44817" class="lvl3">7.3 Error normalization</a><a href="#blk-44826" class="lvl2">8) Runtime Provider Interface (RPI)</a><a href="#blk-44827" class="lvl3">8.1 Required capabilities</a><a href="#blk-44840" class="lvl3">8.2 Deploy contract</a><a href="#blk-44861" class="lvl3">8.3 Invoke contract</a><a href="#blk-44872" class="lvl2">9) Cloudflare runtime (implementation spec)</a><a href="#blk-44873" class="lvl3">9.1 Execution model</a><a href="#blk-44881" class="lvl3">9.2 Session mapping</a><a href="#blk-44887" class="lvl3">9.3 Telemetry</a><a href="#blk-44899" class="lvl3">9.4 Secrets</a><a href="#blk-44905" class="lvl2">10) AWS Bedrock AgentCore runtime (implementation spec)</a><a href="#blk-44906" class="lvl3">10.1 Execution model</a><a href="#blk-44914" class="lvl3">10.2 Session mapping</a><a href="#blk-44920" class="lvl3">10.3 Telemetry</a><a href="#blk-44934" class="lvl3">10.4 Secrets</a><a href="#blk-44940" class="lvl2">11) Control plane API surface (normative)</a><a href="#blk-44943" class="lvl3">11.1 Auth</a><a href="#blk-44947" class="lvl3">11.2 Agents</a><a href="#blk-44961" class="lvl3">11.3 Deployments</a><a href="#blk-44971" class="lvl3">11.4 Invocation gateway</a><a href="#blk-44983" class="lvl3">11.5 Telemetry ingestion</a><a href="#blk-44993" class="lvl3">11.6 Billing</a><a href="#blk-45001" class="lvl2">12) Plan limits and enforcement (normative)</a><a href="#blk-45002" class="lvl3">12.1 Limit types</a><a href="#blk-45012" class="lvl3">12.2 Enforcement points</a><a href="#blk-45024" class="lvl3">12.3 Overages (post-MVP option)</a><a href="#blk-45030" class="lvl2">13) Security requirements (implementation-grade)</a><a href="#blk-45031" class="lvl3">13.1 Tenant isolation</a><a href="#blk-45038" class="lvl3">13.2 Secrets handling</a><a href="#blk-45047" class="lvl3">13.3 Telemetry integrity</a><a href="#blk-45060" class="lvl3">13.4 Abuse and safety</a><a href="#blk-45067" class="lvl3">13.5 Supply chain</a><a href="#blk-45074" class="lvl2">14) Observability and logging</a><a href="#blk-45075" class="lvl3">14.1 Logs</a><a href="#blk-45086" class="lvl3">14.2 Tracing</a><a href="#blk-45093" class="lvl2">15) Build/deploy packaging (MVP design)</a><a href="#blk-45095" class="lvl3">15.1 Artifact types (control-plane inputs)</a><a href="#blk-45107" class="lvl3">15.2 Runtime-specific build targets (what the control plane produces)</a><a href="#blk-45108" class="lvl4">15.2.1 Cloudflare target (Worker bundle)</a><a href="#blk-45117" class="lvl4">15.2.2 AgentCore target (container image pipeline)</a><a href="#blk-45130" class="lvl3">15.3 Required manifest (agent.config.json)</a><a href="#blk-45177" class="lvl3">15.4 AgentCore build pipeline (v1 normative behavior)</a><a href="#blk-45203" class="lvl3">15.5 Validation rules (MUST)</a><a href="#blk-45242" class="lvl2">16) Dashboard assistant (optional module)</a><a href="#blk-45243" class="lvl3">16.1 Purpose</a><a href="#blk-45254" class="lvl3">16.2 Constraints</a><a href="#blk-45263" class="lvl2">17) Testing strategy (minimum viable)</a><a href="#blk-45264" class="lvl3">17.1 Unit tests</a><a href="#blk-45272" class="lvl3">17.2 Integration tests</a><a href="#blk-45280" class="lvl3">17.3 End-to-end (E2E)</a><a href="#blk-45286" class="lvl2">18) Milestones (implementation plan)</a><a href="#blk-45287" class="lvl3">Phase 1 — Control plane foundation</a><a href="#blk-45297" class="lvl3">Phase 2 — Cloudflare runtime</a><a href="#blk-45307" class="lvl3">Phase 3 — Billing + enforcement</a><a href="#blk-45315" class="lvl3">Phase 4 — AgentCore runtime</a><a href="#blk-45323" class="lvl3">Phase 5 — Polish / assistant / reliability</a><a href="#blk-45331" class="lvl2">19) Open questions (must be answered before final sign-off)</a><a href="#blk-45345" class="lvl2">20) Acceptance criteria (definition of done for v1)</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/ECOSYSTEM.md/">The [&amp;] Protocol Ecosystem</a><a href="/WebHost.Systems/docs/architecture.md/">WebHost.Systems Architecture</a><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/quickstart.md/">WebHost.Systems Quickstart</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/spec/10_API_CONTRACTS.md/">webhost.systems — API Contracts (v1)</a><a href="/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md/">webhost.systems — Runtime Provider Interface (RPI) &amp; Adapter Guidance (v1)</a><a href="/WebHost.Systems/docs/spec/30_DATA_MODEL_SUPABASE.md/">webhost.systems — Data Model (Supabase/PostgreSQL) &amp; Access Control (v1)</a><a href="/WebHost.Systems/docs/spec/40_SECURITY_SECRETS_COMPLIANCE.md/">webhost.systems — Security, Secrets, and Compliance (v1)</a><a href="/WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md/">webhost.systems — Observability, Metering, Cost, Tiers, and Limit Enforcement (v1)</a><a href="/WebHost.Systems/docs/spec/60_TESTING_ACCEPTANCE.md/">webhost.systems — Testing Plan &amp; Acceptance Criteria (v1)</a><a href="/WebHost.Systems/docs/spec/70_AMPERSAND_PROTOCOL_INTEGRATION.md/">webhost.systems — [&amp;] Protocol Integration Spec (v1)</a><a href="/WebHost.Systems/docs/spec/README.md/">webhost.systems — Spec v1 (Implementation-Ready Document Set)</a><a href="/WebHost.Systems/docs/spec/REALIGNMENT_PLAN.md/">webhost.systems — Spec-to-Implementation Realignment Plan (v1)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieragmvfg4bsampuarvq7mnds2g64uvewzxkdn7i5anwj3emj5iek37q</div></div></div>
+</div></div>
+</body></html>

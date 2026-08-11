@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>κ × [&amp;] Product Crosswalk · graphonomous · Ampersand Box</title>
+<meta name="description" content="What it does now: Continual learning knowledge graph. Episodic, semantic, procedural, temporal edges. MCP server. SQLite + sqlite-vec backend.…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/spec/kappa_product_crosswalk.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="κ × [&amp;] Product Crosswalk">
+<meta property="og:description" content="What it does now: Continual learning knowledge graph. Episodic, semantic, procedural, temporal edges. MCP server. SQLite + sqlite-vec backend.…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/docs/spec/kappa_product_crosswalk.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"κ × [&] Product Crosswalk","name":"κ × [&] Product Crosswalk","description":"What it does now: Continual learning knowledge graph. Episodic, semantic, procedural, temporal edges. MCP server. SQLite + sqlite-vec backend.…","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/spec/kappa_product_crosswalk.md/","identifier":"bagaaierahzhaftapihcntkh7uvvmlnlyikv67fz2arathv75iqp42nudoora","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Quick Reference for Spec Alignment"},{"@type":"WebPageElement","name":"Graphonomous (graphonomous.com)"},{"@type":"WebPageElement","name":"Deliberatic (deliberatic.com)"},{"@type":"WebPageElement","name":"BendScript (bendscript.com)"},{"@type":"WebPageElement","name":"The [&] Protocol (protocol spec v0.1.0)"},{"@type":"WebPageElement","name":"TickTickClock (ticktickclock.com)"},{"@type":"WebPageElement","name":"OpenSentience (opensentience.org)"},{"@type":"WebPageElement","name":"Implementation Order"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/spec/"},{"@type":"ListItem","position":5,"name":"kappa_product_crosswalk.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/spec/kappa_product_crosswalk.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/docs/spec/kappa_product_crosswalk.md</span>
+
+</div></div>
+<div class="lead">What it does now: Continual learning knowledge graph. Episodic, semantic, procedural, temporal edges. MCP server. SQLite + sqlite-vec backend. Learn/consolidate/prune at inferen…</div>
+<div class="prose"><h1 id="blk-69563">κ × [&amp;] Product Crosswalk</h1>
+<h3 id="blk-69564">Quick Reference for Spec Alignment</h3>
+<blockquote><p>Use this document to compare against each product's existing spec and identify where κ integration points land.</p></blockquote>
+<h3 id="blk-69567">Graphonomous (graphonomous.com)</h3>
+<p><strong>What it does now:</strong> Continual learning knowledge graph. Episodic, semantic, procedural, temporal edges. MCP server. SQLite + sqlite-vec backend. Learn/consolidate/prune at inference time.</p>
+<p><strong>What κ adds:</strong></p>
+<table><thead><tr><th>Existing Concept</th><th>κ Integration Point</th><th>Change Required</th></tr></thead><tbody><tr><td><code>recall/2</code> — retrieves context</td><td>Returns <code>{context, topology}</code> — topology includes SCC map + κ values</td><td>Add SCC computation to query path</td></tr><tr><td>Consolidation (sleep cycle metaphor)</td><td>κ-aware consolidation: SCC regions consolidate differently than DAG regions — cyclic clusters need multi-pass consolidation</td><td>Modify consolidation logic to respect SCC boundaries</td></tr><tr><td>Edge types (episodic, semantic, etc.)</td><td>No change to edge types — κ operates on the directed graph regardless of edge semantics</td><td>None</td></tr><tr><td>Pruning (weak connections decay)</td><td>κ-informed pruning: never prune an edge that would reduce a critical SCC to κ = 0 unless the whole cluster is decaying</td><td>Add κ check before pruning edges in SCC regions</td></tr><tr><td>MCP tool: <code>retrieve_context</code></td><td>Augmented with <code>topology</code> field in response — returns SCC decomposition + κ annotations alongside context. Standalone <code>analyze_topology</code> tool for explicit topology queries.</td><td>Augment existing tool response + register new tool</td></tr></tbody></table>
+<p><strong>New capability to register:</strong></p>
+<pre data-lang="json"><code><span class="t-key">&quot;&amp;topology.analyze&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span> }</code></pre>
+<p><strong>Elixir implementation note:</strong> Tarjan's SCC is well-suited to Elixir — the recursive DFS maps cleanly to recursive function calls. The κ bipartition enumeration for small SCCs (&lt;20 nodes) is CPU-bound but fast. For larger SCCs, approximate via <code>:digraph</code> module's built-in connected component functions + Stoer-Wagner min-cut.</p>
+<h3 id="blk-69592">Deliberatic (deliberatic.com)</h3>
+<p><strong>What it does now:</strong> Structured argumentation protocol. Dung's framework extended to weighted bipolar. Two-phase adaptive consensus (Raft fast-path, PBFT conflict-path). Merkle-chained evidence. Constitutional governance.</p>
+<p><strong>What κ adds:</strong></p>
+<table><thead><tr><th>Existing Concept</th><th>κ Integration Point</th><th>Change Required</th></tr></thead><tbody><tr><td>Trigger condition (when to deliberate)</td><td>κ &gt; 0 in query subgraph = automatic trigger</td><td>Add κ-based invocation path</td></tr><tr><td>Argumentation depth (number of rounds)</td><td>Set by κ value: <code>max_rounds = κ + 1</code></td><td>Accept κ parameter on deliberation endpoint</td></tr><tr><td>Propositions (what agents argue about)</td><td>Seeded from fault-line edges (minimum-cut edges of the SCC) — these are the critical bidirectional dependencies</td><td>Accept fault_lines parameter, generate initial propositions from them</td></tr><tr><td>Agent count</td><td>Scale with κ: <code>agents = min(κ, 3)</code></td><td>Accept agent count as parameter or derive from κ</td></tr><tr><td>Confidence threshold</td><td>Higher for complex topology: <code>threshold = 0.7 + 0.05 * κ</code></td><td>Accept threshold parameter</td></tr><tr><td>Evidence chains (Merkle-chained)</td><td>No change — evidence chains work the same regardless of trigger source</td><td>None</td></tr><tr><td>Constitutional governance</td><td>No change — governance constraints apply universally</td><td>None</td></tr></tbody></table>
+<p><strong>New MCP tool:</strong></p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;deliberate_on_scc&quot;</span>,
+  <span class="t-key">&quot;inputSchema&quot;</span>: {
+    <span class="t-key">&quot;scc_nodes&quot;</span>: <span class="t-string">&quot;array&quot;</span>, <span class="t-key">&quot;scc_edges&quot;</span>: <span class="t-string">&quot;array&quot;</span>,
+    <span class="t-key">&quot;kappa&quot;</span>: <span class="t-string">&quot;integer&quot;</span>, <span class="t-key">&quot;fault_lines&quot;</span>: <span class="t-string">&quot;array&quot;</span>,
+    <span class="t-key">&quot;governance&quot;</span>: <span class="t-string">&quot;object&quot;</span>
+  }
+}</code></pre>
+<p><strong>Key insight:</strong> Deliberatic doesn't need to know about graph theory. It receives a set of propositions (derived from fault lines), a budget (derived from κ), and it argues. The graph intelligence lives in Graphonomous; the argumentation intelligence lives in Deliberatic. κ is the handshake between them.</p>
+<h3 id="blk-69623">BendScript (bendscript.com)</h3>
+<p><strong>What it does now:</strong> Interactive knowledge graph builder. Canvas-based. Nodes, edges, Stargates (sub-graph portals), fork/merge. Right-click context menus. Edge inspector with relationship types (context, causal, temporal, associative). Node inspector with markdown content. HUD showing node/edge/depth/zoom counts.</p>
+<p><strong>What κ adds:</strong></p>
+<table><thead><tr><th>Existing Concept</th><th>κ Integration Point</th><th>Change Required</th></tr></thead><tbody><tr><td>Canvas rendering (nodes + edges)</td><td>SCC clusters get visual grouping (colored halos, pulse animation proportional to κ)</td><td>Add SCC detection to render loop, draw cluster backgrounds</td></tr><tr><td>DAG edges (most current graphs)</td><td>Rendered with directional particle flow (animated dots moving src→dst)</td><td>Already directional; add particle animation for emphasis</td></tr><tr><td>SCC edges</td><td>Rendered with bidirectional particle flow (particles moving both ways)</td><td>New render style for edges within SCCs</td></tr><tr><td>HUD (nodes / edges / depth / zoom)</td><td>Add: κ readout (max κ across SCCs), SCC count, routing mode indicator</td><td>Extend HUD component</td></tr><tr><td>Right-click context menu (fork/merge/pin/stargate/delete)</td><td>Add: &quot;Bend&quot; (suggest edge to create feedback loop) and &quot;Unbend&quot; (suggest edge to remove to break loop)</td><td>New context menu items with topology preview</td></tr><tr><td>Edge creation (&quot;Connect to…&quot; context menu)</td><td>Topology preview per candidate: &quot;→ NodeX (κ: 0→1 — creates feedback loop)&quot;</td><td>Add <code>previewEdgeImpact</code> computation when submenu opens</td></tr><tr><td>Stargates (sub-graph portals)</td><td>Auto-suggest Stargates at SCC boundaries: &quot;This cluster is a deliberation zone — create a Stargate?&quot;</td><td>Add SCC-boundary detection to Stargate suggestion logic</td></tr><tr><td>Edge inspector (kind, label, strength)</td><td>Add κ impact indicator: &quot;This edge is a fault line (part of the minimum cut)&quot;</td><td>Annotate edges with their role in κ structure</td></tr><tr><td>Node inspector (text, type, pinned)</td><td>Add SCC membership indicator: &quot;This node is in SCC-0 (κ=N)&quot;</td><td>Annotate nodes with SCC membership</td></tr></tbody></table>
+<p><strong>JavaScript implementation note:</strong> Port <code>tarjan_scc</code> and <code>compute_kappa</code> to JS. Run in a web worker to avoid blocking the canvas render loop. For graphs under ~100 nodes (typical BendScript usage), the full computation takes &lt;10ms and can run on every graph mutation. Cache SCC results and invalidate on edge add/remove.</p>
+<p><strong>The &quot;bend&quot; verb, formalized:</strong></p>
+<ul><li><p><strong>To bend</strong> = add an edge that increases κ (transforms DAG → SCC, or increases SCC's κ)</p></li><li><p><strong>To unbend</strong> = remove an edge that decreases κ (simplifies SCC → DAG, or reduces κ)</p></li><li><p><strong>Bending through graph space</strong> = navigating the topology from κ=0 (pure retrieval) to κ&gt;0 (deliberation)</p></li></ul>
+<h3 id="blk-69666">The [&amp;] Protocol (protocol spec v0.1.0)</h3>
+<p><strong>What it defines now:</strong> Five cognitive primitives (<code>&amp;memory</code>, <code>&amp;reason</code>, <code>&amp;time</code>, <code>&amp;space</code>, <code>&amp;govern</code>). Composition operator <code>&amp;</code>. Pipeline operator <code>|&gt;</code>. Formal BNF grammar. JSON schema. Capability registry. Composition algebra. Governance constraints. Capability contracts.</p>
+<p><strong>What κ adds:</strong></p>
+<table><thead><tr><th>Existing Concept</th><th>κ Integration Point</th><th>Change Required</th></tr></thead><tbody><tr><td>Cognitive primitives (4)</td><td>Add <code>&amp;topology</code> as a built-in operation (not a 5th primitive — it's a property of <code>&amp;memory</code>)</td><td>Extend grammar with topology operations</td></tr><tr><td>Pipeline pattern</td><td>Insert <code>&amp;topology.route()</code> between <code>&amp;memory.recall()</code> and <code>&amp;reason.deliberate()</code></td><td>Document the κ-aware pipeline pattern</td></tr><tr><td>Capability contracts (§9)</td><td><code>&amp;topology.analyze</code> contract: must return SCC decomposition + κ values</td><td>Add contract definition</td></tr><tr><td>Governance constraints</td><td>κ can inform governance: &quot;Never skip deliberation when κ &gt; 2&quot; or &quot;Always deliberate on financial topics&quot;</td><td>Add κ-based governance examples</td></tr><tr><td>Provider registry</td><td><code>graphonomous</code> registers as <code>&amp;topology.analyze</code> provider</td><td>Add to registry spec</td></tr><tr><td>Composition algebra (commutative, idempotent, etc.)</td><td><code>&amp;topology.route()</code> is a routing operator, not a capability — it doesn't compose with <code>&amp;</code> but sits in the `\</td><td>&gt;` pipeline</td><td>Document as pipeline-only operation</td></tr></tbody></table>
+<p><strong>Extended pipeline pattern:</strong></p>
+<pre><code>context
+|&gt; &amp;memory.recall(&quot;topic&quot;)
+|&gt; &amp;topology.analyze()           # NEW: compute SCCs + κ
+|&gt; &amp;topology.route()             # NEW: fast path vs deliberation
+|&gt; &amp;reason.deliberate(budget: :κ)
+|&gt; &amp;memory.learn()</code></pre>
+<p><strong>Grammar addition:</strong></p>
+<pre><code>TopologyOp := &quot;&amp;topology&quot; &quot;.&quot; (&quot;analyze&quot; | &quot;route&quot; | &quot;kappa&quot;)</code></pre>
+<h3 id="blk-69696">TickTickClock (ticktickclock.com)</h3>
+<p><strong>What it does now:</strong> Temporal intelligence. Anomaly detection, pattern prediction, time-series continual learning via Mamba SSM.</p>
+<p><strong>What κ adds:</strong></p>
+<table><thead><tr><th>Existing Concept</th><th>κ Integration Point</th><th>Change Required</th></tr></thead><tbody><tr><td>Pattern detection (Mamba SSM)</td><td>Complementary structural signal: discretize time series → build transition graph → compute κ → κ &gt; 0 confirms periodic structure</td><td>Add discrete transition graph construction + κ computation as secondary signal</td></tr><tr><td>Anomaly detection</td><td>κ change over time = topological anomaly: if a previously periodic signal (κ &gt; 0) becomes aperiodic (κ → 0), that's a structural regime change</td><td>Monitor κ of sliding-window transition graphs</td></tr><tr><td>Baseline drift</td><td>κ drift = the periodicity structure of the signal is changing</td><td>Track κ over time as a meta-feature</td></tr></tbody></table>
+<p><strong>Priority:</strong> Lower than Graphonomous/BendScript/Deliberatic. TickTickClock already has strong pattern detection. κ adds a complementary structural signal but isn't the primary mechanism.</p>
+<h3 id="blk-69713">OpenSentience (opensentience.org)</h3>
+<p><strong>What it does now:</strong> Open research initiative. Machine cognition foundations.</p>
+<p><strong>What κ adds:</strong></p>
+<table><thead><tr><th>Content</th><th>What to Publish</th></tr></thead><tbody><tr><td>The κ paper</td><td>Full theoretical background — traced monoidal categories, specialization theorems, Wilson loop correspondence. The intellectual depth piece.</td></tr><tr><td>The proof code</td><td>Runnable verification. 1,926,351 objects. Zero counterexamples. &quot;Don't trust us — run it yourself.&quot;</td></tr><tr><td>Interactive demos</td><td>Live κ computation on user-constructed graphs. Drag nodes, add edges, watch κ change.</td></tr><tr><td>Scale Topology Axis essay</td><td>Broader context — connections to physics, cosmology, consciousness. The &quot;why this matters beyond software&quot; piece.</td></tr><tr><td>Applied κ paper</td><td>This document's parent — how κ became a routing primitive for agent inference. The &quot;from theory to product&quot; story.</td></tr></tbody></table>
+<p><strong>Role:</strong> Credibility and intellectual legitimacy. When someone asks &quot;why does [&amp;] route inference based on graph topology?&quot;, the answer is a proved theorem published on the research arm, not a marketing claim.</p>
+<h3 id="blk-69730">Implementation Order</h3>
+<pre><code>Phase 1 (foundation):
+  ├── Port κ computation to Elixir          → Graphonomous
+  ├── Port κ computation to JavaScript      → BendScript
+  └── Integrate Tarjan SCC into graph index → Graphonomous
+
+Phase 2 (routing):
+  ├── retrieve_context + topology field     → Graphonomous MCP
+  ├── κ router (fast vs deliberate)         → [&amp;] pipeline
+  ├── deliberate_on_scc endpoint            → Deliberatic MCP
+  └── SCC visualization on canvas           → BendScript
+
+Phase 3 (polish):
+  ├── Topology preview on edge hover        → BendScript
+  ├── Bend/Unbend context menu              → BendScript
+  ├── HUD κ display + routing indicator     → BendScript
+  ├── &amp;topology in protocol grammar         → [&amp;] spec
+  └── Publish κ paper + demos               → OpenSentience
+
+Phase 4 (validation):
+  ├── A/B test: κ-routed vs uniform         → Graphonomous
+  ├── Benchmark: topology computation cost  → Graphonomous
+  └── User testing: does topology view help → BendScript</code></pre>
+<p><em>Crosswalk version: 0.1.0. Use alongside: kappa_theory_applied.md (theory), kappa_integration_spec.md (product spec), kappa_reference.py (implementation). Align against: existing Graphonomous spec, Deliberatic spec, BendScript codebase, [&amp;] Protocol v0.1.0, TickTickClock spec, OpenSentience content plan.</em></p></div>
+<p class="src"><a href="/#/graphonomous/docs/spec/kappa_product_crosswalk.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-69564" class="lvl2">Quick Reference for Spec Alignment</a><a href="#blk-69567" class="lvl2">Graphonomous (graphonomous.com)</a><a href="#blk-69592" class="lvl2">Deliberatic (deliberatic.com)</a><a href="#blk-69623" class="lvl2">BendScript (bendscript.com)</a><a href="#blk-69666" class="lvl2">The [&amp;] Protocol (protocol spec v0.1.0)</a><a href="#blk-69696" class="lvl2">TickTickClock (ticktickclock.com)</a><a href="#blk-69713" class="lvl2">OpenSentience (opensentience.org)</a><a href="#blk-69730" class="lvl2">Implementation Order</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/spec/README.md/">Graphonomous — Continual Learning Engine</a><a href="/graphonomous/docs/spec/kappa_integration_spec.md/">κ Integration Spec: Product-Level Specification</a><a href="/graphonomous/docs/spec/kappa_theory_applied.md/">κ-Aware Graph Intelligence: The Theoretical Foundation for [&amp;] Adaptive Inference</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierahzhaftapihcntkh7uvvmlnlyikv67fz2arathv75iqp42nudoora</div></div></div>
+</div></div>
+</body></html>

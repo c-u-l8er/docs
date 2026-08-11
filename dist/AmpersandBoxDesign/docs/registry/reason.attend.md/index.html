@@ -1,0 +1,154 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;reason.attend is the capability page for the &amp;reason.attend subtype in the [&amp;] Protocol.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.attend.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol">
+<meta property="og:description" content="&amp;reason.attend is the capability page for the &amp;reason.attend subtype in the [&amp;] Protocol.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.attend.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&reason.attend — Proactive Attention and Bounded Autonomy for the [&] Protocol","name":"&reason.attend — Proactive Attention and Bounded Autonomy for the [&] Protocol","description":"&reason.attend is the capability page for the &reason.attend subtype in the [&] Protocol.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.attend.md/","identifier":"bagaaieraywin3erlc3pwfuvpcjvxrhla4hh4a4inwticetf5evdf2rltz56a","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. Where it fits in the protocol"},{"@type":"WebPageElement","name":"4. Capability contract"},{"@type":"WebPageElement","name":"5. Operations"},{"@type":"WebPageElement","name":"survey(context) -> attention_map"},{"@type":"WebPageElement","name":"triage(attention_map) -> attention_map"},{"@type":"WebPageElement","name":"dispatch(attention_map) -> attention_cycle"},{"@type":"WebPageElement","name":"6. Architecture pattern"},{"@type":"WebPageElement","name":"7. Example declaration snippet (ampersand.json)"},{"@type":"WebPageElement","name":"8. Governance implications"},{"@type":"WebPageElement","name":"9. Provenance implications"},{"@type":"WebPageElement","name":"10. MCP and A2A implications"},{"@type":"WebPageElement","name":"MCP"},{"@type":"WebPageElement","name":"A2A"},{"@type":"WebPageElement","name":"11. Anti-patterns"},{"@type":"WebPageElement","name":"12. Summary"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"reason.attend.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.attend.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/reason.attend.md</span>
+
+</div></div>
+<div class="lead">&amp;reason.attend is the capability page for the &amp;reason.attend subtype in the [&amp;] Protocol.</div>
+<div class="prose"><h1 id="blk-11370"><code>&amp;reason.attend</code> — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</h1>
+<p><code>&amp;reason.attend</code> is the capability page for the <code>&amp;reason.attend</code> subtype in the [&amp;] Protocol.</p>
+<p>It represents a meta-reasoning surface for deciding <strong>what should receive attention next</strong>, under governance and budget constraints.</p>
+<p>In short:</p>
+<blockquote><p><code>&amp;reason.attend</code> is the protocol capability for agents that should not only reason about a task, but also reason about <strong>which tasks to prioritize, defer, escalate, or propose</strong>.</p></blockquote>
+<h3 id="blk-11376">1. Definition</h3>
+<p><code>&amp;reason.attend</code> is a subtype of the <code>&amp;reason</code> primitive.</p>
+<p>It describes a capability that continuously or on-demand:</p>
+<ul><li><p>surveys active context and goals</p></li><li><p>triages attention candidates</p></li><li><p>dispatches bounded actions according to autonomy policy</p></li></ul>
+<p>Typical outputs include:</p>
+<ul><li><p>ranked attention maps</p></li><li><p>dispatch decisions (<code>explore</code>, <code>focus</code>, <code>act</code>, <code>escalate</code>, <code>propose</code>, <code>idle</code>)</p></li><li><p>cycle results suitable for storage, audit, and later learning</p></li></ul>
+<p>Unlike generic scheduling logic hidden in runtime code, <code>&amp;reason.attend</code> makes this behavior explicit and composable.</p>
+<h3 id="blk-11395">2. Why this capability exists</h3>
+<p>Many agent systems fail not because they cannot reason, but because they cannot <strong>allocate reasoning effort</strong> well.</p>
+<p>Real deployments need to answer:</p>
+<ul><li><p>Which goal is most urgent now?</p></li><li><p>Is coverage sufficient to act, or should we learn first?</p></li><li><p>Is this region cyclic/uncertain and requiring deeper deliberation?</p></li><li><p>Should we defer for approval, escalate, or proceed?</p></li><li><p>Are we within autonomy and budget constraints?</p></li></ul>
+<p><code>&amp;reason.attend</code> exists so that these decisions are part of the protocol surface, not ad hoc internal glue.</p>
+<p>This is especially important for:</p>
+<ul><li><p>long-running agents</p></li><li><p>multi-goal systems</p></li><li><p>cost-constrained deployments</p></li><li><p>safety-sensitive domains requiring escalation policy</p></li></ul>
+<h3 id="blk-11420">3. Where it fits in the protocol</h3>
+<p>The [&amp;] Protocol organizes cognition, embodiment, and governance into six primitive families:</p>
+<ul><li><p><code>&amp;memory</code> — what the agent knows</p></li><li><p><code>&amp;reason</code> — how the agent decides</p></li><li><p><code>&amp;time</code> — when things happen</p></li><li><p><code>&amp;space</code> — where things are</p></li><li><p><code>&amp;body</code> — how the agent is instantiated in an environment (perception, action, affordance)</p></li><li><p><code>&amp;govern</code> — who is acting, under what rules, at what cost</p></li></ul>
+<p><code>&amp;reason.attend</code> sits under <code>&amp;reason</code> and complements local decision subtypes by adding <strong>meta-level control</strong>:</p>
+<ul><li><p><code>&amp;reason.argument</code> helps decide <em>between options</em></p></li><li><p><code>&amp;reason.plan</code> helps decide <em>sequences of actions</em></p></li><li><p><code>&amp;reason.deliberate</code> helps reason through <em>cyclic dependencies</em></p></li><li><p><code>&amp;reason.attend</code> helps decide <em>what to reason or act on next</em></p></li></ul>
+<h3 id="blk-11445">4. Capability contract</h3>
+<p>A representative contract for <code>&amp;reason.attend</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.attend&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Proactive attention contract for surveying active goals, triaging epistemic gaps, and dispatching bounded autonomy actions.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;survey&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;attention_map&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Build a ranked attention map from active goals, coverage assessments, and topology signals.&quot;</span>
+    },
+    <span class="t-key">&quot;triage&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;attention_map&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;attention_map&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Assign urgency, gap scores, and dispatch modes to attention items under governance and budget constraints.&quot;</span>
+    },
+    <span class="t-key">&quot;dispatch&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;attention_map&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;attention_cycle&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Execute or defer bounded explore/focus/act/escalate/propose dispatches according to autonomy level.&quot;</span>
+    }
+  }
+}</code></pre>
+<h3 id="blk-11448">5. Operations</h3>
+<h4 id="blk-11449"><code>survey(context) -&gt; attention_map</code></h4>
+<p>Builds a ranked set of attention candidates from available context, for example:</p>
+<ul><li><p>active goals</p></li><li><p>retrieval signals</p></li><li><p>coverage assessments</p></li><li><p>topology/κ signals</p></li><li><p>recent outcomes</p></li></ul>
+<h4 id="blk-11462"><code>triage(attention_map) -&gt; attention_map</code></h4>
+<p>Annotates and reorders attention items with fields such as:</p>
+<ul><li><p>urgency</p></li><li><p>epistemic gap</p></li><li><p>confidence/risk notes</p></li><li><p>selected dispatch mode</p></li><li><p>bounded rationale</p></li></ul>
+<h4 id="blk-11475"><code>dispatch(attention_map) -&gt; attention_cycle</code></h4>
+<p>Executes or defers actions under policy and budget:</p>
+<ul><li><p><code>explore</code> — enrich memory/coverage</p></li><li><p><code>focus</code> — invoke deeper deliberation</p></li><li><p><code>act</code> — execute bounded action</p></li><li><p><code>escalate</code> — defer to higher-trust/human path</p></li><li><p><code>propose</code> — suggest new goal (if allowed)</p></li><li><p><code>idle</code> — no action</p></li></ul>
+<h3 id="blk-11490">6. Architecture pattern</h3>
+<p>A common proactive loop:</p>
+<pre><code>heartbeat
+  |&gt; &amp;reason.attend.survey()
+  |&gt; &amp;reason.attend.triage()
+  |&gt; &amp;reason.attend.dispatch()
+  |&gt; &amp;memory.graph.store()</code></pre>
+<p>A common demand-triggered loop (constrained tier):</p>
+<pre><code>query
+  |&gt; &amp;memory.graph.recall()
+  |&gt; &amp;memory.graph.topology()
+  |&gt; &amp;reason.attend.survey()
+  |&gt; &amp;reason.attend.dispatch()</code></pre>
+<p>Interpretation:</p>
+<ul><li><p>survey/triage gives explicit prioritization</p></li><li><p>dispatch is budgeted and governed</p></li><li><p>cycle artifacts can be persisted for provenance and learning feedback</p></li></ul>
+<h3 id="blk-11503">7. Example declaration snippet (<code>ampersand.json</code>)</h3>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;reason.attend&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {}
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;autonomy&quot;</span>: {
+      <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;advise&quot;</span>,
+      <span class="t-key">&quot;model_tier&quot;</span>: <span class="t-string">&quot;local_small&quot;</span>,
+      <span class="t-key">&quot;heartbeat_seconds&quot;</span>: <span class="t-num">300</span>,
+      <span class="t-key">&quot;budget&quot;</span>: {
+        <span class="t-key">&quot;max_actions_per_hour&quot;</span>: <span class="t-num">5</span>,
+        <span class="t-key">&quot;max_deliberation_calls_per_query&quot;</span>: <span class="t-num">1</span>,
+        <span class="t-key">&quot;require_approval_for&quot;</span>: [<span class="t-string">&quot;act&quot;</span>, <span class="t-string">&quot;propose&quot;</span>]
+      }
+    }
+  }
+}</code></pre>
+<h3 id="blk-11505">8. Governance implications</h3>
+<p><code>&amp;reason.attend</code> is where autonomy policy becomes operational.</p>
+<p>Relevant governance fields:</p>
+<ul><li><p><code>hard</code> / <code>soft</code></p></li><li><p><code>escalate_when</code></p></li><li><p><code>autonomy.level</code> (<code>observe</code>, <code>advise</code>, <code>act</code>)</p></li><li><p><code>autonomy.model_tier</code> (<code>local_small</code>, <code>local_large</code>, <code>cloud_frontier</code>)</p></li><li><p><code>autonomy.heartbeat_seconds</code></p></li><li><p><code>autonomy.budget</code> controls</p></li></ul>
+<p>Typical effect:</p>
+<ul><li><p><code>observe</code> → survey/triage only, no execution</p></li><li><p><code>advise</code> → propose actions, wait for approval</p></li><li><p><code>act</code> → execute bounded actions inside policy limits</p></li></ul>
+<h3 id="blk-11529">9. Provenance implications</h3>
+<p>Attention decisions should be auditable.</p>
+<p>A useful provenance chain should preserve:</p>
+<ul><li><p>source context used for survey/triage</p></li><li><p>selected mode and rationale</p></li><li><p>governance/autonomy state at dispatch time</p></li><li><p>output cycle summary and timestamps</p></li><li><p>links to any resulting memory writes or action outcomes</p></li></ul>
+<p>This makes it possible to answer:</p>
+<ul><li><p>Why was this goal prioritized?</p></li><li><p>Why was action deferred/escalated?</p></li><li><p>Which policy or budget boundary affected dispatch?</p></li></ul>
+<h3 id="blk-11551">10. MCP and A2A implications</h3>
+<h4 id="blk-11552">MCP</h4>
+<p>A provider may expose tool surfaces such as:</p>
+<ul><li><p><code>attention_survey</code></p></li><li><p><code>attention_run_cycle</code></p></li></ul>
+<p>These allow external runtimes or operators to inspect and trigger attention behavior without custom APIs.</p>
+<h4 id="blk-11560">A2A</h4>
+<p><code>&amp;reason.attend</code> commonly maps to skill identifiers like:</p>
+<ul><li><p><code>proactive-attention</code></p></li><li><p><code>autonomous-planning</code></p></li></ul>
+<p>This allows agent-to-agent systems to discover and delegate attention orchestration capabilities explicitly.</p>
+<h3 id="blk-11568">11. Anti-patterns</h3>
+<p>Common mistakes when modeling <code>&amp;reason.attend</code>:</p>
+<ol><li><p>Treating attention as hidden scheduler logic with no contract.</p></li><li><p>Executing actions in autonomous mode without declared budget bounds.</p></li><li><p>Collapsing <code>survey</code>, <code>triage</code>, and <code>dispatch</code> into an opaque single step with no provenance.</p></li><li><p>Allowing <code>propose</code> in constrained environments without governance gates.</p></li><li><p>Confusing topology-derived routing (<code>&amp;memory.graph</code> structural outputs) with a separate primitive.</p></li></ol>
+<h3 id="blk-11581">12. Summary</h3>
+<p><code>&amp;reason.attend</code> turns “what should the agent focus on next?” into a first-class protocol capability.</p>
+<p>It gives agent systems:</p>
+<ul><li><p>explicit attention maps</p></li><li><p>bounded dispatch behavior</p></li><li><p>autonomy-aware governance integration</p></li><li><p>auditable cycle artifacts</p></li><li><p>clean composition with <code>&amp;memory.graph</code> and <code>&amp;reason.deliberate</code></p></li></ul>
+<p>This is essential for robust, long-running agents that need disciplined prioritization, not only pointwise reasoning.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/reason.attend.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-11376" class="lvl2">1. Definition</a><a href="#blk-11395" class="lvl2">2. Why this capability exists</a><a href="#blk-11420" class="lvl2">3. Where it fits in the protocol</a><a href="#blk-11445" class="lvl2">4. Capability contract</a><a href="#blk-11448" class="lvl2">5. Operations</a><a href="#blk-11449" class="lvl3">survey(context) -&gt; attention_map</a><a href="#blk-11462" class="lvl3">triage(attention_map) -&gt; attention_map</a><a href="#blk-11475" class="lvl3">dispatch(attention_map) -&gt; attention_cycle</a><a href="#blk-11490" class="lvl2">6. Architecture pattern</a><a href="#blk-11503" class="lvl2">7. Example declaration snippet (ampersand.json)</a><a href="#blk-11505" class="lvl2">8. Governance implications</a><a href="#blk-11529" class="lvl2">9. Provenance implications</a><a href="#blk-11551" class="lvl2">10. MCP and A2A implications</a><a href="#blk-11552" class="lvl3">MCP</a><a href="#blk-11560" class="lvl3">A2A</a><a href="#blk-11568" class="lvl2">11. Anti-patterns</a><a href="#blk-11581" class="lvl2">12. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.plan.md/">&amp;reason.plan -- Planning-Oriented Reasoning for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraywin3erlc3pwfuvpcjvxrhla4hh4a4inwticetf5evdf2rltz56a</div></div></div>
+</div></div>
+</body></html>

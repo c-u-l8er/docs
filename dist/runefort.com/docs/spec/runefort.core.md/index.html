@@ -1,0 +1,332 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>@runefort/core — Reference Web Component Framework v0.1 · runefort.com · Ampersand Box</title>
+<meta name="description" content="The canonical browser implementation of the Runefort layout protocol.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/runefort.com/docs/spec/runefort.core.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="@runefort/core — Reference Web Component Framework v0.1">
+<meta property="og:description" content="The canonical browser implementation of the Runefort layout protocol.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/runefort.com/docs/spec/runefort.core.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"@runefort/core — Reference Web Component Framework v0.1","name":"@runefort/core — Reference Web Component Framework v0.1","description":"The canonical browser implementation of the Runefort layout protocol.","url":"https://docs.ampersandboxdesign.com/runefort.com/docs/spec/runefort.core.md/","identifier":"bagaaierazggjq57epazuuvm5aswq2cc5fnlzj346uij6blpfbi4o3xs7wfuq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"runefort.com","url":"https://docs.ampersandboxdesign.com/runefort.com/"},"articleSection":"runefort.com","hasPart":[{"@type":"WebPageElement","name":"0. What this is"},{"@type":"WebPageElement","name":"1. Element reference"},{"@type":"WebPageElement","name":"1.1 \u003crune-floor>"},{"@type":"WebPageElement","name":"1.2 \u003crune-room>"},{"@type":"WebPageElement","name":"1.3 \u003crune-claim>"},{"@type":"WebPageElement","name":"1.4 \u003crune-link>"},{"@type":"WebPageElement","name":"1.5 \u003crune-editor> (optional)"},{"@type":"WebPageElement","name":"1.6 \u003crune-source> (optional)"},{"@type":"WebPageElement","name":"1.7 \u003crune-building> (optional)"},{"@type":"WebPageElement","name":"1.8 \u003crune-elevator> (optional)"},{"@type":"WebPageElement","name":"1.9 \u003crune-marquee> (optional)"},{"@type":"WebPageElement","name":"1.10 Composition example"},{"@type":"WebPageElement","name":"2. Minimal example (no build step)"},{"@type":"WebPageElement","name":"3. Loading from JSON"},{"@type":"WebPageElement","name":"4. Theming"},{"@type":"WebPageElement","name":"5. Framework adapters"},{"@type":"WebPageElement","name":"6. Signals (state model)"},{"@type":"WebPageElement","name":"7. Accessibility"},{"@type":"WebPageElement","name":"8. Editor handoff"},{"@type":"WebPageElement","name":"8.5. Runtime + templates (LLM-authoring layer)"},{"@type":"WebPageElement","name":"8.5.1 Settings store"},{"@type":"WebPageElement","name":"8.5.2 OpenRouter client"},{"@type":"WebPageElement","name":"8.5.3 Prompt templates"},{"@type":"WebPageElement","name":"8.5.4 Generation pipeline"},{"@type":"WebPageElement","name":"8.5.5 Templates registry"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"runefort.com","item":"https://docs.ampersandboxdesign.com/runefort.com/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/runefort.com/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/runefort.com/docs/spec/"},{"@type":"ListItem","position":5,"name":"runefort.core.md","item":"https://docs.ampersandboxdesign.com/runefort.com/docs/spec/runefort.core.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">runefort.com</span>
+<span class="path">runefort.com/docs/spec/runefort.core.md</span>
+
+</div></div>
+<div class="lead">The canonical browser implementation of the Runefort layout protocol.</div>
+<div class="prose"><h1 id="blk-83216">@runefort/core — Reference Web Component Framework v0.1</h1>
+<p><strong>The canonical browser implementation of the Runefort layout protocol.</strong></p>
+<p>Status: draft v0.1 Position: reference framework, not the protocol itself. Conformant alternatives may exist. Companion to: <code>runefort.protocol.md</code>, <code>runefort.dsl.md</code></p>
+<h3 id="blk-83219">0. What this is</h3>
+<p>A set of four custom elements (<code>&lt;rune-floor&gt;</code>, <code>&lt;rune-room&gt;</code>, <code>&lt;rune-claim&gt;</code>, <code>&lt;rune-link&gt;</code>) that render a Runefort layout in any browser, with no framework dependency. ~5KB minified target. Works inside React, Vue, Svelte, Solid, Astro, Lit, Phoenix LiveView, plain HTML, or anywhere a <code>&lt;div&gt;</code> works.</p>
+<p>Built on web standards: Custom Elements v1, CSS Grid, CSS custom properties. No build step required.</p>
+<h3 id="blk-83222">1. Element reference</h3>
+<p>The framework ships <strong>thirteen</strong> custom elements organized into four layers:</p>
+<p><strong>Layout (4 — required by protocol):</strong></p>
+<ul><li><p><code>&lt;rune-floor&gt;</code> — grid container</p></li><li><p><code>&lt;rune-room&gt;</code> — tile inside a floor</p></li><li><p><code>&lt;rune-claim&gt;</code> — file-system region binding (metadata)</p></li><li><p><code>&lt;rune-link&gt;</code> — adjacency declaration for keyboard nav</p></li></ul>
+<p><strong>Source viewer (2 — optional):</strong></p>
+<ul><li><p><code>&lt;rune-editor&gt;</code> — in-browser source viewer</p></li><li><p><code>&lt;rune-source&gt;</code> — source content carrier</p></li></ul>
+<p><strong>Hierarchy (3 — optional):</strong></p>
+<ul><li><p><code>&lt;rune-campus&gt;</code> — top-level container, multi-building</p></li><li><p><code>&lt;rune-building&gt;</code> — multi-floor container</p></li><li><p><code>&lt;rune-elevator&gt;</code> — vertical floor switcher</p></li><li><p><code>&lt;rune-marquee&gt;</code> — horizontal nav strip (campus/building/floor scope)</p></li></ul>
+<p><strong>LLM authoring (4 — optional):</strong></p>
+<ul><li><p><code>&lt;rune-modal&gt;</code> — overlay primitive (split-panel via <code>data-variant=&quot;wide&quot;</code>)</p></li><li><p><code>&lt;rune-thread&gt;</code> — BBS-style threaded message list with reply input</p></li><li><p><code>&lt;rune-message&gt;</code> — message in a static thread</p></li><li><p><code>&lt;rune-action&gt;</code> — declarative action button with hotkey support</p></li></ul>
+<p>Plus a runtime module (<code>runtime.js</code>) and a templates registry (<code>templates.js</code>) that power LLM-driven authoring (settings store, OpenRouter client, generation pipeline, room kinds, floor/building/campus templates, persistence layer).</p>
+<p>A document may use any subset. A single floor with no building is valid; a building with one floor is valid; a building with many floors and several marquees is valid; the LLM authoring elements are entirely optional and only needed for runtime content generation.</p>
+<h4 id="blk-83262">1.1 <code>&lt;rune-floor&gt;</code></h4>
+<p>Container element. Establishes the CSS grid and owns signal state.</p>
+<p><strong>Attributes:</strong></p>
+<table><thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>columns</code></td><td>int</td><td><code>12</code></td><td>Grid column count</td></tr><tr><td><code>rows</code></td><td>int</td><td><code>auto</code></td><td>Grid row count (<code>auto</code> = content-driven)</td></tr><tr><td><code>vocabulary</code></td><td>string</td><td><code>&quot;core&quot;</code></td><td>Active vocabulary identifier</td></tr><tr><td><code>editor</code></td><td>string</td><td><code>&quot;vscode&quot;</code></td><td>Editor URL scheme for anchor handoff: <code>vscode</code>, <code>cursor</code>, <code>zed</code>, <code>idea</code>, <code>file</code>, <code>github</code>, <code>browser</code>, or full template like <code>myeditor://open?path={path}&amp;line={line}</code>. <code>browser</code> disables external URL handoff and pairs the floor with a <code>&lt;rune-editor&gt;</code>.</td></tr><tr><td><code>cell-width</code></td><td>length</td><td><code>auto</code></td><td>Sets <code>--rune-cell-width</code> CSS var</td></tr><tr><td><code>cell-height</code></td><td>length</td><td><code>auto</code></td><td>Sets <code>--rune-cell-height</code> CSS var</td></tr><tr><td><code>gap</code></td><td>length</td><td><code>8px</code></td><td>Sets <code>--rune-gap</code> CSS var</td></tr></tbody></table>
+<p><strong>Properties (JS):</strong></p>
+<pre data-lang="ts"><code>floor.signals = { kappa: <span class="t-num">0.7</span>, queue_depth: <span class="t-num">12</span> };  <span class="t-comment">// live state</span>
+floor.bindings = [
+  { room: <span class="t-string">&quot;memory&quot;</span>, signal: <span class="t-string">&quot;kappa&quot;</span>,
+    thresholds: [
+      { <span class="t-kw">if</span>: <span class="t-string">&quot;&lt; 0.3&quot;</span>, <span class="t-kw">class</span>: <span class="t-string">&quot;cold&quot;</span> },
+      { <span class="t-kw">if</span>: <span class="t-string">&quot;&lt; 0.6&quot;</span>, <span class="t-kw">class</span>: <span class="t-string">&quot;warm&quot;</span> },
+      { <span class="t-kw">if</span>: <span class="t-string">&quot;&gt;= 0.6&quot;</span>, <span class="t-kw">class</span>: <span class="t-string">&quot;hot&quot;</span> }
+    ]
+  }
+];
+floor.layout;   <span class="t-comment">// readonly: returns the parsed runefort.json equivalent</span></code></pre>
+<p><strong>Events:</strong></p>
+<ul><li><p><code>rune:navigate</code> — fires when keyboard navigation moves focus across rooms. <code>detail: { from, to, direction }</code></p></li><li><p><code>rune:signal</code> — fires when a signal value changes. <code>detail: { name, value, affected_rooms }</code></p></li></ul>
+<p><strong>Methods:</strong></p>
+<ul><li><p><code>floor.focus(roomId)</code> — programmatically focus a room</p></li><li><p><code>floor.toJSON()</code> — serialize current layout to runefort.json</p></li></ul>
+<h4 id="blk-83312">1.2 <code>&lt;rune-room&gt;</code></h4>
+<p>A tile. Must be a direct child of <code>&lt;rune-floor&gt;</code> (or nested inside another <code>&lt;rune-room&gt;</code> for v0.2 nesting).</p>
+<p><strong>Attributes:</strong></p>
+<table><thead><tr><th>Attribute</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>id</code></td><td>string</td><td>yes</td><td>Unique within the floor</td></tr><tr><td><code>position</code></td><td><code>&quot;col,row&quot;</code></td><td>yes</td><td>Top-left grid cell, 0-indexed</td></tr><tr><td><code>size</code></td><td><code>&quot;colspan,rowspan&quot;</code></td><td>yes</td><td>Span in grid cells</td></tr><tr><td><code>label</code></td><td>string</td><td>no</td><td>Display name (defaults to <code>id</code>)</td></tr><tr><td><code>anchor</code></td><td>string</td><td>no</td><td>File path with optional line: <code>lib/foo.ex:24</code></td></tr><tr><td><code>state-class</code></td><td>string</td><td>no</td><td>Manual state override (otherwise computed from bindings)</td></tr></tbody></table>
+<p><strong>Properties:</strong></p>
+<pre data-lang="ts"><code>room.meta = { autonomy: <span class="t-string">&quot;advise&quot;</span>, uptime_seconds: <span class="t-num">957840</span> };  <span class="t-comment">// arbitrary vocabulary metadata</span>
+room.stateClass;  <span class="t-comment">// readonly: current computed state</span></code></pre>
+<p><strong>Events (all bubble):</strong></p>
+<ul><li><p><code>rune:open</code> — fires when room is clicked or <code>Enter</code>/<code>Space</code> pressed while focused. <code>detail: { id, anchor, anchorUrl, meta }</code>. Default action navigates to <code>anchorUrl</code>. Cancelable with <code>preventDefault()</code>.</p></li><li><p><code>rune:focus</code> — fires on focus. <code>detail: { id }</code></p></li><li><p><code>rune:state</code> — fires when <code>stateClass</code> changes. <code>detail: { id, oldClass, newClass }</code></p></li></ul>
+<p><strong>Slots:</strong></p>
+<ul><li><p>Default slot — arbitrary content rendered inside the tile (file viewer, metric, anything).</p></li></ul>
+<p><strong>Generated CSS classes:</strong></p>
+<ul><li><p><code>runefort-room</code> (always)</p></li><li><p><code>runefort-state-{class}</code> where <code>{class}</code> is one of <code>cold</code>, <code>warm</code>, <code>hot</code>, <code>fault</code>, <code>idle</code>, or any custom token from a vocabulary</p></li><li><p><code>runefort-focused</code> (when keyboard-focused)</p></li></ul>
+<h4 id="blk-83366">1.3 <code>&lt;rune-claim&gt;</code></h4>
+<p>File-system binding. Nested inside a <code>&lt;rune-room&gt;</code>. Multiple allowed per room.</p>
+<p><strong>Attributes:</strong></p>
+<table><thead><tr><th>Attribute</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>pattern</code></td><td>glob</td><td>yes</td><td>File pattern this room owns</td></tr><tr><td><code>anchor</code></td><td>string</td><td>no</td><td>If set, overrides parent room's <code>anchor</code> for this claim</td></tr></tbody></table>
+<p>A room with multiple claims may render a sub-list of files when focused (renderer's choice). Default behavior: claims are metadata only, used by tooling.</p>
+<h4 id="blk-83383">1.4 <code>&lt;rune-link&gt;</code></h4>
+<p>Adjacency declaration. Direct child of <code>&lt;rune-floor&gt;</code>. Drives keyboard navigation order; may render as a visual connection (renderer's choice).</p>
+<p><strong>Attributes:</strong></p>
+<table><thead><tr><th>Attribute</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>from</code></td><td>room id</td><td>yes</td><td>Source room</td></tr><tr><td><code>to</code></td><td>room id</td><td>yes</td><td>Destination room</td></tr><tr><td><code>kind</code></td><td>enum</td><td>no</td><td><code>adjacent</code> (default), <code>linked</code>, <code>nested</code></td></tr><tr><td><code>bidirectional</code></td><td>bool</td><td>no</td><td>If absent, navigation flows <code>from → to</code> only</td></tr></tbody></table>
+<h4 id="blk-83407">1.5 <code>&lt;rune-editor&gt;</code> (optional)</h4>
+<p>In-browser source viewer. Pairs with a <code>&lt;rune-floor&gt;</code> and intercepts its <code>rune:open</code> events, rendering source for the matched anchor inline instead of navigating to an external editor.</p>
+<p><strong>Attributes:</strong></p>
+<table><thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>for</code></td><td>string (room id)</td><td>(auto)</td><td>The id of the floor this editor pairs with. If omitted, auto-binds to the immediately preceding sibling <code>&lt;rune-floor&gt;</code>.</td></tr></tbody></table>
+<p><strong>Behavior:</strong></p>
+<ul><li><p>On <code>rune:open</code> from the paired floor, calls <code>event.preventDefault()</code> and</p></li></ul>
+<p>renders the source for <code>event.detail.anchor</code>.</p>
+<ul><li><p>Source content comes from <code>&lt;rune-source&gt;</code> children indexed by <code>for</code> attribute.</p></li><li><p>If no source is found for the anchor, renders a &quot;no source available&quot;</p></li></ul>
+<p>placeholder.</p>
+<p><strong>Methods:</strong></p>
+<pre data-lang="ts"><code>editor.<span class="t-fn">show</span>(anchor);   <span class="t-comment">// Programmatically show a source by anchor</span>
+editor.<span class="t-fn">clear</span>();        <span class="t-comment">// Reset to the empty placeholder</span></code></pre>
+<p><strong>Optional syntax highlighting:</strong></p>
+<p>If <code>window.hljs</code> (highlight.js) is loaded — typically via CDN — the editor automatically applies syntax highlighting using the source's <code>language</code> attribute. Without highlight.js, the editor renders plain monospace with line numbers. The framework does not bundle a highlighter; consumers choose what (if anything) to load.</p>
+<h4 id="blk-83434">1.6 <code>&lt;rune-source&gt;</code> (optional)</h4>
+<p>Metadata-only carrier of source content. Child of <code>&lt;rune-editor&gt;</code>.</p>
+<p><strong>Attributes:</strong></p>
+<table><thead><tr><th>Attribute</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>for</code></td><td>string</td><td>yes</td><td>The anchor this source corresponds to (matches a room's <code>anchor</code>).</td></tr><tr><td><code>language</code></td><td>string</td><td>no</td><td>Language identifier for highlighting (e.g. <code>elixir</code>, <code>typescript</code>, <code>javascript</code>). Default <code>text</code>.</td></tr><tr><td><code>data-source</code></td><td>string</td><td>no</td><td>Source content as an attribute (CDATA-safe). If absent, <code>textContent</code> is used.</td></tr></tbody></table>
+<p>The element renders nothing visually; it exists only to feed <code>&lt;rune-editor&gt;</code>.</p>
+<p><strong>Two ways to provide source:</strong></p>
+<pre data-lang="html"><code>&lt;!-- Option A: data-source attribute (recommended for reliability) --&gt;
+&lt;rune-source for=&quot;lib/foo.ex:24&quot; language=&quot;elixir&quot;
+             data-source='defmodule Foo do
+  def hello, do: &quot;world&quot;
+end'&gt;&lt;/rune-source&gt;
+
+&lt;!-- Option B: text content (preserves whitespace if simple) --&gt;
+&lt;rune-source for=&quot;lib/foo.ex:24&quot; language=&quot;elixir&quot;&gt;
+defmodule Foo do
+  def hello, do: &quot;world&quot;
+end
+&lt;/rune-source&gt;</code></pre>
+<p>The <code>data-source</code> attribute is preferred for non-trivial source because it avoids HTML-entity encoding pitfalls inside element bodies.</p>
+<h4 id="blk-83458">1.7 <code>&lt;rune-building&gt;</code> (optional)</h4>
+<p>Multi-floor container. Manages active floor, syncs to URL hash, switches between floors. Direct child <code>&lt;rune-floor&gt;</code> elements are auto-discovered as the building's floors.</p>
+<p><strong>Attributes:</strong></p>
+<table><thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>enum</td><td><code>&quot;switch&quot;</code></td><td><code>&quot;switch&quot;</code> shows only the active floor; <code>&quot;scroll&quot;</code> (v0.2) stacks all floors and smooth-scrolls the active into view.</td></tr><tr><td><code>active-floor</code></td><td>string (room id)</td><td>(auto)</td><td>Initial active floor. Overridden by URL hash if present.</td></tr></tbody></table>
+<p><strong>State priority for initial active floor:</strong></p>
+<ol><li><p>URL hash (<code>#floor-id</code>) — wins if it matches a known floor</p></li><li><p><code>active-floor</code> attribute</p></li><li><p>First <code>&lt;rune-floor&gt;</code> child in document order</p></li></ol>
+<p><strong>Properties:</strong></p>
+<pre data-lang="ts"><code>building.mode;          <span class="t-comment">// &quot;switch&quot; | &quot;scroll&quot;</span>
+building.activeFloor;   <span class="t-comment">// current floor id</span>
+building.floors;        <span class="t-comment">// [{ id, label, level, element }, ...] in document order</span>
+building.<span class="t-fn">activate</span>(id);  <span class="t-comment">// imperative floor switch (also updates URL hash via replaceState)</span></code></pre>
+<p><strong>Events:</strong></p>
+<ul><li><p><code>rune:floor</code> — fires when active floor changes. <code>detail: { from, to }</code>. Bubbles.</p></li></ul>
+<p><strong>URL hash semantics:</strong></p>
+<ul><li><p><code>activate()</code> uses <code>history.replaceState()</code> to update the hash without polluting history. Each elevator click does NOT push a new history entry.</p></li><li><p>Direct hash assignment (<code>location.hash = &quot;fleet&quot;</code>) and back/forward buttons trigger <code>hashchange</code>, which the building listens for.</p></li><li><p>This means: the back button takes you to whatever was BEFORE the building was loaded, not between floors. That's intentional — most users don't expect &quot;back&quot; to mean &quot;previous floor&quot;. If you want pushState behavior, that's a v0.2 attribute.</p></li></ul>
+<h4 id="blk-83496">1.8 <code>&lt;rune-elevator&gt;</code> (optional)</h4>
+<p>Vertical floor-switching sidebar. Auto-generates a list of all floors in the parent <code>&lt;rune-building&gt;</code>. Highlights the active floor automatically.</p>
+<p><strong>Attributes:</strong></p>
+<table><thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>for</code></td><td>string (id)</td><td>(closest ancestor building)</td><td>The id of the building this elevator pairs with.</td></tr></tbody></table>
+<p><strong>Auto-generation:</strong></p>
+<p>The elevator reads each floor's <code>id</code>, <code>label</code>, and <code>data-level</code> attributes and renders a <code>&lt;ul&gt;</code> with one <code>&lt;li&gt;</code> per floor. Each <code>&lt;li&gt;</code> contains an <code>&lt;a href=&quot;#floor-id&quot;&gt;</code> that calls <code>building.activate()</code> on click.</p>
+<p><strong>Override mode:</strong></p>
+<p>If the elevator has any pre-existing <code>&lt;a&gt;</code> children at connect time, auto-generation is suppressed. The elevator wires those authored links to <code>activate()</code> instead. Use this for non-trivial structures (groupings, sub-headings, custom icons).</p>
+<p><strong>Generated DOM (auto mode):</strong></p>
+<pre data-lang="html"><code>&lt;rune-elevator&gt;
+  &lt;ul class=&quot;runefort-elevator-list&quot;&gt;
+    &lt;li class=&quot;runefort-elevator-item runefort-elevator-active&quot; data-floor=&quot;supervisor&quot;&gt;
+      &lt;a class=&quot;runefort-elevator-link&quot; href=&quot;#supervisor&quot;&gt;
+        &lt;span class=&quot;runefort-elevator-level&quot;&gt;L1&lt;/span&gt;
+        &lt;span class=&quot;runefort-elevator-label&quot;&gt;Supervisor&lt;/span&gt;
+      &lt;/a&gt;
+    &lt;/li&gt;
+    &lt;!-- ... more floors --&gt;
+  &lt;/ul&gt;
+&lt;/rune-elevator&gt;</code></pre>
+<h4 id="blk-83514">1.9 <code>&lt;rune-marquee&gt;</code> (optional)</h4>
+<p>Horizontal nav strip. Used for title bars, sub-title bars, or any other horizontal menu. Multiple marquees per building are supported and freely stylable via attributes.</p>
+<p><strong>Attributes:</strong></p>
+<p>The element has no required attributes. Common patterns:</p>
+<table><thead><tr><th>Attribute</th><th>Description</th></tr></thead><tbody><tr><td><code>data-variant=&quot;sub&quot;</code></td><td>Theme hint for sub-title-bar styling (smaller, quieter palette in foundry theme).</td></tr><tr><td><code>data-theme=&quot;foundry&quot;</code></td><td>Apply the foundry theme to a standalone marquee outside a themed building.</td></tr></tbody></table>
+<p><strong>Behavior:</strong></p>
+<p>Authors put HTML inside (typically <code>&lt;a href=&quot;#floor-id&quot;&gt;</code> links). The marquee finds links whose <code>href</code> matches the active floor of the surrounding <code>&lt;rune-building&gt;</code> and adds <code>runefort-marquee-active</code> to them.</p>
+<p>If the marquee is not inside a <code>&lt;rune-building&gt;</code>, it just provides styling — no active-state behavior. This means you can use <code>&lt;rune-marquee&gt;</code> as a generic styled nav bar even outside of multi-floor apps.</p>
+<pre data-lang="html"><code>&lt;rune-marquee&gt;
+  &lt;strong&gt;BRAND&lt;/strong&gt;
+  &lt;span style=&quot;margin-left:auto;&quot;&gt;
+    &lt;a href=&quot;#supervisor&quot;&gt;Supervisor&lt;/a&gt;
+    &lt;a href=&quot;#fleet&quot;&gt;Fleet&lt;/a&gt;
+    &lt;a href=&quot;#docs&quot;&gt;Docs&lt;/a&gt;
+  &lt;/span&gt;
+&lt;/rune-marquee&gt;</code></pre>
+<h4 id="blk-83529">1.10 Composition example</h4>
+<pre data-lang="html"><code>&lt;rune-building data-theme=&quot;foundry&quot;&gt;
+  &lt;rune-marquee&gt;
+    &lt;strong&gt;ᚲ RUNEFORT&lt;/strong&gt;
+    &lt;span style=&quot;margin-left:auto; display:flex; gap:24px;&quot;&gt;
+      &lt;a href=&quot;#problem&quot;&gt;Problem&lt;/a&gt;
+      &lt;a href=&quot;#solution&quot;&gt;Solution&lt;/a&gt;
+      &lt;a href=&quot;#install&quot;&gt;Install&lt;/a&gt;
+    &lt;/span&gt;
+  &lt;/rune-marquee&gt;
+
+  &lt;rune-marquee data-variant=&quot;sub&quot;&gt;
+    &lt;span&gt;v0.1.0-alpha&lt;/span&gt;
+  &lt;/rune-marquee&gt;
+
+  &lt;rune-elevator&gt;&lt;/rune-elevator&gt;
+
+  &lt;rune-floor id=&quot;problem&quot; label=&quot;Problem&quot; data-level=&quot;01&quot; columns=&quot;6&quot;&gt; ... &lt;/rune-floor&gt;
+  &lt;rune-floor id=&quot;solution&quot; label=&quot;Solution&quot; data-level=&quot;02&quot; columns=&quot;6&quot;&gt; ... &lt;/rune-floor&gt;
+  &lt;rune-floor id=&quot;install&quot; label=&quot;Install&quot; data-level=&quot;03&quot; columns=&quot;6&quot;&gt; ... &lt;/rune-floor&gt;
+&lt;/rune-building&gt;</code></pre>
+<p>A complete multi-floor app in 11 lines of meaningful markup. The building owns the routing; the elevator owns the sidebar; the marquees own the horizontal nav.</p>
+<h3 id="blk-83532">2. Minimal example (no build step)</h3>
+<p>Drop this into any HTML file:</p>
+<pre data-lang="html"><code>&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@runefort/core&quot;&gt;&lt;/script&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/@runefort/core/theme.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;rune-floor columns=&quot;6&quot; rows=&quot;4&quot; editor=&quot;vscode&quot;&gt;
+  &lt;rune-room id=&quot;memory&quot; position=&quot;0,0&quot; size=&quot;3,2&quot;
+             label=&quot;memory.ex&quot;
+             anchor=&quot;lib/my_app/forge/memory.ex:24&quot;
+             state-class=&quot;hot&quot;&gt;
+    &lt;rune-claim pattern=&quot;lib/my_app/memory/**/*.ex&quot;&gt;&lt;/rune-claim&gt;
+  &lt;/rune-room&gt;
+
+  &lt;rune-room id=&quot;deploy&quot; position=&quot;3,0&quot; size=&quot;3,2&quot;
+             label=&quot;deploy.ex&quot;
+             anchor=&quot;lib/my_app/forge/deploy.ex&quot;&gt;
+    &lt;rune-claim pattern=&quot;lib/my_app/deploy/**/*.ex&quot;&gt;&lt;/rune-claim&gt;
+  &lt;/rune-room&gt;
+
+  &lt;rune-link from=&quot;memory&quot; to=&quot;deploy&quot; bidirectional&gt;&lt;/rune-link&gt;
+&lt;/rune-floor&gt;
+
+&lt;script&gt;
+  const floor = document.querySelector('rune-floor');
+  floor.bindings = [{
+    room: &quot;memory&quot;, signal: &quot;kappa&quot;,
+    thresholds: [
+      { if: &quot;&lt; 0.3&quot;, class: &quot;cold&quot; },
+      { if: &quot;&lt; 0.6&quot;, class: &quot;warm&quot; },
+      { if: &quot;&gt;= 0.6&quot;, class: &quot;hot&quot; }
+    ]
+  }];
+  // Push a live signal — rooms re-color automatically.
+  setInterval(() =&gt; floor.signals = { kappa: Math.random() }, 2000);
+
+  floor.addEventListener('rune:open', e =&gt; {
+    console.log('opening', e.detail.anchorUrl);
+  });
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>That is the entire framework, in use. No bundler. No npm install (CDN). No JS framework.</p>
+<h3 id="blk-83536">3. Loading from JSON</h3>
+<p>For dynamic layouts, mount a runefort.json directly:</p>
+<pre data-lang="js"><code><span class="t-kw">import</span> { mount } <span class="t-kw">from</span> <span class="t-string">&quot;https://unpkg.com/@runefort/core&quot;</span>;
+
+<span class="t-kw">const</span> layout = <span class="t-kw">await</span> <span class="t-fn">fetch</span>(<span class="t-string">'/runefort.json'</span>).<span class="t-fn">then</span>(r =&gt; r.<span class="t-fn">json</span>());
+<span class="t-fn">mount</span>(document.<span class="t-fn">getElementById</span>(<span class="t-string">'mount'</span>), layout);</code></pre>
+<p><code>mount()</code> renders the four-element structure declaratively. The reverse — <code>floor.toJSON()</code> — round-trips losslessly.</p>
+<h3 id="blk-83540">4. Theming</h3>
+<p>Theming is pure CSS. The framework ships a default theme (<code>theme.css</code>) but expects most consumers to override.</p>
+<p><strong>Custom properties (set on `&lt;rune-floor&gt;` or any ancestor):</strong></p>
+<pre data-lang="css"><code>rune-floor {
+  --rune-cell-width: 120px;
+  --rune-cell-height: 80px;
+  --rune-gap: 12px;
+
+  --rune-color-cold: #6e6c63;
+  --rune-color-warm: #7fb850;
+  --rune-color-hot: #ff8a3d;
+  --rune-color-fault: #8b3a1c;
+  --rune-color-idle: #a8a59a;
+
+  --rune-bg: #141714;
+  --rune-fg: #e8e4d8;
+  --rune-border: #2a322a;
+}</code></pre>
+<p><strong>Class hooks (style your own):</strong></p>
+<pre data-lang="css"><code>.runefort-room { /* every tile */ }
+.runefort-state-hot { /* hot tiles */ }
+.runefort-focused { /* keyboard-focused tile */ }</code></pre>
+<p>No theme is privileged. The dark &quot;foundry&quot; look from runefort.com is <code>theme-foundry.css</code>, one of several optional themes.</p>
+<h3 id="blk-83547">5. Framework adapters</h3>
+<p>Adapters are ~20-50 lines each. They forward props/state to the web components and translate events into framework-native callbacks.</p>
+<p><strong>React:</strong></p>
+<pre data-lang="jsx"><code><span class="t-kw">import</span> { <span class="t-type">Floor</span>, <span class="t-type">Room</span>, <span class="t-type">Claim</span>, <span class="t-type">Link</span> } <span class="t-kw">from</span> <span class="t-string">&quot;@runefort/react&quot;</span>;
+
+&lt;<span class="t-type">Floor</span> columns={<span class="t-num">6</span>} rows={<span class="t-num">4</span>} signals={{ kappa: <span class="t-num">0.7</span> }} bindings={bindings}&gt;
+  &lt;<span class="t-type">Room</span> id=<span class="t-string">&quot;memory&quot;</span> position={[<span class="t-num">0</span>,<span class="t-num">0</span>]} size={[<span class="t-num">3</span>,<span class="t-num">2</span>]} anchor=<span class="t-string">&quot;...&quot;</span>
+        onOpen={e =&gt; router.<span class="t-fn">push</span>(e.detail.anchorUrl)} /&gt;
+&lt;/<span class="t-type">Floor</span>&gt;</code></pre>
+<p><strong>Vue, Svelte, Solid:</strong> identical shape, idiomatic syntax.</p>
+<p><strong>Phoenix LiveView:</strong> <code>&lt;.live_component module={Runefort.Floor} ... /&gt;</code> — the LiveView component pushes signal updates to the JS via <code>pushEvent</code>.</p>
+<p>Adapters are not part of <code>@runefort/core</code>. They live in sibling packages: <code>@runefort/react</code>, <code>@runefort/vue</code>, <code>@runefort/liveview</code>, etc.</p>
+<h3 id="blk-83554">6. Signals (state model)</h3>
+<p>Runefort does not ship reactive primitives. The <code>floor.signals</code> setter is plain property assignment — assign a new object, the framework diffs and updates affected rooms.</p>
+<pre data-lang="js"><code>floor.signals = { ...floor.signals, kappa: <span class="t-num">0.8</span> };</code></pre>
+<p>For ergonomic reactivity, recommend <code>@preact/signals</code> (1KB) or your framework's native reactivity:</p>
+<pre data-lang="js"><code><span class="t-kw">import</span> { signal, effect } <span class="t-kw">from</span> <span class="t-string">&quot;@preact/signals&quot;</span>;
+<span class="t-kw">const</span> kappa = <span class="t-fn">signal</span>(<span class="t-num">0.5</span>);
+<span class="t-fn">effect</span>(() =&gt; floor.signals = { kappa: kappa.value });</code></pre>
+<p>This is intentional. Owning a reactive system is a major scope expansion. Web Components observe attribute and property changes natively; that's all we need.</p>
+<h3 id="blk-83560">7. Accessibility</h3>
+<ul><li><p>Every <code>&lt;rune-room&gt;</code> is <code>tabindex=&quot;0&quot;</code> and has <code>role=&quot;button&quot;</code> by default.</p></li><li><p>Arrow keys navigate the <code>&lt;rune-link&gt;</code> graph; <code>Tab</code> follows DOM order.</p></li><li><p>Each room exposes its <code>label</code> as accessible name; <code>meta</code> content is described via <code>aria-describedby</code> if a <code>&lt;slot&gt;</code>-rendered description exists.</p></li><li><p>Focus is visible. The default theme uses a phosphor outline; custom themes must preserve a visible focus indicator.</p></li><li><p>Color is never the only state indicator — every state class also produces a text/icon cue (configurable).</p></li></ul>
+<h3 id="blk-83572">8. Editor handoff</h3>
+<p>The <code>editor</code> attribute on <code>&lt;rune-floor&gt;</code> controls how <code>anchor</code> strings become URLs. Built-in mappings:</p>
+<table><thead><tr><th><code>editor</code></th><th>Output for <code>anchor=&quot;lib/foo.ex:24&quot;</code></th></tr></thead><tbody><tr><td><code>vscode</code></td><td><code>vscode://file/lib/foo.ex:24</code></td></tr><tr><td><code>cursor</code></td><td><code>cursor://file/lib/foo.ex:24</code></td></tr><tr><td><code>zed</code></td><td><code>zed://file/lib/foo.ex:24</code></td></tr><tr><td><code>idea</code></td><td><code>idea://open?file=lib/foo.ex&amp;line=24</code></td></tr><tr><td><code>file</code></td><td><code>file:///lib/foo.ex</code> (no line)</td></tr><tr><td><code>github</code></td><td><code>https://github.com/lib/foo.ex#L24</code></td></tr><tr><td><code>browser</code></td><td><code>null</code> — no URL is built; the paired <code>&lt;rune-editor&gt;</code> handles the event in the page</td></tr><tr><td>custom template</td><td><code>{path}</code> and <code>{line}</code> are substituted</td></tr></tbody></table>
+<p>The editor handoff respects the user's actual editor preference rather than imposing one. We default to <code>vscode</code> only because it's the most common; <code>browser</code> is recommended for public sites and demos where the visitor may not have any local editor installed.</p>
+<h3 id="blk-83594">8.5. Runtime + templates (LLM-authoring layer)</h3>
+<p>The framework optionally ships a small runtime module that pairs with the LLM-authoring elements (<code>&lt;rune-modal&gt;</code>, <code>&lt;rune-thread&gt;</code>, <code>&lt;rune-action&gt;</code>) and a templates registry. Together they implement: API-key settings, OpenRouter client, prompt templates per content type, generation pipeline that mounts elements into the DOM, refinement loop with thread persistence, and reload-survival via localStorage.</p>
+<h4 id="blk-83596">8.5.1 Settings store</h4>
+<p>Plain <code>localStorage</code>-backed getters/setters at known keys:</p>
+<ul><li><p><code>runefort.openrouter.apiKey</code> — string (treat as sensitive; visible to any script on the page)</p></li><li><p><code>runefort.openrouter.model</code> — model id (defaults to <code>anthropic/claude-sonnet-4</code>)</p></li><li><p><code>runefort.openrouter.budgetUsd</code> — soft cap; generation refuses when <code>costSpent ≥ budgetUsd</code></p></li><li><p><code>runefort.openrouter.costSpent</code> — running tally, accumulated by the OpenRouter client based on usage tokens × model pricing</p></li></ul>
+<p>Disclose to users in the settings UI that the API key is plaintext-readable.</p>
+<h4 id="blk-83608">8.5.2 OpenRouter client</h4>
+<p><code>chat({ messages, model?, maxTokens?, temperature? })</code> POSTs to <code>https://openrouter.ai/api/v1/chat/completions</code> with the user's stored API key. Returns <code>{ content, usage, model, costUsd }</code>. Cost is estimated from the <code>RECOMMENDED_MODELS</code> table (input/output $/1M tokens). Throws if no API key is set or budget is exhausted.</p>
+<h4 id="blk-83610">8.5.3 Prompt templates</h4>
+<p>Per generation level there is a system-prompt builder:</p>
+<ul><li><p><code>promptAddRoom({ existingRooms, gridColumns, userPrompt, kind? })</code></p></li><li><p><code>promptAddFloor({ existingFloors, userPrompt })</code></p></li><li><p><code>promptAddBuilding({ existingBuildings, userPrompt })</code></p></li><li><p><code>promptAddCampus({ existingCampuses, userPrompt })</code></p></li></ul>
+<p>Each composes a base SYSTEM prompt (<code>output ONLY JSON, no fences</code>) with level-specific shape constraints. Room prompts further compose per-<code>kind</code> instructions from <code>templates.js</code>.</p>
+<h4 id="blk-83622">8.5.4 Generation pipeline</h4>
+<p>For each level: <code>generateXFor(parent, userPrompt, opts?)</code> →</p>
+<ol><li><p>Snapshot existing children → produce a non-overlap context.</p></li><li><p>Build messages via prompt template; include <code>kind</code> for rooms.</p></li><li><p>Call <code>chat()</code>; parse JSON via <code>extractJson()</code> (strips fences/prose); validate.</p></li><li><p>Build the corresponding element via <code>xFromJson(json)</code>.</p></li><li><p>Append to parent, persist thread + entity, return result.</p></li></ol>
+<p>Auto-relocation: <code>roomFromJson</code> accepts <code>{ existingRooms, columns }</code> context. If the LLM returns an invalid or overlapping position, it scans for the next free slot. This makes generation robust to LLM mistakes.</p>
+<h4 id="blk-83636">8.5.5 Templates registry</h4>
+<p><code>templates.js</code> exports four registries:</p>
+<ul><li><p><strong>`roomKinds`</strong> — <code>text</code>, <code>youtube</code>, <code>ampersand</code>, <code>metric</code>. Each entry has <code>id</code>, <code>label</code>, <code>icon</code>, <code>description</code>, <code>defaultSize</code>, <code>promptSystem</code> (extra instructions appended to the room system prompt), <code>fields</code>, and an optional <code>renderHook(roomEl, json)</code> that mutates the room after construction (e.g., to inject a YouTube thumbnail card or a metric value display).</p></li><li><p><strong>`floorTemplates`</strong> — <code>blank</code>, <code>dashboard</code>, <code>list</code>, <code>kanban</code>, <code>video-gallery</code>. Each has <code>starterPrompt</code> that pre-fills the prompt textarea.</p></li><li><p><strong>`buildingTemplates`</strong> — <code>blank</code>, <code>ops-center</code>, <code>documentation</code>, <code>marketing-site</code>, <code>learning-hub</code>.</p></li><li><p><strong>`campusTemplates`</strong> — <code>blank</code>, <code>company</code>, <code>product-suite</code>, <code>open-source-project</code>.</p></li></ul>
+<h4 id="blk-83647">8.5.6 Refinement (<code>refineRoom</code>, <code>refineEntity</code>)</h4>
+<p><code>refineRoom(room, prompt)</code> mutates a room in place using the prompt + the room's existing thread as context.</p>
+<p><code>refineEntity(element, prompt)</code> is the multi-level refine. It accepts a floor / building / campus, snapshots its current JSON, sends prompt + thread history + snapshot to the LLM, expects updated JSON back, and rebuilds the element via <code>floorFromJson</code> / <code>buildingFromJson</code> / <code>campusFromJson</code>. The element is replaced in place; the original <code>id</code> is preserved for stable references.</p>
+<h4 id="blk-83650">8.5.7 Persistence — <code>entityStore</code> + <code>restoreEntities</code></h4>
+<p><code>entityStore</code> keyed by entity id stores <code>{ type, parent_id, json, ts }</code>. Every successful <code>generateXFor</code> call writes a record.</p>
+<p><code>restoreEntities()</code> should be called once after page load. It walks the store in order (campus → building → floor → room), finds the parent in the DOM (or <code>&lt;body&gt;</code> for campuses), and mounts the element. Already-present entities (e.g., reloaded from a hash route) are skipped. Returns <code>{ restored, skipped, total }</code> for diagnostics.</p>
+<p>Pair with <code>threadStore</code> for full session persistence: threads keyed by entity id store the prompt+response history per element. <code>clearAll()</code> available on both stores.</p>
+<h4 id="blk-83654">8.5.8 What it deliberately doesn't do</h4>
+<ul><li><p><strong>No streaming.</strong> Each chat call blocks until complete.</p></li><li><p><strong>No retry-on-validation-error.</strong> If the LLM returns malformed JSON, generation throws — no auto-reprompt.</p></li><li><p><strong>No web grounding.</strong> YouTube video IDs invented by the LLM 404. The recommended pattern is to ask the user to paste a real URL/ID for kinds that reference real-world identifiers.</p></li><li><p><strong>No undo/redo.</strong> Refine destroys prior state; only the thread retains history.</p></li><li><p><strong>No multi-key user accounts.</strong> Single user, single API key per browser. For team use, every user pastes their own.</p></li></ul>
+<h3 id="blk-83666">9. What @runefort/core does NOT do</h3>
+<ul><li><p>No router. Use your framework's, or none.</p></li><li><p>No state management beyond signal binding. Use <code>@preact/signals</code>, your framework's store, or nothing.</p></li><li><p>No SSR runtime. The DSL compiler emits static HTML; that IS the SSR story.</p></li><li><p>No virtual DOM. Custom Elements + property setters do everything we need.</p></li><li><p>No theming framework. CSS variables and class hooks; the rest is yours.</p></li><li><p>No vocabulary parsing logic. Vocabularies are interpreted by app code or by a vocabulary-specific extension package (<code>@runefort/vocab-supervisor-floor</code>).</p></li><li><p><strong>No bundled syntax highlighter.</strong> <code>&lt;rune-editor&gt;</code> opportunistically uses <code>window.hljs</code> if present, but the framework does not load or include a highlighter. Consumers pick (highlight.js, prism, shiki, none).</p></li><li><p><strong>No source fetching.</strong> <code>&lt;rune-editor&gt;</code> reads source from <code>&lt;rune-source&gt;</code> children only. Fetching files from URLs, GitHub APIs, or filesystems is the consumer's concern (and may be added as <code>@runefort/source-fetch</code> in a later version).</p></li></ul>
+<h3 id="blk-83684">10. Bundle budget (v0.1 target)</h3>
+<table><thead><tr><th>Component</th><th>Size (min+gzip)</th></tr></thead><tbody><tr><td><code>@runefort/core</code> (4 protocol elements)</td><td>≤ 5 KB</td></tr><tr><td><code>+ @runefort/core editor</code> (<code>&lt;rune-editor&gt;</code> + <code>&lt;rune-source&gt;</code>)</td><td>≤ 3 KB additional</td></tr><tr><td><code>+ @runefort/core building</code> (<code>&lt;rune-building&gt;</code> + <code>&lt;rune-elevator&gt;</code> + <code>&lt;rune-marquee&gt;</code>)</td><td>≤ 3 KB additional</td></tr><tr><td><code>theme.css</code> (default)</td><td>≤ 2 KB</td></tr><tr><td><code>theme-foundry.css</code> (foundry look)</td><td>≤ 4 KB</td></tr><tr><td><code>@runefort/react</code> adapter</td><td>≤ 1 KB</td></tr><tr><td><code>@runefort/liveview</code> adapter</td><td>≤ 1 KB</td></tr></tbody></table>
+<p>Bundle budget is a hard ship gate. If we blow it, we cut features, not raise the budget.</p></div>
+<p class="src"><a href="/#/runefort.com/docs/spec/runefort.core.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-83219" class="lvl2">0. What this is</a><a href="#blk-83222" class="lvl2">1. Element reference</a><a href="#blk-83262" class="lvl3">1.1 &lt;rune-floor&gt;</a><a href="#blk-83312" class="lvl3">1.2 &lt;rune-room&gt;</a><a href="#blk-83366" class="lvl3">1.3 &lt;rune-claim&gt;</a><a href="#blk-83383" class="lvl3">1.4 &lt;rune-link&gt;</a><a href="#blk-83407" class="lvl3">1.5 &lt;rune-editor&gt; (optional)</a><a href="#blk-83434" class="lvl3">1.6 &lt;rune-source&gt; (optional)</a><a href="#blk-83458" class="lvl3">1.7 &lt;rune-building&gt; (optional)</a><a href="#blk-83496" class="lvl3">1.8 &lt;rune-elevator&gt; (optional)</a><a href="#blk-83514" class="lvl3">1.9 &lt;rune-marquee&gt; (optional)</a><a href="#blk-83529" class="lvl3">1.10 Composition example</a><a href="#blk-83532" class="lvl2">2. Minimal example (no build step)</a><a href="#blk-83536" class="lvl2">3. Loading from JSON</a><a href="#blk-83540" class="lvl2">4. Theming</a><a href="#blk-83547" class="lvl2">5. Framework adapters</a><a href="#blk-83554" class="lvl2">6. Signals (state model)</a><a href="#blk-83560" class="lvl2">7. Accessibility</a><a href="#blk-83572" class="lvl2">8. Editor handoff</a><a href="#blk-83594" class="lvl2">8.5. Runtime + templates (LLM-authoring layer)</a><a href="#blk-83596" class="lvl3">8.5.1 Settings store</a><a href="#blk-83608" class="lvl3">8.5.2 OpenRouter client</a><a href="#blk-83610" class="lvl3">8.5.3 Prompt templates</a><a href="#blk-83622" class="lvl3">8.5.4 Generation pipeline</a><a href="#blk-83636" class="lvl3">8.5.5 Templates registry</a><a href="#blk-83647" class="lvl3">8.5.6 Refinement (refineRoom, refineEntity)</a><a href="#blk-83650" class="lvl3">8.5.7 Persistence — entityStore + restoreEntities</a><a href="#blk-83654" class="lvl3">8.5.8 What it deliberately doesn&#39;t do</a><a href="#blk-83666" class="lvl2">9. What @runefort/core does NOT do</a><a href="#blk-83684" class="lvl2">10. Bundle budget (v0.1 target)</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/runefort.com/README.md/">Runefort</a><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a></div><div class="card"><div class="lab">in this folder</div><a href="/runefort.com/docs/spec/runefort.dsl.md/">.rune DSL — v0.1</a><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierazggjq57epazuuvm5aswq2cc5fnlzj346uij6blpfbi4o3xs7wfuq</div></div></div>
+</div></div>
+</body></html>

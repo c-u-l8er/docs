@@ -1,0 +1,314 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;govern.telemetry is the [&amp;] Protocol capability for unified agent telemetry and budget enforcement.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement">
+<meta property="og:description" content="&amp;govern.telemetry is the [&amp;] Protocol capability for unified agent telemetry and budget enforcement.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&govern.telemetry — Observability, Cost Tracking, and Budget Enforcement","name":"&govern.telemetry — Observability, Cost Tracking, and Budget Enforcement","description":"&govern.telemetry is the [&] Protocol capability for unified agent telemetry and budget enforcement.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/govern.telemetry.md/","identifier":"bagaaiera5x7t4uq2zj7pwgeqlpieh7zevsrbjnxyy2sw2xjgj4p7hilpc3fq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. What problems &govern.telemetry solves"},{"@type":"WebPageElement","name":"4. Capability role in the &govern namespace"},{"@type":"WebPageElement","name":"5. Typical use cases"},{"@type":"WebPageElement","name":"Operation-level telemetry"},{"@type":"WebPageElement","name":"Budget pre-check"},{"@type":"WebPageElement","name":"Cost attribution"},{"@type":"WebPageElement","name":"Anomaly detection"},{"@type":"WebPageElement","name":"Audit trail"},{"@type":"WebPageElement","name":"Escalation triggering"},{"@type":"WebPageElement","name":"6. Example capability contract"},{"@type":"WebPageElement","name":"What this contract means"},{"@type":"WebPageElement","name":"7. Core operations"},{"@type":"WebPageElement","name":"emit"},{"@type":"WebPageElement","name":"query"},{"@type":"WebPageElement","name":"budget_check"},{"@type":"WebPageElement","name":"8. OpenTelemetry-compatible event schema"},{"@type":"WebPageElement","name":"9. Budget fields from Delegatic"},{"@type":"WebPageElement","name":"Per-task limits"},{"@type":"WebPageElement","name":"Per-period limits"},{"@type":"WebPageElement","name":"Budget status response"},{"@type":"WebPageElement","name":"10. Architecture patterns"},{"@type":"WebPageElement","name":"Pattern A: emit on every operation"},{"@type":"WebPageElement","name":"Pattern B: budget pre-check before expensive operations"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"govern.telemetry.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/govern.telemetry.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/govern.telemetry.md</span>
+
+</div></div>
+<div class="lead">&amp;govern.telemetry is the [&amp;] Protocol capability for unified agent telemetry and budget enforcement.</div>
+<div class="prose"><h1 id="blk-9258"><code>&amp;govern.telemetry</code> — Observability, Cost Tracking, and Budget Enforcement</h1>
+<p><code>&amp;govern.telemetry</code> is the [&amp;] Protocol capability for <strong>unified agent telemetry and budget enforcement</strong>.</p>
+<p>It describes an agent's ability to:</p>
+<ul><li><p>emit structured telemetry events for every capability operation</p></li><li><p>query historical telemetry by agent, capability, time range, or trace ID</p></li><li><p>check current usage against Delegatic budget policies before executing actions</p></li><li><p>provide the observability backbone for auditing, debugging, and anomaly detection</p></li><li><p>feed cost and usage signals into escalation triggers</p></li></ul>
+<p>In the protocol's five-primitive model:</p>
+<ul><li><p><code>&amp;memory</code> answers <strong>what</strong> the agent knows</p></li><li><p><code>&amp;reason</code> answers <strong>how</strong> the agent decides</p></li><li><p><code>&amp;time</code> answers <strong>when</strong> things change</p></li><li><p><code>&amp;space</code> answers <strong>where</strong> things are</p></li><li><p><code>&amp;govern</code> answers <strong>who approves, what limits apply, and how decisions are audited</strong></p></li></ul>
+<p><code>&amp;govern.telemetry</code> is the subtype that answers: <strong>what happened, how much did it cost, and are we within budget?</strong></p>
+<h3 id="blk-9285">1. Definition</h3>
+<p><code>&amp;govern.telemetry</code> is the capability interface for <strong>structured observability, cost accounting, and budget enforcement</strong>.</p>
+<p>It is used when a system must:</p>
+<ul><li><p>record structured events for every capability invocation</p></li><li><p>track token consumption, cost, and compute time across agents and operations</p></li><li><p>enforce budget limits defined by Delegatic org-level and agent-level policies</p></li><li><p>provide queryable telemetry for audit, debugging, and operational analysis</p></li><li><p>trigger escalation when usage approaches or exceeds defined thresholds</p></li></ul>
+<p>Telemetry is the observability backbone of the [&amp;] Protocol. Without it, you cannot:</p>
+<ul><li><p>enforce budgets</p></li><li><p>audit decisions</p></li><li><p>detect anomalous agent behavior</p></li><li><p>attribute costs to specific agents, goals, or organizations</p></li><li><p>debug multi-step capability pipelines</p></li></ul>
+<p>The protocol treats telemetry as a first-class governance capability, not an afterthought logging layer.</p>
+<h3 id="blk-9312">2. Why this capability exists</h3>
+<p>Many agent systems treat observability as optional or implementation-specific.</p>
+<p>That works for single-agent prototypes, but it fails in production multi-agent deployments:</p>
+<ul><li><p>An agent consumes expensive cloud frontier tokens, but no one tracks the cumulative cost until the monthly bill arrives.</p></li><li><p>A multi-agent workflow produces an unexpected output, but there is no trace linking the sequence of capability operations that led to it.</p></li><li><p>An organization sets budget limits for its agents, but the enforcement mechanism is disconnected from the agents' runtime.</p></li><li><p>A governance audit requires evidence of what an agent did and why, but telemetry is scattered across provider-specific log formats.</p></li></ul>
+<p>In all of these cases, the missing layer is <strong>structured, protocol-native telemetry with budget enforcement</strong>.</p>
+<p><code>&amp;govern.telemetry</code> gives the protocol a standard way to declare that capability.</p>
+<h3 id="blk-9326">3. What problems <code>&amp;govern.telemetry</code> solves</h3>
+<p><code>&amp;govern.telemetry</code> is useful when a system needs to answer questions like:</p>
+<ul><li><p>How many tokens has this agent consumed in the current period?</p></li><li><p>What is the estimated cost of this agent's operations so far?</p></li><li><p>Is this agent approaching its per-task or per-period budget limit?</p></li><li><p>Which capability operations are the most expensive across the organization?</p></li><li><p>What was the full trace of operations that led to this output?</p></li><li><p>Are there anomalous patterns in agent behavior (unexpected cost spikes, unusual operation sequences)?</p></li><li><p>Which goal or task is consuming the most resources?</p></li></ul>
+<p>Without this capability, telemetry tends to get buried inside:</p>
+<ul><li><p>provider-specific logging systems with no cross-provider interoperability</p></li><li><p>custom cost-tracking spreadsheets updated manually</p></li><li><p>implicit budget assumptions with no enforcement mechanism</p></li><li><p>unstructured log files that are difficult to query or audit</p></li></ul>
+<p>The protocol makes it explicit instead.</p>
+<h3 id="blk-9354">4. Capability role in the <code>&amp;govern</code> namespace</h3>
+<p>The <code>&amp;govern</code> primitive supports multiple subtypes, including:</p>
+<ul><li><p><code>&amp;govern.escalation</code></p></li><li><p><code>&amp;govern.identity</code></p></li><li><p><code>&amp;govern.telemetry</code></p></li></ul>
+<p>A helpful distinction is:</p>
+<ul><li><p><code>&amp;govern.escalation</code> = decision handoff when thresholds are crossed</p></li><li><p><code>&amp;govern.identity</code> = agent authentication and trust verification</p></li><li><p><code>&amp;govern.telemetry</code> = observability, cost tracking, and budget enforcement</p></li></ul>
+<p><code>&amp;govern.telemetry</code> is the right subtype when the main problem is <strong>knowing what agents are doing, how much it costs, and whether they are within budget</strong>.</p>
+<h3 id="blk-9372">5. Typical use cases</h3>
+<h4 id="blk-9373">Operation-level telemetry</h4>
+<p>Every capability invocation emits a structured event recording the agent, capability, operation, duration, token consumption, and estimated cost.</p>
+<h4 id="blk-9375">Budget pre-check</h4>
+<p>Before executing a potentially expensive operation, the agent calls <code>budget_check</code> to verify that the action will not exceed Delegatic policy limits.</p>
+<h4 id="blk-9377">Cost attribution</h4>
+<p>Telemetry events include <code>org_id</code> and <code>goal_id</code> fields, enabling cost attribution by organization, project, or individual goal.</p>
+<h4 id="blk-9379">Anomaly detection</h4>
+<p>Querying telemetry for unusual patterns (cost spikes, excessive operation counts, unexpected error rates) enables proactive governance intervention.</p>
+<h4 id="blk-9381">Audit trail</h4>
+<p>Governance auditors query telemetry by trace ID to reconstruct the full sequence of capability operations that led to a specific outcome.</p>
+<h4 id="blk-9383">Escalation triggering</h4>
+<p>When <code>budget_check</code> reveals that usage is approaching limits, the result can be fed into <code>&amp;govern.escalation</code> to request human approval before proceeding.</p>
+<h3 id="blk-9385">6. Example capability contract</h3>
+<p>The authoritative contract is at <code>contracts/v0.1.0/govern.telemetry.contract.json</code>.</p>
+<p>A representative summary:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;govern.telemetry&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Unified telemetry contract for observability, cost tracking, and budget enforcement.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;emit&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;telemetry_event&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;ack&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Emit a structured telemetry event to the collector.&quot;</span>
+    },
+    <span class="t-key">&quot;query&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;telemetry_query&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;telemetry_results&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Query telemetry events by agent, capability, time range, or trace ID.&quot;</span>
+    },
+    <span class="t-key">&quot;budget_check&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;budget_query&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;budget_status&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Check current usage against Delegatic policy limits.&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;reason.*&quot;</span>,
+    <span class="t-string">&quot;&amp;time.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.*&quot;</span>,
+    <span class="t-string">&quot;&amp;govern.*&quot;</span>,
+    <span class="t-string">&quot;telemetry_event&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;govern.escalation&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;telemetry-emission&quot;</span>,
+    <span class="t-string">&quot;budget-enforcement&quot;</span>,
+    <span class="t-string">&quot;cost-tracking&quot;</span>
+  ]
+}</code></pre>
+<h4 id="blk-9389">What this contract means</h4>
+<p>This contract says that <code>&amp;govern.telemetry</code> can:</p>
+<ul><li><p>accept telemetry events from every capability primitive (memory, reason, time, space, govern)</p></li><li><p>provide structured query access to historical telemetry</p></li><li><p>check usage against budget policies before operations proceed</p></li></ul>
+<p>It also says that this capability composes well with:</p>
+<ul><li><p>all <code>&amp;*</code> capabilities upstream, since every capability should emit telemetry</p></li><li><p><code>&amp;govern.escalation</code> downstream, since budget violations trigger escalation</p></li></ul>
+<p>The <code>accepts_from</code> list is intentionally broad: <code>&amp;govern.telemetry</code> is the universal collector for the entire capability stack.</p>
+<h3 id="blk-9405">7. Core operations</h3>
+<h4 id="blk-9406"><code>emit</code></h4>
+<p>Purpose:</p>
+<ul><li><p>record a structured telemetry event for a capability operation</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>telemetry_event</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>ack</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>any capability operation completes (successfully or with error)</p></li><li><p>the system needs to record token consumption, cost, or duration</p></li><li><p>provenance requires a telemetry record for the operation</p></li></ul>
+<h4 id="blk-9427"><code>query</code></h4>
+<p>Purpose:</p>
+<ul><li><p>retrieve historical telemetry events matching specified criteria</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>telemetry_query</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>telemetry_results</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>auditing a specific trace to reconstruct the operation sequence</p></li><li><p>analyzing cost or usage patterns across agents, capabilities, or time ranges</p></li><li><p>debugging unexpected behavior in multi-step pipelines</p></li></ul>
+<h4 id="blk-9448"><code>budget_check</code></h4>
+<p>Purpose:</p>
+<ul><li><p>verify that a planned operation will not exceed Delegatic budget limits</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>budget_query</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>budget_status</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>an agent is about to execute a potentially expensive operation</p></li><li><p>the system needs to determine whether escalation is required before proceeding</p></li><li><p>periodic budget monitoring checks are scheduled</p></li></ul>
+<h3 id="blk-9469">8. OpenTelemetry-compatible event schema</h3>
+<p>Telemetry events conform to an OpenTelemetry-compatible schema:</p>
+<ul><li><p><code>trace_id</code> — UUIDv7 or W3C trace ID, linking related operations</p></li><li><p><code>span_id</code> — unique span identifier within the trace</p></li><li><p><code>agent_id</code> — the agent that performed the operation</p></li><li><p><code>capability</code> — the <code>&amp;</code>-prefixed capability key (e.g., <code>&amp;reason.plan</code>)</p></li><li><p><code>operation</code> — the specific operation (e.g., <code>plan</code>, <code>evaluate</code>)</p></li><li><p><code>provider</code> — the provider that executed the operation</p></li><li><p><code>timestamp_ms</code> — epoch milliseconds when the operation occurred</p></li><li><p><code>duration_ms</code> — wall-clock duration of the operation</p></li><li><p><code>tokens_consumed</code> — token count (if applicable)</p></li><li><p><code>cost_usd_estimated</code> — estimated cost in USD (if applicable)</p></li><li><p><code>compute_ms</code> — compute time in milliseconds (if applicable)</p></li><li><p><code>status</code> — <code>ok</code> or <code>error</code></p></li><li><p><code>error_class</code> — error classification (if status is error)</p></li><li><p><code>org_id</code> — Delegatic org reference for cost attribution</p></li><li><p><code>goal_id</code> — Graphonomous goal reference for goal-level tracking</p></li><li><p><code>metadata</code> — provider-specific additional fields</p></li></ul>
+<p>This schema is designed to be compatible with existing OpenTelemetry infrastructure while carrying [&amp;] Protocol-specific attribution fields.</p>
+<h3 id="blk-9505">9. Budget fields from Delegatic</h3>
+<p>Budget enforcement uses limits defined in Delegatic org-level and agent-level policies:</p>
+<h4 id="blk-9507">Per-task limits</h4>
+<ul><li><p><code>max_tokens_per_task</code> — maximum tokens an agent may consume for a single task</p></li><li><p><code>max_cost_usd_per_task</code> — maximum estimated cost in USD for a single task</p></li><li><p><code>max_compute_ms_per_task</code> — maximum compute time for a single task</p></li></ul>
+<h4 id="blk-9515">Per-period limits</h4>
+<ul><li><p><code>max_tokens_per_period</code> — maximum tokens across all tasks within the budget period</p></li><li><p><code>max_cost_usd_per_period</code> — maximum estimated cost across all tasks within the budget period</p></li></ul>
+<h4 id="blk-9521">Budget status response</h4>
+<p>A <code>budget_check</code> response includes:</p>
+<ul><li><p>current usage against each applicable limit</p></li><li><p>percentage consumed</p></li><li><p>whether any limit is exceeded or approaching threshold</p></li><li><p>recommended action (proceed, warn, or escalate)</p></li></ul>
+<p>When a budget limit is approached or exceeded, the recommended action feeds directly into <code>&amp;govern.escalation</code> for human review.</p>
+<h3 id="blk-9533">10. Architecture patterns</h3>
+<h4 id="blk-9534">Pattern A: emit on every operation</h4>
+<pre><code>capability_result
+|&gt; &amp;govern.telemetry.emit()
+|&gt; continue_pipeline()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>every capability operation should be recorded for audit and cost tracking</p></li><li><p>this is the default pattern and should be present in all production agents</p></li></ul>
+<h4 id="blk-9542">Pattern B: budget pre-check before expensive operations</h4>
+<pre><code>planned_action
+|&gt; &amp;govern.telemetry.budget_check()
+|&gt; &amp;govern.escalation.escalate_if_over_budget()
+|&gt; execute_if_approved()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>the planned operation is expected to consume significant tokens or cost</p></li><li><p>Delegatic policy defines budget limits that must be enforced</p></li></ul>
+<h4 id="blk-9550">Pattern C: telemetry-driven anomaly detection</h4>
+<pre><code>periodic_check
+|&gt; &amp;govern.telemetry.query(recent_window)
+|&gt; detect_anomalies()
+|&gt; &amp;govern.escalation.escalate_if_anomalous()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>the system monitors for unusual agent behavior patterns</p></li><li><p>cost spikes or unexpected error rates should trigger governance intervention</p></li></ul>
+<h4 id="blk-9558">Pattern D: full audit trace reconstruction</h4>
+<pre><code>audit_request
+|&gt; &amp;govern.telemetry.query(trace_id)
+|&gt; reconstruct_operation_sequence()
+|&gt; generate_audit_report()</code></pre>
+<p>Use this when:</p>
+<ul><li><p>a governance audit requires the complete operation history for a specific decision or outcome</p></li></ul>
+<h3 id="blk-9564">11. Example declaration</h3>
+<p>A concrete <code>ampersand.json</code> fragment:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;govern.telemetry&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+    <span class="t-key">&quot;config&quot;</span>: {
+      <span class="t-key">&quot;emit_all_operations&quot;</span>: <span class="t-lit">true</span>,
+      <span class="t-key">&quot;budget_enforcement&quot;</span>: <span class="t-string">&quot;delegatic&quot;</span>
+    }
+  }
+}</code></pre>
+<p>A fuller declaration:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;ResearchAnalyst&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;continual-learning&quot;</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;reason.plan&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+      <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;research analysis with cost-aware tool selection&quot;</span>
+    },
+    <span class="t-key">&quot;&amp;govern.telemetry&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;emit_all_operations&quot;</span>: <span class="t-lit">true</span>,
+        <span class="t-key">&quot;budget_enforcement&quot;</span>: <span class="t-string">&quot;delegatic&quot;</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;govern.escalation&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;timeout_seconds&quot;</span>: <span class="t-num">1800</span>
+      }
+    },
+    <span class="t-key">&quot;&amp;govern.identity&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;registry&quot;</span>: <span class="t-string">&quot;fleetprompt&quot;</span>,
+        <span class="t-key">&quot;verify_on_a2a&quot;</span>: <span class="t-lit">true</span>
+      }
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never exceed per-task budget without escalation&quot;</span>,
+      <span class="t-string">&quot;Always emit telemetry for every capability operation&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer local_small model tier when task complexity permits&quot;</span>,
+      <span class="t-string">&quot;Prefer cached results over fresh computation when staleness is acceptable&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span>,
+      <span class="t-key">&quot;cost_exceeds_usd&quot;</span>: <span class="t-num">100</span>,
+      <span class="t-key">&quot;budget_remaining_below_percent&quot;</span>: <span class="t-num">20</span>
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h3 id="blk-9569">12. Governance and provenance implications</h3>
+<p>Telemetry is inherently a governance and provenance tool. Every telemetry event is both an observability record and a governance artifact.</p>
+<h4 id="blk-9571">Cross-references</h4>
+<ul><li><p><strong>OpenSentience OS-006</strong>: defines autonomy levels that determine which operations require telemetry and at what granularity</p></li><li><p><strong>OpenSentience OS-007</strong>: addresses the threat of unaccounted agent operations — telemetry provides the detection layer for unauthorized or anomalous activity</p></li><li><p><strong>Delegatic budget policies</strong>: budget limits (per-task, per-period) are the enforcement targets that <code>budget_check</code> validates against</p></li><li><p><strong>FleetPrompt trust scores</strong>: telemetry history contributes to FleetPrompt's trust score computation — agents with consistent, auditable telemetry earn higher trust</p></li></ul>
+<h4 id="blk-9581">Representative provenance record</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;govern.telemetry&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;emit&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T12:00:00Z&quot;</span>,
+  <span class="t-key">&quot;trace_id&quot;</span>: <span class="t-string">&quot;tr-01JQ7...&quot;</span>,
+  <span class="t-key">&quot;agent_id&quot;</span>: <span class="t-string">&quot;agt-01JQ7...&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.plan&quot;</span>,
+  <span class="t-key">&quot;tokens_consumed&quot;</span>: <span class="t-num">4200</span>,
+  <span class="t-key">&quot;cost_usd_estimated&quot;</span>: <span class="t-num">0.042</span>,
+  <span class="t-key">&quot;duration_ms&quot;</span>: <span class="t-num">1850</span>,
+  <span class="t-key">&quot;org_id&quot;</span>: <span class="t-string">&quot;org-acme&quot;</span>,
+  <span class="t-key">&quot;goal_id&quot;</span>: <span class="t-string">&quot;goal-research-q1&quot;</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;os-tel-155&quot;</span>
+}</code></pre>
+<p>Provenance should help answer questions like:</p>
+<ul><li><p>How much did this specific operation cost?</p></li><li><p>What is the total cost attributed to this goal or organization?</p></li><li><p>Which agent consumed the most tokens in this period?</p></li><li><p>Was the budget check performed before this expensive operation?</p></li><li><p>Which operations contributed to the budget threshold being crossed?</p></li></ul>
+<h3 id="blk-9595">13. Compatible providers</h3>
+<p>Representative compatible providers include:</p>
+<ul><li><p><code>opensentience</code> (primary runtime telemetry collector)</p></li><li><p><code>delegatic</code> (budget policy definition and enforcement rules)</p></li><li><p>OpenTelemetry-compatible collectors and backends</p></li><li><p>custom observability platforms exposed behind MCP-compatible surfaces</p></li><li><p>enterprise cost-management systems with structured event ingestion</p></li></ul>
+<h4 id="blk-9608">Default ecosystem fit</h4>
+<p>The most natural default ecosystem pairing is:</p>
+<ul><li><p><code>opensentience</code> for the telemetry runtime (collection, querying, emission)</p></li><li><p><code>delegatic</code> for budget policy definitions that drive enforcement</p></li></ul>
+<p>Why they fit together:</p>
+<ul><li><p>OpenSentience collects and stores telemetry events from all capability operations</p></li><li><p>Delegatic defines the budget policies that <code>budget_check</code> enforces</p></li><li><p>Together they form the complete observability and cost governance stack</p></li></ul>
+<p>The protocol stance remains:</p>
+<blockquote><p><code>&amp;govern.telemetry</code> is the capability. <code>opensentience</code> is one provider that may satisfy it.</p></blockquote>
+<h3 id="blk-9626">14. A2A-facing skills</h3>
+<p>A <code>&amp;govern.telemetry</code> capability may advertise skills such as:</p>
+<ul><li><p><code>telemetry-emission</code></p></li><li><p><code>budget-enforcement</code></p></li><li><p><code>cost-tracking</code></p></li></ul>
+<p>These are useful when generating A2A-style agent cards, because they let an external coordination surface say more than &quot;has telemetry.&quot;</p>
+<p>Instead, it can say the agent can:</p>
+<ul><li><p>emit structured telemetry for every capability operation</p></li><li><p>enforce budget limits before executing expensive actions</p></li><li><p>track and attribute costs by agent, goal, and organization</p></li></ul>
+<h3 id="blk-9644">15. Anti-patterns</h3>
+<h4 id="blk-9645">Anti-pattern 1: treat telemetry as optional</h4>
+<p>In production multi-agent systems, every capability operation should emit telemetry. Skipping telemetry for &quot;cheap&quot; operations creates blind spots in audit trails and budget tracking.</p>
+<h4 id="blk-9647">Anti-pattern 2: enforce budgets without telemetry</h4>
+<p>Budget enforcement without real-time telemetry is guesswork. The <code>budget_check</code> operation depends on accurate cumulative usage data from <code>emit</code>.</p>
+<h4 id="blk-9649">Anti-pattern 3: emit telemetry without budget fields</h4>
+<p>Telemetry events that omit <code>tokens_consumed</code>, <code>cost_usd_estimated</code>, or <code>org_id</code> cannot be used for budget enforcement or cost attribution. Always include the full schema.</p>
+<h4 id="blk-9651">Anti-pattern 4: query telemetry only for debugging</h4>
+<p>Telemetry is not just for debugging. It drives budget enforcement, anomaly detection, trust scoring, and governance audits. Treating it as a debug-only tool underutilizes the capability.</p>
+<h4 id="blk-9653">Anti-pattern 5: separate telemetry from escalation</h4>
+<p>When budget limits are approached, the natural next step is escalation. Disconnecting telemetry from escalation creates a gap where budget violations go unaddressed.</p>
+<h3 id="blk-9655">16. Summary</h3>
+<p><code>&amp;govern.telemetry</code> is the [&amp;] Protocol capability for <strong>unified observability, cost tracking, and budget enforcement</strong>.</p>
+<p>It is the right capability when a system needs to:</p>
+<ul><li><p>record structured telemetry for every capability operation</p></li><li><p>track token consumption, cost, and compute time across agents</p></li><li><p>enforce Delegatic budget policies before expensive operations proceed</p></li><li><p>provide queryable audit trails for governance review</p></li><li><p>feed usage signals into escalation when thresholds are approached</p></li></ul>
+<p>In one sentence:</p>
+<blockquote><p><code>&amp;govern.telemetry</code> gives agents a protocol-native way to observe, measure, and enforce the cost of everything they do.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/govern.telemetry.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-9285" class="lvl2">1. Definition</a><a href="#blk-9312" class="lvl2">2. Why this capability exists</a><a href="#blk-9326" class="lvl2">3. What problems &amp;govern.telemetry solves</a><a href="#blk-9354" class="lvl2">4. Capability role in the &amp;govern namespace</a><a href="#blk-9372" class="lvl2">5. Typical use cases</a><a href="#blk-9373" class="lvl3">Operation-level telemetry</a><a href="#blk-9375" class="lvl3">Budget pre-check</a><a href="#blk-9377" class="lvl3">Cost attribution</a><a href="#blk-9379" class="lvl3">Anomaly detection</a><a href="#blk-9381" class="lvl3">Audit trail</a><a href="#blk-9383" class="lvl3">Escalation triggering</a><a href="#blk-9385" class="lvl2">6. Example capability contract</a><a href="#blk-9389" class="lvl3">What this contract means</a><a href="#blk-9405" class="lvl2">7. Core operations</a><a href="#blk-9406" class="lvl3">emit</a><a href="#blk-9427" class="lvl3">query</a><a href="#blk-9448" class="lvl3">budget_check</a><a href="#blk-9469" class="lvl2">8. OpenTelemetry-compatible event schema</a><a href="#blk-9505" class="lvl2">9. Budget fields from Delegatic</a><a href="#blk-9507" class="lvl3">Per-task limits</a><a href="#blk-9515" class="lvl3">Per-period limits</a><a href="#blk-9521" class="lvl3">Budget status response</a><a href="#blk-9533" class="lvl2">10. Architecture patterns</a><a href="#blk-9534" class="lvl3">Pattern A: emit on every operation</a><a href="#blk-9542" class="lvl3">Pattern B: budget pre-check before expensive operations</a><a href="#blk-9550" class="lvl3">Pattern C: telemetry-driven anomaly detection</a><a href="#blk-9558" class="lvl3">Pattern D: full audit trace reconstruction</a><a href="#blk-9564" class="lvl2">11. Example declaration</a><a href="#blk-9569" class="lvl2">12. Governance and provenance implications</a><a href="#blk-9571" class="lvl3">Cross-references</a><a href="#blk-9581" class="lvl3">Representative provenance record</a><a href="#blk-9595" class="lvl2">13. Compatible providers</a><a href="#blk-9608" class="lvl3">Default ecosystem fit</a><a href="#blk-9626" class="lvl2">14. A2A-facing skills</a><a href="#blk-9644" class="lvl2">15. Anti-patterns</a><a href="#blk-9645" class="lvl3">Anti-pattern 1: treat telemetry as optional</a><a href="#blk-9647" class="lvl3">Anti-pattern 2: enforce budgets without telemetry</a><a href="#blk-9649" class="lvl3">Anti-pattern 3: emit telemetry without budget fields</a><a href="#blk-9651" class="lvl3">Anti-pattern 4: query telemetry only for debugging</a><a href="#blk-9653" class="lvl3">Anti-pattern 5: separate telemetry from escalation</a><a href="#blk-9655" class="lvl2">16. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.plan.md/">&amp;reason.plan -- Planning-Oriented Reasoning for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera5x7t4uq2zj7pwgeqlpieh7zevsrbjnxyy2sw2xjgj4p7hilpc3fq</div></div></div>
+</div></div>
+</body></html>

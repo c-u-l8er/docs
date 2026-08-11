@@ -1,0 +1,114 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>The [&amp;] Protocol Ecosystem · (root) · Ampersand Box</title>
+<meta name="description" content="This repository holds the [&amp;] Protocol specification and every in-tree reference implementation of it, plus the portfolio products that build on top. This…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/ECOSYSTEM.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The [&amp;] Protocol Ecosystem">
+<meta property="og:description" content="This repository holds the [&amp;] Protocol specification and every in-tree reference implementation of it, plus the portfolio products that build on top. This…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/ECOSYSTEM.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"The [&] Protocol Ecosystem","name":"The [&] Protocol Ecosystem","description":"This repository holds the [&] Protocol specification and every in-tree reference implementation of it, plus the portfolio products that build on top. This…","url":"https://docs.ampersandboxdesign.com/ECOSYSTEM.md/","identifier":"bagaaieraeddw4ah43otzt5tanayqi2wzdk6nji2dzyc5qwxxwhal4mzmsaxa","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"(root)","url":"https://docs.ampersandboxdesign.com/(root)/"},"articleSection":"(root)","hasPart":[{"@type":"WebPageElement","name":"The stack, in one diagram"},{"@type":"WebPageElement","name":"The dark-factory closed loop"},{"@type":"WebPageElement","name":"Product map"},{"@type":"WebPageElement","name":"Shipping products"},{"@type":"WebPageElement","name":"Progressing products (4)"},{"@type":"WebPageElement","name":"Frontend apps (2)"},{"@type":"WebPageElement","name":"Spec-only (5)"},{"@type":"WebPageElement","name":"The three protocols in depth"},{"@type":"WebPageElement","name":"Shared infrastructure"},{"@type":"WebPageElement","name":"Documentation hubs"},{"@type":"WebPageElement","name":"Repository orientation"},{"@type":"WebPageElement","name":"Where to start reading"},{"@type":"WebPageElement","name":"License"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"ECOSYSTEM.md","item":"https://docs.ampersandboxdesign.com/ECOSYSTEM.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">(root)</span>
+<span class="path">ECOSYSTEM.md</span>
+
+</div></div>
+<div class="lead">This repository holds the [&amp;] Protocol specification and every in-tree reference implementation of it, plus the portfolio products that build on top. This document is the one-pa…</div>
+<div class="prose"><h1 id="blk-21531">The [&amp;] Protocol Ecosystem</h1>
+<p>This repository holds the [&amp;] Protocol specification and every in-tree reference implementation of it, plus the portfolio products that build on top. This document is the one-page tour for someone trying to understand how the pieces fit.</p>
+<p>For authoritative status — what's shipped, what's in progress, what the test counts are — see <a href="#/STACK_COMPLETION.md" data-link>`STACK_COMPLETION.md`</a>.</p>
+<h3 id="blk-21534">The stack, in one diagram</h3>
+<pre><code>                      ┌──────────────────────────────────────┐
+                      │   [&amp;] Protocol — composition algebra  │
+                      │    6 primitives · 2 operators        │
+                      │    (AmpersandBoxDesign/)             │
+                      └───────────────┬──────────────────────┘
+                                      │ compiles into
+                  ┌───────────────────┴────────────────────┐
+                  │                                        │
+          ┌───────┴────────┐                      ┌────────┴────────┐
+          │   MCP runtime  │                      │  A2A coordination│
+          │   transport    │                      │    transport      │
+          └───────┬────────┘                      └─────────────────┘
+                  │
+   ┌──────────────┼───────────────────────────────────────────┐
+   │              │                                           │
+   │   OS protocols (OpenSentience) — 11 normative protocols  │
+   │   OS-001 Continual Learning  → Graphonomous              │
+   │   OS-002 κ-Routing           → Graphonomous              │
+   │   OS-003 Deliberation        → Graphonomous              │
+   │   OS-004 Attention           → Graphonomous              │
+   │   OS-005 Model Tier          → (system-level)            │
+   │   OS-006 Governance Shim     → delegatic                 │
+   │   OS-007 Adversarial         → (draft)                   │
+   │   OS-008 Agent Harness       → open_sentience            │
+   │   OS-009 PRISM benchmark     → PRISM                     │
+   │   OS-010 PULSE temporal      → PULSE                     │
+   │   OS-011 Embodiment          → body-browser + body-os    │
+   └──────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="blk-21536">The dark-factory closed loop</h3>
+<p>The north-star use case for this stack is the <strong>dark factory</strong>: agents hosted on machines that operate autonomously, learn continually, and transfer skills to each other. Seven steps close the loop:</p>
+<pre><code>  ┌──────────────────────────────────────────────────────────────┐
+  │  1. Machine A perceives &amp; acts           ←  body-browser     │
+  │                                              body-os         │
+  │  2. Records InteractionTrace             ←  Graphonomous     │
+  │     (&amp;memory.episodic.store)                                 │
+  │                                                              │
+  │  3. Learns via memory consolidation       ←  Graphonomous    │
+  │     (consolidation, κ-routing)                               │
+  │                                                              │
+  │  4. Crystallizes to SkillCandidate        ←  FleetPrompt     │
+  │     (Crystallizer + Oban PollWorker +                        │
+  │      GraphonomousClient.HTTP)                                │
+  │                                                              │
+  │  5. Ships via FleetPrompt                 ←  FleetPrompt     │
+  │     (Registry, Trust, InstallEngine)                         │
+  │                                                              │
+  │  6. Machine B installs + replays          ←  body-browser    │
+  │     (with fresh authorization on             body-os         │
+  │      destructive edges per OS-011 §4.4)      delegatic       │
+  │                                              (authorizer)    │
+  │                                                              │
+  │  7. PRISM measures                        ←  PRISM           │
+  │     (OS-011 scenario suite,                                  │
+  │      BYOR cross-system benchmark)                            │
+  └──────────────────────────────────────────────────────────────┘</code></pre>
+<p>Current status (see <code>STACK_COMPLETION.md</code> for always-live detail): <strong>7 of 7 steps fully in-tree</strong>. Every step has implemented code paths, passing tests, and (for the MCP-exposed pieces) deployment configs.</p>
+<h3 id="blk-21540">Product map</h3>
+<h4 id="blk-21541">Shipping products</h4>
+<table><thead><tr><th>Product</th><th>Role in the loop</th><th>Transport</th><th>Test count</th></tr></thead><tbody><tr><td>Graphonomous</td><td>episodic memory + continual learning engine</td><td>MCP (stdio/HTTP)</td><td>573</td></tr><tr><td>PULSE</td><td>temporal loop manifest standard</td><td>npm package</td><td>3</td></tr><tr><td>PRISM</td><td>cross-system CL benchmark</td><td>MCP + LiveView</td><td>172</td></tr><tr><td>[&amp;] reference</td><td>protocol spec + Elixir CLI</td><td>CLI</td><td>58</td></tr><tr><td>body-browser</td><td><code>&amp;body.browser</code> provider (OS-011)</td><td>MCP (stdio/HTTP)</td><td>41</td></tr><tr><td>body-os</td><td><code>&amp;body.os</code> provider (OS-011)</td><td>MCP (stdio/HTTP)</td><td>41</td></tr><tr><td><strong>delegatic</strong></td><td><strong>OS-006 authorization kernel</strong></td><td><strong>MCP (stdio/HTTP)</strong></td><td><strong>42</strong></td></tr></tbody></table>
+<h4 id="blk-21575">Progressing products (4)</h4>
+<table><thead><tr><th>Product</th><th>Role</th><th>Tests</th></tr></thead><tbody><tr><td>Agentelic</td><td>spec-driven agent builder</td><td>66</td></tr><tr><td>FleetPrompt</td><td>marketplace + trust + install + crystallizer</td><td>121 (108 + 13 install tests)</td></tr><tr><td>SpecPrompt</td><td>spec-driven dev toolchain</td><td>93</td></tr><tr><td>RuneFort</td><td>spatial cognition visualization (SvelteKit)</td><td>—</td></tr></tbody></table>
+<h4 id="blk-21592">Frontend apps (2)</h4>
+<p>WebHost.Systems (React dashboard, 143 tests) and BendScript (SvelteKit KAG editor, 26 tests).</p>
+<h4 id="blk-21594">Spec-only (5)</h4>
+<p>AgenTroMatic (1118-line spec), Delegatic (630), Deliberatic (418), GeoFleetic (987), TickTickClock (1013).</p>
+<h3 id="blk-21596">The three protocols in depth</h3>
+<p>All three fit together as a three-layer stack:</p>
+<ul><li><p><strong>[&amp;]</strong> (composition) — agents declare what capabilities they have via <code>.ampersand.json</code>.</p></li><li><p><strong>PULSE</strong> (temporal) — agents declare how their capabilities circulate via <code>.pulse.json</code>.</p></li><li><p><strong>PRISM</strong> (diagnostic) — benchmarks measure the loops over time.</p></li></ul>
+<p>Example: Graphonomous declares its continual-learning loop in <code>PULSE/manifests/graphonomous.continual_learning.json</code>; PRISM reads that manifest directly to discover phases, signatures, and substrates — no separate benchmark config needed.</p>
+<h3 id="blk-21606">Shared infrastructure</h3>
+<ul><li><p><strong>Supabase</strong>: single shared instance, <code>fleet.*</code>/<code>kag.*</code>/<code>webhost.*</code>/…/<code>spec.*</code> per-product schemas. One <code>supabase start</code> runs every product's data layer. 35 migrations live in <code>ampersand-supabase/migrations/</code>.</p></li><li><p><strong>amp-nav</strong>: Web Component distributed to every portfolio marketing site via <code>sync-nav.sh</code>. Current version: <code>v0.3.3</code>.</p></li><li><p><strong>ampersand-plugins</strong>: Claude Code skill packs (<code>graphonomous</code>, <code>prism</code>, <code>ampersand-protocol</code>, <code>spec-driven-dev</code>).</p></li><li><p><strong>Fly.io deployments</strong>: three live today (<code>graphonomous-mcp</code>, <code>prism-eval</code>, <code>os-pulse-mcp</code>); <code>body-browser-mcp</code> and <code>body-os-mcp</code> have production <code>fly.toml</code> + <code>Dockerfile</code> ready to deploy.</p></li></ul>
+<h3 id="blk-21616">Documentation hubs</h3>
+<p>Each product's in-repo documentation entry point. These links resolve on GitHub and in the docs site:</p>
+<ul><li><p><strong>[&amp;] Protocol</strong> (composition) — <a href="#/AmpersandBoxDesign/docs/index.md" data-link>docs hub</a> · <a href="#/AmpersandBoxDesign/docs/architecture.md" data-link>architecture</a> · <a href="#/AmpersandBoxDesign/docs/UMBRELLA.md" data-link>the umbrella pipeline</a></p></li><li><p><strong>The three-protocol stack</strong> — [[&amp;] · PULSE · PRISM, working together](PULSE/docs/THREE_PROTOCOL_STACK.md)</p></li><li><p><strong>Graphonomous</strong> (memory) — <a href="#/graphonomous/docs/index.md" data-link>docs hub</a> · <a href="#/graphonomous/docs/spec/README.md" data-link>spec</a></p></li><li><p><strong>PULSE</strong> (temporal) — <a href="#/opensentience.org/docs/spec/OS-010-PULSE-SPECIFICATION.md" data-link>OS-010 specification</a></p></li><li><p><strong>PRISM</strong> (diagnostic) — <a href="#/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md" data-link>OS-009 specification</a></p></li><li><p><strong>OpenSentience</strong> (OS protocols) — <a href="#/opensentience.org/docs/index.md" data-link>docs hub</a> · <a href="#/opensentience.org/docs/spec/README.md" data-link>spec index</a></p></li><li><p><strong>BendScript</strong> (documents) — <a href="#/bendscript.com/docs/spec/README.md" data-link>protocol spec</a></p></li><li><p><strong>WebHost.Systems</strong> (runtime) — <a href="#/WebHost.Systems/docs/index.md" data-link>docs hub</a> · <a href="#/WebHost.Systems/docs/spec/00_MASTER_SPEC.md" data-link>master spec</a></p></li><li><p><strong>Agentelic</strong> — <a href="#/agentelic.com/docs/index.md" data-link>docs hub</a> · <strong>AgenTroMatic</strong> — <a href="#/agentromatic.com/docs/index.md" data-link>docs hub</a> · <strong>Delegatic</strong> — <a href="#/delegatic.com/docs/index.md" data-link>docs hub</a> · <strong>Deliberatic</strong> — <a href="#/deliberatic.com/docs/index.md" data-link>docs hub</a></p></li><li><p><strong>FleetPrompt</strong> — <a href="#/fleetprompt.com/docs/index.md" data-link>docs hub</a> · <strong>SpecPrompt</strong> — <a href="#/specprompt.com/docs/index.md" data-link>docs hub</a> · <strong>GeoFleetic</strong> — <a href="#/geofleetic.com/docs/index.md" data-link>docs hub</a> · <strong>TickTickClock</strong> — <a href="#/ticktickclock.com/docs/index.md" data-link>docs hub</a></p></li><li><p><strong>RuneFort</strong> — <a href="#/runefort.com/docs/spec/runefort.protocol.md" data-link>protocol spec</a> · <strong>Workbench</strong> — <a href="#/workbench/docs/spec/README.md" data-link>spec</a> · <strong>Weave</strong> — <a href="#/weave/docs/weave-design.md" data-link>design</a></p></li></ul>
+<h3 id="blk-21641">Repository orientation</h3>
+<p>Cross-cutting docs at the repo root that frame the whole portfolio:</p>
+<ul><li><p><a href="#/README.md" data-link>Repository README</a> — top-level entry point and quick orientation</p></li><li><p><a href="#/AGENTS.md" data-link>Agent guide (AGENTS.md)</a> — how agents should operate across this monorepo</p></li><li><p><a href="#/STACK_COMPLETION.md" data-link>Stack status</a> — authoritative per-product versions, test counts, deployment state</p></li><li><p><a href="#/STACK_PLANNING.md" data-link>Stack planning</a> — roadmap and sequencing across products</p></li><li><p><a href="#/STACK_ARCHITECTURE_GAP_REVIEW.md" data-link>Stack architecture gap review</a> — known gaps between spec and implementation</p></li><li><p><a href="#/STACK_SITEMAP.md" data-link>Stack sitemap</a> — every product, domain, and doc surface in one map</p></li><li><p><a href="#/docs/README.md" data-link>Documentation atlas</a> — the filesystem-mirror docs site that renders this corpus</p></li></ul>
+<h3 id="blk-21658">Where to start reading</h3>
+<ol><li><p><strong>Spec writer</strong>: start with <code>AmpersandBoxDesign/SPEC.md</code> and <code>opensentience.org/docs/spec/</code></p></li><li><p><strong>Memory-system builder</strong>: start with <code>graphonomous/docs/spec/README.md</code> and <code>graphonomous/CLAUDE.md</code></p></li><li><p><strong>Body provider builder</strong>: start with <code>body-browser/README.md</code>, then <code>body-os/README.md</code></p></li><li><p><strong>Benchmark user</strong>: start with <code>PRISM/docs/</code> and <code>PRISM/priv/fixtures/os011/README.md</code></p></li><li><p><strong>Marketplace developer</strong>: start with <code>fleetprompt.com/docs/spec/README.md</code></p></li><li><p><strong>Everything at once</strong>: this file + <code>STACK_COMPLETION.md</code> + <code>CLAUDE.md</code> at the repo root</p></li></ol>
+<h3 id="blk-21672">License</h3>
+<p>Everything in-tree is Apache-2.0 unless noted otherwise in the directory's LICENSE file.</p></div>
+<p class="src"><a href="/#/ECOSYSTEM.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-21534" class="lvl2">The stack, in one diagram</a><a href="#blk-21536" class="lvl2">The dark-factory closed loop</a><a href="#blk-21540" class="lvl2">Product map</a><a href="#blk-21541" class="lvl3">Shipping products</a><a href="#blk-21575" class="lvl3">Progressing products (4)</a><a href="#blk-21592" class="lvl3">Frontend apps (2)</a><a href="#blk-21594" class="lvl3">Spec-only (5)</a><a href="#blk-21596" class="lvl2">The three protocols in depth</a><a href="#blk-21606" class="lvl2">Shared infrastructure</a><a href="#blk-21616" class="lvl2">Documentation hubs</a><a href="#blk-21641" class="lvl2">Repository orientation</a><a href="#blk-21658" class="lvl2">Where to start reading</a><a href="#blk-21672" class="lvl2">License</a></nav></div><div class="card"><div class="lab">links to</div><a href="/STACK_COMPLETION.md/">[&amp;] Stack Completion Status</a><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/architecture.md/">Architecture Guide</a><a href="/AmpersandBoxDesign/docs/UMBRELLA.md/">The [&amp;] Umbrella — one stack: declare → … → observe</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/spec/README.md/">Graphonomous — Continual Learning Engine</a><a href="/opensentience.org/docs/spec/OS-010-PULSE-SPECIFICATION.md/">PULSE — Protocol for Uniform Loop State Exchange</a><a href="/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md/">PRISM — Protocol for Rating Iterative System Memory</a><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/opensentience.org/docs/spec/README.md/">OpenSentience — Open Research into Machine Cognition</a><a href="/bendscript.com/docs/spec/README.md/">BendScript Protocol — v0.1</a><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/spec/00_MASTER_SPEC.md/">webhost.systems — MASTER ENGINEERING SPEC (v1)</a><a href="/agentelic.com/docs/index.md/">Agentelic Documentation</a><a href="/agentromatic.com/docs/index.md/">AgenTroMatic Documentation</a><a href="/delegatic.com/docs/index.md/">Delegatic Documentation</a><a href="/deliberatic.com/docs/index.md/">Deliberatic Documentation</a><a href="/fleetprompt.com/docs/index.md/">FleetPrompt Documentation</a><a href="/specprompt.com/docs/index.md/">SpecPrompt Documentation</a><a href="/geofleetic.com/docs/index.md/">GeoFleetic Documentation</a><a href="/ticktickclock.com/docs/index.md/">TickTickClock Documentation</a><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a><a href="/workbench/docs/spec/README.md/">Workbench — Crystallize agent behavior into replayable skills</a><a href="/weave/docs/weave-design.md/">Weave — a better Bend, built invariant-first (consolidated)</a><a href="/README.md/">ProjectAmp2</a><a href="/AGENTS.md/">ProjectAmp2</a><a href="/STACK_PLANNING.md/">[&amp;] Stack Planning</a><a href="/STACK_ARCHITECTURE_GAP_REVIEW.md/">[&amp;] Stack Architecture Gap Review</a><a href="/STACK_SITEMAP.md/">[&amp;] Stack Sitemap</a><a href="/docs/README.md/">stackdocs — the whole [&amp;] stack, as a filesystem you can walk</a></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/PULSE/docs/THREE_PROTOCOL_STACK.md/">The Three-Protocol Stack: [&amp;], PULSE, PRISM</a><a href="/STACK_COMPLETION.md/">[&amp;] Stack Completion Status</a><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/agentelic.com/docs/index.md/">Agentelic Documentation</a><a href="/agentromatic.com/docs/index.md/">AgenTroMatic Documentation</a><a href="/bendscript.com/docs/spec/README.md/">BendScript Protocol — v0.1</a><a href="/delegatic.com/docs/index.md/">Delegatic Documentation</a><a href="/deliberatic.com/docs/index.md/">Deliberatic Documentation</a><a href="/fleetprompt.com/docs/index.md/">FleetPrompt Documentation</a><a href="/geofleetic.com/docs/index.md/">GeoFleetic Documentation</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a><a href="/specprompt.com/docs/index.md/">SpecPrompt Documentation</a><a href="/ticktickclock.com/docs/index.md/">TickTickClock Documentation</a><a href="/weave/docs/weave-design.md/">Weave — a better Bend, built invariant-first (consolidated)</a><a href="/workbench/docs/spec/README.md/">Workbench — Crystallize agent behavior into replayable skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/AGENTS.md/">ProjectAmp2</a><a href="/CLAUDE.md/">ProjectAmp2</a><a href="/README.md/">ProjectAmp2</a><a href="/STACK_ARCHITECTURE_GAP_REVIEW.md/">[&amp;] Stack Architecture Gap Review</a><a href="/STACK_COMPLETION.md/">[&amp;] Stack Completion Status</a><a href="/STACK_PLANNING.md/">[&amp;] Stack Planning</a><a href="/STACK_SITEMAP.md/">[&amp;] Stack Sitemap</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraeddw4ah43otzt5tanayqi2wzdk6nji2dzyc5qwxxwhal4mzmsaxa</div></div></div>
+</div></div>
+</body></html>

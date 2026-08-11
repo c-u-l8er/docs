@@ -1,0 +1,333 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;reason.argument is the capability page for the &amp;reason.argument subtype in the [&amp;] Protocol.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.argument.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol">
+<meta property="og:description" content="&amp;reason.argument is the capability page for the &amp;reason.argument subtype in the [&amp;] Protocol.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.argument.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&reason.argument — Evidence-Weighted Deliberation for the [&] Protocol","name":"&reason.argument — Evidence-Weighted Deliberation for the [&] Protocol","description":"&reason.argument is the capability page for the &reason.argument subtype in the [&] Protocol.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.argument.md/","identifier":"bagaaiera6fpqx2a5mjvcgmhypchops5mxhivbjdfxld3opschjbbeon5nfpa","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. Where it fits in the protocol"},{"@type":"WebPageElement","name":"4. What makes reason.argument different from other reasoning subtypes"},{"@type":"WebPageElement","name":"Compared with reason.vote"},{"@type":"WebPageElement","name":"Compared with reason.plan"},{"@type":"WebPageElement","name":"Compared with implicit model reasoning"},{"@type":"WebPageElement","name":"5. Capability contract"},{"@type":"WebPageElement","name":"Contract meaning"},{"@type":"WebPageElement","name":"6. Architecture diagram"},{"@type":"WebPageElement","name":"Interpretation"},{"@type":"WebPageElement","name":"7. Example ampersand.json usage"},{"@type":"WebPageElement","name":"Explicit provider binding"},{"@type":"WebPageElement","name":"Auto provider binding"},{"@type":"WebPageElement","name":"8. Example API surface"},{"@type":"WebPageElement","name":"evaluate"},{"@type":"WebPageElement","name":"justify"},{"@type":"WebPageElement","name":"9. Composition patterns"},{"@type":"WebPageElement","name":"Pattern A: Time -> Memory -> Argument"},{"@type":"WebPageElement","name":"Pattern B: Memory -> Argument"},{"@type":"WebPageElement","name":"Pattern C: Time + Space -> Argument"},{"@type":"WebPageElement","name":"Pattern D: Argument -> Memory"},{"@type":"WebPageElement","name":"10. Governance role"},{"@type":"WebPageElement","name":"Example governance block"},{"@type":"WebPageElement","name":"Why this matters"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"reason.argument.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/reason.argument.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/reason.argument.md</span>
+
+</div></div>
+<div class="lead">&amp;reason.argument is the capability page for the &amp;reason.argument subtype in the [&amp;] Protocol.</div>
+<div class="prose"><h1 id="blk-10894"><code>&amp;reason.argument</code> — Evidence-Weighted Deliberation for the [&amp;] Protocol</h1>
+<p><code>&amp;reason.argument</code> is the capability page for the <code>&amp;reason.argument</code> subtype in the [&amp;] Protocol.</p>
+<p>It represents a reasoning surface built for:</p>
+<ul><li><p>evidence-weighted evaluation</p></li><li><p>auditable decision selection</p></li><li><p>policy-aware deliberation</p></li><li><p>explicit justification</p></li><li><p>safe escalation when confidence is low</p></li></ul>
+<p>In short:</p>
+<blockquote><p><code>&amp;reason.argument</code> is the protocol capability for agents that should not merely answer, but <strong>argue from evidence and constraints</strong>.</p></blockquote>
+<h3 id="blk-10911">1. Definition</h3>
+<p><code>&amp;reason.argument</code> is a subtype of the <code>&amp;reason</code> primitive.</p>
+<p>It describes a reasoning capability that takes structured or enriched context and produces:</p>
+<ul><li><p>a decision</p></li><li><p>a ranked set of options</p></li><li><p>a justification</p></li><li><p>a governance-aware recommendation</p></li></ul>
+<p>Unlike a generic “LLM thinks here” step, <code>&amp;reason.argument</code> is modeled as a distinct protocol capability with explicit contracts and composition rules.</p>
+<h3 id="blk-10924">2. Why this capability exists</h3>
+<p>Many agent systems need more than retrieval and tool use.</p>
+<p>They need a way to:</p>
+<ul><li><p>compare competing actions</p></li><li><p>weigh evidence from multiple sources</p></li><li><p>operate under hard and soft constraints</p></li><li><p>explain why an action was selected</p></li><li><p>escalate instead of acting when confidence is too low</p></li></ul>
+<p>That is the role of <code>&amp;reason.argument</code>.</p>
+<p>This capability is especially important for systems where decisions must be:</p>
+<ul><li><p>reviewed</p></li><li><p>justified</p></li><li><p>governed</p></li><li><p>audited</p></li><li><p>replayed through provenance</p></li></ul>
+<p>Examples include:</p>
+<ul><li><p>infrastructure incident response</p></li><li><p>customer support with policy boundaries</p></li><li><p>compliance-sensitive workflows</p></li><li><p>research synthesis</p></li><li><p>operations planning with explicit tradeoffs</p></li></ul>
+<h3 id="blk-10963">3. Where it fits in the protocol</h3>
+<p>The [&amp;] Protocol organizes cognition, embodiment, and governance into six primitive families:</p>
+<ul><li><p><code>&amp;memory</code> — what the agent knows</p></li><li><p><code>&amp;reason</code> — how the agent decides</p></li><li><p><code>&amp;time</code> — when things happen</p></li><li><p><code>&amp;space</code> — where things are</p></li><li><p><code>&amp;body</code> — how the agent is instantiated in an environment (perception, action, affordance)</p></li><li><p><code>&amp;govern</code> — who is acting, under what rules, at what cost</p></li></ul>
+<p><code>&amp;reason.argument</code> lives under <code>&amp;reason</code> and is the subtype most directly associated with:</p>
+<ul><li><p>deliberation</p></li><li><p>comparison</p></li><li><p>justification</p></li><li><p>constrained evaluation</p></li></ul>
+<p>It composes naturally with:</p>
+<ul><li><p><code>&amp;memory.*</code> for evidence retrieval</p></li><li><p><code>&amp;time.*</code> for anomaly or forecast input</p></li><li><p><code>&amp;space.*</code> for localized decision context</p></li></ul>
+<h3 id="blk-10996">4. What makes <code>reason.argument</code> different from other reasoning subtypes</h3>
+<h4 id="blk-10997">Compared with <code>reason.vote</code></h4>
+<ul><li><p><code>reason.argument</code> emphasizes structured evaluation and justification</p></li><li><p><code>reason.vote</code> emphasizes aggregation and consensus across candidates or agents</p></li></ul>
+<h4 id="blk-11003">Compared with <code>reason.plan</code></h4>
+<ul><li><p><code>reason.argument</code> emphasizes selecting or defending a decision</p></li><li><p><code>reason.plan</code> emphasizes producing a sequence of steps</p></li></ul>
+<h4 id="blk-11009">Compared with implicit model reasoning</h4>
+<ul><li><p><code>reason.argument</code> is explicit, typed, inspectable, and composable</p></li><li><p>implicit reasoning is often hidden inside prompts or application code</p></li></ul>
+<h3 id="blk-11015">5. Capability contract</h3>
+<p>A representative contract for <code>&amp;reason.argument</code> looks like this:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.argument&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Argumentative reasoning contract for evidence-weighted evaluation, policy-aware deliberation, and auditable decision selection.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;evaluate&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;enriched_context&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;decision&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Evaluate enriched evidence and return a decision artifact.&quot;</span>
+    },
+    <span class="t-key">&quot;deliberate&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;candidate_set&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;ranked_options&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Compare candidate actions or explanations and rank them by support and policy fit.&quot;</span>
+    },
+    <span class="t-key">&quot;justify&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;decision&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;justification&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Produce an auditable justification for a selected decision.&quot;</span>
+    },
+    <span class="t-key">&quot;learn&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;observation&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;ack&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Accept post-decision observations for future policy or argument refinement.&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;time.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.*&quot;</span>,
+    <span class="t-string">&quot;context&quot;</span>,
+    <span class="t-string">&quot;candidate_set&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;decision-evaluation&quot;</span>,
+    <span class="t-string">&quot;evidence-based-deliberation&quot;</span>,
+    <span class="t-string">&quot;decision-justification&quot;</span>
+  ]
+}</code></pre>
+<h4 id="blk-11018">Contract meaning</h4>
+<p>This contract says:</p>
+<ul><li><p><code>evaluate</code> consumes <code>enriched_context</code> and outputs <code>decision</code></p></li><li><p><code>deliberate</code> consumes <code>candidate_set</code> and outputs <code>ranked_options</code></p></li><li><p><code>justify</code> consumes <code>decision</code> and outputs <code>justification</code></p></li></ul>
+<p>It also says:</p>
+<ul><li><p>upstream inputs can come from memory, time, space, or generic context</p></li><li><p>outputs can feed memory or final output surfaces</p></li><li><p>this capability may advertise A2A-facing skills such as <code>decision-evaluation</code></p></li></ul>
+<h3 id="blk-11035">6. Architecture diagram</h3>
+<p>A typical <code>&amp;reason.argument</code> pipeline looks like this:</p>
+<pre><code>raw_data
+  -&gt; &amp;time.anomaly.detect()
+  -&gt; &amp;memory.graph.enrich()
+  -&gt; &amp;space.fleet.enrich()
+  -&gt; &amp;reason.argument.evaluate()
+  -&gt; decision</code></pre>
+<p>Or, in a support workflow:</p>
+<pre><code>support_case
+  -&gt; &amp;memory.vector.enrich()
+  -&gt; &amp;memory.episodic.enrich()
+  -&gt; &amp;reason.argument.deliberate()
+  -&gt; ranked_options
+  -&gt; &amp;reason.argument.justify()
+  -&gt; justification</code></pre>
+<h4 id="blk-11040">Interpretation</h4>
+<ul><li><p>upstream capabilities gather and enrich evidence</p></li><li><p><code>&amp;reason.argument</code> evaluates candidate actions or conclusions</p></li><li><p>the result can be stored, surfaced, or escalated</p></li><li><p>provenance can preserve the chain from evidence to judgment</p></li></ul>
+<h3 id="blk-11050">7. Example <code>ampersand.json</code> usage</h3>
+<h4 id="blk-11051">Explicit provider binding</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;InfraOperator&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;reason.argument&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {
+        <span class="t-key">&quot;governance&quot;</span>: <span class="t-string">&quot;constitutional&quot;</span>,
+        <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;evidence-first&quot;</span>
+      }
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h4 id="blk-11053">Auto provider binding</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;PolicyAnalyst&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;reason.argument&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+      <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;evidence-weighted policy deliberation with auditable justification&quot;</span>
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;infer_from_goal&quot;</span>: <span class="t-lit">true</span>
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h3 id="blk-11055">8. Example API surface</h3>
+<p>A provider implementing <code>&amp;reason.argument</code> might expose operations like:</p>
+<h4 id="blk-11057"><code>evaluate</code></h4>
+<p>Input:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;incident_id&quot;</span>: <span class="t-string">&quot;inc-2048&quot;</span>,
+  <span class="t-key">&quot;context&quot;</span>: {
+    <span class="t-key">&quot;anomalies&quot;</span>: <span class="t-num">3</span>,
+    <span class="t-key">&quot;affected_regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>],
+    <span class="t-key">&quot;similar_incidents&quot;</span>: <span class="t-num">2</span>
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [<span class="t-string">&quot;Never scale beyond 3x in a single action&quot;</span>],
+    <span class="t-key">&quot;soft&quot;</span>: [<span class="t-string">&quot;Prefer gradual scaling over spikes&quot;</span>]
+  }
+}</code></pre>
+<p>Output:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;decision&quot;</span>: <span class="t-string">&quot;scale_up_gradually&quot;</span>,
+  <span class="t-key">&quot;confidence&quot;</span>: <span class="t-num">0.91</span>,
+  <span class="t-key">&quot;rationale&quot;</span>: [
+    <span class="t-string">&quot;Temporal anomalies detected in CPU load&quot;</span>,
+    <span class="t-string">&quot;Recent graph memory shows two similar incidents&quot;</span>,
+    <span class="t-string">&quot;Regional capacity is approaching threshold&quot;</span>
+  ]
+}</code></pre>
+<h4 id="blk-11062"><code>justify</code></h4>
+<p>Input:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;decision&quot;</span>: <span class="t-string">&quot;scale_up_gradually&quot;</span>,
+  <span class="t-key">&quot;evidence_refs&quot;</span>: [
+    <span class="t-string">&quot;sha256:a3f8...&quot;</span>,
+    <span class="t-string">&quot;sha256:7b2c...&quot;</span>,
+    <span class="t-string">&quot;sha256:e1d0...&quot;</span>
+  ]
+}</code></pre>
+<p>Output:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;justification&quot;</span>: <span class="t-string">&quot;Gradual scaling is preferred because evidence indicates real load pressure, but governance disfavors sudden spikes without stronger confidence.&quot;</span>,
+  <span class="t-key">&quot;citations&quot;</span>: [
+    <span class="t-string">&quot;sha256:a3f8...&quot;</span>,
+    <span class="t-string">&quot;sha256:7b2c...&quot;</span>,
+    <span class="t-string">&quot;sha256:e1d0...&quot;</span>
+  ]
+}</code></pre>
+<h3 id="blk-11067">9. Composition patterns</h3>
+<h4 id="blk-11068">Pattern A: Time -&gt; Memory -&gt; Argument</h4>
+<p>Use when the system should turn operational signals into evidence-backed action.</p>
+<pre><code>&amp;time.anomaly -&gt; &amp;memory.graph -&gt; &amp;reason.argument</code></pre>
+<p>Good for:</p>
+<ul><li><p>incident response</p></li><li><p>reliability operations</p></li><li><p>fraud review</p></li><li><p>demand spikes</p></li></ul>
+<h4 id="blk-11081">Pattern B: Memory -&gt; Argument</h4>
+<p>Use when the primary need is evaluating retrieved facts or prior cases.</p>
+<pre><code>&amp;memory.vector -&gt; &amp;reason.argument</code></pre>
+<p>Good for:</p>
+<ul><li><p>customer support</p></li><li><p>policy review</p></li><li><p>research synthesis</p></li><li><p>knowledge assistants</p></li></ul>
+<h4 id="blk-11094">Pattern C: Time + Space -&gt; Argument</h4>
+<p>Use when the system must evaluate a decision in both temporal and spatial context.</p>
+<pre><code>&amp;time.forecast -&gt; &amp;space.fleet -&gt; &amp;reason.argument</code></pre>
+<p>Good for:</p>
+<ul><li><p>fleet planning</p></li><li><p>regional capacity decisions</p></li><li><p>logistics routing constraints</p></li><li><p>regional remediation strategy</p></li></ul>
+<h4 id="blk-11107">Pattern D: Argument -&gt; Memory</h4>
+<p>Use when the system should preserve outcomes for later recall or postmortem analysis.</p>
+<pre><code>&amp;reason.argument -&gt; &amp;memory.graph.learn</code></pre>
+<p>Good for:</p>
+<ul><li><p>audit logs</p></li><li><p>incident learning</p></li><li><p>support replay</p></li><li><p>policy refinement</p></li></ul>
+<h3 id="blk-11120">10. Governance role</h3>
+<p><code>&amp;reason.argument</code> is one of the strongest governance-sensitive capabilities in the protocol.</p>
+<p>It is often the capability where:</p>
+<ul><li><p>hard constraints are enforced</p></li><li><p>soft preferences are weighed</p></li><li><p>escalation decisions are triggered</p></li><li><p>justifications are created for later review</p></li></ul>
+<h4 id="blk-11132">Example governance block</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [
+      <span class="t-string">&quot;Never reveal private customer data&quot;</span>,
+      <span class="t-string">&quot;Never fabricate refunds or policy exceptions&quot;</span>
+    ],
+    <span class="t-key">&quot;soft&quot;</span>: [
+      <span class="t-string">&quot;Prefer conservative action when evidence is mixed&quot;</span>,
+      <span class="t-string">&quot;Prefer policy-grounded responses&quot;</span>
+    ],
+    <span class="t-key">&quot;escalate_when&quot;</span>: {
+      <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span>,
+      <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span>
+    }
+  }
+}</code></pre>
+<h4 id="blk-11134">Why this matters</h4>
+<p>A reasoning provider without explicit governance tends to drift toward hidden policy logic.</p>
+<p>A reasoning provider with governance as data can:</p>
+<ul><li><p>operate consistently across runtimes</p></li><li><p>surface escalation cleanly</p></li><li><p>preserve reviewable policy context</p></li><li><p>generate safer downstream artifacts</p></li></ul>
+<h3 id="blk-11146">11. Provenance role</h3>
+<p><code>&amp;reason.argument</code> should be provenance-visible.</p>
+<p>A representative provenance record for an argumentative reasoning step might look like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;reason.argument&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;evaluate&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-14T14:23:07Z&quot;</span>,
+  <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:7b2c...&quot;</span>,
+  <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:e1d0...&quot;</span>,
+  <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:a3f8...&quot;</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;delib-inv-1f02...&quot;</span>
+}</code></pre>
+<p>This is important because <code>&amp;reason.argument</code> often produces the exact artifact humans care most about:</p>
+<ul><li><p>the decision</p></li><li><p>the ranking</p></li><li><p>the explanation</p></li><li><p>the escalation</p></li></ul>
+<p>If you want to answer “Why did the agent do this?”, this is usually the most important step in the chain.</p>
+<h3 id="blk-11161">12. Compatible providers</h3>
+<p>The protocol is provider-agnostic, but representative providers for <code>&amp;reason.argument</code> include:</p>
+<ul><li><p><code>deliberatic</code></p></li><li><p>custom enterprise policy engines</p></li><li><p>constitutional reasoning services</p></li><li><p>evidence-ranking and argumentation systems</p></li><li><p>domain-specific adjudication engines</p></li></ul>
+<p>The key protocol rule is:</p>
+<blockquote><p>a provider may satisfy <code>&amp;reason.argument</code> if it honors the declared contract</p></blockquote>
+<p>The capability should not collapse into a single vendor identity.</p>
+<h3 id="blk-11178">13. Typical compatible upstream capabilities</h3>
+<p><code>&amp;reason.argument</code> often accepts input from:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;memory.vector</code></p></li><li><p><code>&amp;memory.episodic</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;time.forecast</code></p></li><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;space.route</code></p></li></ul>
+<p>Typical upstream type tokens include:</p>
+<ul><li><p><code>context</code></p></li><li><p><code>candidate_set</code></p></li><li><p><code>enriched_context</code></p></li></ul>
+<h3 id="blk-11203">14. Typical downstream uses</h3>
+<p>Outputs from <code>&amp;reason.argument</code> often feed into:</p>
+<ul><li><p>final responses</p></li><li><p>action execution layers</p></li><li><p>escalation systems</p></li><li><p>audit logs</p></li><li><p>learning memory surfaces</p></li><li><p>A2A skill publication</p></li><li><p>dashboards and review workflows</p></li></ul>
+<p>Typical downstream type tokens include:</p>
+<ul><li><p><code>decision</code></p></li><li><p><code>ranked_options</code></p></li><li><p><code>justification</code></p></li><li><p><code>output</code></p></li></ul>
+<h3 id="blk-11230">15. A2A skill mapping</h3>
+<p>A capability contract for <code>&amp;reason.argument</code> may advertise skills like:</p>
+<ul><li><p><code>decision-evaluation</code></p></li><li><p><code>evidence-based-deliberation</code></p></li><li><p><code>decision-justification</code></p></li></ul>
+<p>This makes it possible to generate an A2A-style agent card that exposes not just “reasoning,” but a more meaningful external skill surface.</p>
+<p>Example interpretation:</p>
+<ul><li><p>an agent with <code>&amp;reason.argument</code> can advertise that it can evaluate actions under evidence and policy constraints</p></li><li><p>another agent can delegate judgment-heavy tasks to it</p></li><li><p>the published skill can still be derived from one canonical capability declaration</p></li></ul>
+<h3 id="blk-11248">16. Example use cases</h3>
+<h4 id="blk-11249">Infrastructure operator</h4>
+<p>Use <code>&amp;reason.argument</code> when deciding:</p>
+<ul><li><p>whether to scale</p></li><li><p>whether to escalate</p></li><li><p>which remediation path is best justified</p></li></ul>
+<h4 id="blk-11258">Customer support agent</h4>
+<p>Use <code>&amp;reason.argument</code> when deciding:</p>
+<ul><li><p>whether a refund or exception is allowed</p></li><li><p>whether policy supports a certain action</p></li><li><p>whether to answer or escalate</p></li></ul>
+<h4 id="blk-11267">Research assistant</h4>
+<p>Use <code>&amp;reason.argument</code> when deciding:</p>
+<ul><li><p>which interpretation is best supported</p></li><li><p>whether evidence is sufficient to make a claim</p></li><li><p>how to justify a conclusion transparently</p></li></ul>
+<h4 id="blk-11276">Compliance workflow</h4>
+<p>Use <code>&amp;reason.argument</code> when deciding:</p>
+<ul><li><p>whether a policy boundary has been crossed</p></li><li><p>whether action requires review</p></li><li><p>which evidence supports the recommendation</p></li></ul>
+<h3 id="blk-11285">17. Anti-patterns</h3>
+<h4 id="blk-11286">Anti-pattern 1: treating all reasoning as one opaque model call</h4>
+<p>This removes:</p>
+<ul><li><p>type clarity</p></li><li><p>provenance structure</p></li><li><p>governance visibility</p></li><li><p>contract validation</p></li></ul>
+<h4 id="blk-11297">Anti-pattern 2: using <code>&amp;reason.argument</code> for plain planning</h4>
+<p>If the primary output is a sequence of steps, <code>reason.plan</code> is usually the better subtype.</p>
+<h4 id="blk-11299">Anti-pattern 3: skipping upstream enrichment</h4>
+<p><code>&amp;reason.argument</code> is strongest when it evaluates evidence-rich context, not raw unstructured noise.</p>
+<h4 id="blk-11301">Anti-pattern 4: allowing action without justification in governance-heavy systems</h4>
+<p>If the workflow is safety- or policy-sensitive, justification should be a first-class output.</p>
+<h3 id="blk-11303">18. Research connections</h3>
+<p><code>&amp;reason.argument</code> is aligned with several useful research and systems traditions:</p>
+<ul><li><p>formal argumentation</p></li><li><p>evidence-based deliberation</p></li><li><p>constitutional and policy-aware AI</p></li><li><p>explainable decision systems</p></li><li><p>multi-criteria evaluation</p></li><li><p>safety and escalation design for autonomous systems</p></li></ul>
+<p>The protocol does not attempt to standardize one academic theory of reasoning.</p>
+<p>Instead, it provides a practical interface for reasoning systems that must be:</p>
+<ul><li><p>composable</p></li><li><p>inspectable</p></li><li><p>governable</p></li><li><p>publishable</p></li><li><p>interoperable</p></li></ul>
+<h3 id="blk-11331">19. Summary</h3>
+<p><code>&amp;reason.argument</code> is the protocol capability for <strong>auditable, evidence-weighted decision making</strong>.</p>
+<p>It exists so that a system can say more than:</p>
+<ul><li><p>“this agent reasons”</p></li></ul>
+<p>It can say:</p>
+<ul><li><p>what kind of reasoning it performs</p></li><li><p>what inputs it accepts</p></li><li><p>what outputs it produces</p></li><li><p>what it can compose with</p></li><li><p>how it supports governance</p></li><li><p>how it preserves provenance</p></li><li><p>what A2A skills it can publish</p></li></ul>
+<p>That makes <code>&amp;reason.argument</code> one of the most important reasoning surfaces in the [&amp;] Protocol.</p>
+<h3 id="blk-11354">20. Related pages</h3>
+<ul><li><p><code>capabilities/memory.graph.md</code></p></li><li><p><code>capabilities/memory.episodic.md</code></p></li><li><p><code>capabilities/time.forecast.md</code></p></li><li><p><code>capabilities/space.fleet.md</code></p></li><li><p><code>docs/capabilities/reason.md</code></p></li><li><p><code>docs/architecture.md</code></p></li><li><p><code>SPEC.md</code></p></li></ul></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/reason.argument.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-10911" class="lvl2">1. Definition</a><a href="#blk-10924" class="lvl2">2. Why this capability exists</a><a href="#blk-10963" class="lvl2">3. Where it fits in the protocol</a><a href="#blk-10996" class="lvl2">4. What makes reason.argument different from other reasoning subtypes</a><a href="#blk-10997" class="lvl3">Compared with reason.vote</a><a href="#blk-11003" class="lvl3">Compared with reason.plan</a><a href="#blk-11009" class="lvl3">Compared with implicit model reasoning</a><a href="#blk-11015" class="lvl2">5. Capability contract</a><a href="#blk-11018" class="lvl3">Contract meaning</a><a href="#blk-11035" class="lvl2">6. Architecture diagram</a><a href="#blk-11040" class="lvl3">Interpretation</a><a href="#blk-11050" class="lvl2">7. Example ampersand.json usage</a><a href="#blk-11051" class="lvl3">Explicit provider binding</a><a href="#blk-11053" class="lvl3">Auto provider binding</a><a href="#blk-11055" class="lvl2">8. Example API surface</a><a href="#blk-11057" class="lvl3">evaluate</a><a href="#blk-11062" class="lvl3">justify</a><a href="#blk-11067" class="lvl2">9. Composition patterns</a><a href="#blk-11068" class="lvl3">Pattern A: Time -&gt; Memory -&gt; Argument</a><a href="#blk-11081" class="lvl3">Pattern B: Memory -&gt; Argument</a><a href="#blk-11094" class="lvl3">Pattern C: Time + Space -&gt; Argument</a><a href="#blk-11107" class="lvl3">Pattern D: Argument -&gt; Memory</a><a href="#blk-11120" class="lvl2">10. Governance role</a><a href="#blk-11132" class="lvl3">Example governance block</a><a href="#blk-11134" class="lvl3">Why this matters</a><a href="#blk-11146" class="lvl2">11. Provenance role</a><a href="#blk-11161" class="lvl2">12. Compatible providers</a><a href="#blk-11178" class="lvl2">13. Typical compatible upstream capabilities</a><a href="#blk-11203" class="lvl2">14. Typical downstream uses</a><a href="#blk-11230" class="lvl2">15. A2A skill mapping</a><a href="#blk-11248" class="lvl2">16. Example use cases</a><a href="#blk-11249" class="lvl3">Infrastructure operator</a><a href="#blk-11258" class="lvl3">Customer support agent</a><a href="#blk-11267" class="lvl3">Research assistant</a><a href="#blk-11276" class="lvl3">Compliance workflow</a><a href="#blk-11285" class="lvl2">17. Anti-patterns</a><a href="#blk-11286" class="lvl3">Anti-pattern 1: treating all reasoning as one opaque model call</a><a href="#blk-11297" class="lvl3">Anti-pattern 2: using &amp;reason.argument for plain planning</a><a href="#blk-11299" class="lvl3">Anti-pattern 3: skipping upstream enrichment</a><a href="#blk-11301" class="lvl3">Anti-pattern 4: allowing action without justification in governance-heavy systems</a><a href="#blk-11303" class="lvl2">18. Research connections</a><a href="#blk-11331" class="lvl2">19. Summary</a><a href="#blk-11354" class="lvl2">20. Related pages</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.plan.md/">&amp;reason.plan -- Planning-Oriented Reasoning for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera6fpqx2a5mjvcgmhypchops5mxhivbjdfxld3opschjbbeon5nfpa</div></div></div>
+</div></div>
+</body></html>

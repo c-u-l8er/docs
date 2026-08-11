@@ -1,0 +1,164 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Studbook · studbook · Ampersand Box</title>
+<meta name="description" content="Status: draft spec. No implementation. `spec` rung. Nothing in §7 or §10 has been ruled. Do not build from this yet.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/studbook/docs/spec/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Studbook">
+<meta property="og:description" content="Status: draft spec. No implementation. `spec` rung. Nothing in §7 or §10 has been ruled. Do not build from this yet.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/studbook/docs/spec/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Studbook","name":"Studbook","description":"Status: draft spec. No implementation. `spec` rung. Nothing in §7 or §10 has been ruled. Do not build from this yet.","url":"https://docs.ampersandboxdesign.com/studbook/docs/spec/README.md/","identifier":"bagaaierazimiocmosi2i2xvyxbtrhrynp2ghqdcavyrb6cmiz2iqwljxzr6a","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"studbook","url":"https://docs.ampersandboxdesign.com/studbook/"},"articleSection":"studbook","hasPart":[{"@type":"WebPageElement","name":"1. What is decided, and by whom"},{"@type":"WebPageElement","name":"2. Why the Supabase route was abandoned"},{"@type":"WebPageElement","name":"3. What studbook is"},{"@type":"WebPageElement","name":"4. Where this sits, and the three questions"},{"@type":"WebPageElement","name":"5. What substrate already provides"},{"@type":"WebPageElement","name":"6. What substrate does NOT provide"},{"@type":"WebPageElement","name":"7. Proposed design — NOT RULED"},{"@type":"WebPageElement","name":"7.1 The record"},{"@type":"WebPageElement","name":"7.2 Identity — what studbook must ask for"},{"@type":"WebPageElement","name":"7.3 The index problem, and the candidate answer"},{"@type":"WebPageElement","name":"7.4 Surface — studbook adds none in v0"},{"@type":"WebPageElement","name":"7.5 Names studbook must not reuse"},{"@type":"WebPageElement","name":"8. First slice — suggested, not planned"},{"@type":"WebPageElement","name":"9. Non-goals"},{"@type":"WebPageElement","name":"10. What has to be ruled before implementation starts"},{"@type":"WebPageElement","name":"11. Prior art, and what each one settles"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"studbook","item":"https://docs.ampersandboxdesign.com/studbook/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/studbook/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/studbook/docs/spec/"},{"@type":"ListItem","position":5,"name":"README.md","item":"https://docs.ampersandboxdesign.com/studbook/docs/spec/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">studbook</span>
+<span class="path">studbook/docs/spec/README.md</span>
+
+</div></div>
+<div class="lead">Status: draft spec. No implementation. `spec` rung. Nothing in §7 or §10 has been ruled. Do not build from this yet.</div>
+<div class="prose"><h1 id="blk-85008">Studbook</h1>
+<p><strong>Status: draft spec. No implementation. `spec` rung.</strong> <strong>Nothing in §7 or §10 has been ruled. Do not build from this yet.</strong></p>
+<p>The data layer for the [&amp;] stack, built on the substrate the stack already owns instead of on a hosted Postgres it does not.</p>
+<p>A studbook is a pedigree register: every animal in it is recorded with its ancestry, and a record whose parentage cannot be shown is not a record. That is the whole design goal here. A record in studbook carries where it came from, and a record that cannot show its provenance is refused rather than stored.</p>
+<h3 id="blk-85012">1. What is decided, and by whom</h3>
+<p>Decided by Travis, 2026-07-30:</p>
+<ul><li><p>The shared-Supabase route is <strong>abandoned</strong>. <code>ampersand-supabase</code> is archived, not</p></li></ul>
+<p>failed — the 35 migrations across 11 schemas still apply and the code running against them still runs. The route changed, not the verdict on the code.</p>
+<ul><li><p>The replacement is called <strong>studbook</strong>.</p></li><li><p>It lives in <strong>core</strong>, not substrate and not compose. Core is the layer that rests on</p></li></ul>
+<p>substrate and that compose consumes, and a database is exactly that shape.</p>
+<p>Everything from §5 onward is derived from reading the substrate code or from published prior art, and is marked as such. It is a proposal. §10 lists what has to be ruled before any of it is built.</p>
+<h3 id="blk-85025">2. Why the Supabase route was abandoned</h3>
+<p>Not because it did not work. It worked locally. Three reasons it was the wrong shape for this stack:</p>
+<ol><li><p><strong>It could not carry a certificate.</strong> Core's job is that the dark factory closes as</p></li></ol>
+<p>one pass with a certificate at every step. Postgres stores a row. It does not store <em>why the row is that row</em>, and nothing in the migration layer could refuse a row whose provenance did not check out. The stack's central claim — that a divergence is refusable rather than silent — stopped at the database boundary.</p>
+<ol start="2"><li><p><strong>It was a dependency the stack does not control.</strong> <code>live_deployed</code> against a hosted</p></li></ol>
+<p>instance is partly a claim about somebody else's uptime.</p>
+<ol start="3"><li><p><strong>The substrate grew the capability underneath it.</strong> See §5.</p></li></ol>
+<h3 id="blk-85038">3. What studbook is</h3>
+<p>A record store where the identity of a record <strong>is</strong> the hash of its content, and where a record's ancestry is part of what is hashed.</p>
+<p>Three properties, in the order they matter:</p>
+<ul><li><p><strong>Content-addressed.</strong> The key is the hash of the canonical bytes. Writing the same</p></li></ul>
+<p>content twice is one record, not two.</p>
+<ul><li><p><strong>Verified on read.</strong> Every read re-derives the id from the bytes and refuses to return</p></li></ul>
+<p>a record that no longer matches its key. Bit-rot and tampering surface as a named refusal, never as plausible-looking bad data.</p>
+<ul><li><p><strong>Pedigreed.</strong> A record names its parents by their ids. Because ids are content hashes,</p></li></ul>
+<p>a lineage cannot be edited after the fact without changing every id downstream of the edit.</p>
+<h3 id="blk-85053">4. Where this sits, and the three questions</h3>
+<p>substrate → <strong>core</strong> → compose.</p>
+<p>Studbook may depend on substrate. It may not depend on any product in compose. Products in compose may consume it. If studbook reimplements something substrate already proves, that is a finding, not a shortcut.</p>
+<p>The component test applies to core too:</p>
+<ol><li><p><strong>What does it consume?</strong> From substrate: content-addressed durable storage,</p></li></ol>
+<p>hash-verified reads, atomic write, exact-CAS, closure-verified bundles (§5).</p>
+<ol start="2"><li><p><strong>What one service does it offer?</strong> A queryable pedigree register — given a record,</p></li></ol>
+<p>its ancestry; given two states, what changed between them; given a claim, the evidence chain that produced it, with every link re-derivable.</p>
+<ol start="3"><li><p><strong>What does it connect to on either side?</strong> Beneath: <code>TRVM/forge/</code>. Above: KILN's</p></li></ol>
+<p>manifest and audit lineage first, then any compose lane that needs provenance it can show. It connects to nothing that has a user in it until §10.2 is answered.</p>
+<h3 id="blk-85069">5. What substrate already provides</h3>
+<p>Evidence, not assertion — running code with batteries behind it:</p>
+<table><thead><tr><th>Capability</th><th>Where</th><th>Guarantee</th></tr></thead><tbody><tr><td>Content-addressed object store</td><td><code>TRVM/forge/wrl_store.py</code> <code>_ContentStore</code></td><td>key IS <code>sha(bytes)</code>; put refuses mislabeled content (<code>WRL_STORE_ID_MISMATCH</code>)</td></tr><tr><td>Verified read</td><td><code>wrl_store.py</code> <code>_get_bytes</code></td><td>re-hashes every read; <code>WRL_STORE_CORRUPT</code> on mismatch, <code>WRL_STORE_MISSING</code> on absence</td></tr><tr><td>Durable write</td><td><code>wrl_store.py</code> <code>_atomic_write</code></td><td>temp → flush+fsync → <code>os.replace</code> → dir fsync; a crash leaves a <code>.tmp-*</code> stub, never a torn record</td></tr><tr><td>Idempotent write</td><td><code>_put_bytes</code></td><td>same content → same id → same file; reorder- and label-equivalent inputs collapse to one file</td></tr><tr><td>Mutable named documents</td><td><code>TRVM/forge/wrl_project.py</code></td><td>named docs over the immutable substrate</td></tr><tr><td>Optimistic concurrency</td><td><code>wrl_project.py</code></td><td>per-document exact-CAS: <code>WRL_PROJECT_STALE</code>, <code>WRL_PROJECT_EXISTS</code>, <code>WRL_PROJECT_MISSING</code></td></tr><tr><td>Verified export/import</td><td><code>TRVM/forge/wrl_bundle.py</code></td><td>closure (<code>WRL_BUNDLE_UNRESOLVED</code>), identity re-derivation (<code>WRL_BUNDLE_IDENTITY</code>), corruption (<code>WRL_BUNDLE_CORRUPT</code>)</td></tr><tr><td>Crash recovery</td><td><code>RecoveryJournalV1</code> (v0.6-0)</td><td>separate, atomic, non-authoritative checkpoint; never auto-applied on reopen</td></tr></tbody></table>
+<p>That is values, references, per-document transactions, integrity-checked backup and restore, and a crash journal. A from-scratch storage engine would spend its first two milestones earning most of this. <strong>Studbook does not rebuild it.</strong></p>
+<h3 id="blk-85100">6. What substrate does NOT provide</h3>
+<p>The honest half. Supabase was not only Postgres — it was PostgREST, Auth and row-level security. Dropping it drops all four.</p>
+<ol><li><p><strong>No query layer and no index.</strong> <code>wrl_store.py</code> says it outright: *&quot;The stores hold NO</p></li></ol>
+<p>in-memory index.&quot;* <code>ids()</code> is a <code>listdir</code> and a sort. Everything is get-by-id. Any access pattern that is not &quot;I already know the hash&quot; has no answer today. <strong>This is the largest gap.</strong> §7.3 is a candidate answer to it.</p>
+<ol start="2"><li><p><strong>No authentication and no row-level security.</strong> Nothing in substrate has any concept</p></li></ol>
+<p>of a user, and content addressing is actively <em>hostile</em> to access control: if the key is the hash of the content, then knowing the content is knowing the key. Confidentiality has to come from somewhere else entirely. WebHost.Systems and FleetPrompt use Supabase Auth and RLS <strong>today</strong>, so until §10.2 is answered studbook is not their replacement.</p>
+<ol start="3"><li><p><strong>No network surface.</strong> The stores are library objects over an explicit filesystem</p></li></ol>
+<p>root. No server, no wire protocol, no pooling.</p>
+<ol start="4"><li><p><strong>No cross-record transaction.</strong> CAS is per-document. Two records that must move</p></li></ol>
+<p>together have no mechanism today.</p>
+<ol start="5"><li><p><strong>Keys are tied to the frozen identity ladder.</strong> The stores are keyed by <code>sem-</code>,</p></li></ol>
+<p><code>scen-</code> and <code>replay-</code> prefixes. A general record type is new work — and the identity spine is <strong>frozen</strong>, so touching it is a ruling to be asked for, never a task to be done. See §7.2.</p>
+<h3 id="blk-85122">7. Proposed design — NOT RULED</h3>
+<h4 id="blk-85123">7.1 The record</h4>
+<p>A studbook record is canonical bytes plus a declared ancestry, sealed together so that the ancestry is inside the hash rather than beside it. Sketch, not a schema:</p>
+<ul><li><p><code>content</code> — canonical bytes, serialized by the same discipline <code>wrl_canonical.py</code></p></li></ul>
+<p>already uses (sorted keys, exact types, no floats where an int will do).</p>
+<ul><li><p><code>parents</code> — an ordered list of studbook ids. Order is part of the canonical form,</p></li></ul>
+<p>because a claim derived from A-then-B is not the claim derived from B-then-A.</p>
+<ul><li><p><code>kind</code> — what sort of record this is, so a reader can refuse a record it does not</p></li></ul>
+<p>understand rather than half-read it.</p>
+<p>The seal is the existing one: identity is the hash of the canonical bytes, a write of mismatched content is refused, and every read re-derives. That is <code>_put_bytes</code> and <code>_get_bytes</code> behaviour, unchanged.</p>
+<p>Two consequences worth stating before they are discovered:</p>
+<ul><li><p><strong>A record cannot be written before its parents.</strong> A store that admits a record naming</p></li></ul>
+<p>an absent parent has stopped being a pedigree register. The refusal already has a shape — <code>wrl_bundle.py</code> calls it <code>WRL_BUNDLE_UNRESOLVED</code>.</p>
+<ul><li><p><strong>Editing history is not possible, only forking it.</strong> Changing any ancestor changes</p></li></ul>
+<p>every id beneath it. This is the property; it is not a limitation to be worked around.</p>
+<h4 id="blk-85147">7.2 Identity — what studbook must ask for</h4>
+<p>Studbook needs at least one new key prefix, because §6.5 says the three existing stores are keyed to the WRL ladder and a general record is not a <code>sem-</code>, <code>scen-</code> or <code>replay-</code>.</p>
+<p><strong>That is a ruling request, not a design decision, and it is listed as §10.5.</strong> This section exists to make the request precise rather than to pre-empt it:</p>
+<ul><li><p>one prefix, for the record itself;</p></li><li><p>no second rung for ancestry — ancestry is <em>inside</em> the record, so it is not a separate</p></li></ul>
+<p>identity;</p>
+<ul><li><p>nothing that requires re-deriving an existing <code>sem-</code>, <code>scen-</code> or <code>replay-</code> id.</p></li></ul>
+<p>If the answer is no, studbook lives inside an existing rung or does not exist. Either is a legitimate outcome and neither is a reason to widen the ladder quietly.</p>
+<h4 id="blk-85160">7.3 The index problem, and the candidate answer</h4>
+<p>Gap §6.1 is the one that decides whether studbook is weeks or years. Substrate has content addressing and no index. A B+tree gives an index and gives up content addressing as the storage primitive — which is the property the stack's whole claim rests on.</p>
+<p>A <strong>prolly tree</strong> (probabilistic B-tree; invented by the Noms team, used as the storage engine under Dolt) is both. It is a block-oriented ordered search tree whose every node is named by the hash of its contents — a B-tree that is also a merkle DAG. It gives:</p>
+<ul><li><p>ordered key access and range scans — the missing index;</p></li><li><p>content addressing preserved at every level, so a divergence stays refusable all the way</p></li></ul>
+<p>down rather than only at the blob boundary;</p>
+<ul><li><p>structural sharing between versions — a shared subtree is stored once;</p></li><li><p>history independence — insertion order does not change the tree, so equal content has</p></li></ul>
+<p>equal identity, which is the property <code>_put_bytes</code> already enforces for blobs;</p>
+<ul><li><p><strong>diff proportional to the size of the difference</strong>, by comparing subtree hashes rather</p></li></ul>
+<p>than walking records.</p>
+<p>That last property is not an optimisation for a pedigree register. It is the register: <em>what changed between these two states, and can you prove it</em>, answered by arithmetic rather than by scanning.</p>
+<p>Stated with its costs so this does not become an unexamined enthusiasm: chunk-boundary selection is a tuning problem, writes are copy-on-write with real write amplification, point-lookup latency is worse than a tuned B+tree, and the reference implementation represents years of work. <strong>This is a reading task before it is a build task.</strong></p>
+<h4 id="blk-85181">7.4 Surface — studbook adds none in v0</h4>
+<p>Studbook is a library over substrate. It gets no new language surface until there is something running to describe.</p>
+<p>If a surface is ever proposed, three constraints hold and are checkable today:</p>
+<ul><li><p><strong>`~~&gt;` is taken.</strong> It is the WRL route arrow — <code>wrl_canonical.py:388</code> emits</p></li></ul>
+<p><code>route %s ~~%s~~&gt; %s</code>. <code>~~</code> is the mailbox operator.</p>
+<ul><li><p><strong>`#` opens a comment.</strong> In the bootstrap surface <code>wrl_ir.py:201</code> does</p></li></ul>
+<p><code>raw.split(&quot;#&quot;, 1)[0]</code>; in WRL Core the comment character is <code>;</code> (<code>wrl_ir.py:423</code>, <code>:508</code>, <code>:522</code>). So any trailing-<code>#</code> form — <code>query#</code>, <code>snapshot#</code> — lexes as a bare token followed by a comment. It cannot parse.</p>
+<ul><li><p><strong>`-&gt;` is unused.</strong> It appears in no <code>wrl_*.py</code>. That makes it available, not chosen.</p></li></ul>
+<h4 id="blk-85195">7.5 Names studbook must not reuse</h4>
+<ul><li><p><strong>Film.</strong> Forge ships Film v0.7: a per-epoch record of world observables, compared</p></li></ul>
+<p>byte-for-byte in every <code>binding_run*</code> battery. If studbook ever grows a replay or diagnostics artifact it needs its own name. Two artifacts sharing a load-bearing name inside one stack is a defect, not a convenience.</p>
+<ul><li><p>Any <code>WRL_*</code> refusal code already in use. Studbook's refusals get their own namespace so</p></li></ul>
+<p>a caller can tell which layer refused.</p>
+<p>Records studbook owns should be versioned in the shape the tree already uses — <code>forge.bundle.v1</code>, <code>forge.project.v2</code>, <code>forge.recovery.v1</code>, <code>forge.runtime_job.v1</code> — i.e. <code>&lt;owner&gt;.&lt;thing&gt;.v&lt;n&gt;</code>, owned by <code>studbook</code>.</p>
+<h3 id="blk-85205">8. First slice — suggested, not planned</h3>
+<p>The narrowest useful slice appears to be <strong>KILN's manifest and audit lineage</strong>. It is provenance-shaped, it has no user in it, it is already in core, and it is already being written.</p>
+<p>Concretely: an ordered, content-addressed store of manifests where each names its parents, queryable by range, answering &quot;what changed between these two runs&quot; without a scan. That exercises §7.3 against real data, does not require answering §6.2, and either demonstrates the diff property or fails to — which is what a first slice is for.</p>
+<p>This is a suggestion. §10.4 is the ruling.</p>
+<h3 id="blk-85209">9. Non-goals</h3>
+<ul><li><p><strong>Not a general-purpose database.</strong> If a product needs joins and ad-hoc queries over</p></li></ul>
+<p>user data, that is an argument for keeping Postgres for that product, and §6.1 says so honestly.</p>
+<ul><li><p><strong>Not a SQLite competitor.</strong> No point-lookup parity target, no SQL compatibility</p></li></ul>
+<p>surface, no page cache, no GPU or NPU tier. A pedigree register does not need any of it, and adopting them would make every claim above unprovable for years.</p>
+<ul><li><p><strong>Not a new identity rung</strong> without §10.5.</p></li><li><p><strong>Not a reason to migrate anything today.</strong> Nothing moves off Supabase until studbook</p></li></ul>
+<p>can show it holds the same data with the same guarantees.</p>
+<ul><li><p><strong>Not a rewrite of substrate storage.</strong> §5 is consumed, not reimplemented.</p></li></ul>
+<h3 id="blk-85227">10. What has to be ruled before implementation starts</h3>
+<p>These are Travis's, not mine.</p>
+<ol><li><p><strong>What happens to the live data.</strong> <code>fleet.*</code> serves KILN and FleetPrompt today, and</p></li></ol>
+<p><code>kag.*</code> (migrations 010–019) has been orphaned since the BendScript pivot on 2026-04-27. Archiving the <em>lane</em> did not archive the <em>database</em>. Studbook does not get to pretend that data is not there.</p>
+<ol start="2"><li><p><strong>Where confidentiality comes from</strong>, given §6.2. Until this is answered studbook</p></li></ol>
+<p>cannot host anything with a user in it — which today means it cannot replace what WebHost.Systems and FleetPrompt use Supabase for.</p>
+<ol start="3"><li><p><strong>Whether studbook is one store or two.</strong> Provenance records want content addressing.</p></li></ol>
+<p>User accounts want mutability and secrecy. Forcing both into one design is how this gets worse than what it replaces. §7.3 resolves the index question only for the provenance half.</p>
+<ol start="4"><li><p><strong>Scope of the first slice</strong> (§8).</p></li><li><p><strong>Whether the identity ladder admits a studbook prefix</strong> (§7.2), and if not, what</p></li></ol>
+<p>studbook is keyed by instead.</p>
+<h3 id="blk-85247">11. Prior art, and what each one settles</h3>
+<p>Named so the design is not re-derived from scratch, and so distinctiveness is not overclaimed.</p>
+<ul><li><p><strong>CozoDB</strong> — embedded, transactional, relational-graph, recursive Datalog, with</p></li></ul>
+<p>per-relation time travel. Settles that embedded + recursive + historical is buildable and shipped; anything studbook claims there is not novel.</p>
+<ul><li><p><strong>Dolt / Noms</strong> — SQL with a commit graph, branch, merge, cell-wise diff and lineage,</p></li></ul>
+<p>built on prolly trees. This is the closest existing system to what §7 describes, and it is where §7.3 comes from.</p>
+<ul><li><p><strong>Feldera / DBSP</strong> — automatic incremental view maintenance for rich query languages</p></li></ul>
+<p>(VLDB '23 best paper). Settles that &quot;keep derived results correct as the world changes&quot; is a solved research problem with an implementation, and is not a reason on its own to build a new engine.</p>
+<ul><li><p><strong>Datomic</strong> — immutable facts, transaction time, as-of queries. The model studbook's</p></li></ul>
+<p>record shape is closest to conceptually.</p>
+<ul><li><p><strong>SQLite</strong> — the separation of pager, B-tree, WAL and VFS. Worth learning as a set of</p></li></ul>
+<p>boundaries even though §9 declines to build them.</p>
+<p>What none of them have is a record whose identity is derived by the same frozen spine that seals the rest of this stack, so that a divergence is refusable across the boundary rather than only inside the database. That is the only distinctiveness studbook should claim, and it is the one that does not require out-building any of the systems above.</p></div>
+<p class="src"><a href="/#/studbook/docs/spec/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-85012" class="lvl2">1. What is decided, and by whom</a><a href="#blk-85025" class="lvl2">2. Why the Supabase route was abandoned</a><a href="#blk-85038" class="lvl2">3. What studbook is</a><a href="#blk-85053" class="lvl2">4. Where this sits, and the three questions</a><a href="#blk-85069" class="lvl2">5. What substrate already provides</a><a href="#blk-85100" class="lvl2">6. What substrate does NOT provide</a><a href="#blk-85122" class="lvl2">7. Proposed design — NOT RULED</a><a href="#blk-85123" class="lvl3">7.1 The record</a><a href="#blk-85147" class="lvl3">7.2 Identity — what studbook must ask for</a><a href="#blk-85160" class="lvl3">7.3 The index problem, and the candidate answer</a><a href="#blk-85181" class="lvl3">7.4 Surface — studbook adds none in v0</a><a href="#blk-85195" class="lvl3">7.5 Names studbook must not reuse</a><a href="#blk-85205" class="lvl2">8. First slice — suggested, not planned</a><a href="#blk-85209" class="lvl2">9. Non-goals</a><a href="#blk-85227" class="lvl2">10. What has to be ruled before implementation starts</a><a href="#blk-85247" class="lvl2">11. Prior art, and what each one settles</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierazimiocmosi2i2xvyxbtrhrynp2ghqdcavyrb6cmiz2iqwljxzr6a</div></div></div>
+</div></div>
+</body></html>

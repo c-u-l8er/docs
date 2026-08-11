@@ -1,0 +1,98 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Graphonomous v0.3 — P3 Implementation Prompt (Week 6+) · graphonomous · Ampersand Box</title>
+<meta name="description" content="P0, P1, and P2 must be complete. Verify:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/prompts/CONTINUAL_LEARNING_P3_PROMPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Graphonomous v0.3 — P3 Implementation Prompt (Week 6+)">
+<meta property="og:description" content="P0, P1, and P2 must be complete. Verify:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/prompts/CONTINUAL_LEARNING_P3_PROMPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graphonomous v0.3 — P3 Implementation Prompt (Week 6+)","name":"Graphonomous v0.3 — P3 Implementation Prompt (Week 6+)","description":"P0, P1, and P2 must be complete. Verify:","url":"https://docs.ampersandboxdesign.com/graphonomous/prompts/CONTINUAL_LEARNING_P3_PROMPT.md/","identifier":"bagaaierark6yxvyazwi7si6grp5rhqvay7lw5leqpehftrooncblm4ypxsnq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Prerequisites"},{"@type":"WebPageElement","name":"Session Goal"},{"@type":"WebPageElement","name":"Active Goal"},{"@type":"WebPageElement","name":"Capability 11: Causal Edge Metadata Prep (1 day)"},{"@type":"WebPageElement","name":"What it does"},{"@type":"WebPageElement","name":"No schema migration needed"},{"@type":"WebPageElement","name":"File: graphonomous/lib/graphonomous/learner.ex"},{"@type":"WebPageElement","name":"Tests"},{"@type":"WebPageElement","name":"GraphMemBench Phase 3: Full Suite + Competitor Stubs (3 days)"},{"@type":"WebPageElement","name":"Add remaining 40 scenarios (Categories 11-15, 8 each)"},{"@type":"WebPageElement","name":"Competitor adapter interface"},{"@type":"WebPageElement","name":"Finalization Tasks (1 day)"},{"@type":"WebPageElement","name":"Update Graphonomous spec"},{"@type":"WebPageElement","name":"Update OS-E001"},{"@type":"WebPageElement","name":"Update portfolio review"},{"@type":"WebPageElement","name":"Complete goal"},{"@type":"WebPageElement","name":"Store outcome"},{"@type":"WebPageElement","name":"Verification Checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/graphonomous/prompts/"},{"@type":"ListItem","position":4,"name":"CONTINUAL_LEARNING_P3_PROMPT.md","item":"https://docs.ampersandboxdesign.com/graphonomous/prompts/CONTINUAL_LEARNING_P3_PROMPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/prompts/CONTINUAL_LEARNING_P3_PROMPT.md</span>
+
+</div></div>
+<div class="lead">P0, P1, and P2 must be complete. Verify:</div>
+<div class="prose"><h1 id="blk-70750">Graphonomous v0.3 — P3 Implementation Prompt (Week 6+)</h1>
+<h3 id="blk-70751">Prerequisites</h3>
+<p>P0, P1, and P2 must be complete. Verify:</p>
+<ul><li><p>[ ] <code>mix benchmark.capability_spec</code> — 80/80 pass</p></li><li><p>[ ] LongMemEval SHR &gt; 90.4%</p></li><li><p>[ ] kappa &gt; 0 on &gt; 15% of benchmark queries</p></li><li><p>[ ] All tests pass, goal progress at 0.85</p></li></ul>
+<h3 id="blk-70762">Session Goal</h3>
+<p>Implement P3 capabilities: <strong>causal edge metadata prep</strong> and <strong>GraphMemBench Phase 3</strong> (full 200-scenario suite with competitor adapter stubs). Also: finalize the goal, update the spec, update portfolio-review.html with new benchmark numbers.</p>
+<h3 id="blk-70764">Active Goal</h3>
+<p>Retrieve and complete: <code>goal_ae39998e19f363c1519679b15d24744d</code></p>
+<h3 id="blk-70766">Capability 11: Causal Edge Metadata Prep (1 day)</h3>
+<h4 id="blk-70767">What it does</h4>
+<p>Extends <code>:causal</code> edge metadata to support future CausalEngine (deferred until TickTickClock/WebHost ship). No behavioral changes — just ensuring the data substrate can store causal strength, confounders, and intervention history.</p>
+<h4 id="blk-70769">No schema migration needed</h4>
+<p>Uses existing edge <code>metadata</code> JSON field:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;causal_strength&quot;</span>: <span class="t-num">0.75</span>,
+  <span class="t-key">&quot;confounders&quot;</span>: [<span class="t-string">&quot;node_id_1&quot;</span>, <span class="t-string">&quot;node_id_2&quot;</span>],
+  <span class="t-key">&quot;intervention_history&quot;</span>: [
+    {<span class="t-key">&quot;at&quot;</span>: <span class="t-string">&quot;2026-04-10T...&quot;</span>, <span class="t-key">&quot;action&quot;</span>: <span class="t-string">&quot;do(X=0.8)&quot;</span>, <span class="t-key">&quot;result&quot;</span>: <span class="t-string">&quot;Y increased&quot;</span>}
+  ]
+}</code></pre>
+<h4 id="blk-70772">File: <code>graphonomous/lib/graphonomous/learner.ex</code></h4>
+<p>When <code>learn_from_outcome</code> updates a causal edge, also compute and store <code>causal_strength</code>:</p>
+<pre data-lang="elixir"><code>causal_strength = <span class="t-kw">case</span> outcome.status <span class="t-kw">do</span>
+  <span class="t-atom">:success</span> -&gt; min(<span class="t-num">1.0</span>, old_strength + <span class="t-num">0.1</span>)
+  <span class="t-atom">:partial_success</span> -&gt; old_strength  <span class="t-comment"># No change</span>
+  <span class="t-atom">:failure</span> -&gt; max(<span class="t-num">0.0</span>, old_strength - <span class="t-num">0.15</span>)
+  <span class="t-atom">:timeout</span> -&gt; max(<span class="t-num">0.0</span>, old_strength - <span class="t-num">0.05</span>)
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-70775">Tests</h4>
+<ul><li><p>Successful outcome strengthens causal edge</p></li><li><p>Failed outcome weakens causal edge</p></li><li><p>causal_strength persists in edge metadata</p></li><li><p>confounders field accepted and stored</p></li></ul>
+<h3 id="blk-70785">GraphMemBench Phase 3: Full Suite + Competitor Stubs (3 days)</h3>
+<h4 id="blk-70786">Add remaining 40 scenarios (Categories 11-15, 8 each)</h4>
+<p><strong>Category 11: Causal Metadata (8 scenarios)</strong></p>
+<ul><li><p>causal_strength updates on outcome success</p></li><li><p>causal_strength decreases on failure</p></li><li><p>confounders stored in edge metadata</p></li><li><p>Causal subgraph extraction (all causal edges from a node)</p></li><li><p>Multiple causal parents with different strengths</p></li><li><p>causal_strength survives consolidation</p></li><li><p>Zero-strength causal edges flagged for review</p></li><li><p>Causal edge creation during learn_from_outcome</p></li></ul>
+<p><strong>Category 12: End-to-End Workflows (8 scenarios)</strong></p>
+<ul><li><p>Cold start: empty graph → ingest 50 nodes → retrieve → verify quality</p></li><li><p>Knowledge evolution: 10 sessions with changing facts → verify revision chain</p></li><li><p>Skill accumulation: store 5 procedures → retrieve by precondition → verify transfer</p></li><li><p>Goal lifecycle: create → learn → act → complete with full epistemic coverage</p></li><li><p>Contradiction resolution: 3-way conflict → consolidation → single winner</p></li><li><p>Memory lifecycle: ingest → learn → forget → verify no data leak</p></li><li><p>Attention-driven exploration: survey → identify gaps → learn → verify improvement</p></li><li><p>Full v0.3 pipeline: all capabilities active, 100-node graph, measure latency</p></li></ul>
+<p><strong>Category 13: Regression Guards (8 scenarios)</strong></p>
+<ul><li><p>Existing retrieval quality preserved (F1 &gt;= 0.415 baseline)</p></li><li><p>Existing consolidation throughput preserved (&gt;= 27M nodes/sec)</p></li><li><p>Existing topology accuracy preserved (100% SCC detection)</p></li><li><p>Existing learning loop integrity (4/4 outcome tests)</p></li><li><p>Existing goal lifecycle integrity (4/4 lifecycle tests)</p></li><li><p>kappa=0 fast path latency not degraded by expanded topology window</p></li><li><p>Embedding quality unaffected by new columns</p></li><li><p>MCP tool response format backward-compatible</p></li></ul>
+<p><strong>Category 14: Competitor Adapter Stubs (8 scenarios)</strong></p>
+<ul><li><p>Baseline adapter: full-context LLM (stuff everything in prompt)</p></li><li><p>Mem0 adapter stub: simple vector search + LLM</p></li><li><p>Zep adapter stub: temporal graph search</p></li><li><p>Hindsight adapter stub: 4-way parallel retrieval + RRF</p></li><li><p>Adapter interface contract validation (all adapters implement same interface)</p></li><li><p>Cross-adapter result format compatibility</p></li><li><p>Adapter latency measurement framework</p></li><li><p>Adapter accuracy measurement framework</p></li></ul>
+<p><strong>Category 15: GraphMemBench Reporting (8 scenarios)</strong></p>
+<ul><li><p>JSON output format validation</p></li><li><p>Learning curve plotting data (accuracy at 5 checkpoints)</p></li><li><p>Category-level accuracy breakdown</p></li><li><p>Latency percentile reporting (p50, p95, p99)</p></li><li><p>Comparison table generation (Graphonomous vs baselines)</p></li><li><p>Confidence calibration measurement</p></li><li><p>kappa distribution histogram data</p></li><li><p>Deliberation accuracy measurement (kappa&gt;0 answers vs kappa=0 fast path)</p></li></ul>
+<h4 id="blk-70877">Competitor adapter interface</h4>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">GraphMemBench.Adapter</span> <span class="t-kw">do</span>
+  <span class="t-attr">@callback</span> ingest(session :: map()) :: <span class="t-atom">:ok</span> | {<span class="t-atom">:error</span>, term()}
+  <span class="t-attr">@callback</span> retrieve(query :: <span class="t-type">String</span>.t(), opts :: keyword()) :: {<span class="t-atom">:ok</span>, [result()]}
+  <span class="t-attr">@callback</span> forget(node_id :: <span class="t-type">String</span>.t()) :: <span class="t-atom">:ok</span> | {<span class="t-atom">:error</span>, term()}
+  <span class="t-attr">@callback</span> stats() :: map()
+<span class="t-kw">end</span></code></pre>
+<p>Graphonomous adapter wraps MCP tools. Competitor adapters are stubs that define the interface but return <code>{:error, :not_implemented}</code> — actual integration comes when/if competitors provide APIs.</p>
+<h3 id="blk-70880">Finalization Tasks (1 day)</h3>
+<h4 id="blk-70881">Update Graphonomous spec</h4>
+<p><strong>File: `graphonomous/docs/spec/README.md`</strong> Add section for v0.3 capabilities:</p>
+<ul><li><p>Belief revision with provenance chains</p></li><li><p>Conflict-aware consolidation (Stage 4.5)</p></li><li><p>Two-phase retrieval (semantic + utility)</p></li><li><p>Budget-aware forgetting with GDPR hard delete</p></li><li><p>Scoped uncertainty propagation</p></li><li><p>Procedural metadata + precondition matching</p></li><li><p>Multi-agent schema prep</p></li><li><p>GraphMemBench (120 scenarios, 15 categories)</p></li></ul>
+<h4 id="blk-70900">Update OS-E001</h4>
+<p><strong>File: `opensentience.org/docs/spec/OS-E001-EMPIRICAL-EVALUATION.md`</strong> Add v0.3 benchmark results:</p>
+<ul><li><p>kappa activation rate (target: &gt;15%)</p></li><li><p>Two-phase retrieval SHR delta</p></li><li><p>GraphMemBench pass rate</p></li><li><p>Forgetting precision/recall</p></li><li><p>New tool count (22 → 28 MCP tools)</p></li></ul>
+<h4 id="blk-70913">Update portfolio review</h4>
+<p><strong>File: `AmpersandBoxDesign/site/portfolio-review.html`</strong></p>
+<ul><li><p>Update KPI card with new SHR</p></li><li><p>Update benchmark scorecard</p></li><li><p>Add v0.3 capability summary</p></li><li><p>Update competitive comparison with new capabilities</p></li><li><p>Note: kappa activation is now validated, not just theoretical</p></li></ul>
+<h4 id="blk-70926">Complete goal</h4>
+<pre><code>manage_goal operation=set_progress goal_id=goal_ae39998e19f363c1519679b15d24744d progress=1.0
+manage_goal operation=transition_goal goal_id=goal_ae39998e19f363c1519679b15d24744d status=completed</code></pre>
+<h4 id="blk-70928">Store outcome</h4>
+<pre><code>learn_from_outcome action_id=v03_continual_learning status=success
+  causal_node_ids=[all knowledge nodes linked to goal]
+  evidence=&quot;GraphMemBench 120/120, kappa activation &gt;15%, SHR improved&quot;</code></pre>
+<h3 id="blk-70930">Verification Checklist</h3>
+<ul><li><p>[ ] <code>mix compile --warnings-as-errors</code> passes</p></li><li><p>[ ] <code>mix test</code> — ALL tests pass</p></li><li><p>[ ] <code>mix benchmark.capability_spec</code> — 120/120 scenarios pass (Phase 1 + 2 + 3)</p></li><li><p>[ ] <code>mix benchmark.longmemeval --split oracle --neural --limit 100</code> — SHR &gt; 90.4%</p></li><li><p>[ ] kappa &gt; 0 on &gt; 15% of benchmark queries</p></li><li><p>[ ] Spec updated with v0.3 capabilities</p></li><li><p>[ ] OS-E001 updated with new benchmark data</p></li><li><p>[ ] Portfolio review updated with new numbers</p></li><li><p>[ ] Goal completed with outcome learning</p></li><li><p>[ ] Consolidation run to clean session knowledge</p></li><li><p>[ ] Version bumped to v0.3.0 in mix.exs + npm/package.json</p></li></ul></div>
+<p class="src"><a href="/#/graphonomous/prompts/CONTINUAL_LEARNING_P3_PROMPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-70751" class="lvl2">Prerequisites</a><a href="#blk-70762" class="lvl2">Session Goal</a><a href="#blk-70764" class="lvl2">Active Goal</a><a href="#blk-70766" class="lvl2">Capability 11: Causal Edge Metadata Prep (1 day)</a><a href="#blk-70767" class="lvl3">What it does</a><a href="#blk-70769" class="lvl3">No schema migration needed</a><a href="#blk-70772" class="lvl3">File: graphonomous/lib/graphonomous/learner.ex</a><a href="#blk-70775" class="lvl3">Tests</a><a href="#blk-70785" class="lvl2">GraphMemBench Phase 3: Full Suite + Competitor Stubs (3 days)</a><a href="#blk-70786" class="lvl3">Add remaining 40 scenarios (Categories 11-15, 8 each)</a><a href="#blk-70877" class="lvl3">Competitor adapter interface</a><a href="#blk-70880" class="lvl2">Finalization Tasks (1 day)</a><a href="#blk-70881" class="lvl3">Update Graphonomous spec</a><a href="#blk-70900" class="lvl3">Update OS-E001</a><a href="#blk-70913" class="lvl3">Update portfolio review</a><a href="#blk-70926" class="lvl3">Complete goal</a><a href="#blk-70928" class="lvl3">Store outcome</a><a href="#blk-70930" class="lvl2">Verification Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/prompts/BENCHMARK_EXPANSION_PROMPT.md/">Benchmark Expansion Prompt — Graphonomous v0.3.3+</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_P1_PROMPT.md/">Graphonomous v0.3 — P1 Implementation Prompt (Week 3-4)</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_P2_PROMPT.md/">Graphonomous v0.3 — P2 Implementation Prompt (Week 5+)</a><a href="/graphonomous/prompts/CONTINUAL_LEARNING_V03_PROMPT.md/">Graphonomous v0.3 Continual Learning Implementation Prompt</a><a href="/graphonomous/prompts/KAPPA_QA_OPTIMIZATION_PROMPT.md/">κ-Topology QA &amp; SHR Optimization — Session Prompt</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierark6yxvyazwi7si6grp5rhqvay7lw5leqpehftrooncblm4ypxsnq</div></div></div>
+</div></div>
+</body></html>

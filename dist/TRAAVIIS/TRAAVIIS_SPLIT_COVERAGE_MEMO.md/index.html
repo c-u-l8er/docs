@@ -1,0 +1,79 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Items 11 and 12 — split-level coverage, and the paired 0.55 demonstration · TRAAVIIS · Ampersand Box</title>
+<meta name="description" content="Status. Implemented and measured on this box, 2026-08-06, under the best-effort development profile the 9F-A ruling authorized. Everything below carries…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_SPLIT_COVERAGE_MEMO.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Items 11 and 12 — split-level coverage, and the paired 0.55 demonstration">
+<meta property="og:description" content="Status. Implemented and measured on this box, 2026-08-06, under the best-effort development profile the 9F-A ruling authorized. Everything below carries…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_SPLIT_COVERAGE_MEMO.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Items 11 and 12 — split-level coverage, and the paired 0.55 demonstration","name":"Items 11 and 12 — split-level coverage, and the paired 0.55 demonstration","description":"Status. Implemented and measured on this box, 2026-08-06, under the best-effort development profile the 9F-A ruling authorized. Everything below carries…","url":"https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_SPLIT_COVERAGE_MEMO.md/","identifier":"bagaaierat2qqteygyighhl5shyhjyfj3brpd2dcha5f5la2bpbdr7uelbezq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRAAVIIS","url":"https://docs.ampersandboxdesign.com/TRAAVIIS/"},"articleSection":"TRAAVIIS","hasPart":[{"@type":"WebPageElement","name":"1. The design question was arithmetic, not plumbing"},{"@type":"WebPageElement","name":"2. Three denominator rules, each closing a way to inflate the number"},{"@type":"WebPageElement","name":"3. An aggregate is only as strong as its weakest member"},{"@type":"WebPageElement","name":"4. Item 12: one number, two epistemic states"},{"@type":"WebPageElement","name":"5. Purity"},{"@type":"WebPageElement","name":"6. Two mistakes, both caught by a law skipping rather than passing"},{"@type":"WebPageElement","name":"7. Measured"},{"@type":"WebPageElement","name":"8. Still blocked, and not on code"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRAAVIIS","item":"https://docs.ampersandboxdesign.com/TRAAVIIS/"},{"@type":"ListItem","position":3,"name":"TRAAVIIS_SPLIT_COVERAGE_MEMO.md","item":"https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_SPLIT_COVERAGE_MEMO.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRAAVIIS</span>
+<span class="path">TRAAVIIS/TRAAVIIS_SPLIT_COVERAGE_MEMO.md</span>
+
+</div></div>
+<div class="lead">Status. Implemented and measured on this box, 2026-08-06, under the best-effort development profile the 9F-A ruling authorized. Everything below carries strict_comparison_eligib…</div>
+<div class="prose"><h1 id="blk-35046">Items 11 and 12 — split-level coverage, and the paired 0.55 demonstration</h1>
+<p><strong>Status.</strong> Implemented and measured on this box, 2026-08-06, under the best-effort development profile the 9F-A ruling authorized. Everything below carries <code>strict_comparison_eligible: false</code>, enforced by the code rather than promised by this memo.</p>
+<h3 id="blk-35048">1. The design question was arithmetic, not plumbing</h3>
+<p><code>response_coverage</code> reads one episode. Aggregating a split has <strong>two defensible answers, and they disagree</strong>:</p>
+<pre><code>pooled   sum the numerators, sum the denominators, divide
+         -&gt; every unit of rubric weight counts once
+
+mean     average the per-episode ratios
+         -&gt; every episode counts once</code></pre>
+<p>One heavy fully-answered task and nine light unanswered ones:</p>
+<pre><code>pooled weight coverage   50%
+per-task mean            10%
+pooled signal coverage   10%</code></pre>
+<p>Either is a correct answer to a different question. A reader shown one of them and told it is &quot;the coverage&quot; has been misled about the other, so both are reported and <strong>neither is named `coverage`</strong> — a key by that name would be read as the answer and make the others decorative. That is the same refusal <code>coverage.py</code> already makes between weight and signal count.</p>
+<p><code>S1</code> constructs the divergence rather than hoping for it, and pins the exact pair. <code>S11</code> pins a case where the two <em>coincide</em> (77.5% both), so <code>S1</code>'s gap reads as a property of skew rather than as noise.</p>
+<h3 id="blk-35055">2. Three denominator rules, each closing a way to inflate the number</h3>
+<p><strong>Unreadable tasks are counted and excluded.</strong> A task with no receipt — the agent would not launch, admission refused the fixture — stays in <code>tasks</code>, is absent from every ratio, is listed by id, and makes the split ineligible. Dropping it silently would inflate coverage by discarding exactly the tasks that went worst; scoring it zero would invent an adjudication that never happened.</p>
+<p><strong>`error` episodes stay in the denominator</strong> (the 9E ruling, applied). An episode whose verifiers errored has a receipt, a reading and a real denominator; excluding it would let a split raise its coverage by breaking verifiers, which is the shape of every erasure route in this repository. <code>S3</code> measures it as the difference between two splits identical but for the error episode — &quot;it is included&quot; is a claim about a denominator, and a denominator is what a reader cannot see.</p>
+<p><strong>`None` means no denominator, never zero.</strong> Reporting zero would be the strongest possible claim from the least possible evidence — the same inference-from-absence the containment slices spent two rounds removing.</p>
+<h3 id="blk-35059">3. An aggregate is only as strong as its weakest member</h3>
+<p><code>S5</code> refuses to certify a mixture of a certified and a best-effort episode. That is the laundering path: two episodes aggregated into one figure that <em>looks</em> publishable and inherits the stronger label from neither. The profiles are listed so the mixture is visible, the arithmetic is unaffected, and <code>strict_comparison_eligible</code> is false whatever the ratios say.</p>
+<p>An <strong>unclassified</strong> profile is refused too, not assumed fine — the same rule <code>execfacts.strict_comparison_eligible</code> applies one level down.</p>
+<h3 id="blk-35062">4. Item 12: one number, two epistemic states</h3>
+<table><thead><tr><th></th><th>verifiers wired</th><th><code>tests</code> / <code>identity</code></th><th>reward</th><th>weight coverage</th></tr></thead><tbody><tr><td><strong>A</strong></td><td>all five</td><td><code>fail</code> / <code>fail</code></td><td><strong>0.55</strong></td><td><strong>100%</strong></td></tr><tr><td><strong>B</strong></td><td>three</td><td><code>not_applicable</code> / <code>not_applicable</code></td><td><strong>0.55</strong></td><td><strong>55%</strong></td></tr></tbody></table>
+<p><code>reward.score</code> gives a <code>fail</code> and a <code>not_applicable</code> the identical <code>0.0</code> (§6a), so both receipts post the same number, the same <code>status: ok</code>, the same <code>validity: valid</code>. <strong>Nothing in the reward can tell them apart.</strong></p>
+<p>In <strong>A</strong> the missing 0.45 is a <em>verdict</em> — two verifiers looked and said no. In <strong>B</strong> it is a <em>gap</em> — nothing was ever asked. That is the entire justification for <code>response_coverage</code> existing, demonstrated rather than asserted.</p>
+<p><code>S10</code> asserts the rewards are identical <strong>first</strong>. If they differed, the pair would be showing that a score <em>does</em> distinguish them, which is the opposite claim, and the law would be proving the reverse of its own name.</p>
+<p><code>S11</code> aggregates the pair: pooled 77.5%, <code>{&quot;identity&quot;: 1, &quot;tests&quot;: 1}</code> unanswered, and a reward mean that cannot move because the two episodes score the same. <strong>That gap is the deliverable of items 11 and 12 together</strong> — a split-level number a reward mean cannot produce, over evidence a reward mean cannot see.</p>
+<h3 id="blk-35083">5. Purity</h3>
+<p><code>split_coverage</code> is a pure function: no I/O, no clock, no engine, no identity. <code>S7</code> reads that off the parse tree rather than trusting the docstring. It mints no id and is never stored, for the reason <code>response_coverage</code> and <code>ComparisonV1</code> are not: every input is already hash-bound inside the episodes it came from, so storing the aggregate would move ids to record something those bytes already determine.</p>
+<h3 id="blk-35085">6. Two mistakes, both caught by a law <em>skipping</em> rather than passing</h3>
+<p><code>S9</code> — the one law that composes with real sealed bytes rather than hand-built numbers — looked for the episode bundle at a path that does not exist, and then for a manifest member called <code>reward_spec</code> when the manifest calls it <code>reward</code>. Each time it <strong>skipped</strong>, which is how a law quietly stops testing anything.</p>
+<p>Both were mine, and both were visible only because a skip is reported as a skip. The packet gate would have caught them regardless: G6 forbids skips with the engine present, so the packet would have been REJECTED rather than shipping a law that tested nothing. That is the backstop doing exactly what it was added for after the 9D J15 rejection.</p>
+<h3 id="blk-35088">7. Measured</h3>
+<pre><code>test/test_splitcoverage.py     11 passed, 0 skipped, 0 failed
+full battery                  805 passed, 0 skipped, 0 failed  (36 files)
+
+packet  traaviis-11-12-pre.zip
+        d6cb637a7b79591334fd3b0adebd5c76c79508f74934bc296a436f434a2cab8a
+        G5  636 passed, 169 skipped, 0 failed
+        G6  805 passed,   0 skipped, 0 failed
+        ACCEPTED</code></pre>
+<p>Against 9F-A: G5 625 → 636, G6 794 → 805.</p>
+<h3 id="blk-35091">8. Still blocked, and not on code</h3>
+<pre><code>13  v2 cutover              certified backend
+14  [&amp;]code integration     certified backend
+9F items 2-7                a host that can isolate the control plane</code></pre>
+<p>Two things worth ruling before the cutover, neither urgent:</p>
+<p><strong>The v2 capability vector names `memory_max_bytes` and `pids_max` as sealed fields.</strong> Those are values a certified backend <em>sets</em>, and this host cannot set them, so they are deliberately <strong>not</strong> stubbed into the vector. A placeholder <code>null</code> would be indistinguishable from a measured absence, which is the distinction <code>UNKNOWN</code> was added to preserve.</p>
+<p><strong>`compare_episodes(strict=…)` still defaults to `False`.</strong> Correct today — the entire corpus is best-effort and a <code>True</code> default would refuse all of it — but a caller who forgets the flag gets a comparison of best-effort evidence with no complaint. The flip belongs to the cutover; it is recorded here so it is not discovered as a surprise then.</p></div>
+<p class="src"><a href="/#/TRAAVIIS/TRAAVIIS_SPLIT_COVERAGE_MEMO.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-35048" class="lvl2">1. The design question was arithmetic, not plumbing</a><a href="#blk-35055" class="lvl2">2. Three denominator rules, each closing a way to inflate the number</a><a href="#blk-35059" class="lvl2">3. An aggregate is only as strong as its weakest member</a><a href="#blk-35062" class="lvl2">4. Item 12: one number, two epistemic states</a><a href="#blk-35083" class="lvl2">5. Purity</a><a href="#blk-35085" class="lvl2">6. Two mistakes, both caught by a law skipping rather than passing</a><a href="#blk-35088" class="lvl2">7. Measured</a><a href="#blk-35091" class="lvl2">8. Still blocked, and not on code</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRAAVIIS/ARCHITECTURE.md/">TRAAVIIS — Architecture &amp; the road to the environment surface</a><a href="/TRAAVIIS/HANDOFF_TRAAVIIS_ENV.md/">Handoff — TRAAVIIS environment surface (SUPERSEDED)</a><a href="/TRAAVIIS/IDENTITY_MIGRATION_OPTIONS.md/">Identity migration options: versioned prefix vs. schema-level scheme vs. never conform</a><a href="/TRAAVIIS/README.md/">TRAAVIIS</a><a href="/TRAAVIIS/RFC_EVIDENCE_RESIDENCY.md/">RFC — Evidence Residency (residency.repository.v1)</a><a href="/TRAAVIIS/RFC_TRAAVIIS_ARTIFACTS.md/">RFC — TRAAVIIS environment artifacts &amp; episode kernel</a><a href="/TRAAVIIS/ROADMAP.md/">TRAAVIIS — what to build after the MCP transport</a><a href="/TRAAVIIS/TRAAVIIS_BUNDLE_CLOSURE_MEMO.md/">Bundle Distribution Identity Closure — memo</a><a href="/TRAAVIIS/TRAAVIIS_CONTAINMENT_CAPABILITY_MEMO.md/">9F-A — containment capability honesty</a><a href="/TRAAVIIS/TRAAVIIS_CONTAINMENT_MEMO.md/">9E — background process and workspace exact closure</a><a href="/TRAAVIIS/TRAAVIIS_END_TO_END_AND_THREAT_MODEL_MEMO.md/">Item A, item K&#39;s documentation half, and a release gate that blamed the packet</a><a href="/TRAAVIIS/TRAAVIIS_ENV_AUTHORING_MEMO.md/">TRAAVIIS — Environment Authoring Closure (trvs init + trvs pack)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierat2qqteygyighhl5shyhjyfj3brpd2dcha5f5la2bpbdr7uelbezq</div></div></div>
+</div></div>
+</body></html>

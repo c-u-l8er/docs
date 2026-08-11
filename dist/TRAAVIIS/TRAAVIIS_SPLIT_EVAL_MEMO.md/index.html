@@ -1,0 +1,106 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>TRAAVIIS — Split Evaluation Closure (trvs eval) · TRAAVIIS · Ampersand Box</title>
+<meta name="description" content="Date 2026-07-24 · Status shipped, 15 new laws green, 314 tests green Scope RFC_TRAAVIIS_ARTIFACTS.md §7 — the last unbuilt item in the build order that is…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_SPLIT_EVAL_MEMO.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TRAAVIIS — Split Evaluation Closure (trvs eval)">
+<meta property="og:description" content="Date 2026-07-24 · Status shipped, 15 new laws green, 314 tests green Scope RFC_TRAAVIIS_ARTIFACTS.md §7 — the last unbuilt item in the build order that is…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_SPLIT_EVAL_MEMO.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"TRAAVIIS — Split Evaluation Closure (trvs eval)","name":"TRAAVIIS — Split Evaluation Closure (trvs eval)","description":"Date 2026-07-24 · Status shipped, 15 new laws green, 314 tests green Scope RFC_TRAAVIIS_ARTIFACTS.md §7 — the last unbuilt item in the build order that is…","url":"https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_SPLIT_EVAL_MEMO.md/","identifier":"bagaaieracxl4pb4ec7mlxwvxza3yanftrnuruuic4jrqua3uwt3tbca5rcoq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRAAVIIS","url":"https://docs.ampersandboxdesign.com/TRAAVIIS/"},"articleSection":"TRAAVIIS","hasPart":[{"@type":"WebPageElement","name":"1. What shipped"},{"@type":"WebPageElement","name":"2. The load-bearing decision: eval mints no identity"},{"@type":"WebPageElement","name":"3. Nothing runs until everything checkable has been checked"},{"@type":"WebPageElement","name":"4. A split is a set — so its order is not observable"},{"@type":"WebPageElement","name":"5. Laws (15 new, all green)"},{"@type":"WebPageElement","name":"6. Autonomous decisions — flagged for GPT-5.6"},{"@type":"WebPageElement","name":"7. Not built"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRAAVIIS","item":"https://docs.ampersandboxdesign.com/TRAAVIIS/"},{"@type":"ListItem","position":3,"name":"TRAAVIIS_SPLIT_EVAL_MEMO.md","item":"https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_SPLIT_EVAL_MEMO.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRAAVIIS</span>
+<span class="path">TRAAVIIS/TRAAVIIS_SPLIT_EVAL_MEMO.md</span>
+
+</div></div>
+<div class="lead">Date 2026-07-24 · Status shipped, 15 new laws green, 314 tests green Scope RFC_TRAAVIIS_ARTIFACTS.md §7 — the last unbuilt item in the build order that is not explicitly deferre…</div>
+<div class="prose"><h1 id="blk-35096">TRAAVIIS — Split Evaluation Closure (<code>trvs eval</code>)</h1>
+<p><strong>Date</strong> 2026-07-24 · <strong>Status</strong> shipped, 15 new laws green, 314 tests green <strong>Scope</strong> RFC_TRAAVIIS_ARTIFACTS.md §7 — the last unbuilt item in the build order that is not explicitly deferred. <code>serve</code> (D5) and <code>bundle-…</code> remain open.</p>
+<h3 id="blk-35098">1. What shipped</h3>
+<p><code>init</code> + <code>pack</code> closed authoring. <code>eval-one</code> closed one task. The remaining gap was the one §7 names last:</p>
+<blockquote><p><code>trvs eval</code> — run an agent over a split, emit an <code>episode-…</code> per task, score.</p></blockquote>
+<pre data-lang="sh"><code>trvs pack lab lab-pkg
+trvs eval lab-pkg<span class="t-flag"> --split</span> test<span class="t-flag"> --output</span> episodes/<span class="t-flag"> --agent</span> python3 agent.py
+trvs verify-episode episodes/episode-cfef6da4…      <span class="t-comment"># replays with no agent</span></code></pre>
+<p>Verified end to end on a hand-authored three-task environment:</p>
+<pre><code>pack →  env-aa7df5dd…   task-3b4b2599…  task-082e11c1…  task-0cd4992e…
+        closure ✓  reopened ✓
+
+eval --split test
+  [1/2] ✓ task-082e11c181f3be21aa82e138  ok  reward 1
+  [2/2] ✓ task-0cd4992e274e07fc7da0bddd  ok  reward 1
+  ok            2/2
+  mean reward   1
+  evaluation    episodes/evaluation.json
+
+verify-episode (each, no agent process) → ✓ closed</code></pre>
+<h3 id="blk-35105">2. The load-bearing decision: <code>eval</code> mints no identity</h3>
+<p>§1's ladder ends at <code>env-…</code> / <code>bundle-…</code>. There is <strong>no rung for &quot;a run over a split&quot;</strong>, so this command does not create one. What it returns is an <em>index</em>:</p>
+<pre data-lang="json"><code>{ <span class="t-key">&quot;evaluation_version&quot;</span>: <span class="t-string">&quot;traaviis.evaluation.v1&quot;</span>,
+  <span class="t-key">&quot;env_id&quot;</span>: <span class="t-string">&quot;env-…&quot;</span>, <span class="t-key">&quot;split&quot;</span>: <span class="t-string">&quot;test&quot;</span>,
+  <span class="t-key">&quot;episodes&quot;</span>: [ {<span class="t-key">&quot;task_id&quot;</span>: <span class="t-string">&quot;task-…&quot;</span>, <span class="t-key">&quot;episode_id&quot;</span>: <span class="t-string">&quot;episode-…&quot;</span>,
+                 <span class="t-key">&quot;status&quot;</span>: <span class="t-string">&quot;ok&quot;</span>, <span class="t-key">&quot;reward&quot;</span>: <span class="t-num">1.0</span>, <span class="t-key">&quot;bundle&quot;</span>: <span class="t-string">&quot;episode-…&quot;</span>} ],
+  <span class="t-key">&quot;totals&quot;</span>: {<span class="t-key">&quot;tasks&quot;</span>: <span class="t-num">2</span>, <span class="t-key">&quot;ok&quot;</span>: <span class="t-num">2</span>, <span class="t-key">&quot;reward_mean&quot;</span>: <span class="t-num">1.0</span>, …} }</code></pre>
+<p>Every id in it is derived somewhere else. The index itself is not content-addressed and carries no id — a law (E5) scans the emitted JSON and fails on any <code>&lt;prefix&gt;-&lt;hex&gt;</code> family outside <code>{env, task, episode, snap, sem}</code>, and on any <code>evaluation_id</code>/<code>run_id</code>/<code>eval_id</code> key.</p>
+<p>This is deliberate restraint, not an oversight. A defensible <code>eval-…</code> would have to close over <em>the agent</em>, and there is no agent identity rung — so any id minted today would be under-determined, and a later real one would silently disagree with it. See §6.1.</p>
+<h3 id="blk-35110">3. Nothing runs until everything checkable has been checked</h3>
+<p>The order mirrors <code>pack</code>'s, for the same reason:</p>
+<pre><code>1. open_package     reopen through §5a — env-/task-/rew-/snap- ALL re-derived
+                    from the written bytes
+2. resolve split    the split exists, is non-empty, every member is in-closure
+3. admit subject    bind the on-disk tree to snapshot.json (once, shared)
+--- only now is a process launched ---
+4. per task         evaluate → optionally persist episode-&lt;id&gt;/
+5. aggregate        index written atomically (temp sibling + one rename)</code></pre>
+<p>Two laws prove the boundary is real rather than decorative: E2 tampers a packed task and E2b drifts one subject byte, then passes an agent that writes a marker file. Both refuse with a typed code (<code>REOPEN_TASK_ID</code> / <code>SUBJECT_*</code>) <strong>and the marker never appears</strong> — a broken package costs zero episodes, not N wasted ones.</p>
+<h3 id="blk-35114">4. A split is a set — so its order is not observable</h3>
+<p>§3 says splits are &quot;<strong>named sets</strong> of <code>task-…</code> ids&quot;. Taken literally that has a consequence the previous <code>pack</code> did not honour: it stored split membership in source order, so listing the same two tasks the other way round produced a different <code>env-…</code>. Two identical environments, two identities.</p>
+<p><code>pack</code> now canonicalizes a split as a <strong>sorted set</strong>, and a repeated member is <code>SPLIT_DUPLICATE</code> rather than being silently collapsed (pack never repairs a scaffold). <code>eval</code> then derives its run order as the sorted task ids, so the order tasks execute in is a function of the environment, never of how someone typed the manifest. E1 packs two environments differing only in split order and asserts byte-identical <code>env-…</code>.</p>
+<h3 id="blk-35117">5. Laws (15 new, all green)</h3>
+<p><code>test/test_eval_split.py</code>:</p>
+<ul><li><p><strong>E1</strong> split order does not move <code>env-…</code>; the packed manifest is sorted ·</p></li></ul>
+<p>duplicate member refused, nothing written.</p>
+<ul><li><p><strong>E2</strong> tampered package and drifted subject both refuse **before any agent</p></li></ul>
+<p>process starts** (proved with a marker-writing agent).</p>
+<ul><li><p><strong>E3</strong> unknown / empty / foreign-member splits are typed refusals, and the</p></li></ul>
+<p>unknown-split error names the splits that do exist.</p>
+<ul><li><p><strong>E4</strong> run order is the sorted task ids regardless of manifest order.</p></li><li><p><strong>E5</strong> the index invents no identity (id-family scan + forbidden keys).</p></li><li><p><strong>E6/E10</strong> one episode per task, distinct ids for distinct tasks, totals are</p></li></ul>
+<p>real arithmetic over the episodes.</p>
+<ul><li><p><strong>E8</strong> persisted episodes are genuine closed bundles — each re-verified with</p></li></ul>
+<p><code>trvs verify-episode</code>, no agent — and the index round-trips.</p>
+<ul><li><p><strong>E9</strong> a bad task is recorded and the split continues (2 of 3 still score 1).</p></li><li><p><strong>E11</strong> a <code>trvm.world.v1</code> package is refused <em>by name</em></p></li></ul>
+<p>(<code>SUBSTRATE_NOT_EVALUABLE</code>), not half-run.</p>
+<ul><li><p><strong>E13</strong> two runs of one split agree exactly (<code>a == b</code>).</p></li><li><p>CLI: exit 0 all-ok · exit 1 ran-and-disagreed (<code>ok 2/3</code>) · exit 2 unknown</p></li></ul>
+<p>split / missing package · <code>--json</code> emits the index.</p>
+<p>Regression: <strong>314 tests green, 0 failures, 0 skips</strong> — admission 16, cli_evalone 18, cli 12, episode_evidence 56, evalone 14, <strong>eval_split 15</strong>, execfacts 8, forge_adapter 6, identity 25, pack 18, patchapply 10, paths 10, real_residency 9, reward 17, runner 10, scaffold 16, snapshot 10, substrate_verifiers 24, vcontext 5, verifiers 15.</p>
+<h3 id="blk-35156">6. Autonomous decisions — flagged for GPT-5.6</h3>
+<ol><li><p><strong>`eval` mints no artifact id.</strong> The index is <code>traaviis.evaluation.v1</code> and is</p></li></ol>
+<p>not content-addressed. If you want a run over a split to <em>be</em> an artifact, it needs an agent identity rung first — otherwise the id closes over less than the thing it names. I did not invent either. <strong>Confirm, or rule the agent rung.</strong></p>
+<ol start="2"><li><p><strong>Splits are canonicalized as sorted sets, and this changes `env-…`</strong> for any</p></li></ol>
+<p>environment whose split members were not already in sorted order. It is the literal reading of §3 (&quot;named sets&quot;), and it makes reordering non-identity — but it <em>is</em> a behaviour change to a shipped command. Confirm.</p>
+<ol start="3"><li><p><strong>`SPLIT_DUPLICATE` refuses rather than collapses</strong> a repeated member,</p></li></ol>
+<p>matching the <code>RemoveObject</code>/no-auto-repair discipline.</p>
+<ol start="4"><li><p><strong>Verifier wiring moved out of the CLI</strong> into <code>traaviis/wiring.py</code>. It was</p></li></ol>
+<p>CLI-private, so a library caller got <em>zero</em> verifiers and every episode came back invalid-config. A task's verifier set must be a function of the task, not of the caller, or two runs of one task are not comparable. This was a real defect found by the E6 law, not a refactor for taste.</p>
+<ol start="5"><li><p><strong>A low reward is not a disagreement.</strong> Exit 1 fires only on <code>invalid</code> /</p></li></ol>
+<p><code>error</code> episodes; an agent that legitimately scores 0.25 exits 0. <code>eval</code> scores, it does not judge.</p>
+<ol start="6"><li><p><strong>One subject per environment</strong>, admitted once and shared by every task in</p></li></ol>
+<p>the split. That is the shape <code>pack</code> emits today. Per-task subjects would need a different manifest, not a different runner.</p>
+<ol start="7"><li><p><strong>`trvm.world.v1` is refused by name.</strong> It packs and reopens fine, but the</p></li></ol>
+<p>Episode Kernel over a world subject (D5) is unbuilt, so it is a typed refusal rather than a partial run.</p>
+<h3 id="blk-35185">7. Not built</h3>
+<p><code>trvs serve --ors/--mcp</code> (needs the D5 process model), <code>bundle-…</code> (the outer content-addressed package from D3), and the REPL. With <code>eval</code> shipped, <strong>§7's build order is exhausted</strong> — everything remaining was explicitly deferred by ruling, so this is a natural halt point.</p>
+<p>MIT licensed · TRAAVIIS Holdings · part of the [&amp;] Protocol ecosystem.</p></div>
+<p class="src"><a href="/#/TRAAVIIS/TRAAVIIS_SPLIT_EVAL_MEMO.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-35098" class="lvl2">1. What shipped</a><a href="#blk-35105" class="lvl2">2. The load-bearing decision: eval mints no identity</a><a href="#blk-35110" class="lvl2">3. Nothing runs until everything checkable has been checked</a><a href="#blk-35114" class="lvl2">4. A split is a set — so its order is not observable</a><a href="#blk-35117" class="lvl2">5. Laws (15 new, all green)</a><a href="#blk-35156" class="lvl2">6. Autonomous decisions — flagged for GPT-5.6</a><a href="#blk-35185" class="lvl2">7. Not built</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRAAVIIS/ARCHITECTURE.md/">TRAAVIIS — Architecture &amp; the road to the environment surface</a><a href="/TRAAVIIS/HANDOFF_TRAAVIIS_ENV.md/">Handoff — TRAAVIIS environment surface (SUPERSEDED)</a><a href="/TRAAVIIS/IDENTITY_MIGRATION_OPTIONS.md/">Identity migration options: versioned prefix vs. schema-level scheme vs. never conform</a><a href="/TRAAVIIS/README.md/">TRAAVIIS</a><a href="/TRAAVIIS/RFC_EVIDENCE_RESIDENCY.md/">RFC — Evidence Residency (residency.repository.v1)</a><a href="/TRAAVIIS/RFC_TRAAVIIS_ARTIFACTS.md/">RFC — TRAAVIIS environment artifacts &amp; episode kernel</a><a href="/TRAAVIIS/ROADMAP.md/">TRAAVIIS — what to build after the MCP transport</a><a href="/TRAAVIIS/TRAAVIIS_BUNDLE_CLOSURE_MEMO.md/">Bundle Distribution Identity Closure — memo</a><a href="/TRAAVIIS/TRAAVIIS_CONTAINMENT_CAPABILITY_MEMO.md/">9F-A — containment capability honesty</a><a href="/TRAAVIIS/TRAAVIIS_CONTAINMENT_MEMO.md/">9E — background process and workspace exact closure</a><a href="/TRAAVIIS/TRAAVIIS_END_TO_END_AND_THREAT_MODEL_MEMO.md/">Item A, item K&#39;s documentation half, and a release gate that blamed the packet</a><a href="/TRAAVIIS/TRAAVIIS_ENV_AUTHORING_MEMO.md/">TRAAVIIS — Environment Authoring Closure (trvs init + trvs pack)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieracxl4pb4ec7mlxwvxza3yanftrnuruuic4jrqua3uwt3tbca5rcoq</div></div></div>
+</div></div>
+</body></html>

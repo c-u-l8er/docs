@@ -1,0 +1,140 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Skill 06 — CLI Reference · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="The ampersand CLI is the primary interface for working with [&amp;] Protocol declarations. It validates, composes, and generates runtime artifacts.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill 06 — CLI Reference">
+<meta property="og:description" content="The ampersand CLI is the primary interface for working with [&amp;] Protocol declarations. It validates, composes, and generates runtime artifacts.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 06 — CLI Reference","name":"Skill 06 — CLI Reference","description":"The ampersand CLI is the primary interface for working with [&] Protocol declarations. It validates, composes, and generates runtime artifacts.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/","identifier":"bagaaieraq52szf2xzmmegckqwzatgrgamcnfethjom3hd5zxb6vyyyzogkya","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Overview"},{"@type":"WebPageElement","name":"Installation"},{"@type":"WebPageElement","name":"validate"},{"@type":"WebPageElement","name":"Usage"},{"@type":"WebPageElement","name":"Flags"},{"@type":"WebPageElement","name":"Output (text)"},{"@type":"WebPageElement","name":"Output (json)"},{"@type":"WebPageElement","name":"Exit Codes"},{"@type":"WebPageElement","name":"compose"},{"@type":"WebPageElement","name":"Usage"},{"@type":"WebPageElement","name":"Flags"},{"@type":"WebPageElement","name":"Output (text)"},{"@type":"WebPageElement","name":"Output (verbose)"},{"@type":"WebPageElement","name":"Exit Codes"},{"@type":"WebPageElement","name":"generate mcp"},{"@type":"WebPageElement","name":"Usage"},{"@type":"WebPageElement","name":"Flags"},{"@type":"WebPageElement","name":"Output"},{"@type":"WebPageElement","name":"Exit Codes"},{"@type":"WebPageElement","name":"generate a2a"},{"@type":"WebPageElement","name":"Usage"},{"@type":"WebPageElement","name":"Flags"},{"@type":"WebPageElement","name":"Output"},{"@type":"WebPageElement","name":"Exit Codes"},{"@type":"WebPageElement","name":"Common Workflows"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/"},{"@type":"ListItem","position":5,"name":"06_CLI_REFERENCE.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md</span>
+
+</div></div>
+<div class="lead">The ampersand CLI is the primary interface for working with [&amp;] Protocol declarations. It validates, composes, and generates runtime artifacts.</div>
+<div class="prose"><h1 id="blk-16764">Skill 06 — CLI Reference</h1>
+<blockquote><p>Complete command reference for the <code>ampersand</code> CLI tool — flags, output formats, exit codes, and common workflows.</p></blockquote>
+<h3 id="blk-16767">Overview</h3>
+<p>The <code>ampersand</code> CLI is the primary interface for working with [&amp;] Protocol declarations. It validates, composes, and generates runtime artifacts.</p>
+<h4 id="blk-16769">Installation</h4>
+<p><strong>Elixir escript (reference implementation):</strong></p>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> reference/elixir/ampersand_core
+mix deps.get
+mix escript.build
+<span class="t-comment"># Binary: ./ampersand</span></code></pre>
+<p><strong>npm (planned):</strong></p>
+<pre data-lang="bash"><code>npm install<span class="t-flag"> -g</span> @ampersand/cli</code></pre>
+<h3 id="blk-16774">validate</h3>
+<p>Validate an agent declaration against the JSON Schema.</p>
+<h4 id="blk-16776">Usage</h4>
+<pre data-lang="bash"><code>ampersand validate &lt;file&gt; [flags]</code></pre>
+<h4 id="blk-16778">Flags</h4>
+<table><thead><tr><th>Flag</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>--format text</code></td><td><code>text</code></td><td>Output format: <code>text</code> or <code>json</code></td></tr><tr><td><code>--schema &lt;path&gt;</code></td><td>built-in</td><td>Path to a custom schema file</td></tr><tr><td><code>--quiet</code></td><td>off</td><td>Suppress success output, only show errors</td></tr></tbody></table>
+<h4 id="blk-16792">Output (text)</h4>
+<pre><code>OK  infra-operator.ampersand.json
+  Agent: InfraOperator v1.0.0
+  Capabilities: 6
+  Governance: hard=1 soft=1 escalation=yes
+  Provenance: enabled</code></pre>
+<h4 id="blk-16794">Output (json)</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;file&quot;</span>: <span class="t-string">&quot;infra-operator.ampersand.json&quot;</span>,
+  <span class="t-key">&quot;valid&quot;</span>: <span class="t-lit">true</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;InfraOperator&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities_count&quot;</span>: <span class="t-num">6</span>,
+  <span class="t-key">&quot;errors&quot;</span>: []
+}</code></pre>
+<h4 id="blk-16796">Exit Codes</h4>
+<table><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody><tr><td><code>0</code></td><td>All files valid</td></tr><tr><td><code>1</code></td><td>One or more validation errors</td></tr><tr><td><code>2</code></td><td>File not found or unreadable</td></tr></tbody></table>
+<h3 id="blk-16806">compose</h3>
+<p>Check capability compatibility, ACI normalization, and pipeline type safety.</p>
+<h4 id="blk-16808">Usage</h4>
+<pre data-lang="bash"><code>ampersand compose &lt;file&gt; [flags]</code></pre>
+<h4 id="blk-16810">Flags</h4>
+<table><thead><tr><th>Flag</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>--format text</code></td><td><code>text</code></td><td>Output format: <code>text</code> or <code>json</code></td></tr><tr><td><code>--verbose</code></td><td>off</td><td>Show detailed type-checking trace</td></tr></tbody></table>
+<h4 id="blk-16821">Output (text)</h4>
+<pre><code>OK  infra-operator.ampersand.json
+  Capability set: &amp;memory.graph &amp; &amp;time.anomaly &amp; &amp;reason.argument
+  ACI normal form: &amp;memory.graph &amp; &amp;reason.argument &amp; &amp;time.anomaly
+  Pipelines: incident_triage (3 steps, type-safe)
+  Providers: graphonomous, ticktickclock, deliberatic</code></pre>
+<h4 id="blk-16823">Output (verbose)</h4>
+<pre><code>  Pipeline: incident_triage
+    Step 1: &amp;time.anomaly.detect()
+      Input:  stream_data (from source_ref)
+      Output: anomaly_set
+    Step 2: &amp;memory.graph.enrich()
+      Input:  anomaly_set (matches &amp;time.* in accepts_from) OK
+      Output: enriched_context
+    Step 3: &amp;reason.argument.evaluate()
+      Input:  enriched_context (matches &amp;memory.* in accepts_from) OK
+      Output: evaluation_result
+    Pipeline type-safe: YES</code></pre>
+<h4 id="blk-16825">Exit Codes</h4>
+<table><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody><tr><td><code>0</code></td><td>Composition valid</td></tr><tr><td><code>1</code></td><td>Composition errors (type mismatch, missing provider)</td></tr><tr><td><code>2</code></td><td>File not found or unreadable</td></tr></tbody></table>
+<h3 id="blk-16835">generate mcp</h3>
+<p>Generate an MCP server configuration from a declaration.</p>
+<h4 id="blk-16837">Usage</h4>
+<pre data-lang="bash"><code>ampersand generate mcp &lt;file&gt; [flags]</code></pre>
+<h4 id="blk-16839">Flags</h4>
+<table><thead><tr><th>Flag</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>--output &lt;path&gt;</code></td><td>stdout</td><td>Write output to file</td></tr><tr><td><code>--compact</code></td><td>off</td><td>Minified JSON output</td></tr><tr><td><code>--transport &lt;type&gt;</code></td><td><code>stdio</code></td><td>MCP transport: <code>stdio</code> or <code>http</code></td></tr><tr><td><code>--provider &lt;override&gt;</code></td><td>none</td><td>Override a provider: <code>&quot;&amp;cap=provider&quot;</code></td></tr></tbody></table>
+<h4 id="blk-16856">Output</h4>
+<p>JSON object with <code>mcpServers</code> key containing one entry per provider. Each entry includes <code>command</code>, <code>args</code>, <code>transport</code>, <code>tools</code>, and optionally <code>resources</code>.</p>
+<h4 id="blk-16858">Exit Codes</h4>
+<table><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody><tr><td><code>0</code></td><td>Generation succeeded</td></tr><tr><td><code>1</code></td><td>Validation or composition errors</td></tr><tr><td><code>2</code></td><td>File not found or unreadable</td></tr></tbody></table>
+<h3 id="blk-16868">generate a2a</h3>
+<p>Generate an A2A agent card from a declaration.</p>
+<h4 id="blk-16870">Usage</h4>
+<pre data-lang="bash"><code>ampersand generate a2a &lt;file&gt; [flags]</code></pre>
+<h4 id="blk-16872">Flags</h4>
+<table><thead><tr><th>Flag</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>--output &lt;path&gt;</code></td><td>stdout</td><td>Write output to file</td></tr><tr><td><code>--compact</code></td><td>off</td><td>Minified JSON output</td></tr></tbody></table>
+<h4 id="blk-16883">Output</h4>
+<p>JSON object conforming to the A2A agent card format with <code>name</code>, <code>version</code>, <code>description</code>, <code>skills</code>, and <code>capabilities</code> fields.</p>
+<h4 id="blk-16885">Exit Codes</h4>
+<table><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody><tr><td><code>0</code></td><td>Generation succeeded</td></tr><tr><td><code>1</code></td><td>Validation or composition errors</td></tr><tr><td><code>2</code></td><td>File not found or unreadable</td></tr></tbody></table>
+<h3 id="blk-16895">Common Workflows</h3>
+<h4 id="blk-16896">Validate, compose, and generate in sequence</h4>
+<pre data-lang="bash"><code>ampersand validate agent.ampersand.json &amp;&amp; \
+ampersand compose agent.ampersand.json &amp;&amp; \
+ampersand generate mcp agent.ampersand.json<span class="t-flag"> --output</span> mcp-config.json &amp;&amp; \
+ampersand generate a2a agent.ampersand.json<span class="t-flag"> --output</span> agent-card.json</code></pre>
+<p>Note: <code>generate</code> includes validation and composition internally. The explicit steps above are useful when you want to see intermediate output or fail fast.</p>
+<h4 id="blk-16899">Batch validate a directory</h4>
+<pre data-lang="bash"><code>ampersand validate agents/*.ampersand.json</code></pre>
+<h4 id="blk-16901">Generate both artifacts at once</h4>
+<pre data-lang="bash"><code>ampersand generate mcp agent.ampersand.json<span class="t-flag"> --output</span> mcp-config.json
+ampersand generate a2a agent.ampersand.json<span class="t-flag"> --output</span> agent-card.json</code></pre>
+<h4 id="blk-16903">Pipe to jq for inspection</h4>
+<pre data-lang="bash"><code>ampersand generate mcp agent.ampersand.json | jq <span class="t-string">'.mcpServers | keys'</span>
+ampersand generate a2a agent.ampersand.json | jq <span class="t-string">'.skills[].id'</span></code></pre>
+<h3 id="blk-16905">Error Handling</h3>
+<p>All commands write errors to stderr and return non-zero exit codes.</p>
+<p><strong>Validation error example:</strong></p>
+<pre><code>FAIL  agent.ampersand.json
+  errors:
+    - /agent: Required property missing
+    - /capabilities/&amp;memory: Invalid capability identifier (missing subtype)</code></pre>
+<p><strong>Composition error example:</strong></p>
+<pre><code>FAIL  agent.ampersand.json
+  errors:
+    - Pipeline &quot;triage&quot; step 2: type mismatch — &amp;memory.graph.enrich()
+      does not accept &quot;forecast_set&quot;</code></pre>
+<p><strong>File error example:</strong></p>
+<pre><code>ERROR  File not found: nonexistent.ampersand.json</code></pre>
+<p>Errors include the JSON path where the problem occurred, making it straightforward to locate and fix issues in the declaration.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-16767" class="lvl2">Overview</a><a href="#blk-16769" class="lvl3">Installation</a><a href="#blk-16774" class="lvl2">validate</a><a href="#blk-16776" class="lvl3">Usage</a><a href="#blk-16778" class="lvl3">Flags</a><a href="#blk-16792" class="lvl3">Output (text)</a><a href="#blk-16794" class="lvl3">Output (json)</a><a href="#blk-16796" class="lvl3">Exit Codes</a><a href="#blk-16806" class="lvl2">compose</a><a href="#blk-16808" class="lvl3">Usage</a><a href="#blk-16810" class="lvl3">Flags</a><a href="#blk-16821" class="lvl3">Output (text)</a><a href="#blk-16823" class="lvl3">Output (verbose)</a><a href="#blk-16825" class="lvl3">Exit Codes</a><a href="#blk-16835" class="lvl2">generate mcp</a><a href="#blk-16837" class="lvl3">Usage</a><a href="#blk-16839" class="lvl3">Flags</a><a href="#blk-16856" class="lvl3">Output</a><a href="#blk-16858" class="lvl3">Exit Codes</a><a href="#blk-16868" class="lvl2">generate a2a</a><a href="#blk-16870" class="lvl3">Usage</a><a href="#blk-16872" class="lvl3">Flags</a><a href="#blk-16883" class="lvl3">Output</a><a href="#blk-16885" class="lvl3">Exit Codes</a><a href="#blk-16895" class="lvl2">Common Workflows</a><a href="#blk-16896" class="lvl3">Validate, compose, and generate in sequence</a><a href="#blk-16899" class="lvl3">Batch validate a directory</a><a href="#blk-16901" class="lvl3">Generate both artifacts at once</a><a href="#blk-16903" class="lvl3">Pipe to jq for inspection</a><a href="#blk-16905" class="lvl2">Error Handling</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/">Skill 01 — Writing Agent Declarations</a><a href="/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/">Skill 02 — Validation</a><a href="/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/">Skill 03 — Capability Composition</a><a href="/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/">Skill 04 — Capability Contracts</a><a href="/AmpersandBoxDesign/docs/skills/05_GENERATION.md/">Skill 05 — Generation</a><a href="/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/">Skill 07 — Integration Patterns</a><a href="/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/">Skill 08 — Provider Implementation</a><a href="/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/">Skill 09 — Governance and Provenance</a><a href="/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/">Skill 10 — Anti-Patterns</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraq52szf2xzmmegckqwzatgrgamcnfethjom3hd5zxb6vyyyzogkya</div></div></div>
+</div></div>
+</body></html>

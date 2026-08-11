@@ -1,0 +1,198 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;memory.graph — Graph-Structured Memory Capability · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;memory.graph is a concrete capability page for the [&amp;] Protocol&#39;s &amp;memory primitive.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/memory.graph.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;memory.graph — Graph-Structured Memory Capability">
+<meta property="og:description" content="&amp;memory.graph is a concrete capability page for the [&amp;] Protocol&#39;s &amp;memory primitive.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/memory.graph.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&memory.graph — Graph-Structured Memory Capability","name":"&memory.graph — Graph-Structured Memory Capability","description":"&memory.graph is a concrete capability page for the [&] Protocol's &memory primitive.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/memory.graph.md/","identifier":"bagaaieratet7oh43b2snoyrcwd5655qgtee3blcot6j4xfkqz3cwspeg6tja","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability exists"},{"@type":"WebPageElement","name":"3. Capability family position"},{"@type":"WebPageElement","name":"4. Capability contract summary"},{"@type":"WebPageElement","name":"Interpretation"},{"@type":"WebPageElement","name":"5. Operations"},{"@type":"WebPageElement","name":"recall"},{"@type":"WebPageElement","name":"learn"},{"@type":"WebPageElement","name":"consolidate"},{"@type":"WebPageElement","name":"enrich"},{"@type":"WebPageElement","name":"6. Architecture patterns"},{"@type":"WebPageElement","name":"Pattern A: anomaly enrichment"},{"@type":"WebPageElement","name":"Pattern B: research knowledge graph"},{"@type":"WebPageElement","name":"Pattern C: learning from outcomes"},{"@type":"WebPageElement","name":"7. Architecture diagram"},{"@type":"WebPageElement","name":"8. Example declaration"},{"@type":"WebPageElement","name":"9. Example API shape"},{"@type":"WebPageElement","name":"Recall request"},{"@type":"WebPageElement","name":"Recall response"},{"@type":"WebPageElement","name":"Enrich request"},{"@type":"WebPageElement","name":"Enrich response"},{"@type":"WebPageElement","name":"10. Compatible providers"},{"@type":"WebPageElement","name":"Current default ecosystem fit"},{"@type":"WebPageElement","name":"11. A2A-facing skills"},{"@type":"WebPageElement","name":"12. Governance implications"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"memory.graph.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/memory.graph.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/memory.graph.md</span>
+
+</div></div>
+<div class="lead">&amp;memory.graph is a concrete capability page for the [&amp;] Protocol&#39;s &amp;memory primitive.</div>
+<div class="prose"><h1 id="blk-10130"><code>&amp;memory.graph</code> — Graph-Structured Memory Capability</h1>
+<p><code>&amp;memory.graph</code> is a concrete capability page for the [&amp;] Protocol's <code>&amp;memory</code> primitive.</p>
+<p>It describes the capability interface for <strong>graph-structured memory</strong>: a memory system that stores entities, events, concepts, and relationships in a connected form and can use that structure to enrich retrieval, support reasoning, and preserve durable context over time.</p>
+<p>This page is part of the capability registry and documentation hub. It is intended to be useful both to humans and to downstream generation systems.</p>
+<h3 id="blk-10134">1. Definition</h3>
+<p><code>&amp;memory.graph</code> is the capability for:</p>
+<ul><li><p>relationship-aware recall</p></li><li><p>graph-linked context enrichment</p></li><li><p>durable structured memory</p></li><li><p>consolidation of repeated observations into connected knowledge</p></li><li><p>retrieval over entities, events, dependencies, and incident structure</p></li></ul>
+<p>Unlike flat text retrieval alone, graph memory preserves <strong>how things relate</strong>.</p>
+<p>That makes it especially useful when an agent must answer questions like:</p>
+<ul><li><p>What other incidents are connected to this one?</p></li><li><p>Which dependency chain links this failure to a prior outage?</p></li><li><p>Which entities, regions, or customers are affected through known relationships?</p></li><li><p>What prior action led to this current state?</p></li></ul>
+<p>In protocol terms, the canonical capability identifier is:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li></ul>
+<h3 id="blk-10162">2. Why this capability exists</h3>
+<p>A large share of important agent workloads are not just about finding similar text. They are about traversing structure.</p>
+<p>Examples:</p>
+<ul><li><p>infrastructure incidents linked through services, hosts, and dependencies</p></li><li><p>research concepts linked through claims, citations, and prior conclusions</p></li><li><p>customer support cases linked through account history, policies, and prior escalations</p></li><li><p>fraud investigations linked through entities, accounts, devices, and event chains</p></li></ul>
+<p>A graph memory capability is useful whenever:</p>
+<ol><li><p>relationship structure matters</p></li><li><p>recall should be explainable</p></li><li><p>enrichment should include linked context rather than only nearest-neighbor similarity</p></li><li><p>memory should consolidate into durable connected knowledge over time</p></li></ol>
+<p>This is why <code>&amp;memory.graph</code> is a distinct capability rather than just a provider detail.</p>
+<h3 id="blk-10185">3. Capability family position</h3>
+<p><code>&amp;memory.graph</code> sits inside the <code>&amp;memory</code> namespace.</p>
+<p>Related memory capabilities include:</p>
+<ul><li><p><code>&amp;memory.vector</code> — semantic retrieval over embedded content</p></li><li><p><code>&amp;memory.episodic</code> — replayable prior experiences or sessions</p></li></ul>
+<p>A useful shorthand:</p>
+<ul><li><p><code>memory.graph</code> = connected durable knowledge</p></li><li><p><code>memory.vector</code> = semantic similarity retrieval</p></li><li><p><code>memory.episodic</code> = prior experience replay</p></li></ul>
+<p>In many real systems, these capabilities compose rather than compete.</p>
+<h3 id="blk-10202">4. Capability contract summary</h3>
+<p>Below is a representative contract for <code>&amp;memory.graph</code>.</p>
+<p>~~~json { &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;, &quot;capability&quot;: &quot;&amp;memory.graph&quot;, &quot;provider&quot;: &quot;graphonomous&quot;, &quot;version&quot;: &quot;0.1.0&quot;, &quot;description&quot;: &quot;Graph-structured memory contract for relationship-aware recall, enrichment, and consolidation across incident, research, and operational contexts.&quot;, &quot;operations&quot;: { &quot;recall&quot;: { &quot;in&quot;: &quot;query_context&quot;, &quot;out&quot;: &quot;memory_hits&quot;, &quot;description&quot;: &quot;Retrieve graph-linked facts, incidents, entities, and relationships relevant to the current query.&quot;, &quot;deterministic&quot;: false, &quot;side_effects&quot;: false }, &quot;learn&quot;: { &quot;in&quot;: &quot;observation&quot;, &quot;out&quot;: &quot;ack&quot;, &quot;description&quot;: &quot;Persist a new observation or derived relationship into graph memory.&quot;, &quot;deterministic&quot;: true, &quot;side_effects&quot;: true }, &quot;consolidate&quot;: { &quot;in&quot;: &quot;memory_batch&quot;, &quot;out&quot;: &quot;graph_update&quot;, &quot;description&quot;: &quot;Merge repeated observations into more durable graph structure.&quot;, &quot;deterministic&quot;: false, &quot;side_effects&quot;: true }, &quot;enrich&quot;: { &quot;in&quot;: &quot;anomaly_set&quot;, &quot;out&quot;: &quot;enriched_context&quot;, &quot;description&quot;: &quot;Add linked historical incidents, dependencies, or related entities to a current anomaly set.&quot;, &quot;deterministic&quot;: false, &quot;side_effects&quot;: false } }, &quot;accepts_from&quot;: [ &quot;&amp;time.*&quot;, &quot;&amp;reason.*&quot;, &quot;query_context&quot;, &quot;observation&quot;, &quot;memory_batch&quot; ], &quot;feeds_into&quot;: [ &quot;&amp;reason.*&quot;, &quot;&amp;space.*&quot;, &quot;output&quot; ], &quot;a2a_skills&quot;: [ &quot;graph-memory-recall&quot;, &quot;context-enrichment&quot;, &quot;memory-consolidation&quot; ] } ~~~</p>
+<h4 id="blk-10205">Interpretation</h4>
+<p>This contract says that <code>&amp;memory.graph</code> can:</p>
+<ul><li><p>recall graph-linked knowledge from a query context</p></li><li><p>learn new observations</p></li><li><p>consolidate batches into stronger graph structure</p></li><li><p>enrich anomaly-oriented or operational context for downstream reasoning</p></li></ul>
+<p>It also says that it composes especially naturally with:</p>
+<ul><li><p>temporal capabilities upstream</p></li><li><p>reasoning capabilities downstream</p></li><li><p>spatial capabilities downstream</p></li></ul>
+<h3 id="blk-10224">5. Operations</h3>
+<h4 id="blk-10225"><code>recall</code></h4>
+<p>Purpose:</p>
+<ul><li><p>retrieve relevant nodes, edges, and linked context</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>query_context</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>memory_hits</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>the agent needs graph-aware recall instead of plain document search</p></li></ul>
+<h4 id="blk-10242"><code>learn</code></h4>
+<p>Purpose:</p>
+<ul><li><p>store new observations or relationship updates</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>observation</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>ack</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>the agent should update durable memory after a task or decision</p></li></ul>
+<h4 id="blk-10259"><code>consolidate</code></h4>
+<p>Purpose:</p>
+<ul><li><p>merge repeated or fragmented knowledge into more stable graph structure</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>memory_batch</code></p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>graph_update</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>the system accumulates many observations and needs durable structure</p></li></ul>
+<h4 id="blk-10276"><code>enrich</code></h4>
+<p>Purpose:</p>
+<ul><li><p>attach graph-linked historical or dependency context to an existing payload</p></li></ul>
+<p>Typical input:</p>
+<ul><li><p><code>anomaly_set</code> or compatible context object</p></li></ul>
+<p>Typical output:</p>
+<ul><li><p><code>enriched_context</code></p></li></ul>
+<p>Use when:</p>
+<ul><li><p>another capability has already produced a signal and graph memory should make it more useful</p></li></ul>
+<h3 id="blk-10293">6. Architecture patterns</h3>
+<h4 id="blk-10294">Pattern A: anomaly enrichment</h4>
+<p>~~~text stream_data</p>
+<p>~~~</p>
+<p>What happens:</p>
+<ol><li><p>a temporal capability detects anomalies</p></li><li><p>graph memory adds linked incident and dependency context</p></li><li><p>reasoning evaluates the best action</p></li></ol>
+<p>This is one of the strongest <code>&amp;memory.graph</code> patterns.</p>
+<h4 id="blk-10306">Pattern B: research knowledge graph</h4>
+<p>~~~text research_query</p>
+<p>~~~</p>
+<p>What happens:</p>
+<ol><li><p>graph memory retrieves claims, relationships, and prior linked knowledge</p></li><li><p>reasoning compares or synthesizes evidence</p></li></ol>
+<h4 id="blk-10315">Pattern C: learning from outcomes</h4>
+<p>~~~text decision_outcome</p>
+<p>~~~</p>
+<p>What happens:</p>
+<ol><li><p>outcome evidence is added to graph memory</p></li><li><p>repeated or related observations are consolidated</p></li></ol>
+<p>This supports continual learning without discarding structure.</p>
+<h3 id="blk-10325">7. Architecture diagram</h3>
+<p>A simple mental model for <code>&amp;memory.graph</code>:</p>
+<p>~~~text ┌─────────────────────┐ │   incoming signal   │ │  query / anomaly /  │ │     observation     │ └─────────┬───────────┘ │ ▼ ┌─────────────────────┐ │   &amp;memory.graph     │ │                     │ │  - recall           │ │  - enrich           │ │  - learn            │ │  - consolidate      │ └─────────┬───────────┘ │ ┌──────────────┼──────────────┐ │              │              │ ▼              ▼              ▼ ┌────────────────┐ ┌──────────────┐ ┌───────────────┐ │ enriched       │ │ graph update │ │ memory hits   │ │ context        │ │ / ack        │ │ / linked facts│ └──────┬─────────┘ └──────────────┘ └───────────────┘ │ ▼ ┌─────────────────────┐ │ downstream reason / │ │ space / output flow │ └─────────────────────┘ ~~~</p>
+<h3 id="blk-10328">8. Example declaration</h3>
+<p>A concrete <code>ampersand.json</code> fragment:</p>
+<p>~~~json { &quot;&amp;memory.graph&quot;: { &quot;provider&quot;: &quot;graphonomous&quot;, &quot;config&quot;: { &quot;instance&quot;: &quot;infra-ops&quot; } } } ~~~</p>
+<p>A fuller declaration:</p>
+<p>~~~json { &quot;$schema&quot;: &quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;, &quot;agent&quot;: &quot;InfraOperator&quot;, &quot;version&quot;: &quot;1.0.0&quot;, &quot;capabilities&quot;: { &quot;&amp;memory.graph&quot;: { &quot;provider&quot;: &quot;graphonomous&quot;, &quot;config&quot;: { &quot;instance&quot;: &quot;infra-ops&quot; } }, &quot;&amp;time.anomaly&quot;: { &quot;provider&quot;: &quot;ticktickclock&quot;, &quot;config&quot;: { &quot;streams&quot;: [&quot;cpu&quot;, &quot;mem&quot;] } }, &quot;&amp;space.fleet&quot;: { &quot;provider&quot;: &quot;geofleetic&quot;, &quot;config&quot;: { &quot;regions&quot;: [&quot;us-east&quot;] } }, &quot;&amp;reason.argument&quot;: { &quot;provider&quot;: &quot;deliberatic&quot;, &quot;config&quot;: { &quot;governance&quot;: &quot;constitutional&quot; } } }, &quot;provenance&quot;: true } ~~~</p>
+<h3 id="blk-10333">9. Example API shape</h3>
+<p>A provider-specific API may vary, but the protocol-level shape can look like this.</p>
+<h4 id="blk-10335">Recall request</h4>
+<p>~~~json { &quot;capability&quot;: &quot;&amp;memory.graph&quot;, &quot;operation&quot;: &quot;recall&quot;, &quot;input&quot;: { &quot;query_context&quot;: { &quot;incident_type&quot;: &quot;cpu_spike&quot;, &quot;region&quot;: &quot;us-east&quot;, &quot;service&quot;: &quot;api-gateway&quot; } } } ~~~</p>
+<h4 id="blk-10337">Recall response</h4>
+<p>~~~json { &quot;capability&quot;: &quot;&amp;memory.graph&quot;, &quot;operation&quot;: &quot;recall&quot;, &quot;output&quot;: { &quot;memory_hits&quot;: [ { &quot;entity&quot;: &quot;incident-4821&quot;, &quot;summary&quot;: &quot;CPU saturation on api-gateway during regional traffic spike&quot;, &quot;links&quot;: [&quot;service:api-gateway&quot;, &quot;region:us-east&quot;, &quot;runbook:scale-gateway&quot;] }, { &quot;entity&quot;: &quot;incident-4792&quot;, &quot;summary&quot;: &quot;Dependency saturation caused by cache failure&quot;, &quot;links&quot;: [&quot;service:cache&quot;, &quot;service:api-gateway&quot;] } ] } } ~~~</p>
+<h4 id="blk-10339">Enrich request</h4>
+<p>~~~json { &quot;capability&quot;: &quot;&amp;memory.graph&quot;, &quot;operation&quot;: &quot;enrich&quot;, &quot;input&quot;: { &quot;anomaly_set&quot;: { &quot;service&quot;: &quot;api-gateway&quot;, &quot;region&quot;: &quot;us-east&quot;, &quot;anomalies&quot;: [&quot;cpu_spike&quot;, &quot;latency_jump&quot;] } } } ~~~</p>
+<h4 id="blk-10341">Enrich response</h4>
+<p>~~~json { &quot;capability&quot;: &quot;&amp;memory.graph&quot;, &quot;operation&quot;: &quot;enrich&quot;, &quot;output&quot;: { &quot;enriched_context&quot;: { &quot;related_incidents&quot;: [&quot;incident-4821&quot;, &quot;incident-4792&quot;], &quot;related_entities&quot;: [&quot;service:cache&quot;, &quot;service:api-gateway&quot;, &quot;region:us-east&quot;], &quot;suggested_runbooks&quot;: [&quot;scale-gateway&quot;, &quot;check-cache-health&quot;] } } } ~~~</p>
+<h3 id="blk-10343">10. Compatible providers</h3>
+<p><code>&amp;memory.graph</code> is a capability interface. Compatible providers are implementations that can satisfy the contract.</p>
+<p>Representative providers:</p>
+<ul><li><p><code>graphonomous</code></p></li><li><p><code>neo4j-memory</code></p></li><li><p>custom graph-backed MCP services</p></li><li><p>domain-specific knowledge graph systems wrapped behind a protocol-compatible surface</p></li></ul>
+<h4 id="blk-10355">Current default ecosystem fit</h4>
+<ul><li><p><code>graphonomous</code> is the clearest default example provider in this repository</p></li></ul>
+<p>Why it fits:</p>
+<ul><li><p>graph-oriented memory model</p></li><li><p>MCP-friendly runtime shape</p></li><li><p>suitable for recall, enrichment, and learning workflows</p></li><li><p>directly useful for infra, research, and agent memory scenarios</p></li></ul>
+<h3 id="blk-10369">11. A2A-facing skills</h3>
+<p>A <code>&amp;memory.graph</code> capability may advertise skills such as:</p>
+<ul><li><p><code>graph-memory-recall</code></p></li><li><p><code>context-enrichment</code></p></li><li><p><code>memory-consolidation</code></p></li></ul>
+<p>These skills are useful when generating A2A agent cards from a declaration, because they let an externally visible agent surface say more than just “has memory.”</p>
+<h3 id="blk-10379">12. Governance implications</h3>
+<p>Graph memory often sits close to high-value historical context, so governance matters.</p>
+<p>Examples of governance constraints that commonly pair with <code>&amp;memory.graph</code>:</p>
+<h4 id="blk-10382">Hard constraints</h4>
+<ul><li><p>never reveal private customer-linked graph context outside authorized workflows</p></li><li><p>never delete incident lineage without human approval</p></li><li><p>always preserve audit trail for graph-backed decision support</p></li></ul>
+<h4 id="blk-10390">Soft constraints</h4>
+<ul><li><p>prefer policy-grounded linked evidence over unsupported inference</p></li><li><p>prefer recent validated graph context when conflicts exist</p></li></ul>
+<h4 id="blk-10396">Escalation triggers</h4>
+<ul><li><p>escalate when confidence in recalled graph context is below threshold</p></li><li><p>escalate when a decision depends on sparse or conflicting graph evidence</p></li></ul>
+<h3 id="blk-10402">13. Provenance implications</h3>
+<p><code>&amp;memory.graph</code> should participate in the provenance chain.</p>
+<p>Representative provenance record:</p>
+<p>~~~json { &quot;source&quot;: &quot;&amp;memory.graph&quot;, &quot;provider&quot;: &quot;graphonomous&quot;, &quot;operation&quot;: &quot;enrich&quot;, &quot;timestamp&quot;: &quot;2026-03-14T14:23:07Z&quot;, &quot;input_hash&quot;: &quot;sha256:1a2b...&quot;, &quot;output_hash&quot;: &quot;sha256:7c8d...&quot;, &quot;parent_hash&quot;: &quot;sha256:0000...&quot; } ~~~</p>
+<p>This matters because graph-backed context often strongly influences downstream reasoning. If a system chooses a remediation path because graph memory linked the current issue to prior incidents, that enrichment step should be auditable.</p>
+<h3 id="blk-10407">14. Typical use cases</h3>
+<p><code>&amp;memory.graph</code> is especially strong in the following domains.</p>
+<h4 id="blk-10409">Infrastructure operations</h4>
+<ul><li><p>dependency-aware incident recall</p></li><li><p>similar outage enrichment</p></li><li><p>durable operational knowledge</p></li><li><p>continual learning from postmortems</p></li></ul>
+<h4 id="blk-10419">Research systems</h4>
+<ul><li><p>linked concepts and citations</p></li><li><p>claim/evidence relationship structure</p></li><li><p>durable research graph building</p></li></ul>
+<h4 id="blk-10427">Customer support</h4>
+<ul><li><p>account and case relationship modeling</p></li><li><p>escalation lineage</p></li><li><p>policy and entity linkage across prior interactions</p></li></ul>
+<h4 id="blk-10435">Fraud and investigation</h4>
+<ul><li><p>entity graph traversal</p></li><li><p>linked device/account/session analysis</p></li><li><p>relationship-based anomaly support</p></li></ul>
+<h3 id="blk-10443">15. Anti-patterns</h3>
+<p>Avoid these mistakes when modeling <code>&amp;memory.graph</code>.</p>
+<h4 id="blk-10445">Anti-pattern 1: treating graph memory as just another vector store</h4>
+<p>Graph memory is valuable because of structure, not just similarity.</p>
+<h4 id="blk-10447">Anti-pattern 2: collapsing provider and capability</h4>
+<p><code>graphonomous</code> is not the protocol capability. <code>&amp;memory.graph</code> is.</p>
+<h4 id="blk-10449">Anti-pattern 3: using graph memory without provenance</h4>
+<p>If graph-linked context influences action, lineage should be preserved.</p>
+<h4 id="blk-10451">Anti-pattern 4: using graph memory for everything</h4>
+<p>Not every retrieval problem is best solved by graph structure alone. In many systems, <code>&amp;memory.graph</code> works best alongside <code>&amp;memory.vector</code> or <code>&amp;memory.episodic</code>.</p>
+<h3 id="blk-10453">16. Related capabilities</h3>
+<p>Closest related protocol capabilities:</p>
+<ul><li><p><code>&amp;memory.vector</code></p></li><li><p><code>&amp;memory.episodic</code></p></li><li><p><code>&amp;reason.argument</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;space.fleet</code></p></li></ul>
+<p>Common high-value compositions:</p>
+<ul><li><p><code>&amp;time.anomaly</code> + <code>&amp;memory.graph</code> + <code>&amp;reason.argument</code></p></li><li><p><code>&amp;memory.graph</code> + <code>&amp;space.fleet</code> + <code>&amp;reason.plan</code></p></li><li><p><code>&amp;memory.graph</code> + <code>&amp;memory.vector</code> + <code>&amp;reason.argument</code></p></li></ul>
+<h3 id="blk-10474">17. Research references</h3>
+<p>This capability is informed by both memory-systems research and modern agent memory architecture work.</p>
+<p>Useful reference directions:</p>
+<ul><li><p>Atkinson &amp; Shiffrin — staged memory models</p></li><li><p>Endel Tulving — episodic vs semantic memory distinction</p></li><li><p>Alan Baddeley — working memory and active memory use</p></li><li><p>Larry Squire and related memory-systems research</p></li><li><p>modern knowledge graph and graph retrieval systems</p></li><li><p>graph-based agent memory architectures</p></li><li><p>retrieval-augmented reasoning systems with structured memory</p></li></ul>
+<p>The protocol does not claim to reproduce neuroscience literally. The value of these references is that they support treating memory as a family of functions rather than one monolithic feature.</p>
+<h3 id="blk-10493">18. Summary</h3>
+<p><code>&amp;memory.graph</code> is the [&amp;] Protocol capability for graph-structured memory.</p>
+<p>It is the right capability when an agent needs:</p>
+<ul><li><p>durable structured recall</p></li><li><p>relationship-aware enrichment</p></li><li><p>connected incident or research context</p></li><li><p>continual learning into linked knowledge</p></li><li><p>explainable memory that preserves structure</p></li></ul>
+<p>In one sentence:</p>
+<blockquote><p><code>&amp;memory.graph</code> lets an agent remember not only facts, but how those facts connect.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/memory.graph.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-10134" class="lvl2">1. Definition</a><a href="#blk-10162" class="lvl2">2. Why this capability exists</a><a href="#blk-10185" class="lvl2">3. Capability family position</a><a href="#blk-10202" class="lvl2">4. Capability contract summary</a><a href="#blk-10205" class="lvl3">Interpretation</a><a href="#blk-10224" class="lvl2">5. Operations</a><a href="#blk-10225" class="lvl3">recall</a><a href="#blk-10242" class="lvl3">learn</a><a href="#blk-10259" class="lvl3">consolidate</a><a href="#blk-10276" class="lvl3">enrich</a><a href="#blk-10293" class="lvl2">6. Architecture patterns</a><a href="#blk-10294" class="lvl3">Pattern A: anomaly enrichment</a><a href="#blk-10306" class="lvl3">Pattern B: research knowledge graph</a><a href="#blk-10315" class="lvl3">Pattern C: learning from outcomes</a><a href="#blk-10325" class="lvl2">7. Architecture diagram</a><a href="#blk-10328" class="lvl2">8. Example declaration</a><a href="#blk-10333" class="lvl2">9. Example API shape</a><a href="#blk-10335" class="lvl3">Recall request</a><a href="#blk-10337" class="lvl3">Recall response</a><a href="#blk-10339" class="lvl3">Enrich request</a><a href="#blk-10341" class="lvl3">Enrich response</a><a href="#blk-10343" class="lvl2">10. Compatible providers</a><a href="#blk-10355" class="lvl3">Current default ecosystem fit</a><a href="#blk-10369" class="lvl2">11. A2A-facing skills</a><a href="#blk-10379" class="lvl2">12. Governance implications</a><a href="#blk-10382" class="lvl3">Hard constraints</a><a href="#blk-10390" class="lvl3">Soft constraints</a><a href="#blk-10396" class="lvl3">Escalation triggers</a><a href="#blk-10402" class="lvl2">13. Provenance implications</a><a href="#blk-10407" class="lvl2">14. Typical use cases</a><a href="#blk-10409" class="lvl3">Infrastructure operations</a><a href="#blk-10419" class="lvl3">Research systems</a><a href="#blk-10427" class="lvl3">Customer support</a><a href="#blk-10435" class="lvl3">Fraud and investigation</a><a href="#blk-10443" class="lvl2">15. Anti-patterns</a><a href="#blk-10445" class="lvl3">Anti-pattern 1: treating graph memory as just another vector store</a><a href="#blk-10447" class="lvl3">Anti-pattern 2: collapsing provider and capability</a><a href="#blk-10449" class="lvl3">Anti-pattern 3: using graph memory without provenance</a><a href="#blk-10451" class="lvl3">Anti-pattern 4: using graph memory for everything</a><a href="#blk-10453" class="lvl2">16. Related capabilities</a><a href="#blk-10474" class="lvl2">17. Research references</a><a href="#blk-10493" class="lvl2">18. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.plan.md/">&amp;reason.plan -- Planning-Oriented Reasoning for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieratet7oh43b2snoyrcwd5655qgtee3blcot6j4xfkqz3cwspeg6tja</div></div></div>
+</div></div>
+</body></html>

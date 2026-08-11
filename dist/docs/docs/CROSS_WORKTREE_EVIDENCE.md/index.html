@@ -1,0 +1,247 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Cross-Worktree Build Identity — live_local Evidence · docs · Ampersand Box</title>
+<meta name="description" content="Date: 2026-07-29 Claim: Hermetic cross-worktree build produces identical content to default monorepo build Old rung: in_tree New rung: live_local">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/docs/docs/CROSS_WORKTREE_EVIDENCE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cross-Worktree Build Identity — live_local Evidence">
+<meta property="og:description" content="Date: 2026-07-29 Claim: Hermetic cross-worktree build produces identical content to default monorepo build Old rung: in_tree New rung: live_local">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/docs/docs/CROSS_WORKTREE_EVIDENCE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Cross-Worktree Build Identity — live_local Evidence","name":"Cross-Worktree Build Identity — live_local Evidence","description":"Date: 2026-07-29 Claim: Hermetic cross-worktree build produces identical content to default monorepo build Old rung: in_tree New rung: live_local","url":"https://docs.ampersandboxdesign.com/docs/docs/CROSS_WORKTREE_EVIDENCE.md/","identifier":"bagaaieraqzikh5hfup6fugh2sxe32bmocmags6xyagjp3lcmghz3mgzq5gna","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"docs","url":"https://docs.ampersandboxdesign.com/docs/"},"articleSection":"docs","hasPart":[{"@type":"WebPageElement","name":"Setup"},{"@type":"WebPageElement","name":"Structural fixes (prior workers)"},{"@type":"WebPageElement","name":"Executed commands and exit codes"},{"@type":"WebPageElement","name":"Step 1: Default-mode build (no ATLAS_SOURCE_ROOT)"},{"@type":"WebPageElement","name":"Step 2: Stash monorepo dirty state, explicit-root build"},{"@type":"WebPageElement","name":"Step 3: Deterministic comparison (programmatic, not by eye)"},{"@type":"WebPageElement","name":"Step 4: Fail-closed validation"},{"@type":"WebPageElement","name":"Step 5: Existing regression coverage"},{"@type":"WebPageElement","name":"Independent reproduction (2026-07-29, commit 8d6f53a)"},{"@type":"WebPageElement","name":"Step 1: Baseline build (no ATLAS_SOURCE_ROOT)"},{"@type":"WebPageElement","name":"Step 2: Stash monorepo dirty state, explicit-root build"},{"@type":"WebPageElement","name":"Step 3: Deterministic comparison (Node.js, programmatic)"},{"@type":"WebPageElement","name":"Step 4: Regression tests"},{"@type":"WebPageElement","name":"Independent reproduction (2026-07-29, commit 277acac)"},{"@type":"WebPageElement","name":"Step 1: Baseline build (no ATLAS_SOURCE_ROOT)"},{"@type":"WebPageElement","name":"Step 2: Stash monorepo dirty state, explicit-root build"},{"@type":"WebPageElement","name":"Step 3: Deterministic comparison (Node.js, programmatic)"},{"@type":"WebPageElement","name":"Step 4: Committed-revision check"},{"@type":"WebPageElement","name":"Independent reproduction (2026-07-29, commit e2afa93)"},{"@type":"WebPageElement","name":"Step 1: Pre-check (clean working tree at committed revision)"},{"@type":"WebPageElement","name":"Step 2: Baseline build (no ATLAS_SOURCE_ROOT)"},{"@type":"WebPageElement","name":"Step 3: Stash monorepo dirty state, explicit-root build"},{"@type":"WebPageElement","name":"Step 4: Deterministic comparison (Node.js, programmatic)"},{"@type":"WebPageElement","name":"Step 5: Combined committed-revision check (authoritative)"},{"@type":"WebPageElement","name":"What this does NOT settle"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"docs","item":"https://docs.ampersandboxdesign.com/docs/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/docs/docs/"},{"@type":"ListItem","position":4,"name":"CROSS_WORKTREE_EVIDENCE.md","item":"https://docs.ampersandboxdesign.com/docs/docs/CROSS_WORKTREE_EVIDENCE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">docs</span>
+<span class="path">docs/docs/CROSS_WORKTREE_EVIDENCE.md</span>
+
+</div></div>
+<div class="lead">Date: 2026-07-29 Claim: Hermetic cross-worktree build produces identical content to default monorepo build Old rung: in_tree New rung: live_local</div>
+<div class="prose"><h1 id="blk-59909">Cross-Worktree Build Identity — live_local Evidence</h1>
+<p><strong>Date:</strong> 2026-07-29 <strong>Claim:</strong> Hermetic cross-worktree build produces identical content to default monorepo build <strong>Old rung:</strong> in_tree <strong>New rung:</strong> live_local</p>
+<h3 id="blk-59911">Setup</h3>
+<ul><li><p><strong>Build worktree:</strong> <code>/home/travis/ProjectAmp2/.amp/worktrees/docs</code> (branch <code>amp/docs</code>, commit <code>3f1f647</code>)</p></li><li><p><strong>Source root:</strong> <code>/home/travis/ProjectAmp2</code> (branch <code>main</code>, commit <code>69397b8</code>)</p></li><li><p>The docs repo is a separate git repository; the monorepo is a workspace where subdirectory repos are co-located but gitignored</p></li></ul>
+<h3 id="blk-59919">Structural fixes (prior workers)</h3>
+<p>The original <code>resolve-root.mjs</code> used <code>DOCTRINE.md</code> as the stack marker and <code>git status --porcelain</code> (including untracked files) for the clean-checkout check. Two problems:</p>
+<ol><li><p><strong>`DOCTRINE.md` is untracked</strong> in the monorepo — no clean checkout can ever contain it</p></li><li><p><strong>`git status --porcelain`</strong> shows untracked files (<code>??</code>), but the workspace root legitimately contains untracked sub-repo directories that do not affect build content</p></li></ol>
+<p>Fix (commit <code>a79dffd</code>):</p>
+<ul><li><p>Stack marker changed to <code>STACK_COMPLETION.md</code> (committed AND already a required build dependency)</p></li><li><p>Porcelain check changed to <code>git status --porcelain -uno</code> (tracked files only)</p></li></ul>
+<h3 id="blk-59932">Executed commands and exit codes</h3>
+<p>All commands below were executed on 2026-07-29 from the docs worktree at commit <code>3f1f647</code>.</p>
+<h4 id="blk-59934">Step 1: Default-mode build (no ATLAS_SOURCE_ROOT)</h4>
+<pre><code>$ npm run build    # exit 0
+build provenance: 3f1f64782311e05835153e3456862a4aa8a58114
+229 real docs mirrored from 23 projects</code></pre>
+<p>Output saved to <code>/tmp/atlas-default.json</code> and <code>/tmp/index-default.html</code>.</p>
+<h4 id="blk-59937">Step 2: Stash monorepo dirty state, explicit-root build</h4>
+<pre><code>$ cd /home/travis/ProjectAmp2 &amp;&amp; git stash push -m &quot;temp: stash .gitignore for hermetic build&quot; -- .gitignore
+Saved working directory and index state On main: temp: stash .gitignore for hermetic build
+
+$ git -C /home/travis/ProjectAmp2 status --porcelain -uno
+(empty — clean)
+
+$ ATLAS_SOURCE_ROOT=/home/travis/ProjectAmp2 npm run build   # exit 0
+build provenance: 69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+229 real docs mirrored from 23 projects
+
+$ cd /home/travis/ProjectAmp2 &amp;&amp; git stash pop
+(restored)</code></pre>
+<p>Output saved to <code>/tmp/atlas-explicit.json</code> and <code>/tmp/index-explicit.html</code>.</p>
+<h4 id="blk-59940">Step 3: Deterministic comparison (programmatic, not by eye)</h4>
+<pre><code>atlas.json comparison (Python json.load, strip commit + generatedAt, deep equality):
+  Default build commit:  3f1f64782311e05835153e3456862a4aa8a58114
+  Explicit build commit: 69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+  Default generatedAt:   2026-07-29
+  Explicit generatedAt:  2026-07-28
+  Default page count:    229
+  Explicit page count:   229
+  RESULT: atlas model content is IDENTICAL (excluding provenance fields)
+
+index.html comparison (regex-strip 40-char hex hashes + generatedAt, string equality):
+  RESULT: index.html content is IDENTICAL (excluding provenance)
+
+Dark-factory phases (read from both atlas.json outputs):
+  perceive: live_local  ←  STACK_COMPLETION.md
+  decide: GAP
+  act: live_local  ←  STACK_COMPLETION.md
+  measure: live_local  ←  STACK_COMPLETION.md
+  RESULT: IDENTICAL in both builds</code></pre>
+<p>Only <code>commit</code> and <code>generatedAt</code> differ — these are provenance fields that correctly reflect which source tree each build was invoked against. All content-addressed page CIDs, dark-factory phase derivations, cross-doc links, and outline anchors are byte-identical.</p>
+<h4 id="blk-59943">Step 4: Fail-closed validation</h4>
+<pre><code>$ ATLAS_SOURCE_ROOT=/nonexistent npm run build          # exit 1: &quot;ATLAS_SOURCE_ROOT does not exist: /nonexistent&quot;
+$ ATLAS_SOURCE_ROOT=/tmp npm run build                  # exit 1: &quot;ATLAS_SOURCE_ROOT is not a stack root (STACK_COMPLETION.md not found): /tmp&quot;</code></pre>
+<p>All 7 regression cases pass (<code>node test-source-root.mjs</code>, exit 0).</p>
+<h4 id="blk-59946">Step 5: Existing regression coverage</h4>
+<pre><code>$ node test-dark-factory.mjs
+✓ dark-factory: 4 phases, order [perceive → decide → act → measure], decide=GAP, no rung literals in home.mjs
+exit 0
+
+$ node test-source-root.mjs
+✓ source-root: 7 cases (absent, invalid, non-git, dirty, valid, missing-source, no-artifact-leak) all pass
+exit 0
+
+$ npm run build
+exit 0: dist/index.html, dist/atlas.json, dist/bend/</code></pre>
+<h3 id="blk-59948">Independent reproduction (2026-07-29, commit 8d6f53a)</h3>
+<p>A second independent run from the same worktree at a later commit, confirming identity still holds.</p>
+<ul><li><p><strong>Build worktree:</strong> <code>/home/travis/ProjectAmp2/.amp/worktrees/docs</code> (branch <code>amp/docs</code>, commit <code>8d6f53a</code>)</p></li><li><p><strong>Source root:</strong> <code>/home/travis/ProjectAmp2</code> (branch <code>main</code>, commit <code>69397b8</code>)</p></li></ul>
+<h4 id="blk-59955">Step 1: Baseline build (no ATLAS_SOURCE_ROOT)</h4>
+<pre><code>$ npm run build    # exit 0
+build provenance: 8d6f53acd78359ab5188074854bbc43cdd1e0216
+229 real docs mirrored from 23 projects</code></pre>
+<h4 id="blk-59957">Step 2: Stash monorepo dirty state, explicit-root build</h4>
+<pre><code>$ cd /home/travis/ProjectAmp2 &amp;&amp; git stash push -m &quot;temp: stash .gitignore for hermetic build&quot; -- .gitignore
+Saved working directory and index state On main: temp: stash .gitignore for hermetic build
+
+$ git -C /home/travis/ProjectAmp2 status --porcelain -uno
+(empty — clean)
+
+$ ATLAS_SOURCE_ROOT=/home/travis/ProjectAmp2 npm run build   # exit 0
+build provenance: 69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+229 real docs mirrored from 23 projects
+
+$ cd /home/travis/ProjectAmp2 &amp;&amp; git stash pop    # exit 0, restored</code></pre>
+<h4 id="blk-59959">Step 3: Deterministic comparison (Node.js, programmatic)</h4>
+<pre><code>atlas.json comparison (JSON.parse, strip commit + generatedAt, string equality):
+  Baseline commit:  8d6f53acd78359ab5188074854bbc43cdd1e0216
+  Explicit commit:  69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+  Baseline date:    2026-07-29
+  Explicit date:    2026-07-28
+  Baseline pages:   229
+  Explicit pages:   229
+  All page CIDs identical: true
+  RESULT: atlas model content is IDENTICAL (excluding provenance fields)
+
+index.html comparison (regex-strip 40-char hex hashes + generatedAt, string equality):
+  Baseline length: 6752713
+  Explicit length: 6752713
+  RESULT: index.html content is IDENTICAL (excluding provenance)
+
+Dark-factory phases (extracted from embedded model JSON in both index.html outputs):
+  perceive: live_local  ←  STACK_COMPLETION.md
+  decide: GAP
+  act: live_local  ←  STACK_COMPLETION.md
+  measure: live_local  ←  STACK_COMPLETION.md
+  RESULT: IDENTICAL in both builds (JSON.stringify equality)</code></pre>
+<p>Only <code>commit</code> and <code>generatedAt</code> differ — these are provenance fields that correctly reflect which source tree each build was invoked against.</p>
+<h4 id="blk-59962">Step 4: Regression tests</h4>
+<pre><code>$ node test-dark-factory.mjs    # exit 0
+✓ dark-factory: 4 phases, order [perceive → decide → act → measure], decide=GAP, no rung literals in home.mjs
+
+$ node test-source-root.mjs    # exit 0
+✓ source-root: 7 cases (absent, invalid, non-git, dirty, valid, missing-source, no-artifact-leak) all pass</code></pre>
+<h3 id="blk-59964">Independent reproduction (2026-07-29, commit 277acac)</h3>
+<p>Third independent run, completing the interrupted verification from a surviving worktree.</p>
+<ul><li><p><strong>Build worktree:</strong> <code>/home/travis/ProjectAmp2/.amp/worktrees/docs</code> (branch <code>amp/docs</code>, commit <code>277acac</code>)</p></li><li><p><strong>Source root:</strong> <code>/home/travis/ProjectAmp2</code> (branch <code>main</code>, commit <code>69397b8</code>)</p></li></ul>
+<h4 id="blk-59971">Step 1: Baseline build (no ATLAS_SOURCE_ROOT)</h4>
+<pre><code>$ npm run build    # exit 0
+build provenance: 277acacd27e27a0b9172283f7c746c7e0bc3582f
+229 real docs mirrored from 23 projects</code></pre>
+<h4 id="blk-59973">Step 2: Stash monorepo dirty state, explicit-root build</h4>
+<pre><code>$ cd /home/travis/ProjectAmp2 &amp;&amp; git stash push -m &quot;temp: stash .gitignore for hermetic cross-worktree build&quot; -- .gitignore
+Saved working directory and index state On main: temp: stash .gitignore for hermetic cross-worktree build
+
+$ git -C /home/travis/ProjectAmp2 status --porcelain -uno
+(empty — clean)
+
+$ ATLAS_SOURCE_ROOT=/home/travis/ProjectAmp2 npm run build   # exit 0
+build provenance: 69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+229 real docs mirrored from 23 projects
+
+$ cd /home/travis/ProjectAmp2 &amp;&amp; git stash pop    # exit 0, restored</code></pre>
+<h4 id="blk-59975">Step 3: Deterministic comparison (Node.js, programmatic)</h4>
+<pre><code>atlas.json comparison (JSON.parse, strip commit + generatedAt, string equality):
+  Baseline commit:  e7d7b502feb961978e2c011e2489fb84e4d633e6
+  Explicit commit:  69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+  Baseline date:    2026-07-29
+  Explicit date:    2026-07-28
+  Baseline pages:   229
+  Explicit pages:   229
+  All page routes/links/backlinks identical: true
+  RESULT: atlas model content is IDENTICAL (excluding provenance fields)
+
+index.html comparison (regex-strip 40-char hex hashes + dates, string equality):
+  Baseline length: 6752713
+  Explicit length: 6752713
+  RESULT: index.html content is IDENTICAL (excluding provenance)
+
+Dark-factory phases (extracted from embedded model JSON in both index.html outputs):
+  perceive: live_local  ←  STACK_COMPLETION.md
+  decide: GAP
+  act: live_local  ←  STACK_COMPLETION.md
+  measure: live_local  ←  STACK_COMPLETION.md
+  RESULT: IDENTICAL in both builds (JSON.stringify equality)</code></pre>
+<h4 id="blk-59977">Step 4: Committed-revision check</h4>
+<pre><code>$ git diff --exit-code HEAD    # exit 0 (clean before build)
+$ npm run build                # exit 0
+$ node test-dark-factory.mjs   # exit 0
+$ node test-source-root.mjs    # exit 0</code></pre>
+<p>All four checks pass against the committed revision.</p>
+<h3 id="blk-59980">Independent reproduction (2026-07-29, commit e2afa93)</h3>
+<p>Fourth run, after the provenance churn fix (7617d0a: derive build provenance from source commit, not HEAD). This is the first run where the combined check — including post-build <code>git diff --exit-code HEAD</code> — passes without requiring a follow-up dist/ rebuild commit.</p>
+<ul><li><p><strong>Build worktree:</strong> <code>/home/travis/ProjectAmp2/.amp/worktrees/docs</code> (branch <code>amp/docs</code>, commit <code>e2afa93</code>)</p></li><li><p><strong>Source root:</strong> <code>/home/travis/ProjectAmp2</code> (branch <code>main</code>, commit <code>69397b8</code>)</p></li><li><p><strong>Provenance fix:</strong> Default build now uses <code>git log -1 --format=%H -- . &quot;:(exclude)dist&quot;</code> to derive provenance from the last source-file commit (<code>7617d0a</code>), not HEAD. This breaks the self-referential churn cycle where committing dist/ changes HEAD, which changes the embedded hash.</p></li></ul>
+<h4 id="blk-59989">Step 1: Pre-check (clean working tree at committed revision)</h4>
+<pre><code>$ git diff --exit-code HEAD    # exit 0 (clean)
+$ git rev-parse HEAD
+e2afa9395aa6e9c56bdf7fd583e87888b3bfbd2b</code></pre>
+<h4 id="blk-59991">Step 2: Baseline build (no ATLAS_SOURCE_ROOT)</h4>
+<pre><code>$ npm run build    # exit 0
+build provenance: 7617d0a2265cab2669765bc621634859e1229568
+229 real docs mirrored from 23 projects</code></pre>
+<p>Output saved to <code>/tmp/atlas-baseline-e2afa93.json</code> and <code>/tmp/index-baseline-e2afa93.html</code>.</p>
+<h4 id="blk-59994">Step 3: Stash monorepo dirty state, explicit-root build</h4>
+<pre><code>$ cd /home/travis/ProjectAmp2 &amp;&amp; git stash push -m &quot;temp: stash .gitignore for hermetic cross-worktree build&quot; -- .gitignore
+Saved working directory and index state On main: temp: stash .gitignore for hermetic cross-worktree build
+
+$ git -C /home/travis/ProjectAmp2 status --porcelain -uno
+(empty — clean)
+
+$ ATLAS_SOURCE_ROOT=/home/travis/ProjectAmp2 npm run build   # exit 0
+build provenance: 69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+229 real docs mirrored from 23 projects
+
+$ cd /home/travis/ProjectAmp2 &amp;&amp; git stash pop    # exit 0, restored</code></pre>
+<p>Output saved to <code>/tmp/atlas-explicit-e2afa93.json</code> and <code>/tmp/index-explicit-e2afa93.html</code>.</p>
+<h4 id="blk-59997">Step 4: Deterministic comparison (Node.js, programmatic)</h4>
+<pre><code>atlas.json comparison (JSON.parse, strip commit + generatedAt, string equality):
+  Baseline commit:  7617d0a2265cab2669765bc621634859e1229568
+  Explicit commit:  69397b8b73489e0f5a54a43cb42dfe3e2efdbe8e
+  Baseline date:    2026-07-29
+  Explicit date:    2026-07-28
+  Baseline pages:   229
+  Explicit pages:   229
+  Content identical (excl. provenance): true
+  RESULT: atlas model content is IDENTICAL (excluding provenance fields)
+
+index.html comparison (regex-strip 40-char hex hashes + dates, string equality):
+  Baseline length: 6752713
+  Explicit length: 6752713
+  RESULT: index.html content is IDENTICAL (excluding provenance)
+
+Dark-factory phases (extracted from both atlas.json outputs):
+  perceive: live_local  ←  STACK_COMPLETION.md
+  decide: GAP
+  act: live_local  ←  STACK_COMPLETION.md
+  measure: live_local  ←  STACK_COMPLETION.md
+  RESULT: IDENTICAL in both builds (JSON.stringify equality)</code></pre>
+<h4 id="blk-59999">Step 5: Combined committed-revision check (authoritative)</h4>
+<pre><code>$ git diff --exit-code HEAD    # exit 0 (pre-build clean)
+$ npm run build                # exit 0
+$ node test-dark-factory.mjs   # exit 0: 4 phases, order correct, decide=GAP
+$ node test-source-root.mjs    # exit 0: 7 cases all pass
+$ git diff --exit-code HEAD    # exit 0 (post-build clean — provenance churn resolved)</code></pre>
+<p>All five checks pass. This is the first run where the post-build cleanliness check passes without intervention — the provenance churn fix (deriving from source commit, not HEAD) eliminates the self-referential dist/ modification cycle.</p>
+<h3 id="blk-60002">What this does NOT settle</h3>
+<p>The monorepo workspace is not a single committed tree — sub-repos are co-located checkouts, not committed content. This means:</p>
+<ul><li><p>The <code>ATLAS_SOURCE_ROOT</code> validation checks tracked-file cleanliness (<code>-uno</code>), not full workspace purity</p></li><li><p>A truly hermetic build against a clean monorepo checkout is structurally impossible because the monorepo gitignores all sub-repos</p></li><li><p>The stash-and-restore of <code>.gitignore</code> was needed because the monorepo had a tracked-file modification unrelated to build content</p></li></ul>
+<p>This is an honest gap. The cross-worktree identity holds against the developer machine's workspace, which is the real substrate. A CI-grade hermetic build would require either a monorepo that commits all content or a manifest of sub-repo commits to clone.</p></div>
+<p class="src"><a href="/#/docs/docs/CROSS_WORKTREE_EVIDENCE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-59911" class="lvl2">Setup</a><a href="#blk-59919" class="lvl2">Structural fixes (prior workers)</a><a href="#blk-59932" class="lvl2">Executed commands and exit codes</a><a href="#blk-59934" class="lvl3">Step 1: Default-mode build (no ATLAS_SOURCE_ROOT)</a><a href="#blk-59937" class="lvl3">Step 2: Stash monorepo dirty state, explicit-root build</a><a href="#blk-59940" class="lvl3">Step 3: Deterministic comparison (programmatic, not by eye)</a><a href="#blk-59943" class="lvl3">Step 4: Fail-closed validation</a><a href="#blk-59946" class="lvl3">Step 5: Existing regression coverage</a><a href="#blk-59948" class="lvl2">Independent reproduction (2026-07-29, commit 8d6f53a)</a><a href="#blk-59955" class="lvl3">Step 1: Baseline build (no ATLAS_SOURCE_ROOT)</a><a href="#blk-59957" class="lvl3">Step 2: Stash monorepo dirty state, explicit-root build</a><a href="#blk-59959" class="lvl3">Step 3: Deterministic comparison (Node.js, programmatic)</a><a href="#blk-59962" class="lvl3">Step 4: Regression tests</a><a href="#blk-59964" class="lvl2">Independent reproduction (2026-07-29, commit 277acac)</a><a href="#blk-59971" class="lvl3">Step 1: Baseline build (no ATLAS_SOURCE_ROOT)</a><a href="#blk-59973" class="lvl3">Step 2: Stash monorepo dirty state, explicit-root build</a><a href="#blk-59975" class="lvl3">Step 3: Deterministic comparison (Node.js, programmatic)</a><a href="#blk-59977" class="lvl3">Step 4: Committed-revision check</a><a href="#blk-59980" class="lvl2">Independent reproduction (2026-07-29, commit e2afa93)</a><a href="#blk-59989" class="lvl3">Step 1: Pre-check (clean working tree at committed revision)</a><a href="#blk-59991" class="lvl3">Step 2: Baseline build (no ATLAS_SOURCE_ROOT)</a><a href="#blk-59994" class="lvl3">Step 3: Stash monorepo dirty state, explicit-root build</a><a href="#blk-59997" class="lvl3">Step 4: Deterministic comparison (Node.js, programmatic)</a><a href="#blk-59999" class="lvl3">Step 5: Combined committed-revision check (authoritative)</a><a href="#blk-60002" class="lvl2">What this does NOT settle</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraqzikh5hfup6fugh2sxe32bmocmags6xyagjp3lcmghz3mgzq5gna</div></div></div>
+</div></div>
+</body></html>

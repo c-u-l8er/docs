@@ -1,0 +1,124 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Skill 09 — Governance and Provenance · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Capabilities without governance are unconstrained. Provenance without governance has no enforcement. Governance without provenance has no audit trail.…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill 09 — Governance and Provenance">
+<meta property="og:description" content="Capabilities without governance are unconstrained. Provenance without governance has no enforcement. Governance without provenance has no audit trail.…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 09 — Governance and Provenance","name":"Skill 09 — Governance and Provenance","description":"Capabilities without governance are unconstrained. Provenance without governance has no enforcement. Governance without provenance has no audit trail.…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/","identifier":"bagaaierazypd2vdznbrgqyrb3knufd3mqtbkc5llwunzfjj6biyndv7boldq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why This Matters"},{"@type":"WebPageElement","name":"Hard Constraints"},{"@type":"WebPageElement","name":"Rules for hard constraints"},{"@type":"WebPageElement","name":"Soft Constraints"},{"@type":"WebPageElement","name":"Rules for soft constraints"},{"@type":"WebPageElement","name":"Escalation Triggers"},{"@type":"WebPageElement","name":"Custom escalation triggers"},{"@type":"WebPageElement","name":"Autonomy Levels"},{"@type":"WebPageElement","name":"Autonomy levels"},{"@type":"WebPageElement","name":"Model tiers"},{"@type":"WebPageElement","name":"Governance hierarchy"},{"@type":"WebPageElement","name":"Provenance Records"},{"@type":"WebPageElement","name":"Hash linking"},{"@type":"WebPageElement","name":"Querying provenance"},{"@type":"WebPageElement","name":"Governance Composition"},{"@type":"WebPageElement","name":"Hard constraint merging"},{"@type":"WebPageElement","name":"Soft constraint merging"},{"@type":"WebPageElement","name":"Escalation trigger merging"},{"@type":"WebPageElement","name":"Autonomy level merging"},{"@type":"WebPageElement","name":"Integration with Delegatic"},{"@type":"WebPageElement","name":"Common Governance Patterns"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/"},{"@type":"ListItem","position":5,"name":"09_GOVERNANCE_PROVENANCE.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md</span>
+
+</div></div>
+<div class="lead">Capabilities without governance are unconstrained. Provenance without governance has no enforcement. Governance without provenance has no audit trail. Together, they make agents…</div>
+<div class="prose"><h1 id="blk-17080">Skill 09 — Governance and Provenance</h1>
+<blockquote><p>Declaring governance constraints, escalation rules, autonomy levels, and hash-linked provenance chains in agent declarations.</p></blockquote>
+<h3 id="blk-17083">Why This Matters</h3>
+<p>Capabilities without governance are unconstrained. Provenance without governance has no enforcement. Governance without provenance has no audit trail. Together, they make agents trustworthy and accountable.</p>
+<h3 id="blk-17085">Hard Constraints</h3>
+<p>Hard constraints are <strong>inviolable</strong>. Implementations MUST prevent violation. They are strings declaring absolute boundaries:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;hard&quot;</span>: [
+  <span class="t-string">&quot;Never scale beyond 3x in a single action&quot;</span>,
+  <span class="t-string">&quot;Never authorize expenditures above $10,000&quot;</span>,
+  <span class="t-string">&quot;Never modify production systems without approval&quot;</span>
+]</code></pre>
+<h4 id="blk-17088">Rules for hard constraints</h4>
+<ul><li><p>They are enforced at the runtime level, not just advisory</p></li><li><p>Violation of a hard constraint is a system failure, not a judgment call</p></li><li><p>They apply to all capability operations regardless of pipeline</p></li><li><p>Multiple hard constraints are conjunctive (all must hold)</p></li></ul>
+<h3 id="blk-17098">Soft Constraints</h3>
+<p>Soft constraints are <strong>preferences</strong>. They are passed to reasoning capabilities and MAY be overridden with evidence:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;soft&quot;</span>: [
+  <span class="t-string">&quot;Prefer gradual scaling over spikes&quot;</span>,
+  <span class="t-string">&quot;Prefer reversible actions over irreversible ones&quot;</span>,
+  <span class="t-string">&quot;Prefer consensus when multiple options score equally&quot;</span>
+]</code></pre>
+<h4 id="blk-17101">Rules for soft constraints</h4>
+<ul><li><p>They inform reasoning but do not block action</p></li><li><p>A reasoning capability may override a soft constraint if it provides</p></li></ul>
+<p>evidence justifying the override</p>
+<ul><li><p>Overrides should be recorded in the provenance chain</p></li><li><p>They are advisory for non-reasoning capabilities</p></li></ul>
+<h3 id="blk-17113">Escalation Triggers</h3>
+<p>Escalation rules define when an agent MUST defer to a human:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;escalate_when&quot;</span>: {
+  <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span>,
+  <span class="t-key">&quot;cost_exceeds_usd&quot;</span>: <span class="t-num">1000</span>,
+  <span class="t-key">&quot;hard_boundary_approached&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<table><thead><tr><th>Trigger</th><th>Semantics</th></tr></thead><tbody><tr><td><code>confidence_below</code></td><td>Escalate if reasoning confidence drops below threshold</td></tr><tr><td><code>cost_exceeds_usd</code></td><td>Escalate if action cost exceeds dollar amount</td></tr><tr><td><code>hard_boundary_approached</code></td><td>Escalate if action is near a hard constraint boundary</td></tr></tbody></table>
+<p>Triggers are disjunctive — any single trigger firing causes escalation.</p>
+<h4 id="blk-17126">Custom escalation triggers</h4>
+<p>The <code>escalate_when</code> object supports arbitrary key-value pairs. Providers interpret the triggers they understand and ignore the rest:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;escalate_when&quot;</span>: {
+  <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.6</span>,
+  <span class="t-key">&quot;latency_exceeds_ms&quot;</span>: <span class="t-num">5000</span>,
+  <span class="t-key">&quot;affected_users_above&quot;</span>: <span class="t-num">1000</span>
+}</code></pre>
+<h3 id="blk-17129">Autonomy Levels</h3>
+<p>The <code>autonomy</code> block controls proactive behavior:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;autonomy&quot;</span>: {
+  <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;advise&quot;</span>,
+  <span class="t-key">&quot;model_tier&quot;</span>: <span class="t-string">&quot;local_small&quot;</span>,
+  <span class="t-key">&quot;heartbeat_seconds&quot;</span>: <span class="t-num">300</span>,
+  <span class="t-key">&quot;budget&quot;</span>: {
+    <span class="t-key">&quot;max_actions_per_hour&quot;</span>: <span class="t-num">5</span>,
+    <span class="t-key">&quot;max_deliberation_calls_per_query&quot;</span>: <span class="t-num">1</span>,
+    <span class="t-key">&quot;require_approval_for&quot;</span>: [<span class="t-string">&quot;act&quot;</span>, <span class="t-string">&quot;propose&quot;</span>]
+  }
+}</code></pre>
+<h4 id="blk-17132">Autonomy levels</h4>
+<table><thead><tr><th>Level</th><th>Behavior</th></tr></thead><tbody><tr><td><code>observe</code></td><td>Survey and log only. Take no action. Safe default for new deployments.</td></tr><tr><td><code>advise</code></td><td>Propose actions, wait for approval. Typical production mode.</td></tr><tr><td><code>act</code></td><td>Execute within budget constraints. Full autonomy for high-trust agents.</td></tr></tbody></table>
+<h4 id="blk-17142">Model tiers</h4>
+<table><thead><tr><th>Tier</th><th>Target Hardware</th><th>Typical Budget</th></tr></thead><tbody><tr><td><code>local_small</code></td><td>8B parameter models</td><td>Shallow deliberation, fast attention</td></tr><tr><td><code>local_large</code></td><td>70B+ parameter models</td><td>Deeper deliberation, broader attention</td></tr><tr><td><code>cloud_frontier</code></td><td>Cloud-hosted frontier models</td><td>Full deliberation depth</td></tr></tbody></table>
+<h4 id="blk-17156">Governance hierarchy</h4>
+<p>Autonomy levels compose hierarchically. An organization-level policy of <code>advise</code> will downgrade any agent declaring <code>act</code>:</p>
+<pre><code>Org policy: advise  +  Agent declaration: act  →  Effective: advise
+Org policy: act     +  Agent declaration: advise  →  Effective: advise</code></pre>
+<p>The effective level is always the minimum of the org policy and the agent declaration. This is enforced by Delegatic governance policies.</p>
+<h3 id="blk-17160">Provenance Records</h3>
+<p>When <code>&quot;provenance&quot;: true</code>, every capability operation appends a hash-linked record to the provenance chain:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;time.anomaly&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;detect&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-14T14:23:07Z&quot;</span>,
+  <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:a3f8...&quot;</span>,
+  <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:7b2c...&quot;</span>,
+  <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:0000...&quot;</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;ttc-inv-9f3a...&quot;</span>
+}</code></pre>
+<table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>source</code></td><td>Capability that performed the operation</td></tr><tr><td><code>provider</code></td><td>Provider that executed it</td></tr><tr><td><code>operation</code></td><td>Operation name from the contract</td></tr><tr><td><code>timestamp</code></td><td>ISO 8601 timestamp</td></tr><tr><td><code>input_hash</code></td><td>SHA-256 hash of the input payload</td></tr><tr><td><code>output_hash</code></td><td>SHA-256 hash of the output payload</td></tr><tr><td><code>parent_hash</code></td><td>Hash of the previous record in the chain</td></tr><tr><td><code>mcp_trace_id</code></td><td>MCP invocation trace ID</td></tr></tbody></table>
+<h4 id="blk-17182">Hash linking</h4>
+<p>Records form a chain via <code>parent_hash</code>. The first record in a pipeline references <code>sha256:0000...</code> (genesis). Each subsequent record references the previous record's hash. This creates an immutable, verifiable audit trail.</p>
+<h4 id="blk-17184">Querying provenance</h4>
+<p>The provenance chain is queryable after pipeline execution. Use it for:</p>
+<ul><li><p><strong>Audit</strong>: Trace which capabilities contributed to a decision</p></li><li><p><strong>Debugging</strong>: Identify where a pipeline produced unexpected results</p></li><li><p><strong>Compliance</strong>: Prove that governance constraints were respected</p></li><li><p><strong>Reproducibility</strong>: Replay a pipeline with the same inputs</p></li></ul>
+<h3 id="blk-17195">Governance Composition</h3>
+<p>When capabilities compose, their governance constraints merge:</p>
+<h4 id="blk-17197">Hard constraint merging</h4>
+<p>All hard constraints from all composed capabilities are collected into a single conjunctive set. None may be violated.</p>
+<h4 id="blk-17199">Soft constraint merging</h4>
+<p>Soft constraints are collected and passed to reasoning capabilities. When soft constraints conflict, the reasoning capability decides based on evidence. The resolution is recorded in provenance.</p>
+<h4 id="blk-17201">Escalation trigger merging</h4>
+<p>Escalation triggers are merged disjunctively. If any trigger fires, escalation occurs. The most conservative trigger wins.</p>
+<h4 id="blk-17203">Autonomy level merging</h4>
+<p>The effective autonomy level is the minimum across all governance sources (agent declaration, org policy, runtime override).</p>
+<h3 id="blk-17205">Integration with Delegatic</h3>
+<p>Delegatic is the governance provider in the [&amp;] Protocol ecosystem. It manages:</p>
+<ul><li><p>Organization-level autonomy caps</p></li><li><p>Cross-agent governance policies</p></li><li><p>Escalation routing (who gets notified)</p></li><li><p>Approval workflows</p></li><li><p>Policy versioning and audit</p></li></ul>
+<p>When an agent declares <code>&amp;reason.argument</code> with <code>provider: &quot;deliberatic&quot;</code>, the governance block is passed to Deliberatic for enforcement. Delegatic policies can override agent-level governance when org-level constraints are stricter.</p>
+<h3 id="blk-17219">Common Governance Patterns</h3>
+<table><thead><tr><th>Pattern</th><th>Description</th><th>Key Fields</th></tr></thead><tbody><tr><td><strong>Read-only observer</strong></td><td>Agent monitors but never acts</td><td><code>level: &quot;observe&quot;</code>, no soft/hard needed</td></tr><tr><td><strong>Advisor with guardrails</strong></td><td>Agent proposes within bounds</td><td><code>level: &quot;advise&quot;</code>, hard constraints, escalation</td></tr><tr><td><strong>Autonomous with budget</strong></td><td>Agent acts within strict limits</td><td><code>level: &quot;act&quot;</code>, budget caps, hard constraints</td></tr><tr><td><strong>Compliance-first</strong></td><td>Full audit trail, conservative escalation</td><td><code>provenance: true</code>, low confidence threshold</td></tr><tr><td><strong>Multi-domain corroboration</strong></td><td>Requires evidence from multiple capabilities</td><td>Hard constraint requiring multi-domain evidence</td></tr></tbody></table></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-17083" class="lvl2">Why This Matters</a><a href="#blk-17085" class="lvl2">Hard Constraints</a><a href="#blk-17088" class="lvl3">Rules for hard constraints</a><a href="#blk-17098" class="lvl2">Soft Constraints</a><a href="#blk-17101" class="lvl3">Rules for soft constraints</a><a href="#blk-17113" class="lvl2">Escalation Triggers</a><a href="#blk-17126" class="lvl3">Custom escalation triggers</a><a href="#blk-17129" class="lvl2">Autonomy Levels</a><a href="#blk-17132" class="lvl3">Autonomy levels</a><a href="#blk-17142" class="lvl3">Model tiers</a><a href="#blk-17156" class="lvl3">Governance hierarchy</a><a href="#blk-17160" class="lvl2">Provenance Records</a><a href="#blk-17182" class="lvl3">Hash linking</a><a href="#blk-17184" class="lvl3">Querying provenance</a><a href="#blk-17195" class="lvl2">Governance Composition</a><a href="#blk-17197" class="lvl3">Hard constraint merging</a><a href="#blk-17199" class="lvl3">Soft constraint merging</a><a href="#blk-17201" class="lvl3">Escalation trigger merging</a><a href="#blk-17203" class="lvl3">Autonomy level merging</a><a href="#blk-17205" class="lvl2">Integration with Delegatic</a><a href="#blk-17219" class="lvl2">Common Governance Patterns</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/">Skill 01 — Writing Agent Declarations</a><a href="/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/">Skill 02 — Validation</a><a href="/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/">Skill 03 — Capability Composition</a><a href="/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/">Skill 04 — Capability Contracts</a><a href="/AmpersandBoxDesign/docs/skills/05_GENERATION.md/">Skill 05 — Generation</a><a href="/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/">Skill 06 — CLI Reference</a><a href="/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/">Skill 07 — Integration Patterns</a><a href="/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/">Skill 08 — Provider Implementation</a><a href="/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/">Skill 10 — Anti-Patterns</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierazypd2vdznbrgqyrb3knufd3mqtbkc5llwunzfjj6biyndv7boldq</div></div></div>
+</div></div>
+</body></html>

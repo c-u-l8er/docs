@@ -1,0 +1,391 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>[&amp;] Protocol — Zed AI Coder Prompt · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="You are building the [&amp;] Protocol ecosystem — an open-source, language-agnostic specification for composing agent cognitive capabilities. The ampersand…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[&amp;] Protocol — Zed AI Coder Prompt">
+<meta property="og:description" content="You are building the [&amp;] Protocol ecosystem — an open-source, language-agnostic specification for composing agent cognitive capabilities. The ampersand…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] Protocol — Zed AI Coder Prompt","name":"[&] Protocol — Zed AI Coder Prompt","description":"You are building the [&] Protocol ecosystem — an open-source, language-agnostic specification for composing agent cognitive capabilities. The ampersand…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md/","identifier":"bagaaiera3gw6wnya5kmf5ggl33plwygwlsv6al25kczb5ol4fvgcyu2a5jta","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Project Identity"},{"@type":"WebPageElement","name":"Protocol Architecture Summary"},{"@type":"WebPageElement","name":"The Six Capability Domains (Cognitive + Sensorimotor Primitives)"},{"@type":"WebPageElement","name":"Namespaced Subtypes"},{"@type":"WebPageElement","name":"Two Operators"},{"@type":"WebPageElement","name":"Formal Grammar (BNF)"},{"@type":"WebPageElement","name":"Three-Layer Architecture"},{"@type":"WebPageElement","name":"Canonical Agent Declaration (ampersand.json)"},{"@type":"WebPageElement","name":"Composition Algebra Properties"},{"@type":"WebPageElement","name":"Context Provenance"},{"@type":"WebPageElement","name":"Capability Contracts"},{"@type":"WebPageElement","name":"Governance"},{"@type":"WebPageElement","name":"Governance Foundations"},{"@type":"WebPageElement","name":"Protocol Stack Position"},{"@type":"WebPageElement","name":"Portfolio Companies (Default Capability Providers)"},{"@type":"WebPageElement","name":"Competitive Landscape & Positioning"},{"@type":"WebPageElement","name":"What exists (as of March 2026)"},{"@type":"WebPageElement","name":"The gap [&] fills"},{"@type":"WebPageElement","name":"Key academic references"},{"@type":"WebPageElement","name":"Memory landscape (relevant to Graphonomous / &memory)"},{"@type":"WebPageElement","name":"Design System"},{"@type":"WebPageElement","name":"Colors"},{"@type":"WebPageElement","name":"Typography"},{"@type":"WebPageElement","name":"Visual Style"},{"@type":"WebPageElement","name":"Current Site Structure"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/"},{"@type":"ListItem","position":4,"name":"PROTOCOL_PROMPT.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md</span>
+
+</div></div>
+<div class="lead">You are building the [&amp;] Protocol ecosystem — an open-source, language-agnostic specification for composing agent cognitive capabilities. The ampersand (&amp;) is a composition oper…</div>
+<div class="prose"><h1 id="blk-20780">[&amp;] Protocol — Zed AI Coder Prompt</h1>
+<h3 id="blk-20781">Project Identity</h3>
+<p>You are building <strong>the [&amp;] Protocol ecosystem</strong> — an open-source, language-agnostic specification for composing agent cognitive capabilities. The ampersand (<code>&amp;</code>) is a composition operator, not a logo. The protocol sits at the <strong>composition layer</strong> of the agent protocol stack — above MCP (agent-to-tool, Anthropic/AAIF) and A2A (agent-to-agent, Google/AAIF), below UI protocols (AG-UI, A2UI).</p>
+<p><strong>The core thesis</strong>: MCP defines how agents call tools. A2A defines how agents call agents. Neither defines how cognitive capabilities compose into a coherent system — what memory, reasoning, temporal, and spatial capabilities an agent needs, whether they're compatible, and how context flows between them with provenance. [&amp;] fills that gap.</p>
+<p><strong>Organization</strong>: Ampersand Box Design (ampersandboxdesign.com) <strong>GitHub</strong>: github.com/c-u-l8er/AmpersandBoxDesign <strong>Author/Founder</strong>: Travis (traaviis.com / c-u-l8er.link) <strong>License</strong>: Apache 2.0 <strong>Reference implementation language</strong>: Elixir <strong>Planned bindings</strong>: TypeScript (<code>@ampersand/sdk</code>), Rust (<code>ampersand-rs</code>)</p>
+<h3 id="blk-20785">Protocol Architecture Summary</h3>
+<h4 id="blk-20786">The Six Capability Domains (Cognitive + Sensorimotor Primitives)</h4>
+<p>The protocol defines exactly six fundamental capability domains. These are framed as <strong>engineering infrastructure primitives</strong> in documentation aimed at developers, and as <strong>cognitive + sensorimotor primitives</strong> when connecting to the theoretical foundations. Both framings are valid and should be used contextually:</p>
+<table><thead><tr><th>Primitive</th><th>Engineering Domain</th><th>Cognitive Mapping</th><th>Question</th><th>Color</th></tr></thead><tbody><tr><td><code>&amp;memory</code></td><td>State persistence</td><td>Knowledge / episodic recall</td><td>What the agent knows</td><td>Cyan <code>#4af5c6</code></td></tr><tr><td><code>&amp;reason</code></td><td>Decision logic</td><td>Deliberation / planning</td><td>How the agent decides</td><td>Blue <code>#7b8cff</code></td></tr><tr><td><code>&amp;time</code></td><td>Temporal modeling</td><td>Temporal awareness / forecasting</td><td>When things happen</td><td>Rose <code>#ff6b8a</code></td></tr><tr><td><code>&amp;space</code></td><td>Spatial modeling</td><td>Spatial awareness / navigation</td><td>Where things are</td><td>Amber <code>#ffc46b</code></td></tr><tr><td><code>&amp;body</code></td><td>Sensorimotor interface</td><td>Perception / action / affordance</td><td>How the agent is instantiated in an environment</td><td>Green <code>#6bff8a</code></td></tr><tr><td><code>&amp;govern</code></td><td>Cross-cutting governance</td><td>Telemetry / escalation / identity</td><td>Who is acting, under what rules, at what cost</td><td>Purple <code>#b57bff</code></td></tr></tbody></table>
+<p><strong>Cognitive architecture lineage</strong>: The first four cognitive primitives are not arbitrary. They map directly to established cognitive science models:</p>
+<ul><li><p><strong>SOAR</strong> (Newell, 1990; Laird, 2012): Integrates procedural memory, semantic memory, episodic memory, and a Spatial Visual System (SVS). SOAR's memory types map to <code>&amp;memory</code> subtypes; its SVS maps to <code>&amp;space</code>; its deliberation/impasse resolution maps to <code>&amp;reason</code>.</p></li><li><p><strong>ACT-R</strong> (Anderson, CMU): Modular architecture with declarative memory, procedural memory, visual/spatial modules, and temporal constraints on retrieval. ACT-R's imaginal buffer (mental workspace) maps to <code>&amp;reason</code>; its temporal dynamics map to <code>&amp;time</code>.</p></li><li><p><strong>CoALA</strong> (Cognitive Architectures for Language Agents, 2023): Proposes that LLM agents need working memory, long-term memory (procedural, semantic, episodic), and structured action spaces. CoALA explicitly draws on SOAR and ACT-R. [&amp;] formalizes these insights as composable, provider-agnostic primitives with a validation algebra.</p></li></ul>
+<p><strong>Sensorimotor grounding</strong>: <code>&amp;body</code> is a sensorimotor primitive, added in protocol draft v0.1.0 to close the perception-action gap in the original four cognitive domains. Its lineage is:</p>
+<ul><li><p><strong>Motor cortex + cerebellum + proprioception</strong> (neuroscience): biological agents have a distinct system for perceiving environmental state through sensors and committing typed actions through effectors. This is orthogonal to memory/reason/time/space.</p></li><li><p><strong>ACT-R/E embodied spatial module</strong> (Trafton et al., 2013): extends ACT-R with proprioceptive and motor modules separate from the spatial/visual module; <code>&amp;body</code> preserves this distinction.</p></li><li><p><strong>Sensorimotor grounding</strong> (Smith &amp; Gasser, 2005) and <strong>Gibson's affordances</strong> (1977): intelligence is grounded in the agent's ability to perceive what actions an environment affords. <code>&amp;body.*.affordances()</code> is the first-class protocol operation for this.</p></li><li><p><strong>Without `&amp;body`</strong>: perception and action were smeared across <code>&amp;reason</code> (implicit action generation), MCP tool calls (implicit perception), and <code>&amp;memory.episodic</code> (retrospective trace recall). The absence was a modeling hole, not a design decision.</p></li></ul>
+<p>The sixth primitive — <code>&amp;govern</code> — is the cross-cutting governance domain: telemetry, escalation, and identity. Unlike the five cognitive/sensorimotor primitives, <code>&amp;govern</code> does not map to a single cognitive module. It models the operational concerns that all capability providers may consume or emit: who is acting, under what rules, and at what cost. Its lineage is systems engineering (audit, policy enforcement, access control) rather than cognitive science.</p>
+<p>When writing developer-facing content (README, CLI help, API docs), prefer the engineering framing: &quot;capability domains&quot; and &quot;state persistence / decision logic / temporal modeling / spatial modeling / sensorimotor interface / cross-cutting governance.&quot; When writing the spec, positioning docs, or research-facing content, use the cognitive science framing for the first four primitives, the sensorimotor framing for <code>&amp;body</code>, and the systems engineering framing for <code>&amp;govern</code>.</p>
+<h4 id="blk-20844">Namespaced Subtypes</h4>
+<p>Each primitive has subtypes:</p>
+<ul><li><p><code>&amp;memory</code> → <code>.graph</code>, <code>.vector</code>, <code>.episodic</code>, <code>.semantic</code></p></li><li><p><code>&amp;reason</code> → <code>.argument</code>, <code>.vote</code>, <code>.plan</code>, <code>.chain</code>, <code>.deliberate</code>, <code>.attend</code></p></li><li><p><code>&amp;time</code> → <code>.anomaly</code>, <code>.forecast</code>, <code>.pattern</code>, <code>.baseline</code></p></li><li><p><code>&amp;space</code> → <code>.fleet</code>, <code>.geofence</code>, <code>.route</code>, <code>.region</code></p></li><li><p><code>&amp;body</code> → <code>.browser</code>, <code>.os</code>, <code>.vision</code>, <code>.voice</code>, <code>.motor</code></p></li><li><p><code>&amp;govern</code> → <code>.telemetry</code>, <code>.escalation</code>, <code>.identity</code></p></li></ul>
+<p>Custom subtypes are permitted if they satisfy the primitive's capability contract. The initial <code>&amp;body.*</code> subtypes cover digital embodiment (browser DOM, operating systems); <code>.vision</code> and <code>.voice</code> are declared for future audio/visual perception providers; <code>.motor</code> is reserved for future robotics/physical-actuation providers.</p>
+<p><strong>Derived operations</strong> (computed from primitives, not separate primitives):</p>
+<ul><li><p><code>&amp;topology</code> — Shorthand for graph-structural analysis computed from <code>&amp;memory.graph</code>. Used in pipelines as <code>&amp;topology.analyze()</code> and <code>&amp;topology.route()</code>. Topology is a structural property of the knowledge graph, not its own primitive. The <code>&amp;topology</code> namespace is a convenience alias; the canonical home is <code>&amp;memory.graph.topology()</code>. Implementations register <code>&amp;topology.analyze</code> as a capability provided by the <code>&amp;memory.graph</code> provider (e.g., Graphonomous).</p></li></ul>
+<h4 id="blk-20864">Two Operators</h4>
+<ul><li><p><code>&amp;</code> — Composition: combines capabilities into a validated set</p></li><li><p><code>|&gt;</code> — Pipeline: flows data through capability operations</p></li></ul>
+<h4 id="blk-20870">Formal Grammar (BNF)</h4>
+<pre><code>AgentSpec       := &quot;agent&quot; Identifier &quot;{&quot; CapabilityBlock GovernanceBlock? &quot;}&quot;
+CapabilityBlock := &quot;capabilities&quot; &quot;[&quot; CapabilityList &quot;]&quot;
+CapabilityList  := Capability (&quot;,&quot; Capability)*
+Capability      := &quot;&amp;&quot; PrimitiveType (&quot;.&quot; Subtype)? &quot;(&quot; ProviderExpr? (&quot;,&quot; Config)? &quot;)&quot;
+PrimitiveType   := &quot;memory&quot; | &quot;reason&quot; | &quot;time&quot; | &quot;space&quot; | &quot;body&quot; | &quot;govern&quot;
+Subtype         := Identifier
+ProviderExpr    := &quot;:&quot; Identifier | &quot;:&quot; &quot;auto&quot;
+Config          := KeyValue (&quot;,&quot; KeyValue)*
+CapabilitySet   := Capability (&quot;&amp;&quot; Capability)*
+Pipeline        := Expression (&quot;|&gt;&quot; CapabilityOp)*
+GovernanceBlock := &quot;governance&quot; &quot;{&quot; Constraint* &quot;}&quot;
+Constraint      := HardConstraint | SoftConstraint | EscalationRule</code></pre>
+<h4 id="blk-20872">Three-Layer Architecture</h4>
+<table><thead><tr><th>Layer</th><th>Name</th><th>Description</th><th>Artifact</th></tr></thead><tbody><tr><td>1</td><td>Canonical Schema</td><td>JSON/YAML capability composition format. Language-agnostic. Normative.</td><td><code>ampersand.schema.json</code></td></tr><tr><td>2</td><td>Abstract Operations</td><td>compose, validate, bind, invoke, trace</td><td>This specification</td></tr><tr><td>3</td><td>Language Bindings</td><td>Concrete SDKs (Elixir macros, TypeScript, Rust)</td><td>hex / npm / crates.io</td></tr></tbody></table>
+<h4 id="blk-20890">Canonical Agent Declaration (<code>ampersand.json</code>)</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;InfraOperator&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;instance&quot;</span>: <span class="t-string">&quot;infra-ops&quot;</span> } },
+    <span class="t-key">&quot;&amp;time.anomaly&quot;</span>:      { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;streams&quot;</span>: [<span class="t-string">&quot;cpu&quot;</span>, <span class="t-string">&quot;mem&quot;</span>] } },
+    <span class="t-key">&quot;&amp;space.fleet&quot;</span>:       { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;geofleetic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>] } },
+    <span class="t-key">&quot;&amp;reason.argument&quot;</span>:   { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;governance&quot;</span>: <span class="t-string">&quot;constitutional&quot;</span> } },
+    <span class="t-key">&quot;&amp;reason.deliberate&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;budget&quot;</span>: <span class="t-string">&quot;kappa&quot;</span> } },
+    <span class="t-key">&quot;&amp;reason.attend&quot;</span>:     { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [<span class="t-string">&quot;Never scale beyond 3x in a single action&quot;</span>],
+    <span class="t-key">&quot;soft&quot;</span>: [<span class="t-string">&quot;Prefer gradual scaling over spikes&quot;</span>],
+    <span class="t-key">&quot;escalate_when&quot;</span>: { <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span>, <span class="t-key">&quot;cost_exceeds_usd&quot;</span>: <span class="t-num">1000</span> },
+    <span class="t-key">&quot;autonomy&quot;</span>: {
+      <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;advise&quot;</span>,
+      <span class="t-key">&quot;model_tier&quot;</span>: <span class="t-string">&quot;local_small&quot;</span>,
+      <span class="t-key">&quot;heartbeat_seconds&quot;</span>: <span class="t-num">300</span>,
+      <span class="t-key">&quot;budget&quot;</span>: {
+        <span class="t-key">&quot;max_actions_per_hour&quot;</span>: <span class="t-num">5</span>,
+        <span class="t-key">&quot;require_approval_for&quot;</span>: [<span class="t-string">&quot;act&quot;</span>, <span class="t-string">&quot;propose&quot;</span>]
+      }
+    }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h4 id="blk-20892">Composition Algebra Properties</h4>
+<p>The <code>&amp;</code> operator satisfies ACI (Abelian, Commutative, Idempotent) — the same properties CRDTs use for conflict-free convergence:</p>
+<ul><li><p><strong>Commutative</strong>: <code>&amp;memory &amp; &amp;time ≡ &amp;time &amp; &amp;memory</code></p></li><li><p><strong>Associative</strong>: <code>(&amp;memory &amp; &amp;time) &amp; &amp;space ≡ &amp;memory &amp; (&amp;time &amp; &amp;space)</code></p></li><li><p><strong>Idempotent</strong>: <code>&amp;memory &amp; &amp;memory ≡ &amp;memory</code></p></li><li><p><strong>Identity</strong>: <code>&amp;none &amp; &amp;memory ≡ &amp;memory</code></p></li></ul>
+<h4 id="blk-20903">Context Provenance</h4>
+<p>Every capability operation appends a hash-linked provenance record:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>:       <span class="t-string">&quot;&amp;time.anomaly&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>:     <span class="t-string">&quot;ticktickclock&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>:    <span class="t-string">&quot;detect&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>:    <span class="t-string">&quot;2026-03-14T14:23:07Z&quot;</span>,
+  <span class="t-key">&quot;input_hash&quot;</span>:   <span class="t-string">&quot;sha256:a3f8...&quot;</span>,
+  <span class="t-key">&quot;output_hash&quot;</span>:  <span class="t-string">&quot;sha256:7b2c...&quot;</span>,
+  <span class="t-key">&quot;parent_hash&quot;</span>:  <span class="t-string">&quot;sha256:0000...&quot;</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;ttc-inv-9f3a...&quot;</span>
+}</code></pre>
+<h4 id="blk-20906">Capability Contracts</h4>
+<p>Each provider declares typed contracts with <code>accepts_from</code> and <code>feeds_into</code> — validated at composition time to ensure pipeline type safety:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;time.anomaly&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;detect&quot;</span>:  { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;stream_data&quot;</span>,  <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;anomaly_set&quot;</span> },
+    <span class="t-key">&quot;enrich&quot;</span>:  { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>,      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;enriched_context&quot;</span> },
+    <span class="t-key">&quot;learn&quot;</span>:   { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;observation&quot;</span>,  <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;ack&quot;</span> }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [<span class="t-string">&quot;&amp;memory.*&quot;</span>, <span class="t-string">&quot;&amp;space.*&quot;</span>, <span class="t-string">&quot;raw_data&quot;</span>],
+  <span class="t-key">&quot;feeds_into&quot;</span>:   [<span class="t-string">&quot;&amp;memory.*&quot;</span>, <span class="t-string">&quot;&amp;reason.*&quot;</span>, <span class="t-string">&quot;&amp;space.*&quot;</span>, <span class="t-string">&quot;output&quot;</span>],
+  <span class="t-key">&quot;a2a_skills&quot;</span>:   [<span class="t-string">&quot;temporal-anomaly-detection&quot;</span>]
+}</code></pre>
+<p><strong>`&amp;reason.deliberate` contract</strong> (κ-driven focused reasoning through feedback loops):</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.deliberate&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;deliberate&quot;</span>: { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;topology_result&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;deliberation_result&quot;</span> },
+    <span class="t-key">&quot;decompose&quot;</span>:  { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;topology_result&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;partitions&quot;</span> },
+    <span class="t-key">&quot;reconcile&quot;</span>:  { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;intermediate_conclusions&quot;</span>, <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;deliberation_result&quot;</span> }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [<span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-string">&quot;&amp;memory.*&quot;</span>],
+  <span class="t-key">&quot;feeds_into&quot;</span>:   [<span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-string">&quot;&amp;reason.*&quot;</span>, <span class="t-string">&quot;output&quot;</span>],
+  <span class="t-key">&quot;a2a_skills&quot;</span>:   [<span class="t-string">&quot;topology-aware-deliberation&quot;</span>]
+}</code></pre>
+<p><strong>`&amp;reason.attend` contract</strong> (proactive attention / meta-reasoning):</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.attend&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;survey&quot;</span>:   { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>,        <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;attention_map&quot;</span> },
+    <span class="t-key">&quot;triage&quot;</span>:   { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;attention_map&quot;</span>,   <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;attention_map&quot;</span> },
+    <span class="t-key">&quot;dispatch&quot;</span>: { <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;attention_map&quot;</span>,   <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;attention_cycle&quot;</span> }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [<span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-string">&quot;&amp;reason.*&quot;</span>, <span class="t-string">&quot;context&quot;</span>],
+  <span class="t-key">&quot;feeds_into&quot;</span>:   [<span class="t-string">&quot;&amp;reason.deliberate&quot;</span>, <span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-string">&quot;output&quot;</span>],
+  <span class="t-key">&quot;a2a_skills&quot;</span>:   [<span class="t-string">&quot;proactive-attention&quot;</span>, <span class="t-string">&quot;autonomous-planning&quot;</span>]
+}</code></pre>
+<p><strong>Pipeline type tokens</strong> added by κ and attention:</p>
+<table><thead><tr><th>Type Token</th><th>Description</th><th>Produced By</th><th>Consumed By</th></tr></thead><tbody><tr><td><code>topology_result</code></td><td>κ analysis with SCCs, routing, fault lines</td><td><code>&amp;memory.graph.topology()</code></td><td><code>&amp;reason.deliberate()</code>, <code>&amp;reason.attend()</code></td></tr><tr><td><code>deliberation_result</code></td><td>Conclusions from focused reasoning</td><td><code>&amp;reason.deliberate()</code></td><td><code>&amp;memory.graph.store()</code>, <code>output</code></td></tr><tr><td><code>attention_map</code></td><td>Ranked items needing attention</td><td><code>&amp;reason.attend.survey()</code></td><td><code>&amp;reason.attend.dispatch()</code>, <code>output</code></td></tr><tr><td><code>attention_cycle</code></td><td>Full cycle result with outcomes</td><td><code>&amp;reason.attend.dispatch()</code></td><td><code>&amp;memory.graph.store()</code>, <code>output</code></td></tr><tr><td><code>coverage_assessment</code></td><td>Epistemic coverage score + recommendation</td><td><code>&amp;memory.graph.coverage()</code></td><td><code>&amp;reason.attend()</code>, <code>&amp;reason.deliberate()</code></td></tr></tbody></table>
+<p><strong>Reactive pipeline</strong> (query-triggered, extended with κ):</p>
+<pre><code>query
+  |&gt; &amp;memory.graph.recall()
+  |&gt; &amp;memory.graph.topology()
+  |&gt; &amp;reason.deliberate(budget: :κ)
+  |&gt; &amp;memory.graph.store()</code></pre>
+<p><strong>Proactive pipeline</strong> (heartbeat-triggered, attention engine):</p>
+<pre><code>heartbeat
+  |&gt; &amp;reason.attend.survey()
+  |&gt; &amp;reason.attend.triage()
+  |&gt; &amp;reason.attend.dispatch()
+  |&gt; &amp;memory.graph.store()</code></pre>
+<p>Note: The <code>|&gt;</code> operator is linear — it doesn't express cycles. The heartbeat loop is a runtime scheduling concern declared in the <code>governance.autonomy</code> block, not a pipeline construct.</p>
+<h4 id="blk-20944">Governance</h4>
+<p>Declarative constraints in the schema — not language-specific syntax:</p>
+<ul><li><p><strong>Hard constraints</strong>: Inviolable. Implementations MUST prevent violation.</p></li><li><p><strong>Soft constraints</strong>: Preferences passed to reasoning capabilities, MAY be overridden with evidence.</p></li><li><p><strong>Escalation rules</strong>: Define when the agent MUST defer to a human.</p></li><li><p><strong>Autonomy levels</strong>: Declared in <code>governance.autonomy</code> — controls proactive behavior:</p></li><li><p><code>:observe</code> — Survey and log, take no action. Safe default for new deployments.</p></li><li><p><code>:advise</code> — Propose actions, wait for approval. Typical production mode.</p></li><li><p><code>:act</code> — Execute within budget constraints. Full autonomy for high-trust agents.</p></li></ul>
+<p>Autonomy is governed by Delegatic policy. An org-level cap of <code>:advise</code> will downgrade any agent declaring <code>:act</code> at composition time. The <code>model_tier</code> field (<code>:local_small</code>, <code>:local_large</code>, <code>:cloud_frontier</code>) determines default budgets for deliberation depth, attention cadence, and inference strategy.</p>
+<h4 id="blk-20962">Governance Foundations</h4>
+<p>The governance model is grounded in four structural principles. When writing developer-facing docs, use the engineering framing. The underlying insight is that governance emerges from feedback topology — analogous to how biological homeostasis emerges from somatic feedback loops.</p>
+<ol><li><p><strong>Feedback topology determines deliberation rights.</strong> κ = 0 (DAG) means fast-path, no deliberation. κ &gt; 0 (SCC) means iterative deliberation. This is a governance principle, not just a routing optimization — deliberation rights derive from mutual influence, not role assignment.</p></li></ol>
+<ol start="2"><li><p><strong>Coherence requires timescale separation.</strong> The consolidation tiers (fast/medium/slow/glacial) manage the autonomy-coherence gradient. Fast tiers preserve local autonomy; slow tiers enforce system coherence. This maps to the <code>governance.autonomy</code> block.</p></li></ol>
+<ol start="3"><li><p><strong>Legitimacy comes from bidirectional influence.</strong> SCC membership means mutual influence. DAG nodes don't deliberate because they lack the topology for mutual influence. Autonomy without feedback is isolation.</p></li></ol>
+<ol start="4"><li><p><strong>The bootstrapping lifecycle.</strong> The portfolio implements a closed feedback loop: spec (SpecPrompt) → declaration ([&amp;]) → generation (Agentelic) → deployment (WebHost.Systems) → autonomous operation (OpenSentience + Graphonomous) → governance (Delegatic) → outcome feedback → spec revision. Each domain is a node in this governance topology.</p></li></ol>
+<p>When generating code or documentation, these principles should inform:</p>
+<ul><li><p>How <code>governance.autonomy</code> blocks are explained</p></li><li><p>Why <code>&amp;reason.deliberate</code> requires <code>topology_result</code> input</p></li><li><p>Why <code>budget: :κ</code> in deliberation pipelines is a governance decision</p></li><li><p>How the portfolio companies relate to each other as a system</p></li></ul>
+<h4 id="blk-20986">Protocol Stack Position</h4>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│  UI          Agent-to-user rendering     A2UI/AG-UI │
+├─────────────────────────────────────────────────────┤
+│  COMPOSITION Capability declaration,     [&amp;]        │ ← THIS LAYER
+│              validation, binding,        Protocol   │
+│              provenance                             │
+├─────────────────────────────────────────────────────┤
+│  COORDINATION Agent-to-agent delegation  A2A        │
+├─────────────────────────────────────────────────────┤
+│  CONTEXT     Agent-to-tool connectivity  MCP        │
+├─────────────────────────────────────────────────────┤
+│  RUNTIME     Execution, metering, deploy Any host   │
+└─────────────────────────────────────────────────────┘</code></pre>
+<h3 id="blk-20988">Portfolio Companies (Default Capability Providers)</h3>
+<table><thead><tr><th>Company</th><th>Domain</th><th>Capability</th><th>URL</th></tr></thead><tbody><tr><td>Graphonomous</td><td>Graph memory + κ topology + deliberation</td><td><code>&amp;memory.graph</code>, <code>&amp;memory.episodic</code>, <code>&amp;reason.deliberate</code>, <code>&amp;reason.attend</code></td><td>graphonomous.com</td></tr><tr><td>Deliberatic</td><td>Multi-agent argumentation (escalation path)</td><td><code>&amp;reason.argument</code>, <code>&amp;reason.vote</code></td><td>deliberatic.com</td></tr><tr><td>AgenTroMatic</td><td>Task decomposition + orchestration</td><td>Agent automation</td><td>agentromatic.com</td></tr><tr><td>Delegatic</td><td>Governance + authorization + policy</td><td>Agent delegation + autonomy governance</td><td>delegatic.com</td></tr><tr><td>OpenSentience</td><td>Execution + outcome feedback</td><td>Runtime + research</td><td>opensentience.org</td></tr><tr><td>SpecPrompt</td><td>Specification standard</td><td>Spec tooling</td><td>specprompt.com</td></tr><tr><td>Agentelic</td><td>Agent engineering pipeline</td><td>Agent infra</td><td>agentelic.com</td></tr><tr><td>FleetPrompt</td><td>Fleet-scale prompt orchestration</td><td><code>&amp;space.fleet</code></td><td>fleetprompt.com</td></tr><tr><td>WebHost Systems</td><td>Hosting infrastructure</td><td>Runtime</td><td>webhost.systems</td></tr></tbody></table>
+<h3 id="blk-21030">Competitive Landscape &amp; Positioning</h3>
+<h4 id="blk-21031">What exists (as of March 2026)</h4>
+<p>The agent protocol space is dominated by three established layers:</p>
+<ul><li><p><strong>MCP</strong> (Anthropic, donated to Linux Foundation AAIF Dec 2025): Agent-to-tool connectivity via JSON-RPC 2.0. Primitives: tools, resources, prompts, sampling. 62k+ GitHub stars on anthropics/skills.</p></li><li><p><strong>A2A</strong> (Google): Agent-to-agent coordination. Agent Cards at <code>/.well-known/agent.json</code>. Task delegation, streaming, capability discovery.</p></li><li><p><strong>ACP</strong> (IBM, Linux Foundation): Lightweight REST-based agent communication.</p></li></ul>
+<p>Additional emerging protocols: ANP (Agent Network Protocol, DID-based discovery), AG-UI (agent-to-user interaction).</p>
+<h4 id="blk-21041">The gap [&amp;] fills</h4>
+<p>No existing protocol formally specifies <strong>how cognitive capabilities compose within an agent</strong>. The closest academic work is:</p>
+<ul><li><p><strong>DALIA</strong> (Rodriguez-Sanchez et al., Jan 2026, arXiv:2601.17435) — &quot;Declarative Agentic Layer for Intelligent Agents.&quot; Argues MCP is structurally under-specified: tools lack semantic descriptions, dependencies, and compositional constraints. Proposes a declarative layer connecting goals, capabilities, and execution. <strong>This paper validates [&amp;]'s thesis from the academic side.</strong></p></li></ul>
+<ul><li><p><strong>CoALA</strong> (Cognitive Architectures for Language Agents) — Distinguishes four memory types (working, episodic, semantic, procedural) drawing on the SOAR architecture from the 1980s. [&amp;] formalizes this as composable primitives.</p></li></ul>
+<ul><li><p><strong>Agent Skills</strong> (Anthropic, launched Oct 2025, open-standard Dec 2025) — Bundles of instructions, workflows, scripts, and metadata. Orthogonal to MCP. Skills provide procedural intelligence; MCP provides connectivity. [&amp;] sits above both — declaring what capabilities an agent needs and how they compose, before any skill or tool is invoked.</p></li></ul>
+<h4 id="blk-21052">Key academic references</h4>
+<ul><li><p>Behrouz &amp; Mirrokni (Google Research, NeurIPS 2025): &quot;Nested Learning&quot; — multi-timescale memory, HOPE architecture. Validates <code>&amp;memory</code> primitive with fast/slow modules.</p></li><li><p>Kaesberg et al. (ACL 2025): Multi-agent deliberation protocols outperform voting and single-agent approaches. Validates <code>&amp;reason</code> primitive.</p></li><li><p>Gartner 2025: 40% of enterprise apps will embed AI agents by end of 2026.</p></li><li><p>VentureBeat (Jan 2026): &quot;Continual learning shifts rigor toward memory provenance and retention.&quot;</p></li></ul>
+<h4 id="blk-21062">Memory landscape (relevant to Graphonomous / &amp;memory)</h4>
+<p>Major players in agent memory: Mem0 (intelligent memory layer, Apache 2.0, vector+metadata), Zep (fact extraction, conversation memory), LangMem (LangGraph integration), Letta (self-editing memory, OS-inspired tiered architecture), Cognee (knowledge graphs + vector search). Graph memory is emerging as the next frontier beyond vector RAG — graphonomous.com's thesis.</p>
+<h3 id="blk-21064">Design System</h3>
+<h4 id="blk-21065">Colors</h4>
+<pre data-lang="css"><code>--bg: #08090c;
+--surface: #0e1017;
+--surface-2: #14161e;
+--border: rgba(255, 255, 255, 0.06);
+--text: #e2e0db;
+--dim: #6b6980;
+--muted: #3d3b4a;
+--cyan: #4af5c6;    /* &amp;memory, primary accent */
+--blue: #7b8cff;    /* &amp;reason */
+--rose: #ff6b8a;    /* &amp;time */
+--amber: #ffc46b;   /* &amp;space */
+--purple: #b48cff;  /* protocol/meta */</code></pre>
+<h4 id="blk-21067">Typography</h4>
+<ul><li><p>Headlines: <code>Newsreader</code> (serif, weight 300, italic for emphasis)</p></li><li><p>Body/code: <code>JetBrains Mono</code> (monospace)</p></li><li><p>All caps section labels: 0.65rem, weight 700, letter-spacing 0.3em</p></li></ul>
+<h4 id="blk-21075">Visual Style</h4>
+<ul><li><p>Dark terminal aesthetic with subtle grain overlay (SVG noise filter)</p></li><li><p>Particle system background (canvas, mouse-reactive, colored dots with connecting edges)</p></li><li><p>Cards with left-colored borders (2px, primitive color)</p></li><li><p>Grid layouts with 1px gap borders</p></li><li><p>Callout boxes: <code>rgba(74,245,198,0.04)</code> bg, <code>3px solid var(--cyan)</code> left border</p></li><li><p>Code blocks: <code>--code-bg: #0b0c12</code>, left border colored by primitive</p></li><li><p>Scroll-triggered fade-up reveals (opacity 0 → 1, translateY 14px → 0)</p></li></ul>
+<h3 id="blk-21091">Current Site Structure</h3>
+<pre><code>ampersandboxdesign.com/
+├── index.html                              # Main landing page (hero, thesis, market convergence, protocol preview, ecosystem, architecture, philosophy)
+├── protocol.html                           # Full protocol specification (RFC-style, 14 sections across 3 parts)
+├── portfolio_company_complete_research.html # Research &amp; valuation page for all portfolio domains</code></pre>
+<h3 id="blk-21093">What Needs To Be Built (Priority Order)</h3>
+<h4 id="blk-21094">Priority 1: Machine-Readable Schema Artifact</h4>
+<p>Create <code>ampersand.schema.json</code> — a real, downloadable JSON Schema (draft 2020-12) that validates <code>ampersand.json</code> agent declarations. This is the single most important artifact for protocol adoption. Developers need something they can <code>$ref</code> in their own schemas and validate against.</p>
+<p>The schema must validate:</p>
+<ul><li><p>Agent name and version</p></li><li><p>Capability declarations with primitive type, optional subtype, provider, and config</p></li><li><p>Governance blocks (hard constraints, soft constraints, escalation rules)</p></li><li><p>Provenance flag</p></li><li><p>Capability contracts (operations, accepts_from, feeds_into, a2a_skills)</p></li></ul>
+<p>Host at: <code>protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json</code></p>
+<h4 id="blk-21109">Priority 2: CLI Tool (<code>ampersand</code>)</h4>
+<p>A CLI is how infrastructure protocols spread. Terraform, Kubernetes, Docker — all grew through CLI tooling. Build a minimal CLI (Node.js or Elixir escript) that does three things:</p>
+<pre data-lang="bash"><code><span class="t-comment"># Validate an agent declaration against the schema</span>
+ampersand validate agent.ampersand.json
+
+<span class="t-comment"># Compose capabilities and check pipeline type safety</span>
+ampersand compose agent.ampersand.json
+
+<span class="t-comment"># Generate MCP server config and A2A agent card from declaration</span>
+ampersand generate mcp agent.ampersand.json
+ampersand generate a2a agent.ampersand.json</code></pre>
+<p>The validate command is the MVP — it just wraps JSON Schema validation (ajv for Node, ex_json_schema for Elixir). The compose command checks ACI properties and validates capability contracts. The generate commands are Priority 4's demo, wrapped in a CLI.</p>
+<p>Publish as: <code>npm install -g @ampersand/cli</code> and/or <code>mix escript.install hex ampersand</code></p>
+<h4 id="blk-21114">Priority 3: GitHub Repository Restructure</h4>
+<p>The repo at <code>github.com/c-u-l8er/AmpersandBoxDesign</code> needs to become the canonical protocol home, not just a website repo. Structure:</p>
+<pre><code>AmpersandBoxDesign/
+├── README.md                    # Protocol overview, quick example, link to spec
+├── SPEC.md                      # Full protocol specification (markdown version of protocol.html)
+├── schema/
+│   └── v0.1.0/
+│       ├── ampersand.schema.json      # JSON Schema for agent declarations
+│       ├── capability-contract.schema.json  # Schema for capability contracts
+│       └── registry.schema.json       # Schema for the capability registry
+├── examples/
+│   ├── infra-operator.ampersand.json  # The InfraOperator example from the spec
+│   ├── research-agent.ampersand.json  # A research/analysis agent
+│   ├── customer-support.ampersand.json # Customer support agent
+│   └── README.md                      # Explains each example
+├── reference/
+│   └── elixir/                        # Elixir reference implementation
+│       ├── mix.exs
+│       ├── lib/
+│       │   ├── ampersand.ex           # Core composition module
+│       │   ├── ampersand/
+│       │   │   ├── schema.ex          # Schema validation
+│       │   │   ├── compose.ex         # Capability composition (&amp; operator)
+│       │   │   ├── pipeline.ex        # Pipeline execution (|&gt; operator)
+│       │   │   ├── provenance.ex      # Hash-linked provenance chain
+│       │   │   ├── governance.ex      # Constraint enforcement
+│       │   │   ├── registry.ex        # Capability registry
+│       │   │   ├── mcp.ex             # MCP configuration generation
+│       │   │   └── a2a.ex             # A2A agent card generation
+│       │   └── ampersand/
+│       │       └── primitives/
+│       │           ├── memory.ex
+│       │           ├── reason.ex
+│       │           ├── time.ex
+│       │           └── space.ex
+│       └── test/
+├── tools/
+│   ├── validate.sh                    # CLI: validate an ampersand.json against schema
+│   └── generate-mcp.sh               # CLI: generate MCP config from ampersand.json
+├── docs/
+│   ├── positioning.md                 # &quot;The Missing Layer&quot; positioning document
+│   ├── faq.md
+│   └── comparison-table.md            # [&amp;] vs MCP vs A2A vs DALIA vs ACP
+├── site/                              # Website source files
+│   ├── index.html
+│   ├── protocol.html
+│   └── portfolio_company_complete_research.html
+├── LICENSE                            # Apache 2.0
+└── CONTRIBUTING.md</code></pre>
+<h4 id="blk-21117">Priority 4: &quot;The Missing Layer&quot; Positioning Document</h4>
+<p>A focused 1500-2000 word document (<code>docs/positioning.md</code>) titled:</p>
+<p><strong>&quot;The Missing Layer: Capability Composition in the Agent Protocol Stack&quot;</strong></p>
+<p>Structure:</p>
+<ol><li><p><strong>The current stack</strong> — MCP (context/tools), A2A (coordination), ACP (communication). What each does well.</p></li><li><p><strong>The gap</strong> — No protocol defines how cognitive capabilities compose. Cite DALIA (arXiv:2601.17435) as independent academic validation. Cite the CoALA taxonomy. Note that MCP's own extensions (ScaleMCP, MCPEval) improve operational dimensions but don't address composition.</p></li><li><p><strong>What composition means</strong> — Not just &quot;agent has memory and reasoning.&quot; Formal grammar. Algebraic properties (ACI). Type-safe pipelines. Hash-linked provenance. Declarative governance.</p></li><li><p><strong>The [&amp;] Protocol</strong> — Stack position diagram. The four primitives mapped to cognitive science. How ampersand.json works. How it generates MCP/A2A configurations (not replaces them).</p></li><li><p><strong>Try it</strong> — Link to schema, example agent declarations, validation tool.</p></li></ol>
+<p>Tone: Technical but accessible. No marketing language. Write it like an RFC introduction or a Stripe engineering blog post.</p>
+<h4 id="blk-21133">Priority 5: Working MCP/A2A Generation Demo</h4>
+<p>The killer demo: take an <code>ampersand.json</code> and produce:</p>
+<ol><li><p>An MCP server configuration that wires up the declared capability providers</p></li><li><p>An A2A agent card (<code>/.well-known/agent.json</code>) that advertises the agent's composed capabilities as A2A skills</p></li></ol>
+<p>This proves [&amp;] is complementary to MCP/A2A, not competitive. It's the &quot;from spec to running agent&quot; path described in Part B §13 of the protocol spec.</p>
+<h4 id="blk-21141">Priority 6: Documentation Hub</h4>
+<p>Break the monolithic research page into standalone pages:</p>
+<pre><code>/docs/protocol           → The spec (already exists as protocol.html)
+/docs/capabilities/memory → Deep dive on &amp;memory, subtypes, providers, research
+/docs/capabilities/reason → Deep dive on &amp;reason, deliberation protocols, research
+/docs/capabilities/time   → Deep dive on &amp;time, temporal intelligence, research
+/docs/capabilities/space  → Deep dive on &amp;space, spatial intelligence, research
+/docs/architecture        → Reference architecture guide
+/docs/research            → Market convergence research (refactored from portfolio page)</code></pre>
+<p>Each capability page should include: theory, research citations, architecture patterns, protocol schema for that primitive, example providers, and an example pipeline using that capability.</p>
+<h4 id="blk-21145">Priority 7: Capability Registry Pages (Programmatic SEO)</h4>
+<p>Only after the above exists. Generate structured pages like:</p>
+<pre><code>/capabilities/memory.graph
+/capabilities/memory.episodic
+/capabilities/reason.argument
+/capabilities/time.forecast
+/capabilities/space.fleet</code></pre>
+<p>Each page includes: definition, capability contract JSON, architecture diagram, example API, research references, compatible providers. These are programmatic but high-quality — not thin SEO pages.</p>
+<h3 id="blk-21149">Elixir Reference Implementation Notes</h3>
+<p>The DSL syntax in Elixir uses macros. The <code>&amp;</code> is literally Elixir's capture operator repurposed as a composition operator:</p>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">InfraOperator</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Ampersand.Agent</span>
+
+  capabilities <span class="t-kw">do</span>
+    &amp;memory.graph(<span class="t-atom">:graphonomous</span>, instance: <span class="t-string">&quot;infra-ops&quot;</span>)
+    &amp;time.anomaly(<span class="t-atom">:ticktickclock</span>, streams: [<span class="t-atom">:cpu</span>, <span class="t-atom">:mem</span>])
+    &amp;space.fleet(<span class="t-atom">:geofleetic</span>, regions: [<span class="t-string">&quot;us-east&quot;</span>])
+    &amp;reason.argument(<span class="t-atom">:deliberatic</span>, governance: <span class="t-atom">:constitutional</span>)
+  <span class="t-kw">end</span>
+
+  governance <span class="t-kw">do</span>
+    hard <span class="t-string">&quot;Never scale beyond 3x current capacity in a single action&quot;</span>
+    soft <span class="t-string">&quot;Prefer gradual scaling over sudden spikes&quot;</span>
+    escalate_when confidence_below: <span class="t-num">0.7</span>, cost_exceeds_usd: <span class="t-num">1000</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<p>Pipeline usage:</p>
+<pre data-lang="elixir"><code>stream_data
+|&gt; &amp;time.anomaly.detect()
+|&gt; &amp;memory.graph.enrich()
+|&gt; &amp;space.fleet.locate()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Each step appends a provenance record. The full chain is queryable after execution.</p>
+<h3 id="blk-21155">Key Technical Decisions</h3>
+<ul><li><p><strong>JSON Schema (draft 2020-12)</strong> for the canonical schema — widest tooling support</p></li><li><p><strong>Hash-linked provenance</strong> (SHA-256) — same pattern as git commits and blockchain, but for capability operation chains</p></li><li><p><strong>ACI algebra</strong> — borrowed from CRDT theory. Ensures capability sets converge regardless of declaration order, enabling distributed composition</p></li><li><p><strong>Capability contracts</strong> with <code>accepts_from</code>/<code>feeds_into</code> — enables compile-time pipeline validation</p></li><li><p><strong>Provider-agnostic</strong> — capabilities are interfaces. <code>&amp;memory.graph</code> can be satisfied by Graphonomous, Neo4j, or any MCP-compatible graph service</p></li><li><p><strong>Governance as data</strong> — constraints live in the schema, not in code. Portable across implementations</p></li></ul>
+<h3 id="blk-21169">SEO &amp; Discovery Goals</h3>
+<p>Target search terms the project should own:</p>
+<ul><li><p>&quot;agent capability composition protocol&quot;</p></li><li><p>&quot;agent cognitive capability specification&quot;</p></li><li><p>&quot;AI agent capability registry&quot;</p></li><li><p>&quot;agent protocol composition layer&quot;</p></li><li><p>&quot;MCP capability composition&quot;</p></li><li><p>&quot;agent memory reasoning time space govern&quot;</p></li></ul>
+<p>The site should be discoverable by AI crawlers and training datasets. Protocol specs, formal grammars, and JSON schemas get disproportionately crawled because they're structured, technical, and novel.</p>
+<h3 id="blk-21185">Strategic Positioning (Critical)</h3>
+<p><strong>Never say &quot;[&amp;] sits above MCP and A2A.&quot;</strong> Ecosystem politics matter. Instead, always frame it as:</p>
+<blockquote><p>&quot;[&amp;] compiles into MCP + A2A configurations.&quot;</p></blockquote>
+<p>The mental model for developers should be:</p>
+<pre><code>ampersand.json  →  ampersand compose  →  mcp-config.json + agent-card.json</code></pre>
+<p>[&amp;] is the <strong>source of truth</strong> that generates the wiring for existing protocols. This makes adoption frictionless — developers don't need to abandon MCP or A2A, they gain a higher-level declaration language that outputs configurations for both.</p>
+<p>The protocol + ecosystem model is analogous to:</p>
+<ul><li><p><strong>Terraform</strong> (HCL → cloud provider API calls)</p></li><li><p><strong>Kubernetes</strong> (YAML manifests → container orchestration)</p></li><li><p><strong>Stripe</strong> (API + marketplace of payment methods)</p></li></ul>
+<p>The [&amp;] portfolio companies (Graphonomous, Deliberatic, etc.) function as <strong>default capability providers</strong> — the &quot;Stripe-native payment methods&quot; equivalent. But any MCP-compatible service can be a provider.</p>
+<h3 id="blk-21201">Single-Line Composition Expressions</h3>
+<p>The protocol supports a compact, memeable composition syntax:</p>
+<pre><code>&amp;memory.graph &amp; &amp;time.anomaly &amp; &amp;reason.argument</code></pre>
+<p>And a pipeline form:</p>
+<pre><code>(&amp;memory.graph &amp; &amp;time.anomaly) |&gt; &amp;reason.argument</code></pre>
+<p>This is intentionally reminiscent of Unix pipes, Elixir pipelines, and Haskell function composition. It should appear prominently in README headers, social media, and anywhere the protocol needs to be instantly recognizable. The syntax IS the brand.</p>
+<h3 id="blk-21207">Voice &amp; Tone Guidelines</h3>
+<ul><li><p><strong>Technical precision</strong>: Use RFC-style language (MUST, SHOULD, MAY) in spec documents</p></li><li><p><strong>No hype</strong>: Never say &quot;revolutionary&quot; or &quot;game-changing.&quot; The protocol's value is self-evident from the gap it fills</p></li><li><p><strong>Infrastructure voice</strong>: Write like you're documenting something that already exists and works, not pitching something aspirational</p></li><li><p><strong>Compositional thinking</strong>: Every explanation should come back to the core metaphor — capabilities compose like functions, the ampersand is an operator</p></li><li><p><strong>Respect for the ecosystem</strong>: [&amp;] complements MCP and A2A. Never position against them. The protocol generates configurations for them.</p></li></ul>
+<h3 id="blk-21219">Cognitive Science &amp; Neuroscience Grounding</h3>
+<p>The four primitives have deep roots in how biological intelligence is modeled. This connection should be referenced in the positioning document and spec, but never over-emphasized in developer docs.</p>
+<h4 id="blk-21221">The mapping</h4>
+<table><thead><tr><th>[&amp;] Primitive</th><th>Brain Region / System</th><th>Cognitive Science Model</th></tr></thead><tbody><tr><td><code>&amp;memory</code></td><td>Hippocampus (episodic), Neocortex (semantic), Basal ganglia (procedural)</td><td>Atkinson-Shiffrin model; SOAR's semantic + episodic memory; ACT-R's declarative memory</td></tr><tr><td><code>&amp;reason</code></td><td>Prefrontal cortex (planning, deliberation), Anterior cingulate (conflict monitoring)</td><td>BDI (Belief-Desire-Intention) model; SOAR's impasse resolution; ACT-R's production system</td></tr><tr><td><code>&amp;time</code></td><td>Cerebellum (timing), Hippocampus (temporal sequence), Basal ganglia (interval timing)</td><td>Temporal difference learning; ACT-R's temporal constraints on retrieval</td></tr><tr><td><code>&amp;space</code></td><td>Hippocampus (cognitive maps), Parietal cortex (spatial reasoning), Entorhinal cortex (grid cells)</td><td>Cognitive Map Theory (O'Keefe &amp; Nadel); SOAR's Spatial Visual System; ACT-R/E's embodied spatial module</td></tr></tbody></table>
+<h4 id="blk-21238">Key references for the neuroscience connection</h4>
+<ul><li><p><strong>O'Keefe &amp; Nadel (1978)</strong>: &quot;The Hippocampus as a Cognitive Map&quot; — established that the hippocampus encodes spatial relationships. The discovery of place cells (O'Keefe) and grid cells (Moser &amp; Moser, Nobel 2014) confirmed this. Maps to <code>&amp;space</code>.</p></li><li><p><strong>Tulving (1972, 1983)</strong>: Distinction between episodic and semantic memory. Maps directly to <code>&amp;memory.episodic</code> vs <code>&amp;memory.semantic</code>.</p></li><li><p><strong>Baddeley &amp; Hitch (1974)</strong>: Working memory model with central executive. The central executive maps to <code>&amp;reason</code>; the phonological loop and visuospatial sketchpad map to <code>&amp;time</code> and <code>&amp;space</code> processing.</p></li><li><p><strong>Cognitive Map Theory (Burgess et al., 2002)</strong>: Broader hippocampal function including temporal and spatial-associative retrievals — connecting <code>&amp;memory</code>, <code>&amp;time</code>, and <code>&amp;space</code> at the neural level.</p></li></ul>
+<h4 id="blk-21248">How to use this</h4>
+<p>The neuroscience grounding serves two purposes: (1) it explains <strong>why</strong> four primitives and not three or five — these are the fundamental axes along which biological cognition organizes information, and (2) it provides academic legitimacy when the protocol is discussed in research contexts. The positioning document should include a brief section connecting [&amp;]'s primitives to cognitive architectures (SOAR, ACT-R, CoALA) and note the neuroscience parallels without over-claiming.</p>
+<h3 id="blk-21250">Key Academic References (Complete List)</h3>
+<h4 id="blk-21251">Cognitive Architectures</h4>
+<ul><li><p>Newell, A. (1990). <em>Unified Theories of Cognition</em>. Harvard University Press.</p></li><li><p>Laird, J.E. (2012). <em>The Soar Cognitive Architecture</em>. MIT Press.</p></li><li><p>Anderson, J.R. (2007). <em>How Can the Human Mind Occur in the Physical Universe?</em> Oxford University Press. (ACT-R)</p></li><li><p>Sumers et al. (2023). &quot;Cognitive Architectures for Language Agents (CoALA).&quot; arXiv:2309.02427.</p></li></ul>
+<h4 id="blk-21261">Agent Protocols &amp; Composition</h4>
+<ul><li><p>Rodriguez-Sanchez et al. (Jan 2026). &quot;DALIA: Declarative Agentic Layer for Intelligent Agents.&quot; arXiv:2601.17435.</p></li><li><p>Anthropic (2024-2025). Model Context Protocol specification. modelcontextprotocol.io.</p></li><li><p>Google (2025). Agent-to-Agent Protocol (A2A). github.com/google/A2A.</p></li><li><p>IBM / Linux Foundation (2025). Agent Communication Protocol (ACP).</p></li></ul>
+<h4 id="blk-21271">Memory &amp; Reasoning</h4>
+<ul><li><p>Behrouz &amp; Mirrokni (Google Research, NeurIPS 2025). &quot;Nested Learning&quot; — HOPE architecture for multi-timescale memory.</p></li><li><p>Kaesberg et al. (ACL 2025). Multi-agent deliberation protocols outperforming voting approaches.</p></li><li><p>VentureBeat (Jan 2026). &quot;Continual learning shifts rigor toward memory provenance and retention.&quot;</p></li></ul>
+<h4 id="blk-21279">Agent Skills &amp; Frameworks</h4>
+<ul><li><p>Anthropic (Oct 2025). Agent Skills launch; open standard Dec 2025. 62k+ GitHub stars.</p></li><li><p>Survey papers: arXiv:2508.10146v1 (Agentic AI Frameworks), arXiv:2601.12560v1 (Agentic AI taxonomies).</p></li></ul>
+<h4 id="blk-21285">Industry</h4>
+<ul><li><p>Gartner (2025). 40% of enterprise apps will embed AI agents by end of 2026.</p></li><li><p>Linux Foundation AAIF: MCP donated Dec 2025; ACP and related protocols under governance.</p></li></ul></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-20781" class="lvl2">Project Identity</a><a href="#blk-20785" class="lvl2">Protocol Architecture Summary</a><a href="#blk-20786" class="lvl3">The Six Capability Domains (Cognitive + Sensorimotor Primitives)</a><a href="#blk-20844" class="lvl3">Namespaced Subtypes</a><a href="#blk-20864" class="lvl3">Two Operators</a><a href="#blk-20870" class="lvl3">Formal Grammar (BNF)</a><a href="#blk-20872" class="lvl3">Three-Layer Architecture</a><a href="#blk-20890" class="lvl3">Canonical Agent Declaration (ampersand.json)</a><a href="#blk-20892" class="lvl3">Composition Algebra Properties</a><a href="#blk-20903" class="lvl3">Context Provenance</a><a href="#blk-20906" class="lvl3">Capability Contracts</a><a href="#blk-20944" class="lvl3">Governance</a><a href="#blk-20962" class="lvl3">Governance Foundations</a><a href="#blk-20986" class="lvl3">Protocol Stack Position</a><a href="#blk-20988" class="lvl2">Portfolio Companies (Default Capability Providers)</a><a href="#blk-21030" class="lvl2">Competitive Landscape &amp; Positioning</a><a href="#blk-21031" class="lvl3">What exists (as of March 2026)</a><a href="#blk-21041" class="lvl3">The gap [&amp;] fills</a><a href="#blk-21052" class="lvl3">Key academic references</a><a href="#blk-21062" class="lvl3">Memory landscape (relevant to Graphonomous / &amp;memory)</a><a href="#blk-21064" class="lvl2">Design System</a><a href="#blk-21065" class="lvl3">Colors</a><a href="#blk-21067" class="lvl3">Typography</a><a href="#blk-21075" class="lvl3">Visual Style</a><a href="#blk-21091" class="lvl2">Current Site Structure</a><a href="#blk-21093" class="lvl2">What Needs To Be Built (Priority Order)</a><a href="#blk-21094" class="lvl3">Priority 1: Machine-Readable Schema Artifact</a><a href="#blk-21109" class="lvl3">Priority 2: CLI Tool (ampersand)</a><a href="#blk-21114" class="lvl3">Priority 3: GitHub Repository Restructure</a><a href="#blk-21117" class="lvl3">Priority 4: &quot;The Missing Layer&quot; Positioning Document</a><a href="#blk-21133" class="lvl3">Priority 5: Working MCP/A2A Generation Demo</a><a href="#blk-21141" class="lvl3">Priority 6: Documentation Hub</a><a href="#blk-21145" class="lvl3">Priority 7: Capability Registry Pages (Programmatic SEO)</a><a href="#blk-21149" class="lvl2">Elixir Reference Implementation Notes</a><a href="#blk-21155" class="lvl2">Key Technical Decisions</a><a href="#blk-21169" class="lvl2">SEO &amp; Discovery Goals</a><a href="#blk-21185" class="lvl2">Strategic Positioning (Critical)</a><a href="#blk-21201" class="lvl2">Single-Line Composition Expressions</a><a href="#blk-21207" class="lvl2">Voice &amp; Tone Guidelines</a><a href="#blk-21219" class="lvl2">Cognitive Science &amp; Neuroscience Grounding</a><a href="#blk-21221" class="lvl3">The mapping</a><a href="#blk-21238" class="lvl3">Key references for the neuroscience connection</a><a href="#blk-21248" class="lvl3">How to use this</a><a href="#blk-21250" class="lvl2">Key Academic References (Complete List)</a><a href="#blk-21251" class="lvl3">Cognitive Architectures</a><a href="#blk-21261" class="lvl3">Agent Protocols &amp; Composition</a><a href="#blk-21271" class="lvl3">Memory &amp; Reasoning</a><a href="#blk-21279" class="lvl3">Agent Skills &amp; Frameworks</a><a href="#blk-21285" class="lvl3">Industry</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/prompts/ATTENTION_ENGINE_PROMPT.md/">Attention Engine — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/CODEX_GUIDE.md/">[&amp;] Ecosystem — Codex Prompt Guide</a><a href="/AmpersandBoxDesign/prompts/DUAL_LOOP_MACHINES.md/">Dual- and Triple-Loop Machine Architecture</a><a href="/AmpersandBoxDesign/prompts/GRAPHONOMOUS_PROMPT.md/">GRAPHONOMOUS_PROMPT</a><a href="/AmpersandBoxDesign/prompts/KAPPA_BUILD_PROMPT.md/">κ-Aware Routing — Build Prompt v2 for Graphonomous + BendScript</a><a href="/AmpersandBoxDesign/prompts/KAPPA_DELIBERATOR_PROMPT.md/">κ-Driven Deliberation Orchestrator — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/MODEL_TIER_PROMPT.md/">Model Tier Adaptation — Build Prompt v1</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera3gw6wnya5kmf5ggl33plwygwlsv6al25kczb5ol4fvgcyu2a5jta</div></div></div>
+</div></div>
+</body></html>

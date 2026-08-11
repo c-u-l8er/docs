@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>[&amp;] Protocol — AmpersandBoxDesign · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Open, language-agnostic specification for capability composition in AI agents. Defines how agents declare memory, reasoning, time, space, body…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/CLAUDE.md/">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[&amp;] Protocol — AmpersandBoxDesign">
+<meta property="og:description" content="Open, language-agnostic specification for capability composition in AI agents. Defines how agents declare memory, reasoning, time, space, body…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/CLAUDE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] Protocol — AmpersandBoxDesign","name":"[&] Protocol — AmpersandBoxDesign","description":"Open, language-agnostic specification for capability composition in AI agents. Defines how agents declare memory, reasoning, time, space, body…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/CLAUDE.md/","identifier":"bagaaieraw32blteslgrsiypohnn3ijjm4h2d7hlj2ljz3hbowlsk5btfqqxa","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Implementation prompts (source-of-truth for code generation)"},{"@type":"WebPageElement","name":"Build and verify (Elixir reference implementation)"},{"@type":"WebPageElement","name":"CLI usage"},{"@type":"WebPageElement","name":"Repository structure"},{"@type":"WebPageElement","name":"Protocol change rules"},{"@type":"WebPageElement","name":"Core model"},{"@type":"WebPageElement","name":"Schema targets"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"CLAUDE.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/CLAUDE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/CLAUDE.md</span>
+
+</div></div>
+<div class="lead">Open, language-agnostic specification for capability composition in AI agents. Defines how agents declare memory, reasoning, time, space, body (sensorimotor), and governance cap…</div>
+<div class="prose"><h1 id="blk-157">[&amp;] Protocol — AmpersandBoxDesign</h1>
+<p>Open, language-agnostic specification for capability composition in AI agents. Defines how agents declare memory, reasoning, time, space, body (sensorimotor), and governance capabilities that compile into MCP and A2A configurations.</p>
+<h3 id="blk-159">Implementation prompts (source-of-truth for code generation)</h3>
+<ul><li><p><code>prompts/PROTOCOL_PROMPT.md</code> — the full implementation prompt used to generate [&amp;] Protocol reference code. Read this before modifying the Elixir reference implementation — it contains the project identity, architecture summary, formal grammar, coding standards, and generation rules.</p></li><li><p><code>prompts/GRAPHONOMOUS_PROMPT.md</code> — autonomous codebase traversal prompt for Graphonomous MCP integration.</p></li><li><p><code>prompts/KAPPA_BUILD_PROMPT.md</code> — κ cyclicity detection implementation guide (v2). Canonical schema, field name rules, directed edge rules. Proved on 1,926,351 finite systems.</p></li><li><p><code>prompts/KAPPA_DELIBERATOR_PROMPT.md</code> — deliberation loop architecture triggered by κ &gt; 0 routing. Decompose → focus → reconcile pipeline.</p></li><li><p><code>prompts/ATTENTION_ENGINE_PROMPT.md</code> — proactive attention engine: survey → triage → dispatch → execute → reflect. The &quot;ignition&quot; for autonomous behavior.</p></li><li><p><code>prompts/MODEL_TIER_PROMPT.md</code> — hardware-adaptive tier budgets (local_small/8B, local_large/70B+, cloud_frontier). Same topology, different depth.</p></li></ul>
+<p>Prompt dependency order:</p>
+<pre><code>PROTOCOL_PROMPT → KAPPA_BUILD → KAPPA_DELIBERATOR → ATTENTION_ENGINE → MODEL_TIER</code></pre>
+<p>These prompts serve the same role as <code>docs/spec/</code> in other portfolio projects. When the protocol or reference impl needs changes, align with the prompt first.</p>
+<h3 id="blk-176">Build and verify (Elixir reference implementation)</h3>
+<pre><code>cd reference/elixir/ampersand_core
+mix deps.get
+mix escript.build
+mix test</code></pre>
+<h3 id="blk-178">CLI usage</h3>
+<pre><code>cd reference/elixir/ampersand_core
+./ampersand validate ../../../examples/infra-operator.ampersand.json
+./ampersand compose ../../../examples/infra-operator.ampersand.json
+./ampersand generate mcp ../../../examples/infra-operator.ampersand.json
+./ampersand generate a2a ../../../examples/infra-operator.ampersand.json</code></pre>
+<h3 id="blk-180">Repository structure</h3>
+<ul><li><p><code>SPEC.md</code> — protocol specification (draft v0.1.0)</p></li><li><p><code>protocol/schema/v0.1.0/</code> — JSON Schema artifacts (ampersand.schema.json, capability-contract.schema.json, registry.schema.json)</p></li><li><p><code>examples/</code> — reference agent declarations (*.ampersand.json)</p></li><li><p><code>contracts/v0.1.0/</code> — capability contract definitions</p></li><li><p><code>reference/elixir/ampersand_core/</code> — Elixir reference implementation + CLI</p></li><li><p><code>sdk/npm/validate/</code> — @ampersand-protocol/validate npm package</p></li><li><p><code>sdk/python/ampersand_protocol/</code> — ampersand-protocol Python SDK</p></li><li><p><code>capabilities/</code> — individual capability documentation</p></li><li><p><code>docs/</code> — quickstart, runtime walkthrough, FAQ, comparison table</p></li><li><p><code>site/</code> — website source files</p></li><li><p><code>playground/</code> — browser-based validation playground</p></li></ul>
+<h3 id="blk-204">Protocol change rules</h3>
+<p>When changing the protocol, update ALL affected layers together:</p>
+<ol><li><p><code>SPEC.md</code></p></li><li><p><code>protocol/schema/v0.1.0/*.schema.json</code></p></li><li><p><code>examples/*.ampersand.json</code></p></li><li><p>Reference implementation logic</p></li><li><p>CLI output</p></li><li><p><code>docs/</code></p></li></ol>
+<p>A protocol change is not complete if only the prose changes. See CONTRIBUTING.md.</p>
+<h3 id="blk-220">Core model</h3>
+<p>Six capability primitives: <code>&amp;memory</code>, <code>&amp;reason</code>, <code>&amp;time</code>, <code>&amp;space</code>, <code>&amp;body</code>, <code>&amp;govern</code> Two composition operators: <code>&amp;</code> (combine) and <code>|&gt;</code> (pipeline) Capabilities are interfaces, providers are implementations. [&amp;] does not replace MCP or A2A — it compiles into them.</p>
+<p><code>&amp;body</code> is the sensorimotor primitive (added in draft v0.1.0) describing the agent's instantiation in an environment — perception, typed action, affordance enumeration, state encoding for replay. See OS-011 (Embodiment Protocol) for the behavioral loop that consumes <code>&amp;body.*</code>.</p>
+<h3 id="blk-223">Schema targets</h3>
+<p>JSON Schema draft 2020-12. Prefer explicit validation rules over descriptions.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/CLAUDE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-159" class="lvl2">Implementation prompts (source-of-truth for code generation)</a><a href="#blk-176" class="lvl2">Build and verify (Elixir reference implementation)</a><a href="#blk-178" class="lvl2">CLI usage</a><a href="#blk-180" class="lvl2">Repository structure</a><a href="#blk-204" class="lvl2">Protocol change rules</a><a href="#blk-220" class="lvl2">Core model</a><a href="#blk-223" class="lvl2">Schema targets</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/AGENTS.md/">[&amp;] Protocol — AmpersandBoxDesign</a><a href="/AmpersandBoxDesign/CONTRIBUTING.md/">Contributing to the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/DEPLOY.md/">DEPLOY.md</a><a href="/AmpersandBoxDesign/README.md/">[&amp;] Protocol</a><a href="/AmpersandBoxDesign/SPEC.md/">[&amp;] Protocol Specification</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraw32blteslgrsiypohnn3ijjm4h2d7hlj2ljz3hbowlsk5btfqqxa</div></div></div>
+</div></div>
+</body></html>

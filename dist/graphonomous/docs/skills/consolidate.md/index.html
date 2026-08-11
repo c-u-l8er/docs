@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Consolidation · graphonomous · Ampersand Box</title>
+<meta name="description" content="Trigger graph maintenance — decay weak knowledge, prune, merge duplicates, strengthen relationships.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/consolidate.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Consolidation">
+<meta property="og:description" content="Trigger graph maintenance — decay weak knowledge, prune, merge duplicates, strengthen relationships.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/consolidate.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Consolidation","name":"Consolidation","description":"Trigger graph maintenance — decay weak knowledge, prune, merge duplicates, strengthen relationships.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/consolidate.md/","identifier":"bagaaierabk5s5vuqw3bdiq7kkw7qrbggbk3wy2q4f73u4nnfmwpaizux5j7a","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Trigger Consolidation"},{"@type":"WebPageElement","name":"The 7-Stage Pipeline"},{"@type":"WebPageElement","name":"Timescale System"},{"@type":"WebPageElement","name":"When to Consolidate"},{"@type":"WebPageElement","name":"Consolidation Log Resource"},{"@type":"WebPageElement","name":"Health Indicators"},{"@type":"WebPageElement","name":"Consolidation and Goals"},{"@type":"WebPageElement","name":"Anti-patterns to avoid"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/"},{"@type":"ListItem","position":5,"name":"consolidate.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/consolidate.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/docs/skills/consolidate.md</span>
+
+</div></div>
+<div class="lead">Trigger graph maintenance — decay weak knowledge, prune, merge duplicates, strengthen relationships.</div>
+<div class="prose"><h1 id="blk-67091">Consolidation</h1>
+<p>Trigger graph maintenance — decay weak knowledge, prune, merge duplicates, strengthen relationships.</p>
+<h3 id="blk-67093">Trigger Consolidation</h3>
+<pre><code>consolidate(action: &quot;run&quot;, wait_ms: 2000)</code></pre>
+<p>The <code>consolidate</code> machine supports these actions:</p>
+<ul><li><p><code>run</code> — trigger consolidation (optionally wait with <code>wait_ms</code>)</p></li><li><p><code>stats</code> — aggregate graph health without triggering</p></li><li><p><code>query</code> — operation-based graph inspection</p></li><li><p><code>traverse</code> — BFS walk with depth/relationship filters</p></li></ul>
+<p><strong>`wait_ms`:</strong> 0–30000 (max 30 seconds). How long to wait for completion before returning status.</p>
+<h3 id="blk-67106">The 7-Stage Pipeline</h3>
+<ol><li><p><strong>Decay confidence</strong> — time-based confidence reduction. Nodes not accessed or reinforced gradually lose confidence.</p></li><li><p><strong>Prune weak nodes</strong> — remove nodes below the confidence threshold. Eliminates knowledge that has decayed past usefulness.</p></li><li><p><strong>Prune weak edges</strong> — remove edges below the weight threshold. Cleans up tenuous connections.</p></li><li><p><strong>Strengthen co-activated</strong> — boost edges between nodes frequently retrieved together (&quot;neurons that fire together wire together&quot;).</p></li><li><p><strong>Merge similar nodes</strong> — combine near-duplicate nodes (similarity &gt; 0.95 default). Consolidates redundant knowledge.</p></li><li><p><strong>Promote timescale</strong> — move valuable, frequently-accessed nodes to slower decay tiers (fast → medium → slow → glacial).</p></li><li><p><strong>Generate abstractions</strong> — create semantic summary nodes from clusters of episodic observations.</p></li></ol>
+<h3 id="blk-67122">Timescale System</h3>
+<p>Nodes live on one of 4 decay tiers:</p>
+<table><thead><tr><th>Tier</th><th>TTL</th><th>Decay Rate</th><th>Purpose</th></tr></thead><tbody><tr><td><strong>fast</strong></td><td>Hours</td><td>High</td><td>Working memory, session-local observations</td></tr><tr><td><strong>medium</strong></td><td>Days</td><td>Moderate</td><td>Recently reinforced knowledge</td></tr><tr><td><strong>slow</strong></td><td>Weeks</td><td>Low</td><td>Well-established, frequently-used facts</td></tr><tr><td><strong>glacial</strong></td><td>Months+</td><td>Minimal</td><td>Core architectural knowledge, proven procedures</td></tr></tbody></table>
+<p>Consolidation promotes nodes up tiers based on access frequency and confidence. Decay happens within each tier at its own rate.</p>
+<h3 id="blk-67146">When to Consolidate</h3>
+<ul><li><p>End of every productive session</p></li><li><p>Every 4–5 heavy storage/learning iterations</p></li><li><p>After outcome learning bursts</p></li><li><p>Before critical retrievals (ensures clean, high-quality graph)</p></li></ul>
+<p>Consolidation also runs automatically during idle — manual triggers supplement this.</p>
+<h3 id="blk-67157">Consolidation Log Resource</h3>
+<p>Read the current consolidation state and orchestrator metrics without triggering a cycle:</p>
+<pre><code>Resource URI: graphonomous://consolidation/log</code></pre>
+<p>Returns consolidator state (cycle count, last run, config) and orchestrator plasticity metrics (current learning rate, churn estimate, counters). Useful for monitoring without side effects.</p>
+<h3 id="blk-67161">Health Indicators</h3>
+<table><thead><tr><th>Metric</th><th>Healthy Range</th><th>Problem If</th></tr></thead><tbody><tr><td>Node count</td><td>Growing steadily</td><td>Stagnant or shrinking rapidly</td></tr><tr><td>Pruned count</td><td>&gt; 0 occasionally</td><td>Always 0 (no decay) or very high (over-aggressive)</td></tr><tr><td>Merged count</td><td>Occasional</td><td>Never (duplicates accumulating)</td></tr><tr><td>Edge/node ratio</td><td>0.5–3.0</td><td>&lt; 0.5 (isolated nodes) or &gt; 3.0 (edge spaghetti)</td></tr><tr><td>Cycle count</td><td>Increasing</td><td>N/A (just informational)</td></tr></tbody></table>
+<h3 id="blk-67181">Consolidation and Goals</h3>
+<p>Consolidation can prune nodes that are linked to goals, which affects coverage scores. After heavy consolidation, consider re-reviewing active goals with <code>review_goal</code> to ensure coverage hasn't dropped below thresholds.</p>
+<h3 id="blk-67183">Anti-patterns to avoid</h3>
+<ul><li><p>Consolidation neglect — never running consolidation, letting the graph accumulate noise</p></li><li><p>Running consolidation too frequently during active work (once per session boundary is usually enough)</p></li></ul></div>
+<p class="src"><a href="/#/graphonomous/docs/skills/consolidate.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-67093" class="lvl2">Trigger Consolidation</a><a href="#blk-67106" class="lvl2">The 7-Stage Pipeline</a><a href="#blk-67122" class="lvl2">Timescale System</a><a href="#blk-67146" class="lvl2">When to Consolidate</a><a href="#blk-67157" class="lvl2">Consolidation Log Resource</a><a href="#blk-67161" class="lvl2">Health Indicators</a><a href="#blk-67181" class="lvl2">Consolidation and Goals</a><a href="#blk-67183" class="lvl2">Anti-patterns to avoid</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a><a href="/graphonomous/docs/skills/attention.md/">Attention Engine</a><a href="/graphonomous/docs/skills/belief.md/">Belief Revision</a><a href="/graphonomous/docs/skills/bootstrap.md/">Graphonomous Bootstrap</a><a href="/graphonomous/docs/skills/deliberate.md/">Topology and Deliberation</a><a href="/graphonomous/docs/skills/epistemic-frontier.md/">Epistemic Frontier — Uncertainty-Guided Investigation</a><a href="/graphonomous/docs/skills/forgetting.md/">Intentional Forgetting — Structured Knowledge Removal</a><a href="/graphonomous/docs/skills/goals.md/">Goal Management</a><a href="/graphonomous/docs/skills/graph-health.md/">Graph Health Check</a><a href="/graphonomous/docs/skills/inspect.md/">Graph Inspection</a><a href="/graphonomous/docs/skills/learn.md/">Learning Loop</a><a href="/graphonomous/docs/skills/retrieve.md/">Retrieve and Remember</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierabk5s5vuqw3bdiq7kkw7qrbggbk3wy2q4f73u4nnfmwpaizux5j7a</div></div></div>
+</div></div>
+</body></html>

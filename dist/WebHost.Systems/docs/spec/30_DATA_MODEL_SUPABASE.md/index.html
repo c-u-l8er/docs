@@ -1,0 +1,604 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>webhost.systems — Data Model (Supabase/PostgreSQL) &amp; Access Control (v1) · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="Version: 1.0 Status: Implementation-ready Last updated: 2026-03-28">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/30_DATA_MODEL_SUPABASE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webhost.systems — Data Model (Supabase/PostgreSQL) &amp; Access Control (v1)">
+<meta property="og:description" content="Version: 1.0 Status: Implementation-ready Last updated: 2026-03-28">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/30_DATA_MODEL_SUPABASE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"webhost.systems — Data Model (Supabase/PostgreSQL) & Access Control (v1)","name":"webhost.systems — Data Model (Supabase/PostgreSQL) & Access Control (v1)","description":"Version: 1.0 Status: Implementation-ready Last updated: 2026-03-28","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/30_DATA_MODEL_SUPABASE.md/","identifier":"bagaaieralhrqu5onlyaxq3gzstfqinbkguzx3hpkzxhhskg43wdwaborngpa","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"1) Design goals"},{"@type":"WebPageElement","name":"1.1 Goals"},{"@type":"WebPageElement","name":"1.2 Non-goals"},{"@type":"WebPageElement","name":"2) Cross-cutting conventions"},{"@type":"WebPageElement","name":"2.1 IDs and references"},{"@type":"WebPageElement","name":"2.2 Time"},{"@type":"WebPageElement","name":"2.3 Immutability rules"},{"@type":"WebPageElement","name":"2.4 Multi-runtime modeling"},{"@type":"WebPageElement","name":"2.5 \"Active\" pointer"},{"@type":"WebPageElement","name":"2.6 Secrets"},{"@type":"WebPageElement","name":"3) Custom types"},{"@type":"WebPageElement","name":"4) Tables (normative)"},{"@type":"WebPageElement","name":"4.1 users"},{"@type":"WebPageElement","name":"4.2 agents"},{"@type":"WebPageElement","name":"4.3 deployments"},{"@type":"WebPageElement","name":"4.4 metrics_events (raw telemetry, append-only)"},{"@type":"WebPageElement","name":"4.5 billing_usage (aggregated usage per billing period)"},{"@type":"WebPageElement","name":"4.6 subscriptions (optional but recommended for clarity)"},{"@type":"WebPageElement","name":"4.7 audit_log (append-only)"},{"@type":"WebPageElement","name":"5) Indexing guidance (PostgreSQL specifics)"},{"@type":"WebPageElement","name":"6) Access control requirements (Supabase RLS + Edge Functions)"},{"@type":"WebPageElement","name":"6.1 General rule"},{"@type":"WebPageElement","name":"6.2 Server-only operations"},{"@type":"WebPageElement","name":"6.3 Allowed client operations (MVP)"},{"@type":"WebPageElement","name":"6.4 Preventing confused deputy"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/"},{"@type":"ListItem","position":5,"name":"30_DATA_MODEL_SUPABASE.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/30_DATA_MODEL_SUPABASE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/docs/spec/30_DATA_MODEL_SUPABASE.md</span>
+
+</div></div>
+<div class="lead">Version: 1.0 Status: Implementation-ready Last updated: 2026-03-28</div>
+<div class="prose"><h1 id="blk-46794">webhost.systems — Data Model (Supabase/PostgreSQL) &amp; Access Control (v1)</h1>
+<p>Version: 1.0 Status: Implementation-ready Last updated: 2026-03-28</p>
+<p>This document defines the <strong>normative Supabase/PostgreSQL data model</strong> for webhost.systems, including:</p>
+<ul><li><p>required tables and columns,</p></li><li><p>indexes,</p></li><li><p>invariants and state machines,</p></li><li><p>Row Level Security (RLS) policies using <code>auth.uid()</code>,</p></li><li><p>retention and deletion semantics,</p></li><li><p>example query patterns and aggregation guidance.</p></li></ul>
+<p>Normative language: MUST, MUST NOT, SHOULD, MAY.</p>
+<h3 id="blk-46811">1) Design goals</h3>
+<h4 id="blk-46812">1.1 Goals</h4>
+<p>The data model MUST support:</p>
+<ul><li><p>strong tenant isolation (per-user ownership via RLS),</p></li><li><p>immutable deployment history with rollback,</p></li><li><p>auditable changes to sensitive operations (deploy, billing, secrets),</p></li><li><p>efficient listing and time-range metrics queries,</p></li><li><p>usage aggregation by billing period,</p></li><li><p>multi-runtime metadata (Cloudflare + AgentCore),</p></li><li><p>idempotent operations (deploy, telemetry ingestion).</p></li></ul>
+<h4 id="blk-46829">1.2 Non-goals</h4>
+<ul><li><p>Teams/orgs/roles in v1 (single-owner resources only).</p></li><li><p>Perfect cost reconciliation (store &quot;estimated cost&quot; until provider billing exports exist).</p></li></ul>
+<h3 id="blk-46835">2) Cross-cutting conventions</h3>
+<h4 id="blk-46836">2.1 IDs and references</h4>
+<ul><li><p>All primary keys are <code>uuid</code> using <code>gen_random_uuid()</code> as default.</p></li><li><p>Foreign key columns MUST use <code>uuid</code> referencing the target table's <code>id</code>.</p></li><li><p>The <code>users.id</code> column maps directly to Supabase Auth <code>auth.uid()</code> (type <code>uuid</code>).</p></li></ul>
+<h4 id="blk-46844">2.2 Time</h4>
+<ul><li><p>Store times as <code>timestamptz</code> (timestamp with time zone) for native PostgreSQL time operations, indexing, and range queries.</p></li><li><p>Convert to RFC3339 only at API boundaries (UI/API layer) if needed; <code>timestamptz</code> serializes naturally as ISO 8601.</p></li></ul>
+<p>Required time columns:</p>
+<ul><li><p><code>created_at</code> on all top-level entities (default <code>now()</code>).</p></li><li><p><code>updated_at</code> where mutable (users, agents, billing_usage, subscriptions).</p></li></ul>
+<h4 id="blk-46856">2.3 Immutability rules</h4>
+<ul><li><p><code>deployments</code> are immutable except for:</p></li><li><p><code>status</code>,</p></li><li><p><code>provider_ref</code> (once known),</p></li><li><p><code>error_message</code>,</p></li><li><p><code>finished_at</code>.</p></li><li><p><code>metrics_events</code> are append-only (never update; only delete via retention policy jobs).</p></li><li><p><code>audit_log</code> is append-only.</p></li></ul>
+<h4 id="blk-46872">2.4 Multi-runtime modeling</h4>
+<ul><li><p>Use <code>runtime_provider</code> as the canonical selector: <code>'cloudflare' | 'agentcore'</code> (enforced by CHECK constraint).</p></li><li><p>Store runtime-specific config in a JSONB column with a tagged structure:</p></li><li><p><code>provider_config-&gt;'cloudflare'</code> object (nullable within JSON)</p></li><li><p><code>provider_config-&gt;'agentcore'</code> object (nullable within JSON)</p></li><li><p>Exactly one provider key MUST be non-null for a given agent/deployment where applicable.</p></li></ul>
+<h4 id="blk-46884">2.5 &quot;Active&quot; pointer</h4>
+<ul><li><p><code>agents.active_deployment_id</code> points to the currently active deployment (nullable if none).</p></li><li><p>Rollback is implemented by switching <code>active_deployment_id</code> to a prior deployment (that is in a valid state).</p></li></ul>
+<h4 id="blk-46890">2.6 Secrets</h4>
+<ul><li><p>Sensitive values (API keys, provider credentials) MUST be stored in <strong>Supabase Vault</strong> (<code>vault.secrets</code>), never in application tables.</p></li><li><p>Application tables store only key names and vault secret references/metadata.</p></li></ul>
+<h3 id="blk-46896">3) Custom types</h3>
+<pre data-lang="sql"><code>-- Runtime provider enum
+CREATE TYPE runtime_provider AS ENUM ('cloudflare', 'agentcore');
+
+-- Agent status enum
+CREATE TYPE agent_status AS ENUM ('created', 'deploying', 'active', 'error', 'disabled');
+
+-- Deployment status enum
+CREATE TYPE deployment_status AS ENUM ('deploying', 'active', 'failed', 'rolled_back');
+
+-- Subscription status enum
+CREATE TYPE subscription_status AS ENUM ('active', 'past_due', 'canceled', 'trialing', 'paused');
+
+-- Subscription tier enum
+CREATE TYPE subscription_tier AS ENUM ('free', 'starter', 'pro', 'enterprise');
+
+-- Error class enum for metrics
+CREATE TYPE error_class AS ENUM ('auth', 'limit', 'runtime', 'tool', 'unknown');
+
+-- Billing provider enum
+CREATE TYPE billing_provider AS ENUM ('lemonsqueezy', 'other');</code></pre>
+<h3 id="blk-46898">4) Tables (normative)</h3>
+<blockquote><p>Naming is normative for this spec. If you rename, preserve semantics, indexes, and invariants.</p></blockquote>
+<h4 id="blk-46901">4.1 <code>users</code></h4>
+<p>Represents the tenant owner. The <code>id</code> column is the Supabase Auth user ID (<code>auth.uid()</code>).</p>
+<pre data-lang="sql"><code>CREATE TABLE users (
+  id              uuid PRIMARY KEY DEFAULT auth.uid(),
+  email           text NOT NULL,
+  name            text,
+  subscription_tier subscription_tier NOT NULL DEFAULT 'free',
+  default_runtime_provider runtime_provider NOT NULL DEFAULT 'cloudflare',
+  billing_customer_id text,
+  disabled        boolean NOT NULL DEFAULT false,
+  created_at      timestamptz NOT NULL DEFAULT now(),
+  updated_at      timestamptz NOT NULL DEFAULT now()
+);
+
+-- Indexes
+CREATE UNIQUE INDEX idx_users_email ON users (email);</code></pre>
+<p>Invariants:</p>
+<ul><li><p>One row per Supabase Auth user (PK = <code>auth.uid()</code>).</p></li><li><p><code>subscription_tier</code> MUST be set (default <code>free</code>).</p></li></ul>
+<p>RLS policies:</p>
+<pre data-lang="sql"><code>ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+
+-- Users can read their own row
+CREATE POLICY users_select_own ON users
+  FOR SELECT USING (id = auth.uid());
+
+-- Users can update their own row (except subscription_tier, handled server-side)
+CREATE POLICY users_update_own ON users
+  FOR UPDATE USING (id = auth.uid());
+
+-- Insert: allow authenticated users to create their own row (on first login)
+CREATE POLICY users_insert_own ON users
+  FOR INSERT WITH CHECK (id = auth.uid());</code></pre>
+<p>Access control:</p>
+<ul><li><p>User can read their own user row.</p></li><li><p>Mutations to <code>subscription_tier</code> MUST be server-only (Edge Function webhook or service_role key).</p></li></ul>
+<h4 id="blk-46918">4.2 <code>agents</code></h4>
+<p>Logical agent entity owned by a user.</p>
+<pre data-lang="sql"><code>CREATE TABLE agents (
+  id                    uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id               uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name                  text NOT NULL,
+  description           text,
+  framework             text,
+  runtime_provider      runtime_provider NOT NULL DEFAULT 'cloudflare',
+  status                agent_status NOT NULL DEFAULT 'created',
+  active_deployment_id  uuid,  -- FK added after deployments table exists
+  env_var_keys          text[] NOT NULL DEFAULT '{}',
+  provider_config       jsonb NOT NULL DEFAULT '{}',
+  deleted_at            timestamptz,
+  created_at            timestamptz NOT NULL DEFAULT now(),
+  updated_at            timestamptz NOT NULL DEFAULT now(),
+  last_deployed_at      timestamptz,
+  last_invocation_at    timestamptz,
+
+  CONSTRAINT agents_name_length CHECK (char_length(name) &lt;= 64),
+  CONSTRAINT agents_description_length CHECK (description IS NULL OR char_length(description) &lt;= 4000),
+  CONSTRAINT agents_env_var_keys_length CHECK (array_length(env_var_keys, 1) IS NULL OR array_length(env_var_keys, 1) &lt;= 128)
+);
+
+-- Indexes
+CREATE INDEX idx_agents_user_id ON agents (user_id);
+CREATE UNIQUE INDEX idx_agents_user_id_name ON agents (user_id, name) WHERE deleted_at IS NULL;</code></pre>
+<p>The deferred FK for <code>active_deployment_id</code> is added after the <code>deployments</code> table:</p>
+<pre data-lang="sql"><code>ALTER TABLE agents
+  ADD CONSTRAINT fk_agents_active_deployment
+  FOREIGN KEY (active_deployment_id) REFERENCES deployments(id);</code></pre>
+<p><code>provider_config</code> JSONB structure:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;cloudflare&quot;</span>: {
+    <span class="t-key">&quot;worker_name&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;worker_url&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;durable_object_namespace&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;durable_object_id&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>
+  },
+  <span class="t-key">&quot;agentcore&quot;</span>: {
+    <span class="t-key">&quot;agent_runtime_arn&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;agent_runtime_id&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;runtime_id&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;region&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;v_cpu&quot;</span>: <span class="t-string">&quot;number | null&quot;</span>,
+    <span class="t-key">&quot;memory_mb&quot;</span>: <span class="t-string">&quot;number | null&quot;</span>,
+    <span class="t-key">&quot;memory_enabled&quot;</span>: <span class="t-string">&quot;boolean | null&quot;</span>,
+    <span class="t-key">&quot;code_interpreter_enabled&quot;</span>: <span class="t-string">&quot;boolean | null&quot;</span>,
+    <span class="t-key">&quot;browser_enabled&quot;</span>: <span class="t-string">&quot;boolean | null&quot;</span>
+  }
+}</code></pre>
+<p>Invariants:</p>
+<ul><li><p><code>user_id</code> MUST exist.</p></li><li><p>If <code>active_deployment_id</code> is set:</p></li><li><p>it MUST reference a deployment with <code>deployments.agent_id == agents.id</code>,</p></li><li><p>the deployment SHOULD be <code>status='active'</code> (or at least not <code>'failed'</code>).</p></li><li><p><code>provider_config-&gt;'cloudflare'</code> MUST be non-null when <code>runtime_provider='cloudflare'</code> (once deployed), and <code>provider_config-&gt;'agentcore'</code> MUST be null (and vice versa). During <code>'created'</code> state, both may be null.</p></li></ul>
+<p>RLS policies:</p>
+<pre data-lang="sql"><code>ALTER TABLE agents ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY agents_select_own ON agents
+  FOR SELECT USING (user_id = auth.uid());
+
+CREATE POLICY agents_insert_own ON agents
+  FOR INSERT WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY agents_update_own ON agents
+  FOR UPDATE USING (user_id = auth.uid());
+
+CREATE POLICY agents_delete_own ON agents
+  FOR DELETE USING (user_id = auth.uid());</code></pre>
+<p>Access control:</p>
+<ul><li><p>Only the owning user may read/write agent rows (except server-side billing/deploy workflows via <code>service_role</code>).</p></li><li><p>Changing <code>runtime_provider</code> MUST be gated by entitlements (tier check).</p></li><li><p>Agent deletion SHOULD be soft-delete with <code>deleted_at</code> set; invocations MUST fail for deleted/disabled agents.</p></li></ul>
+<p>State machine (normative):</p>
+<ul><li><p><code>created</code> -&gt; <code>deploying</code> when a new deployment begins</p></li><li><p><code>deploying</code> -&gt; <code>active</code> when deployment succeeds and becomes active</p></li><li><p><code>deploying</code> -&gt; <code>error</code> when deployment fails</p></li><li><p>any -&gt; <code>disabled</code> via manual disable</p></li><li><p><code>disabled</code> -&gt; <code>active</code> (optional &quot;enable&quot;) if there is an active deployment</p></li><li><p><code>error</code> -&gt; <code>deploying</code> on redeploy attempt</p></li></ul>
+<h4 id="blk-46961">4.3 <code>deployments</code></h4>
+<p>Immutable deployment record.</p>
+<pre data-lang="sql"><code>CREATE TABLE deployments (
+  id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id             uuid NOT NULL REFERENCES users(id),
+  agent_id            uuid NOT NULL REFERENCES agents(id) ON DELETE CASCADE,
+  version             integer NOT NULL,
+  runtime_provider    runtime_provider NOT NULL,
+  status              deployment_status NOT NULL DEFAULT 'deploying',
+  commit_hash         text,
+  artifact            jsonb NOT NULL DEFAULT '{}',
+  manifest            jsonb,
+  provider_ref        jsonb NOT NULL DEFAULT '{}',
+  error_message       text,
+  logs_ref            jsonb,
+  idempotency_key     text,
+  telemetry_auth_ref  jsonb,
+  deployed_by_user_id uuid NOT NULL REFERENCES users(id),
+  created_at          timestamptz NOT NULL DEFAULT now(),
+  deployed_at         timestamptz,
+  finished_at         timestamptz,
+
+  CONSTRAINT deployments_version_positive CHECK (version &gt; 0),
+  CONSTRAINT deployments_unique_version UNIQUE (agent_id, version)
+);
+
+-- Indexes
+CREATE INDEX idx_deployments_agent_id_created_at ON deployments (agent_id, created_at DESC);
+CREATE INDEX idx_deployments_agent_id_version ON deployments (agent_id, version DESC);
+CREATE INDEX idx_deployments_user_id_created_at ON deployments (user_id, created_at DESC);
+CREATE INDEX idx_deployments_status_created_at ON deployments (status, created_at DESC);</code></pre>
+<p><code>artifact</code> JSONB structure:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;uploaded_bundle | repo_ref&quot;</span>,
+  <span class="t-key">&quot;uploaded_bundle&quot;</span>: {
+    <span class="t-key">&quot;upload_id&quot;</span>: <span class="t-string">&quot;string&quot;</span>,
+    <span class="t-key">&quot;checksum&quot;</span>: <span class="t-string">&quot;string&quot;</span>,
+    <span class="t-key">&quot;size_bytes&quot;</span>: <span class="t-string">&quot;number&quot;</span>
+  },
+  <span class="t-key">&quot;repo_ref&quot;</span>: {
+    <span class="t-key">&quot;github_url&quot;</span>: <span class="t-string">&quot;string&quot;</span>,
+    <span class="t-key">&quot;ref&quot;</span>: <span class="t-string">&quot;string&quot;</span>
+  },
+  <span class="t-key">&quot;agentcore_container&quot;</span>: {
+    <span class="t-key">&quot;image_uri&quot;</span>: <span class="t-string">&quot;string&quot;</span>,
+    <span class="t-key">&quot;image_digest&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;repository&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;tag&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;build_id&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>
+  }
+}</code></pre>
+<p><code>provider_ref</code> JSONB structure:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;cloudflare&quot;</span>: {
+    <span class="t-key">&quot;worker_url&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;durable_object_id&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>
+  },
+  <span class="t-key">&quot;agentcore&quot;</span>: {
+    <span class="t-key">&quot;agent_runtime_arn&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;agent_runtime_id&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;runtime_id&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;region&quot;</span>: <span class="t-string">&quot;string | null&quot;</span>,
+    <span class="t-key">&quot;memory_enabled&quot;</span>: <span class="t-string">&quot;boolean | null&quot;</span>,
+    <span class="t-key">&quot;code_interpreter_enabled&quot;</span>: <span class="t-string">&quot;boolean | null&quot;</span>,
+    <span class="t-key">&quot;browser_enabled&quot;</span>: <span class="t-string">&quot;boolean | null&quot;</span>
+  }
+}</code></pre>
+<p>Invariants:</p>
+<ul><li><p><code>agent_id</code> MUST exist and belong to <code>user_id</code>.</p></li><li><p><code>version</code> MUST be unique per <code>agent_id</code> and monotonic increasing (enforced by UNIQUE constraint).</p></li><li><p><code>status</code> transitions:</p></li><li><p><code>deploying</code> -&gt; <code>active</code> OR <code>failed</code></p></li><li><p><code>active</code> may become <code>rolled_back</code> when another deployment becomes active (optional bookkeeping)</p></li><li><p><code>provider_ref</code> must align with <code>runtime_provider</code> (only one non-null once deployed).</p></li></ul>
+<p>RLS policies:</p>
+<pre data-lang="sql"><code>ALTER TABLE deployments ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY deployments_select_own ON deployments
+  FOR SELECT USING (user_id = auth.uid());
+
+-- Insert/update restricted to server-side (service_role) via Edge Functions
+-- No client INSERT/UPDATE policies; use service_role key in Edge Functions</code></pre>
+<p>Access control:</p>
+<ul><li><p>User can list and read deployments for their own agents.</p></li><li><p>Only server-side code (Edge Functions with <code>service_role</code> key) can create deployments.</p></li><li><p><code>provider_ref</code>, <code>status</code>, and <code>error_message</code> updates MUST be server-only.</p></li></ul>
+<h4 id="blk-46992">4.4 <code>metrics_events</code> (raw telemetry, append-only)</h4>
+<p>Stores per-invocation telemetry events. This is the &quot;source of truth&quot; for usage aggregation.</p>
+<pre data-lang="sql"><code>CREATE TABLE metrics_events (
+  id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id             uuid NOT NULL REFERENCES users(id),
+  agent_id            uuid NOT NULL REFERENCES agents(id),
+  deployment_id       uuid REFERENCES deployments(id),
+  runtime_provider    runtime_provider NOT NULL,
+  timestamp           timestamptz NOT NULL,
+  requests            integer NOT NULL DEFAULT 1,
+  llm_tokens          integer NOT NULL DEFAULT 0,
+  compute_ms          integer NOT NULL DEFAULT 0,
+  errors              integer NOT NULL DEFAULT 0,
+  error_class         error_class,
+  trace_id            text,
+  provider            jsonb NOT NULL DEFAULT '{}',
+  cost_usd_estimated  numeric(12,6) NOT NULL DEFAULT 0,
+  bucket_key          text,
+  ingest_source       text,
+  ingest_deployment_key_id text,
+  created_at          timestamptz NOT NULL DEFAULT now()
+);
+
+-- Indexes (MUST)
+CREATE INDEX idx_metrics_events_user_id_timestamp ON metrics_events (user_id, timestamp DESC);
+CREATE INDEX idx_metrics_events_agent_id_timestamp ON metrics_events (agent_id, timestamp DESC);
+
+-- Indexes (SHOULD)
+CREATE INDEX idx_metrics_events_deployment_id_timestamp ON metrics_events (deployment_id, timestamp DESC)
+  WHERE deployment_id IS NOT NULL;
+
+-- Indexes (MAY)
+CREATE INDEX idx_metrics_events_user_id_bucket_key ON metrics_events (user_id, bucket_key)
+  WHERE bucket_key IS NOT NULL;</code></pre>
+<p><code>provider</code> JSONB structure:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;cloudflare&quot;</span>: {
+    <span class="t-key">&quot;durable_object_ops&quot;</span>: <span class="t-string">&quot;number | null&quot;</span>,
+    <span class="t-key">&quot;workers_ai_calls&quot;</span>: <span class="t-string">&quot;number | null&quot;</span>
+  },
+  <span class="t-key">&quot;agentcore&quot;</span>: {
+    <span class="t-key">&quot;session_duration_ms&quot;</span>: <span class="t-string">&quot;number | null&quot;</span>,
+    <span class="t-key">&quot;tool_invocations&quot;</span>: <span class="t-string">&quot;number | null&quot;</span>,
+    <span class="t-key">&quot;browser_interactions&quot;</span>: <span class="t-string">&quot;number | null&quot;</span>
+  }
+}</code></pre>
+<p>Invariants:</p>
+<ul><li><p>Events are append-only.</p></li><li><p><code>user_id</code> and <code>agent_id</code> MUST match actual ownership at the time of ingestion:</p></li><li><p>control plane MUST validate that <code>agents.user_id == user_id</code>.</p></li><li><p>If <code>deployment_id</code> is present:</p></li><li><p>control plane MUST validate <code>deployments.agent_id == agent_id</code> and <code>deployments.user_id == user_id</code>.</p></li></ul>
+<p>RLS policies:</p>
+<pre data-lang="sql"><code>ALTER TABLE metrics_events ENABLE ROW LEVEL SECURITY;
+
+-- Users can read their own metrics
+CREATE POLICY metrics_events_select_own ON metrics_events
+  FOR SELECT USING (user_id = auth.uid());
+
+-- Inserts are server-only (telemetry ingestion Edge Function with service_role)
+-- No client INSERT policy</code></pre>
+<p>Access control:</p>
+<ul><li><p>Users can query aggregated views derived from metrics; direct raw access MAY be allowed but SHOULD be restricted:</p></li><li><p>If exposing raw events, ensure tenant checks (RLS) and pagination limits.</p></li><li><p>Inserts into <code>metrics_events</code> MUST be server-only via telemetry ingestion Edge Function with signature verification.</p></li></ul>
+<p>Retention:</p>
+<ul><li><p>Raw events SHOULD be retained by tier:</p></li><li><p>free: 7 days</p></li><li><p>starter: 14 days</p></li><li><p>pro: 30 days</p></li><li><p>enterprise: 90+ days (or configurable)</p></li><li><p>Aggregated usage MUST be retained longer (see <code>billing_usage</code>).</p></li><li><p>Retention SHOULD be enforced via <strong>pg_cron</strong> scheduled jobs (see section 6.3).</p></li></ul>
+<h4 id="blk-47035">4.5 <code>billing_usage</code> (aggregated usage per billing period)</h4>
+<p>Stores per-user aggregate usage for a billing period (e.g., monthly).</p>
+<pre data-lang="sql"><code>CREATE TABLE billing_usage (
+  id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id             uuid NOT NULL REFERENCES users(id),
+  period_key          text NOT NULL,
+  period_start        timestamptz NOT NULL,
+  period_end          timestamptz NOT NULL,
+  totals              jsonb NOT NULL DEFAULT '{}',
+  by_runtime          jsonb NOT NULL DEFAULT '{}',
+  last_aggregated_at  timestamptz NOT NULL DEFAULT now(),
+  paid                boolean NOT NULL DEFAULT false,
+  invoice_id          text,
+  created_at          timestamptz NOT NULL DEFAULT now(),
+  updated_at          timestamptz NOT NULL DEFAULT now(),
+
+  CONSTRAINT billing_usage_unique_user_period UNIQUE (user_id, period_key)
+);
+
+-- Indexes
+CREATE INDEX idx_billing_usage_user_id_period_key ON billing_usage (user_id, period_key);
+CREATE INDEX idx_billing_usage_period_key ON billing_usage (period_key);</code></pre>
+<p><code>totals</code> JSONB structure:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;requests&quot;</span>: <span class="t-string">&quot;number&quot;</span>,
+  <span class="t-key">&quot;tokens&quot;</span>: <span class="t-string">&quot;number&quot;</span>,
+  <span class="t-key">&quot;compute_ms&quot;</span>: <span class="t-string">&quot;number&quot;</span>,
+  <span class="t-key">&quot;cost_usd_estimated&quot;</span>: <span class="t-string">&quot;number&quot;</span>
+}</code></pre>
+<p><code>by_runtime</code> JSONB structure:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;cloudflare&quot;</span>: { <span class="t-key">&quot;requests&quot;</span>: <span class="t-num">0</span>, <span class="t-key">&quot;tokens&quot;</span>: <span class="t-num">0</span>, <span class="t-key">&quot;compute_ms&quot;</span>: <span class="t-num">0</span>, <span class="t-key">&quot;cost_usd_estimated&quot;</span>: <span class="t-num">0</span> },
+  <span class="t-key">&quot;agentcore&quot;</span>: { <span class="t-key">&quot;requests&quot;</span>: <span class="t-num">0</span>, <span class="t-key">&quot;tokens&quot;</span>: <span class="t-num">0</span>, <span class="t-key">&quot;compute_ms&quot;</span>: <span class="t-num">0</span>, <span class="t-key">&quot;cost_usd_estimated&quot;</span>: <span class="t-num">0</span> }
+}</code></pre>
+<p>Invariants:</p>
+<ul><li><p>One row per <code>(user_id, period_key)</code> (enforced by UNIQUE constraint).</p></li><li><p>Aggregation should be idempotent and can be recomputed.</p></li></ul>
+<p>RLS policies:</p>
+<pre data-lang="sql"><code>ALTER TABLE billing_usage ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY billing_usage_select_own ON billing_usage
+  FOR SELECT USING (user_id = auth.uid());
+
+-- Writes are server-only (aggregation job via service_role)</code></pre>
+<p>Access control:</p>
+<ul><li><p>User can read their own <code>billing_usage</code>.</p></li><li><p>Writes are server-only (Edge Function aggregation job, billing webhook handler).</p></li></ul>
+<h4 id="blk-47056">4.6 <code>subscriptions</code> (optional but recommended for clarity)</h4>
+<p>Tracks subscription lifecycle independent of <code>users.subscription_tier</code>.</p>
+<pre data-lang="sql"><code>CREATE TABLE subscriptions (
+  id                        uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id                   uuid NOT NULL REFERENCES users(id),
+  provider                  billing_provider NOT NULL DEFAULT 'lemonsqueezy',
+  provider_customer_id      text,
+  provider_subscription_id  text,
+  status                    subscription_status NOT NULL DEFAULT 'active',
+  tier                      subscription_tier NOT NULL DEFAULT 'free',
+  current_period_start      timestamptz,
+  current_period_end        timestamptz,
+  created_at                timestamptz NOT NULL DEFAULT now(),
+  updated_at                timestamptz NOT NULL DEFAULT now()
+);
+
+-- Indexes
+CREATE INDEX idx_subscriptions_user_id ON subscriptions (user_id);
+CREATE UNIQUE INDEX idx_subscriptions_provider_subscription_id
+  ON subscriptions (provider_subscription_id) WHERE provider_subscription_id IS NOT NULL;</code></pre>
+<p>Invariants:</p>
+<ul><li><p>At most one active subscription per user in v1.</p></li></ul>
+<p>RLS policies:</p>
+<pre data-lang="sql"><code>ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY subscriptions_select_own ON subscriptions
+  FOR SELECT USING (user_id = auth.uid());
+
+-- Writes are server-only (webhook handler via service_role)</code></pre>
+<p>Access control:</p>
+<ul><li><p>User can read their own subscription record.</p></li><li><p>Writes are server-only (webhook handler).</p></li></ul>
+<h4 id="blk-47071">4.7 <code>audit_log</code> (append-only)</h4>
+<p>Records privileged actions for auditability.</p>
+<pre data-lang="sql"><code>CREATE TABLE audit_log (
+  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id         uuid NOT NULL REFERENCES users(id),
+  actor_user_id   uuid NOT NULL REFERENCES users(id),
+  action          text NOT NULL,
+  target          jsonb,
+  metadata        jsonb,
+  trace_id        text,
+  created_at      timestamptz NOT NULL DEFAULT now()
+);
+
+-- Indexes
+CREATE INDEX idx_audit_log_user_id_created_at ON audit_log (user_id, created_at DESC);
+CREATE INDEX idx_audit_log_action_created_at ON audit_log (action, created_at DESC);</code></pre>
+<p>Action values (normative enum, enforced in application code):</p>
+<ul><li><p><code>agent.create</code></p></li><li><p><code>agent.update</code></p></li><li><p><code>agent.disable</code></p></li><li><p><code>agent.delete</code></p></li><li><p><code>deployment.create</code></p></li><li><p><code>deployment.status_update</code></p></li><li><p><code>deployment.activate</code></p></li><li><p><code>billing.checkout_created</code></p></li><li><p><code>billing.webhook_processed</code></p></li><li><p><code>secrets.set</code></p></li><li><p><code>telemetry.rejected</code></p></li></ul>
+<p>RLS policies:</p>
+<pre data-lang="sql"><code>ALTER TABLE audit_log ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY audit_log_select_own ON audit_log
+  FOR SELECT USING (user_id = auth.uid());
+
+-- Writes are server-only (service_role)</code></pre>
+<p>Access control:</p>
+<ul><li><p>User can read their own audit log (optional UI).</p></li><li><p>Writes are server-only.</p></li></ul>
+<h3 id="blk-47106">5) Indexing guidance (PostgreSQL specifics)</h3>
+<p>PostgreSQL indexes should be selected to support the core query paths:</p>
+<ul><li><p>list agents by user</p></li><li><p>list deployments by agent in descending time order</p></li><li><p>query metrics by agent and time range</p></li><li><p>query usage by period</p></li><li><p>find user by <code>auth.uid()</code> (PK lookup, no index needed)</p></li></ul>
+<p>Required index set (minimum):</p>
+<ul><li><p><code>agents.idx_agents_user_id</code></p></li><li><p><code>deployments.idx_deployments_agent_id_created_at</code></p></li><li><p><code>deployments.idx_deployments_agent_id_version</code></p></li><li><p><code>metrics_events.idx_metrics_events_user_id_timestamp</code></p></li><li><p><code>metrics_events.idx_metrics_events_agent_id_timestamp</code></p></li><li><p><code>billing_usage.idx_billing_usage_user_id_period_key</code></p></li></ul>
+<p>Recommended additions:</p>
+<ul><li><p><code>agents.idx_agents_user_id_name</code> (uniqueness and quick lookup)</p></li><li><p><code>deployments.idx_deployments_user_id_created_at</code> (support/admin)</p></li><li><p><code>metrics_events.idx_metrics_events_deployment_id_timestamp</code> (deployment drill-down)</p></li><li><p><code>subscriptions.idx_subscriptions_provider_subscription_id</code></p></li></ul>
+<p>Partial indexes (WHERE clauses) SHOULD be used where applicable to reduce index size:</p>
+<ul><li><p><code>idx_agents_user_id_name</code> uses <code>WHERE deleted_at IS NULL</code> to exclude soft-deleted agents.</p></li><li><p><code>idx_metrics_events_deployment_id_timestamp</code> uses <code>WHERE deployment_id IS NOT NULL</code>.</p></li></ul>
+<h3 id="blk-47149">6) Access control requirements (Supabase RLS + Edge Functions)</h3>
+<h4 id="blk-47150">6.1 General rule</h4>
+<p>Every query that reads/writes tenant-owned data MUST be protected by RLS policies that enforce:</p>
+<ol><li><p><code>auth.uid()</code> is non-null (user is authenticated),</p></li><li><p><code>resource.user_id = auth.uid()</code> before returning or modifying.</p></li></ol>
+<p>For client-side queries via Supabase client (<code>anon</code> key), RLS provides automatic tenant isolation.</p>
+<p>For server-side operations (Edge Functions using <code>service_role</code> key), RLS is bypassed intentionally. These functions MUST still validate ownership in application code.</p>
+<h4 id="blk-47159">6.2 Server-only operations</h4>
+<p>The following MUST be implemented as Supabase Edge Functions using the <code>service_role</code> key and MUST NOT be callable directly from untrusted clients:</p>
+<ul><li><p>deployment orchestration and provider API calls</p></li><li><p>subscription webhook processing</p></li><li><p>telemetry ingestion and signature verification</p></li><li><p>cost calculation and aggregation writes</p></li><li><p>secrets storage/injection into providers (via Supabase Vault)</p></li></ul>
+<h4 id="blk-47172">6.3 Allowed client operations (MVP)</h4>
+<p>Client may call (authenticated via Supabase Auth, protected by RLS):</p>
+<ul><li><p><code>agents</code>: create, update, list, get, disable, delete (soft)</p></li><li><p><code>deployments</code>: list, get, activate (but provider calls must happen in Edge Functions)</p></li><li><p><code>billing_usage</code>: read own usage</p></li><li><p><code>metrics_events</code>: read own metrics (paginated)</p></li><li><p><code>subscriptions</code>: read own subscription</p></li></ul>
+<h4 id="blk-47185">6.4 Preventing confused deputy</h4>
+<p>For any Edge Function that accepts <code>{ user_id, agent_id, deployment_id }</code> in the request:</p>
+<ul><li><p>server MUST derive <code>user_id</code> from auth context (<code>auth.uid()</code> or JWT), not from client input</p></li><li><p>server MUST verify <code>agent_id</code> belongs to that user</p></li><li><p>if <code>deployment_id</code> provided, verify it belongs to <code>agent_id</code> and user</p></li></ul>
+<h4 id="blk-47194">6.5 Telemetry ingestion authorization</h4>
+<p>Telemetry ingestion MUST NOT rely on user auth cookies/JWTs. Instead it MUST use:</p>
+<ul><li><p>deployment-scoped secret signature verification, AND</p></li><li><p>cross-check ownership against DB (agent belongs to user; deployment belongs to agent).</p></li></ul>
+<p>Rejected telemetry SHOULD be recorded to <code>audit_log</code> with sanitized metadata.</p>
+<h3 id="blk-47202">7) Deletion and retention semantics</h3>
+<h4 id="blk-47203">7.1 Soft delete (recommended)</h4>
+<p>For <code>agents</code>:</p>
+<ul><li><p>set <code>deleted_at</code> and <code>status='disabled'</code></p></li><li><p>invocations MUST fail with <code>NOT_FOUND</code> or <code>UNAUTHORIZED</code> semantics (choose consistent behavior; prefer <code>NOT_FOUND</code> to avoid leakage)</p></li><li><p>UI hides deleted agents by default (partial index on <code>deleted_at IS NULL</code>)</p></li></ul>
+<p>For related resources:</p>
+<ul><li><p>deployments MAY be retained for audit for some time, but should be excluded from default lists if agent deleted (implementation choice).</p></li><li><p>metrics_events retention policy continues independently.</p></li></ul>
+<h4 id="blk-47218">7.2 Hard delete (optional)</h4>
+<p>If implementing hard deletes:</p>
+<ul><li><p>ensure cascading deletion is safe and does not violate audit requirements</p></li><li><p>ensure provider resources are deprovisioned best-effort</p></li></ul>
+<h4 id="blk-47225">7.3 Retention jobs (pg_cron)</h4>
+<p>A <strong>pg_cron</strong> scheduled job SHOULD:</p>
+<ul><li><p>delete <code>metrics_events</code> older than retention for that user's tier</p></li><li><p>optionally compact metrics into daily/hourly aggregates (post-v1)</p></li><li><p>keep <code>billing_usage</code> for at least 13 months (recommended) regardless of tier (or per tier)</p></li></ul>
+<p>Example pg_cron retention job:</p>
+<pre data-lang="sql"><code>-- Schedule daily at 03:00 UTC
+SELECT cron.schedule('metrics-retention', '0 3 * * *', $$
+  DELETE FROM metrics_events
+  WHERE created_at &lt; now() - interval '7 days'
+    AND user_id IN (SELECT id FROM users WHERE subscription_tier = 'free');
+
+  DELETE FROM metrics_events
+  WHERE created_at &lt; now() - interval '14 days'
+    AND user_id IN (SELECT id FROM users WHERE subscription_tier = 'starter');
+
+  DELETE FROM metrics_events
+  WHERE created_at &lt; now() - interval '30 days'
+    AND user_id IN (SELECT id FROM users WHERE subscription_tier = 'pro');
+
+  DELETE FROM metrics_events
+  WHERE created_at &lt; now() - interval '90 days'
+    AND user_id IN (SELECT id FROM users WHERE subscription_tier = 'enterprise');
+$$);</code></pre>
+<p>A <strong>pg_cron</strong> aggregation job SHOULD:</p>
+<ul><li><p>compute and upsert <code>billing_usage</code> rows periodically.</p></li></ul>
+<p>Example pg_cron aggregation job:</p>
+<pre data-lang="sql"><code>-- Schedule hourly
+SELECT cron.schedule('billing-aggregation', '0 * * * *', $$
+  INSERT INTO billing_usage (user_id, period_key, period_start, period_end, totals, by_runtime, last_aggregated_at)
+  SELECT
+    user_id,
+    to_char(timestamp, 'YYYY-MM') AS period_key,
+    date_trunc('month', timestamp) AS period_start,
+    date_trunc('month', timestamp) + interval '1 month' AS period_end,
+    jsonb_build_object(
+      'requests', SUM(requests),
+      'tokens', SUM(llm_tokens),
+      'compute_ms', SUM(compute_ms),
+      'cost_usd_estimated', SUM(cost_usd_estimated)
+    ),
+    '{}'::jsonb,
+    now()
+  FROM metrics_events
+  WHERE timestamp &gt;= date_trunc('month', now())
+  GROUP BY user_id, to_char(timestamp, 'YYYY-MM'), date_trunc('month', timestamp)
+  ON CONFLICT (user_id, period_key) DO UPDATE SET
+    totals = EXCLUDED.totals,
+    by_runtime = EXCLUDED.by_runtime,
+    last_aggregated_at = EXCLUDED.last_aggregated_at,
+    updated_at = now();
+$$);</code></pre>
+<h3 id="blk-47242">8) Aggregation guidance (billing_usage)</h3>
+<h4 id="blk-47243">8.1 Period standard</h4>
+<p>Choose one billing period scheme:</p>
+<ul><li><p>Monthly calendar (recommended for v1 simplicity): <code>period_key = YYYY-MM</code>.</p></li><li><p>Or subscription-aligned period (more accurate but more complex).</p></li></ul>
+<p>v1 recommendation:</p>
+<ul><li><p>Use monthly <code>YYYY-MM</code> keys.</p></li><li><p>If subscription billing periods differ, reconcile later.</p></li></ul>
+<h4 id="blk-47256">8.2 Aggregation strategy</h4>
+<p>A server job (pg_cron or Edge Function cron) MUST:</p>
+<ul><li><p>compute totals by scanning <code>metrics_events</code> in the period window</p></li><li><p>write/update <code>billing_usage</code> idempotently for <code>(user_id, period_key)</code> using <code>ON CONFLICT ... DO UPDATE</code></p></li><li><p>record <code>last_aggregated_at</code></p></li></ul>
+<p>Optimization (recommended):</p>
+<ul><li><p>maintain incremental counters (e.g., per-day aggregates) to avoid scanning large raw tables repeatedly.</p></li></ul>
+<h4 id="blk-47269">8.3 Idempotency</h4>
+<p>Aggregation MUST be safe to rerun:</p>
+<ul><li><p>recompute and overwrite totals using <code>ON CONFLICT ... DO UPDATE</code>, OR</p></li><li><p>use a checkpoint cursor and update incrementally with a stored watermark.</p></li></ul>
+<h3 id="blk-47276">9) Deployment versioning strategy</h3>
+<h4 id="blk-47277">9.1 Version assignment</h4>
+<p><code>deployments.version</code> MUST be monotonic per agent. Implementation options:</p>
+<ol><li><p>Use a subquery <code>SELECT COALESCE(MAX(version), 0) + 1 FROM deployments WHERE agent_id = $1</code> within a transaction with <code>SERIALIZABLE</code> or advisory lock.</p></li><li><p>Maintain <code>agents.next_deployment_version</code> counter (recommended for concurrency safety).</p></li></ol>
+<h4 id="blk-47284">9.2 Concurrency</h4>
+<p>If two deployments start simultaneously:</p>
+<ul><li><p>one MUST win version assignment</p></li><li><p>the other MUST retry or fail with <code>CONFLICT</code> depending on desired UX</p></li><li><p>The <code>UNIQUE(agent_id, version)</code> constraint provides a safety net.</p></li></ul>
+<p>v1 recommendation:</p>
+<ul><li><p>prevent concurrent deploys per agent (<code>agents.status='deploying'</code> guard) to simplify.</p></li></ul>
+<h3 id="blk-47297">10) Schema validation requirements</h3>
+<h4 id="blk-47298">10.1 Enums</h4>
+<p>Store enums as PostgreSQL <code>ENUM</code> types or <code>text</code> with CHECK constraints; validate on write.</p>
+<h4 id="blk-47300">10.2 Limits</h4>
+<p>Enforce reasonable max sizes via CHECK constraints:</p>
+<ul><li><p><code>agents.name</code>: 64 chars</p></li><li><p><code>agents.description</code>: 4000 chars (optional)</p></li><li><p><code>agents.env_var_keys</code>: max 128 keys</p></li><li><p><code>metrics_events</code>: enforce payload size limits at ingestion (Edge Function validation)</p></li></ul>
+<h4 id="blk-47311">10.3 Sanitization</h4>
+<p><code>error_message</code> and <code>audit_log.metadata</code> MUST be sanitized:</p>
+<ul><li><p>no secret values</p></li><li><p>no raw provider credential strings</p></li><li><p>no stack traces unless safely redacted and gated</p></li></ul>
+<h3 id="blk-47320">11) Example query patterns (implementation hints)</h3>
+<h4 id="blk-47321">11.1 Resolve user from identity</h4>
+<pre data-lang="sql"><code>-- On first login, upsert user
+INSERT INTO users (id, email)
+VALUES (auth.uid(), 'user@example.com')
+ON CONFLICT (id) DO NOTHING
+RETURNING *;
+
+-- Or simply select (RLS ensures only own row)
+SELECT * FROM users WHERE id = auth.uid();</code></pre>
+<h4 id="blk-47323">11.2 List agents</h4>
+<pre data-lang="sql"><code>SELECT * FROM agents
+WHERE user_id = auth.uid() AND deleted_at IS NULL
+ORDER BY updated_at DESC;</code></pre>
+<h4 id="blk-47325">11.3 List deployments for an agent</h4>
+<pre data-lang="sql"><code>SELECT * FROM deployments
+WHERE agent_id = $1 AND user_id = auth.uid()
+ORDER BY created_at DESC
+LIMIT 20;</code></pre>
+<h4 id="blk-47327">11.4 Metrics time range for an agent</h4>
+<pre data-lang="sql"><code>SELECT
+  date_trunc('hour', timestamp) AS bucket,
+  SUM(requests) AS requests,
+  SUM(llm_tokens) AS tokens,
+  SUM(compute_ms) AS compute_ms,
+  SUM(cost_usd_estimated) AS cost
+FROM metrics_events
+WHERE agent_id = $1
+  AND user_id = auth.uid()
+  AND timestamp BETWEEN $2 AND $3
+GROUP BY bucket
+ORDER BY bucket;</code></pre>
+<h4 id="blk-47329">11.5 Current period usage</h4>
+<pre data-lang="sql"><code>SELECT * FROM billing_usage
+WHERE user_id = auth.uid()
+  AND period_key = to_char(now(), 'YYYY-MM');</code></pre>
+<h3 id="blk-47331">12) Updated_at trigger</h3>
+<p>All mutable tables SHOULD use a trigger to automatically set <code>updated_at</code>:</p>
+<pre data-lang="sql"><code>CREATE OR REPLACE FUNCTION set_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_users_updated_at
+  BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_agents_updated_at
+  BEFORE UPDATE ON agents FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_billing_usage_updated_at
+  BEFORE UPDATE ON billing_usage FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_subscriptions_updated_at
+  BEFORE UPDATE ON subscriptions FOR EACH ROW EXECUTE FUNCTION set_updated_at();</code></pre>
+<h3 id="blk-47334">13) Security checklist (data model)</h3>
+<ul><li><p>[ ] No plaintext secrets stored in any table (use Supabase Vault).</p></li><li><p>[ ] <code>user_id</code> present on all tenant-owned tables for RLS enforcement.</p></li><li><p>[ ] RLS enabled on all application tables with <code>auth.uid()</code> policies.</p></li><li><p>[ ] Telemetry ingestion requires signature verification and ownership cross-check (Edge Function with <code>service_role</code>).</p></li><li><p>[ ] Audit log captures deploy/billing/secrets actions without leaking secrets.</p></li><li><p>[ ] Soft delete prevents data leaks and preserves auditability.</p></li><li><p>[ ] Server-only mutations use <code>service_role</code> key (bypasses RLS intentionally).</p></li><li><p>[ ] pg_cron handles retention and aggregation jobs.</p></li><li><p>[ ] Supabase Vault stores all sensitive credentials.</p></li></ul></div>
+<p class="src"><a href="/#/WebHost.Systems/docs/spec/30_DATA_MODEL_SUPABASE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-46811" class="lvl2">1) Design goals</a><a href="#blk-46812" class="lvl3">1.1 Goals</a><a href="#blk-46829" class="lvl3">1.2 Non-goals</a><a href="#blk-46835" class="lvl2">2) Cross-cutting conventions</a><a href="#blk-46836" class="lvl3">2.1 IDs and references</a><a href="#blk-46844" class="lvl3">2.2 Time</a><a href="#blk-46856" class="lvl3">2.3 Immutability rules</a><a href="#blk-46872" class="lvl3">2.4 Multi-runtime modeling</a><a href="#blk-46884" class="lvl3">2.5 &quot;Active&quot; pointer</a><a href="#blk-46890" class="lvl3">2.6 Secrets</a><a href="#blk-46896" class="lvl2">3) Custom types</a><a href="#blk-46898" class="lvl2">4) Tables (normative)</a><a href="#blk-46901" class="lvl3">4.1 users</a><a href="#blk-46918" class="lvl3">4.2 agents</a><a href="#blk-46961" class="lvl3">4.3 deployments</a><a href="#blk-46992" class="lvl3">4.4 metrics_events (raw telemetry, append-only)</a><a href="#blk-47035" class="lvl3">4.5 billing_usage (aggregated usage per billing period)</a><a href="#blk-47056" class="lvl3">4.6 subscriptions (optional but recommended for clarity)</a><a href="#blk-47071" class="lvl3">4.7 audit_log (append-only)</a><a href="#blk-47106" class="lvl2">5) Indexing guidance (PostgreSQL specifics)</a><a href="#blk-47149" class="lvl2">6) Access control requirements (Supabase RLS + Edge Functions)</a><a href="#blk-47150" class="lvl3">6.1 General rule</a><a href="#blk-47159" class="lvl3">6.2 Server-only operations</a><a href="#blk-47172" class="lvl3">6.3 Allowed client operations (MVP)</a><a href="#blk-47185" class="lvl3">6.4 Preventing confused deputy</a><a href="#blk-47194" class="lvl3">6.5 Telemetry ingestion authorization</a><a href="#blk-47202" class="lvl2">7) Deletion and retention semantics</a><a href="#blk-47203" class="lvl3">7.1 Soft delete (recommended)</a><a href="#blk-47218" class="lvl3">7.2 Hard delete (optional)</a><a href="#blk-47225" class="lvl3">7.3 Retention jobs (pg_cron)</a><a href="#blk-47242" class="lvl2">8) Aggregation guidance (billing_usage)</a><a href="#blk-47243" class="lvl3">8.1 Period standard</a><a href="#blk-47256" class="lvl3">8.2 Aggregation strategy</a><a href="#blk-47269" class="lvl3">8.3 Idempotency</a><a href="#blk-47276" class="lvl2">9) Deployment versioning strategy</a><a href="#blk-47277" class="lvl3">9.1 Version assignment</a><a href="#blk-47284" class="lvl3">9.2 Concurrency</a><a href="#blk-47297" class="lvl2">10) Schema validation requirements</a><a href="#blk-47298" class="lvl3">10.1 Enums</a><a href="#blk-47300" class="lvl3">10.2 Limits</a><a href="#blk-47311" class="lvl3">10.3 Sanitization</a><a href="#blk-47320" class="lvl2">11) Example query patterns (implementation hints)</a><a href="#blk-47321" class="lvl3">11.1 Resolve user from identity</a><a href="#blk-47323" class="lvl3">11.2 List agents</a><a href="#blk-47325" class="lvl3">11.3 List deployments for an agent</a><a href="#blk-47327" class="lvl3">11.4 Metrics time range for an agent</a><a href="#blk-47329" class="lvl3">11.5 Current period usage</a><a href="#blk-47331" class="lvl2">12) Updated_at trigger</a><a href="#blk-47334" class="lvl2">13) Security checklist (data model)</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/spec/00_MASTER_SPEC.md/">webhost.systems — MASTER ENGINEERING SPEC (v1)</a><a href="/WebHost.Systems/docs/spec/10_API_CONTRACTS.md/">webhost.systems — API Contracts (v1)</a><a href="/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md/">webhost.systems — Runtime Provider Interface (RPI) &amp; Adapter Guidance (v1)</a><a href="/WebHost.Systems/docs/spec/40_SECURITY_SECRETS_COMPLIANCE.md/">webhost.systems — Security, Secrets, and Compliance (v1)</a><a href="/WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md/">webhost.systems — Observability, Metering, Cost, Tiers, and Limit Enforcement (v1)</a><a href="/WebHost.Systems/docs/spec/60_TESTING_ACCEPTANCE.md/">webhost.systems — Testing Plan &amp; Acceptance Criteria (v1)</a><a href="/WebHost.Systems/docs/spec/70_AMPERSAND_PROTOCOL_INTEGRATION.md/">webhost.systems — [&amp;] Protocol Integration Spec (v1)</a><a href="/WebHost.Systems/docs/spec/README.md/">webhost.systems — Spec v1 (Implementation-Ready Document Set)</a><a href="/WebHost.Systems/docs/spec/REALIGNMENT_PLAN.md/">webhost.systems — Spec-to-Implementation Realignment Plan (v1)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieralhrqu5onlyaxq3gzstfqinbkguzx3hpkzxhhskg43wdwaborngpa</div></div></div>
+</div></div>
+</body></html>

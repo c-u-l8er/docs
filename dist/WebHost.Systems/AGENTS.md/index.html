@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>WebHost.Systems · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="Node.js monorepo for an AI-driven web hosting platform. Convex serverless backend + Vite/React/Clerk frontend.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/AGENTS.md/">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebHost.Systems">
+<meta property="og:description" content="Node.js monorepo for an AI-driven web hosting platform. Convex serverless backend + Vite/React/Clerk frontend.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/AGENTS.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"WebHost.Systems","name":"WebHost.Systems","description":"Node.js monorepo for an AI-driven web hosting platform. Convex serverless backend + Vite/React/Clerk frontend.","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/AGENTS.md/","identifier":"bagaaieray2xdjh6x52fpkngva2ir2nrj7trz6iqe6l3xvkpfk737iudcejca","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Source-of-truth spec"},{"@type":"WebPageElement","name":"Build and test"},{"@type":"WebPageElement","name":"Development"},{"@type":"WebPageElement","name":"Structure"},{"@type":"WebPageElement","name":"[&] Protocol Integration"},{"@type":"WebPageElement","name":"Constraints"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"AGENTS.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/AGENTS.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/AGENTS.md</span>
+
+</div></div>
+<div class="lead">Node.js monorepo for an AI-driven web hosting platform. Convex serverless backend + Vite/React/Clerk frontend.</div>
+<div class="prose"><h1 id="blk-42467">WebHost.Systems</h1>
+<p>Node.js monorepo for an AI-driven web hosting platform. Convex serverless backend + Vite/React/Clerk frontend.</p>
+<h3 id="blk-42469">Source-of-truth spec</h3>
+<ul><li><p><code>docs/spec/00_MASTER_SPEC.md</code> — master engineering spec</p></li><li><p>Numbered section files (10-70) in same dir for API contracts, data model, security, billing, testing, and [&amp;] Protocol integration</p></li><li><p><code>docs/spec/adr/</code> — architecture decision records</p></li><li><p><code>docs/spec/progress/</code> — implementation progress logs</p></li></ul>
+<p>Read the master spec before implementing features.</p>
+<h3 id="blk-42480">Build and test</h3>
+<pre><code>npm install
+npm run typecheck
+npm run lint
+npm run format:check</code></pre>
+<h3 id="blk-42482">Development</h3>
+<pre><code>npm run dev           # Vite frontend dev server
+npm run convex:dev    # Convex backend dev mode</code></pre>
+<h3 id="blk-42484">Structure</h3>
+<ul><li><p><code>apps/web/</code> — Vite + React + Clerk dashboard</p></li><li><p><code>apps/control-plane/</code> — Convex serverless functions + Zod validation</p></li><li><p><code>packages/</code> — shared workspace packages</p></li></ul>
+<h3 id="blk-42492">[&amp;] Protocol Integration</h3>
+<p>WebHost.Systems is the hosting layer for [&amp;] Protocol agents. See <code>docs/spec/70_AMPERSAND_PROTOCOL_INTEGRATION.md</code> for:</p>
+<ul><li><p><code>ampersand.json</code> manifest support (capability declarations)</p></li><li><p>MCP sidecar orchestration (Graphonomous, TickTickClock, etc.)</p></li><li><p>Agent-to-agent skill routing (A2A)</p></li><li><p>Delegatic governance enforcement</p></li><li><p>Dynamic capability provider resolution</p></li></ul>
+<h3 id="blk-42505">Constraints</h3>
+<ul><li><p>Node &gt;= 20</p></li><li><p>TypeScript strict mode</p></li><li><p>ESLint + Prettier enforced</p></li><li><p>Convex functions live in <code>apps/control-plane/convex/</code></p></li><li><p>Clerk handles auth in the frontend</p></li></ul></div>
+<p class="src"><a href="/#/WebHost.Systems/AGENTS.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-42469" class="lvl2">Source-of-truth spec</a><a href="#blk-42480" class="lvl2">Build and test</a><a href="#blk-42482" class="lvl2">Development</a><a href="#blk-42484" class="lvl2">Structure</a><a href="#blk-42492" class="lvl2">[&amp;] Protocol Integration</a><a href="#blk-42505" class="lvl2">Constraints</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/CLAUDE.md/">WebHost.Systems</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieray2xdjh6x52fpkngva2ir2nrj7trz6iqe6l3xvkpfk737iudcejca</div></div></div>
+</div></div>
+</body></html>

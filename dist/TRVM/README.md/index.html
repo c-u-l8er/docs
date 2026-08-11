@@ -1,0 +1,137 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>TRVM — a coordination-free distributed interaction-calculus runtime · TRVM · Ampersand Box</title>
+<meta name="description" content="A correct, packed-word, WebAssembly reducer for the Interaction Calculus (the calculus HVM3/HVM4 implement), and the argument and evidence that its…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TRVM — a coordination-free distributed interaction-calculus runtime">
+<meta property="og:description" content="A correct, packed-word, WebAssembly reducer for the Interaction Calculus (the calculus HVM3/HVM4 implement), and the argument and evidence that its…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"TRVM — a coordination-free distributed interaction-calculus runtime","name":"TRVM — a coordination-free distributed interaction-calculus runtime","description":"A correct, packed-word, WebAssembly reducer for the Interaction Calculus (the calculus HVM3/HVM4 implement), and the argument and evidence that its…","url":"https://docs.ampersandboxdesign.com/TRVM/README.md/","identifier":"bagaaierakd7ch63jxdwcq5ttekx6ygss4vb7gdszsqysfhyvzluozc5ghagq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"The thesis in one paragraph"},{"@type":"WebPageElement","name":"Repository layout"},{"@type":"WebPageElement","name":"The arc (build order — each artifact is self-validating)"},{"@type":"WebPageElement","name":"Reproduce every result"},{"@type":"WebPageElement","name":"The layers above the runtime"},{"@type":"WebPageElement","name":"WRLM — the proposer"},{"@type":"WebPageElement","name":"Honesty notes (also in the paper)"},{"@type":"WebPageElement","name":"License"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/TRVM/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/README.md</span>
+
+</div></div>
+<div class="lead">A correct, packed-word, WebAssembly reducer for the Interaction Calculus (the calculus HVM3/HVM4 implement), and the argument and evidence that its reduction distributes across…</div>
+<div class="prose"><h1 id="blk-36803">TRVM — a coordination-free distributed interaction-calculus runtime</h1>
+<p>A correct, packed-word, <strong>WebAssembly</strong> reducer for the Interaction Calculus (the calculus HVM3/HVM4 implement), and the argument and evidence that its reduction <strong>distributes across machines with no locks and no consensus</strong>.</p>
+<blockquote><p><strong>Start with [`FINDINGS.md`](FINDINGS.md)</strong> — the legible synthesis: the surviving arc, what was demonstrated, what was investigated and falsified, and what is honestly open. Then <a href="#/TRVM/docs/spec/paper.md" data-link>`docs/spec/paper.md`</a> for the runtime in full and <a href="research/INCRDT.md" target="_blank" rel="noopener">`research/INCRDT.md`</a> for the identity/memory thread. This README is the file map and reproduction guide. Where any older note disagrees, <code>FINDINGS.md</code>, <code>docs/spec/paper.md</code>, and this README are canonical.</p></blockquote>
+<h3 id="blk-36807">The thesis in one paragraph</h3>
+<p>Interaction-net reduction is confluent by construction, which makes single-net reduction <em>schedule-independent</em>: if the order redexes fire does not change the result, then <em>which machine</em> fires a redex and <em>when</em> does not change the result of a fixed net either. Coordination-freedom <strong>across machines</strong> additionally rests on the boundary-port discipline (owner-only rewrite over monotone, never-retracting exports; see <code>spec/paper.md</code> §4.5) — confluence licenses the schedule-independence, that discipline licenses the coordination-freedom. Together they let a single computation be sharded across nodes and reduced without locks or consensus. <strong>Reduction is the data plane and needs no coordination; only termination is ever a control-plane question — and only in the autonomous regime.</strong> On a WebAssembly substrate, the same runtime runs in any browser with no server, so &quot;multi-node&quot; means browser/edge/client-side — the sovereign substrate an open agent stack wants.</p>
+<h3 id="blk-36809">Repository layout</h3>
+<pre><code>docs/spec/                  SOURCE OF TRUTH for any new implementation
+  SPEC.md                   normative 64-bit tagged-word runtime spec
+  paper.md                  the runtime, in full (authoritative writeup)
+  RELATED_WORK.md           prior-art map; bounds novelty honestly
+  conformance/
+    README.md               how an implementation proves conformance
+    vectors/*.json          language-agnostic test vectors (run by any impl)
+
+runtime/                    the reduction engine — one subdir per implementation
+  python/                   reference + oracle (ic_ref, ic_float) + foundations (inet, p2)
+    conformance.py          runs docs/spec/conformance/vectors against this implementation
+  c/                        ic32.c — packed-word native runtime (`./ic32 --test` → 13/13)
+  wasm/                     ic32_wasm.c, ic32.wasm (9.9KB), wrun.js, build.sh
+  js/                       swarm.js — ic32.wasm coordination-free across worker_threads
+  zig/                      ic32.zig — third native implementation
+  mojo/                     ic32.mojo — fourth native implementation
+
+bench/                      cross-runtime benchmark over famous math problems
+  bench.py terms.py nf_equiv.py results.json README.md
+
+distribution/               coordination-free protocol artifacts
+  dist_ic.py dist_real.py parallel.py dsearch.py share_win.py
+
+forge/                      WRL Forge — the world authoring/sealing toolchain that sits
+                            on top of the runtime (identity spine, Spinner Bench, project
+                            store); see forge/README.md and forge/FORGE_ARCHITECTURE.md
+
+wrlm/                       WRLM — the proposer above the sealed substrate (see below)
+
+research/                   the identity / computational-memory thread (the result)
+  INCRDT.md incrdt*.py slotted*.py compmem*.py semilattice.py …
+
+site/                       trvm.dev static site
+tools/                      laws_check.py — citation-consistency checker for LAWS.md
+
+attic/                      superseded / forward-looking, kept for the record
+  lc2.py linet.py DESIGN.md plan.py world.py</code></pre>
+<p>The clean multi-implementation axis is <strong>the runtime</strong>: <code>docs/spec/</code> plus <code>docs/spec/conformance/vectors</code> is the contract a future Rust/Go implementation targets; each <code>runtime/&lt;lang&gt;</code> proves conformance against the same vectors.</p>
+<h3 id="blk-36812">The arc (build order — each artifact is self-validating)</h3>
+<pre><code>runtime/python/ic_ref.py     correct reducer (fixes the higher-order-dup bug class)
+   |
+runtime/python/ic_float.py   general reducer (floating dups); the oracle
+   |
+runtime/c/ic32.c             packed-word native runtime (optimal sharing; ~22–34 M int/s;
+   |                           self-validating via `./ic32 --test`)
+   |
+runtime/wasm/ic32.wasm       WebAssembly build (9.9 KB, matches the reference bit-for-bit)
+   |
+distribution/dist_ic.py      coordination-free distributed reduction — simulation (480 runs)
+   |
+distribution/dist_real.py    the same protocol on real OS processes over real IPC
+   |
+runtime/js/swarm.js          ic32.wasm coordination-free across real isolated workers  &lt;- capstone</code></pre>
+<h3 id="blk-36814">Reproduce every result</h3>
+<pre data-lang="bash"><code><span class="t-comment"># fastest: the whole battery</span>
+make test
+
+<span class="t-comment"># or piecemeal:</span>
+python3 runtime/python/ic_ref.py            <span class="t-comment"># reference rules</span>
+python3 runtime/python/ic_float.py          <span class="t-comment"># floating dups; 23 terms agree with the oracle</span>
+gcc<span class="t-flag"> -O2</span><span class="t-flag"> -o</span> runtime/c/ic32 runtime/c/ic32.c  <span class="t-comment"># native runtime</span>
+<span class="t-kw">echo</span> <span class="t-string">'λx.x'</span> | runtime/c/ic32
+
+<span class="t-comment"># WebAssembly (clang-15 + lld-15; no emscripten). Rebuilds the prebuilt ic32.wasm:</span>
+bash runtime/wasm/build.sh
+<span class="t-kw">echo</span> <span class="t-string">'λx.x'</span> | node runtime/wasm/wrun.js
+
+<span class="t-comment"># distribution</span>
+PYTHONPATH=runtime/python:distribution:research python3 distribution/dist_ic.py
+node runtime/js/swarm.js                     <span class="t-comment"># ic32.wasm coordination-free across worker_threads</span>
+
+<span class="t-comment"># identity / memory (the result)</span>
+PYTHONPATH=runtime/python:research python3 research/semilattice.py   <span class="t-comment"># ALL CONDITIONS HOLD</span></code></pre>
+<p>(<code>runtime/wasm/ic32.wasm</code> is committed prebuilt; <code>build.sh</code> rebuilds it.)</p>
+<h3 id="blk-36817">The layers above the runtime</h3>
+<p>The reducer is the bottom of a four-layer stack. Two of those layers live in this repository:</p>
+<table><thead><tr><th>Layer</th><th>What it does</th><th>Where</th></tr></thead><tbody><tr><td><strong>WRLM</strong></td><td><em>proposes</em> worlds — the only statistical component</td><td><code>wrlm/</code> (this repo)</td></tr><tr><td><strong>WRL</strong></td><td><em>seals</em> worlds into a <code>sem-</code> identity</td><td><a href="../WRL" target="_blank" rel="noopener">`WRL/`</a> · <code>forge/</code> (this repo)</td></tr><tr><td><strong>TRVM</strong></td><td><em>reduces</em> them deterministically</td><td><code>runtime/</code> (this repo)</td></tr><tr><td><strong>TRAAVIIS</strong></td><td><em>admits</em> episodes as evidence</td><td><a href="../TRAAVIIS" target="_blank" rel="noopener">`TRAAVIIS/`</a></td></tr></tbody></table>
+<p>Read that as one sentence: <strong>WRLM proposes, WRL seals, TRVM reduces, TRAAVIIS admits.</strong></p>
+<h4 id="blk-36836">WRLM — the proposer</h4>
+<p>Everything below WRLM is deliberately dumb: total, deterministic, content-addressed, non-statistical. <strong>WRLM is the only statistical component in the stack</strong> — an <em>admitted generative transducer</em>, a probabilistic proposer over deterministic sealed worlds. It is not a world model, not a memory system, and not a replacement for anything already shipped. TRAAVIIS <em>holds, seals, replays and admits</em> worlds; WRLM <em>authors</em> them under supervision. Substrate vs. cortex — neither absorbs the other.</p>
+<p>The architecture is <strong>Arm D′</strong>, and the trick is that the edit ops are <em>derived, not generated</em>:</p>
+<pre><code>model emits full WRL text
+  → host parses into an isolated candidate buffer
+  → diagnose_core
+  → seal  (candidate_sem_id)
+  → wrl_diff.semantic_diff(base, candidate)
+  → derived GraphEditV1 op sequence
+  → apply_edit(base, derived_ops)
+  → assert resulting_sem_id == candidate_sem_id</code></pre>
+<p>The model writes prose-like text (its strongest modality), but nothing reaches the world except through the six frozen typed ops and the existing <code>apply_edit</code> seam. <strong>No new runtime construct, no new identity rung.</strong></p>
+<p>Correctness is a ladder of four rungs — validity (does it parse, seal and lower), target identity (<code>sem-</code> equality), goal satisfaction (<code>GoalSpecV1</code> evaluation), and subjective quality. The first three are <em>total and free</em>. The fourth is <strong>out of scope</strong> and must never be smuggled in via an LLM judge.</p>
+<p><strong>Status: build-order steps 1 and 2 are shipped and closed; steps 3–10 are paper only.</strong> What exists in <code>wrlm/</code> today is <code>GoalSpecV1</code> (a closed serialized AST, not a language — decidable over bounded finite worlds by construction), <code>TaskBundleV1</code>, <code>WorldRecordV1</code>, the <code>worldview.py</code> engine adapter, <code>envelope.py</code>, a derived coverage domain (<code>wrlm.coverage.v1.2</code>, 320 published cells) and a 58-world proved pool inhabiting 298 of them. There is no model arm yet.</p>
+<p>Design of record: <a href="#/TRVM/WRLM_RESEARCH_BRIEF.md" data-link>`WRLM_RESEARCH_BRIEF.md`</a>. It supersedes nothing — WRL, TRVM, TRAAVIIS and Forge remain authoritative for their own layers.</p>
+<h3 id="blk-36844">Honesty notes (also in the paper)</h3>
+<ul><li><p><strong>No parallel speedup is demonstrated.</strong> Every distribution result is</p></li></ul>
+<p>coordination-free <em>correct</em>, not faster. Speedup needs the autonomous regime (re-entrant workers + the Safra detector from <code>runtime/python/p2.py</code>).</p>
+<ul><li><p><strong>Iterative normaliser/readback</strong> in both <code>ic32.c</code> and <code>ic32_wasm.c</code>; the WASM</p></li></ul>
+<p>build reaches depth 2^21 (2,097,152) matching the native runtimes. The WASM <em>parser</em> is still recursive (deep input, not deep output, is the remaining limit). Python's <code>ic_float</code> is still recursive and depth-limited.</p>
+<ul><li><p><strong>GC (Phases 1–2):</strong> <code>ic32.c</code> recycles consumed redex nodes via size-classed free</p></li></ul>
+<p>lists and propagates erasers at <code>APP-ERA</code>; <code>--gcstats</code> / <code>--erasestats</code> quantify it. Var-indirect / affine-unused leaks remain and are precisely characterized in <code>FINDINGS.md</code>.</p>
+<h3 id="blk-36857">License</h3>
+<p>Apache-2.0. See <a href="LICENSE" target="_blank" rel="noopener">`LICENSE`</a>.</p></div>
+<p class="src"><a href="/#/TRVM/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-36807" class="lvl2">The thesis in one paragraph</a><a href="#blk-36809" class="lvl2">Repository layout</a><a href="#blk-36812" class="lvl2">The arc (build order — each artifact is self-validating)</a><a href="#blk-36814" class="lvl2">Reproduce every result</a><a href="#blk-36817" class="lvl2">The layers above the runtime</a><a href="#blk-36836" class="lvl3">WRLM — the proposer</a><a href="#blk-36844" class="lvl2">Honesty notes (also in the paper)</a><a href="#blk-36857" class="lvl2">License</a></nav></div><div class="card"><div class="lab">links to</div><a href="/TRVM/docs/spec/paper.md/">A Coordination-Free Distributed Interaction-Calculus Runtime</a><a href="/TRVM/WRLM_RESEARCH_BRIEF.md/">WRLM Research Brief</a></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a><a href="/TRVM/WRL.md/">WallRiderLang (WRL) — Complete Design Draft</a><a href="/TRVM/WRLM_RESEARCH_BRIEF.md/">WRLM Research Brief</a><a href="/TRVM/WRL_CORE_0.1.md/">WRL Core 0.1.3 — Frozen Family Extract</a><a href="/TRVM/WRL_CORE_0.2.md/">WRL Core 0.2.1 — Frozen Family Extract</a><a href="/TRVM/WRL_LANGUAGE_TRACK_L0_CLOSURE_MEMO.md/">WallRiderLang — LANGUAGE TRACK, L-0 CLOSURE memo</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierakd7ch63jxdwcq5ttekx6ygss4vb7gdszsqysfhyvzluozc5ghagq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>RuneFort Interactive Layer — Build Order · runefort.com · Ampersand Box</title>
+<meta name="description" content="Six prompts that transform RuneFort from a static fort visualizer into an interactive playground with BYOK chat, MCP tool connections, token flow…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-BUILD-ORDER.md/">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RuneFort Interactive Layer — Build Order">
+<meta property="og:description" content="Six prompts that transform RuneFort from a static fort visualizer into an interactive playground with BYOK chat, MCP tool connections, token flow…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-BUILD-ORDER.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"RuneFort Interactive Layer — Build Order","name":"RuneFort Interactive Layer — Build Order","description":"Six prompts that transform RuneFort from a static fort visualizer into an interactive playground with BYOK chat, MCP tool connections, token flow…","url":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-BUILD-ORDER.md/","identifier":"bagaaiera22hy2j2ofunz77on54ew2jcxgxlbrzabh2iwxtqrgyo7k234f4hq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"runefort.com","url":"https://docs.ampersandboxdesign.com/runefort.com/"},"articleSection":"runefort.com","hasPart":[{"@type":"WebPageElement","name":"Overview"},{"@type":"WebPageElement","name":"Dependency Graph"},{"@type":"WebPageElement","name":"Recommended Session Plan"},{"@type":"WebPageElement","name":"Session A: Foundation (RFORT-1 + RFORT-2)"},{"@type":"WebPageElement","name":"Session B: Chat (RFORT-3)"},{"@type":"WebPageElement","name":"Session C: Token Flows (RFORT-4)"},{"@type":"WebPageElement","name":"Session D: Repo Import (RFORT-5)"},{"@type":"WebPageElement","name":"Session E: Workspaces (RFORT-6)"},{"@type":"WebPageElement","name":"Context for All Sessions"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"runefort.com","item":"https://docs.ampersandboxdesign.com/runefort.com/"},{"@type":"ListItem","position":3,"name":".claude","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/"},{"@type":"ListItem","position":4,"name":"prompts","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/"},{"@type":"ListItem","position":5,"name":"RFORT-BUILD-ORDER.md","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-BUILD-ORDER.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">runefort.com</span>
+<span class="path">runefort.com/.claude/prompts/RFORT-BUILD-ORDER.md</span>
+
+</div></div>
+<div class="lead">Six prompts that transform RuneFort from a static fort visualizer into an interactive playground with BYOK chat, MCP tool connections, token flow animations, repo import, and wo…</div>
+<div class="prose"><h1 id="blk-83150">RuneFort Interactive Layer — Build Order</h1>
+<h3 id="blk-83151">Overview</h3>
+<p>Six prompts that transform RuneFort from a static fort visualizer into an interactive playground with BYOK chat, MCP tool connections, token flow animations, repo import, and workspace management.</p>
+<h3 id="blk-83153">Dependency Graph</h3>
+<pre><code>RFORT-1 (BYOK) ──────┐
+                      ├── RFORT-3 (Chat) ── RFORT-4 (Token Flows)
+RFORT-2 (MCP) ───────┘
+RFORT-5 (Repo Import) ── standalone, uses fort generator
+RFORT-6 (Workspaces) ── standalone, uses auth + supabase</code></pre>
+<h3 id="blk-83155">Recommended Session Plan</h3>
+<h4 id="blk-83156">Session A: Foundation (RFORT-1 + RFORT-2)</h4>
+<p><strong>Prompt</strong>: &quot;Build RFORT-1 and RFORT-2. Read <code>.claude/prompts/RFORT-1_BYOK.md</code> and <code>.claude/prompts/RFORT-2_MCP.md</code> for full specs. These are the foundation — BYOK key storage and MCP proxy/client. Port patterns from <code>bendscript.com/src/lib/play/</code> and <code>bendscript.com/src/routes/api/play/mcp-proxy/</code>. Verify: API key modal opens, key persists in localStorage, MCP proxy forwards to graphonomous-mcp.fly.dev, tool discovery returns tools.&quot;</p>
+<h4 id="blk-83158">Session B: Chat (RFORT-3)</h4>
+<p><strong>Prompt</strong>: &quot;Build RFORT-3. Read <code>.claude/prompts/RFORT-3_CHAT.md</code> for full spec. Add the chat panel with tool-use loop. The chat should use the BYOK OpenRouter key (from RFORT-1), call MCP tools via the proxy (from RFORT-2), and execute built-in fort navigation tools that zoom/navigate the fort view. Verify: chat sends messages via OpenRouter, tool calls work (both MCP and built-in), fort navigation tools zoom the view.&quot;</p>
+<h4 id="blk-83160">Session C: Token Flows (RFORT-4)</h4>
+<p><strong>Prompt</strong>: &quot;Build RFORT-4. Read <code>.claude/prompts/RFORT-4_TOKENFLOWS.md</code> for full spec. Add animated particles on Svelte Flow edges representing token throughput. Include a benchmark simulation mode that cascades flows through PULSE phases. Verify: particles animate along edges, speed/color respond to metrics, simulation runs through all phases.&quot;</p>
+<h4 id="blk-83162">Session D: Repo Import (RFORT-5)</h4>
+<p><strong>Prompt</strong>: &quot;Build RFORT-5. Read <code>.claude/prompts/RFORT-5_REPO_IMPORT.md</code> for full spec. Add GitHub repo import that converts repository structure into a fort. Directories → rooms, files → tiles, package manifests → gates. Verify: paste a GitHub URL, import generates a navigable fort, zoom works on imported fort.&quot;</p>
+<h4 id="blk-83164">Session E: Workspaces (RFORT-6)</h4>
+<p><strong>Prompt</strong>: &quot;Build RFORT-6. Read <code>.claude/prompts/RFORT-6_WORKSPACES.md</code> for full spec. Add workspace switching tied to amp.workspaces. Each workspace shows its own district of saved forts. Verify: workspace dropdown shows user's workspaces, switching reloads forts, demo mode works without auth.&quot;</p>
+<h3 id="blk-83166">Context for All Sessions</h3>
+<ul><li><p><strong>Framework</strong>: SvelteKit 2.x + Svelte 5 (runes: <code>$state</code>, <code>$props</code>, <code>$effect</code>)</p></li><li><p><strong>Flow lib</strong>: <code>@xyflow/svelte</code> v1.5.0</p></li><li><p><strong>Style</strong>: Dark theme, zinc-900 bg, amber-400 accents</p></li><li><p><strong>SSR</strong>: Disabled on <code>/app</code> route (<code>export const ssr = false</code>)</p></li><li><p><strong>Supabase</strong>: Lazy client via <code>getSupabase()</code> (returns null during SSR)</p></li><li><p><strong>Existing code</strong>: Marketing site + 5-level fort editor already built (see <code>src/</code> tree)</p></li><li><p><strong>BendScript reference</strong>: The <code>/play</code> implementation in <code>bendscript.com/</code> is the proven pattern to port from</p></li></ul></div>
+<p class="src"><a href="/#/runefort.com/.claude/prompts/RFORT-BUILD-ORDER.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-83151" class="lvl2">Overview</a><a href="#blk-83153" class="lvl2">Dependency Graph</a><a href="#blk-83155" class="lvl2">Recommended Session Plan</a><a href="#blk-83156" class="lvl3">Session A: Foundation (RFORT-1 + RFORT-2)</a><a href="#blk-83158" class="lvl3">Session B: Chat (RFORT-3)</a><a href="#blk-83160" class="lvl3">Session C: Token Flows (RFORT-4)</a><a href="#blk-83162" class="lvl3">Session D: Repo Import (RFORT-5)</a><a href="#blk-83164" class="lvl3">Session E: Workspaces (RFORT-6)</a><a href="#blk-83166" class="lvl2">Context for All Sessions</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a></div><div class="card"><div class="lab">in this folder</div><a href="/runefort.com/.claude/prompts/RFORT-1_BYOK.md/">RFort-1: BYOK Modal + OpenRouter Key Storage</a><a href="/runefort.com/.claude/prompts/RFORT-2_MCP.md/">RFort-2: MCP Proxy + Client + Connection Panel</a><a href="/runefort.com/.claude/prompts/RFORT-3_CHAT.md/">RFort-3: Chat Panel with Fort-Aware Navigation</a><a href="/runefort.com/.claude/prompts/RFORT-4_TOKENFLOWS.md/">RFort-4: Token Flow Animations on Edges</a><a href="/runefort.com/.claude/prompts/RFORT-5_REPO_IMPORT.md/">RFort-5: Repo Import → Fort Generator</a><a href="/runefort.com/.claude/prompts/RFORT-6_WORKSPACES.md/">RFort-6: Workspace Switcher + Supabase Persistence</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera22hy2j2ofunz77on54ew2jcxgxlbrzabh2iwxtqrgyo7k234f4hq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,341 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Architecture Guide · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="This document describes the reference architecture of the [&amp;] Protocol and how its core artifacts fit together.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/architecture.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Architecture Guide">
+<meta property="og:description" content="This document describes the reference architecture of the [&amp;] Protocol and how its core artifacts fit together.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/architecture.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Architecture Guide","name":"Architecture Guide","description":"This document describes the reference architecture of the [&] Protocol and how its core artifacts fit together.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/architecture.md/","identifier":"bagaaieragtzi55zwndx4eejklfewwdea466hfsbfo7hhzfgqp5btpxrtud4a","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. What the protocol is responsible for"},{"@type":"WebPageElement","name":"2. Stack position"},{"@type":"WebPageElement","name":"3. Core architectural model"},{"@type":"WebPageElement","name":"3.1 Capability primitives"},{"@type":"WebPageElement","name":"3.2 Canonical declaration"},{"@type":"WebPageElement","name":"3.3 Contracts"},{"@type":"WebPageElement","name":"3.4 Registry artifacts"},{"@type":"WebPageElement","name":"3.5 Generated artifacts"},{"@type":"WebPageElement","name":"4. Repository architecture"},{"@type":"WebPageElement","name":"4.1 Overview"},{"@type":"WebPageElement","name":"4.2 Why this structure matters"},{"@type":"WebPageElement","name":"5. Schema architecture"},{"@type":"WebPageElement","name":"5.1 ampersand.schema.json"},{"@type":"WebPageElement","name":"5.2 capability-contract.schema.json"},{"@type":"WebPageElement","name":"5.3 registry.schema.json"},{"@type":"WebPageElement","name":"5.4 Why multiple schemas are better"},{"@type":"WebPageElement","name":"6. Declaration architecture"},{"@type":"WebPageElement","name":"6.1 Top-level shape"},{"@type":"WebPageElement","name":"6.2 Capability binding modes"},{"@type":"WebPageElement","name":"Explicit binding"},{"@type":"WebPageElement","name":"Auto binding"},{"@type":"WebPageElement","name":"6.3 Why declarations are object-shaped"},{"@type":"WebPageElement","name":"7. Composition architecture"},{"@type":"WebPageElement","name":"7.1 Set-like semantics"},{"@type":"WebPageElement","name":"7.2 Conflict behavior"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"architecture.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/architecture.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/architecture.md</span>
+
+</div></div>
+<div class="lead">This document describes the reference architecture of the [&amp;] Protocol and how its core artifacts fit together.</div>
+<div class="prose"><h1 id="blk-2323">Architecture Guide</h1>
+<p>This document describes the reference architecture of the [&amp;] Protocol and how its core artifacts fit together.</p>
+<p>It is written for engineers who want to understand the protocol as a system, not just as a schema or a CLI.</p>
+<h3 id="blk-2326">1. What the protocol is responsible for</h3>
+<p>The [&amp;] Protocol defines the <strong>composition layer</strong> of the agent stack.</p>
+<p>It is responsible for:</p>
+<ul><li><p>capability declaration</p></li><li><p>capability compatibility</p></li><li><p>capability contracts</p></li><li><p>governance as data</p></li><li><p>provenance requirements</p></li><li><p>downstream artifact generation</p></li></ul>
+<p>It is <strong>not</strong> responsible for replacing:</p>
+<ul><li><p>MCP tool invocation</p></li><li><p>A2A delegation semantics</p></li><li><p>UI rendering protocols</p></li><li><p>model inference runtimes</p></li><li><p>storage engines</p></li><li><p>deployment platforms</p></li></ul>
+<p>A concise framing is:</p>
+<blockquote><p>MCP defines how agents call tools.   A2A defines how agents call agents.   [&amp;] defines how capabilities compose into a coherent agent.</p></blockquote>
+<h3 id="blk-2359">2. Stack position</h3>
+<p>A useful architecture view of the ecosystem is:</p>
+<table><thead><tr><th>Layer</th><th>Concern</th><th>Typical Protocols</th></tr></thead><tbody><tr><td>UI</td><td>agent-to-user rendering</td><td>AG-UI, A2UI</td></tr><tr><td>Composition</td><td>capability declaration, validation, provenance, governance</td><td>[&amp;]</td></tr><tr><td>Coordination</td><td>agent-to-agent delegation and discovery</td><td>A2A, ACP</td></tr><tr><td>Context</td><td>agent-to-tool connectivity</td><td>MCP</td></tr><tr><td>Runtime</td><td>execution, storage, orchestration, observability</td><td>framework-specific</td></tr></tbody></table>
+<p>The protocol exists because there is currently no standard, machine-readable layer for declaring how an agent's cognitive capabilities fit together before runtime wiring begins.</p>
+<h3 id="blk-2381">3. Core architectural model</h3>
+<p>The protocol has five primary architectural concepts (stable across the six-primitive vocabulary):</p>
+<ol><li><p><strong>capability primitives</strong></p></li><li><p><strong>canonical declarations</strong></p></li><li><p><strong>contracts</strong></p></li><li><p><strong>registry artifacts</strong></p></li><li><p><strong>generated downstream configuration</strong></p></li></ol>
+<p>These concepts are designed to remain valid across programming languages and runtimes.</p>
+<h4 id="blk-2395">3.1 Capability primitives</h4>
+<p>The protocol starts with six primitive capability domains:</p>
+<ul><li><p><code>&amp;memory</code></p></li><li><p><code>&amp;reason</code></p></li><li><p><code>&amp;time</code></p></li><li><p><code>&amp;space</code></p></li><li><p><code>&amp;body</code></p></li><li><p><code>&amp;govern</code></p></li></ul>
+<p>The first four are cognitive building blocks; <code>&amp;body</code> is the sensorimotor primitive (perception, action, affordance, state-encoding for replay); <code>&amp;govern</code> is the cross-cutting operational primitive.</p>
+<p>Examples of subtypes:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;memory.vector</code></p></li><li><p><code>&amp;memory.episodic</code></p></li><li><p><code>&amp;reason.argument</code></p></li><li><p><code>&amp;reason.vote</code></p></li><li><p><code>&amp;reason.deliberate</code></p></li><li><p><code>&amp;reason.attend</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;time.forecast</code></p></li><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;space.route</code></p></li><li><p><code>&amp;body.browser</code></p></li><li><p><code>&amp;body.os</code></p></li><li><p><code>&amp;govern.telemetry</code></p></li><li><p><code>&amp;govern.escalation</code></p></li><li><p><code>&amp;govern.identity</code></p></li></ul>
+<p>This gives the protocol a compact vocabulary for describing an agent's architecture.</p>
+<h4 id="blk-2446">3.2 Canonical declaration</h4>
+<p>The canonical artifact is <code>ampersand.json</code>.</p>
+<p>This file declares:</p>
+<ul><li><p>agent identity</p></li><li><p>version</p></li><li><p>capabilities</p></li><li><p>provider bindings</p></li><li><p>provider config</p></li><li><p>governance constraints</p></li><li><p>provenance preference</p></li></ul>
+<p>This declaration is the source of truth for the rest of the architecture.</p>
+<h4 id="blk-2465">3.3 Contracts</h4>
+<p>Capability contracts describe the typed operational behavior of a capability.</p>
+<p>A contract can define:</p>
+<ul><li><p>supported operations</p></li><li><p>input types</p></li><li><p>output types</p></li><li><p>adjacency rules with <code>accepts_from</code></p></li><li><p>adjacency rules with <code>feeds_into</code></p></li><li><p>optional A2A skill mappings</p></li></ul>
+<p>Contracts make composition checkable instead of merely descriptive.</p>
+<h4 id="blk-2482">3.4 Registry artifacts</h4>
+<p>A registry publishes:</p>
+<ul><li><p>known primitives</p></li><li><p>known subtypes</p></li><li><p>known providers</p></li><li><p>provider support metadata</p></li><li><p>optional links to contracts</p></li></ul>
+<p>This is especially useful when a declaration uses <code>provider: &quot;auto&quot;</code>.</p>
+<h4 id="blk-2496">3.5 Generated artifacts</h4>
+<p>A valid declaration can compile into downstream artifacts such as:</p>
+<ul><li><p>MCP configuration</p></li><li><p>A2A-style agent cards</p></li></ul>
+<p>This means the architecture is not just descriptive. It is executable.</p>
+<h3 id="blk-2504">4. Repository architecture</h3>
+<p>The repository is structured around the protocol lifecycle.</p>
+<h3 id="blk-2506">4.1 Overview</h3>
+<ul><li><p><code>README.md</code> — protocol overview and quick start</p></li><li><p><code>SPEC.md</code> — markdown protocol specification</p></li><li><p><code>schema/</code> — machine-readable schema artifacts</p></li><li><p><code>examples/</code> — validating example declarations</p></li><li><p><code>reference/</code> — reference implementation(s)</p></li><li><p><code>docs/</code> — conceptual and practical documentation</p></li><li><p><code>site/</code> — website/source publishing assets</p></li><li><p><code>tools/</code> — helper scripts</p></li></ul>
+<h3 id="blk-2524">4.2 Why this structure matters</h3>
+<p>This layout is intentional.</p>
+<p>A protocol repo should not be only:</p>
+<ul><li><p>prose docs</p></li><li><p>a website</p></li><li><p>or a reference implementation</p></li></ul>
+<p>It should contain all three layers:</p>
+<ol><li><p><strong>specification</strong></p></li><li><p><strong>machine contracts</strong></p></li><li><p><strong>working implementation</strong></p></li></ol>
+<p>That reduces ambiguity and helps keep the docs, schema, and code aligned.</p>
+<h3 id="blk-2543">5. Schema architecture</h3>
+<p>The protocol currently uses a schema suite rather than one oversized schema.</p>
+<h3 id="blk-2545">5.1 <code>ampersand.schema.json</code></h3>
+<p>This schema validates canonical agent declarations.</p>
+<p>It defines the shape of:</p>
+<ul><li><p><code>$schema</code></p></li><li><p><code>agent</code></p></li><li><p><code>version</code></p></li><li><p><code>capabilities</code></p></li><li><p><code>governance</code></p></li><li><p><code>provenance</code></p></li></ul>
+<p>It is the primary entry point for validation.</p>
+<h3 id="blk-2562">5.2 <code>capability-contract.schema.json</code></h3>
+<p>This schema validates capability contract artifacts.</p>
+<p>It defines the structure of:</p>
+<ul><li><p><code>capability</code></p></li><li><p><code>operations</code></p></li><li><p><code>accepts_from</code></p></li><li><p><code>feeds_into</code></p></li><li><p><code>a2a_skills</code></p></li></ul>
+<p>This is the schema that makes typed composition portable.</p>
+<h3 id="blk-2577">5.3 <code>registry.schema.json</code></h3>
+<p>This schema validates registry documents that publish:</p>
+<ul><li><p>primitive namespaces</p></li><li><p>subtypes</p></li><li><p>providers</p></li><li><p>protocol metadata</p></li></ul>
+<p>It supports capability discovery and provider resolution.</p>
+<h3 id="blk-2589">5.4 Why multiple schemas are better</h3>
+<p>Using multiple schemas keeps the architecture modular.</p>
+<p>Each artifact has a different role:</p>
+<ul><li><p>declarations describe an agent</p></li><li><p>contracts describe capability behavior</p></li><li><p>registries describe discovery and availability</p></li></ul>
+<p>Separating them avoids conflating concerns and makes implementations easier to reason about.</p>
+<h3 id="blk-2600">6. Declaration architecture</h3>
+<p>A declaration is a normalized description of an agent's capability architecture.</p>
+<h3 id="blk-2602">6.1 Top-level shape</h3>
+<p>An <code>ampersand.json</code> declaration usually includes:</p>
+<ul><li><p><code>$schema</code></p></li><li><p><code>agent</code></p></li><li><p><code>version</code></p></li><li><p><code>capabilities</code></p></li></ul>
+<p>It may also include:</p>
+<ul><li><p><code>governance</code></p></li><li><p><code>provenance</code></p></li></ul>
+<h3 id="blk-2619">6.2 Capability binding modes</h3>
+<p>There are two main binding modes.</p>
+<h4 id="blk-2621">Explicit binding</h4>
+<p>A declaration directly names the provider.</p>
+<p>Example idea:</p>
+<ul><li><p><code>&amp;memory.graph</code> → <code>graphonomous</code></p></li></ul>
+<p>This mode is best when:</p>
+<ul><li><p>the runtime is already known</p></li><li><p>the provider is fixed</p></li><li><p>reproducibility matters more than discovery</p></li></ul>
+<h4 id="blk-2635">Auto binding</h4>
+<p>A declaration uses <code>provider: &quot;auto&quot;</code> with a <code>need</code>.</p>
+<p>This mode is best when:</p>
+<ul><li><p>provider resolution should happen later</p></li><li><p>discovery is dynamic</p></li><li><p>the declaration should preserve intent without locking a provider</p></li></ul>
+<h3 id="blk-2645">6.3 Why declarations are object-shaped</h3>
+<p>Capabilities are stored as object keys rather than positional list items.</p>
+<p>This design supports set-like semantics:</p>
+<ul><li><p>declaration order does not define meaning</p></li><li><p>duplicates collapse naturally</p></li><li><p>capability identity is explicit</p></li></ul>
+<p>This makes composition behavior easier to normalize and validate.</p>
+<h3 id="blk-2656">7. Composition architecture</h3>
+<p>The protocol treats capability sets as algebraic structures.</p>
+<h3 id="blk-2658">7.1 Set-like semantics</h3>
+<p>A valid capability set should preserve:</p>
+<ul><li><p><strong>commutativity</strong></p></li><li><p><strong>associativity</strong></p></li><li><p><strong>idempotence</strong></p></li><li><p><strong>identity</strong></p></li></ul>
+<p>These properties are important because multiple tools or users may assemble the same declaration in different ways, and they should converge on the same result.</p>
+<h3 id="blk-2670">7.2 Conflict behavior</h3>
+<p>Set-like composition does not mean every merge is valid.</p>
+<p>A conflict occurs when the same capability appears with incompatible bindings.</p>
+<p>Example:</p>
+<ul><li><p><code>&amp;memory.graph</code> bound to <code>graphonomous</code></p></li><li><p><code>&amp;memory.graph</code> bound to <code>neo4j-memory</code></p></li></ul>
+<p>That is not an idempotent duplicate. It is a real conflict that should be surfaced explicitly.</p>
+<h3 id="blk-2680">7.3 Why composition is separate from execution</h3>
+<p>Composition answers:</p>
+<blockquote><p>What capabilities does the agent contain?</p></blockquote>
+<p>Execution answers:</p>
+<blockquote><p>How does work flow through those capabilities?</p></blockquote>
+<p>Keeping those separate makes the protocol easier to validate and implement.</p>
+<h3 id="blk-2688">8. Pipeline architecture</h3>
+<p>Pipelines represent data flowing through capability operations.</p>
+<h3 id="blk-2690">8.1 The role of <code>|&gt;</code></h3>
+<p>The pipeline operator is a conceptual notation used in this documentation to show ordered flow between capability operations.</p>
+<p>It means:</p>
+<ul><li><p>one operation produces an output</p></li><li><p>the next operation accepts that output as input</p></li></ul>
+<p>Example shape:</p>
+<ul><li><p><code>stream_data</code></p></li><li><p><code>&amp;time.anomaly.detect</code></p></li><li><p><code>&amp;memory.graph.enrich</code></p></li><li><p><code>&amp;reason.argument.evaluate</code></p></li></ul>
+<p>Unless a specific CLI, SDK, or runtime explicitly documents <code>|&gt;</code> as supported input syntax, readers should treat it as pseudocode rather than canonical protocol grammar.</p>
+<p>A runtime may represent the same pipeline in other forms, such as:</p>
+<ul><li><p>a validated sequence in a declaration</p></li><li><p>a contract-aware internal execution plan</p></li><li><p>a generated MCP or A2A artifact</p></li><li><p>an execution DAG or other runtime-specific graph</p></li></ul>
+<h3 id="blk-2719">8.2 Contract-driven validation</h3>
+<p>A pipeline is valid only if:</p>
+<ol><li><p>each capability exists</p></li><li><p>each operation exists</p></li><li><p>output and input types align</p></li><li><p><code>feeds_into</code> allows the transition</p></li><li><p><code>accepts_from</code> allows the transition</p></li></ol>
+<p>Before execution begins, a conforming runtime should be able to check these conditions and either:</p>
+<ul><li><p>accept the pipeline and materialize an execution plan</p></li><li><p>reject the pipeline with a precise compatibility error</p></li></ul>
+<p>This architecture prevents pipelines from being treated as informal glue.</p>
+<h3 id="blk-2739">8.3 Architectural implication</h3>
+<p>The protocol moves pipeline safety earlier in the lifecycle.</p>
+<p>Instead of waiting for runtime failures, implementations can reject invalid compositions before deployment or generation.</p>
+<p>That means the protocol separates two moments clearly:</p>
+<ul><li><p><strong>composition-time checks</strong> validate structure, contracts, and allowed transitions</p></li><li><p><strong>runtime execution</strong> invokes providers, enforces governance, and emits provenance for each realized step</p></li></ul>
+<h3 id="blk-2748">9. Governance architecture</h3>
+<p>Governance is expressed as portable data.</p>
+<h3 id="blk-2750">9.1 Components</h3>
+<p>The governance object can contain:</p>
+<ul><li><p><code>hard</code></p></li><li><p><code>soft</code></p></li><li><p><code>escalate_when</code></p></li><li><p><code>infer_from_goal</code></p></li></ul>
+<h3 id="blk-2761">9.2 Why governance is modeled this way</h3>
+<p>If governance only exists in runtime code, then:</p>
+<ul><li><p>it is hard to audit</p></li><li><p>it is not portable</p></li><li><p>it becomes implementation-specific</p></li><li><p>it cannot travel with the declaration</p></li></ul>
+<p>By expressing governance in the declaration, the protocol lets implementations preserve the same safety intent across languages and runtimes.</p>
+<h3 id="blk-2773">9.3 Architectural boundaries</h3>
+<p>The protocol defines the structure of governance.</p>
+<p>A runtime still decides:</p>
+<ul><li><p>how hard constraints are enforced</p></li><li><p>how soft constraints are used in reasoning</p></li><li><p>how escalation is implemented operationally</p></li></ul>
+<p>So the architecture separates:</p>
+<ul><li><p><strong>governance declaration</strong></p></li><li><p>from</p></li><li><p><strong>governance execution</strong></p></li></ul>
+<p>That is an intentional boundary.</p>
+<h3 id="blk-2792">10. Provenance architecture</h3>
+<p>Provenance is a required architectural concept for trustworthy composition.</p>
+<h3 id="blk-2794">10.1 What provenance captures</h3>
+<p>A provenance record may include:</p>
+<ul><li><p>source capability</p></li><li><p>provider</p></li><li><p>operation</p></li><li><p>timestamp</p></li><li><p>input hash</p></li><li><p>output hash</p></li><li><p>parent hash</p></li><li><p>optional runtime trace IDs</p></li></ul>
+<h3 id="blk-2813">10.2 Why hash-linked chains matter</h3>
+<p>A hash-linked provenance chain allows the system to answer questions like:</p>
+<ul><li><p>why was this decision made</p></li><li><p>which capability produced this context</p></li><li><p>what output depended on what input</p></li><li><p>what runtime call corresponds to this step</p></li></ul>
+<p>This is especially important for:</p>
+<ul><li><p>audits</p></li><li><p>debugging</p></li><li><p>regulated workflows</p></li><li><p>governance review</p></li><li><p>trust and explainability</p></li></ul>
+<h3 id="blk-2836">10.3 Architectural role</h3>
+<p>Provenance is not just logging.</p>
+<p>It is a protocol-level requirement that says:</p>
+<blockquote><p>composed cognition should preserve lineage</p></blockquote>
+<p>That makes provenance part of the architecture contract rather than an optional afterthought.</p>
+<h3 id="blk-2842">11. Provider architecture</h3>
+<p>The protocol makes a strict distinction between capabilities and providers.</p>
+<h3 id="blk-2844">11.1 Capabilities are interfaces</h3>
+<p>Examples:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;reason.argument</code></p></li></ul>
+<p>These are protocol concepts.</p>
+<h3 id="blk-2854">11.2 Providers are implementations</h3>
+<p>Examples used throughout this documentation include:</p>
+<ul><li><p><code>graphonomous</code></p></li><li><p><code>ticktickclock</code></p></li><li><p><code>deliberatic</code></p></li><li><p><code>geofleetic</code></p></li></ul>
+<p>Unless a registry entry, repository artifact, or implementation guide says otherwise, these names should be read as illustrative provider examples rather than guaranteed public implementations.</p>
+<p>What matters at the protocol level is the role they play:</p>
+<ul><li><p>a capability such as <code>&amp;memory.graph</code> is the interface</p></li><li><p>a provider such as <code>graphonomous</code> is one possible implementation of that interface</p></li></ul>
+<h3 id="blk-2872">11.3 Why this separation matters</h3>
+<p>If capabilities and providers are collapsed into one concept, then:</p>
+<ul><li><p>interoperability disappears</p></li><li><p>schemas become vendor-specific</p></li><li><p>portability suffers</p></li><li><p>composition becomes branding instead of protocol design</p></li></ul>
+<p>The architecture is stronger when capabilities remain vendor-neutral.</p>
+<h3 id="blk-2884">12. Registry architecture</h3>
+<p>The registry is the discovery and resolution layer.</p>
+<h3 id="blk-2886">12.1 What the registry publishes</h3>
+<p>A registry can publish:</p>
+<ul><li><p>primitive roots</p></li><li><p>subtype definitions</p></li><li><p>operation metadata</p></li><li><p>provider availability</p></li><li><p>transport/protocol identifiers</p></li><li><p>contract references</p></li></ul>
+<h3 id="blk-2901">12.2 Why a registry exists</h3>
+<p>The registry supports:</p>
+<ul><li><p><code>provider: &quot;auto&quot;</code></p></li><li><p>compatibility discovery</p></li><li><p>provider lookup</p></li><li><p>downstream generation</p></li><li><p>capability publishing</p></li></ul>
+<h3 id="blk-2914">12.3 Architectural boundary</h3>
+<p>The protocol does not require one global registry service implementation.</p>
+<p>It only requires a machine-readable registry model.</p>
+<p>That means different ecosystems can host their own registries while preserving the same artifact shape.</p>
+<h3 id="blk-2918">13. Generation architecture</h3>
+<p>One of the most important architectural goals of the protocol is that a declaration should compile into downstream artifacts.</p>
+<h3 id="blk-2920">13.1 MCP generation</h3>
+<p>MCP generation turns a validated declaration into a tool-facing configuration.</p>
+<p>That may involve:</p>
+<ul><li><p>grouping capabilities by provider</p></li><li><p>resolving provider launch details</p></li><li><p>creating stdio or URL-based config entries</p></li><li><p>preserving unresolved providers explicitly</p></li></ul>
+<p>The generator should not invent details that are not grounded in known provider information.</p>
+<h3 id="blk-2933">13.2 A2A generation</h3>
+<p>A2A generation turns a validated declaration into an agent-facing coordination artifact.</p>
+<p>That may include:</p>
+<ul><li><p>agent identity</p></li><li><p>skill list</p></li><li><p>provider bindings</p></li><li><p>governance metadata</p></li><li><p>provenance metadata</p></li></ul>
+<p>This shows that the same declaration can support both runtime integration and coordination publication.</p>
+<h3 id="blk-2948">13.3 Architectural significance</h3>
+<p>This is what makes the protocol more than documentation.</p>
+<p>A declaration is not just read by humans. It is transformed into real operational artifacts.</p>
+<h3 id="blk-2951">14. Reference implementation architecture</h3>
+<p>The Elixir reference implementation is intentionally small and layered.</p>
+<p>Its main modules correspond to the protocol architecture:</p>
+<ul><li><p>schema validation</p></li><li><p>composition</p></li><li><p>contract checking</p></li><li><p>MCP generation</p></li><li><p>A2A generation</p></li><li><p>CLI entrypoint</p></li></ul>
+<h3 id="blk-2967">14.1 Why the reference implementation is minimal</h3>
+<p>The purpose of the reference implementation is to prove:</p>
+<ul><li><p>the schema is usable</p></li><li><p>composition is checkable</p></li><li><p>generation is possible</p></li><li><p>the protocol can be grounded in real code</p></li></ul>
+<p>It is not intended to be the only runtime or the final production architecture.</p>
+<h3 id="blk-2979">14.2 Why a CLI matters</h3>
+<p>A protocol spreads through interfaces that developers can actually use.</p>
+<p>The CLI acts as the operator surface for the lifecycle:</p>
+<ol><li><p>validate</p></li><li><p>compose</p></li><li><p>generate</p></li></ol>
+<p>This makes the architecture easier to adopt and test.</p>
+<h3 id="blk-2990">15. Documentation architecture</h3>
+<p>The documentation should mirror the system architecture.</p>
+<p>A healthy documentation hub should include:</p>
+<ul><li><p>overview</p></li><li><p>formal spec</p></li><li><p>positioning</p></li><li><p>FAQ</p></li><li><p>architecture guide</p></li><li><p>capability deep dives</p></li><li><p>reference examples</p></li></ul>
+<p>This structure matters because different audiences need different entry points:</p>
+<ul><li><p>engineers want artifacts and implementation detail</p></li><li><p>researchers want conceptual framing</p></li><li><p>adopters want examples and workflows</p></li><li><p>contributors want repository conventions</p></li></ul>
+<h3 id="blk-3018">16. End-to-end architecture flow</h3>
+<p>The full architecture flow looks like this:</p>
+<ol><li><p>author an <code>ampersand.json</code></p></li><li><p>validate it against the canonical schema</p></li><li><p>normalize the capability set</p></li><li><p>optionally check capability contracts and pipeline compatibility</p></li><li><p>preserve governance and provenance semantics</p></li><li><p>resolve providers directly or through a registry</p></li><li><p>generate downstream artifacts such as MCP config and A2A agent cards</p></li></ol>
+<p>This can be summarized as:</p>
+<p><strong>declaration → validation → composition → resolution → generation</strong></p>
+<p>That is the central execution model of the protocol.</p>
+<h3 id="blk-3038">16.1 Minimal runtime walkthrough</h3>
+<p>Consider a small operations agent with these declared capabilities:</p>
+<ul><li><p><code>&amp;time.anomaly</code> bound to <code>ticktickclock</code></p></li><li><p><code>&amp;memory.graph</code> bound to <code>graphonomous</code></p></li><li><p><code>&amp;reason.argument</code> bound to <code>deliberatic</code></p></li></ul>
+<p>Assume the intended flow is:</p>
+<ul><li><p>detect an anomaly</p></li><li><p>enrich it with graph memory</p></li><li><p>evaluate candidate actions with argument-based reasoning</p></li></ul>
+<p>A conforming runtime processes that declaration in stages rather than all at once.</p>
+<h3 id="blk-3056">16.2 What happens during <code>validate</code></h3>
+<p>The validation step should answer:</p>
+<ul><li><p>is the declaration structurally valid</p></li><li><p>are required fields present</p></li><li><p>are capability identifiers known</p></li><li><p>are governance and provenance blocks well-formed</p></li></ul>
+<p>A typical CLI interaction might look like:</p>
+<blockquote><p>$ ampersand validate ampersand.json   ✔ schema valid   ✔ capabilities normalized: 3   ✔ governance block valid   ✔ provenance mode accepted: hash_chain</p></blockquote>
+<p>At this stage, the runtime has not executed providers yet. It has only established that the declaration is well-formed enough to continue.</p>
+<h3 id="blk-3071">16.3 What happens during <code>compose</code></h3>
+<p>The composition step should answer:</p>
+<ul><li><p>do the declared capabilities coexist without conflict</p></li><li><p>do requested operations exist on their contracts</p></li><li><p>do adjacent steps agree on input and output types</p></li><li><p>are <code>accepts_from</code> and <code>feeds_into</code> constraints satisfied</p></li></ul>
+<p>A typical CLI interaction might look like:</p>
+<blockquote><p>$ ampersand compose ampersand.json   ✔ provider bindings resolved   ✔ contract check passed for <code>&amp;time.anomaly.detect</code>   ✔ contract check passed for <code>&amp;memory.graph.enrich</code>   ✔ contract check passed for <code>&amp;reason.argument.evaluate</code>   ✔ execution plan created: detect → enrich → evaluate</p></blockquote>
+<p>This is the stage where a runtime turns a declaration into an executable plan. If a provider is still unresolved because the declaration uses <code>provider: &quot;auto&quot;</code>, the runtime should preserve that unresolved state explicitly rather than inventing a binding.</p>
+<h3 id="blk-3086">16.4 What happens during execution</h3>
+<p>Once validation and composition succeed, runtime execution can begin.</p>
+<p>A typical execution loop is:</p>
+<ol><li><p>invoke the first provider operation</p></li><li><p>capture its typed output</p></li><li><p>verify the next step can accept that output</p></li><li><p>attach provenance for the completed step</p></li><li><p>apply governance checks before, during, or after the step as required</p></li><li><p>continue until the pipeline or task completes</p></li></ol>
+<p>For the example above, that means:</p>
+<ul><li><p><code>ticktickclock</code> emits an anomaly event</p></li><li><p><code>graphonomous</code> enriches that event with related incidents or topology context</p></li><li><p><code>deliberatic</code> evaluates candidate responses under the declared governance rules</p></li></ul>
+<p>This is the practical bridge between declaration and behavior.</p>
+<h3 id="blk-3111">16.5 What happens during <code>generate</code></h3>
+<p>Generation turns the composed plan into downstream artifacts.</p>
+<p>A typical CLI interaction might look like:</p>
+<blockquote><p>$ ampersand generate --target mcp ampersand.json   ✔ wrote MCP configuration for 3 provider bindings   $ ampersand generate --target a2a ampersand.json   ✔ wrote A2A agent card with 3 exposed skills</p></blockquote>
+<p>The exact artifact shape depends on the target, but the important point is that generation happens after validation and composition, not instead of them.</p>
+<h3 id="blk-3117">16.6 Failure behavior</h3>
+<p>If a pipeline step is incompatible, the runtime should fail before generation or execution.</p>
+<p>For example, if one step emits <code>anomaly_event</code> but the next step requires <code>forecast_window</code>, a conforming implementation should surface a targeted error such as:</p>
+<blockquote><p>$ ampersand compose ampersand.json   ✖ pipeline invalid at step 2   output <code>anomaly_event</code> does not satisfy required input <code>forecast_window</code>   transition not allowed by declared capability contracts</p></blockquote>
+<p>This is what makes the protocol operational rather than merely descriptive: a runtime can explain not only what an agent declares, but why a composition is accepted or rejected.</p>
+<h3 id="blk-3123">17. Example mental model</h3>
+<p>Consider an incident response or infrastructure operations agent.</p>
+<p>Its declaration may include:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;reason.argument</code></p></li></ul>
+<p>Architecturally, that means:</p>
+<ul><li><p>memory stores and recalls similar incidents</p></li><li><p>time detects anomalous behavior</p></li><li><p>space localizes impact across regions or fleets</p></li><li><p>reason evaluates possible actions under governance constraints</p></li></ul>
+<p>The protocol gives that architecture a portable machine-readable representation.</p>
+<p>Without the protocol, those pieces often exist only as implicit framework wiring or prompt conventions.</p>
+<h3 id="blk-3147">18. Non-goals of this architecture</h3>
+<p>This architecture is intentionally narrow in a few places.</p>
+<p>It does not try to standardize:</p>
+<ul><li><p>all runtime execution semantics</p></li><li><p>all transport protocols</p></li><li><p>all memory implementations</p></li><li><p>all reasoning models</p></li><li><p>all deployment and orchestration</p></li><li><p>all UI behavior</p></li></ul>
+<p>Its focus is the composition layer.</p>
+<p>That narrowness is a strength. It keeps the protocol understandable and implementable.</p>
+<h3 id="blk-3165">19. Design principles for future architecture work</h3>
+<p>When extending the protocol, preserve these architectural principles:</p>
+<h4 id="blk-3167">19.1 Spec first</h4>
+<p>If a new concept matters, it should be represented in schema and examples, not only prose.</p>
+<h4 id="blk-3169">19.2 Provider-agnostic core</h4>
+<p>Keep capability identity separate from provider identity.</p>
+<h4 id="blk-3171">19.3 No invented runtime details</h4>
+<p>If provider launch or integration details are unknown, leave them unresolved explicitly.</p>
+<h4 id="blk-3173">19.4 Declarative governance</h4>
+<p>Keep constraints portable and machine-readable.</p>
+<h4 id="blk-3175">19.5 Provenance by design</h4>
+<p>Do not bolt lineage on later.</p>
+<h4 id="blk-3177">19.6 Minimal primitive set</h4>
+<p>Prefer a compact, extensible primitive vocabulary over an explosion of top-level categories.</p>
+<h3 id="blk-3179">20. Practical reading order</h3>
+<p>If you are trying to understand the architecture for the first time, read the repository in this order:</p>
+<ol><li><p><code>README.md</code></p></li><li><p><code>SPEC.md</code></p></li><li><p><code>protocol/schema/v0.1.0/ampersand.schema.json</code></p></li><li><p><code>protocol/schema/v0.1.0/capability-contract.schema.json</code></p></li><li><p><code>protocol/schema/v0.1.0/registry.schema.json</code></p></li><li><p><code>examples/</code></p></li><li><p><code>reference/elixir/ampersand_core/</code></p></li><li><p><code>docs/positioning.md</code></p></li><li><p><code>docs/comparison-table.md</code></p></li></ol>
+<p>That moves from concept to contract to implementation.</p>
+<h3 id="blk-3201">21. Summary</h3>
+<p>The [&amp;] Protocol architecture is built around one central idea:</p>
+<blockquote><p>an agent should have a portable, machine-readable declaration of how its cognitive capabilities compose before runtime integration is generated</p></blockquote>
+<p>To make that possible, the architecture includes:</p>
+<ul><li><p>a canonical declaration format</p></li><li><p>a schema suite</p></li><li><p>capability contracts</p></li><li><p>a registry model</p></li><li><p>governance as data</p></li><li><p>provenance requirements</p></li><li><p>generators for MCP and A2A</p></li><li><p>a reference implementation and CLI</p></li></ul>
+<p>That is the composition layer this protocol is designed to provide.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/architecture.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-2326" class="lvl2">1. What the protocol is responsible for</a><a href="#blk-2359" class="lvl2">2. Stack position</a><a href="#blk-2381" class="lvl2">3. Core architectural model</a><a href="#blk-2395" class="lvl3">3.1 Capability primitives</a><a href="#blk-2446" class="lvl3">3.2 Canonical declaration</a><a href="#blk-2465" class="lvl3">3.3 Contracts</a><a href="#blk-2482" class="lvl3">3.4 Registry artifacts</a><a href="#blk-2496" class="lvl3">3.5 Generated artifacts</a><a href="#blk-2504" class="lvl2">4. Repository architecture</a><a href="#blk-2506" class="lvl2">4.1 Overview</a><a href="#blk-2524" class="lvl2">4.2 Why this structure matters</a><a href="#blk-2543" class="lvl2">5. Schema architecture</a><a href="#blk-2545" class="lvl2">5.1 ampersand.schema.json</a><a href="#blk-2562" class="lvl2">5.2 capability-contract.schema.json</a><a href="#blk-2577" class="lvl2">5.3 registry.schema.json</a><a href="#blk-2589" class="lvl2">5.4 Why multiple schemas are better</a><a href="#blk-2600" class="lvl2">6. Declaration architecture</a><a href="#blk-2602" class="lvl2">6.1 Top-level shape</a><a href="#blk-2619" class="lvl2">6.2 Capability binding modes</a><a href="#blk-2621" class="lvl3">Explicit binding</a><a href="#blk-2635" class="lvl3">Auto binding</a><a href="#blk-2645" class="lvl2">6.3 Why declarations are object-shaped</a><a href="#blk-2656" class="lvl2">7. Composition architecture</a><a href="#blk-2658" class="lvl2">7.1 Set-like semantics</a><a href="#blk-2670" class="lvl2">7.2 Conflict behavior</a><a href="#blk-2680" class="lvl2">7.3 Why composition is separate from execution</a><a href="#blk-2688" class="lvl2">8. Pipeline architecture</a><a href="#blk-2690" class="lvl2">8.1 The role of |&gt;</a><a href="#blk-2719" class="lvl2">8.2 Contract-driven validation</a><a href="#blk-2739" class="lvl2">8.3 Architectural implication</a><a href="#blk-2748" class="lvl2">9. Governance architecture</a><a href="#blk-2750" class="lvl2">9.1 Components</a><a href="#blk-2761" class="lvl2">9.2 Why governance is modeled this way</a><a href="#blk-2773" class="lvl2">9.3 Architectural boundaries</a><a href="#blk-2792" class="lvl2">10. Provenance architecture</a><a href="#blk-2794" class="lvl2">10.1 What provenance captures</a><a href="#blk-2813" class="lvl2">10.2 Why hash-linked chains matter</a><a href="#blk-2836" class="lvl2">10.3 Architectural role</a><a href="#blk-2842" class="lvl2">11. Provider architecture</a><a href="#blk-2844" class="lvl2">11.1 Capabilities are interfaces</a><a href="#blk-2854" class="lvl2">11.2 Providers are implementations</a><a href="#blk-2872" class="lvl2">11.3 Why this separation matters</a><a href="#blk-2884" class="lvl2">12. Registry architecture</a><a href="#blk-2886" class="lvl2">12.1 What the registry publishes</a><a href="#blk-2901" class="lvl2">12.2 Why a registry exists</a><a href="#blk-2914" class="lvl2">12.3 Architectural boundary</a><a href="#blk-2918" class="lvl2">13. Generation architecture</a><a href="#blk-2920" class="lvl2">13.1 MCP generation</a><a href="#blk-2933" class="lvl2">13.2 A2A generation</a><a href="#blk-2948" class="lvl2">13.3 Architectural significance</a><a href="#blk-2951" class="lvl2">14. Reference implementation architecture</a><a href="#blk-2967" class="lvl2">14.1 Why the reference implementation is minimal</a><a href="#blk-2979" class="lvl2">14.2 Why a CLI matters</a><a href="#blk-2990" class="lvl2">15. Documentation architecture</a><a href="#blk-3018" class="lvl2">16. End-to-end architecture flow</a><a href="#blk-3038" class="lvl2">16.1 Minimal runtime walkthrough</a><a href="#blk-3056" class="lvl2">16.2 What happens during validate</a><a href="#blk-3071" class="lvl2">16.3 What happens during compose</a><a href="#blk-3086" class="lvl2">16.4 What happens during execution</a><a href="#blk-3111" class="lvl2">16.5 What happens during generate</a><a href="#blk-3117" class="lvl2">16.6 Failure behavior</a><a href="#blk-3123" class="lvl2">17. Example mental model</a><a href="#blk-3147" class="lvl2">18. Non-goals of this architecture</a><a href="#blk-3165" class="lvl2">19. Design principles for future architecture work</a><a href="#blk-3167" class="lvl3">19.1 Spec first</a><a href="#blk-3169" class="lvl3">19.2 Provider-agnostic core</a><a href="#blk-3171" class="lvl3">19.3 No invented runtime details</a><a href="#blk-3173" class="lvl3">19.4 Declarative governance</a><a href="#blk-3175" class="lvl3">19.5 Provenance by design</a><a href="#blk-3177" class="lvl3">19.6 Minimal primitive set</a><a href="#blk-3179" class="lvl2">20. Practical reading order</a><a href="#blk-3201" class="lvl2">21. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/runtime-walkthrough.md/">Runtime Walkthrough</a><a href="/ECOSYSTEM.md/">The [&amp;] Protocol Ecosystem</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/CC2-capability-composition.md/">[&amp;] / CC2 — Capability Composition, v2 (Coalitional)</a><a href="/AmpersandBoxDesign/docs/COMPOSE_RUNTIME.md/">The Compose Runtime — CC2 compose, made authorable (design note)</a><a href="/AmpersandBoxDesign/docs/UMBRELLA.md/">The [&amp;] Umbrella — one stack: declare → … → observe</a><a href="/AmpersandBoxDesign/docs/comparison-table.md/">[&amp;] vs MCP vs A2A vs DALIA vs ACP</a><a href="/AmpersandBoxDesign/docs/competitive-landscape.md/">Competitive Landscape: Machine Cognition</a><a href="/AmpersandBoxDesign/docs/ecosystem-overview.md/">[&amp;] Ecosystem Overview — How Everything Ties Together</a><a href="/AmpersandBoxDesign/docs/faq.md/">FAQ</a><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/positioning.md/">The Missing Layer: Capability Composition in the Agent Protocol Stack</a><a href="/AmpersandBoxDesign/docs/quickstart.md/">Five-Minute Quickstart (Elixir Reference CLI)</a><a href="/AmpersandBoxDesign/docs/research.md/">Research Overview</a><a href="/AmpersandBoxDesign/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieragtzi55zwndx4eejklfewwdea466hfsbfo7hhzfgqp5btpxrtud4a</div></div></div>
+</div></div>
+</body></html>

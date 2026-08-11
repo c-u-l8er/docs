@@ -1,0 +1,132 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Operations &amp; Maintenance · graphonomous · Ampersand Box</title>
+<meta name="description" content="This page is the operational runbook for running, validating, and maintaining Graphonomous in development and production-like environments.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/operations.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Operations &amp; Maintenance">
+<meta property="og:description" content="This page is the operational runbook for running, validating, and maintaining Graphonomous in development and production-like environments.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/docs/operations.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Operations & Maintenance","name":"Operations & Maintenance","description":"This page is the operational runbook for running, validating, and maintaining Graphonomous in development and production-like environments.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/operations.md/","identifier":"bagaaieral5y5ocsyuzakaecx4p3zqau2kafu6kgs5tlmvnz2yldteg7a2aza","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"1) Operational Model"},{"@type":"WebPageElement","name":"2) Daily Operator Checklist"},{"@type":"WebPageElement","name":"3) Startup Procedures"},{"@type":"WebPageElement","name":"3.1 Local development startup"},{"@type":"WebPageElement","name":"3.2 MCP client startup validation"},{"@type":"WebPageElement","name":"4) Health Monitoring"},{"@type":"WebPageElement","name":"4.1 Runtime health resource"},{"@type":"WebPageElement","name":"4.2 Goal snapshot resource"},{"@type":"WebPageElement","name":"5) Data & Storage Operations"},{"@type":"WebPageElement","name":"5.1 Persistence strategy"},{"@type":"WebPageElement","name":"5.2 Backup strategy"},{"@type":"WebPageElement","name":"5.3 Recovery procedure"},{"@type":"WebPageElement","name":"6) Learning Loop Operations"},{"@type":"WebPageElement","name":"6.1 Required loop discipline"},{"@type":"WebPageElement","name":"6.2 Outcome status semantics"},{"@type":"WebPageElement","name":"6.3 Confidence hygiene"},{"@type":"WebPageElement","name":"7) Goal Operations"},{"@type":"WebPageElement","name":"7.1 Goal lifecycle flow"},{"@type":"WebPageElement","name":"7.2 Coverage review gate"},{"@type":"WebPageElement","name":"7.3 Progress and evidence"},{"@type":"WebPageElement","name":"8) Consolidation Operations"},{"@type":"WebPageElement","name":"8.1 When to run"},{"@type":"WebPageElement","name":"8.2 What to watch"},{"@type":"WebPageElement","name":"9) Incident Response Runbooks"},{"@type":"WebPageElement","name":"9.1 MCP server transport instability"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"operations.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/operations.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/docs/operations.md</span>
+
+</div></div>
+<div class="lead">This page is the operational runbook for running, validating, and maintaining Graphonomous in development and production-like environments.</div>
+<div class="prose"><h1 id="blk-65843">Operations &amp; Maintenance</h1>
+<p>This page is the operational runbook for running, validating, and maintaining <strong>Graphonomous</strong> in development and production-like environments.</p>
+<h3 id="blk-65845">1) Operational Model</h3>
+<p>Graphonomous runs as an Elixir/OTP application with supervised runtime services and an MCP server interface over stdio. Core operational concerns are:</p>
+<ul><li><p><strong>Process health</strong> (runtime services are up)</p></li><li><p><strong>Data durability</strong> (SQLite-backed state)</p></li><li><p><strong>Retrieval quality</strong> (memory remains relevant)</p></li><li><p><strong>Learning integrity</strong> (outcomes update confidence correctly)</p></li><li><p><strong>Memory hygiene</strong> (consolidation decay/pruning cycles)</p></li><li><p><strong>Transport stability</strong> (MCP client/server connectivity)</p></li></ul>
+<h3 id="blk-65860">2) Daily Operator Checklist</h3>
+<p>Use this checklist for routine operation:</p>
+<ol><li><p>Start Graphonomous with an explicit DB path.</p></li><li><p>Verify runtime health snapshot.</p></li><li><p>Verify goals snapshot (if goal-driven workflows are active).</p></li><li><p>Confirm retrieval works on a known query.</p></li><li><p>Confirm writes (<code>store_node</code>) and updates (<code>learn_from_outcome</code>) succeed.</p></li><li><p>Run/inspect consolidation state.</p></li><li><p>Review logs for transport disconnects or repeated timeouts.</p></li></ol>
+<h3 id="blk-65877">3) Startup Procedures</h3>
+<h3 id="blk-65878">3.1 Local development startup</h3>
+<p>Run Graphonomous with a dedicated local DB:</p>
+<ul><li><p>Ensure your DB directory exists.</p></li><li><p>Start using fallback embedder when troubleshooting or on constrained devices.</p></li></ul>
+<p>Recommended startup characteristics:</p>
+<ul><li><p>Explicit <code>--db</code> path</p></li><li><p>Stable log level (<code>info</code> or <code>debug</code>)</p></li><li><p>Request timeout tuned for your client/editor</p></li></ul>
+<h3 id="blk-65893">3.2 MCP client startup validation</h3>
+<p>After startup, validate in this order:</p>
+<ol><li><p>Tool discovery returns expected Graphonomous tools.</p></li><li><p>Resource reads succeed:</p></li></ol>
+<ul><li><p><code>graphonomous://runtime/health</code></p></li><li><p><code>graphonomous://goals/snapshot</code></p></li></ul>
+<ol start="3"><li><p>A test retrieval query returns <code>status: ok</code>.</p></li><li><p>A test node write succeeds.</p></li></ol>
+<h3 id="blk-65910">4) Health Monitoring</h3>
+<h3 id="blk-65911">4.1 Runtime health resource</h3>
+<p>Use <code>graphonomous://runtime/health</code> to verify:</p>
+<ul><li><p>Process-level service status (<code>up</code>/<code>down</code>)</p></li><li><p>High-level object counts (nodes/goals)</p></li><li><p>Timestamp of snapshot generation</p></li></ul>
+<p>If any core service is down, restart runtime and verify DB accessibility.</p>
+<h3 id="blk-65921">4.2 Goal snapshot resource</h3>
+<p>Use <code>graphonomous://goals/snapshot</code> to verify:</p>
+<ul><li><p>Total number of goals</p></li><li><p>Status distribution (<code>proposed</code>, <code>active</code>, <code>blocked</code>, <code>completed</code>, etc.)</p></li><li><p>Serialized goal records for debugging orchestration state</p></li></ul>
+<h3 id="blk-65930">5) Data &amp; Storage Operations</h3>
+<h3 id="blk-65931">5.1 Persistence strategy</h3>
+<p>Graphonomous uses SQLite as durable storage and ETS as hot in-memory cache.</p>
+<p>Operational implications:</p>
+<ul><li><p>SQLite file is the recovery source of truth.</p></li><li><p>ETS is rebuilt/warmed from DB state.</p></li><li><p>Always keep DB path explicit and stable per environment.</p></li></ul>
+<h3 id="blk-65941">5.2 Backup strategy</h3>
+<p>Recommended backup practice:</p>
+<ul><li><p>Schedule periodic copies/snapshots of the SQLite DB file.</p></li><li><p>Perform backups during low-write periods when possible.</p></li><li><p>Keep at least:</p></li><li><p>daily rolling backups (7 days),</p></li><li><p>weekly backups (4 weeks),</p></li><li><p>monthly backups (3–6 months).</p></li></ul>
+<h3 id="blk-65956">5.3 Recovery procedure</h3>
+<p>If runtime state appears inconsistent:</p>
+<ol><li><p>Stop Graphonomous.</p></li><li><p>Backup current DB file before changes.</p></li><li><p>Restart runtime and verify health.</p></li><li><p>Re-run retrieval sanity checks.</p></li><li><p>If needed, restore from known-good backup and replay required operational steps.</p></li></ol>
+<h3 id="blk-65969">6) Learning Loop Operations</h3>
+<h3 id="blk-65970">6.1 Required loop discipline</h3>
+<p>For consequential actions:</p>
+<ol><li><p>Retrieve context first.</p></li><li><p>Perform action.</p></li><li><p>Report outcome with real <code>causal_node_ids</code>.</p></li></ol>
+<p>This keeps confidence updates meaningful and avoids drift.</p>
+<h3 id="blk-65980">6.2 Outcome status semantics</h3>
+<p>Use outcome status correctly:</p>
+<ul><li><p><code>success</code>: action achieved intended result</p></li><li><p><code>partial_success</code>: mixed outcome</p></li><li><p><code>failure</code>: action failed</p></li><li><p><code>timeout</code>: no reliable completion signal</p></li></ul>
+<p>Treating timeouts as failures can incorrectly penalize good knowledge.</p>
+<h3 id="blk-65992">6.3 Confidence hygiene</h3>
+<p>Operational rule:</p>
+<ul><li><p>Use evidence-calibrated confidence values.</p></li><li><p>Avoid blanket high confidence in both stored nodes and outcomes.</p></li><li><p>Favor structured evidence payloads for audits and debugging.</p></li></ul>
+<h3 id="blk-66001">7) Goal Operations</h3>
+<p>For multi-step work, always use goals.</p>
+<h3 id="blk-66003">7.1 Goal lifecycle flow</h3>
+<p>Typical progression:</p>
+<p><code>proposed -&gt; active -&gt; completed</code> or <code>proposed/active -&gt; blocked -&gt; active</code> (when unblocked)</p>
+<h3 id="blk-66006">7.2 Coverage review gate</h3>
+<p>Before high-impact actions, run goal coverage review to route execution:</p>
+<ul><li><p><code>act</code>: proceed</p></li><li><p><code>learn</code>: gather additional context</p></li><li><p><code>escalate</code>: block/escalate to human or multi-agent process</p></li></ul>
+<h3 id="blk-66015">7.3 Progress and evidence</h3>
+<ul><li><p>Update progress incrementally (avoid “jump to 100%” without evidence).</p></li><li><p>Link supporting nodes to goals.</p></li><li><p>Keep transition metadata descriptive for auditability.</p></li></ul>
+<h3 id="blk-66023">8) Consolidation Operations</h3>
+<p>Consolidation maintains memory quality over time.</p>
+<h3 id="blk-66025">8.1 When to run</h3>
+<ul><li><p>End of productive sessions</p></li><li><p>Periodically during long autonomous runs</p></li><li><p>After heavy write/ingestion bursts</p></li><li><p>Before critical retrieval/review checkpoints</p></li></ul>
+<h3 id="blk-66035">8.2 What to watch</h3>
+<p>From consolidation status/runtime info monitor:</p>
+<ul><li><p>cycle count</p></li><li><p>last run timestamp</p></li><li><p>decay/prune behavior</p></li><li><p>signs of overly aggressive pruning</p></li></ul>
+<p>If retrieval quality drops sharply, inspect consolidation settings and confidence distributions.</p>
+<h3 id="blk-66047">9) Incident Response Runbooks</h3>
+<h3 id="blk-66048">9.1 MCP server transport instability</h3>
+<p>Symptoms:</p>
+<ul><li><p>client timeouts</p></li><li><p>server shutdown messages</p></li><li><p>intermittent success/failure across calls</p></li></ul>
+<p>Response:</p>
+<ol><li><p>Confirm runtime process is alive.</p></li><li><p>Validate health resource.</p></li><li><p>Restart MCP runtime cleanly.</p></li><li><p>Re-run minimal smoke flow (list tools -&gt; read resources -&gt; retrieve -&gt; store).</p></li><li><p>Inspect logs for transport and timeout patterns.</p></li><li><p>Increase request timeout if workload is heavy.</p></li></ol>
+<h3 id="blk-66071">9.2 Write-path failures</h3>
+<p>Symptoms:</p>
+<ul><li><p>retrieval works but node/goal writes fail</p></li><li><p>partial success in batches</p></li></ul>
+<p>Response:</p>
+<ol><li><p>Verify DB path and file permissions.</p></li><li><p>Check available disk space.</p></li><li><p>Restart runtime.</p></li><li><p>Retry writes idempotently.</p></li><li><p>Confirm data via query/list calls after retry.</p></li></ol>
+<h3 id="blk-66090">9.3 Retrieval degradation</h3>
+<p>Symptoms:</p>
+<ul><li><p>poor relevance</p></li><li><p>stale/conflicting recall</p></li><li><p>weak support around active goals</p></li></ul>
+<p>Response:</p>
+<ol><li><p>Inspect low-confidence node concentration.</p></li><li><p>Run consolidation.</p></li><li><p>Add missing high-quality nodes (semantic, procedural, temporal, outcome, or goal as appropriate).</p></li><li><p>Use coverage review to identify knowledge gaps.</p></li><li><p>Avoid forcing action when routing says <code>learn</code> or <code>escalate</code>.</p></li></ol>
+<h3 id="blk-66111">10) Release &amp; Change Management</h3>
+<p>Before releases:</p>
+<ol><li><p>Run format, compile, and tests.</p></li><li><p>Verify MCP tools/resources remain discoverable.</p></li><li><p>Validate key operational workflows:</p></li></ol>
+<ul><li><p>retrieve -&gt; store -&gt; learn -&gt; consolidate</p></li></ul>
+<ol start="4"><li><p>Confirm docs and CLI help text are in sync with behavior.</p></li><li><p>Ensure version parity across project metadata and distribution artifacts.</p></li></ol>
+<p>After releases:</p>
+<ul><li><p>Smoke test install/run path.</p></li><li><p>Verify health/resource access from at least one MCP client.</p></li><li><p>Confirm no regressions in goal operations and consolidation calls.</p></li></ul>
+<h3 id="blk-66136">11) Security &amp; Safety Practices</h3>
+<ul><li><p>Never store secrets or credentials in graph content/metadata.</p></li><li><p>Use least-privilege file permissions for DB directories.</p></li><li><p>Keep logs free of sensitive user data where possible.</p></li><li><p>Prefer explicit, auditable metadata over opaque free-text for critical actions.</p></li><li><p>Treat externally sourced claims as lower confidence until verified.</p></li></ul>
+<h3 id="blk-66148">12) Recommended SLO-Style Targets (Starter Set)</h3>
+<p>These are practical baseline targets you can tune per environment:</p>
+<ul><li><p><strong>Runtime availability:</strong> core services up &gt; 99%</p></li><li><p><strong>MCP request success rate:</strong> &gt; 99% for standard calls</p></li><li><p><strong>Median retrieval latency:</strong> &lt; 2s on local workloads</p></li><li><p><strong>Write success rate:</strong> &gt; 99% for node/goal operations</p></li><li><p><strong>Consolidation cadence adherence:</strong> &gt; 95% of expected cycles</p></li></ul>
+<h3 id="blk-66161">13) Quick Troubleshooting Matrix</h3>
+<table><thead><tr><th>Symptom</th><th>Likely Cause</th><th>First Action</th></tr></thead><tbody><tr><td>Tool calls timeout</td><td>Transport/runtime instability</td><td>Restart runtime, re-check health</td></tr><tr><td>Goals not updating</td><td>Write-path issue or bad payload</td><td>Validate payload shape, retry update</td></tr><tr><td>Retrieval returns empty repeatedly</td><td>Sparse graph or wrong query scope</td><td>Seed knowledge, broaden query</td></tr><tr><td>Coverage always escalates</td><td>Insufficient support/confidence</td><td>Add evidence nodes, review contradictions</td></tr><tr><td>Sudden memory loss feel</td><td>Aggressive decay/prune settings</td><td>Inspect consolidation config/status</td></tr></tbody></table>
+<h3 id="blk-66181">14) End-of-Session Operator Procedure</h3>
+<p>Before ending a productive session:</p>
+<ol><li><p>Store key new knowledge discovered.</p></li><li><p>Report any pending outcomes.</p></li><li><p>Update goal progress/status.</p></li><li><p>Trigger consolidation and verify status.</p></li><li><p>Capture any unresolved risks in a goal note for next session continuity.</p></li></ol>
+<h3 id="blk-66194">15) Related Documentation</h3>
+<ul><li><p><code>index</code> — docs entry point</p></li><li><p><code>architecture</code> — system design and internals</p></li><li><p><code>quickstart</code> — first-run path</p></li><li><p><code>mcp-tools</code> — tool/resource interface reference</p></li><li><p><code>skills/SKILLS</code> — operational agent behavior loop</p></li><li><p><code>NPM_PUBLISH</code> — release/distribution runbook</p></li><li><p><code>ZED</code> — editor integration guidance</p></li></ul></div>
+<p class="src"><a href="/#/graphonomous/docs/operations.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-65845" class="lvl2">1) Operational Model</a><a href="#blk-65860" class="lvl2">2) Daily Operator Checklist</a><a href="#blk-65877" class="lvl2">3) Startup Procedures</a><a href="#blk-65878" class="lvl2">3.1 Local development startup</a><a href="#blk-65893" class="lvl2">3.2 MCP client startup validation</a><a href="#blk-65910" class="lvl2">4) Health Monitoring</a><a href="#blk-65911" class="lvl2">4.1 Runtime health resource</a><a href="#blk-65921" class="lvl2">4.2 Goal snapshot resource</a><a href="#blk-65930" class="lvl2">5) Data &amp; Storage Operations</a><a href="#blk-65931" class="lvl2">5.1 Persistence strategy</a><a href="#blk-65941" class="lvl2">5.2 Backup strategy</a><a href="#blk-65956" class="lvl2">5.3 Recovery procedure</a><a href="#blk-65969" class="lvl2">6) Learning Loop Operations</a><a href="#blk-65970" class="lvl2">6.1 Required loop discipline</a><a href="#blk-65980" class="lvl2">6.2 Outcome status semantics</a><a href="#blk-65992" class="lvl2">6.3 Confidence hygiene</a><a href="#blk-66001" class="lvl2">7) Goal Operations</a><a href="#blk-66003" class="lvl2">7.1 Goal lifecycle flow</a><a href="#blk-66006" class="lvl2">7.2 Coverage review gate</a><a href="#blk-66015" class="lvl2">7.3 Progress and evidence</a><a href="#blk-66023" class="lvl2">8) Consolidation Operations</a><a href="#blk-66025" class="lvl2">8.1 When to run</a><a href="#blk-66035" class="lvl2">8.2 What to watch</a><a href="#blk-66047" class="lvl2">9) Incident Response Runbooks</a><a href="#blk-66048" class="lvl2">9.1 MCP server transport instability</a><a href="#blk-66071" class="lvl2">9.2 Write-path failures</a><a href="#blk-66090" class="lvl2">9.3 Retrieval degradation</a><a href="#blk-66111" class="lvl2">10) Release &amp; Change Management</a><a href="#blk-66136" class="lvl2">11) Security &amp; Safety Practices</a><a href="#blk-66148" class="lvl2">12) Recommended SLO-Style Targets (Starter Set)</a><a href="#blk-66161" class="lvl2">13) Quick Troubleshooting Matrix</a><a href="#blk-66181" class="lvl2">14) End-of-Session Operator Procedure</a><a href="#blk-66194" class="lvl2">15) Related Documentation</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/ARITHMETIC_COMPLIANCE.md/">Graphonomous × box-and-box — Arithmetic Compliance Review</a><a href="/graphonomous/docs/BOOTSTRAP.md/">Graphonomous Local Bootstrap &amp; Verification Guide</a><a href="/graphonomous/docs/NPM_PACKAGE.md/">graphonomous — NPM Package Specification</a><a href="/graphonomous/docs/NPM_PUBLISH.md/">Graphonomous npm Publishing + Maintenance Runbook (Manual-First)</a><a href="/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/">Graphonomous Technical Documentation</a><a href="/graphonomous/docs/ZED.md/">Graphonomous + Zed MCP Setup Guide</a><a href="/graphonomous/docs/architecture.md/">Graphonomous Architecture</a><a href="/graphonomous/docs/faq.md/">Graphonomous FAQ</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/mcp-tools.md/">Graphonomous MCP Tools Reference</a><a href="/graphonomous/docs/quickstart.md/">Graphonomous Quickstart</a><a href="/graphonomous/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieral5y5ocsyuzakaecx4p3zqau2kafu6kgs5tlmvnz2yldteg7a2aza</div></div></div>
+</div></div>
+</body></html>

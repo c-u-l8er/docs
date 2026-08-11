@@ -1,0 +1,125 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Graphonomous Local Bootstrap &amp; Verification Guide · graphonomous · Ampersand Box</title>
+<meta name="description" content="This guide gives you a reproducible way to bootstrap, run, and verify graphonomous on a local machine.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/BOOTSTRAP.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Graphonomous Local Bootstrap &amp; Verification Guide">
+<meta property="og:description" content="This guide gives you a reproducible way to bootstrap, run, and verify graphonomous on a local machine.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/graphonomous/docs/BOOTSTRAP.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graphonomous Local Bootstrap & Verification Guide","name":"Graphonomous Local Bootstrap & Verification Guide","description":"This guide gives you a reproducible way to bootstrap, run, and verify graphonomous on a local machine.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/BOOTSTRAP.md/","identifier":"bagaaieramdbwqznfmctwnsttfirw2jed2flt2exuyo6guaxp42k3ppyzuhnq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"1) Prerequisites"},{"@type":"WebPageElement","name":"2) Quick Start (5-minute path)"},{"@type":"WebPageElement","name":"3) Clean Reproducible Bootstrap (from scratch)"},{"@type":"WebPageElement","name":"4) Runtime Configuration Matrix"},{"@type":"WebPageElement","name":"Core variables"},{"@type":"WebPageElement","name":"Example (safe local dev profile)"},{"@type":"WebPageElement","name":"MCP Executable Build + Standard Client Command Configuration"},{"@type":"WebPageElement","name":"5) Functional Verification in IEx"},{"@type":"WebPageElement","name":"6) Store & Migration Verification"},{"@type":"WebPageElement","name":"7) CI Parity Commands (run exactly what CI expects)"},{"@type":"WebPageElement","name":"8) Common Issues & Fixes"},{"@type":"WebPageElement","name":"A) sqlite_vec / extension loading issues"},{"@type":"WebPageElement","name":"B) Embedding model download/runtime constraints"},{"@type":"WebPageElement","name":"C) Logger warning about session store adapter during tests"},{"@type":"WebPageElement","name":"D) Stale local DB state causing confusing results"},{"@type":"WebPageElement","name":"9) Release-Hardening Checklist (Local)"},{"@type":"WebPageElement","name":"10) Always-On Skills Pack Wiring Verification"},{"@type":"WebPageElement","name":"Required files"},{"@type":"WebPageElement","name":"Wiring checkpoints"},{"@type":"WebPageElement","name":"Expected behavior"},{"@type":"WebPageElement","name":"11) One-Command Local Verification Script (optional)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"BOOTSTRAP.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/BOOTSTRAP.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">graphonomous</span>
+<span class="path">graphonomous/docs/BOOTSTRAP.md</span>
+
+</div></div>
+<div class="lead">This guide gives you a reproducible way to bootstrap, run, and verify graphonomous on a local machine.</div>
+<div class="prose"><h1 id="blk-63907">Graphonomous Local Bootstrap &amp; Verification Guide</h1>
+<p>This guide gives you a reproducible way to bootstrap, run, and verify <code>graphonomous</code> on a local machine.</p>
+<h3 id="blk-63909">1) Prerequisites</h3>
+<p>Use the same toolchain as CI for consistency:</p>
+<ul><li><p><strong>Erlang/OTP</strong>: <code>27.1</code></p></li><li><p><strong>Elixir</strong>: <code>1.17.3</code></p></li><li><p><strong>Mix</strong>: comes with Elixir</p></li><li><p><strong>OS</strong>: Linux/macOS (Windows via WSL recommended)</p></li></ul>
+<p>Optional but useful:</p>
+<ul><li><p><code>git</code></p></li><li><p><code>sqlite3</code> CLI (for inspecting DB files manually)</p></li></ul>
+<h3 id="blk-63926">2) Quick Start (5-minute path)</h3>
+<p>From the <code>ProjectAmp2</code> root:</p>
+<p>cd graphonomous mix deps.get mix format mix compile --warnings-as-errors mix test MIX_ENV=prod mix escript.build</p>
+<p>Expected result:</p>
+<ul><li><p>Compile succeeds</p></li><li><p>Test suite passes (currently <code>455+ tests, 0 failures</code>)</p></li><li><p>Executable <code>./graphonomous</code> is generated for standard MCP client launch</p></li></ul>
+<h3 id="blk-63937">3) Clean Reproducible Bootstrap (from scratch)</h3>
+<p>If you want a deterministic “fresh machine” style run:</p>
+<p>cd graphonomous rm -rf _build deps rm -f tmp/graphonomous_test.db rm -f priv/graphonomous_dev.db mix local.hex --force mix local.rebar --force mix deps.get MIX_ENV=test mix compile --warnings-as-errors MIX_ENV=test mix test</p>
+<p>Why this works:</p>
+<ul><li><p>Removes compiled artifacts and dependency cache</p></li><li><p>Rebuilds from declared dependencies in <code>mix.exs</code> + <code>mix.lock</code></p></li><li><p>Verifies code quality and runtime behavior in test mode</p></li></ul>
+<h3 id="blk-63948">4) Runtime Configuration Matrix</h3>
+<p>Runtime config is controlled via environment variables in <code>config/runtime.exs</code>.</p>
+<h4 id="blk-63950">Core variables</h4>
+<ul><li><p><code>GRAPHONOMOUS_DB_PATH</code></p></li></ul>
+<p>Default: <code>priv/graphonomous.db</code></p>
+<ul><li><p><code>GRAPHONOMOUS_EMBEDDING_MODEL</code></p></li></ul>
+<p>Default: <code>sentence-transformers/all-MiniLM-L6-v2</code></p>
+<ul><li><p><code>GRAPHONOMOUS_EMBEDDER_BACKEND</code></p></li></ul>
+<p>Allowed: <code>auto | fallback</code> Default: <code>auto</code></p>
+<ul><li><p><code>GRAPHONOMOUS_SQLITE_VEC_EXTENSION_PATH</code></p></li></ul>
+<p>Optional path to sqlite-vec extension</p>
+<ul><li><p><code>GRAPHONOMOUS_CONSOLIDATOR_INTERVAL_MS</code></p></li></ul>
+<p>Default: <code>300000</code></p>
+<ul><li><p><code>GRAPHONOMOUS_CONSOLIDATOR_DECAY_RATE</code></p></li></ul>
+<p>Default: <code>0.02</code></p>
+<ul><li><p><code>GRAPHONOMOUS_CONSOLIDATOR_PRUNE_THRESHOLD</code></p></li></ul>
+<p>Default: <code>0.1</code></p>
+<ul><li><p><code>GRAPHONOMOUS_CONSOLIDATOR_MERGE_SIMILARITY</code></p></li></ul>
+<p>Default: <code>0.95</code></p>
+<ul><li><p><code>GRAPHONOMOUS_LEARNING_RATE</code></p></li></ul>
+<p>Default: <code>0.2</code></p>
+<ul><li><p><code>LOG_LEVEL</code></p></li></ul>
+<p>Allowed: <code>debug | info | warning | error</code> Default: <code>info</code></p>
+<h4 id="blk-63991">Example (safe local dev profile)</h4>
+<p>export GRAPHONOMOUS_DB_PATH=&quot;tmp/graphonomous_local.db&quot; export GRAPHONOMOUS_EMBEDDER_BACKEND=&quot;fallback&quot; export LOG_LEVEL=&quot;debug&quot;</p>
+<h4 id="blk-63993">MCP Executable Build + Standard Client Command Configuration</h4>
+<p>Build the executable command once:</p>
+<p>MIX_ENV=prod mix escript.build</p>
+<p>Run directly (STDIO transport):</p>
+<p>./graphonomous --db ~/.graphonomous/knowledge.db</p>
+<p>If you install/copy it onto PATH, use:</p>
+<p>graphonomous --db ~/.graphonomous/knowledge.db</p>
+<p>Standard MCP client configuration shape:</p>
+<p>{ &quot;mcpServers&quot;: { &quot;graphonomous&quot;: { &quot;command&quot;: &quot;graphonomous&quot;, &quot;args&quot;: [&quot;--db&quot;, &quot;~/.graphonomous/knowledge.db&quot;], &quot;env&quot;: { &quot;GRAPHONOMOUS_EMBEDDING_MODEL&quot;: &quot;sentence-transformers/all-MiniLM-L6-v2&quot; } } } }</p>
+<h3 id="blk-64002">5) Functional Verification in IEx</h3>
+<p>Start the app:</p>
+<p>iex -S mix</p>
+<p>Run these checks in IEx:</p>
+<p>Graphonomous.health() Graphonomous.store_node(%{ content: &quot;Hydraulic pressure error E-47 often indicates seal wear.&quot;, node_type: &quot;semantic&quot;, confidence: 0.82, source: &quot;bootstrap_manual&quot; }) Graphonomous.retrieve_context(&quot;What causes E-47 hydraulic pressure faults?&quot;, limit: 3)</p>
+<p>What to verify:</p>
+<ul><li><p><code>Graphonomous.health/0</code> reports services as <code>:up</code></p></li><li><p><code>store_node/1</code> returns a node struct/map with an <code>id</code></p></li><li><p><code>retrieve_context/2</code> returns relevant node results</p></li></ul>
+<h3 id="blk-64015">6) Store &amp; Migration Verification</h3>
+<p>The store auto-creates schema and applies tracked migrations at startup.</p>
+<p>To verify via tests:</p>
+<p>mix test test/store_test.exs</p>
+<p>Coverage includes:</p>
+<ul><li><p>node/edge/outcome persistence</p></li><li><p>cache rebuild from SQLite</p></li><li><p>grounding trace persistence</p></li><li><p>migration bookkeeping (<code>schema_migrations</code> records applied IDs)</p></li></ul>
+<h3 id="blk-64029">7) CI Parity Commands (run exactly what CI expects)</h3>
+<p>MIX_ENV=test mix deps.get MIX_ENV=test mix format --check-formatted MIX_ENV=test mix compile --warnings-as-errors MIX_ENV=test mix test --color</p>
+<p>If all pass locally, your branch should be CI-ready.</p>
+<h3 id="blk-64032">8) Common Issues &amp; Fixes</h3>
+<h4 id="blk-64033">A) <code>sqlite_vec</code> / extension loading issues</h4>
+<p>If vector extension loading fails, keep going with:</p>
+<ul><li><p><code>GRAPHONOMOUS_EMBEDDER_BACKEND=fallback</code></p></li><li><p>omit <code>GRAPHONOMOUS_SQLITE_VEC_EXTENSION_PATH</code> unless you have a valid extension binary</p></li></ul>
+<h4 id="blk-64040">B) Embedding model download/runtime constraints</h4>
+<p>If model/NIF/runtime setup is constrained:</p>
+<ul><li><p>set <code>GRAPHONOMOUS_EMBEDDER_BACKEND=fallback</code></p></li><li><p>rerun compile/test</p></li></ul>
+<h4 id="blk-64047">C) Logger warning about session store adapter during tests</h4>
+<p>A warning like session-store adapter availability may appear in test output; tests can still pass. Treat as non-blocking unless behavior fails.</p>
+<h4 id="blk-64049">D) Stale local DB state causing confusing results</h4>
+<p>Reset local state:</p>
+<p>rm -f tmp/graphonomous_test.db priv/graphonomous_dev.db priv/graphonomous.db mix test</p>
+<h3 id="blk-64052">9) Release-Hardening Checklist (Local)</h3>
+<p>Before merging/releasing, verify:</p>
+<ul><li><p>[ ] <code>mix format --check-formatted</code> passes</p></li><li><p>[ ] <code>mix compile --warnings-as-errors</code> passes</p></li><li><p>[ ] <code>mix test</code> passes</p></li><li><p>[ ] runtime env vars documented for your deployment</p></li><li><p>[ ] DB path is explicit for your environment</p></li><li><p>[ ] fallback embedder behavior understood for constrained runtimes</p></li><li><p>[ ] migration table (<code>schema_migrations</code>) present after boot</p></li></ul>
+<h3 id="blk-64069">10) Always-On Skills Pack Wiring Verification</h3>
+<p>Before considering local bootstrap complete, verify the agent skills wiring is present and discoverable.</p>
+<h4 id="blk-64071">Required files</h4>
+<p>Skills live in the <a href="https://github.com/c-u-l8er/ampersand-plugins" target="_blank" rel="noopener">ampersand-plugins</a> repo. Reference docs are mirrored in <code>docs/skills/</code>:</p>
+<ul><li><p><code>docs/skills/SKILLS.md</code> (index + machine architecture)</p></li><li><p><code>docs/skills/bootstrap.md</code></p></li><li><p><code>docs/skills/retrieve.md</code></p></li><li><p><code>docs/skills/store.md</code></p></li><li><p><code>docs/skills/learn.md</code></p></li><li><p><code>docs/skills/deliberate.md</code></p></li><li><p><code>docs/skills/consolidate.md</code></p></li><li><p><code>docs/skills/goals.md</code></p></li><li><p><code>docs/skills/belief.md</code></p></li><li><p><code>docs/skills/forgetting.md</code></p></li><li><p><code>docs/skills/epistemic-frontier.md</code></p></li><li><p><code>docs/skills/trace-evidence-path.md</code></p></li><li><p><code>docs/skills/attention.md</code></p></li><li><p><code>docs/skills/review.md</code></p></li><li><p><code>docs/skills/inspect.md</code></p></li><li><p><code>docs/skills/graph-health.md</code></p></li><li><p><code>docs/skills/workflows.md</code></p></li><li><p><code>docs/skills/sync.md</code></p></li><li><p><code>docs/skills/watch.md</code></p></li></ul>
+<h4 id="blk-64112">Wiring checkpoints</h4>
+<ul><li><p><code>AGENTS.md</code> references the skills pack as mandatory session context.</p></li><li><p><code>CLAUDE.md</code> references the bootstrap prompt and skills index.</p></li><li><p><code>README.md</code> includes &quot;Always-On Agent Skills Wiring (Required)&quot; guidance.</p></li><li><p><code>docs/ZED.md</code> includes &quot;Always-on skills prompt wiring&quot; guidance.</p></li></ul>
+<h4 id="blk-64122">Expected behavior</h4>
+<p>For non-trivial chat sessions, agent behavior should default to:</p>
+<ol><li><p>retrieve context first</p></li><li><p>reason + act</p></li><li><p>store durable knowledge</p></li><li><p>report outcomes</p></li><li><p>run consolidation periodically</p></li></ol>
+<h3 id="blk-64135">11) One-Command Local Verification Script (optional)</h3>
+<p>You can use this command sequence for a quick confidence run (including MCP executable build):</p>
+<p>rm -rf _build deps &amp;&amp; rm -f tmp/graphonomous_test.db &amp;&amp; mix deps.get &amp;&amp; MIX_ENV=test mix format --check-formatted &amp;&amp; MIX_ENV=test mix compile --warnings-as-errors &amp;&amp; MIX_ENV=test mix test &amp;&amp; MIX_ENV=prod mix escript.build</p>
+<p>If this completes successfully, your local environment is reproducible, verified, and ready for standard MCP command launch via <code>./graphonomous</code>.</p></div>
+<p class="src"><a href="/#/graphonomous/docs/BOOTSTRAP.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-63909" class="lvl2">1) Prerequisites</a><a href="#blk-63926" class="lvl2">2) Quick Start (5-minute path)</a><a href="#blk-63937" class="lvl2">3) Clean Reproducible Bootstrap (from scratch)</a><a href="#blk-63948" class="lvl2">4) Runtime Configuration Matrix</a><a href="#blk-63950" class="lvl3">Core variables</a><a href="#blk-63991" class="lvl3">Example (safe local dev profile)</a><a href="#blk-63993" class="lvl3">MCP Executable Build + Standard Client Command Configuration</a><a href="#blk-64002" class="lvl2">5) Functional Verification in IEx</a><a href="#blk-64015" class="lvl2">6) Store &amp; Migration Verification</a><a href="#blk-64029" class="lvl2">7) CI Parity Commands (run exactly what CI expects)</a><a href="#blk-64032" class="lvl2">8) Common Issues &amp; Fixes</a><a href="#blk-64033" class="lvl3">A) sqlite_vec / extension loading issues</a><a href="#blk-64040" class="lvl3">B) Embedding model download/runtime constraints</a><a href="#blk-64047" class="lvl3">C) Logger warning about session store adapter during tests</a><a href="#blk-64049" class="lvl3">D) Stale local DB state causing confusing results</a><a href="#blk-64052" class="lvl2">9) Release-Hardening Checklist (Local)</a><a href="#blk-64069" class="lvl2">10) Always-On Skills Pack Wiring Verification</a><a href="#blk-64071" class="lvl3">Required files</a><a href="#blk-64112" class="lvl3">Wiring checkpoints</a><a href="#blk-64122" class="lvl3">Expected behavior</a><a href="#blk-64135" class="lvl2">11) One-Command Local Verification Script (optional)</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/ARITHMETIC_COMPLIANCE.md/">Graphonomous × box-and-box — Arithmetic Compliance Review</a><a href="/graphonomous/docs/NPM_PACKAGE.md/">graphonomous — NPM Package Specification</a><a href="/graphonomous/docs/NPM_PUBLISH.md/">Graphonomous npm Publishing + Maintenance Runbook (Manual-First)</a><a href="/graphonomous/docs/TECHNICAL_DOCUMENTATION.md/">Graphonomous Technical Documentation</a><a href="/graphonomous/docs/ZED.md/">Graphonomous + Zed MCP Setup Guide</a><a href="/graphonomous/docs/architecture.md/">Graphonomous Architecture</a><a href="/graphonomous/docs/faq.md/">Graphonomous FAQ</a><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/mcp-tools.md/">Graphonomous MCP Tools Reference</a><a href="/graphonomous/docs/operations.md/">Operations &amp; Maintenance</a><a href="/graphonomous/docs/quickstart.md/">Graphonomous Quickstart</a><a href="/graphonomous/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieramdbwqznfmctwnsttfirw2jed2flt2exuyo6guaxp42k3ppyzuhnq</div></div></div>
+</div></div>
+</body></html>

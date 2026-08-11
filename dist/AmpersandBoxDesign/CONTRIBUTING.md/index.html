@@ -1,0 +1,115 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Contributing to the [&amp;] Protocol · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Thanks for contributing.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/CONTRIBUTING.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Contributing to the [&amp;] Protocol">
+<meta property="og:description" content="Thanks for contributing.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/CONTRIBUTING.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Contributing to the [&] Protocol","name":"Contributing to the [&] Protocol","description":"Thanks for contributing.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/CONTRIBUTING.md/","identifier":"bagaaierak6gb5oib42vgbt22k34vfvzcbqjv57xld6s5aocadf2k6dpvpqla","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"What belongs in this repository"},{"@type":"WebPageElement","name":"Guiding principles"},{"@type":"WebPageElement","name":"Repository structure"},{"@type":"WebPageElement","name":"Before you open a pull request"},{"@type":"WebPageElement","name":"Specification changes"},{"@type":"WebPageElement","name":"Schema contribution rules"},{"@type":"WebPageElement","name":"Example declaration rules"},{"@type":"WebPageElement","name":"Reference implementation rules"},{"@type":"WebPageElement","name":"Documentation guidelines"},{"@type":"WebPageElement","name":"Commit guidelines"},{"@type":"WebPageElement","name":"Pull request guidelines"},{"@type":"WebPageElement","name":"Review criteria"},{"@type":"WebPageElement","name":"Things to avoid"},{"@type":"WebPageElement","name":"Reporting issues"},{"@type":"WebPageElement","name":"Security and safety"},{"@type":"WebPageElement","name":"Questions before large changes"},{"@type":"WebPageElement","name":"License and ownership"},{"@type":"WebPageElement","name":"Practical contributor checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"CONTRIBUTING.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/CONTRIBUTING.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/CONTRIBUTING.md</span>
+
+</div></div>
+<div class="lead">Thanks for contributing.</div>
+<div class="prose"><h1 id="blk-225">Contributing to the [&amp;] Protocol</h1>
+<p>Thanks for contributing.</p>
+<p>This repository is the canonical home for the [&amp;] Protocol specification, schemas, examples, documentation, and reference implementation. The goal is to keep the project useful both as a <strong>human-readable protocol spec</strong> and as a <strong>machine-readable implementation target</strong>.</p>
+<h3 id="blk-228">What belongs in this repository</h3>
+<p>This repository includes work on:</p>
+<ul><li><p>protocol specification and terminology</p></li><li><p>JSON Schema artifacts</p></li><li><p>example <code>ampersand.json</code> declarations</p></li><li><p>capability contract and registry artifacts</p></li><li><p>reference implementations</p></li><li><p>CLI tooling</p></li><li><p>MCP and A2A generation</p></li><li><p>documentation and positioning material</p></li><li><p>site/source files for publishing the protocol</p></li></ul>
+<h3 id="blk-249">Guiding principles</h3>
+<p>When contributing, optimize for these priorities:</p>
+<ol><li><p><strong>Specification first</strong></p></li></ol>
+<p>The schema, examples, and protocol documents should agree.</p>
+<ol start="2"><li><p><strong>Machine-readable before magical</strong></p></li></ol>
+<p>Prefer explicit contracts, schemas, fixtures, and validation over prose-only ideas.</p>
+<ol start="3"><li><p><strong>Do not invent runtime details</strong></p></li></ol>
+<p>If a provider, protocol binding, or integration is not grounded in code or docs, leave it unresolved and document the gap.</p>
+<ol start="4"><li><p><strong>Keep the protocol provider-agnostic</strong></p></li></ol>
+<p>Capabilities are interfaces. Providers are implementations.</p>
+<ol start="5"><li><p><strong>Complement existing standards</strong></p></li></ol>
+<p>[&amp;] compiles into MCP and A2A configurations. It does not replace them.</p>
+<h3 id="blk-271">Repository structure</h3>
+<p>Contributions should generally fit into one of these areas:</p>
+<ul><li><p><code>schema/</code> — canonical schemas</p></li><li><p><code>examples/</code> — validating example declarations</p></li><li><p><code>reference/</code> — reference implementations</p></li><li><p><code>docs/</code> — supporting documentation</p></li><li><p><code>site/</code> — website/source publishing assets</p></li><li><p><code>tools/</code> — scripts and developer helpers</p></li><li><p><code>prompts/</code> — implementation and research prompts</p></li></ul>
+<p>If you need to add a new top-level directory, explain why in your pull request.</p>
+<h3 id="blk-289">Before you open a pull request</h3>
+<p>Please make sure your contribution does the following where relevant:</p>
+<ul><li><p>keeps terminology consistent with the protocol</p></li><li><p>preserves or improves schema validity</p></li><li><p>includes examples for new protocol concepts</p></li><li><p>includes tests for implementation changes</p></li><li><p>updates docs when behavior changes</p></li><li><p>avoids unrelated formatting churn</p></li><li><p>keeps generated artifacts out of commits unless intentionally checked in</p></li></ul>
+<h3 id="blk-306">Specification changes</h3>
+<p>If you change the protocol itself, update all affected layers together.</p>
+<p>For example, a change to a capability field may require updates to:</p>
+<ul><li><p><code>SPEC.md</code></p></li><li><p><code>protocol.html</code> or site source</p></li><li><p><code>schema/v*/ampersand.schema.json</code></p></li><li><p>example declarations in <code>examples/</code></p></li><li><p>reference implementation logic</p></li><li><p>CLI output or generation behavior</p></li><li><p>docs in <code>docs/</code></p></li></ul>
+<p>A protocol change is not complete if only the prose changes.</p>
+<h3 id="blk-325">Schema contribution rules</h3>
+<p>When editing schemas:</p>
+<ul><li><p>target JSON Schema draft 2020-12 unless there is a documented reason not to</p></li><li><p>prefer explicit validation rules over vague descriptions</p></li><li><p>include examples where helpful</p></li><li><p>preserve backward compatibility when possible</p></li><li><p>if compatibility must break, document it clearly in the pull request</p></li></ul>
+<p>If you add a new schema artifact, also add at least one realistic example document that validates against it.</p>
+<h3 id="blk-339">Example declaration rules</h3>
+<p>Example files should be realistic, not toy placeholders.</p>
+<p>Each example should:</p>
+<ul><li><p>reference the canonical schema</p></li><li><p>use realistic capability combinations</p></li><li><p>use meaningful governance and provenance settings where appropriate</p></li><li><p>demonstrate an actual use case</p></li><li><p>validate successfully</p></li></ul>
+<p>Examples are both documentation and test fixtures.</p>
+<h3 id="blk-354">Reference implementation rules</h3>
+<p>Reference implementations should stay:</p>
+<ul><li><p>small</p></li><li><p>readable</p></li><li><p>deterministic</p></li><li><p>well-tested</p></li><li><p>faithful to the spec</p></li></ul>
+<p>Prefer minimal, explicit implementations over premature abstraction.</p>
+<p>If you add a new implementation feature, include tests that show:</p>
+<ul><li><p>valid behavior</p></li><li><p>invalid behavior</p></li><li><p>edge cases where useful</p></li></ul>
+<h3 id="blk-376">Documentation guidelines</h3>
+<p>Documentation should be:</p>
+<ul><li><p>technical but accessible</p></li><li><p>precise about what is implemented vs planned</p></li><li><p>respectful of the surrounding ecosystem</p></li><li><p>light on hype</p></li><li><p>heavy on examples</p></li></ul>
+<p>Preferred framing:</p>
+<ul><li><p>MCP handles agent-to-tool connectivity</p></li><li><p>A2A handles agent-to-agent coordination</p></li><li><p>[&amp;] handles capability composition and compiles into MCP + A2A artifacts</p></li></ul>
+<p>Avoid framing the protocol as replacing other standards.</p>
+<h3 id="blk-398">Commit guidelines</h3>
+<p>Use clear, focused commits.</p>
+<p>Good examples:</p>
+<ul><li><p><code>Add capability contract schema</code></p></li><li><p><code>Create customer support example declaration</code></p></li><li><p><code>Add MCP config generator to Elixir reference implementation</code></p></li><li><p><code>Document protocol stack positioning</code></p></li></ul>
+<p>Avoid vague commits like:</p>
+<ul><li><p><code>updates</code></p></li><li><p><code>fix stuff</code></p></li><li><p><code>misc changes</code></p></li></ul>
+<h3 id="blk-418">Pull request guidelines</h3>
+<p>A good pull request should include:</p>
+<ul><li><p>a short summary of what changed</p></li><li><p>why the change is needed</p></li><li><p>which protocol layer it affects</p></li><li><p>any follow-up work still missing</p></li><li><p>screenshots or sample output if UI/CLI/site output changed</p></li></ul>
+<p>If the change affects schemas, generation, or validation, include example input/output in the PR description.</p>
+<h3 id="blk-432">Review criteria</h3>
+<p>Contributions will generally be reviewed for:</p>
+<ul><li><p>correctness</p></li><li><p>consistency with the protocol model</p></li><li><p>clarity of naming</p></li><li><p>compatibility with existing artifacts</p></li><li><p>test coverage</p></li><li><p>documentation completeness</p></li></ul>
+<h3 id="blk-447">Things to avoid</h3>
+<p>Please avoid these unless explicitly discussed first:</p>
+<ul><li><p>sweeping renames across the repo without strong justification</p></li><li><p>speculative provider integrations with no grounding</p></li><li><p>undocumented schema changes</p></li><li><p>mixing protocol changes with unrelated site/design cleanup</p></li><li><p>adding dependencies that are not clearly necessary</p></li><li><p>using marketing copy in technical specification files</p></li></ul>
+<h3 id="blk-462">Reporting issues</h3>
+<p>When filing an issue, include:</p>
+<ul><li><p>what you expected</p></li><li><p>what happened instead</p></li><li><p>relevant file paths</p></li><li><p>example input</p></li><li><p>validation/test output if available</p></li><li><p>whether the issue is about spec, schema, docs, CLI, generation, or implementation</p></li></ul>
+<h3 id="blk-477">Security and safety</h3>
+<p>Do not commit:</p>
+<ul><li><p>secrets</p></li><li><p>API keys</p></li><li><p>credentials</p></li><li><p>private tokens</p></li><li><p>private customer or personal data</p></li></ul>
+<p>If a contribution touches governance, provenance, auditability, or safety constraints, explain the intended behavior clearly.</p>
+<h3 id="blk-491">Questions before large changes</h3>
+<p>If you want to make a major change, open an issue or draft pull request first.</p>
+<p>Examples of &quot;major changes&quot;:</p>
+<ul><li><p>changing the canonical schema shape</p></li><li><p>renaming core primitives</p></li><li><p>changing composition semantics</p></li><li><p>changing governance model semantics</p></li><li><p>changing generated MCP or A2A artifact structure</p></li><li><p>introducing a new reference implementation language</p></li></ul>
+<h3 id="blk-507">License and ownership</h3>
+<p>By contributing, you agree that your contribution may be included in the project under the repository's license once it is added or finalized.</p>
+<p>If licensing status is in transition, call that out in the pull request when relevant.</p>
+<h3 id="blk-510">Practical contributor checklist</h3>
+<p>Before submitting, ask yourself:</p>
+<ul><li><p>Does this match the protocol as written?</p></li><li><p>Did I update schema/examples/docs together?</p></li><li><p>Did I avoid inventing details that are not grounded?</p></li><li><p>Did I add or update tests?</p></li><li><p>Would another engineer understand this change in six months?</p></li></ul>
+<p>If the answer is yes, you're probably in good shape.</p>
+<p>Build the protocol like infrastructure: clear contracts, reproducible behavior, and minimal ambiguity.</p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/CONTRIBUTING.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-228" class="lvl2">What belongs in this repository</a><a href="#blk-249" class="lvl2">Guiding principles</a><a href="#blk-271" class="lvl2">Repository structure</a><a href="#blk-289" class="lvl2">Before you open a pull request</a><a href="#blk-306" class="lvl2">Specification changes</a><a href="#blk-325" class="lvl2">Schema contribution rules</a><a href="#blk-339" class="lvl2">Example declaration rules</a><a href="#blk-354" class="lvl2">Reference implementation rules</a><a href="#blk-376" class="lvl2">Documentation guidelines</a><a href="#blk-398" class="lvl2">Commit guidelines</a><a href="#blk-418" class="lvl2">Pull request guidelines</a><a href="#blk-432" class="lvl2">Review criteria</a><a href="#blk-447" class="lvl2">Things to avoid</a><a href="#blk-462" class="lvl2">Reporting issues</a><a href="#blk-477" class="lvl2">Security and safety</a><a href="#blk-491" class="lvl2">Questions before large changes</a><a href="#blk-507" class="lvl2">License and ownership</a><a href="#blk-510" class="lvl2">Practical contributor checklist</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/AGENTS.md/">[&amp;] Protocol — AmpersandBoxDesign</a><a href="/AmpersandBoxDesign/CLAUDE.md/">[&amp;] Protocol — AmpersandBoxDesign</a><a href="/AmpersandBoxDesign/DEPLOY.md/">DEPLOY.md</a><a href="/AmpersandBoxDesign/README.md/">[&amp;] Protocol</a><a href="/AmpersandBoxDesign/SPEC.md/">[&amp;] Protocol Specification</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierak6gb5oib42vgbt22k34vfvzcbqjv57xld6s5aocadf2k6dpvpqla</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,226 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Research Overview · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="This document is the research-oriented companion for the [&amp;] Protocol documentation hub.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/research.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Research Overview">
+<meta property="og:description" content="This document is the research-oriented companion for the [&amp;] Protocol documentation hub.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/research.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Research Overview","name":"Research Overview","description":"This document is the research-oriented companion for the [&] Protocol documentation hub.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/research.md/","identifier":"bagaaierajrzdrav6wezafguzjqciouyvi3wt4z6ksm54c7i3ssi27fjlmcda","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Executive Summary"},{"@type":"WebPageElement","name":"1. Why This Research Matters"},{"@type":"WebPageElement","name":"2. The Current Protocol Stack"},{"@type":"WebPageElement","name":"MCP"},{"@type":"WebPageElement","name":"A2A"},{"@type":"WebPageElement","name":"ACP and adjacent work"},{"@type":"WebPageElement","name":"3. Research Thread: Cognitive Architectures"},{"@type":"WebPageElement","name":"Why cognitive architecture matters"},{"@type":"WebPageElement","name":"Why this supports a protocol"},{"@type":"WebPageElement","name":"Why now"},{"@type":"WebPageElement","name":"4. Research Thread: Memory Systems"},{"@type":"WebPageElement","name":"Why memory research matters to the protocol"},{"@type":"WebPageElement","name":"5. Research Thread: Reasoning and Deliberation"},{"@type":"WebPageElement","name":"Why this matters"},{"@type":"WebPageElement","name":"6. Research Thread: Time and Temporal Intelligence"},{"@type":"WebPageElement","name":"Why this matters for composition"},{"@type":"WebPageElement","name":"7. Research Thread: Space and Spatial Intelligence"},{"@type":"WebPageElement","name":"Why this matters"},{"@type":"WebPageElement","name":"8. Research Thread: Taxonomy and Functional Decomposition"},{"@type":"WebPageElement","name":"9. Research Thread: Provenance, Auditability, and Trust"},{"@type":"WebPageElement","name":"Why hash-linked provenance matters"},{"@type":"WebPageElement","name":"10. Research Thread: Governance as Data"},{"@type":"WebPageElement","name":"11. Why a Composition Layer Is Plausible Now"},{"@type":"WebPageElement","name":"Condition 1: adjacent protocols exist"},{"@type":"WebPageElement","name":"Condition 2: agent systems are increasingly modular"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"research.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/research.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/research.md</span>
+
+</div></div>
+<div class="lead">This document is the research-oriented companion for the [&amp;] Protocol documentation hub.</div>
+<div class="prose"><h1 id="blk-15318">Research Overview</h1>
+<p>This document is the research-oriented companion for the [&amp;] Protocol documentation hub.</p>
+<p>Its purpose is to explain <strong>why capability composition is emerging as a distinct problem in the agent ecosystem</strong>, how that problem relates to current protocol work, and which research threads most directly support the protocol’s design.</p>
+<p>This is not a full literature review. It is a structured overview of the ideas, pressures, and signals that make a composition layer plausible now.</p>
+<h3 id="blk-15322">Executive Summary</h3>
+<p>The agent ecosystem is maturing in recognizable layers:</p>
+<ul><li><p><strong>tool and resource connectivity</strong> via protocols such as MCP</p></li><li><p><strong>agent-to-agent coordination</strong> via protocols such as A2A</p></li><li><p><strong>communication and transport</strong> via ACP, HTTP, gRPC, and related infrastructure</p></li><li><p><strong>UI and rendering</strong> via interface-oriented protocols and frameworks</p></li></ul>
+<p>These layers matter, but they do not fully address a different question:</p>
+<blockquote><p>How should an agent declare, validate, and govern the cognitive capabilities that make it up before runtime wiring begins?</p></blockquote>
+<p>That is the research and protocol gap the [&amp;] Protocol addresses.</p>
+<p>The relevant convergence is happening across four fronts:</p>
+<ol><li><p><strong>industry standardization</strong> around MCP and A2A</p></li><li><p><strong>cognitive architecture research</strong> that decomposes intelligence into functional systems</p></li><li><p><strong>memory/reasoning systems work</strong> that makes capability boundaries more explicit</p></li><li><p><strong>governance and provenance demands</strong> driven by safety, auditability, and operational trust</p></li></ol>
+<p>The result is a clear opening for a composition layer built around:</p>
+<ul><li><p>capability declaration</p></li><li><p>typed contracts</p></li><li><p>composition algebra</p></li><li><p>provenance</p></li><li><p>governance as data</p></li><li><p>compilation into downstream runtime protocols</p></li></ul>
+<h3 id="blk-15361">1. Why This Research Matters</h3>
+<p>The strongest reason to study this space is that agent systems are no longer just prompt wrappers around a single model invocation.</p>
+<p>Production systems now combine:</p>
+<ul><li><p>retrieval layers</p></li><li><p>graph or vector memory</p></li><li><p>planning or deliberation systems</p></li><li><p>temporal pattern detection</p></li><li><p>routing and location awareness</p></li><li><p>policy constraints</p></li><li><p>external tool invocation</p></li><li><p>multi-agent delegation</p></li></ul>
+<p>Once agents become multi-capability systems, the architectural question changes.</p>
+<p>It is no longer enough to say:</p>
+<ul><li><p>“this agent has memory”</p></li><li><p>“this agent can reason”</p></li><li><p>“this agent can call tools”</p></li></ul>
+<p>Those statements are too vague for interoperability and too vague for validation.</p>
+<p>A more useful question is:</p>
+<ul><li><p>what kind of memory?</p></li><li><p>what kind of reasoning?</p></li><li><p>what temporal or spatial intelligence is involved?</p></li><li><p>what contracts do those components satisfy?</p></li><li><p>how do they compose?</p></li><li><p>how is provenance preserved?</p></li><li><p>where do constraints live?</p></li></ul>
+<p>That is why a research overview is useful: it shows that the protocol problem is not arbitrary. It emerges from real architectural pressure.</p>
+<h3 id="blk-15408">2. The Current Protocol Stack</h3>
+<p>The current ecosystem already has strong momentum in adjacent areas.</p>
+<h4 id="blk-15410">MCP</h4>
+<p>MCP is important because it standardizes <strong>agent-to-tool connectivity</strong>.</p>
+<p>It gives agents a consistent way to discover and invoke tools, resources, and prompts. This is a major step toward interoperability at the context layer.</p>
+<p>But MCP does not attempt to define:</p>
+<ul><li><p>cognitive primitives</p></li><li><p>capability composition</p></li><li><p>governance semantics</p></li><li><p>provenance chain structure</p></li><li><p>compatibility between internal agent capabilities</p></li></ul>
+<p>It standardizes invocation surfaces, not internal capability architecture.</p>
+<h4 id="blk-15426">A2A</h4>
+<p>A2A is important because it standardizes <strong>agent-to-agent coordination</strong>.</p>
+<p>It gives agents a way to advertise skills, publish agent cards, and coordinate with other agents.</p>
+<p>But A2A begins with the assumption that an agent already exists and is ready to expose itself externally. It does not define how that agent was internally composed.</p>
+<h4 id="blk-15430">ACP and adjacent work</h4>
+<p>ACP and similar work help standardize communication patterns.</p>
+<p>Operational projects around agent infrastructure improve:</p>
+<ul><li><p>observability</p></li><li><p>scaling</p></li><li><p>testing</p></li><li><p>evaluation</p></li><li><p>deployment discipline</p></li></ul>
+<p>All of that is useful, but it still leaves a conceptual and practical gap between:</p>
+<ul><li><p>“agent can call tools”</p></li><li><p>and</p></li><li><p>“agent is composed from validated capabilities with explicit governance and provenance”</p></li></ul>
+<p>That gap is the composition layer.</p>
+<h3 id="blk-15453">3. Research Thread: Cognitive Architectures</h3>
+<p>A major source of support for the [&amp;] model comes from cognitive architecture research.</p>
+<h4 id="blk-15455">Why cognitive architecture matters</h4>
+<p>Cognitive architectures treat intelligence as a system of interacting functions rather than a single monolithic process.</p>
+<p>That perspective maps naturally onto the protocol’s primitive domains:</p>
+<ul><li><p><strong>memory</strong></p></li><li><p><strong>reason</strong></p></li><li><p><strong>time</strong></p></li><li><p><strong>space</strong></p></li></ul>
+<p>This is not a claim that the protocol is a neuroscience model. It is a claim that practical agent systems benefit from a functional decomposition that resembles the way cognitive architecture research breaks down intelligence.</p>
+<h4 id="blk-15468">Why this supports a protocol</h4>
+<p>Once intelligence is decomposed into distinct functional concerns, it becomes possible to standardize:</p>
+<ul><li><p>interfaces between concerns</p></li><li><p>contracts for each concern</p></li><li><p>composition rules</p></li><li><p>implementation-agnostic declarations</p></li></ul>
+<p>This is exactly the shift from “framework code” to “protocol artifact.”</p>
+<h4 id="blk-15480">Why now</h4>
+<p>Earlier generations of AI software often hid architecture behind application code. Modern agent systems increasingly expose architecture in configuration, orchestration, or retrieval layers. That makes the step toward a formal capability declaration much more plausible.</p>
+<h3 id="blk-15482">4. Research Thread: Memory Systems</h3>
+<p>Memory is one of the clearest areas where capability distinctions matter.</p>
+<p>In practice, “memory” now often means multiple different things:</p>
+<ul><li><p>graph memory</p></li><li><p>vector retrieval memory</p></li><li><p>episodic recall</p></li><li><p>durable long-term storage</p></li><li><p>short-term working context</p></li><li><p>consolidation pipelines</p></li></ul>
+<p>These are not interchangeable.</p>
+<p>A graph memory system supports different queries and reasoning patterns than a vector store. An episodic memory system supports different use cases than a simple semantic retrieval layer.</p>
+<p>That means memory is already a namespace of capabilities, not a single feature flag.</p>
+<p>This is one reason the protocol models memory as:</p>
+<ul><li><p><code>&amp;memory.graph</code></p></li><li><p><code>&amp;memory.vector</code></p></li><li><p><code>&amp;memory.episodic</code></p></li></ul>
+<p>The research landscape supports this move because modern agent memory work already treats memory as plural.</p>
+<h4 id="blk-15510">Why memory research matters to the protocol</h4>
+<p>It reinforces three protocol ideas:</p>
+<ol><li><p><strong>capabilities should be typed</strong></p></li><li><p><strong>providers should be separated from interfaces</strong></p></li><li><p><strong>downstream pipelines should know what form of memory they are receiving</strong></p></li></ol>
+<p>Without that distinction, “agent memory” becomes a vague marketing term rather than a composable system component.</p>
+<h3 id="blk-15520">5. Research Thread: Reasoning and Deliberation</h3>
+<p>Reasoning is another place where capability boundaries matter.</p>
+<p>Agent systems increasingly use multiple reasoning modes:</p>
+<ul><li><p>argumentation</p></li><li><p>voting</p></li><li><p>planning</p></li><li><p>critique</p></li><li><p>self-reflection</p></li><li><p>evidence comparison</p></li><li><p>tool-assisted verification</p></li></ul>
+<p>Again, these are not identical.</p>
+<p>A system built around deliberative argument is not equivalent to one built around weighted voting or one-step planning. If an agent declaration says only “has reasoning,” it hides the operationally important part.</p>
+<p>The protocol therefore models reasoning as a namespace, for example:</p>
+<ul><li><p><code>&amp;reason.argument</code></p></li><li><p><code>&amp;reason.vote</code></p></li><li><p><code>&amp;reason.plan</code></p></li><li><p><code>&amp;reason.deliberate</code></p></li><li><p><code>&amp;reason.attend</code></p></li></ul>
+<h4 id="blk-15552">Why this matters</h4>
+<p>Reasoning strategy affects:</p>
+<ul><li><p>explainability</p></li><li><p>governance compatibility</p></li><li><p>escalation paths</p></li><li><p>auditability</p></li><li><p>acceptable inputs and outputs</p></li><li><p>how much provenance needs to be preserved</p></li></ul>
+<p>This makes reasoning a natural fit for typed contracts and governance-aware declaration.</p>
+<h3 id="blk-15568">6. Research Thread: Time and Temporal Intelligence</h3>
+<p>Time is often under-modeled in agent systems even though many real-world tasks depend on it.</p>
+<p>Examples include:</p>
+<ul><li><p>anomaly detection</p></li><li><p>forecasting</p></li><li><p>trend recognition</p></li><li><p>sequence modeling</p></li><li><p>seasonality</p></li><li><p>decay and recency weighting</p></li><li><p>event windows</p></li></ul>
+<p>A support agent, fleet optimizer, or infrastructure operator often depends on temporal behavior, not just current-state lookup.</p>
+<p>That is why the protocol treats temporal capability as first-class:</p>
+<ul><li><p><code>&amp;time.anomaly</code></p></li><li><p><code>&amp;time.forecast</code></p></li><li><p><code>&amp;time.pattern</code></p></li></ul>
+<h4 id="blk-15595">Why this matters for composition</h4>
+<p>Temporal outputs are not always interchangeable with memory or reasoning outputs.</p>
+<p>A forecast may produce one type of signal. An anomaly detector may produce another. A downstream reasoner may require enriched context rather than raw temporal output.</p>
+<p>This is exactly where typed contracts and pipeline validation become useful.</p>
+<h3 id="blk-15599">7. Research Thread: Space and Spatial Intelligence</h3>
+<p>Spatial intelligence is also easy to ignore until the system must reason about:</p>
+<ul><li><p>fleets</p></li><li><p>routes</p></li><li><p>regions</p></li><li><p>geofences</p></li><li><p>locations</p></li><li><p>topology</p></li><li><p>asset distribution</p></li></ul>
+<p>In logistics, operations, robotics, and physical systems, this is not optional.</p>
+<p>The protocol treats these as spatial capabilities such as:</p>
+<ul><li><p><code>&amp;space.fleet</code></p></li><li><p><code>&amp;space.route</code></p></li><li><p><code>&amp;space.geofence</code></p></li></ul>
+<h4 id="blk-15625">Why this matters</h4>
+<p>Spatial context is often the missing dimension in otherwise “intelligent” agents.</p>
+<p>An agent can remember, retrieve, and reason—but still fail if it cannot represent where assets are, which regions are affected, or how routes constrain action.</p>
+<p>From a research perspective, this supports the idea that cognition for real-world agents is multi-domain rather than purely symbolic or purely linguistic.</p>
+<h3 id="blk-15629">8. Research Thread: Taxonomy and Functional Decomposition</h3>
+<p>One of the strongest external supports for the protocol model is work that treats agent cognition as a taxonomy rather than an undifferentiated blob.</p>
+<p>The general pattern is:</p>
+<ul><li><p>break cognition into functions</p></li><li><p>make those functions explicit</p></li><li><p>reason about interfaces between them</p></li><li><p>keep architecture inspectable</p></li></ul>
+<p>This kind of decomposition appears across:</p>
+<ul><li><p>memory taxonomies</p></li><li><p>planning systems</p></li><li><p>deliberation systems</p></li><li><p>agent architecture work</p></li><li><p>embodied cognition and situated reasoning research</p></li></ul>
+<p>The protocol’s primitive structure is intentionally simple, but it follows the same broad direction: a small number of high-level domains with extensible subtype namespaces.</p>
+<p>That balance matters.</p>
+<p>Too few categories and the protocol becomes vague. Too many categories and the protocol becomes unusable.</p>
+<h3 id="blk-15656">9. Research Thread: Provenance, Auditability, and Trust</h3>
+<p>A major reason composition is becoming more important is that systems are increasingly expected to be explainable and auditable.</p>
+<p>That expectation comes from multiple pressures:</p>
+<ul><li><p>enterprise governance</p></li><li><p>safety engineering</p></li><li><p>internal debugging</p></li><li><p>regulated workflows</p></li><li><p>customer trust</p></li><li><p>postmortem and incident analysis</p></li></ul>
+<p>If an agent decision combines:</p>
+<ul><li><p>memory retrieval</p></li><li><p>anomaly detection</p></li><li><p>spatial context</p></li><li><p>deliberative reasoning</p></li></ul>
+<p>then a useful system should be able to answer:</p>
+<ul><li><p>what data entered the decision path?</p></li><li><p>which capability produced which intermediate artifact?</p></li><li><p>what provider produced the result?</p></li><li><p>what was the sequence of transformations?</p></li><li><p>what rules constrained the output?</p></li></ul>
+<p>This is where provenance shifts from a “nice tracing feature” to a protocol concern.</p>
+<h4 id="blk-15695">Why hash-linked provenance matters</h4>
+<p>Hash-linked provenance is useful because it preserves sequence and dependency, not just logs.</p>
+<p>It creates a chain of evidence that can be inspected after the fact. That makes provenance a natural part of capability composition rather than an afterthought.</p>
+<h3 id="blk-15698">10. Research Thread: Governance as Data</h3>
+<p>Another major convergence is the shift from “prompt policy” toward more explicit forms of control.</p>
+<p>Teams increasingly need systems to represent:</p>
+<ul><li><p>hard operational boundaries</p></li><li><p>soft preferences</p></li><li><p>escalation triggers</p></li><li><p>approval conditions</p></li><li><p>cost thresholds</p></li><li><p>confidence thresholds</p></li></ul>
+<p>If those rules live only in scattered framework code or prompts, they are hard to port and hard to audit.</p>
+<p>The protocol’s answer is to treat governance as part of the declaration itself.</p>
+<p>That is a research-informed move because many safety and governance problems are really interface problems: the constraint exists, but it is not represented in a portable, inspectable form.</p>
+<p>Putting governance in data makes it:</p>
+<ul><li><p>visible</p></li><li><p>testable</p></li><li><p>portable</p></li><li><p>generatable</p></li><li><p>reviewable</p></li></ul>
+<h3 id="blk-15729">11. Why a Composition Layer Is Plausible Now</h3>
+<p>A composition layer becomes plausible only when several conditions are true at once.</p>
+<h4 id="blk-15731">Condition 1: adjacent protocols exist</h4>
+<p>MCP and A2A already provide surrounding layers. That means composition does not need to solve everything. It can focus on its own concern boundary.</p>
+<h4 id="blk-15733">Condition 2: agent systems are increasingly modular</h4>
+<p>Real systems already distinguish between memory, retrieval, planning, reasoning, and tool use. The architecture is already there, even when the declaration format is not.</p>
+<h4 id="blk-15735">Condition 3: schemas and generators are acceptable developer tools</h4>
+<p>Modern developer workflows are comfortable with:</p>
+<ul><li><p>JSON Schema</p></li><li><p>contract files</p></li><li><p>registry documents</p></li><li><p>code generation</p></li><li><p>CLI validation</p></li><li><p>machine-readable configuration</p></li></ul>
+<p>That makes a schema-first protocol socially and technically plausible.</p>
+<h4 id="blk-15751">Condition 4: auditability pressure is increasing</h4>
+<p>The more consequential agents become, the less acceptable opaque composition becomes.</p>
+<h3 id="blk-15753">12. What the [&amp;] Protocol Adds</h3>
+<p>Against this background, the protocol contributes a concrete set of ideas:</p>
+<h4 id="blk-15755">A canonical declaration</h4>
+<p>A single source artifact: <code>ampersand.json</code></p>
+<h4 id="blk-15757">Capability primitives with namespaces</h4>
+<p>A compact vocabulary:</p>
+<ul><li><p><code>&amp;memory</code></p></li><li><p><code>&amp;reason</code></p></li><li><p><code>&amp;time</code></p></li><li><p><code>&amp;space</code></p></li></ul>
+<p>with extensible subtypes.</p>
+<h4 id="blk-15769">Composition algebra</h4>
+<p>Deterministic behavior for capability sets:</p>
+<ul><li><p>commutative</p></li><li><p>associative</p></li><li><p>idempotent</p></li><li><p>identity-safe</p></li></ul>
+<h4 id="blk-15780">Capability contracts</h4>
+<p>Explicit input/output typing and adjacency rules via:</p>
+<ul><li><p><code>operations</code></p></li><li><p><code>accepts_from</code></p></li><li><p><code>feeds_into</code></p></li><li><p><code>a2a_skills</code></p></li></ul>
+<h4 id="blk-15791">Provenance model</h4>
+<p>Hash-linkable records that preserve decision lineage.</p>
+<h4 id="blk-15793">Governance model</h4>
+<p>Constraints and escalation rules represented as data.</p>
+<h4 id="blk-15795">Downstream compilation</h4>
+<p>The declaration is not isolated. It can generate:</p>
+<ul><li><p>MCP config</p></li><li><p>A2A-style agent cards</p></li><li><p>future runtime artifacts</p></li></ul>
+<p>This is the core point: the protocol turns composition into a machine-readable layer instead of leaving it as prose, framework convention, or private architecture.</p>
+<h3 id="blk-15805">13. Important Open Questions</h3>
+<p>A research overview should also be honest about what remains open.</p>
+<h4 id="blk-15807">How many primitives are enough?</h4>
+<p>The current four-domain model is intentionally compact, but future implementations may raise pressure for more domains or more formal subtype hierarchies.</p>
+<h4 id="blk-15809">How strict should contracts be?</h4>
+<p>There is a tradeoff between:</p>
+<ul><li><p>portability and flexibility</p></li><li><p>strong typing and adoption friction</p></li></ul>
+<h4 id="blk-15816">How much provenance is mandatory?</h4>
+<p>Implementations may differ in storage and tracing depth, even if the protocol defines a common record shape.</p>
+<h4 id="blk-15818">How should registries evolve?</h4>
+<p>Provider registries can become complex quickly once they include:</p>
+<ul><li><p>capabilities</p></li><li><p>versions</p></li><li><p>transport details</p></li><li><p>compatibility metadata</p></li><li><p>governance traits</p></li><li><p>cost information</p></li></ul>
+<h4 id="blk-15833">How much should the protocol standardize vs delegate?</h4>
+<p>A good protocol should define enough to be useful without overreaching into every runtime concern.</p>
+<p>These are healthy questions. They indicate that the problem is real.</p>
+<h3 id="blk-15836">14. Reading Map</h3>
+<p>If you are exploring the repository through the lens of this research overview, a useful order is:</p>
+<ol><li><p><code>docs/positioning.md</code></p></li><li><p><code>SPEC.md</code></p></li><li><p><code>protocol/schema/v0.1.0/ampersand.schema.json</code></p></li><li><p><code>protocol/schema/v0.1.0/capability-contract.schema.json</code></p></li><li><p><code>protocol/schema/v0.1.0/registry.schema.json</code></p></li><li><p><code>examples/</code></p></li><li><p><code>reference/elixir/ampersand_core/</code></p></li></ol>
+<p>This path moves from: concept → contract → example → implementation</p>
+<h3 id="blk-15854">15. Conclusion</h3>
+<p>The research case for the [&amp;] Protocol is not that no one has worked on agents before.</p>
+<p>It is that the ecosystem now has enough maturity in adjacent layers, enough modularity in real systems, and enough demand for governance and provenance that <strong>capability composition is ready to become a protocol concern of its own</strong>.</p>
+<p>The strongest supporting signals are:</p>
+<ul><li><p>agent systems are increasingly multi-capability</p></li><li><p>current protocols solve neighboring but different problems</p></li><li><p>cognitive architecture research supports functional decomposition</p></li><li><p>memory and reasoning systems already operate as capability families</p></li><li><p>provenance and governance demands make opaque composition harder to justify</p></li></ul>
+<p>The result is a credible opening for a composition layer that is:</p>
+<ul><li><p>schema-first</p></li><li><p>provider-agnostic</p></li><li><p>contract-aware</p></li><li><p>provenance-aware</p></li><li><p>governance-aware</p></li><li><p>complementary to MCP and A2A</p></li></ul>
+<p>That is the research context in which the [&amp;] Protocol should be understood.</p>
+<h3 id="blk-15884">Suggested Next Reading</h3>
+<ul><li><p><code>docs/positioning.md</code></p></li><li><p><code>docs/comparison-table.md</code></p></li><li><p><code>SPEC.md</code></p></li><li><p><code>examples/README.md</code></p></li></ul></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/research.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-15322" class="lvl2">Executive Summary</a><a href="#blk-15361" class="lvl2">1. Why This Research Matters</a><a href="#blk-15408" class="lvl2">2. The Current Protocol Stack</a><a href="#blk-15410" class="lvl3">MCP</a><a href="#blk-15426" class="lvl3">A2A</a><a href="#blk-15430" class="lvl3">ACP and adjacent work</a><a href="#blk-15453" class="lvl2">3. Research Thread: Cognitive Architectures</a><a href="#blk-15455" class="lvl3">Why cognitive architecture matters</a><a href="#blk-15468" class="lvl3">Why this supports a protocol</a><a href="#blk-15480" class="lvl3">Why now</a><a href="#blk-15482" class="lvl2">4. Research Thread: Memory Systems</a><a href="#blk-15510" class="lvl3">Why memory research matters to the protocol</a><a href="#blk-15520" class="lvl2">5. Research Thread: Reasoning and Deliberation</a><a href="#blk-15552" class="lvl3">Why this matters</a><a href="#blk-15568" class="lvl2">6. Research Thread: Time and Temporal Intelligence</a><a href="#blk-15595" class="lvl3">Why this matters for composition</a><a href="#blk-15599" class="lvl2">7. Research Thread: Space and Spatial Intelligence</a><a href="#blk-15625" class="lvl3">Why this matters</a><a href="#blk-15629" class="lvl2">8. Research Thread: Taxonomy and Functional Decomposition</a><a href="#blk-15656" class="lvl2">9. Research Thread: Provenance, Auditability, and Trust</a><a href="#blk-15695" class="lvl3">Why hash-linked provenance matters</a><a href="#blk-15698" class="lvl2">10. Research Thread: Governance as Data</a><a href="#blk-15729" class="lvl2">11. Why a Composition Layer Is Plausible Now</a><a href="#blk-15731" class="lvl3">Condition 1: adjacent protocols exist</a><a href="#blk-15733" class="lvl3">Condition 2: agent systems are increasingly modular</a><a href="#blk-15735" class="lvl3">Condition 3: schemas and generators are acceptable developer tools</a><a href="#blk-15751" class="lvl3">Condition 4: auditability pressure is increasing</a><a href="#blk-15753" class="lvl2">12. What the [&amp;] Protocol Adds</a><a href="#blk-15755" class="lvl3">A canonical declaration</a><a href="#blk-15757" class="lvl3">Capability primitives with namespaces</a><a href="#blk-15769" class="lvl3">Composition algebra</a><a href="#blk-15780" class="lvl3">Capability contracts</a><a href="#blk-15791" class="lvl3">Provenance model</a><a href="#blk-15793" class="lvl3">Governance model</a><a href="#blk-15795" class="lvl3">Downstream compilation</a><a href="#blk-15805" class="lvl2">13. Important Open Questions</a><a href="#blk-15807" class="lvl3">How many primitives are enough?</a><a href="#blk-15809" class="lvl3">How strict should contracts be?</a><a href="#blk-15816" class="lvl3">How much provenance is mandatory?</a><a href="#blk-15818" class="lvl3">How should registries evolve?</a><a href="#blk-15833" class="lvl3">How much should the protocol standardize vs delegate?</a><a href="#blk-15836" class="lvl2">14. Reading Map</a><a href="#blk-15854" class="lvl2">15. Conclusion</a><a href="#blk-15884" class="lvl2">Suggested Next Reading</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/CC2-capability-composition.md/">[&amp;] / CC2 — Capability Composition, v2 (Coalitional)</a><a href="/AmpersandBoxDesign/docs/COMPOSE_RUNTIME.md/">The Compose Runtime — CC2 compose, made authorable (design note)</a><a href="/AmpersandBoxDesign/docs/UMBRELLA.md/">The [&amp;] Umbrella — one stack: declare → … → observe</a><a href="/AmpersandBoxDesign/docs/architecture.md/">Architecture Guide</a><a href="/AmpersandBoxDesign/docs/comparison-table.md/">[&amp;] vs MCP vs A2A vs DALIA vs ACP</a><a href="/AmpersandBoxDesign/docs/competitive-landscape.md/">Competitive Landscape: Machine Cognition</a><a href="/AmpersandBoxDesign/docs/ecosystem-overview.md/">[&amp;] Ecosystem Overview — How Everything Ties Together</a><a href="/AmpersandBoxDesign/docs/faq.md/">FAQ</a><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/positioning.md/">The Missing Layer: Capability Composition in the Agent Protocol Stack</a><a href="/AmpersandBoxDesign/docs/quickstart.md/">Five-Minute Quickstart (Elixir Reference CLI)</a><a href="/AmpersandBoxDesign/docs/runtime-walkthrough.md/">Runtime Walkthrough</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajrzdrav6wezafguzjqciouyvi3wt4z6ksm54c7i3ssi27fjlmcda</div></div></div>
+</div></div>
+</body></html>

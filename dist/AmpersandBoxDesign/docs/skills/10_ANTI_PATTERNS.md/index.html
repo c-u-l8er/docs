@@ -1,0 +1,163 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Skill 10 — Anti-Patterns · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Each anti-pattern follows this structure:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill 10 — Anti-Patterns">
+<meta property="og:description" content="Each anti-pattern follows this structure:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 10 — Anti-Patterns","name":"Skill 10 — Anti-Patterns","description":"Each anti-pattern follows this structure:","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/","identifier":"bagaaieraxm2ci4pkcjx3blgm3u3zxhrinh7adtslkkql7ruogjxbhjzmb6iq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Overview"},{"@type":"WebPageElement","name":"Table of Anti-Patterns"},{"@type":"WebPageElement","name":"Critical Anti-Patterns"},{"@type":"WebPageElement","name":"1 — Capabilities Without Providers"},{"@type":"WebPageElement","name":"2 — Ignoring Composition Type Checks"},{"@type":"WebPageElement","name":"High-Severity Anti-Patterns"},{"@type":"WebPageElement","name":"3 — Kitchen-Sink Declarations"},{"@type":"WebPageElement","name":"4 — Missing Provenance on Critical Capabilities"},{"@type":"WebPageElement","name":"5 — Governance Gaps"},{"@type":"WebPageElement","name":"Medium-Severity Anti-Patterns"},{"@type":"WebPageElement","name":"6 — Over-Specifying Providers"},{"@type":"WebPageElement","name":"7 — Ignoring Contract Versioning"},{"@type":"WebPageElement","name":"8 — Pipeline Without Validation"},{"@type":"WebPageElement","name":"Low-Severity Anti-Patterns"},{"@type":"WebPageElement","name":"9 — Bare Primitive References"},{"@type":"WebPageElement","name":"10 — Copy-Paste Governance"},{"@type":"WebPageElement","name":"Self-Audit Checklist"},{"@type":"WebPageElement","name":"Declaration"},{"@type":"WebPageElement","name":"Composition"},{"@type":"WebPageElement","name":"Governance"},{"@type":"WebPageElement","name":"Provenance"},{"@type":"WebPageElement","name":"Portability"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/"},{"@type":"ListItem","position":5,"name":"10_ANTI_PATTERNS.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md</span>
+
+</div></div>
+<div class="lead">Each anti-pattern follows this structure:</div>
+<div class="prose"><h1 id="blk-17239">Skill 10 — Anti-Patterns</h1>
+<blockquote><p>Common mistakes when writing [&amp;] Protocol declarations and how to avoid them. Every anti-pattern here comes from real failure modes: broken compositions, unenforceable governance, unportable agents, and silent pipeline failures.</p></blockquote>
+<h3 id="blk-17242">Overview</h3>
+<p>Each anti-pattern follows this structure:</p>
+<ol><li><p><strong>The mistake</strong> — what it looks like</p></li><li><p><strong>Why it's harmful</strong> — the concrete damage</p></li><li><p><strong>The fix</strong> — what to do instead</p></li></ol>
+<h3 id="blk-17251">Table of Anti-Patterns</h3>
+<table><thead><tr><th>#</th><th>Name</th><th>Severity</th></tr></thead><tbody><tr><td>1</td><td><a href="#1--capabilities-without-providers" target="_blank" rel="noopener">Capabilities Without Providers</a></td><td>Critical</td></tr><tr><td>2</td><td><a href="#2--ignoring-composition-type-checks" target="_blank" rel="noopener">Ignoring Composition Type Checks</a></td><td>Critical</td></tr><tr><td>3</td><td><a href="#3--kitchen-sink-declarations" target="_blank" rel="noopener">Kitchen-Sink Declarations</a></td><td>High</td></tr><tr><td>4</td><td><a href="#4--missing-provenance-on-critical-capabilities" target="_blank" rel="noopener">Missing Provenance on Critical Capabilities</a></td><td>High</td></tr><tr><td>5</td><td><a href="#5--governance-gaps" target="_blank" rel="noopener">Governance Gaps</a></td><td>High</td></tr><tr><td>6</td><td><a href="#6--over-specifying-providers" target="_blank" rel="noopener">Over-Specifying Providers</a></td><td>Medium</td></tr><tr><td>7</td><td><a href="#7--ignoring-contract-versioning" target="_blank" rel="noopener">Ignoring Contract Versioning</a></td><td>Medium</td></tr><tr><td>8</td><td><a href="#8--pipeline-without-validation" target="_blank" rel="noopener">Pipeline Without Validation</a></td><td>Medium</td></tr><tr><td>9</td><td><a href="#9--bare-primitive-references" target="_blank" rel="noopener">Bare Primitive References</a></td><td>Low</td></tr><tr><td>10</td><td><a href="#10--copy-paste-governance" target="_blank" rel="noopener">Copy-Paste Governance</a></td><td>Low</td></tr></tbody></table>
+<h3 id="blk-17286">Critical Anti-Patterns</h3>
+<h4 id="blk-17287">1 — Capabilities Without Providers</h4>
+<p><strong>The mistake:</strong> Declaring capabilities but omitting or leaving blank the provider field.</p>
+<pre data-lang="json"><code><span class="t-key">&quot;capabilities&quot;</span>: {
+  <span class="t-key">&quot;&amp;memory.graph&quot;</span>: { <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;instance&quot;</span>: <span class="t-string">&quot;ops&quot;</span> } },
+  <span class="t-key">&quot;&amp;time.anomaly&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} }
+}</code></pre>
+<p><strong>Why it's harmful:</strong></p>
+<ul><li><p>The runtime cannot bind the capability to any service</p></li><li><p>Generation produces empty MCP server entries</p></li><li><p>The agent appears to have capabilities it cannot actually use</p></li><li><p>Composition passes but generation fails silently or produces broken output</p></li></ul>
+<p><strong>The fix:</strong> Always specify a provider. Use <code>&quot;auto&quot;</code> if you want the runtime to resolve it from the registry:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;&amp;memory.graph&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;instance&quot;</span>: <span class="t-string">&quot;ops&quot;</span> } }
+<span class="t-key">&quot;&amp;time.anomaly&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} }</code></pre>
+<h4 id="blk-17302">2 — Ignoring Composition Type Checks</h4>
+<p><strong>The mistake:</strong> Building pipelines without verifying that step N's output type matches step N+1's <code>accepts_from</code> list.</p>
+<pre data-lang="json"><code><span class="t-key">&quot;steps&quot;</span>: [
+  { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;time.forecast&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;predict&quot;</span> },
+  { <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;memory.graph&quot;</span>, <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;enrich&quot;</span> }
+]</code></pre>
+<p>If <code>&amp;time.forecast.predict()</code> outputs <code>forecast_set</code> but <code>&amp;memory.graph.enrich()</code> does not accept <code>forecast_set</code>, the pipeline breaks at runtime.</p>
+<p><strong>Why it's harmful:</strong></p>
+<ul><li><p>Runtime errors instead of compile-time errors</p></li><li><p>Silent data loss or unexpected behavior</p></li><li><p>Difficult to debug in production</p></li></ul>
+<p><strong>The fix:</strong> Run <code>ampersand compose</code> before <code>ampersand generate</code>. Always check the type flow:</p>
+<pre data-lang="bash"><code>ampersand compose agent.ampersand.json<span class="t-flag"> --verbose</span></code></pre>
+<p>The verbose output shows the type at each pipeline step, making mismatches immediately visible.</p>
+<h3 id="blk-17317">High-Severity Anti-Patterns</h3>
+<h4 id="blk-17318">3 — Kitchen-Sink Declarations</h4>
+<p><strong>The mistake:</strong> Declaring every available capability even when the agent does not need most of them.</p>
+<pre data-lang="json"><code><span class="t-key">&quot;capabilities&quot;</span>: {
+  <span class="t-key">&quot;&amp;memory.graph&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;memory.vector&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;memory.episodic&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;memory.semantic&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;time.anomaly&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;time.forecast&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;time.pattern&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;time.baseline&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;space.fleet&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;space.geofence&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;reason.argument&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;reason.vote&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;reason.plan&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;reason.deliberate&quot;</span>: { ... },
+  <span class="t-key">&quot;&amp;reason.attend&quot;</span>: { ... }
+}</code></pre>
+<p><strong>Why it's harmful:</strong></p>
+<ul><li><p>Generated MCP config starts 8+ servers, most unused</p></li><li><p>A2A agent card advertises skills the agent cannot meaningfully perform</p></li><li><p>More providers means more failure points</p></li><li><p>Harder to reason about what the agent actually does</p></li></ul>
+<p><strong>The fix:</strong> Start with the minimum set of capabilities your use case requires. Add more only when a concrete need emerges:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;capabilities&quot;</span>: {
+  <span class="t-key">&quot;&amp;memory.graph&quot;</span>:    { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+  <span class="t-key">&quot;&amp;time.anomaly&quot;</span>:    { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} },
+  <span class="t-key">&quot;&amp;reason.argument&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} }
+}</code></pre>
+<p>Three capabilities that work together is better than fifteen that sit idle.</p>
+<h4 id="blk-17334">4 — Missing Provenance on Critical Capabilities</h4>
+<p><strong>The mistake:</strong> Omitting <code>&quot;provenance&quot;: true</code> on agents that make consequential decisions.</p>
+<p><strong>Why it's harmful:</strong></p>
+<ul><li><p>No audit trail for decisions</p></li><li><p>Cannot trace which capability contributed to an outcome</p></li><li><p>Compliance requirements cannot be verified</p></li><li><p>Debugging production issues requires reproducing the full pipeline</p></li></ul>
+<p><strong>The fix:</strong> Enable provenance on any agent that makes decisions affecting users, infrastructure, or finances:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span></code></pre>
+<p>The overhead is minimal — a hash computation per operation. The value is significant — a complete, verifiable decision trail.</p>
+<h4 id="blk-17349">5 — Governance Gaps</h4>
+<p><strong>The mistake:</strong> Declaring autonomous agents without escalation rules or hard constraints.</p>
+<pre data-lang="json"><code><span class="t-key">&quot;governance&quot;</span>: {
+  <span class="t-key">&quot;autonomy&quot;</span>: { <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;act&quot;</span> }
+}</code></pre>
+<p><strong>Why it's harmful:</strong></p>
+<ul><li><p>The agent has full autonomy with no guardrails</p></li><li><p>No mechanism to stop it from taking harmful actions</p></li><li><p>No escalation path when confidence is low</p></li><li><p>Violates the principle that autonomy requires governance</p></li></ul>
+<p><strong>The fix:</strong> Every <code>act</code>-level agent needs hard constraints and escalation:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;governance&quot;</span>: {
+  <span class="t-key">&quot;hard&quot;</span>: [<span class="t-string">&quot;Never exceed budget allocation&quot;</span>],
+  <span class="t-key">&quot;escalate_when&quot;</span>: { <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.6</span> },
+  <span class="t-key">&quot;autonomy&quot;</span>: {
+    <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;act&quot;</span>,
+    <span class="t-key">&quot;budget&quot;</span>: { <span class="t-key">&quot;max_actions_per_hour&quot;</span>: <span class="t-num">10</span> }
+  }
+}</code></pre>
+<p>The higher the autonomy, the more governance is required.</p>
+<h3 id="blk-17365">Medium-Severity Anti-Patterns</h3>
+<h4 id="blk-17366">6 — Over-Specifying Providers</h4>
+<p><strong>The mistake:</strong> Hardcoding specific provider names when the agent could work with any conforming provider.</p>
+<pre data-lang="json"><code><span class="t-key">&quot;&amp;memory.graph&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>, <span class="t-key">&quot;config&quot;</span>: {} }</code></pre>
+<p><strong>Why it's harmful (when portability matters):</strong></p>
+<ul><li><p>Locks the agent to a specific provider</p></li><li><p>Cannot swap to an alternative without modifying the declaration</p></li><li><p>Reduces adoption — users without access to that provider cannot use the agent</p></li></ul>
+<p><strong>The fix:</strong> Use <code>&quot;auto&quot;</code> for capabilities where the specific provider does not matter, and explicit providers only when provider-specific features are required:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;&amp;memory.graph&quot;</span>: { <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>, <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;index&quot;</span>: <span class="t-string">&quot;docs&quot;</span> } }</code></pre>
+<p>Note: This is only an anti-pattern when portability is a goal. For internal agents with known infrastructure, explicit providers are fine.</p>
+<h4 id="blk-17380">7 — Ignoring Contract Versioning</h4>
+<p><strong>The mistake:</strong> Never specifying which contract version a declaration was built against.</p>
+<p><strong>Why it's harmful:</strong></p>
+<ul><li><p>A provider updates its contract, breaking your pipeline</p></li><li><p>No way to pin to a known-working version</p></li><li><p>Composition may pass today and fail tomorrow</p></li></ul>
+<p><strong>The fix:</strong> Pin your declarations to specific contract versions and test against them in CI:</p>
+<pre data-lang="bash"><code>ampersand validate agent.ampersand.json<span class="t-flag"> --schema</span> protocol/schema/v0.<span class="t-undefined">1</span>.<span class="t-undefined">0</span>/</code></pre>
+<p>When upgrading, review the contract changelog for breaking changes.</p>
+<h4 id="blk-17393">8 — Pipeline Without Validation</h4>
+<p><strong>The mistake:</strong> Defining pipelines in the declaration but only running <code>validate</code> (schema check) and never <code>compose</code> (type check).</p>
+<p><strong>Why it's harmful:</strong></p>
+<ul><li><p><code>validate</code> checks structure, not semantics</p></li><li><p>A structurally valid pipeline can have type mismatches</p></li><li><p>Errors surface at generation or runtime instead of composition time</p></li></ul>
+<p><strong>The fix:</strong> Always run <code>compose</code> after <code>validate</code>:</p>
+<pre data-lang="bash"><code>ampersand validate agent.ampersand.json &amp;&amp; ampersand compose agent.ampersand.json</code></pre>
+<p>Or just run <code>generate</code>, which includes both checks.</p>
+<h3 id="blk-17406">Low-Severity Anti-Patterns</h3>
+<h4 id="blk-17407">9 — Bare Primitive References</h4>
+<p><strong>The mistake:</strong> Using <code>&amp;memory</code> instead of <code>&amp;memory.graph</code> in discussions, documentation, or (attempted) declarations.</p>
+<p><strong>Why it's harmful:</strong></p>
+<ul><li><p>Declarations require subtypes — <code>&amp;memory</code> alone is not valid</p></li><li><p>Creates ambiguity about which specific capability is meant</p></li><li><p>New users may think bare primitives work and get confused by errors</p></li></ul>
+<p><strong>The fix:</strong> Always use the full <code>&amp;primitive.subtype</code> form:</p>
+<pre><code>&amp;memory.graph    (not &amp;memory)
+&amp;reason.argument (not &amp;reason)
+&amp;time.anomaly    (not &amp;time)
+&amp;space.fleet     (not &amp;space)</code></pre>
+<h4 id="blk-17419">10 — Copy-Paste Governance</h4>
+<p><strong>The mistake:</strong> Copying governance blocks from examples without adapting them to the agent's actual requirements.</p>
+<p><strong>Why it's harmful:</strong></p>
+<ul><li><p>Constraints may be too loose or too strict for the use case</p></li><li><p>Escalation thresholds may not match operational reality</p></li><li><p>Budget limits may be inappropriate</p></li><li><p>Creates a false sense of security</p></li></ul>
+<p><strong>The fix:</strong> Write governance constraints specific to your agent's domain, risk profile, and operational context. Use examples as templates, not as final answers.</p>
+<h3 id="blk-17432">Self-Audit Checklist</h3>
+<p>Run through this before deploying an agent declaration:</p>
+<h4 id="blk-17434">Declaration</h4>
+<ul><li><p>[ ] Every capability has an explicit provider (or <code>&quot;auto&quot;</code>)</p></li><li><p>[ ] Agent name and version are set</p></li><li><p>[ ] Only needed capabilities are declared</p></li></ul>
+<h4 id="blk-17442">Composition</h4>
+<ul><li><p>[ ] <code>ampersand compose</code> passes with no errors</p></li><li><p>[ ] Pipeline type flow is verified (use <code>--verbose</code>)</p></li><li><p>[ ] No circular pipeline dependencies</p></li></ul>
+<h4 id="blk-17450">Governance</h4>
+<ul><li><p>[ ] Hard constraints cover critical boundaries</p></li><li><p>[ ] Escalation triggers are set for autonomous agents</p></li><li><p>[ ] Autonomy level matches operational trust level</p></li><li><p>[ ] Budget limits are appropriate</p></li></ul>
+<h4 id="blk-17460">Provenance</h4>
+<ul><li><p>[ ] <code>provenance: true</code> for agents making consequential decisions</p></li><li><p>[ ] Audit trail requirements are met</p></li></ul>
+<h4 id="blk-17466">Portability</h4>
+<ul><li><p>[ ] Providers are explicit only when provider-specific features are needed</p></li><li><p>[ ] Contract versions are pinned for production agents</p></li></ul></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-17242" class="lvl2">Overview</a><a href="#blk-17251" class="lvl2">Table of Anti-Patterns</a><a href="#blk-17286" class="lvl2">Critical Anti-Patterns</a><a href="#blk-17287" class="lvl3">1 — Capabilities Without Providers</a><a href="#blk-17302" class="lvl3">2 — Ignoring Composition Type Checks</a><a href="#blk-17317" class="lvl2">High-Severity Anti-Patterns</a><a href="#blk-17318" class="lvl3">3 — Kitchen-Sink Declarations</a><a href="#blk-17334" class="lvl3">4 — Missing Provenance on Critical Capabilities</a><a href="#blk-17349" class="lvl3">5 — Governance Gaps</a><a href="#blk-17365" class="lvl2">Medium-Severity Anti-Patterns</a><a href="#blk-17366" class="lvl3">6 — Over-Specifying Providers</a><a href="#blk-17380" class="lvl3">7 — Ignoring Contract Versioning</a><a href="#blk-17393" class="lvl3">8 — Pipeline Without Validation</a><a href="#blk-17406" class="lvl2">Low-Severity Anti-Patterns</a><a href="#blk-17407" class="lvl3">9 — Bare Primitive References</a><a href="#blk-17419" class="lvl3">10 — Copy-Paste Governance</a><a href="#blk-17432" class="lvl2">Self-Audit Checklist</a><a href="#blk-17434" class="lvl3">Declaration</a><a href="#blk-17442" class="lvl3">Composition</a><a href="#blk-17450" class="lvl3">Governance</a><a href="#blk-17460" class="lvl3">Provenance</a><a href="#blk-17466" class="lvl3">Portability</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/">Skill 01 — Writing Agent Declarations</a><a href="/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/">Skill 02 — Validation</a><a href="/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/">Skill 03 — Capability Composition</a><a href="/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/">Skill 04 — Capability Contracts</a><a href="/AmpersandBoxDesign/docs/skills/05_GENERATION.md/">Skill 05 — Generation</a><a href="/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/">Skill 06 — CLI Reference</a><a href="/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/">Skill 07 — Integration Patterns</a><a href="/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/">Skill 08 — Provider Implementation</a><a href="/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/">Skill 09 — Governance and Provenance</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraxm2ci4pkcjx3blgm3u3zxhrinh7adtslkkql7ruogjxbhjzmb6iq</div></div></div>
+</div></div>
+</body></html>

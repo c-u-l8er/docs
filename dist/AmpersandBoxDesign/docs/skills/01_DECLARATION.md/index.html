@@ -1,0 +1,137 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Skill 01 — Writing Agent Declarations · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="The ampersand.json declaration is the source of truth for what an agent can do. Everything else — validation, composition, MCP/A2A generation — flows from…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill 01 — Writing Agent Declarations">
+<meta property="og:description" content="The ampersand.json declaration is the source of truth for what an agent can do. Everything else — validation, composition, MCP/A2A generation — flows from…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 01 — Writing Agent Declarations","name":"Skill 01 — Writing Agent Declarations","description":"The ampersand.json declaration is the source of truth for what an agent can do. Everything else — validation, composition, MCP/A2A generation — flows from…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/","identifier":"bagaaieratsdaap3g7nzhjlatmsoguztznuag5szfbiy5kze6c77uaut6gska","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why This Matters"},{"@type":"WebPageElement","name":"Basic Structure"},{"@type":"WebPageElement","name":"Capability Identifier Patterns"},{"@type":"WebPageElement","name":"Provider Binding"},{"@type":"WebPageElement","name":"Config Objects"},{"@type":"WebPageElement","name":"Working Examples"},{"@type":"WebPageElement","name":"Minimal declaration (single capability)"},{"@type":"WebPageElement","name":"Research agent (three capabilities, governance)"},{"@type":"WebPageElement","name":"Full infrastructure agent (six capabilities, pipelines, governance)"},{"@type":"WebPageElement","name":"Governance Block"},{"@type":"WebPageElement","name":"Common Mistakes"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/"},{"@type":"ListItem","position":5,"name":"01_DECLARATION.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/skills/01_DECLARATION.md</span>
+
+</div></div>
+<div class="lead">The ampersand.json declaration is the source of truth for what an agent can do. Everything else — validation, composition, MCP/A2A generation — flows from this file. Get the dec…</div>
+<div class="prose"><h1 id="blk-16244">Skill 01 — Writing Agent Declarations</h1>
+<blockquote><p>How to write <code>ampersand.json</code> files that declare an agent's capabilities, governance, and provenance requirements.</p></blockquote>
+<h3 id="blk-16247">Why This Matters</h3>
+<p>The <code>ampersand.json</code> declaration is the source of truth for what an agent can do. Everything else — validation, composition, MCP/A2A generation — flows from this file. Get the declaration right and the rest follows.</p>
+<h3 id="blk-16249">Basic Structure</h3>
+<p>Every declaration has these top-level fields:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;AgentName&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: { ... },
+  <span class="t-key">&quot;governance&quot;</span>: { ... },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<table><thead><tr><th>Field</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>$schema</code></td><td>Recommended</td><td>Points to the JSON Schema for validation</td></tr><tr><td><code>agent</code></td><td>Yes</td><td>Agent identifier (PascalCase by convention)</td></tr><tr><td><code>version</code></td><td>Yes</td><td>Semver version string</td></tr><tr><td><code>capabilities</code></td><td>Yes</td><td>Map of capability identifiers to provider configs</td></tr><tr><td><code>governance</code></td><td>No</td><td>Hard/soft constraints, escalation rules, autonomy</td></tr><tr><td><code>pipelines</code></td><td>No</td><td>Named data-flow pipelines through capabilities</td></tr><tr><td><code>provenance</code></td><td>No</td><td>Boolean — enable hash-linked provenance chain</td></tr></tbody></table>
+<h3 id="blk-16277">Capability Identifier Patterns</h3>
+<p>Capabilities follow the pattern <code>&amp;primitive.subtype</code>:</p>
+<pre><code>&amp;memory.graph        — graph-structured persistent memory
+&amp;memory.vector       — vector similarity search
+&amp;memory.episodic     — event-based recall
+&amp;reason.argument     — structured argumentation
+&amp;reason.deliberate   — topology-aware focused reasoning
+&amp;reason.attend       — proactive attention engine
+&amp;time.anomaly        — temporal anomaly detection
+&amp;time.forecast       — time-series prediction
+&amp;space.fleet         — fleet-wide spatial awareness
+&amp;space.geofence      — geographic boundary management</code></pre>
+<p>Custom subtypes are permitted if they satisfy the primitive's capability contract.</p>
+<h3 id="blk-16281">Provider Binding</h3>
+<p>Each capability declares a provider — the service that implements it:</p>
+<p><strong>Explicit provider:</strong></p>
+<pre data-lang="json"><code><span class="t-key">&quot;&amp;memory.graph&quot;</span>: {
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+  <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;instance&quot;</span>: <span class="t-string">&quot;infra-ops&quot;</span> }
+}</code></pre>
+<p><strong>Auto-resolved provider:</strong></p>
+<pre data-lang="json"><code><span class="t-key">&quot;&amp;memory.vector&quot;</span>: {
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+  <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;index&quot;</span>: <span class="t-string">&quot;documents&quot;</span> }
+}</code></pre>
+<p>When <code>provider</code> is <code>&quot;auto&quot;</code>, the runtime resolves the provider from the capability registry at composition time.</p>
+<h3 id="blk-16288">Config Objects</h3>
+<p>The <code>config</code> object is provider-specific. It passes through to the provider at bind time. Common patterns:</p>
+<table><thead><tr><th>Provider</th><th>Typical Config</th></tr></thead><tbody><tr><td><code>graphonomous</code></td><td><code>instance</code>, <code>budget</code></td></tr><tr><td><code>ticktickclock</code></td><td><code>streams</code>, <code>window_days</code>, <code>granularity</code></td></tr><tr><td><code>geofleetic</code></td><td><code>regions</code>, <code>precision</code></td></tr><tr><td><code>deliberatic</code></td><td><code>governance</code>, <code>mode</code></td></tr></tbody></table>
+<p>The schema does not constrain <code>config</code> contents — that is the provider's responsibility via its capability contract.</p>
+<h3 id="blk-16302">Working Examples</h3>
+<h4 id="blk-16303">Minimal declaration (single capability)</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;SimpleMemoryAgent&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.graph&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;graphonomous&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: {}
+    }
+  }
+}</code></pre>
+<h4 id="blk-16305">Research agent (three capabilities, governance)</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/ampersand.schema.json&quot;</span>,
+  <span class="t-key">&quot;agent&quot;</span>: <span class="t-string">&quot;ResearchAgent&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: {
+    <span class="t-key">&quot;&amp;memory.vector&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;pgvector&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;index&quot;</span>: <span class="t-string">&quot;papers&quot;</span>, <span class="t-key">&quot;namespace&quot;</span>: <span class="t-string">&quot;research-corpus&quot;</span> }
+    },
+    <span class="t-key">&quot;&amp;time.pattern&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;window_days&quot;</span>: <span class="t-num">30</span>, <span class="t-key">&quot;granularity&quot;</span>: <span class="t-string">&quot;daily&quot;</span> }
+    },
+    <span class="t-key">&quot;&amp;reason.argument&quot;</span>: {
+      <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;deliberatic&quot;</span>,
+      <span class="t-key">&quot;config&quot;</span>: { <span class="t-key">&quot;governance&quot;</span>: <span class="t-string">&quot;evidence-first&quot;</span> }
+    }
+  },
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [<span class="t-string">&quot;Never present unsupported conclusions as facts&quot;</span>],
+    <span class="t-key">&quot;soft&quot;</span>: [<span class="t-string">&quot;Prefer recent peer-reviewed evidence&quot;</span>],
+    <span class="t-key">&quot;escalate_when&quot;</span>: { <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.65</span> }
+  },
+  <span class="t-key">&quot;provenance&quot;</span>: <span class="t-lit">true</span>
+}</code></pre>
+<h4 id="blk-16307">Full infrastructure agent (six capabilities, pipelines, governance)</h4>
+<p>See <code>examples/infra-operator.ampersand.json</code> for the complete InfraOperator declaration with <code>&amp;memory.graph</code>, <code>&amp;time.anomaly</code>, <code>&amp;space.fleet</code>, <code>&amp;reason.argument</code>, <code>&amp;reason.deliberate</code>, <code>&amp;reason.attend</code>, plus a named <code>incident_triage</code> pipeline and full governance block.</p>
+<h3 id="blk-16309">Governance Block</h3>
+<p>The <code>governance</code> object declares constraints the agent must respect:</p>
+<pre data-lang="json"><code><span class="t-key">&quot;governance&quot;</span>: {
+  <span class="t-key">&quot;hard&quot;</span>: [<span class="t-string">&quot;Never scale beyond 3x in a single action&quot;</span>],
+  <span class="t-key">&quot;soft&quot;</span>: [<span class="t-string">&quot;Prefer gradual scaling over spikes&quot;</span>],
+  <span class="t-key">&quot;escalate_when&quot;</span>: {
+    <span class="t-key">&quot;confidence_below&quot;</span>: <span class="t-num">0.7</span>,
+    <span class="t-key">&quot;cost_exceeds_usd&quot;</span>: <span class="t-num">1000</span>
+  },
+  <span class="t-key">&quot;autonomy&quot;</span>: {
+    <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;advise&quot;</span>,
+    <span class="t-key">&quot;model_tier&quot;</span>: <span class="t-string">&quot;local_small&quot;</span>,
+    <span class="t-key">&quot;heartbeat_seconds&quot;</span>: <span class="t-num">300</span>,
+    <span class="t-key">&quot;budget&quot;</span>: {
+      <span class="t-key">&quot;max_actions_per_hour&quot;</span>: <span class="t-num">5</span>,
+      <span class="t-key">&quot;require_approval_for&quot;</span>: [<span class="t-string">&quot;act&quot;</span>, <span class="t-string">&quot;propose&quot;</span>]
+    }
+  }
+}</code></pre>
+<p>See <code>09_GOVERNANCE_PROVENANCE.md</code> for full governance documentation.</p>
+<h3 id="blk-16313">Common Mistakes</h3>
+<table><thead><tr><th>Mistake</th><th>Why It Fails</th><th>Fix</th></tr></thead><tbody><tr><td>Missing <code>agent</code> field</td><td>Schema validation rejects it</td><td>Always include agent name</td></tr><tr><td>Using bare primitives (<code>&amp;memory</code>)</td><td>Subtypes are required in declarations</td><td>Use <code>&amp;memory.graph</code>, <code>&amp;memory.vector</code>, etc.</td></tr><tr><td>Omitting <code>provider</code></td><td>Runtime cannot bind the capability</td><td>Specify a provider or use <code>&quot;auto&quot;</code></td></tr><tr><td>Putting pipeline logic in capabilities</td><td>Capabilities declare what, not how</td><td>Use the <code>pipelines</code> block for data flow</td></tr><tr><td>Duplicating capability keys</td><td>JSON keys must be unique</td><td>Each <code>&amp;primitive.subtype</code> appears once</td></tr><tr><td>Non-semver version strings</td><td>Schema requires semver</td><td>Use <code>&quot;1.0.0&quot;</code>, not <code>&quot;v1&quot;</code> or <code>&quot;latest&quot;</code></td></tr></tbody></table></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/skills/01_DECLARATION.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-16247" class="lvl2">Why This Matters</a><a href="#blk-16249" class="lvl2">Basic Structure</a><a href="#blk-16277" class="lvl2">Capability Identifier Patterns</a><a href="#blk-16281" class="lvl2">Provider Binding</a><a href="#blk-16288" class="lvl2">Config Objects</a><a href="#blk-16302" class="lvl2">Working Examples</a><a href="#blk-16303" class="lvl3">Minimal declaration (single capability)</a><a href="#blk-16305" class="lvl3">Research agent (three capabilities, governance)</a><a href="#blk-16307" class="lvl3">Full infrastructure agent (six capabilities, pipelines, governance)</a><a href="#blk-16309" class="lvl2">Governance Block</a><a href="#blk-16313" class="lvl2">Common Mistakes</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/">Skill 02 — Validation</a><a href="/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/">Skill 03 — Capability Composition</a><a href="/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/">Skill 04 — Capability Contracts</a><a href="/AmpersandBoxDesign/docs/skills/05_GENERATION.md/">Skill 05 — Generation</a><a href="/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/">Skill 06 — CLI Reference</a><a href="/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/">Skill 07 — Integration Patterns</a><a href="/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/">Skill 08 — Provider Implementation</a><a href="/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/">Skill 09 — Governance and Provenance</a><a href="/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/">Skill 10 — Anti-Patterns</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieratsdaap3g7nzhjlatmsoguztznuag5szfbiy5kze6c77uaut6gska</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,121 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>os-prism — NPM Package Specification · PRISM · Ampersand Box</title>
+<meta name="description" content="Package: os-prism Version: 0.1.0 (initial) Language: TypeScript (MCP wrapper) + Elixir (engine, vendored escript) License: Apache-2.0 Registry:…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/PRISM/docs/NPM_PACKAGE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="os-prism — NPM Package Specification">
+<meta property="og:description" content="Package: os-prism Version: 0.1.0 (initial) Language: TypeScript (MCP wrapper) + Elixir (engine, vendored escript) License: Apache-2.0 Registry:…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/PRISM/docs/NPM_PACKAGE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"os-prism — NPM Package Specification","name":"os-prism — NPM Package Specification","description":"Package: os-prism Version: 0.1.0 (initial) Language: TypeScript (MCP wrapper) + Elixir (engine, vendored escript) License: Apache-2.0 Registry:…","url":"https://docs.ampersandboxdesign.com/PRISM/docs/NPM_PACKAGE.md/","identifier":"bagaaieralfeeuglhz35nhdbs2nr3qwzahvqlh4xvpn4bzv4jeozjd5zpjuyq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"PRISM","url":"https://docs.ampersandboxdesign.com/PRISM/"},"articleSection":"PRISM","hasPart":[{"@type":"WebPageElement","name":"Purpose"},{"@type":"WebPageElement","name":"Install"},{"@type":"WebPageElement","name":"CLI Flags"},{"@type":"WebPageElement","name":"Dependencies"},{"@type":"WebPageElement","name":"Wire Protocol (Node ⇄ Elixir)"},{"@type":"WebPageElement","name":"SQLite Schema (TS-side)"},{"@type":"WebPageElement","name":"MCP Tools (6 machines, 47 actions — delegated to Elixir)"},{"@type":"WebPageElement","name":"MCP Resources"},{"@type":"WebPageElement","name":"Project Layout"},{"@type":"WebPageElement","name":"Build and Publish"},{"@type":"WebPageElement","name":"Why os-prism ships third"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"PRISM","item":"https://docs.ampersandboxdesign.com/PRISM/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/PRISM/docs/"},{"@type":"ListItem","position":4,"name":"NPM_PACKAGE.md","item":"https://docs.ampersandboxdesign.com/PRISM/docs/NPM_PACKAGE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">PRISM</span>
+<span class="path">PRISM/docs/NPM_PACKAGE.md</span>
+
+</div></div>
+<div class="lead">Package: os-prism Version: 0.1.0 (initial) Language: TypeScript (MCP wrapper) + Elixir (engine, vendored escript) License: Apache-2.0 Registry: https://www.npmjs.com/package/os-…</div>
+<div class="prose"><h1 id="blk-22449">os-prism — NPM Package Specification</h1>
+<p><strong>Package</strong>: <code>os-prism</code> <strong>Version</strong>: <code>0.1.0</code> (initial) <strong>Language</strong>: TypeScript (MCP wrapper) + Elixir (engine, vendored escript) <strong>License</strong>: Apache-2.0 <strong>Registry</strong>: https://www.npmjs.com/package/os-prism <strong>Repository</strong>: <code>AmpersandBoxDesign/PRISM</code> (monorepo subdir)</p>
+<h3 id="blk-22451">Purpose</h3>
+<p><code>os-prism</code> is the MCP server for OS-009 PRISM. It exposes the 6 PRISM loop-phase machines (<code>compose</code>, <code>interact</code>, <code>observe</code>, <code>reflect</code>, <code>diagnose</code>, <code>config</code>) over stdio and runs benchmarks against any PULSE-conforming memory system. Unlike the Fly.io-hosted PRISM service, <code>os-prism</code> runs locally and stores benchmark state in an embedded SQLite + sqlite-vec database.</p>
+<p><code>os-prism</code> wraps the existing Elixir PRISM engine via the same postinstall escript pattern that <code>graphonomous</code> uses. The Elixir engine carries PRISM's sophisticated IRT/Rasch calibration, three-layer judging pipeline, and scenario evolution logic — porting those to JavaScript is out of scope for v0.1 (the JS IRT ecosystem is thin; see <code>../../../memory/research</code> for details).</p>
+<h3 id="blk-22454">Install</h3>
+<pre data-lang="bash"><code>npx<span class="t-flag"> -y</span> os-prism<span class="t-flag"> --db</span> ~/.os-prism/benchmarks.db</code></pre>
+<p>Or in <code>.mcp.json</code>:</p>
+<pre data-lang="jsonc"><code>{
+  <span class="t-key">&quot;mcpServers&quot;</span>: {
+    <span class="t-key">&quot;prism&quot;</span>: {
+      <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;npx&quot;</span>,
+      <span class="t-key">&quot;args&quot;</span>: [<span class="t-string">&quot;-y&quot;</span>, <span class="t-string">&quot;os-prism&quot;</span>, <span class="t-string">&quot;--db&quot;</span>, <span class="t-string">&quot;~/.os-prism/benchmarks.db&quot;</span>]
+    }
+  }
+}</code></pre>
+<p><code>postinstall</code> fetches the platform-appropriate Elixir escript bundle (darwin-x64, darwin-arm64, linux-x64, linux-arm64) from the GitHub release assets attached to the matching <code>os-prism-vX.Y.Z</code> git tag, verifies the SHA256, and installs it under <code>vendor/</code>. Offline installs can set <code>PRISM_ESCRIPT_PATH</code> to skip the fetch.</p>
+<h3 id="blk-22459">CLI Flags</h3>
+<table><thead><tr><th>Flag</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>--db &lt;path&gt;</code></td><td><code>~/.os-prism/benchmarks.db</code></td><td>SQLite database path.</td></tr><tr><td><code>--transport</code></td><td><code>stdio</code></td><td><code>stdio</code> or <code>http</code>.</td></tr><tr><td><code>--port &lt;n&gt;</code></td><td><code>4712</code></td><td>HTTP port (ignored for stdio).</td></tr><tr><td><code>--engine-path &lt;path&gt;</code></td><td><code>./vendor/prism_engine</code></td><td>Path to the bundled Elixir escript.</td></tr><tr><td><code>--llm-provider</code></td><td><code>openrouter</code></td><td><code>openrouter</code>, <code>anthropic</code>, <code>openai</code>, <code>gemini</code>.</td></tr><tr><td><code>--llm-api-key-env</code></td><td><code>OPENROUTER_API_KEY</code></td><td>Env var name to read the API key from.</td></tr><tr><td><code>--log-level</code></td><td><code>info</code></td><td><code>debug</code>, <code>info</code>, <code>warn</code>, <code>error</code>.</td></tr><tr><td><code>--version</code> / <code>--help</code></td><td>—</td><td>Print and exit.</td></tr></tbody></table>
+<h3 id="blk-22488">Dependencies</h3>
+<table><thead><tr><th>Dependency</th><th>Version</th><th>Why</th></tr></thead><tbody><tr><td><code>@modelcontextprotocol/sdk</code></td><td><code>^1.29.0</code></td><td>Stable v1.x MCP surface.</td></tr><tr><td><code>better-sqlite3</code></td><td><code>^12.8.0</code></td><td>SQLite bindings (benchmark metadata).</td></tr><tr><td><code>sqlite-vec</code></td><td><code>^0.1.10</code></td><td>Vector index over scenario embeddings.</td></tr><tr><td><code>zod</code></td><td><code>^3.23.0</code></td><td>Tool input schemas.</td></tr><tr><td><code>yargs</code></td><td><code>^17.7.0</code></td><td>CLI parsing.</td></tr><tr><td><code>node-fetch</code></td><td><code>^3.3.2</code></td><td>Escript bundle download (postinstall).</td></tr><tr><td>(Elixir runtime)</td><td>via escript</td><td><code>vendor/prism_engine</code> — the PRISM OTP app as an escript.</td></tr></tbody></table>
+<p>The Elixir engine itself pulls: <code>ecto_sqlite3</code>, <code>exqlite</code>, <code>req</code>, <code>jason</code>, <code>peri</code>, <code>nimble_options</code>. These live inside the escript bundle — they do <strong>not</strong> appear in <code>package.json</code>.</p>
+<h3 id="blk-22515">Wire Protocol (Node ⇄ Elixir)</h3>
+<p>The TS MCP server spawns the vendored escript as a child process and communicates over line-delimited JSON on the escript's stdin/stdout. Each MCP tool call is translated into a single JSON-RPC-style request:</p>
+<pre data-lang="jsonc"><code><span class="t-comment">// TS → escript</span>
+{ <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;req-123&quot;</span>, <span class="t-key">&quot;method&quot;</span>: <span class="t-string">&quot;interact.run&quot;</span>, <span class="t-key">&quot;params&quot;</span>: { <span class="t-key">&quot;scenario_id&quot;</span>: <span class="t-string">&quot;s42&quot;</span> } }
+
+<span class="t-comment">// escript → TS</span>
+{ <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;req-123&quot;</span>, <span class="t-key">&quot;ok&quot;</span>: <span class="t-lit">true</span>, <span class="t-key">&quot;result&quot;</span>: { <span class="t-key">&quot;run_id&quot;</span>: <span class="t-string">&quot;r_...&quot;</span>, <span class="t-key">&quot;transcript&quot;</span>: <span class="t-string">&quot;…&quot;</span> } }</code></pre>
+<p>The escript exposes exactly the same 6 machines + actions that the Elixir PRISM application currently supports, so the TS wrapper is a thin pass-through with zod input validation and MCP response shaping.</p>
+<h3 id="blk-22519">SQLite Schema (TS-side)</h3>
+<p>The TS wrapper stores a small projection for fast MCP resource responses; the authoritative benchmark state lives inside the escript's own SQLite file (at the path passed via <code>--db</code>).</p>
+<pre data-lang="sql"><code>CREATE TABLE IF NOT EXISTS systems (
+  id             TEXT PRIMARY KEY,                -- e.g. &quot;graphonomous@0.4.0&quot;
+  name           TEXT NOT NULL,
+  manifest_uri   TEXT,                            -- PULSE manifest URL or file path
+  registered_at  INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS runs (
+  id             TEXT PRIMARY KEY,
+  system_id      TEXT NOT NULL,
+  scenario_id    TEXT NOT NULL,
+  status         TEXT NOT NULL,                   -- queued | running | ok | error
+  started_at     INTEGER NOT NULL,
+  ended_at       INTEGER,
+  transcript_uri TEXT,                            -- engine-side URI
+  FOREIGN KEY (system_id) REFERENCES systems (id)
+);</code></pre>
+<h3 id="blk-22522">MCP Tools (6 machines, 47 actions — delegated to Elixir)</h3>
+<table><thead><tr><th>Machine</th><th>Actions</th></tr></thead><tbody><tr><td><code>compose</code></td><td><code>scenarios</code>, <code>validate</code>, <code>list</code>, <code>get</code>, <code>retire</code>, <code>import</code>, <code>byor_register</code>, <code>byor_discover</code>, <code>byor_generate</code></td></tr><tr><td><code>interact</code></td><td><code>run</code>, <code>run_sequence</code>, <code>run_matrix</code>, <code>status</code>, <code>transcript</code>, <code>cancel</code>, <code>byor_evaluate</code>, <code>byor_compare</code></td></tr><tr><td><code>observe</code></td><td><code>judge_transcript</code>, <code>judge_dimension</code>, <code>meta_judge</code>, <code>meta_judge_batch</code>, <code>override</code></td></tr><tr><td><code>reflect</code></td><td><code>analyze_gaps</code>, <code>evolve</code>, <code>advance_cycle</code>, <code>calibrate_irt</code>, <code>cycle_history</code>, <code>byor_recommend</code>, <code>byor_infer_profile</code></td></tr><tr><td><code>diagnose</code></td><td><code>report</code>, <code>failure_patterns</code>, <code>retest</code>, <code>verify</code>, <code>regressions</code>, <code>suggest_fixes</code>, <code>leaderboard</code>, <code>leaderboard_history</code>, <code>compare_systems</code>, <code>dimension_leaders</code>, <code>fit_recommendation</code>, <code>compare_fit</code>, <code>task_profiles</code></td></tr><tr><td><code>config</code></td><td><code>set_weights</code>, <code>register_system</code>, <code>list_systems</code>, <code>get_config</code>, <code>create_profile</code></td></tr></tbody></table>
+<p>All 47 actions are already implemented in Elixir under <code>PRISM/lib/prism/mcp/machines/</code>. The npm wrapper does not add or remove actions; it only exposes them over the MCP SDK's stdio transport.</p>
+<h3 id="blk-22539">MCP Resources</h3>
+<table><thead><tr><th>URI</th><th>Returns</th></tr></thead><tbody><tr><td><code>prism://runtime/health</code></td><td>Engine health, pending run count, queue depth.</td></tr><tr><td><code>prism://systems/registered</code></td><td>Registered BYOR systems.</td></tr><tr><td><code>prism://runs/recent</code></td><td>Recent benchmark runs.</td></tr><tr><td><code>prism://leaderboard/{profile}</code></td><td>Leaderboard for a given task profile.</td></tr><tr><td><code>prism://scenarios/{id}</code></td><td>Scenario definition.</td></tr><tr><td><code>prism://transcripts/{run_id}</code></td><td>Full transcript for a run.</td></tr></tbody></table>
+<h3 id="blk-22555">Project Layout</h3>
+<pre><code>PRISM/
+├── package.json                    # &quot;name&quot;: &quot;os-prism&quot;
+├── tsconfig.json
+├── bin/
+│   └── os-prism.js
+├── src/
+│   ├── server.ts                   # MCP wiring
+│   ├── db.ts                       # projection DB
+│   ├── engine.ts                   # spawn + JSON-RPC over stdio
+│   ├── tools/
+│   │   ├── compose.ts
+│   │   ├── interact.ts
+│   │   ├── observe.ts
+│   │   ├── reflect.ts
+│   │   ├── diagnose.ts
+│   │   └── config.ts
+│   ├── resources/ …
+│   └── cli.ts
+├── scripts/
+│   └── postinstall.js              # fetch vendor/prism_engine
+└── lib/                            # existing Elixir PRISM app (escript source)</code></pre>
+<h3 id="blk-22557">Build and Publish</h3>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> PRISM
+<span class="t-comment"># 1. Build the Elixir escript engine for each target platform</span>
+MIX_ENV=prod mix escript.build          <span class="t-comment"># writes to ./prism_engine</span>
+<span class="t-comment"># 2. Upload to GitHub Releases under tag os-prism-v0.1.0 (CI)</span>
+<span class="t-comment"># 3. Build and publish the TS wrapper</span>
+npm install
+npm run build
+npm publish<span class="t-flag"> --access</span> public</code></pre>
+<h3 id="blk-22559">Why os-prism ships third</h3>
+<ol><li><p>Optionally reads a system-under-test's <code>*.ampersand.json</code> spec graph (via</p></li></ol>
+<p>the [&amp;] reference CLI / SDKs) to understand what it is composed of.</p>
+<ol start="2"><li><p>Depends on <code>os-pulse</code> to read the system-under-test's PULSE manifest and</p></li></ol>
+<p>discover the <code>retrieve</code> and <code>learn</code> boundaries.</p>
+<ol start="3"><li><p>Requires the graphonomous-style postinstall escript pattern, which is</p></li></ol>
+<p>the most complex install path of the three packages.</p></div>
+<p class="src"><a href="/#/PRISM/docs/NPM_PACKAGE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-22451" class="lvl2">Purpose</a><a href="#blk-22454" class="lvl2">Install</a><a href="#blk-22459" class="lvl2">CLI Flags</a><a href="#blk-22488" class="lvl2">Dependencies</a><a href="#blk-22515" class="lvl2">Wire Protocol (Node ⇄ Elixir)</a><a href="#blk-22519" class="lvl2">SQLite Schema (TS-side)</a><a href="#blk-22522" class="lvl2">MCP Tools (6 machines, 47 actions — delegated to Elixir)</a><a href="#blk-22539" class="lvl2">MCP Resources</a><a href="#blk-22555" class="lvl2">Project Layout</a><a href="#blk-22557" class="lvl2">Build and Publish</a><a href="#blk-22559" class="lvl2">Why os-prism ships third</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md/">PRISM — Protocol for Rating Iterative System Memory</a></div><div class="card"><div class="lab">in this folder</div><a href="/PRISM/docs/ARITHMETIC_INTEGRATION.md/">PRISM × box-and-box — Arithmetic Integration Review</a><a href="/PRISM/docs/DUAL_LOOP_MACHINES.md/">Dual- and Triple-Loop Machine Architecture</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieralfeeuglhz35nhdbs2nr3qwzahvqlh4xvpn4bzv4jeozjd5zpjuyq</div></div></div>
+</div></div>
+</body></html>

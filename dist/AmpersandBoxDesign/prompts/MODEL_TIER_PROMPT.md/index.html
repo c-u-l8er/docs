@@ -1,0 +1,658 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Model Tier Adaptation — Build Prompt v1 · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="**κ routing becomes more valuable on constrained hardware — it tells the system when to skip expensive inference entirely. The model tier determines how…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/MODEL_TIER_PROMPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Model Tier Adaptation — Build Prompt v1">
+<meta property="og:description" content="**κ routing becomes more valuable on constrained hardware — it tells the system when to skip expensive inference entirely. The model tier determines how…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/MODEL_TIER_PROMPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Model Tier Adaptation — Build Prompt v1","name":"Model Tier Adaptation — Build Prompt v1","description":"**κ routing becomes more valuable on constrained hardware — it tells the system when to skip expensive inference entirely. The model tier determines how…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/MODEL_TIER_PROMPT.md/","identifier":"bagaaieradcxvrx55ncee53bcaumdfoaiw4wk2eeqwtizmkesfo4p7jgicbya","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"0. The One-Sentence Idea"},{"@type":"WebPageElement","name":"1. Why This Exists"},{"@type":"WebPageElement","name":"2. Model Tiers"},{"@type":"WebPageElement","name":"2.1 Tier Definition"},{"@type":"WebPageElement","name":"2.2 Tier Profiles"},{"@type":"WebPageElement","name":"2.3 Key Design Decisions"},{"@type":"WebPageElement","name":"3. Integration with Existing Modules"},{"@type":"WebPageElement","name":"3.1 Deliberator Adaptation"},{"@type":"WebPageElement","name":"3.2 Attention Engine Adaptation"},{"@type":"WebPageElement","name":"3.3 Retriever Adaptation — Enriched Retrieval for κ=1"},{"@type":"WebPageElement","name":"4. The Consolidator Is More Important on Constrained Hardware"},{"@type":"WebPageElement","name":"5. Cost Model"},{"@type":"WebPageElement","name":"5.1 Cost Estimates by Tier"},{"@type":"WebPageElement","name":"6. [&] Protocol Integration"},{"@type":"WebPageElement","name":"6.1 Tier in Governance Block"},{"@type":"WebPageElement","name":"6.2 Tier-Aware Pipeline Compilation"},{"@type":"WebPageElement","name":"7. Phase 0 Validation Test"},{"@type":"WebPageElement","name":"7.1 The Test"},{"@type":"WebPageElement","name":"7.2 What Success Looks Like"},{"@type":"WebPageElement","name":"7.3 Elixir Test Sketch"},{"@type":"WebPageElement","name":"8. Build Order (Hardware-Constrained Solo Developer)"},{"@type":"WebPageElement","name":"Phase 0 — Prove the thesis (1-2 days)"},{"@type":"WebPageElement","name":"Phase 1 — Minimum viable κ-aware agent (3-5 days)"},{"@type":"WebPageElement","name":"Phase 2 — BendScript visual debugging (2-3 days)"},{"@type":"WebPageElement","name":"Phase 3 — Upgrade path (when model/hardware improves)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/"},{"@type":"ListItem","position":4,"name":"MODEL_TIER_PROMPT.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/MODEL_TIER_PROMPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/prompts/MODEL_TIER_PROMPT.md</span>
+
+</div></div>
+<div class="lead">**κ routing becomes more valuable on constrained hardware — it tells the system when to skip expensive inference entirely. The model tier determines how much reasoning happens w…</div>
+<div class="prose"><h1 id="blk-20562">Model Tier Adaptation — Build Prompt v1</h1>
+<blockquote><p><strong>Purpose:</strong> Defines how the κ-driven architecture (Deliberator, Attention Engine, crystallization) adapts across hardware and model tiers. The same graph topology drives all tiers — what changes is the <em>depth</em> of reasoning at each routing decision, not the routing itself.  <strong>Depends on:</strong> KAPPA_BUILD_PROMPT.md, KAPPA_DELIBERATOR_PROMPT.md, ATTENTION_ENGINE_PROMPT.md  <strong>Target agent:</strong> ChatGPT-5.3-Codex (or any coding agent with file access)  <strong>Author:</strong> Travis / [&amp;] Ampersand Box Design  <strong>Date:</strong> 2026-03-22  <strong>Version:</strong> 1.0</p></blockquote>
+<h3 id="blk-20565">0. The One-Sentence Idea</h3>
+<p>**κ routing becomes <em>more</em> valuable on constrained hardware — it tells the system when to skip expensive inference entirely. The model tier determines <em>how much</em> reasoning happens when κ &gt; 0, not <em>whether</em> to reason.**</p>
+<h3 id="blk-20567">1. Why This Exists</h3>
+<p>The KAPPA_DELIBERATOR_PROMPT assumes multi-pass LLM reasoning: decompose → focused passes per partition → reconciliation. This is correct for frontier models with large context windows and strong instruction-following. On smaller models (8B parameters, 4K-8K effective context), this architecture breaks in predictable ways:</p>
+<table><thead><tr><th>Assumption</th><th>Frontier Model</th><th>8B Local Model</th><th>Failure Mode</th></tr></thead><tbody><tr><td>Multi-pass reasoning across partitions</td><td>Works — model tracks assumptions across passes</td><td>Fails — model loses context of the &quot;held fixed&quot; assumption</td><td>Incoherent reconciliation</td></tr><tr><td>Context window holds partition + boundary nodes</td><td>32K+ tokens available</td><td>4K-8K effective (quality degrades above)</td><td>Partition context exceeds usable window</td></tr><tr><td>Reconciliation synthesizes contradictions</td><td>Model can weigh evidence and identify wrong assumptions</td><td>Model picks one side arbitrarily or hallucinates</td><td>Wrong crystallized conclusions compound over time</td></tr><tr><td>Heartbeat every 5 minutes with agent calls</td><td>Cloud API latency ~1s, cost ~$0.01/call</td><td>Local inference ~10-30s/call, machine pegged while generating</td><td>System unusable during attention cycles</td></tr><tr><td>Autonomous goal generation (PROPOSE mode)</td><td>Frontier models generate sensible goals</td><td>Smaller models hallucinate goals or drift</td><td>Noise in GoalGraph, wasted compute on meaningless goals</td></tr></tbody></table>
+<p>**The fix is not to disable these features on small models. The fix is to make them <em>tier-aware</em> — the same architectural pipeline with different depth settings.**</p>
+<h3 id="blk-20595">2. Model Tiers</h3>
+<h4 id="blk-20596">2.1 Tier Definition</h4>
+<p>Three tiers, configured at startup. The tier determines default budgets for deliberation and attention. Tiers are about <em>effective reasoning capability</em>, not parameter count — a well-tuned 13B may outperform a generic 70B.</p>
+<pre data-lang="elixir"><code><span class="t-attr">@type</span> model_tier :: <span class="t-atom">:local_small</span> | <span class="t-atom">:local_large</span> | <span class="t-atom">:cloud_frontier</span>
+
+<span class="t-comment"># Configured in config/config.exs or runtime:</span>
+config <span class="t-atom">:graphonomous</span>, <span class="t-atom">:model_tier</span>, <span class="t-atom">:local_small</span>
+
+<span class="t-comment"># Or detected at startup based on available model:</span>
+config <span class="t-atom">:graphonomous</span>, <span class="t-atom">:model_tier</span>, <span class="t-atom">:auto</span></code></pre>
+<h4 id="blk-20599">2.2 Tier Profiles</h4>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Graphonomous.ModelTier</span> <span class="t-kw">do</span>
+  <span class="t-attr">@moduledoc</span> <span class="t-string">&quot;&quot;&quot;
+  Hardware-adaptive profiles for deliberation and attention.
+  The κ computation is tier-independent (pure graph algorithm).
+  The LLM-dependent operations adapt to what the model can handle.
+  &quot;&quot;&quot;</span>
+
+  <span class="t-attr">@profiles</span> %{
+    local_small: %{
+      label: <span class="t-string">&quot;Local 8B (e.g., Llama 3.1 8B, Qwen 2.5 7B, Gemma 2 9B)&quot;</span>,
+      effective_context_tokens: <span class="t-num">4096</span>,
+      max_nodes_per_prompt: <span class="t-num">8</span>,
+      avg_inference_ms: <span class="t-num">15_000</span>,
+
+      deliberation: %{
+        strategy: <span class="t-atom">:single_pass</span>,
+        max_agent_calls_per_scc: <span class="t-num">1</span>,
+        max_iterations: <span class="t-num">1</span>,
+        confidence_threshold: <span class="t-num">0.6</span>,
+        timeout_multiplier: <span class="t-num">3.0</span>,
+        kappa_deliberation_floor: <span class="t-num">2</span>
+      },
+
+      attention: %{
+        trigger_mode: <span class="t-atom">:demand</span>,
+        heartbeat_ms: <span class="t-atom">:disabled</span>,
+        max_items_per_cycle: <span class="t-num">1</span>,
+        max_explore_calls: <span class="t-num">2</span>,
+        max_deliberation_sccs: <span class="t-num">1</span>,
+        max_action_dispatches: <span class="t-num">1</span>,
+        total_timeout_ms: <span class="t-num">120_000</span>,
+        propose_enabled: <span class="t-lit">false</span>,
+        default_autonomy: <span class="t-atom">:observe</span>
+      },
+
+      embedding: %{
+        model: <span class="t-string">&quot;all-MiniLM-L6-v2&quot;</span>,
+        dimensions: <span class="t-num">384</span>,
+        device: <span class="t-atom">:cpu</span>,
+        retrieval_limit: <span class="t-num">10</span>
+      },
+
+      crystallization: %{
+        aggressive: <span class="t-lit">true</span>,
+        cache_retrievals: <span class="t-lit">true</span>
+      }
+    },
+
+    local_large: %{
+      label: <span class="t-string">&quot;Local 70B+ (e.g., Llama 3.1 70B, Qwen 2.5 72B, DeepSeek-V3)&quot;</span>,
+      effective_context_tokens: <span class="t-num">16_384</span>,
+      max_nodes_per_prompt: <span class="t-num">20</span>,
+      avg_inference_ms: <span class="t-num">5_000</span>,
+
+      deliberation: %{
+        strategy: <span class="t-atom">:multi_pass</span>,
+        max_agent_calls_per_scc: <span class="t-num">3</span>,
+        max_iterations: <span class="t-num">3</span>,
+        confidence_threshold: <span class="t-num">0.7</span>,
+        timeout_multiplier: <span class="t-num">2.0</span>,
+        kappa_deliberation_floor: <span class="t-num">1</span>
+      },
+
+      attention: %{
+        trigger_mode: <span class="t-atom">:heartbeat</span>,
+        heartbeat_ms: <span class="t-num">600_000</span>,
+        max_items_per_cycle: <span class="t-num">2</span>,
+        max_explore_calls: <span class="t-num">5</span>,
+        max_deliberation_sccs: <span class="t-num">1</span>,
+        max_action_dispatches: <span class="t-num">1</span>,
+        total_timeout_ms: <span class="t-num">90_000</span>,
+        propose_enabled: <span class="t-lit">false</span>,
+        default_autonomy: <span class="t-atom">:advise</span>
+      },
+
+      embedding: %{
+        model: <span class="t-string">&quot;nomic-embed-text&quot;</span>,
+        dimensions: <span class="t-num">768</span>,
+        device: <span class="t-atom">:gpu</span>,
+        retrieval_limit: <span class="t-num">20</span>
+      },
+
+      crystallization: %{
+        aggressive: <span class="t-lit">true</span>,
+        cache_retrievals: <span class="t-lit">true</span>
+      }
+    },
+
+    cloud_frontier: %{
+      label: <span class="t-string">&quot;Cloud API (e.g., Claude 4/Opus, GPT-5, Gemini Ultra)&quot;</span>,
+      effective_context_tokens: <span class="t-num">128_000</span>,
+      max_nodes_per_prompt: <span class="t-num">50</span>,
+      avg_inference_ms: <span class="t-num">1_500</span>,
+
+      deliberation: %{
+        strategy: <span class="t-atom">:multi_pass</span>,
+        max_agent_calls_per_scc: <span class="t-atom">:budget</span>,
+        max_iterations: <span class="t-num">5</span>,
+        confidence_threshold: <span class="t-num">0.75</span>,
+        timeout_multiplier: <span class="t-num">1.0</span>,
+        kappa_deliberation_floor: <span class="t-num">1</span>
+      },
+
+      attention: %{
+        trigger_mode: <span class="t-atom">:heartbeat</span>,
+        heartbeat_ms: <span class="t-num">300_000</span>,
+        max_items_per_cycle: <span class="t-num">3</span>,
+        max_explore_calls: <span class="t-num">10</span>,
+        max_deliberation_sccs: <span class="t-num">2</span>,
+        max_action_dispatches: <span class="t-num">1</span>,
+        total_timeout_ms: <span class="t-num">60_000</span>,
+        propose_enabled: <span class="t-lit">true</span>,
+        default_autonomy: <span class="t-atom">:advise</span>
+      },
+
+      embedding: %{
+        model: <span class="t-atom">:provider_default</span>,
+        dimensions: <span class="t-atom">:provider_default</span>,
+        device: <span class="t-atom">:api</span>,
+        retrieval_limit: <span class="t-num">50</span>
+      },
+
+      crystallization: %{
+        aggressive: <span class="t-lit">false</span>,
+        cache_retrievals: <span class="t-lit">false</span>
+      }
+    }
+  }
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Get the full profile for a tier&quot;</span>
+  <span class="t-attr">@spec</span> profile(model_tier()) :: map()
+  <span class="t-kw">def</span> profile(tier), <span class="t-kw">do</span>: <span class="t-type">Map</span>.fetch!(<span class="t-attr">@profiles</span>, tier)
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Get the deliberation config for a tier&quot;</span>
+  <span class="t-attr">@spec</span> deliberation_config(model_tier()) :: map()
+  <span class="t-kw">def</span> deliberation_config(tier), <span class="t-kw">do</span>: profile(tier).deliberation
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Get the attention config for a tier&quot;</span>
+  <span class="t-attr">@spec</span> attention_config(model_tier()) :: map()
+  <span class="t-kw">def</span> attention_config(tier), <span class="t-kw">do</span>: profile(tier).attention
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-20601">2.3 Key Design Decisions</h4>
+<p><strong>`kappa_deliberation_floor`</strong> — The minimum κ value that triggers LLM-based deliberation.</p>
+<ul><li><p>On <code>local_small</code>: floor is <strong>2</strong>. For κ=1 (single feedback loop), the model gets a structured single-pass prompt that <em>acknowledges</em> the circularity but doesn't attempt partition-and-reconcile. The fault-line is mentioned in context (&quot;Note: these concepts form a feedback loop; the weakest link is X→Y&quot;), giving the model a chance to reason about it without the overhead of multi-pass prompting. Only κ≥2 (genuinely tangled) triggers the full Deliberator.</p></li><li><p>On <code>local_large</code> and <code>cloud_frontier</code>: floor is <strong>1</strong>. Any circularity gets deliberation.</p></li></ul>
+<p>This means κ routing has <em>three</em> outcomes on constrained hardware:</p>
+<pre><code>κ = 0 → fast retrieval (no LLM reasoning pass, just return context)
+κ = 1 → enriched retrieval (single prompt with topology annotation)
+κ ≥ 2 → deliberation (full Deliberator pipeline, adapted to tier)</code></pre>
+<p><strong>`strategy: :single_pass`</strong> — Replaces the decompose→focus→reconcile pipeline with a single structured prompt:</p>
+<pre><code>CONTEXT (scoped to SCC nodes, max 8 nodes):
+  [node contents + edge relationships]
+
+TOPOLOGY NOTE:
+  These concepts form a feedback loop (κ=N).
+  The weakest link in this loop is: [fault_line_source] → [fault_line_target].
+  This means [fault_line_source] depends on [fault_line_target] with the
+  least evidential support.
+
+QUERY:
+  [original query]
+
+INSTRUCTION:
+  Consider the circular dependency described above. The weakest point
+  is [fault line]. Given this structure, what conclusion can you draw?
+  State your confidence (0.0-1.0).</code></pre>
+<p>This preserves the core insight (fault lines as reasoning anchors) without requiring the model to track assumptions across multiple calls.</p>
+<p><strong>`trigger_mode: :demand`</strong> — The Attention Engine fires on user action (query, BendScript interaction, goal creation) instead of a timer. The survey/triage/dispatch pipeline is identical — only the trigger changes.</p>
+<pre data-lang="elixir"><code><span class="t-comment"># In Retriever, after topology analysis (demand-triggered attention):</span>
+<span class="t-kw">if</span> tier_config.attention.trigger_mode == <span class="t-atom">:demand</span> <span class="t-kw">and</span> result.topology.max_kappa &gt; <span class="t-num">0</span> <span class="t-kw">do</span>
+  <span class="t-comment"># Piggyback a lightweight attention check on this query</span>
+  <span class="t-type">Attention</span>.on_demand_check(result.topology, query)
+<span class="t-kw">end</span>
+
+<span class="t-comment"># In Attention GenServer:</span>
+<span class="t-kw">def</span> on_demand_check(topology, query) <span class="t-kw">do</span>
+  <span class="t-comment"># Only survey goals related to this query's knowledge region</span>
+  <span class="t-comment"># Much cheaper than a full survey</span>
+  partial_survey(topology.sccs, query)
+<span class="t-kw">end</span></code></pre>
+<p><strong>`propose_enabled: false`</strong> — Goal generation is disabled on small models. The risk of hallucinated goals outweighs the value. Goals must come from the user (<code>:user</code>) or from explicit system rules (<code>:system</code>). Enable only after validating that the model produces sensible goals on your specific domain.</p>
+<p><strong>`crystallization.aggressive: true`</strong> — On constrained hardware, every LLM call is expensive. Crystallized conclusion nodes are <em>critical performance optimizations</em>:</p>
+<ul><li><p>A crystallized conclusion means you never re-deliberate that SCC region for similar queries</p></li><li><p>The graph &quot;learns&quot; faster because conclusions are aggressively written back</p></li><li><p>Combined with <code>cache_retrievals: true</code>, the system memoizes the full retrieve→deliberate→conclude pipeline</p></li></ul>
+<p><strong>`crystallization.aggressive: false`</strong> on cloud — When inference is cheap, it can be better to re-derive conclusions from fresh context than to rely on potentially stale crystallized nodes. The Consolidator's decay/prune cycle handles staleness, but with aggressive crystallization disabled, the system stays more dynamic.</p>
+<h3 id="blk-20625">3. Integration with Existing Modules</h3>
+<h4 id="blk-20626">3.1 Deliberator Adaptation</h4>
+<p>The Deliberator (KAPPA_DELIBERATOR_PROMPT.md) already accepts <code>agent_fn</code> and <code>budget</code> as options. Tier adaptation plugs into these:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># In Graphonomous.Deliberator.deliberate/4:</span>
+<span class="t-kw">def</span> deliberate(topology, query, retrieval_results, opts \\ []) <span class="t-kw">do</span>
+  tier = <span class="t-type">Application</span>.get_env(<span class="t-atom">:graphonomous</span>, <span class="t-atom">:model_tier</span>, <span class="t-atom">:local_small</span>)
+  tier_config = <span class="t-type">ModelTier</span>.deliberation_config(tier)
+
+  <span class="t-comment"># Merge tier defaults with explicit opts (explicit wins)</span>
+  budget = <span class="t-type">Map</span>.merge(tier_config, <span class="t-type">Keyword</span>.get(opts, <span class="t-atom">:budget</span>, %{}))
+
+  <span class="t-comment"># Check deliberation floor</span>
+  sccs_to_deliberate =
+    topology.sccs
+    |&gt; <span class="t-type">Enum</span>.filter(<span class="t-kw">fn</span> scc -&gt; scc.kappa &gt;= tier_config.kappa_deliberation_floor <span class="t-kw">end</span>)
+
+  <span class="t-kw">case</span> tier_config.strategy <span class="t-kw">do</span>
+    <span class="t-atom">:single_pass</span> -&gt;
+      deliberate_single_pass(sccs_to_deliberate, query, retrieval_results, budget, opts)
+
+    <span class="t-atom">:multi_pass</span> -&gt;
+      deliberate_multi_pass(sccs_to_deliberate, query, retrieval_results, budget, opts)
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span>
+
+<span class="t-kw">defp</span> deliberate_single_pass(sccs, query, retrieval_results, budget, opts) <span class="t-kw">do</span>
+  agent_fn = <span class="t-type">Keyword</span>.fetch!(opts, <span class="t-atom">:agent_fn</span>)
+
+  <span class="t-type">Enum</span>.map(sccs, <span class="t-kw">fn</span> scc -&gt;
+    prompt = build_single_pass_prompt(query, scc, retrieval_results)
+    {<span class="t-atom">:ok</span>, response} = agent_fn.(prompt)
+    conclusion = parse_single_pass_conclusion(response, scc)
+
+    <span class="t-kw">if</span> <span class="t-type">Keyword</span>.get(opts, <span class="t-atom">:write_back</span>, <span class="t-lit">true</span>) <span class="t-kw">do</span>
+      {<span class="t-atom">:ok</span>, _node_id} = crystallize(conclusion, scc, opts)
+    <span class="t-kw">end</span>
+
+    {<span class="t-atom">:ok</span>, conclusion}
+  <span class="t-kw">end</span>)
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-20629">3.2 Attention Engine Adaptation</h4>
+<p>The Attention Engine (ATTENTION_ENGINE_PROMPT.md) reads tier config at startup:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># In Graphonomous.Attention.init/1:</span>
+<span class="t-kw">def</span> init(opts) <span class="t-kw">do</span>
+  tier = <span class="t-type">Application</span>.get_env(<span class="t-atom">:graphonomous</span>, <span class="t-atom">:model_tier</span>, <span class="t-atom">:local_small</span>)
+  tier_config = <span class="t-type">ModelTier</span>.attention_config(tier)
+
+  <span class="t-comment"># Merge with explicit config (explicit wins)</span>
+  config = <span class="t-type">Map</span>.merge(tier_config, <span class="t-type">Map</span>.new(opts))
+
+  state = %{
+    config: config,
+    active: config.trigger_mode == <span class="t-atom">:heartbeat</span>,
+    autonomy_level: config.default_autonomy,
+    <span class="t-comment"># ...</span>
+  }
+
+  <span class="t-comment"># Only start heartbeat timer if tier supports it</span>
+  <span class="t-kw">if</span> state.active <span class="t-kw">and</span> config.heartbeat_ms != <span class="t-atom">:disabled</span> <span class="t-kw">do</span>
+    <span class="t-type">Process</span>.send_after(self(), <span class="t-atom">:heartbeat</span>, config.heartbeat_ms)
+  <span class="t-kw">end</span>
+
+  {<span class="t-atom">:ok</span>, state}
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-20632">3.3 Retriever Adaptation — Enriched Retrieval for κ=1</h4>
+<p>For <code>local_small</code> tier where <code>kappa_deliberation_floor</code> is 2, κ=1 regions get <em>enriched retrieval</em> instead of full deliberation. This is a lightweight annotation pass:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># In Graphonomous.Retriever, after topology analysis:</span>
+<span class="t-kw">defp</span> maybe_enrich_or_deliberate(result, query, opts) <span class="t-kw">do</span>
+  tier = <span class="t-type">Application</span>.get_env(<span class="t-atom">:graphonomous</span>, <span class="t-atom">:model_tier</span>, <span class="t-atom">:local_small</span>)
+  tier_config = <span class="t-type">ModelTier</span>.deliberation_config(tier)
+
+  <span class="t-kw">cond</span> <span class="t-kw">do</span>
+    result.topology.max_kappa == <span class="t-num">0</span> -&gt;
+      <span class="t-comment"># DAG — fast path, no enrichment needed</span>
+      result
+
+    result.topology.max_kappa &lt; tier_config.kappa_deliberation_floor -&gt;
+      <span class="t-comment"># Below deliberation floor — enrich context with topology annotations</span>
+      <span class="t-comment"># This is FREE (no LLM calls, just context decoration)</span>
+      enrich_with_topology_notes(result)
+
+    opts[<span class="t-atom">:auto_deliberate</span>] -&gt;
+      <span class="t-comment"># Above floor — full deliberation</span>
+      <span class="t-kw">case</span> <span class="t-type">Deliberator</span>.deliberate(result.topology, query, result.results, opts) <span class="t-kw">do</span>
+        {<span class="t-atom">:ok</span>, deliberation_result} -&gt;
+          <span class="t-type">Map</span>.put(result, <span class="t-atom">:deliberation</span>, deliberation_result)
+        _ -&gt;
+          result
+      <span class="t-kw">end</span>
+
+    <span class="t-lit">true</span> -&gt;
+      <span class="t-comment"># Above floor but auto_deliberate off — let caller decide</span>
+      result
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span>
+
+<span class="t-kw">defp</span> enrich_with_topology_notes(result) <span class="t-kw">do</span>
+  <span class="t-comment"># Annotate the retrieval result with human-readable topology context</span>
+  <span class="t-comment"># The calling LLM gets this as structured context, not a separate prompt</span>
+  topology_notes =
+    result.topology.sccs
+    |&gt; <span class="t-type">Enum</span>.map(<span class="t-kw">fn</span> scc -&gt;
+      fault_lines =
+        scc.fault_line_edges
+        |&gt; <span class="t-type">Enum</span>.map(<span class="t-kw">fn</span> {s, t} -&gt; <span class="t-string">&quot;#{s} → #{t}&quot;</span> <span class="t-kw">end</span>)
+        |&gt; <span class="t-type">Enum</span>.join(<span class="t-string">&quot;, &quot;</span>)
+
+      %{
+        scc_id: scc.id,
+        kappa: scc.kappa,
+        node_ids: scc.nodes,
+        note: <span class="t-string">&quot;These #{length(scc.nodes)} concepts form a feedback loop (κ=#{scc.kappa}). &quot;</span> &lt;&gt;
+              <span class="t-string">&quot;Weakest link: #{fault_lines}. Consider this circularity when reasoning.&quot;</span>
+      }
+    <span class="t-kw">end</span>)
+
+  <span class="t-type">Map</span>.put(result, <span class="t-atom">:topology_notes</span>, topology_notes)
+<span class="t-kw">end</span></code></pre>
+<p>This three-tier routing is the key insight: <strong>κ is a routing signal, and the routes themselves adapt to hardware.</strong></p>
+<h3 id="blk-20636">4. The Consolidator Is More Important on Constrained Hardware</h3>
+<p>On <code>local_small</code>, graph size directly impacts performance:</p>
+<ul><li><p>More nodes → more embedding comparisons (CPU-bound on 384-dim vectors)</p></li><li><p>More edges → more SCC computation (Tarjan is O(V+E) but constant factors matter)</p></li><li><p>Larger SCCs → more context needed per deliberation (hits the 4K token wall faster)</p></li></ul>
+<p>The Consolidator's pruning and merging are therefore <strong>performance-critical</strong>, not just knowledge-hygiene:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># Tier-aware consolidation thresholds</span>
+<span class="t-kw">defp</span> consolidation_config(<span class="t-atom">:local_small</span>) <span class="t-kw">do</span>
+  %{
+    <span class="t-comment"># Prune more aggressively to keep graph lean</span>
+    min_confidence_for_retention: <span class="t-num">0.3</span>,     <span class="t-comment"># default 0.2</span>
+    idle_decay_rate: <span class="t-num">0.15</span>,                 <span class="t-comment"># default 0.1 — faster decay</span>
+    max_graph_size_nodes: <span class="t-num">5_000</span>,           <span class="t-comment"># hard cap</span>
+    consolidation_trigger: <span class="t-atom">:every_nth_query</span>,
+    consolidation_n: <span class="t-num">10</span>,                   <span class="t-comment"># consolidate every 10 queries</span>
+    merge_similarity_threshold: <span class="t-num">0.88</span>       <span class="t-comment"># default 0.92 — merge more aggressively</span>
+  }
+<span class="t-kw">end</span>
+
+<span class="t-kw">defp</span> consolidation_config(<span class="t-atom">:local_large</span>) <span class="t-kw">do</span>
+  %{
+    min_confidence_for_retention: <span class="t-num">0.2</span>,
+    idle_decay_rate: <span class="t-num">0.1</span>,
+    max_graph_size_nodes: <span class="t-num">50_000</span>,
+    consolidation_trigger: <span class="t-atom">:periodic</span>,
+    consolidation_interval_ms: <span class="t-num">600_000</span>,    <span class="t-comment"># every 10 min</span>
+    merge_similarity_threshold: <span class="t-num">0.92</span>
+  }
+<span class="t-kw">end</span>
+
+<span class="t-kw">defp</span> consolidation_config(<span class="t-atom">:cloud_frontier</span>) <span class="t-kw">do</span>
+  %{
+    min_confidence_for_retention: <span class="t-num">0.15</span>,
+    idle_decay_rate: <span class="t-num">0.05</span>,                 <span class="t-comment"># slow decay — cheap to keep</span>
+    max_graph_size_nodes: <span class="t-num">500_000</span>,
+    consolidation_trigger: <span class="t-atom">:periodic</span>,
+    consolidation_interval_ms: <span class="t-num">300_000</span>,    <span class="t-comment"># every 5 min</span>
+    merge_similarity_threshold: <span class="t-num">0.95</span>       <span class="t-comment"># conservative merge</span>
+  }
+<span class="t-kw">end</span></code></pre>
+<h3 id="blk-20647">5. Cost Model</h3>
+<p>Every tier has a different cost function. The Deliberator and Attention Engine should track and expose these:</p>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Graphonomous.CostTracker</span> <span class="t-kw">do</span>
+  <span class="t-attr">@moduledoc</span> <span class="t-string">&quot;&quot;&quot;
+  Tracks inference cost per tier. On cloud tiers, cost is monetary (tokens × price).
+  On local tiers, cost is compute time (inference_ms × opportunity_cost).
+  &quot;&quot;&quot;</span>
+
+  <span class="t-attr">@type</span> cost_entry :: %{
+    operation: <span class="t-atom">:deliberation</span> | <span class="t-atom">:exploration</span> | <span class="t-atom">:attention</span> | <span class="t-atom">:retrieval</span>,
+    tier: <span class="t-type">ModelTier</span>.model_tier(),
+    tokens_in: non_neg_integer(),
+    tokens_out: non_neg_integer(),
+    inference_ms: float(),
+    timestamp: <span class="t-type">DateTime</span>.t()
+  }
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Record an inference cost event&quot;</span>
+  <span class="t-attr">@spec</span> record(cost_entry()) :: <span class="t-atom">:ok</span>
+  <span class="t-kw">def</span> record(entry)
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Get total cost for the current session&quot;</span>
+  <span class="t-attr">@spec</span> session_summary() :: %{
+    total_calls: non_neg_integer(),
+    total_tokens: non_neg_integer(),
+    total_inference_ms: float(),
+    estimated_cost_usd: float() | <span class="t-lit">nil</span>,
+    by_operation: map()
+  }
+  <span class="t-kw">def</span> session_summary()
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Get cost per deliberation (useful for budgeting)&quot;</span>
+  <span class="t-attr">@spec</span> avg_deliberation_cost() :: %{
+    avg_tokens: float(),
+    avg_inference_ms: float(),
+    avg_cost_usd: float() | <span class="t-lit">nil</span>
+  }
+  <span class="t-kw">def</span> avg_deliberation_cost()
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Check if daily cost cap has been exceeded. Returns true if
+  the Attention Engine heartbeat should be paused.&quot;</span>
+  <span class="t-attr">@spec</span> budget_exceeded?() :: boolean()
+  <span class="t-kw">def</span> budget_exceeded?()
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;Reset daily cost counter (called at midnight or manually)&quot;</span>
+  <span class="t-attr">@spec</span> reset_daily() :: <span class="t-atom">:ok</span>
+  <span class="t-kw">def</span> reset_daily()
+<span class="t-kw">end</span></code></pre>
+<p>Telemetry integration:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># Emitted after every LLM call</span>
+<span class="t-atom">:telemetry</span>.execute(
+  [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:inference</span>, <span class="t-atom">:complete</span>],
+  %{tokens_in: n, tokens_out: n, inference_ms: ms},
+  %{tier: tier, operation: op, scc_id: scc_id}
+)</code></pre>
+<h4 id="blk-20652">5.1 Cost Estimates by Tier</h4>
+<pre><code>local_small (8B, ~15s/call):
+  Single-pass deliberation: 1 call × ~1K tokens = ~15s
+  Attention cycle (demand): 1 item × 1 call = ~15s
+  Daily cost at 20 queries with κ&gt;0: ~5 min inference time
+  Monetary: $0 (self-hosted)
+
+local_large (70B, ~5s/call):
+  Multi-pass deliberation: 3 calls × ~2K tokens = ~15s
+  Attention heartbeat (10 min): 6 cycles/hr × 2 calls = ~1 min/hr
+  Daily cost: ~30 min inference time
+  Monetary: $0 (self-hosted) + electricity
+
+cloud_frontier (~1.5s/call):
+  Multi-pass deliberation: 3-5 calls × ~3K tokens = ~5s
+  Attention heartbeat (5 min): 12 cycles/hr × 3 calls = ~$0.50/hr
+  Daily cost (active 8hr): ~$4
+  Monetary: ~$4-10/day depending on query volume
+
+WORST-CASE (cloud_frontier, all goals active, all κ&gt;0):
+  Heartbeat: 12 cycles/hr × 3 goals × (survey + deliberate + act)
+           = 12 × 3 × ~5 calls = ~180 calls/hr
+           ≈ ~$2/hr at frontier pricing
+  Daily (8hr active): ~$16
+  Daily (24hr unattended): ~$48
+
+  → Implement a daily cost cap in CostTracker (default: $10/day)
+    that pauses the heartbeat when exceeded. Resume on next day
+    or on manual override. Log the pause as telemetry event.</code></pre>
+<h3 id="blk-20654">6. [&amp;] Protocol Integration</h3>
+<h4 id="blk-20655">6.1 Tier in Governance Block</h4>
+<p>The model tier is a governance concern — it affects what the agent can do autonomously. Declare it in the <code>ampersand.json</code> governance block:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;governance&quot;</span>: {
+    <span class="t-key">&quot;hard&quot;</span>: [<span class="t-string">&quot;...&quot;</span>],
+    <span class="t-key">&quot;soft&quot;</span>: [<span class="t-string">&quot;...&quot;</span>],
+    <span class="t-key">&quot;autonomy&quot;</span>: {
+      <span class="t-key">&quot;level&quot;</span>: <span class="t-string">&quot;advise&quot;</span>,
+      <span class="t-key">&quot;model_tier&quot;</span>: <span class="t-string">&quot;local_small&quot;</span>,
+      <span class="t-key">&quot;heartbeat_seconds&quot;</span>: <span class="t-lit">null</span>,
+      <span class="t-key">&quot;budget&quot;</span>: {
+        <span class="t-key">&quot;max_actions_per_hour&quot;</span>: <span class="t-num">2</span>,
+        <span class="t-key">&quot;max_deliberation_calls_per_query&quot;</span>: <span class="t-num">1</span>,
+        <span class="t-key">&quot;require_approval_for&quot;</span>: [<span class="t-string">&quot;act&quot;</span>, <span class="t-string">&quot;propose&quot;</span>]
+      }
+    }
+  }
+}</code></pre>
+<p>When <code>model_tier</code> is declared, the runtime loads the corresponding profile and uses it as defaults. Explicit budget values override tier defaults.</p>
+<h4 id="blk-20659">6.2 Tier-Aware Pipeline Compilation</h4>
+<p>When <code>ampersand compose</code> processes a pipeline, it validates against the declared tier:</p>
+<pre><code># This pipeline:
+query
+  |&gt; &amp;memory.graph.recall()
+  |&gt; &amp;memory.graph.topology()
+  |&gt; &amp;reason.deliberate(budget: :κ)
+  |&gt; &amp;memory.graph.store()
+
+# Compiles differently per tier:
+
+# local_small: deliberate step uses single_pass strategy,
+#   skips SCCs with κ &lt; 2, enriches κ=1 regions with topology notes
+
+# cloud_frontier: deliberate step uses multi_pass strategy,
+#   full partition-and-reconcile for all κ &gt; 0 SCCs</code></pre>
+<p>The pipeline declaration is the same. The tier determines compilation. This is the Terraform analogy extended: same HCL, different providers, different execution plans.</p>
+<h3 id="blk-20663">7. Phase 0 Validation Test</h3>
+<p>Before building the full Deliberator/Attention stack, validate the core thesis on the target hardware. This is the single most important test:</p>
+<h4 id="blk-20665">7.1 The Test</h4>
+<pre><code>1. Seed Graphonomous with a small cyclic knowledge graph (~10-20 nodes)
+   containing at least one SCC with κ ≥ 1.
+
+2. Query the graph about a topic that spans the SCC.
+
+3. Run three conditions:
+   A. Raw retrieval — no topology, no deliberation
+   B. Enriched retrieval — topology notes included in context
+   C. Single-pass deliberation — full structured prompt with fault lines
+
+4. For each condition, have the model (your target 8B) generate an answer.
+
+5. Human-evaluate: which answer best handles the circular dependency?
+   Score 1-5 on coherence (does it make sense?) and
+   1-5 on circularity awareness (does it acknowledge/resolve the loop?).</code></pre>
+<h4 id="blk-20667">7.2 What Success Looks Like</h4>
+<ul><li><p><strong>B &gt; A</strong> would validate that topology annotations help even without deliberation</p></li><li><p><strong>C &gt; B</strong> would validate that fault-line prompting adds value on 8B</p></li><li><p><strong>C ≈ B</strong> would suggest deliberation overhead isn't worth it on 8B — stick with enriched retrieval</p></li><li><p><strong>A ≈ B ≈ C</strong> would suggest the 8B model can't usefully leverage topology information at all — the architecture's value proposition depends on the model being able to use structural hints</p></li></ul>
+<p>If A ≈ B ≈ C, the κ computation is still valuable (it's free CPU work that correctly identifies structure), but the <em>deliberation</em> pipeline should be deferred to a larger model. The system would run in &quot;topology-aware retrieval&quot; mode: compute κ, annotate results, let the calling agent handle the reasoning.</p>
+<h4 id="blk-20678">7.3 Elixir Test Sketch</h4>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Graphonomous.ModelTierValidationTest</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">ExUnit.Case</span>
+
+  <span class="t-attr">@tag</span> <span class="t-atom">:manual</span>
+  <span class="t-attr">@tag</span> <span class="t-atom">:requires_llm</span>
+  test <span class="t-string">&quot;Phase 0: topology awareness improves answer quality on target model&quot;</span> <span class="t-kw">do</span>
+    <span class="t-comment"># 1. Seed a cyclic business graph</span>
+    seed_business_cycle_graph()
+
+    query = <span class="t-string">&quot;How does R&amp;D investment affect market share for mid-size companies?&quot;</span>
+
+    <span class="t-comment"># Condition A: raw retrieval</span>
+    raw = <span class="t-type">Graphonomous</span>.retrieve_context(query, topology: <span class="t-lit">false</span>)
+    answer_a = call_target_model(format_raw_context(raw, query))
+
+    <span class="t-comment"># Condition B: enriched retrieval (topology notes, no deliberation)</span>
+    enriched = <span class="t-type">Graphonomous</span>.retrieve_context(query, topology: <span class="t-lit">true</span>)
+    answer_b = call_target_model(format_enriched_context(enriched, query))
+
+    <span class="t-comment"># Condition C: single-pass deliberation</span>
+    deliberated = <span class="t-type">Graphonomous</span>.retrieve_context(query,
+      topology: <span class="t-lit">true</span>,
+      auto_deliberate: <span class="t-lit">true</span>,
+      model_tier: <span class="t-atom">:local_small</span>
+    )
+    answer_c = call_target_model(format_deliberated_context(deliberated, query))
+
+    <span class="t-comment"># Log for human evaluation</span>
+    <span class="t-type">IO</span>.puts(<span class="t-string">&quot;=== CONDITION A (raw) ===\n#{answer_a}&quot;</span>)
+    <span class="t-type">IO</span>.puts(<span class="t-string">&quot;=== CONDITION B (enriched) ===\n#{answer_b}&quot;</span>)
+    <span class="t-type">IO</span>.puts(<span class="t-string">&quot;=== CONDITION C (deliberated) ===\n#{answer_c}&quot;</span>)
+
+    <span class="t-comment"># Automated check: deliberated answer should mention the circular dependency</span>
+    assert <span class="t-type">String</span>.contains?(answer_c, <span class="t-string">&quot;feedback&quot;</span>) <span class="t-kw">or</span>
+           <span class="t-type">String</span>.contains?(answer_c, <span class="t-string">&quot;circular&quot;</span>) <span class="t-kw">or</span>
+           <span class="t-type">String</span>.contains?(answer_c, <span class="t-string">&quot;loop&quot;</span>) <span class="t-kw">or</span>
+           <span class="t-type">String</span>.contains?(answer_c, <span class="t-string">&quot;cycle&quot;</span>),
+           <span class="t-string">&quot;Single-pass deliberation should surface circularity awareness&quot;</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h3 id="blk-20680">8. Build Order (Hardware-Constrained Solo Developer)</h3>
+<p>This reorders the crosswalk's phased implementation for a solo developer validating on real hardware:</p>
+<h4 id="blk-20682">Phase 0 — Prove the thesis (1-2 days)</h4>
+<pre><code>├── Get Graphonomous running with SQLite + local embeddings (all-MiniLM-L6-v2)
+├── Implement Topology.analyze/1 (Tarjan + κ) [KAPPA_BUILD_PROMPT]
+├── Wire topology into retrieve_context response
+├── Write the Phase 0 validation test (§7)
+├── Run it. Does B &gt; A? Does C &gt; B?
+│
+└── STOP HERE if A ≈ B ≈ C. Revisit with a larger model.</code></pre>
+<h4 id="blk-20684">Phase 1 — Minimum viable κ-aware agent (3-5 days)</h4>
+<pre><code>├── ModelTier module with local_small profile
+├── Single-pass deliberation (Deliberator with strategy: :single_pass)
+├── Enriched retrieval for κ=1 (topology notes, no LLM call)
+├── Demand-triggered attention (on query, not heartbeat)
+├── Crystallization (write conclusions back, aggressive mode)
+├── CostTracker (telemetry for inference time)
+│
+└── Gate: retrieve cyclic graph → enriched/deliberated answer → conclusion node exists</code></pre>
+<h4 id="blk-20686">Phase 2 — BendScript visual debugging (2-3 days)</h4>
+<pre><code>├── Port κ to JavaScript
+├── SCC visualization, HUD, fault-line highlighting
+├── Visual debugging of which SCCs get deliberated vs enriched vs skipped
+│
+└── This gives you eyes on the graph. Invaluable for a solo developer.</code></pre>
+<h4 id="blk-20688">Phase 3 — Upgrade path (when model/hardware improves)</h4>
+<pre><code>├── Multi-pass deliberation (local_large / cloud_frontier profiles)
+├── Heartbeat attention engine
+├── Autonomous goal generation (PROPOSE mode)
+├── Protocol amendments (SPEC.md, schema, PROTOCOL_PROMPT.md)
+│
+└── Only build this when Phase 0 validates with the target model tier.</code></pre>
+<h3 id="blk-20690">9. What to Build</h3>
+<h4 id="blk-20691">9.1 Module: <code>Graphonomous.ModelTier</code></h4>
+<p><strong>File:</strong> <code>graphonomous/lib/graphonomous/model_tier.ex</code></p>
+<p>The tier profile module as specified in §2.2. Pure data — no side effects, no LLM calls.</p>
+<h4 id="blk-20694">9.2 Module: <code>Graphonomous.CostTracker</code></h4>
+<p><strong>File:</strong> <code>graphonomous/lib/graphonomous/cost_tracker.ex</code></p>
+<p>Inference cost tracking as specified in §5. ETS-backed for fast writes.</p>
+<h4 id="blk-20697">9.3 Modifications to Existing Modules</h4>
+<table><thead><tr><th>File</th><th>Change</th></tr></thead><tbody><tr><td><code>graphonomous/lib/graphonomous/deliberator.ex</code></td><td>Read tier from config, branch on <code>strategy</code> (<code>:single_pass</code> vs <code>:multi_pass</code>), respect <code>kappa_deliberation_floor</code></td></tr><tr><td><code>graphonomous/lib/graphonomous/attention.ex</code></td><td>Read tier from config, support <code>:demand</code> trigger mode, respect <code>propose_enabled</code></td></tr><tr><td><code>graphonomous/lib/graphonomous/retriever.ex</code></td><td>Add <code>enrich_with_topology_notes/1</code> for sub-floor κ regions</td></tr><tr><td><code>graphonomous/config/config.exs</code></td><td>Add <code>:model_tier</code> configuration</td></tr></tbody></table>
+<h3 id="blk-20709">10. Tests</h3>
+<h4 id="blk-20710">File: <code>test/graphonomous/model_tier_test.exs</code></h4>
+<pre><code>[x] profile/1 returns correct defaults for each tier
+[x] deliberation_config/1 returns tier-appropriate strategy
+[x] attention_config/1 returns tier-appropriate trigger_mode
+[x] local_small has single_pass strategy and demand trigger
+[x] local_large has multi_pass strategy and heartbeat trigger
+[x] cloud_frontier has multi_pass strategy and heartbeat trigger
+[x] local_small has kappa_deliberation_floor of 2
+[x] local_large has kappa_deliberation_floor of 1</code></pre>
+<h4 id="blk-20712">File: <code>test/graphonomous/model_tier_integration_test.exs</code></h4>
+<pre><code>[x] Deliberator with local_small config → single_pass on κ=2 SCC
+[x] Deliberator with local_small config → skips κ=1 SCC (below floor)
+[x] Deliberator with cloud_frontier config → multi_pass on κ=1 SCC
+[x] Retriever with local_small config → enriches κ=1 with topology_notes
+[x] Attention with demand trigger → does NOT fire on timer
+[x] Attention with demand trigger → fires on on_demand_check call
+[x] Attention with heartbeat trigger → fires on timer
+[x] CostTracker records inference events and computes session summary
+[x] Explicit opts override tier defaults</code></pre>
+<h3 id="blk-20714">11. Success Criteria</h3>
+<h4 id="blk-20715">Gate A — Tier Routing (MUST PASS)</h4>
+<ol><li><p>κ=0 → fast retrieval (no LLM) on ALL tiers</p></li><li><p>κ=1 → enriched retrieval (no LLM) on <code>local_small</code></p></li><li><p>κ=1 → full deliberation on <code>local_large</code> and <code>cloud_frontier</code></p></li><li><p>κ≥2 → deliberation on ALL tiers (adapted to tier strategy)</p></li></ol>
+<h4 id="blk-20725">Gate B — Single-Pass Quality (MUST PASS)</h4>
+<ol><li><p>Single-pass prompt includes fault-line context</p></li><li><p>Single-pass conclusion is parseable (confidence + content)</p></li><li><p>Single-pass crystallization writes valid node to graph</p></li><li><p>Second retrieval finds crystallized conclusion</p></li></ol>
+<h4 id="blk-20735">Gate C — Cost Tracking (MUST PASS)</h4>
+<ol><li><p>Every LLM call is tracked with tokens + duration</p></li><li><p>Session summary is accurate</p></li><li><p>Telemetry events fire for all inference</p></li></ol>
+<h4 id="blk-20743">Gate D — Phase 0 Validation (SHOULD PASS)</h4>
+<ol><li><p>Enriched retrieval (B) scores ≥ raw retrieval (A) on human eval</p></li><li><p>Single-pass deliberation (C) scores ≥ enriched retrieval (B) on human eval</p></li><li><p>Or: clear evidence of which tier is the minimum viable tier for this architecture</p></li></ol>
+<h3 id="blk-20751">12. Architectural Notes</h3>
+<h4 id="blk-20752">Why not auto-detect tier from hardware?</h4>
+<p>You could probe available VRAM, check for GPU, estimate model size. But:</p>
+<ol><li><p>Model quality ≠ model size. A fine-tuned 8B may outperform a generic 13B.</p></li><li><p>The tier determines reasoning <em>depth</em>, which depends on task domain and model strengths.</p></li><li><p>Auto-detection creates a false sense of optimization. Explicit configuration forces the operator to think about their hardware constraints.</p></li></ol>
+<p>Provide <code>:auto</code> as an option that guesses based on available resources, but default to explicit configuration.</p>
+<h4 id="blk-20762">Why three tiers and not a continuous slider?</h4>
+<p>Three tiers map to three real-world deployment scenarios:</p>
+<ul><li><p><strong>local_small</strong>: Developer laptop, hobbyist, air-gapped environments</p></li><li><p><strong>local_large</strong>: Dedicated inference server, multi-GPU workstation</p></li><li><p><strong>cloud_frontier</strong>: Production deployment with API budget</p></li></ul>
+<p>A continuous slider (e.g., &quot;reasoning depth: 0.0-1.0&quot;) would require interpolating between strategies, which adds complexity without clear benefit. The three tiers have qualitatively different strategies (single-pass vs multi-pass, demand vs heartbeat), not just quantitatively different parameters.</p>
+<h4 id="blk-20772">How does this relate to the [&amp;] Protocol's model-agnosticism?</h4>
+<p>The [&amp;] Protocol is model-agnostic by design — it declares <em>what</em> capabilities an agent needs, not <em>how</em> they're implemented. Model tier adaptation is an implementation concern, not a protocol concern. The tier lives in the <code>governance.autonomy</code> block because it affects <em>what the agent is allowed to do</em>, which is governance.</p>
+<p>A valid ampersand.json can declare <code>&amp;reason.deliberate</code> without specifying a tier. The runtime (Graphonomous) picks the tier based on its own configuration. The protocol doesn't need to know about 8B vs 70B — it just needs to know that deliberation is a declared capability.</p>
+<h4 id="blk-20775">The κ paradox: more valuable when inference is expensive</h4>
+<p>On cloud with cheap, fast inference, κ routing is a quality optimization — &quot;use deliberation to get better answers on circular topics.&quot; You could skip it and still get decent answers via brute-force long-context reasoning.</p>
+<p>On local with expensive, slow inference, κ routing is a <strong>resource optimization</strong> — &quot;don't waste 15 seconds of inference on a region that doesn't need it.&quot; The κ=0 fast path (no LLM call at all, just return retrieved context) is the single biggest performance win. Every query where κ=0 saves you a full inference pass.</p>
+<p>This means the ROI of implementing κ topology is <em>higher</em> on constrained hardware, not lower. The Tarjan + bipartition computation is CPU-bound and takes &lt;1ms. It saves you 15+ seconds of inference on every query that hits a DAG region. The more constrained your hardware, the more valuable this routing becomes.</p>
+<p><em>Companion to: KAPPA_BUILD_PROMPT.md (κ computation), KAPPA_DELIBERATOR_PROMPT.md (deliberation loop), ATTENTION_ENGINE_PROMPT.md (proactive attention). This prompt ensures the architecture degrades gracefully across hardware tiers, with the same graph topology driving all decisions.</em></p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/prompts/MODEL_TIER_PROMPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-20565" class="lvl2">0. The One-Sentence Idea</a><a href="#blk-20567" class="lvl2">1. Why This Exists</a><a href="#blk-20595" class="lvl2">2. Model Tiers</a><a href="#blk-20596" class="lvl3">2.1 Tier Definition</a><a href="#blk-20599" class="lvl3">2.2 Tier Profiles</a><a href="#blk-20601" class="lvl3">2.3 Key Design Decisions</a><a href="#blk-20625" class="lvl2">3. Integration with Existing Modules</a><a href="#blk-20626" class="lvl3">3.1 Deliberator Adaptation</a><a href="#blk-20629" class="lvl3">3.2 Attention Engine Adaptation</a><a href="#blk-20632" class="lvl3">3.3 Retriever Adaptation — Enriched Retrieval for κ=1</a><a href="#blk-20636" class="lvl2">4. The Consolidator Is More Important on Constrained Hardware</a><a href="#blk-20647" class="lvl2">5. Cost Model</a><a href="#blk-20652" class="lvl3">5.1 Cost Estimates by Tier</a><a href="#blk-20654" class="lvl2">6. [&amp;] Protocol Integration</a><a href="#blk-20655" class="lvl3">6.1 Tier in Governance Block</a><a href="#blk-20659" class="lvl3">6.2 Tier-Aware Pipeline Compilation</a><a href="#blk-20663" class="lvl2">7. Phase 0 Validation Test</a><a href="#blk-20665" class="lvl3">7.1 The Test</a><a href="#blk-20667" class="lvl3">7.2 What Success Looks Like</a><a href="#blk-20678" class="lvl3">7.3 Elixir Test Sketch</a><a href="#blk-20680" class="lvl2">8. Build Order (Hardware-Constrained Solo Developer)</a><a href="#blk-20682" class="lvl3">Phase 0 — Prove the thesis (1-2 days)</a><a href="#blk-20684" class="lvl3">Phase 1 — Minimum viable κ-aware agent (3-5 days)</a><a href="#blk-20686" class="lvl3">Phase 2 — BendScript visual debugging (2-3 days)</a><a href="#blk-20688" class="lvl3">Phase 3 — Upgrade path (when model/hardware improves)</a><a href="#blk-20690" class="lvl2">9. What to Build</a><a href="#blk-20691" class="lvl3">9.1 Module: Graphonomous.ModelTier</a><a href="#blk-20694" class="lvl3">9.2 Module: Graphonomous.CostTracker</a><a href="#blk-20697" class="lvl3">9.3 Modifications to Existing Modules</a><a href="#blk-20709" class="lvl2">10. Tests</a><a href="#blk-20710" class="lvl3">File: test/graphonomous/model_tier_test.exs</a><a href="#blk-20712" class="lvl3">File: test/graphonomous/model_tier_integration_test.exs</a><a href="#blk-20714" class="lvl2">11. Success Criteria</a><a href="#blk-20715" class="lvl3">Gate A — Tier Routing (MUST PASS)</a><a href="#blk-20725" class="lvl3">Gate B — Single-Pass Quality (MUST PASS)</a><a href="#blk-20735" class="lvl3">Gate C — Cost Tracking (MUST PASS)</a><a href="#blk-20743" class="lvl3">Gate D — Phase 0 Validation (SHOULD PASS)</a><a href="#blk-20751" class="lvl2">12. Architectural Notes</a><a href="#blk-20752" class="lvl3">Why not auto-detect tier from hardware?</a><a href="#blk-20762" class="lvl3">Why three tiers and not a continuous slider?</a><a href="#blk-20772" class="lvl3">How does this relate to the [&amp;] Protocol&#39;s model-agnosticism?</a><a href="#blk-20775" class="lvl3">The κ paradox: more valuable when inference is expensive</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/prompts/ATTENTION_ENGINE_PROMPT.md/">Attention Engine — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/CODEX_GUIDE.md/">[&amp;] Ecosystem — Codex Prompt Guide</a><a href="/AmpersandBoxDesign/prompts/DUAL_LOOP_MACHINES.md/">Dual- and Triple-Loop Machine Architecture</a><a href="/AmpersandBoxDesign/prompts/GRAPHONOMOUS_PROMPT.md/">GRAPHONOMOUS_PROMPT</a><a href="/AmpersandBoxDesign/prompts/KAPPA_BUILD_PROMPT.md/">κ-Aware Routing — Build Prompt v2 for Graphonomous + BendScript</a><a href="/AmpersandBoxDesign/prompts/KAPPA_DELIBERATOR_PROMPT.md/">κ-Driven Deliberation Orchestrator — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md/">[&amp;] Protocol — Zed AI Coder Prompt</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieradcxvrx55ncee53bcaumdfoaiw4wk2eeqwtizmkesfo4p7jgicbya</div></div></div>
+</div></div>
+</body></html>

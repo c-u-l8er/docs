@@ -1,0 +1,212 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Deliberatic — Protocol Specification v0.1-draft · deliberatic.com · Ampersand Box</title>
+<meta name="description" content="Deliberatic is an open-source deliberation protocol for multi-agent AI systems. It provides structured argumentation, fault-tolerant consensus, and…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/deliberatic.com/docs/spec/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deliberatic — Protocol Specification v0.1-draft">
+<meta property="og:description" content="Deliberatic is an open-source deliberation protocol for multi-agent AI systems. It provides structured argumentation, fault-tolerant consensus, and…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/deliberatic.com/docs/spec/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Deliberatic — Protocol Specification v0.1-draft","name":"Deliberatic — Protocol Specification v0.1-draft","description":"Deliberatic is an open-source deliberation protocol for multi-agent AI systems. It provides structured argumentation, fault-tolerant consensus, and…","url":"https://docs.ampersandboxdesign.com/deliberatic.com/docs/spec/README.md/","identifier":"bagaaieraliekwpgcwnponzhoxs2e6vdh24c6rtka7pnumu2is6hezn6yfimq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"deliberatic.com","url":"https://docs.ampersandboxdesign.com/deliberatic.com/"},"articleSection":"deliberatic.com","hasPart":[{"@type":"WebPageElement","name":"Abstract"},{"@type":"WebPageElement","name":"1. Motivation"},{"@type":"WebPageElement","name":"2. Core Formalism"},{"@type":"WebPageElement","name":"2.1 Deliberatic Argumentation Framework (DAF)"},{"@type":"WebPageElement","name":"2.2 Graded Semantics"},{"@type":"WebPageElement","name":"2.3 Evidence Types"},{"@type":"WebPageElement","name":"3. Consensus Protocol"},{"@type":"WebPageElement","name":"3.1 Two-Phase Adaptive Consensus"},{"@type":"WebPageElement","name":"3.2 Quorum Rules"},{"@type":"WebPageElement","name":"3.3 Leader Election"},{"@type":"WebPageElement","name":"4. Constitution DSL"},{"@type":"WebPageElement","name":"4.1 Normative Constraints"},{"@type":"WebPageElement","name":"4.2 Constitutional Interpreter"},{"@type":"WebPageElement","name":"5. Evidence Chains"},{"@type":"WebPageElement","name":"5.1 Merkle-Chained Audit Log"},{"@type":"WebPageElement","name":"5.2 Verification"},{"@type":"WebPageElement","name":"6. Reputation & Calibration System (Domain-Aware)"},{"@type":"WebPageElement","name":"6.1 Domain-Aware Dissent-Weighted ELO"},{"@type":"WebPageElement","name":"6.2 Calibration Tracking (Self-Modeling Signals)"},{"@type":"WebPageElement","name":"6.3 Bounds & Normalization"},{"@type":"WebPageElement","name":"7. Transport Bindings"},{"@type":"WebPageElement","name":"7.1 A2A (Agent-to-Agent Protocol)"},{"@type":"WebPageElement","name":"7.2 MCP (Model Context Protocol)"},{"@type":"WebPageElement","name":"7.3 Raw HTTP"},{"@type":"WebPageElement","name":"8. Position in the [&] Ecosystem"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"deliberatic.com","item":"https://docs.ampersandboxdesign.com/deliberatic.com/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/deliberatic.com/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/deliberatic.com/docs/spec/"},{"@type":"ListItem","position":5,"name":"README.md","item":"https://docs.ampersandboxdesign.com/deliberatic.com/docs/spec/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">deliberatic.com</span>
+<span class="path">deliberatic.com/docs/spec/README.md</span>
+
+</div></div>
+<div class="lead">Deliberatic is an open-source deliberation protocol for multi-agent AI systems. It provides structured argumentation, fault-tolerant consensus, and cryptographic auditability fo…</div>
+<div class="prose"><h1 id="blk-59504">Deliberatic — Protocol Specification v0.1-draft</h1>
+<h3 id="blk-59505">Abstract</h3>
+<p>Deliberatic is an open-source deliberation protocol for multi-agent AI systems. It provides structured argumentation, fault-tolerant consensus, and cryptographic auditability for agent decision-making. The protocol extends Dung's Abstract Argumentation Framework (1995) into a weighted bipolar system with agent authorship, integrates a two-phase consensus mechanism (Raft fast-path / PBFT conflict-path), and produces Merkle-chained evidence logs for regulatory compliance. Deliberatic is transport-agnostic but ships with native bindings for A2A (Google, Linux Foundation) and MCP (Anthropic, AAIF).</p>
+<p><strong>Status</strong>: Draft · <strong>License</strong>: Apache 2.0 · <strong>Transport</strong>: A2A v0.3+ / MCP / HTTP+JSON-RPC</p>
+<h3 id="blk-59508">1. Motivation</h3>
+<p>Multi-Agent Debate (MAD) research (Du et al. 2023, Chan et al. 2023, Wu et al. 2025) has demonstrated that LLM agents can improve decision quality through structured disagreement. However, current MAD frameworks suffer from three critical gaps:</p>
+<ol><li><p><strong>No formal argumentation semantics.</strong> Agents exchange natural language opinions, but there is no structured way to compare, attack, or support positions. Confidence scores are opaque and unverifiable.</p></li></ol>
+<ol start="2"><li><p><strong>No Byzantine fault tolerance.</strong> If one agent in a cluster is compromised, hallucinating, or adversarial, existing frameworks have no mechanism to detect or contain the damage. Most rely on simple majority voting, which Wu et al. (2025) showed provides diminishing returns.</p></li></ol>
+<ol start="3"><li><p><strong>No audit trail.</strong> Enterprise deployments in finance, healthcare, and government require explainable, auditable decision chains. Current MAD frameworks produce conversation logs, not verifiable evidence.</p></li></ol>
+<p>Deliberatic addresses all three by combining formal argumentation theory with distributed consensus algorithms and append-only evidence chains.</p>
+<h3 id="blk-59520">2. Core Formalism</h3>
+<h4 id="blk-59521">2.1 Deliberatic Argumentation Framework (DAF)</h4>
+<p>A Deliberatic Argumentation Framework is a tuple:</p>
+<pre><code>DAF = ⟨A, R⁻, R⁺, w, α, C, ρ⟩</code></pre>
+<p>Where:</p>
+<ul><li><p><strong>A</strong> = finite set of arguments (agent positions)</p></li><li><p><strong>R⁻ ⊆ A × A</strong> = attack relation (directed edges where a₁ attacks a₂)</p></li><li><p><strong>R⁺ ⊆ A × A</strong> = support relation (directed edges where a₁ supports a₂)</p></li><li><p><strong>w: A → [0, 1]</strong> = initial weight function (derived from evidence strength)</p></li><li><p><strong>α: A → Agents</strong> = authorship function (maps arguments to submitting agents)</p></li><li><p><strong>C</strong> = Constitution (normative constraint set, see §4)</p></li><li><p><strong>ρ: Agents × Domain → ℝ⁺</strong> = <strong>domain-aware</strong> reputation function (ELO-derived and calibration-adjusted, see §6). If domain is unknown, Deliberatic falls back to a global <code>ρ₀: Agents → ℝ⁺</code>.</p></li></ul>
+<p>This extends Dung's AF (1995) with bipolarity (Amgoud et al.), weights (Potyka 2019 wBAF semantics), and two novel additions: agent authorship tracking and constitutional constraints.</p>
+<h4 id="blk-59541">2.2 Graded Semantics</h4>
+<p>Deliberatic uses a modified version of Potyka's modular graded semantics for wBAFs. The acceptability degree of an argument a ∈ A is computed iteratively:</p>
+<pre><code>σ(a) = w(a) · ρ(α(a), dom(a)) + Σ[s ∈ Sup(a)] σ(s) · γ⁺ − Σ[t ∈ Att(a)] σ(t) · γ⁻</code></pre>
+<p>Where:</p>
+<ul><li><p><code>Sup(a)</code> = set of arguments supporting a</p></li><li><p><code>Att(a)</code> = set of arguments attacking a</p></li><li><p><code>γ⁺ ∈ (0,1)</code> = support propagation factor (default 0.6)</p></li><li><p><code>γ⁻ ∈ (0,1)</code> = attack propagation factor (default 0.8)</p></li><li><p><code>dom(a)</code> = domain label for argument <code>a</code> (e.g. <code>&quot;hydraulics&quot;</code>, <code>&quot;scheduling&quot;</code>). Provided by the round/task metadata or inferred from the task description.</p></li><li><p><code>ρ(α(a), dom(a))</code> = domain-aware reputation factor for the authoring agent, normalized to [0.5, 2.0]. If <code>dom(a)</code> is missing/unknown, use global <code>ρ₀(α(a))</code>. This term is <strong>calibration-adjusted</strong> (see §6.2) so consistently overconfident agents are down-weighted in the domains where they miscalibrate.</p></li></ul>
+<p>The computation converges when <code>max|σₙ(a) − σₙ₋₁(a)| &lt; ε</code> for all a ∈ A, with ε = 0.001. Convergence is guaranteed by the contraction property when γ⁺ + γ⁻ &lt; 1 (see Potyka 2019, Theorem 3).</p>
+<h4 id="blk-59559">2.3 Evidence Types</h4>
+<p>Arguments in Deliberatic are not abstract. Each argument a carries a typed evidence vector:</p>
+<pre data-lang="typescript"><code><span class="t-kw">interface</span> <span class="t-type">Evidence</span> {
+  <span class="t-kw">type</span>: <span class="t-string">&quot;performance&quot;</span> | <span class="t-string">&quot;resource&quot;</span> | <span class="t-string">&quot;schema&quot;</span> | <span class="t-string">&quot;latency&quot;</span> | <span class="t-string">&quot;historical&quot;</span> | <span class="t-string">&quot;external&quot;</span>;
+  value: number;           <span class="t-comment">// normalized to [0, 1]</span>
+  confidence: number;      <span class="t-comment">// confidence interval width</span>
+  sample_size?: number;    <span class="t-comment">// n for statistical evidence</span>
+  source?: string;         <span class="t-comment">// provenance URI</span>
+  timestamp: <span class="t-type">ISO8601</span>;
+}</code></pre>
+<p>The weight function <code>w(a)</code> is computed from the evidence vector using a configurable aggregation (default: weighted geometric mean with confidence discounting):</p>
+<pre><code>w(a) = Π[eᵢ ∈ evidence(a)] eᵢ.value^(1/n) · (1 − eᵢ.confidence/2)</code></pre>
+<h3 id="blk-59564">3. Consensus Protocol</h3>
+<h4 id="blk-59565">3.1 Two-Phase Adaptive Consensus</h4>
+<p>Deliberatic uses a two-phase consensus protocol that adapts to the level of disagreement:</p>
+<p><strong>Phase 1: Fast Path (Raft-derived)</strong> When the graded semantics produce a clear winner (σ(best) − σ(second) &gt; τ, default τ = 0.15), the round uses a Raft-like fast path:</p>
+<ul><li><p>The highest-acceptability position becomes the proposed verdict</p></li><li><p>Agents confirm or reject via AppendEntries-style RPCs</p></li><li><p>Majority quorum (⌊n/2⌋ + 1) commits the verdict</p></li><li><p>Latency: ~50ms for typical clusters</p></li></ul>
+<p><strong>Phase 2: Conflict Path (PBFT-derived)</strong> When positions are close (σ(best) − σ(second) ≤ τ), the protocol escalates to a PBFT-inspired conflict path:</p>
+<ul><li><p>All surviving positions enter a three-phase commit: Pre-Prepare → Prepare → Commit</p></li><li><p>Requires 3f + 1 agents for f Byzantine faults</p></li><li><p>Agents can submit additional evidence during the Prepare phase</p></li><li><p>Graded semantics are recomputed after new evidence</p></li><li><p>Latency: ~200ms, but produces stronger verdicts</p></li></ul>
+<h4 id="blk-59589">3.2 Quorum Rules</h4>
+<pre data-lang="yaml"><code>quorum:
+  minimum: 3                    # minimum agents to open a round
+  fast_path: &quot;majority&quot;         # ⌊n/2⌋ + 1
+  conflict_path: &quot;supermajority&quot; # 3f + 1
+  timeout: &quot;30s&quot;                # deadline for all phases
+  escalation_threshold: 0.15    # τ: gap below which triggers conflict path</code></pre>
+<h4 id="blk-59591">3.3 Leader Election</h4>
+<p>Deliberatic does not have a permanent leader. Each round elects a temporary <strong>Moderator</strong> — the agent with the highest reputation score who did NOT submit a position in the current round. The Moderator:</p>
+<ul><li><p>Validates position schemas</p></li><li><p>Triggers graded semantics computation</p></li><li><p>Decides fast-path vs. conflict-path</p></li><li><p>Publishes the final verdict and evidence chain</p></li></ul>
+<p>If no neutral agent is available, the protocol falls back to rotating moderation based on agent ID hash.</p>
+<h3 id="blk-59603">4. Constitution DSL</h3>
+<h4 id="blk-59604">4.1 Normative Constraints</h4>
+<p>Every agent cluster operates under a Constitution — a YAML document that defines hard boundaries, soft preferences, and amendment rules.</p>
+<pre data-lang="yaml"><code># constitution.deliberatic.yaml
+name: &quot;Production Cluster Alpha&quot;
+version: 2
+authors: [&quot;admin@company.com&quot;]
+ratified: &quot;2026-01-15T00:00:00Z&quot;
+
+hard_boundaries:
+  # Violations → instant position rejection
+  - id: &quot;hb-01&quot;
+    rule: &quot;token_budget &lt;= task.allocated_tokens&quot;
+    description: &quot;Never exceed allocated token budget&quot;
+  - id: &quot;hb-02&quot;
+    rule: &quot;pii_access == false || consent.explicit == true&quot;
+    description: &quot;No PII access without explicit consent&quot;
+  - id: &quot;hb-03&quot;
+    rule: &quot;irreversible_action == false || quorum &gt;= supermajority&quot;
+    description: &quot;Irreversible actions require supermajority&quot;
+  - id: &quot;hb-04&quot;
+    rule: &quot;human_impact == true → human_review == true&quot;
+    description: &quot;Human-affecting decisions require human review&quot;
+
+soft_preferences:
+  # Adjust acceptability scores by ±delta
+  - id: &quot;sp-01&quot;
+    rule: &quot;minimize(resource_cost)&quot;
+    delta: 0.08
+    condition: &quot;task.stakes &lt; 'medium'&quot;
+  - id: &quot;sp-02&quot;
+    rule: &quot;maximize(accuracy)&quot;
+    delta: 0.15
+    condition: &quot;task.stakes &gt;= 'high'&quot;
+  - id: &quot;sp-03&quot;
+    rule: &quot;prefer(specialist_agent)&quot;
+    delta: 0.05
+    condition: &quot;specialist.domain == task.domain&quot;
+
+amendment:
+  trigger: &quot;vindicated_dissents &gt;= 3&quot;
+  process: &quot;supermajority_vote&quot;
+  cooldown: &quot;7d&quot;</code></pre>
+<h4 id="blk-59607">4.2 Constitutional Interpreter</h4>
+<p>The Constitution Interpreter runs as a pre-commit validator:</p>
+<ol><li><p><strong>Hard boundary check</strong>: Every position is validated against hard boundaries. Violations result in immediate rejection with a structured error.</p></li><li><p><strong>Soft preference adjustment</strong>: Surviving positions have their acceptability scores adjusted by the sum of applicable soft preference deltas.</p></li><li><p><strong>Amendment detection</strong>: When a dissent is vindicated (the dissenter's prediction was correct), the vindication counter increments. At threshold, a constitutional amendment vote is triggered.</p></li></ol>
+<h3 id="blk-59616">5. Evidence Chains</h3>
+<h4 id="blk-59617">5.1 Merkle-Chained Audit Log</h4>
+<p>Every deliberation round produces an immutable evidence chain:</p>
+<pre><code>EvidenceChain = [
+  Hash(RoundMetadata),
+  Hash(Position₁), Hash(Position₂), ...,
+  Hash(Challenge₁), Hash(Challenge₂), ...,
+  Hash(ConstitutionalCheck),
+  Hash(GradedSemantics),
+  Hash(ConsensusVote),
+  Hash(Verdict),
+  Hash(DissentRecords)
+]
+
+MerkleRoot = Hash(EvidenceChain)</code></pre>
+<p>Each element is a SHA-256 hash of the structured data. The Merkle root is published as the verdict's <code>evidence_chain</code> field.</p>
+<h4 id="blk-59621">5.2 Verification</h4>
+<p>Any party with access to the evidence chain can:</p>
+<ol><li><p>Verify integrity (recompute Merkle root)</p></li><li><p>Trace the reasoning path (which positions led to which verdict)</p></li><li><p>Audit constitutional compliance (which checks passed/failed)</p></li><li><p>Identify dissenting agents (and whether their dissents were later vindicated)</p></li></ol>
+<p>Export formats: JSON, CSV, PDF (compliance report), OTEL spans (distributed tracing).</p>
+<h3 id="blk-59633">6. Reputation &amp; Calibration System (Domain-Aware)</h3>
+<p>Deliberatic’s weighting must reflect not just “who is strong overall” but “who is strong <strong>in this domain</strong>” and “who is <strong>well-calibrated</strong> vs. systematically over/underconfident.”</p>
+<h4 id="blk-59635">6.1 Domain-Aware Dissent-Weighted ELO</h4>
+<p>Deliberatic maintains <strong>two coupled reputations</strong>:</p>
+<ul><li><p>Global: <code>ρ₀(agent)</code> (coarse prior when domain is unknown)</p></li><li><p>Domain: <code>ρ(agent, domain)</code> for each domain label used in rounds</p></li></ul>
+<p>Per-domain ELO update:</p>
+<pre><code>ρ_new(agent, d) = ρ_old(agent, d) + K_d · (S − E_d)</code></pre>
+<p>Where:</p>
+<ul><li><p><code>d</code> = domain label for the round (string)</p></li><li><p><code>K_d</code> = per-domain adjustment factor (default 32, decays with experience <em>in that domain</em>)</p></li><li><p><code>S</code> = actual outcome (1.0 for winning position, 0.5 for supporting winner, 0.0 for rejected)</p></li><li><p><code>E_d</code> = expected outcome computed from domain ELOs: <code>1 / (1 + 10^((ρ_old(opponent, d) − ρ_old(agent, d)) / 400))</code></p></li></ul>
+<p>Global ELO update mirrors the existing rule, but uses smaller steps (e.g. <code>K₀ = 8</code>) so global reputation evolves slowly and primarily serves as a fallback prior.</p>
+<p><strong>Vindicated dissent bonus (domain-scoped):</strong> when a dissent is later confirmed correct for the same domain <code>d</code>, apply the bonus within that domain:</p>
+<pre><code>ρ_new(dissenter, d) = ρ_old(dissenter, d) + 1.5 · K_d · (1.0 − E_d)</code></pre>
+<p>This preserves the anti-groupthink incentive while keeping expertise attribution domain-accurate.</p>
+<h4 id="blk-59658">6.2 Calibration Tracking (Self-Modeling Signals)</h4>
+<p>In addition to ELO, Deliberatic tracks <strong>domain-specific calibration</strong> for each agent, updated when outcomes become known (immediate tool outcomes, later offline evaluation, or explicit human adjudication).</p>
+<p>Calibration record (conceptual shape):</p>
+<ul><li><p><code>domain_calibration</code>: <code>%{domain_string =&gt; %{accuracy: float, brier: float, ece: float, n: non_neg_integer, updated_at: ISO8601}}</code></p></li><li><p><code>accuracy</code> = fraction of correct predictions/positions in that domain</p></li><li><p><code>brier</code> = Brier score on probabilistic claims (lower is better)</p></li><li><p><code>ece</code> = expected calibration error (lower is better)</p></li><li><p><code>n</code> = sample count supporting the metrics</p></li><li><p><code>overconfidence_index</code>: float</p></li><li><p>Positive when the agent frequently asserts high confidence and is wrong (aggregate + domain-weighted)</p></li><li><p><code>underconfidence_index</code>: float</p></li><li><p>Positive when the agent frequently defers / assigns low confidence but is correct (aggregate + domain-weighted)</p></li></ul>
+<p><strong>How calibration affects weighting:</strong> the reputation term used in §2.2 is calibration-adjusted per domain:</p>
+<ul><li><p><code>ρ(α(a), dom(a))</code> is derived from ELO in that domain, <strong>discounted</strong> when calibration is poor and <strong>bounded</strong> to the same [0.5, 2.0] normalization range.</p></li></ul>
+<p>(Exact discount function is configurable; default is monotone decreasing in <code>ece</code> and <code>overconfidence_index</code>.)</p>
+<h4 id="blk-59685">6.3 Bounds &amp; Normalization</h4>
+<p>ELO values remain bounded per agent per domain:</p>
+<ul><li><p><code>ρ(agent, d) ∈ [800, 2400]</code></p></li><li><p>New agents start at 1200 in global and in any unseen domain (or can be initialized from global).</p></li></ul>
+<p>Normalization into the semantics layer stays consistent with the original spec:</p>
+<ul><li><p>Map ELO to a multiplicative factor in <code>[0.5, 2.0]</code> (monotone in ELO), then apply calibration discount, and clamp back to <code>[0.5, 2.0]</code>.</p></li></ul>
+<p>This ensures:</p>
+<ul><li><p>domain experts are weighted appropriately for domain-relevant rounds,</p></li><li><p>consistently miscalibrated agents do not dominate purely by rhetorical confidence,</p></li><li><p>new domains start safe via the global prior and limited influence until evidence accumulates.</p></li></ul>
+<h3 id="blk-59704">7. Transport Bindings</h3>
+<h4 id="blk-59705">7.1 A2A (Agent-to-Agent Protocol)</h4>
+<p>Deliberatic maps natively onto A2A v0.3:</p>
+<table><thead><tr><th>Deliberatic Concept</th><th>A2A Primitive</th><th>Details</th></tr></thead><tbody><tr><td>Agent capabilities</td><td>Agent Card</td><td>Skill: <code>deliberation/v1</code> in card</td></tr><tr><td>Open round</td><td><code>tasks/send</code></td><td>Task with <code>deliberation_round</code> type</td></tr><tr><td>Submit position</td><td><code>message/send</code></td><td>Message with structured Position parts</td></tr><tr><td>Challenge</td><td><code>message/send</code></td><td>Message with Challenge parts + attack target</td></tr><tr><td>Verdict</td><td>Artifact</td><td>Final verdict as structured Artifact</td></tr><tr><td>Evidence chain</td><td>Artifact attachment</td><td>Merkle root + full chain as JSON</td></tr></tbody></table>
+<p>Discovery: Agents advertise deliberation capabilities via <code>/.well-known/agent.json</code> with a <code>deliberation/v1</code> skill.</p>
+<h4 id="blk-59730">7.2 MCP (Model Context Protocol)</h4>
+<p>Deliberatic also ships as an MCP server, exposing tools:</p>
+<table><thead><tr><th>Tool</th><th>Description</th></tr></thead><tbody><tr><td><code>deliberatic_open_round</code></td><td>Open a new deliberation round</td></tr><tr><td><code>deliberatic_submit_position</code></td><td>Submit a position with evidence</td></tr><tr><td><code>deliberatic_challenge</code></td><td>Challenge another agent's position</td></tr><tr><td><code>deliberatic_resolve</code></td><td>Trigger resolution and get verdict</td></tr><tr><td><code>deliberatic_query_evidence</code></td><td>Query evidence chains by round ID</td></tr><tr><td><code>deliberatic_get_reputation</code></td><td>Get agent reputation scores</td></tr><tr><td><code>deliberatic_amend_constitution</code></td><td>Propose constitutional amendment</td></tr></tbody></table>
+<h4 id="blk-59749">7.3 Raw HTTP</h4>
+<p>For non-A2A/MCP environments: JSON-RPC 2.0 over HTTPS with SSE for streaming updates.</p>
+<h3 id="blk-59751">8. Position in the [&amp;] Ecosystem</h3>
+<p>Deliberatic is the <strong>decision layer</strong> in the Ampersand Box Design agent infrastructure stack:</p>
+<table><thead><tr><th>Layer</th><th>Domain</th><th>Protocol Role</th></tr></thead><tbody><tr><td>Compute</td><td>fleetprompt.com</td><td>Agent runtime, skill execution</td></tr><tr><td>Contracts</td><td>specprompt.com</td><td>Execution specs, schema validation</td></tr><tr><td>Orchestration</td><td>delegatic.com</td><td>Task routing, workflow graphs</td></tr><tr><td><strong>Decisions</strong></td><td><strong>deliberatic.com</strong></td><td><strong>Argumentation, consensus, audit</strong></td></tr><tr><td>Execution</td><td>agentromatic.com</td><td>Autonomous task execution</td></tr><tr><td>Infrastructure</td><td>webhost.systems</td><td>Hosting, deployment</td></tr><tr><td>Spatial</td><td>geofleetic.com</td><td>Location-aware routing</td></tr><tr><td>Temporal</td><td>ticktickclock.com</td><td>Scheduling, deadlines</td></tr></tbody></table>
+<h4 id="blk-59781">Integration Flow</h4>
+<pre><code>Task arrives → delegatic.com routes it
+  → If ambiguous/conflicted: deliberatic.com opens round
+    → Agents submit positions via A2A
+    → Graded semantics compute acceptability
+    → Constitution validates
+    → Consensus commits verdict
+  → Verdict → agentromatic.com executes
+  → Evidence chain → append-only log</code></pre>
+<h3 id="blk-59783">8.1 PULSE Loop Manifest</h3>
+<p>Deliberatic is a <strong>PULSE-conforming loop</strong> under OS-010. It is a sibling of AgenTroMatic — both are deliberation protocols, but Deliberatic's primary contribution is the <strong>formal argumentation algebra</strong> while AgenTroMatic adds Raft consensus and reputation. Both can coexist; Deliberatic publishes a leaner manifest focused on argumentation rounds.</p>
+<p><strong>Loop ID:</strong> <code>deliberatic.argumentation</code> <strong>Loop name:</strong> Deliberatic Argumentation Loop <strong>Version:</strong> 0.1.0 <strong>Owner:</strong> deliberatic.com <strong>Workspace scope:</strong> required</p>
+<p><strong>Phases (5 — `act` and `learn` canonical, three custom kinds for the argumentation protocol):</strong></p>
+<table><thead><tr><th>Phase ID</th><th>Kind</th><th>Description</th></tr></thead><tbody><tr><td><code>open_round</code></td><td><code>custom: open_round</code></td><td>Open a deliberation round, broadcast call-for-positions over A2A</td></tr><tr><td><code>submit_positions</code></td><td><code>custom: submit_positions</code></td><td>Collect agent positions with attack/support relations and evidence pointers</td></tr><tr><td><code>compute_semantics</code></td><td><code>custom: compute_semantics</code></td><td>Run weighted bipolar argumentation semantics; compute acceptability scores</td></tr><tr><td><code>commit_verdict</code></td><td><code>act</code></td><td>Verdict committed to Merkle-chained evidence log; constitution validates</td></tr><tr><td><code>learn_calibration</code></td><td><code>learn</code></td><td>Update domain-aware reputation and calibration tracking from outcome feedback</td></tr></tbody></table>
+<p><strong>Closure:</strong> <code>learn_calibration → open_round</code> via Merkle log, guarantee <code>eventual</code>.</p>
+<p><strong>Cadence:</strong> <code>event</code> (triggered by Delegatic when a task is flagged ambiguous or conflicted).</p>
+<p><strong>Substrates:</strong></p>
+<ul><li><p><code>memory</code>: <code>graphonomous://workspace/{ws_id}</code> (evidence pointers, reputation history)</p></li><li><p><code>policy</code>: <code>delegatic://workspace/{ws_id}</code> (constitution validation)</p></li><li><p><code>audit</code>: <code>delegatic://workspace/{ws_id}/audit</code> + Merkle-chained evidence log</p></li><li><p><code>auth</code>: <code>open_sentience://workspace/{ws_id}</code></p></li><li><p><code>transport</code>: <code>a2a</code> (native), <code>mcp</code> (alternate), <code>jsonrpc</code> (alternate)</p></li><li><p><code>time</code>: optional</p></li></ul>
+<p><strong>Invariants enabled:</strong> <code>phase_atomicity</code>, <code>feedback_immutability</code>, <code>append_only_audit</code>, <code>quorum_before_commit</code>, <code>outcome_grounding</code>, <code>trace_id_propagation</code>. <code>kappa_routing</code> is not used.</p>
+<p><strong>Cross-loop connections:</strong></p>
+<ul><li><p><code>verdict_to_agentromatic</code> — emits <code>DeliberationResult</code> from <code>commit_verdict</code> to <code>agentromatic.deliberation.execute</code> (verdict feeds task execution)</p></li><li><p><code>outcome_to_prism</code> — emits <code>OutcomeSignal</code> from <code>learn_calibration</code> to <code>prism.benchmark.observe</code></p></li></ul>
+<p><strong>Why this matters:</strong> Deliberatic and AgenTroMatic both emit the canonical <code>DeliberationResult</code> token. PULSE's five-token vocabulary means downstream loops cannot tell which deliberation engine produced a verdict — they consume the same envelope. This is the <strong>substitutability</strong> that PULSE enables across the portfolio.</p>
+<h3 id="blk-59830">9. References</h3>
+<ol><li><p>Dung, P.M. (1995). &quot;On the Acceptability of Arguments and its Fundamental Role in Nonmonotonic Reasoning, Logic Programming and n-Person Games.&quot; <em>Artificial Intelligence</em>, 77(2), 321–358.</p></li><li><p>Potyka, N. (2019). &quot;Extending Modular Semantics for Bipolar Weighted Argumentation.&quot; <em>AAMAS '19</em>.</p></li><li><p>Amgoud, L. &amp; Cayrol, C. (1998). &quot;On the Acceptability of Arguments in Preference-based Argumentation Framework.&quot; <em>UAI</em>.</p></li><li><p>Castro, M. &amp; Liskov, B. (1999). &quot;Practical Byzantine Fault Tolerance.&quot; <em>OSDI</em>.</p></li><li><p>Ongaro, D. &amp; Ousterhout, J. (2014). &quot;In Search of an Understandable Consensus Algorithm.&quot; <em>USENIX ATC</em>.</p></li><li><p>Du, Y. et al. (2023). &quot;Improving Factuality and Reasoning in Language Models through Multiagent Debate.&quot;</p></li><li><p>Wu, T. et al. (2025). &quot;Can LLM Agents Really Debate?&quot; <em>arXiv:2511.07784</em>.</p></li><li><p>A2A Protocol v0.3 (2025). Linux Foundation. https://a2a-protocol.org</p></li><li><p>MCP Specification (2025). Agentic AI Foundation. https://modelcontextprotocol.io</p></li><li><p>Zhu, J. et al. (2025). &quot;Secure Consensus Control on Multi-Agent Systems Based on Improved PBFT and Raft.&quot; <em>IEEE/CAA J. Autom. Sinica</em>.</p></li><li><p>Abdelnabi, S. et al. (2024). &quot;Cooperation, Competition, and Maliciousness: LLM-Stakeholders Interactive Negotiation.&quot; <em>NeurIPS</em>.</p></li></ol></div>
+<p class="src"><a href="/#/deliberatic.com/docs/spec/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-59505" class="lvl2">Abstract</a><a href="#blk-59508" class="lvl2">1. Motivation</a><a href="#blk-59520" class="lvl2">2. Core Formalism</a><a href="#blk-59521" class="lvl3">2.1 Deliberatic Argumentation Framework (DAF)</a><a href="#blk-59541" class="lvl3">2.2 Graded Semantics</a><a href="#blk-59559" class="lvl3">2.3 Evidence Types</a><a href="#blk-59564" class="lvl2">3. Consensus Protocol</a><a href="#blk-59565" class="lvl3">3.1 Two-Phase Adaptive Consensus</a><a href="#blk-59589" class="lvl3">3.2 Quorum Rules</a><a href="#blk-59591" class="lvl3">3.3 Leader Election</a><a href="#blk-59603" class="lvl2">4. Constitution DSL</a><a href="#blk-59604" class="lvl3">4.1 Normative Constraints</a><a href="#blk-59607" class="lvl3">4.2 Constitutional Interpreter</a><a href="#blk-59616" class="lvl2">5. Evidence Chains</a><a href="#blk-59617" class="lvl3">5.1 Merkle-Chained Audit Log</a><a href="#blk-59621" class="lvl3">5.2 Verification</a><a href="#blk-59633" class="lvl2">6. Reputation &amp; Calibration System (Domain-Aware)</a><a href="#blk-59635" class="lvl3">6.1 Domain-Aware Dissent-Weighted ELO</a><a href="#blk-59658" class="lvl3">6.2 Calibration Tracking (Self-Modeling Signals)</a><a href="#blk-59685" class="lvl3">6.3 Bounds &amp; Normalization</a><a href="#blk-59704" class="lvl2">7. Transport Bindings</a><a href="#blk-59705" class="lvl3">7.1 A2A (Agent-to-Agent Protocol)</a><a href="#blk-59730" class="lvl3">7.2 MCP (Model Context Protocol)</a><a href="#blk-59749" class="lvl3">7.3 Raw HTTP</a><a href="#blk-59751" class="lvl2">8. Position in the [&amp;] Ecosystem</a><a href="#blk-59781" class="lvl3">Integration Flow</a><a href="#blk-59783" class="lvl2">8.1 PULSE Loop Manifest</a><a href="#blk-59830" class="lvl2">9. References</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/deliberatic.com/docs/index.md/">Deliberatic Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraliekwpgcwnponzhoxs2e6vdh24c6rtka7pnumu2is6hezn6yfimq</div></div></div>
+</div></div>
+</body></html>

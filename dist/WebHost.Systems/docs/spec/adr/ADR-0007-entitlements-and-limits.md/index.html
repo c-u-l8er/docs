@@ -1,0 +1,173 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>ADR-0007: Tier Entitlements, Runtime Gating, and Limit Enforcement Strategy · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/ADR-0007-entitlements-and-limits.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ADR-0007: Tier Entitlements, Runtime Gating, and Limit Enforcement Strategy">
+<meta property="og:description" content="Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/ADR-0007-entitlements-and-limits.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"ADR-0007: Tier Entitlements, Runtime Gating, and Limit Enforcement Strategy","name":"ADR-0007: Tier Entitlements, Runtime Gating, and Limit Enforcement Strategy","description":"Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/ADR-0007-entitlements-and-limits.md/","identifier":"bagaaierab4jkpm3ahhvdlqiq5cfkunsu3u4k2c2ac5iplf3vwvuqsbp3mokq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"1) Context"},{"@type":"WebPageElement","name":"2) Decision"},{"@type":"WebPageElement","name":"2.1 Adopt a configuration-driven entitlement model (server authoritative)"},{"@type":"WebPageElement","name":"2.2 Tier gating rules: runtime access is an entitlement (defense in depth)"},{"@type":"WebPageElement","name":"2.3 Limit enforcement strategy (v1): requests hard-stop + post-charge tokens/compute, with upgrade path to reservation"},{"@type":"WebPageElement","name":"2.4 Enforcement point: invocation gateway is the primary cost-control boundary"},{"@type":"WebPageElement","name":"2.5 Consistent error semantics"},{"@type":"WebPageElement","name":"3) Rationale"},{"@type":"WebPageElement","name":"3.1 Why configuration-driven entitlements"},{"@type":"WebPageElement","name":"3.2 Why runtime gating is mandatory"},{"@type":"WebPageElement","name":"3.3 Why requests-first enforcement is acceptable for v1"},{"@type":"WebPageElement","name":"3.4 Why we still plan for reservation"},{"@type":"WebPageElement","name":"4) Alternatives considered"},{"@type":"WebPageElement","name":"A) No limits (reject)"},{"@type":"WebPageElement","name":"B) Pre-reservation for all dimensions in v1 (defer)"},{"@type":"WebPageElement","name":"C) Provider-side enforcement only (reject)"},{"@type":"WebPageElement","name":"D) Soft limits with overage billing from day one (defer)"},{"@type":"WebPageElement","name":"5) Consequences"},{"@type":"WebPageElement","name":"Positive"},{"@type":"WebPageElement","name":"Negative / tradeoffs"},{"@type":"WebPageElement","name":"6) Implementation details (normative requirements)"},{"@type":"WebPageElement","name":"6.1 Entitlements representation"},{"@type":"WebPageElement","name":"6.2 Period definition"},{"@type":"WebPageElement","name":"6.3 Invocation enforcement algorithm (v1)"},{"@type":"WebPageElement","name":"6.4 Deploy-time enforcement"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/"},{"@type":"ListItem","position":5,"name":"adr","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/"},{"@type":"ListItem","position":6,"name":"ADR-0007-entitlements-and-limits.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/ADR-0007-entitlements-and-limits.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/docs/spec/adr/ADR-0007-entitlements-and-limits.md</span>
+
+</div></div>
+<div class="lead">Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:</div>
+<div class="prose"><h1 id="blk-52475">ADR-0007: Tier Entitlements, Runtime Gating, and Limit Enforcement Strategy</h1>
+<p>Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:</p>
+<ul><li><p><code>WebHost.Systems/docs/spec/00_MASTER_SPEC.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/10_API_CONTRACTS.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/30_DATA_MODEL_CONVEX.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/40_SECURITY_SECRETS_COMPLIANCE.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/60_TESTING_ACCEPTANCE.md</code></p></li></ul>
+<h3 id="blk-52492">1) Context</h3>
+<p>webhost.systems is a multi-runtime AI agent platform. The control plane must:</p>
+<ul><li><p>monetize via subscription tiers,</p></li><li><p>enforce tenant entitlements and limits in a way that protects platform cost exposure,</p></li><li><p>gate access to premium runtime providers (AWS Bedrock AgentCore),</p></li><li><p>provide predictable, explainable behavior to users and support.</p></li></ul>
+<p>The platform has heterogeneous cost profiles by runtime:</p>
+<ul><li><p><strong>Cloudflare Workers/DO</strong> supports a broad set of use cases with favorable economics and global edge distribution, enabling acquisition tiers (including free).</p></li><li><p>TypeScript-first: Workers/DO are TypeScript-friendly and support modern agent frameworks naturally.</p></li><li><p><strong>AWS Bedrock AgentCore</strong> supports premium enterprise capabilities (long running sessions, stronger isolation, built-in tools), but has higher marginal cost and different operational constraints.</p></li><li><p>TypeScript-first: AgentCore has first-class TypeScript SDK support for runtime operations and modern tooling integration:</p></li><li><p><code>@aws-sdk/client-bedrock-agentcore</code> (TypeScript) for management and invocation</p></li><li><p><code>bedrock-agentcore</code> (TypeScript) for built-in tools (e.g., Code Interpreter and Browser), with integration paths for modern agent frameworks (e.g., Vercel AI SDK)</p></li><li><p>Premium value drivers beyond runtime length:</p></li><li><p>built-in tool ecosystem (code execution + browser automation) that is otherwise “DIY” on many runtimes</p></li><li><p>enterprise isolation posture aligned with higher-tier requirements</p></li></ul>
+<p>Limits are required for:</p>
+<ul><li><p>preventing runaway cost and abuse,</p></li><li><p>ensuring fairness and QoS,</p></li><li><p>aligning tier pricing with usage.</p></li></ul>
+<p>Key constraints:</p>
+<ul><li><p>Actual token usage and compute time are not known until after the invocation completes.</p></li><li><p>Telemetry ingestion is asynchronous and may be delayed or fail transiently.</p></li><li><p>Concurrency (multiple simultaneous invocations) can race around limit boundaries.</p></li><li><p>Security requirements prohibit relying on client-provided usage or tier claims.</p></li></ul>
+<p>Therefore, v1 needs a robust entitlement model and a limit enforcement strategy that is safe, implementable, and extensible.</p>
+<h3 id="blk-52542">2) Decision</h3>
+<h4 id="blk-52543">2.1 Adopt a configuration-driven entitlement model (server authoritative)</h4>
+<p>Entitlements are represented as a server-side configuration mapping a user’s current tier to a set of allowed capabilities and budgets. Entitlements MUST be treated as <strong>authoritative</strong> on the server; the client/UI is advisory only.</p>
+<p>Each tier defines (minimum):</p>
+<ul><li><p><code>maxRequestsPerPeriod</code></p></li><li><p><code>maxTokensPerPeriod</code> (reported or estimated)</p></li><li><p><code>maxComputeMsPerPeriod</code></p></li></ul>
+<p>Runtime access + capabilities:</p>
+<ul><li><p><code>agentcoreEnabled</code> (boolean) — whether the user may deploy/invoke on AgentCore at all</p></li><li><p><code>memoryEnabled</code> (boolean) — whether AgentCore Memory features may be enabled for deployments</p></li><li><p><code>codeInterpreterEnabled</code> (boolean) — whether AgentCore Code Interpreter tools may be enabled for deployments</p></li><li><p><code>browserEnabled</code> (boolean) — whether AgentCore Browser tools may be enabled for deployments</p></li></ul>
+<p>Tool quotas (only meaningful if tools are enabled; omitted or set to 0 when disabled):</p>
+<ul><li><p><code>maxToolCallsPerPeriod</code> (number, optional)</p></li><li><p><code>maxCodeExecutionSecondsPerPeriod</code> (number, optional)</p></li><li><p><code>maxBrowserSessionsPerPeriod</code> (number, optional)</p></li></ul>
+<p>Retention policies:</p>
+<ul><li><p>telemetry/logs retention days</p></li></ul>
+<p>Entitlements MUST be stored and evaluated in a way that can be changed without code edits (e.g., configuration file/env, DB table, or feature flag system). Exact storage choice is implementation detail, but it MUST be server-controlled and auditable.</p>
+<h4 id="blk-52576">2.2 Tier gating rules: runtime access is an entitlement (defense in depth)</h4>
+<p>Runtime access is gated by entitlements:</p>
+<ul><li><p>If <code>agentcoreEnabled=false</code>, then:</p></li><li><p>deploy to <code>runtimeProvider=agentcore</code> MUST be rejected, and</p></li><li><p>invoke routed to an AgentCore deployment MUST be rejected, and</p></li><li><p>any attempt to switch an agent’s runtimeProvider to <code>agentcore</code> SHOULD be rejected (v1 recommendation: reject to reduce confusion).</p></li></ul>
+<ul><li><p>If <code>agentcoreEnabled=true</code>, AgentCore capability flags MUST still be enforced:</p></li><li><p>If <code>codeInterpreterEnabled=false</code>, deployments MUST NOT enable code interpreter tooling, and invocations MUST be treated as “tools unavailable” (no tool loop) even if user code requests it.</p></li><li><p>If <code>browserEnabled=false</code>, deployments MUST NOT enable browser tooling, and invocations MUST be treated as “tools unavailable” for browser interactions.</p></li><li><p>If <code>memoryEnabled=false</code>, deployments MUST NOT enable provider memory features.</p></li></ul>
+<p><strong>v1 recommendation (tools): enterprise-only</strong></p>
+<ul><li><p>v1 SHOULD enable AgentCore tools (<code>codeInterpreterEnabled</code> and <code>browserEnabled</code>) only on the <code>enterprise</code> tier.</p></li><li><p>v1 MAY allow <code>agentcoreEnabled=true</code> on <code>pro</code> while keeping tools disabled (and optionally allowing <code>memoryEnabled=true</code> if cost/behavior is acceptable).</p></li><li><p>If you later enable tools for <code>pro</code>, you MUST add explicit tool quotas (<code>maxToolCallsPerPeriod</code>, <code>maxCodeExecutionSecondsPerPeriod</code>, <code>maxBrowserSessionsPerPeriod</code>) and enforce them at invoke time.</p></li></ul>
+<p>This gating MUST be enforced at three layers (defense in depth):</p>
+<ol><li><p><strong>UI layer</strong>: hide/disable options (non-authoritative)</p></li><li><p><strong>Control plane deploy/invoke APIs</strong>: authoritative check before provider calls</p></li><li><p><strong>Runtime adapter layer</strong>: refuse deploy/invoke if not entitled (in case of misrouting or bugs)</p></li></ol>
+<p>The same three-layer enforcement applies to <strong>AgentCore capability flags</strong> (<code>memoryEnabled</code>, <code>codeInterpreterEnabled</code>, <code>browserEnabled</code>):</p>
+<ul><li><p>UI MUST not present toggles the user is not entitled to.</p></li><li><p>Deploy APIs MUST reject configurations that attempt to enable disallowed capabilities.</p></li><li><p>Invoke routing MUST ensure a deployment cannot exercise disallowed capabilities (even if user code attempts to).</p></li></ul>
+<h4 id="blk-52620">2.3 Limit enforcement strategy (v1): requests hard-stop + post-charge tokens/compute, with upgrade path to reservation</h4>
+<p>v1 enforcement strategy is:</p>
+<ul><li><p><strong>Pre-invocation hard-stop on requests</strong> (MUST).</p></li><li><p><strong>Post-invocation accounting for tokens/compute</strong> via telemetry (MUST).</p></li><li><p><strong>Subsequent invocations blocked</strong> if tokens/compute budgets exceeded (MUST).</p></li><li><p><strong>Optional predictive reservation</strong> for expensive runtimes (SHOULD for AgentCore, MAY for Cloudflare) as an enhancement.</p></li><li><p>AgentCore-specific note: because AgentCore can support longer-running workloads and built-in tools (code execution, browser automation), it may concentrate more cost into a single invocation. This makes reservation (or stricter pre-flight checks) more valuable for AgentCore tiers.</p></li></ul>
+<p>This is a deliberate v1 tradeoff:</p>
+<ul><li><p>It protects the platform from request floods (and thus most cost/abuse).</p></li><li><p>It keeps implementation complexity manageable while still meeting product needs.</p></li><li><p>It provides a clear path to a stronger pre-reservation model without changing the external API.</p></li></ul>
+<h4 id="blk-52641">2.4 Enforcement point: invocation gateway is the primary cost-control boundary</h4>
+<p>Limits MUST be enforced in the invocation gateway <strong>before calling a runtime provider</strong> whenever possible. This prevents spending money on requests that will be rejected.</p>
+<p>For v1:</p>
+<ul><li><p>Request count enforcement MUST happen before provider invocation.</p></li><li><p>Token/compute enforcement MAY lag by up to telemetry ingestion delay; when exceeded, block subsequent requests.</p></li></ul>
+<h4 id="blk-52649">2.5 Consistent error semantics</h4>
+<p>When a deploy or invoke is rejected due to entitlements or limits, the system MUST return a normalized error envelope with:</p>
+<ul><li><p><code>code = LIMIT_EXCEEDED</code> (or a dedicated entitlement code if added later),</p></li><li><p>a safe user-displayable message,</p></li><li><p>details including:</p></li><li><p>limit type (<code>requests</code>, <code>tokens</code>, <code>computeMs</code>, or <code>agentcoreEnabled</code> / <code>runtimeGated</code>),</p></li><li><p>period key,</p></li><li><p>current usage and limit where known,</p></li><li><p>suggested action (upgrade tier).</p></li></ul>
+<p>HTTP status mapping is defined in <code>10_API_CONTRACTS.md</code>.</p>
+<h3 id="blk-52667">3) Rationale</h3>
+<h4 id="blk-52668">3.1 Why configuration-driven entitlements</h4>
+<ul><li><p>Pricing and tiers will iterate frequently; hardcoding makes iteration risky and slow.</p></li><li><p>Entitlements must be authoritative and auditable, independent of client behavior.</p></li><li><p>A single entitlements surface simplifies UI gating, API checks, and support tooling.</p></li></ul>
+<h4 id="blk-52676">3.2 Why runtime gating is mandatory</h4>
+<ul><li><p>AgentCore has a materially different cost and capability footprint.</p></li><li><p>Capability: long-running sessions and built-in tools (e.g., code execution and browser automation) unlock workflows that are not “free” to operate.</p></li><li><p>DX: AgentCore is viable for TypeScript-first teams via official TypeScript SDK support and tool integrations, which strengthens its premium value proposition.</p></li><li><p>Allowing access without gating risks unbounded cost exposure, especially for long-running or tool-heavy workloads.</p></li><li><p>Tier-based runtime gating enables a clear product ladder (acquisition → premium) while keeping the default path cost-efficient and globally distributed.</p></li></ul>
+<h4 id="blk-52688">3.3 Why requests-first enforcement is acceptable for v1</h4>
+<ul><li><p>Requests are the most immediate and reliable pre-invocation signal.</p></li><li><p>Accurate tokens/compute budgets require predictive reservation or “post-charge” logic, which is more complex and varies by runtime.</p></li><li><p>v1 still ensures tokens/compute budgets are enforced over time (subsequent blocking), which is sufficient to prevent ongoing overuse.</p></li></ul>
+<h4 id="blk-52696">3.4 Why we still plan for reservation</h4>
+<p>For AgentCore, a single invocation can be expensive. Reservation provides better pre-flight protection:</p>
+<ul><li><p>reserve predicted tokens/compute,</p></li><li><p>reject if budget cannot cover expected cost,</p></li><li><p>reconcile after invocation.</p></li></ul>
+<p>We accept requests-first in v1 but design data models and APIs to allow reservation without breaking changes (e.g., counters and “pending usage” concepts).</p>
+<h3 id="blk-52706">4) Alternatives considered</h3>
+<h4 id="blk-52707">A) No limits (reject)</h4>
+<p>Pros:</p>
+<ul><li><p>simplest experience</p></li></ul>
+<p>Cons:</p>
+<ul><li><p>unacceptable cost and abuse exposure</p></li><li><p>no pricing integrity</p></li></ul>
+<p>Rejected.</p>
+<h4 id="blk-52719">B) Pre-reservation for all dimensions in v1 (defer)</h4>
+<p>Pros:</p>
+<ul><li><p>best cost control and fewer “single request blows budget” events</p></li></ul>
+<p>Cons:</p>
+<ul><li><p>requires good prediction of tokens/compute, which is inherently uncertain</p></li><li><p>requires stronger atomic counters and reconciliation logic</p></li><li><p>increases complexity and time-to-market</p></li></ul>
+<p>Deferred; recommended as a post-v1 enhancement, and potentially as a “AgentCore-only” enhancement sooner.</p>
+<h4 id="blk-52733">C) Provider-side enforcement only (reject)</h4>
+<p>Pros:</p>
+<ul><li><p>offload to providers</p></li></ul>
+<p>Cons:</p>
+<ul><li><p>providers don’t enforce webhost.systems tier semantics</p></li><li><p>cannot unify multi-runtime behavior</p></li><li><p>cannot prevent cross-runtime abuse and cannot provide unified UX</p></li></ul>
+<p>Rejected.</p>
+<h4 id="blk-52747">D) Soft limits with overage billing from day one (defer)</h4>
+<p>Pros:</p>
+<ul><li><p>better UX (fewer blocks), potential revenue upside</p></li></ul>
+<p>Cons:</p>
+<ul><li><p>requires accurate reconciliation, payment handling, dispute workflows</p></li><li><p>increases complexity and compliance surface</p></li></ul>
+<p>Deferred; start with hard-stop in v1.</p>
+<h3 id="blk-52759">5) Consequences</h3>
+<h4 id="blk-52760">Positive</h4>
+<ul><li><p>Clear, predictable tier behavior.</p></li><li><p>Strong control of premium runtime access.</p></li><li><p>Requests hard-stop prevents the most common abuse patterns.</p></li><li><p>Compatible with future improvements (reservation, overages, public invocations).</p></li></ul>
+<h4 id="blk-52770">Negative / tradeoffs</h4>
+<ul><li><p>A user may exceed token/compute budget within a single request in v1 (especially on premium runtime), then be blocked afterwards.</p></li><li><p>Telemetry delays can cause temporary undercounting until aggregation catches up.</p></li><li><p>Concurrency can cause minor overrun near boundaries unless atomic counters are implemented.</p></li></ul>
+<h3 id="blk-52778">6) Implementation details (normative requirements)</h3>
+<h4 id="blk-52779">6.1 Entitlements representation</h4>
+<p>The system MUST have a function (or module) equivalent to:</p>
+<ul><li><p><code>getEntitlementsForTier(tier) -&gt; { limits, runtimeAccess, retention }</code></p></li></ul>
+<p>It MUST be deterministic, server-only, and auditable (config changes tracked via code review or admin change logs).</p>
+<h4 id="blk-52785">6.2 Period definition</h4>
+<p>v1 MUST standardize billing periods. Recommendation:</p>
+<ul><li><p>calendar-month <code>YYYY-MM</code> as <code>periodKey</code></p></li></ul>
+<p>If subscription-aligned periods are implemented later, ensure backward compatibility in reporting.</p>
+<h4 id="blk-52791">6.3 Invocation enforcement algorithm (v1)</h4>
+<p>At invocation start (before provider call):</p>
+<ol><li><p>Resolve authenticated user.</p></li><li><p>Resolve agent; enforce ownership; ensure not disabled/deleted.</p></li><li><p>Resolve active deployment; ensure valid state.</p></li><li><p>Load entitlements for user tier.</p></li><li><p>Enforce runtime gating:</p></li></ol>
+<ul><li><p>if deployment runtime is <code>agentcore</code> and <code>agentcoreEnabled=false</code>, reject.</p></li></ul>
+<ol start="6"><li><p>Load current period usage totals (from aggregated <code>billingUsage</code> and/or fast counters).</p></li><li><p>Enforce requests limit:</p></li></ol>
+<ul><li><p>if requests already at/over limit, reject with <code>LIMIT_EXCEEDED</code>.</p></li></ul>
+<ol start="8"><li><p>Proceed to provider invocation.</p></li></ol>
+<p>After invocation:</p>
+<ul><li><p>Ensure telemetry is recorded (directly from runtime or adapter-side).</p></li><li><p>Aggregation updates period totals.</p></li><li><p>If tokens/compute exceed budgets:</p></li><li><p>subsequent invocations MUST be rejected until next period or upgrade.</p></li></ul>
+<h4 id="blk-52828">6.4 Deploy-time enforcement</h4>
+<p>At deploy start:</p>
+<ul><li><p>Load entitlements.</p></li><li><p>Enforce runtime gating (AgentCore enabled).</p></li><li><p>Enforce any deploy-related caps (optional in v1; e.g., max agents or deployments).</p></li><li><p>Create deployment record and proceed.</p></li></ul>
+<h4 id="blk-52839">6.5 Concurrency and counters (minimum vs recommended)</h4>
+<p>Minimum acceptable v1:</p>
+<ul><li><p>Use aggregated usage totals and accept small overruns under concurrency.</p></li><li><p>Ensure the system never systematically undercounts.</p></li></ul>
+<p>Recommended:</p>
+<ul><li><p>Maintain an atomic per-user per-period counter for <code>requests</code>.</p></li><li><p>Optionally maintain token/compute counters as well.</p></li><li><p>If counters are implemented, ensure idempotency under retries and telemetry dedupe.</p></li></ul>
+<h4 id="blk-52854">6.6 Telemetry integrity dependency</h4>
+<p>This ADR depends on ADR-0004 (telemetry integrity). Limit enforcement based on usage requires trustworthy telemetry:</p>
+<ul><li><p>signed events per deployment,</p></li><li><p>ownership cross-check.</p></li></ul>
+<h4 id="blk-52861">6.7 Observability and UX requirements</h4>
+<p>When rejecting for limits/gating:</p>
+<ul><li><p>include enough detail to explain why,</p></li><li><p>suggest an upgrade path,</p></li><li><p>never leak confidential internal state.</p></li></ul>
+<p>The dashboard MUST show:</p>
+<ul><li><p>current tier and limits,</p></li><li><p>current usage totals,</p></li><li><p>per-runtime breakdown,</p></li><li><p>“estimated” cost labeling.</p></li></ul>
+<h3 id="blk-52880">7) Testing requirements (acceptance-focused)</h3>
+<h4 id="blk-52881">MUST</h4>
+<ul><li><p>E2E: requests limit blocks invocations with <code>LIMIT_EXCEEDED</code>.</p></li><li><p>Integration: AgentCore deploy/invoke blocked for non-entitled tiers.</p></li><li><p>Unit: entitlements mapping returns expected limits and gating behavior.</p></li><li><p>Integration: deploy-time gating prevents provider calls to AgentCore.</p></li><li><p>Security: clients cannot modify tier or entitlements; only webhook-verified updates are effective.</p></li></ul>
+<h4 id="blk-52893">SHOULD</h4>
+<ul><li><p>Concurrency test near request limit boundary.</p></li><li><p>Token/compute exceeded triggers subsequent blocking.</p></li><li><p>Telemetry delays do not break correctness beyond acceptable staleness windows.</p></li></ul>
+<h3 id="blk-52901">8) Acceptance criteria</h3>
+<p>This ADR is correctly implemented when:</p>
+<ol><li><p><strong>Authoritative entitlements</strong></p></li></ol>
+<ul><li><p>The server derives tier entitlements from a server-controlled configuration and does not trust client claims.</p></li></ul>
+<ol start="2"><li><p><strong>Runtime gating</strong></p></li></ol>
+<ul><li><p>Users without <code>agentcoreEnabled</code> cannot deploy to AgentCore and cannot invoke AgentCore deployments (defense in depth).</p></li></ul>
+<ol start="3"><li><p><strong>Limit enforcement</strong></p></li></ol>
+<ul><li><p>Requests limit is enforced pre-invocation (hard-stop).</p></li><li><p>Tokens/compute are accounted post-invocation and cause subsequent blocking when exceeded.</p></li></ul>
+<ol start="4"><li><p><strong>Consistent errors</strong></p></li></ol>
+<ul><li><p>All limit/gating rejections return normalized error envelopes with actionable details.</p></li></ul>
+<ol start="5"><li><p><strong>Billing integrity</strong></p></li></ol>
+<ul><li><p>Tier changes occur only via verified billing webhooks (or an equivalent server-only mechanism) and cannot be spoofed by clients.</p></li></ul>
+<ol start="6"><li><p><strong>Observability</strong></p></li></ol>
+<ul><li><p>Dashboard shows current period usage and limits, including per-runtime breakdown, with cost labeled as estimated.</p></li></ul>
+<ol start="7"><li><p><strong>Extensibility</strong></p></li></ol>
+<ul><li><p>The architecture can be upgraded to predictive reservation and/or overage billing without breaking API contracts.</p></li></ul></div>
+<p class="src"><a href="/#/WebHost.Systems/docs/spec/adr/ADR-0007-entitlements-and-limits.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-52492" class="lvl2">1) Context</a><a href="#blk-52542" class="lvl2">2) Decision</a><a href="#blk-52543" class="lvl3">2.1 Adopt a configuration-driven entitlement model (server authoritative)</a><a href="#blk-52576" class="lvl3">2.2 Tier gating rules: runtime access is an entitlement (defense in depth)</a><a href="#blk-52620" class="lvl3">2.3 Limit enforcement strategy (v1): requests hard-stop + post-charge tokens/compute, with upgrade path to reservation</a><a href="#blk-52641" class="lvl3">2.4 Enforcement point: invocation gateway is the primary cost-control boundary</a><a href="#blk-52649" class="lvl3">2.5 Consistent error semantics</a><a href="#blk-52667" class="lvl2">3) Rationale</a><a href="#blk-52668" class="lvl3">3.1 Why configuration-driven entitlements</a><a href="#blk-52676" class="lvl3">3.2 Why runtime gating is mandatory</a><a href="#blk-52688" class="lvl3">3.3 Why requests-first enforcement is acceptable for v1</a><a href="#blk-52696" class="lvl3">3.4 Why we still plan for reservation</a><a href="#blk-52706" class="lvl2">4) Alternatives considered</a><a href="#blk-52707" class="lvl3">A) No limits (reject)</a><a href="#blk-52719" class="lvl3">B) Pre-reservation for all dimensions in v1 (defer)</a><a href="#blk-52733" class="lvl3">C) Provider-side enforcement only (reject)</a><a href="#blk-52747" class="lvl3">D) Soft limits with overage billing from day one (defer)</a><a href="#blk-52759" class="lvl2">5) Consequences</a><a href="#blk-52760" class="lvl3">Positive</a><a href="#blk-52770" class="lvl3">Negative / tradeoffs</a><a href="#blk-52778" class="lvl2">6) Implementation details (normative requirements)</a><a href="#blk-52779" class="lvl3">6.1 Entitlements representation</a><a href="#blk-52785" class="lvl3">6.2 Period definition</a><a href="#blk-52791" class="lvl3">6.3 Invocation enforcement algorithm (v1)</a><a href="#blk-52828" class="lvl3">6.4 Deploy-time enforcement</a><a href="#blk-52839" class="lvl3">6.5 Concurrency and counters (minimum vs recommended)</a><a href="#blk-52854" class="lvl3">6.6 Telemetry integrity dependency</a><a href="#blk-52861" class="lvl3">6.7 Observability and UX requirements</a><a href="#blk-52880" class="lvl2">7) Testing requirements (acceptance-focused)</a><a href="#blk-52881" class="lvl3">MUST</a><a href="#blk-52893" class="lvl3">SHOULD</a><a href="#blk-52901" class="lvl2">8) Acceptance criteria</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/spec/adr/ADR-0001-multi-runtime.md/">ADR-0001: Multi-Runtime Strategy (Cloudflare Workers/DO + AWS Bedrock AgentCore)</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0002-supabase-control-plane.md/">ADR-0002: Use Supabase as the Control Plane Backend (PostgreSQL + Edge Functions)</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0003-secrets-strategy.md/">ADR-0003: Secrets Handling &amp; Provider Injection Strategy</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0004-telemetry-integrity.md/">ADR-0004: Telemetry Integrity &amp; Attribution Model (Deployment-Scoped Signed Events)</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0005-deployment-immutability.md/">ADR-0005: Deployment Immutability + Active Deployment Pointer Model</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0006-invocation-protocol.md/">ADR-0006: Canonical Invocation Protocol (invoke/v1) and Streaming Strategy</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0008-delegated-invocation-auth.md/">ADR-0008: Delegated Invocation Auth Mode (Server-to-Server HMAC)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierab4jkpm3ahhvdlqiq5cfkunsu3u4k2c2ac5iplf3vwvuqsbp3mokq</div></div></div>
+</div></div>
+</body></html>

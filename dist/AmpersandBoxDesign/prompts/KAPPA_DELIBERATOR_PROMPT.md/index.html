@@ -1,0 +1,642 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>κ-Driven Deliberation Orchestrator — Build Prompt v1 · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="When κ &gt; 0, fault-line edges become prompt boundaries. The Deliberator decomposes circular knowledge along those boundaries, runs focused reasoning passes…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/KAPPA_DELIBERATOR_PROMPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="κ-Driven Deliberation Orchestrator — Build Prompt v1">
+<meta property="og:description" content="When κ &gt; 0, fault-line edges become prompt boundaries. The Deliberator decomposes circular knowledge along those boundaries, runs focused reasoning passes…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/KAPPA_DELIBERATOR_PROMPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"κ-Driven Deliberation Orchestrator — Build Prompt v1","name":"κ-Driven Deliberation Orchestrator — Build Prompt v1","description":"When κ > 0, fault-line edges become prompt boundaries. The Deliberator decomposes circular knowledge along those boundaries, runs focused reasoning passes…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/KAPPA_DELIBERATOR_PROMPT.md/","identifier":"bagaaierat56w6qa3zuwz7hlwfqybqha4es6rlracigkl2bcib345ols5mvya","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"0. The One-Sentence Idea"},{"@type":"WebPageElement","name":"1. Why This Exists (The Gap)"},{"@type":"WebPageElement","name":"Relationship to Deliberatic"},{"@type":"WebPageElement","name":"1.1 Current API Conventions (READ BEFORE IMPLEMENTING)"},{"@type":"WebPageElement","name":"2. Architecture"},{"@type":"WebPageElement","name":"2.1 The Deliberation Loop"},{"@type":"WebPageElement","name":"2.2 Core Insight: Fault Lines Are Prompt Boundaries"},{"@type":"WebPageElement","name":"2.3 Graph Crystallization"},{"@type":"WebPageElement","name":"2.4 Escalation Rules"},{"@type":"WebPageElement","name":"3. What to Build"},{"@type":"WebPageElement","name":"3.1 Module: Graphonomous.Deliberator"},{"@type":"WebPageElement","name":"3.1.1 Public API"},{"@type":"WebPageElement","name":"3.1.2 Internal Functions"},{"@type":"WebPageElement","name":"3.1.3 The Loop (putting it together)"},{"@type":"WebPageElement","name":"3.2 MCP Tool: Deliberate"},{"@type":"WebPageElement","name":"3.3 Wire into Retriever (optional auto-deliberation)"},{"@type":"WebPageElement","name":"3.4 [&] Protocol Integration"},{"@type":"WebPageElement","name":"3.5 Telemetry"},{"@type":"WebPageElement","name":"4. The Crystallization Model (Detailed)"},{"@type":"WebPageElement","name":"4.1 How κ Decreases Over Time"},{"@type":"WebPageElement","name":"4.2 Conclusion Decay and Re-Deliberation"},{"@type":"WebPageElement","name":"4.3 The Consciousness Analogy"},{"@type":"WebPageElement","name":"5. Tests"},{"@type":"WebPageElement","name":"File: test/graphonomous/deliberator_test.exs"},{"@type":"WebPageElement","name":"File: test/graphonomous/deliberator_integration_test.exs"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/"},{"@type":"ListItem","position":4,"name":"KAPPA_DELIBERATOR_PROMPT.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/prompts/KAPPA_DELIBERATOR_PROMPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/prompts/KAPPA_DELIBERATOR_PROMPT.md</span>
+
+</div></div>
+<div class="lead">When κ &gt; 0, fault-line edges become prompt boundaries. The Deliberator decomposes circular knowledge along those boundaries, runs focused reasoning passes on each partition, rec…</div>
+<div class="prose"><h1 id="blk-20173">κ-Driven Deliberation Orchestrator — Build Prompt v1</h1>
+<blockquote><p><strong>Purpose:</strong> Implementation prompt for the deliberation loop that κ triggers. The KAPPA_BUILD_PROMPT tells you <em>when</em> to think. This prompt tells you <em>how</em> to think — mechanically decomposing circular knowledge into focused reasoning passes driven by graph topology.  <strong>Depends on:</strong> KAPPA_BUILD_PROMPT.md (κ computation must exist first)  <strong>Target agent:</strong> ChatGPT-5.3-Codex (or any coding agent with file access)  <strong>Author:</strong> Travis / [&amp;] Ampersand Box Design  <strong>Date:</strong> 2026-03-21  <strong>Version:</strong> 1.0</p></blockquote>
+<h3 id="blk-20176">0. The One-Sentence Idea</h3>
+<p><strong>When κ &gt; 0, fault-line edges become prompt boundaries. The Deliberator decomposes circular knowledge along those boundaries, runs focused reasoning passes on each partition, reconciles them, and writes conclusions back into the graph — reducing κ over time as uncertainty crystallizes into settled knowledge.</strong></p>
+<h3 id="blk-20178">1. Why This Exists (The Gap)</h3>
+<p>The [&amp;] ecosystem already has:</p>
+<table><thead><tr><th>Product</th><th>What It Does</th><th>What It Doesn't Do</th></tr></thead><tbody><tr><td><strong>Graphonomous</strong> (κ computation)</td><td>Detects topology, returns <code>routing: &quot;deliberate&quot;</code> + fault lines</td><td>Doesn't execute the deliberation. Returns metadata and hopes the caller knows what to do.</td></tr><tr><td><strong>Deliberatic</strong></td><td>Formal multi-agent argumentation (Dung's AAF, Byzantine consensus, constitution DSL)</td><td>Overkill for single-agent reasoning on a 4-node cycle. Requires multiple agents submitting positions.</td></tr><tr><td><strong>AgenTroMatic</strong></td><td>Multi-agent task decomposition + bidding + election</td><td>Assumes tasks are pre-decomposed. Doesn't know about graph topology or fault lines.</td></tr><tr><td><strong>OpenSentience</strong></td><td>Executes actions, reports outcomes, closes feedback loop</td><td>Doesn't decide <em>what</em> to reason about. Waits for decisions to execute.</td></tr></tbody></table>
+<p><strong>The gap:</strong> Nothing takes a κ &gt; 0 result and <em>mechanically drives focused reasoning</em> using the graph's own structure as the orchestration template. The Deliberator fills this gap as a <strong>single-agent reasoning loop</strong> that:</p>
+<ol><li><p>Uses fault-line edges as decomposition boundaries (not human-authored task splits)</p></li><li><p>Runs focused passes with subgraph-scoped context (not the whole graph)</p></li><li><p>Writes conclusions back as new nodes (not ephemeral chain-of-thought)</p></li><li><p>Reduces κ over time (the graph settles)</p></li><li><p>Escalates to Deliberatic only when single-agent convergence fails</p></li></ol>
+<h4 id="blk-20208">Relationship to Deliberatic</h4>
+<p>Deliberatic is <strong>not replaced</strong>. It remains the formal multi-agent argumentation protocol for high-stakes decisions requiring Byzantine fault tolerance, evidence chains, and constitutional constraints. The Deliberator is a <strong>lightweight predecessor</strong> — the thing you try first. Think of it as:</p>
+<pre><code>κ detected → Deliberator (single-agent, fast, graph-local)
+           → if convergence fails → Deliberatic (multi-agent, formal, consensus)
+           → if task decomposition needed → AgenTroMatic (bidding, election)</code></pre>
+<p>Deliberatic's formal argumentation is the escalation path, not the default path. Most κ &gt; 0 regions can be resolved by a single agent reasoning through the fault lines systematically.</p>
+<h3 id="blk-20212">1.1 Current API Conventions (READ BEFORE IMPLEMENTING)</h3>
+<table><thead><tr><th>Pattern</th><th>Convention</th></tr></thead><tbody><tr><td><strong>`Graphonomous.retrieve_context/2`</strong></td><td>Returns unwrapped map (not <code>{:ok, map}</code>). Contains <code>.results</code>, <code>.topology</code>, <code>.causal_context</code>, <code>.stats</code></td></tr><tr><td><strong>`Store.list_edges_between/1`</strong></td><td>Returns <code>{:ok, [Edge.t()]}</code></td></tr><tr><td><strong>`Topology.analyze/1`</strong></td><td>Returns map with <code>.sccs</code>, <code>.dag_nodes</code>, <code>.routing</code>, <code>.max_kappa</code>, <code>.scc_count</code></td></tr><tr><td><strong>MCP components</strong></td><td><code>use Anubis.Server.Component, type: :tool</code> with <code>schema do...end</code> block. Return <code>{:reply, tool_response(payload), frame}</code></td></tr><tr><td><strong>Param access</strong></td><td>Use <code>p(params, :key, default)</code> helper in MCP components for string/atom key access</td></tr><tr><td><strong>Supervision</strong></td><td>Not needed for Deliberator (runs as tasks under calling process)</td></tr></tbody></table>
+<h3 id="blk-20228">2. Architecture</h3>
+<h4 id="blk-20229">2.1 The Deliberation Loop</h4>
+<pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                    DELIBERATION ORCHESTRATOR                      │
+│                                                                  │
+│  Input: topology_result from retrieve_context (κ &gt; 0)            │
+│         original_query                                           │
+│         retrieval_results                                        │
+│                                                                  │
+│  For each SCC where κ &gt; 0:                                       │
+│                                                                  │
+│    1. DECOMPOSE                                                  │
+│       │ Read fault_line_edges from topology                      │
+│       │ Partition SCC nodes along each fault line                │
+│       │ Each partition = one &quot;reasoning focus&quot;                   │
+│       │                                                          │
+│    2. FOCUS (parallel, up to budget.agent_count)                 │
+│       │ For each partition:                                      │
+│       │   a. Extract subgraph: partition nodes + boundary edges  │
+│       │   b. Build focused prompt with ONLY that context         │
+│       │   c. Hold fault-line assumption fixed                    │
+│       │   d. Reason forward through the partition                │
+│       │   e. Produce intermediate conclusion                     │
+│       │                                                          │
+│    3. RECONCILE                                                  │
+│       │ Feed ALL intermediate conclusions back through           │
+│       │   full SCC context                                       │
+│       │ Check: do conclusions contradict?                        │
+│       │ Check: confidence ≥ budget.confidence_threshold?         │
+│       │                                                          │
+│    4. CONVERGE or ESCALATE                                       │
+│       │ If confident: write conclusion nodes to graph            │
+│       │ If contradictory: retry with different fault-line focus  │
+│       │ If budget exhausted: escalate to Deliberatic             │
+│       │                                                          │
+│    5. CRYSTALLIZE                                                │
+│       │ Write conclusion as new :semantic node                   │
+│       │ Add :derived_from edges to source nodes                  │
+│       │ Graph topology shifts → κ may decrease                   │
+│       │ Emit telemetry                                           │
+│                                                                  │
+│  Output: conclusions + updated topology + confidence scores      │
+└──────────────────────────────────────────────────────────────────┘</code></pre>
+<h4 id="blk-20231">2.2 Core Insight: Fault Lines Are Prompt Boundaries</h4>
+<p>This is the key architectural idea. A fault-line edge is the minimum-cut edge in an SCC — the weakest link in a feedback loop. The Deliberator treats each fault line as a <strong>conditional assumption</strong>:</p>
+<pre><code>SCC: A → B → C → D → A
+Fault line: D → A (the weakest causal link)
+
+Pass 1: &quot;Assume D→A holds. Given that, what follows for A→B→C→D?&quot;
+Pass 2: &quot;Assume D→A does NOT hold. Given that, what follows?&quot;
+Reconciliation: &quot;Given both analyses, what is the actual relationship D→A?&quot;</code></pre>
+<p>For κ = 2 (two independent fault lines), you get a 2×2 matrix of assumptions. The budget caps this at <code>max_iterations</code> passes.</p>
+<p>The graph's structure <strong>mechanically determines</strong> the prompt structure. No human prompt engineering. The topology <em>is</em> the prompt template.</p>
+<h4 id="blk-20236">2.3 Graph Crystallization</h4>
+<p>The most important property: <strong>deliberation changes the graph.</strong></p>
+<p>When the Deliberator produces a conclusion, it writes back:</p>
+<pre><code>[New Node] &quot;R&amp;D investment has diminishing returns above $10M/quarter
+            for companies under 500 employees&quot;
+  type: :semantic
+  confidence: 0.82
+  metadata: %{
+    derived_by: :deliberator,
+    source_scc: &quot;scc-0&quot;,
+    source_kappa: 1,
+    fault_lines_examined: [&quot;product-quality→market-share&quot;],
+    iteration: 2
+  }
+
+[New Edges]
+  &quot;conclusion-node&quot; ←derived_from— &quot;market-share&quot;
+  &quot;conclusion-node&quot; ←derived_from— &quot;r-and-d&quot;
+  &quot;conclusion-node&quot; ←derived_from— &quot;product-quality&quot;
+  &quot;conclusion-node&quot; ←derived_from— &quot;revenue&quot;</code></pre>
+<p>This conclusion node <strong>breaks the cycle</strong> for future queries. The next time someone asks about R&amp;D investment, the retriever finds the conclusion node (high confidence, recent), and the subgraph topology may now show κ = 0 for that specific question — because the circular dependency has been partially resolved into a settled fact.</p>
+<p>Over time, heavily-queried regions of the graph crystallize from circular uncertainty (κ &gt; 0) into linear knowledge (κ = 0). Rarely-queried regions remain circular until someone asks. The graph <strong>self-organizes</strong> around actual information needs.</p>
+<h4 id="blk-20242">2.4 Escalation Rules</h4>
+<table><thead><tr><th>Condition</th><th>Action</th></tr></thead><tbody><tr><td>Single SCC, κ ≤ 2, single agent available</td><td>Deliberator handles locally</td></tr><tr><td>Confidence below threshold after max_iterations</td><td>Escalate to Deliberatic (formal argumentation)</td></tr><tr><td>Multiple SCCs with κ &gt; 2, task is decomposable</td><td>Escalate to AgenTroMatic (parallel agent assignment)</td></tr><tr><td>Policy constraint (Delegatic) blocks autonomous conclusion</td><td>Escalate to human via OpenSentience</td></tr><tr><td>Conclusion contradicts existing high-confidence node</td><td>Escalate to Deliberatic (evidence-based resolution)</td></tr></tbody></table>
+<h3 id="blk-20256">3. What to Build</h3>
+<h4 id="blk-20257">3.1 Module: <code>Graphonomous.Deliberator</code></h4>
+<p><strong>File:</strong> <code>graphonomous/lib/graphonomous/deliberator.ex</code></p>
+<p>This is the core deliberation loop. It consumes topology results and produces conclusions.</p>
+<h5 id="blk-20260">3.1.1 Public API</h5>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Graphonomous.Deliberator</span> <span class="t-kw">do</span>
+  <span class="t-attr">@moduledoc</span> <span class="t-string">&quot;&quot;&quot;
+  κ-driven deliberation orchestrator. When topology analysis returns κ &gt; 0,
+  the Deliberator decomposes circular knowledge along fault-line edges,
+  runs focused reasoning passes on each partition, reconciles them,
+  and writes conclusions back into the graph.
+
+  ## Usage
+
+      topology = Graphonomous.Topology.analyze(adjacency)
+      case topology.routing do
+        :fast -&gt; # single-pass retrieval is sufficient
+        :deliberate -&gt;
+          Deliberator.deliberate(topology, query, retrieval_results)
+      end
+  &quot;&quot;&quot;</span>
+
+  <span class="t-attr">@type</span> conclusion :: %{
+    content: binary(),
+    confidence: float(),
+    source_scc_id: binary(),
+    source_kappa: non_neg_integer(),
+    fault_lines_examined: [{binary(), binary()}],
+    iteration: non_neg_integer(),
+    converged: boolean()
+  }
+
+  <span class="t-attr">@type</span> deliberation_result :: %{
+    conclusions: [conclusion()],
+    iterations_used: non_neg_integer(),
+    converged: boolean(),
+    escalated: boolean(),
+    escalation_reason: binary() | <span class="t-lit">nil</span>,
+    topology_before: map(),
+    topology_after: map() | <span class="t-lit">nil</span>,
+    duration_ms: float()
+  }
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;&quot;&quot;
+  Run the deliberation loop for all SCCs with κ &gt; 0 in the topology result.
+
+  Options:
+    - `:agent_fn` — function that takes a focused prompt and returns a response.
+      Signature: `(prompt :: binary()) -&gt; {:ok, binary()} | {:error, term()}`
+      This is the LLM call. Injected for testability.
+    - `:write_back` — whether to write conclusions to the graph (default: true)
+    - `:escalation_callback` — function called when deliberation fails to converge.
+      Signature: `(scc :: map(), reason :: binary()) -&gt; :ok`
+
+  Note on API conventions: follows Graphonomous public API style where
+  `Graphonomous.retrieve_context/2` returns an unwrapped map (not `{:ok, map}`).
+  The Deliberator returns `{:ok, result}` tuples for explicit success/error
+  handling since deliberation can fail in more ways than retrieval.
+  &quot;&quot;&quot;</span>
+  <span class="t-attr">@spec</span> deliberate(
+    topology :: map(),
+    query :: binary(),
+    retrieval_results :: [map()],
+    opts :: keyword()
+  ) :: {<span class="t-atom">:ok</span>, deliberation_result()} | {<span class="t-atom">:error</span>, term()}
+  <span class="t-kw">def</span> deliberate(topology, query, retrieval_results, opts \\ [])
+<span class="t-kw">end</span></code></pre>
+<h5 id="blk-20262">3.1.2 Internal Functions</h5>
+<p><strong>`decompose/1`</strong> — Partition an SCC along fault lines</p>
+<pre data-lang="elixir"><code><span class="t-attr">@doc</span> <span class="t-lit">false</span>
+<span class="t-attr">@spec</span> decompose(scc :: map()) :: [partition()]
+<span class="t-kw">def</span> decompose(scc) <span class="t-kw">do</span>
+  <span class="t-comment"># For each fault-line edge {source, target}:</span>
+  <span class="t-comment">#   1. Remove that edge from the SCC's internal adjacency</span>
+  <span class="t-comment">#   2. The resulting graph may split into reachable partitions</span>
+  <span class="t-comment">#   3. Each partition = a &quot;reasoning focus&quot; with:</span>
+  <span class="t-comment">#      - nodes: the partition's node set</span>
+  <span class="t-comment">#      - boundary: the removed fault-line edge (the assumption to hold fixed)</span>
+  <span class="t-comment">#      - context_nodes: nodes in the partition + immediate neighbors across the fault line</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># For κ = 1: one fault line → two partitions → two focused passes</span>
+  <span class="t-comment"># For κ = 2: two fault lines → up to four partitions → capped by budget.max_iterations</span>
+<span class="t-kw">end</span></code></pre>
+<p><strong>`build_focused_prompt/4`</strong> — Construct a prompt scoped to one partition</p>
+<pre data-lang="elixir"><code><span class="t-attr">@doc</span> <span class="t-lit">false</span>
+<span class="t-attr">@spec</span> build_focused_prompt(
+  query :: binary(),
+  partition :: partition(),
+  scc :: map(),
+  retrieval_results :: [map()]
+) :: binary()
+<span class="t-kw">def</span> build_focused_prompt(query, partition, scc, retrieval_results) <span class="t-kw">do</span>
+  <span class="t-comment"># Structure:</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># CONTEXT (scoped):</span>
+  <span class="t-comment">#   Only nodes in this partition + boundary nodes.</span>
+  <span class="t-comment">#   Include node content, confidence, edge relationships.</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># ASSUMPTION (from fault line):</span>
+  <span class="t-comment">#   &quot;For this analysis, assume the relationship [source] → [target]</span>
+  <span class="t-comment">#    holds with the current confidence of [X]. Reason forward from</span>
+  <span class="t-comment">#    this assumption through the following knowledge.&quot;</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># QUERY:</span>
+  <span class="t-comment">#   The original user query, unchanged.</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># INSTRUCTION:</span>
+  <span class="t-comment">#   &quot;Given only the context above and the stated assumption,</span>
+  <span class="t-comment">#    what conclusion can you draw about [query]?</span>
+  <span class="t-comment">#    State your confidence (0.0-1.0) and reasoning.&quot;</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># The prompt does NOT include:</span>
+  <span class="t-comment">#   - Nodes from other partitions (prevents context bleed)</span>
+  <span class="t-comment">#   - The full graph (focuses attention)</span>
+  <span class="t-comment">#   - Other fault-line assumptions (one at a time)</span>
+<span class="t-kw">end</span></code></pre>
+<p><strong>`reconcile/4`</strong> — Merge intermediate conclusions</p>
+<pre data-lang="elixir"><code><span class="t-attr">@doc</span> <span class="t-lit">false</span>
+<span class="t-attr">@spec</span> reconcile(
+  intermediates :: [intermediate_conclusion()],
+  scc :: map(),
+  query :: binary(),
+  budget :: map()
+) :: {<span class="t-atom">:converged</span>, conclusion()} | {<span class="t-atom">:divergent</span>, [intermediate_conclusion()]}
+<span class="t-kw">def</span> reconcile(intermediates, scc, query, budget) <span class="t-kw">do</span>
+  <span class="t-comment"># FAST PATH: If intermediate conclusions agree (embedding similarity</span>
+  <span class="t-comment"># above threshold), skip the reconciliation LLM call entirely.</span>
+  <span class="t-comment"># Take the higher-confidence conclusion directly. This saves ~33%</span>
+  <span class="t-comment"># of LLM calls and provides a convergence signal that doesn't</span>
+  <span class="t-comment"># depend on the model's metacognitive abilities.</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># agreement_threshold = 0.85 (cosine similarity between conclusion embeddings)</span>
+  <span class="t-comment"># If all pairs of intermediates exceed this threshold:</span>
+  <span class="t-comment">#   → pick highest-confidence intermediate</span>
+  <span class="t-comment">#   → return {:converged, best_intermediate}</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># FULL PATH: If intermediates disagree, build a reconciliation prompt:</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># INTERMEDIATE CONCLUSIONS:</span>
+  <span class="t-comment">#   [List each partition's conclusion + confidence + assumption]</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># FULL SCC CONTEXT:</span>
+  <span class="t-comment">#   [All nodes in the SCC — now the agent sees the complete picture]</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># INSTRUCTION:</span>
+  <span class="t-comment">#   &quot;These conclusions were reached by examining different parts of</span>
+  <span class="t-comment">#    the feedback loop [SCC description]. Some were derived under</span>
+  <span class="t-comment">#    different assumptions about [fault-line edges].</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment">#    Synthesize a unified conclusion. If the intermediate conclusions</span>
+  <span class="t-comment">#    contradict, identify which assumption was wrong and why.</span>
+  <span class="t-comment">#    State your final confidence (0.0-1.0).&quot;</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># Convergence check:</span>
+  <span class="t-comment">#   If final_confidence &gt;= budget.confidence_threshold → :converged</span>
+  <span class="t-comment">#   If final_confidence &lt; threshold → :divergent (may retry or escalate)</span>
+<span class="t-kw">end</span></code></pre>
+<p><strong>`crystallize/3`</strong> — Write conclusions back to the graph</p>
+<pre data-lang="elixir"><code><span class="t-attr">@doc</span> <span class="t-lit">false</span>
+<span class="t-attr">@spec</span> crystallize(conclusion :: conclusion(), scc :: map(), opts :: keyword()) ::
+  {<span class="t-atom">:ok</span>, node_id :: binary()} | {<span class="t-atom">:error</span>, term()}
+<span class="t-kw">def</span> crystallize(conclusion, scc, opts) <span class="t-kw">do</span>
+  <span class="t-comment"># 1. Create a new :semantic node with the conclusion content</span>
+  <span class="t-comment">#    - confidence = conclusion.confidence</span>
+  <span class="t-comment">#    - metadata includes deliberation provenance:</span>
+  <span class="t-comment">#      %{</span>
+  <span class="t-comment">#        derived_by: :deliberator,</span>
+  <span class="t-comment">#        source_scc: scc.id,</span>
+  <span class="t-comment">#        source_kappa: scc.kappa,</span>
+  <span class="t-comment">#        fault_lines_examined: [...],</span>
+  <span class="t-comment">#        iteration: N,</span>
+  <span class="t-comment">#        query: original_query</span>
+  <span class="t-comment">#      }</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># 2. Create :derived_from edges from conclusion node to each source node in the SCC</span>
+  <span class="t-comment">#    - weight proportional to that node's contribution to the conclusion</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># 3. Optionally create :supports or :contradicts edges if the conclusion</span>
+  <span class="t-comment">#    explicitly agrees with or opposes existing nodes</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># 4. The new node + edges change the graph topology.</span>
+  <span class="t-comment">#    Next retrieve_context call to this region will find the conclusion node</span>
+  <span class="t-comment">#    (high confidence, recent timestamp) and may see reduced κ.</span>
+  <span class="t-comment">#</span>
+  <span class="t-comment"># 5. Emit telemetry: [:graphonomous, :deliberator, :crystallize]</span>
+<span class="t-kw">end</span></code></pre>
+<h5 id="blk-20271">3.1.3 The Loop (putting it together)</h5>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> deliberate_scc(scc, query, retrieval_results, budget, opts) <span class="t-kw">do</span>
+  agent_fn = <span class="t-type">Keyword</span>.fetch!(opts, <span class="t-atom">:agent_fn</span>)
+  iteration = <span class="t-num">0</span>
+  max = budget.max_iterations
+
+  partitions = decompose(scc)
+
+  <span class="t-comment"># Phase: FOCUS — run partitions in parallel up to agent_count</span>
+  intermediates =
+    partitions
+    |&gt; <span class="t-type">Enum</span>.take(max)  <span class="t-comment"># cap by budget</span>
+    |&gt; <span class="t-type">Task</span>.async_stream(
+      <span class="t-kw">fn</span> partition -&gt;
+        prompt = build_focused_prompt(query, partition, scc, retrieval_results)
+        {<span class="t-atom">:ok</span>, response} = agent_fn.(prompt)
+        parse_intermediate(response, partition)
+      <span class="t-kw">end</span>,
+      max_concurrency: budget.agent_count,
+      timeout: round(<span class="t-num">30_000</span> * budget.timeout_multiplier)
+    )
+    |&gt; <span class="t-type">Enum</span>.map(<span class="t-kw">fn</span> {<span class="t-atom">:ok</span>, result} -&gt; result <span class="t-kw">end</span>)
+
+  <span class="t-comment"># Phase: RECONCILE</span>
+  <span class="t-kw">case</span> reconcile(intermediates, scc, query, budget) <span class="t-kw">do</span>
+    {<span class="t-atom">:converged</span>, conclusion} -&gt;
+      <span class="t-kw">if</span> <span class="t-type">Keyword</span>.get(opts, <span class="t-atom">:write_back</span>, <span class="t-lit">true</span>) <span class="t-kw">do</span>
+        {<span class="t-atom">:ok</span>, _node_id} = crystallize(conclusion, scc, opts)
+      <span class="t-kw">end</span>
+      {<span class="t-atom">:ok</span>, conclusion}
+
+    {<span class="t-atom">:divergent</span>, _intermediates} <span class="t-kw">when</span> iteration &lt; max - <span class="t-num">1</span> -&gt;
+      <span class="t-comment"># Retry with different fault-line focus</span>
+      <span class="t-comment"># (rotate which fault line is held fixed vs. questioned)</span>
+      retry_with_rotated_focus(scc, query, retrieval_results, budget, opts, iteration + <span class="t-num">1</span>)
+
+    {<span class="t-atom">:divergent</span>, intermediates} -&gt;
+      <span class="t-comment"># Budget exhausted — escalate</span>
+      escalation_callback = <span class="t-type">Keyword</span>.get(opts, <span class="t-atom">:escalation_callback</span>, &amp;default_escalation/<span class="t-num">2</span>)
+      escalation_callback.(scc, <span class="t-string">&quot;Divergent after #{max} iterations&quot;</span>)
+      {<span class="t-atom">:escalated</span>, intermediates}
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-20273">3.2 MCP Tool: <code>Deliberate</code></h4>
+<p><strong>File:</strong> <code>graphonomous/lib/graphonomous/mcp/deliberate.ex</code></p>
+<p>Exposes deliberation as an MCP tool so external agents can trigger it explicitly.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;deliberate&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Run κ-driven focused deliberation on a knowledge region. Decomposes circular dependencies along fault-line edges, reasons through each partition independently, and synthesizes a unified conclusion. Use when retrieve_context returns routing: 'deliberate'. Writes conclusions back to the graph, reducing κ for future queries.&quot;</span>,
+  <span class="t-key">&quot;inputSchema&quot;</span>: {
+    <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;object&quot;</span>,
+    <span class="t-key">&quot;properties&quot;</span>: {
+      <span class="t-key">&quot;query&quot;</span>: {
+        <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;string&quot;</span>,
+        <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;The question or topic requiring deliberation.&quot;</span>
+      },
+      <span class="t-key">&quot;node_ids&quot;</span>: {
+        <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;array&quot;</span>,
+        <span class="t-key">&quot;items&quot;</span>: { <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;string&quot;</span> },
+        <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Optional. Node IDs to deliberate over. If omitted, retrieves relevant nodes first.&quot;</span>
+      },
+      <span class="t-key">&quot;write_back&quot;</span>: {
+        <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;boolean&quot;</span>,
+        <span class="t-key">&quot;default&quot;</span>: <span class="t-lit">true</span>,
+        <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Whether to write conclusion nodes back to the graph.&quot;</span>
+      }
+    },
+    <span class="t-key">&quot;required&quot;</span>: [<span class="t-string">&quot;query&quot;</span>]
+  }
+}</code></pre>
+<p><strong>Response:</strong></p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;status&quot;</span>: <span class="t-string">&quot;ok&quot;</span>,
+  <span class="t-key">&quot;query&quot;</span>: <span class="t-string">&quot;How does R&amp;D investment affect market share for mid-size companies?&quot;</span>,
+  <span class="t-key">&quot;deliberation&quot;</span>: {
+    <span class="t-key">&quot;converged&quot;</span>: <span class="t-lit">true</span>,
+    <span class="t-key">&quot;iterations_used&quot;</span>: <span class="t-num">2</span>,
+    <span class="t-key">&quot;conclusions&quot;</span>: [
+      {
+        <span class="t-key">&quot;content&quot;</span>: <span class="t-string">&quot;R&amp;D investment shows diminishing returns on market share above $10M/quarter for companies under 500 employees, mediated by product quality improvements that take 2-3 quarters to manifest in customer retention metrics.&quot;</span>,
+        <span class="t-key">&quot;confidence&quot;</span>: <span class="t-num">0.84</span>,
+        <span class="t-key">&quot;source_scc_id&quot;</span>: <span class="t-string">&quot;scc-0&quot;</span>,
+        <span class="t-key">&quot;source_kappa&quot;</span>: <span class="t-num">1</span>,
+        <span class="t-key">&quot;fault_lines_examined&quot;</span>: [
+          {<span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;product-quality&quot;</span>, <span class="t-key">&quot;target&quot;</span>: <span class="t-string">&quot;market-share&quot;</span>}
+        ]
+      }
+    ],
+    <span class="t-key">&quot;topology_change&quot;</span>: {
+      <span class="t-key">&quot;kappa_before&quot;</span>: <span class="t-num">1</span>,
+      <span class="t-key">&quot;kappa_after&quot;</span>: <span class="t-num">1</span>,
+      <span class="t-key">&quot;new_nodes_created&quot;</span>: <span class="t-num">1</span>,
+      <span class="t-key">&quot;note&quot;</span>: <span class="t-string">&quot;Conclusion node added. Future queries to this region may see reduced effective κ as the conclusion provides a shortcut through the feedback loop.&quot;</span>
+    }
+  }
+}</code></pre>
+<p>Register in <code>lib/graphonomous/mcp/server.ex</code> (follows existing Anubis component pattern):</p>
+<pre data-lang="elixir"><code>component(<span class="t-type">Graphonomous.MCP.Deliberate</span>)</code></pre>
+<p><strong>MCP component implementation note:</strong> Follow the existing <code>Anubis.Server.Component</code> pattern used in <code>TopologyAnalyze</code>:</p>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Graphonomous.MCP.Deliberate</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Anubis.Server.Component</span>, type: <span class="t-atom">:tool</span>
+
+  schema <span class="t-kw">do</span>
+    field(<span class="t-atom">:query</span>, <span class="t-atom">:string</span>, description: <span class="t-string">&quot;The question or topic requiring deliberation.&quot;</span>)
+    field(<span class="t-atom">:node_ids</span>, <span class="t-atom">:array</span>, description: <span class="t-string">&quot;Optional. Node IDs to deliberate over.&quot;</span>)
+    field(<span class="t-atom">:write_back</span>, <span class="t-atom">:boolean</span>, description: <span class="t-string">&quot;Write conclusion nodes back to graph.&quot;</span>)
+  <span class="t-kw">end</span>
+
+  <span class="t-attr">@impl</span> <span class="t-lit">true</span>
+  <span class="t-kw">def</span> execute(params, frame) <span class="t-kw">do</span>
+    <span class="t-comment"># Use p(params, :key) helper for string/atom key access</span>
+    <span class="t-comment"># Return {:reply, tool_response(payload), frame}</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-20283">3.3 Wire into Retriever (optional auto-deliberation)</h4>
+<p><strong>File:</strong> <code>graphonomous/lib/graphonomous/retriever.ex</code></p>
+<p>After the topology analysis step added by KAPPA_BUILD_PROMPT, optionally trigger deliberation automatically. Note: <code>Graphonomous.retrieve_context/2</code> returns an unwrapped map (not <code>{:ok, map}</code>) — the Retriever follows this convention:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># In retrieve/2, after topology is computed:</span>
+result =
+  <span class="t-kw">if</span> result.topology.routing == <span class="t-atom">:deliberate</span> <span class="t-kw">and</span> opts[<span class="t-atom">:auto_deliberate</span>] <span class="t-kw">do</span>
+    <span class="t-kw">case</span> <span class="t-type">Deliberator</span>.deliberate(result.topology, query, result.results, opts) <span class="t-kw">do</span>
+      {<span class="t-atom">:ok</span>, deliberation_result} -&gt;
+        <span class="t-type">Map</span>.put(result, <span class="t-atom">:deliberation</span>, deliberation_result)
+      {<span class="t-atom">:escalated</span>, _} -&gt;
+        <span class="t-type">Map</span>.put(result, <span class="t-atom">:deliberation</span>, %{escalated: <span class="t-lit">true</span>})
+      _ -&gt;
+        result
+    <span class="t-kw">end</span>
+  <span class="t-kw">else</span>
+    result
+  <span class="t-kw">end</span></code></pre>
+<p><strong>Default: auto-deliberation is OFF.</strong> The calling agent decides whether to call <code>deliberate</code> explicitly after seeing the topology. This preserves agent autonomy — the graph provides the map, the agent decides whether to drive.</p>
+<h4 id="blk-20288">3.4 [&amp;] Protocol Integration</h4>
+<p><strong>File:</strong> <code>AmpersandBoxDesign/SPEC.md</code> (amendment)</p>
+<p>Add <code>&amp;reason.deliberate</code> as a capability operation:</p>
+<pre><code>&amp;reason.deliberate(
+  budget: :κ,
+  write_back: true,
+  escalation: :deliberatic
+)</code></pre>
+<p>Pipeline form:</p>
+<pre><code>context
+  |&gt; &amp;memory.recall()
+  |&gt; &amp;topology.analyze()
+  |&gt; &amp;topology.route()
+  |&gt; &amp;reason.deliberate(budget: :κ)
+  |&gt; &amp;memory.store()            # crystallization</code></pre>
+<p>This makes deliberation <strong>declarative and composable</strong> within the [&amp;] Protocol. An agent spec can declare that it uses κ-driven deliberation without encoding the loop mechanics.</p>
+<h4 id="blk-20295">3.5 Telemetry</h4>
+<p><strong>File:</strong> <code>graphonomous/lib/graphonomous/deliberator.ex</code></p>
+<p>Emit events at each phase:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># Deliberation started</span>
+<span class="t-atom">:telemetry</span>.execute(
+  [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:deliberator</span>, <span class="t-atom">:start</span>],
+  %{scc_count: length(sccs_to_deliberate)},
+  %{query: query, max_kappa: topology.max_kappa}
+)
+
+<span class="t-comment"># Per-SCC focus pass completed</span>
+<span class="t-atom">:telemetry</span>.execute(
+  [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:deliberator</span>, <span class="t-atom">:focus</span>],
+  %{duration_ms: duration, partition_count: length(partitions)},
+  %{scc_id: scc.id, kappa: scc.kappa}
+)
+
+<span class="t-comment"># Reconciliation completed</span>
+<span class="t-atom">:telemetry</span>.execute(
+  [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:deliberator</span>, <span class="t-atom">:reconcile</span>],
+  %{duration_ms: duration, converged: converged},
+  %{scc_id: scc.id, confidence: final_confidence}
+)
+
+<span class="t-comment"># Crystallization (write-back)</span>
+<span class="t-atom">:telemetry</span>.execute(
+  [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:deliberator</span>, <span class="t-atom">:crystallize</span>],
+  %{node_id: node_id},
+  %{scc_id: scc.id, kappa_before: kappa, conclusion_confidence: confidence}
+)
+
+<span class="t-comment"># Escalation</span>
+<span class="t-atom">:telemetry</span>.execute(
+  [<span class="t-atom">:graphonomous</span>, <span class="t-atom">:deliberator</span>, <span class="t-atom">:escalate</span>],
+  %{},
+  %{scc_id: scc.id, reason: reason, target: <span class="t-atom">:deliberatic</span> | <span class="t-atom">:agentromatic</span> | <span class="t-atom">:human</span>}
+)</code></pre>
+<h3 id="blk-20299">4. The Crystallization Model (Detailed)</h3>
+<p>This section explains the &quot;mechanized consciousness&quot; property — how the graph self-organizes through deliberation.</p>
+<h4 id="blk-20301">4.1 How κ Decreases Over Time</h4>
+<p>Consider the 5-node business example SCC with κ = 1 (verified against kappa_reference.py):</p>
+<pre><code>market-share → revenue → r-and-d → product-quality → market-share
+                                  ↗
+              customer-retention ─┘</code></pre>
+<p>After deliberation, a conclusion node is added:</p>
+<pre><code>market-share → revenue → r-and-d → product-quality → market-share
+                                  ↗
+              customer-retention ─┘
+
+              [CONCLUSION: &quot;R&amp;D has diminishing returns above $10M/quarter&quot;]
+                ←derived_from— market-share
+                ←derived_from— r-and-d
+                ←derived_from— product-quality
+                ←derived_from— revenue</code></pre>
+<p>The conclusion node is NOT part of the cycle — it's a DAG leaf with incoming <code>:derived_from</code> edges. But it has:</p>
+<ul><li><p>High confidence (0.84)</p></li><li><p>Recent timestamp</p></li><li><p>Content that directly answers the query</p></li></ul>
+<p><strong>Next time</strong> someone asks about R&amp;D and market share:</p>
+<ol><li><p>The Retriever finds the conclusion node (high similarity, high confidence)</p></li><li><p>The retrieved subgraph now includes the conclusion node in its node set</p></li><li><p>The conclusion node has no outgoing directed edges into the SCC</p></li><li><p>The effective topology for the retrieved context may have lower κ because the conclusion provides a &quot;shortcut&quot; — the agent can use the settled conclusion instead of re-traversing the full cycle</p></li></ol>
+<p>This isn't κ literally decreasing on the original SCC (that's structural), but the <strong>effective κ of the retrieved subgraph</strong> decreasing because the conclusion node resolves the circular dependency for that query class.</p>
+<h4 id="blk-20325">4.2 Conclusion Decay and Re-Deliberation</h4>
+<p>Conclusions are nodes. They participate in the normal Consolidator lifecycle:</p>
+<ul><li><p><strong>Confidence decay:</strong> Unused conclusions decay like any other node (Consolidator's idle-time decay)</p></li><li><p><strong>Access reinforcement:</strong> Conclusions that keep getting retrieved stay high-confidence</p></li><li><p><strong>Contradiction:</strong> If new evidence contradicts a conclusion, its confidence drops. When confidence drops below threshold, the Deliberator may re-run on the SCC with updated context → new conclusion replaces old one</p></li><li><p><strong>Pruning:</strong> Very old, low-confidence, unused conclusions get pruned by the Consolidator</p></li></ul>
+<p>This creates a <strong>natural lifecycle</strong> for deliberated knowledge:</p>
+<pre><code>uncertain (κ &gt; 0) → deliberated → crystallized → reinforced by use
+                                                → OR decayed by time
+                                                → OR contradicted by evidence
+                                                → re-deliberated</code></pre>
+<h4 id="blk-20338">4.3 The Consciousness Analogy</h4>
+<p>The system exhibits properties analogous to focused attention:</p>
+<table><thead><tr><th>Human Cognition</th><th>Deliberator Equivalent</th></tr></thead><tbody><tr><td>Noticing confusion</td><td>κ &gt; 0 detected in retrieval</td></tr><tr><td>Focusing attention on the confusing part</td><td>Fault-line decomposition scopes context</td></tr><tr><td>Reasoning through assumptions</td><td>Focused passes with held-fixed assumptions</td></tr><tr><td>Reaching a conclusion</td><td>Reconciliation produces unified answer</td></tr><tr><td>Committing to memory</td><td>Crystallization writes node to graph</td></tr><tr><td>Forgetting stale conclusions</td><td>Consolidator decay + prune</td></tr><tr><td>Changing your mind</td><td>Re-deliberation when evidence contradicts</td></tr><tr><td>Knowing what you don't know</td><td><code>coverage_query</code> + κ detection = epistemic self-modeling</td></tr></tbody></table>
+<p>This is not sentience. It is <strong>mechanical epistemology</strong> — the graph knows its own structure, uses that structure to route reasoning, and updates itself based on the results.</p>
+<h3 id="blk-20360">5. Tests</h3>
+<h4 id="blk-20361">File: <code>test/graphonomous/deliberator_test.exs</code></h4>
+<pre><code>[x] decompose/1 on κ=1 SCC with one fault line → two partitions
+[ ] decompose/1 on κ=2 SCC with two fault lines → up to four partitions, capped by budget
+[ ] build_focused_prompt/4 includes ONLY partition nodes, not full graph
+[ ] build_focused_prompt/4 includes fault-line assumption statement
+[ ] reconcile/4 with agreeing intermediates → :converged
+[ ] reconcile/4 with contradicting intermediates → :divergent
+[ ] reconcile/4 checks confidence against budget.confidence_threshold
+[ ] deliberate/4 on κ=0 topology → returns immediately (no-op)
+[x] deliberate/4 on κ=1 SCC → runs focus + reconcile → converged conclusion
+[x] deliberate/4 on κ=2 SCC → runs multiple partitions → converged or escalated
+[ ] deliberate/4 budget.max_iterations respected (does not run forever)
+[x] deliberate/4 with write_back: true → creates new node in graph
+[x] deliberate/4 with write_back: false → no graph mutation
+[x] crystallize/3 creates :semantic node with correct metadata
+[ ] crystallize/3 creates :derived_from edges to source SCC nodes
+[ ] escalation fires when budget exhausted without convergence
+[ ] telemetry events emitted at each phase
+[x] agent_fn injection works (mock LLM for deterministic tests)</code></pre>
+<h4 id="blk-20363">File: <code>test/graphonomous/deliberator_integration_test.exs</code></h4>
+<pre><code>[ ] End-to-end: store cyclic graph → retrieve → auto_deliberate → conclusion node exists
+[x] Conclusion node has correct metadata (derived_by, source_scc, source_kappa)
+[ ] Second retrieval of same region finds conclusion node
+[ ] Effective κ of retrieved subgraph may be lower after crystallization
+[x] MCP tool `deliberate` returns valid response matching schema
+[x] MCP tool registered and callable</code></pre>
+<h3 id="blk-20365">6. File Manifest</h3>
+<h4 id="blk-20366">New files to create:</h4>
+<table><thead><tr><th>File</th><th>Language</th><th>Purpose</th></tr></thead><tbody><tr><td><code>graphonomous/lib/graphonomous/deliberator.ex</code></td><td>Elixir</td><td>Core deliberation loop</td></tr><tr><td><code>graphonomous/lib/graphonomous/mcp/deliberate.ex</code></td><td>Elixir</td><td>MCP tool for explicit deliberation</td></tr><tr><td><code>graphonomous/test/graphonomous/deliberator_test.exs</code></td><td>Elixir</td><td>Unit tests</td></tr><tr><td><code>graphonomous/test/graphonomous/deliberator_integration_test.exs</code></td><td>Elixir</td><td>Integration tests</td></tr></tbody></table>
+<h4 id="blk-20383">Files to modify:</h4>
+<table><thead><tr><th>File</th><th>Change</th></tr></thead><tbody><tr><td><code>graphonomous/lib/graphonomous/retriever.ex</code></td><td>Add optional <code>auto_deliberate</code> flag</td></tr><tr><td><code>graphonomous/lib/graphonomous/mcp/server.ex</code></td><td>Register <code>Deliberate</code> component</td></tr></tbody></table>
+<h4 id="blk-20391">Depends on (must exist first, from KAPPA_BUILD_PROMPT):</h4>
+<table><thead><tr><th>File</th><th>Required Function</th></tr></thead><tbody><tr><td><code>graphonomous/lib/graphonomous/topology.ex</code></td><td><code>analyze/1</code>, <code>build_adjacency/2</code>, <code>preview_edge_impact/3</code></td></tr><tr><td><code>graphonomous/lib/graphonomous/store.ex</code></td><td><code>list_edges_between/1</code></td></tr><tr><td><code>graphonomous/lib/graphonomous/mcp/topology_analyze.ex</code></td><td>Registered MCP tool</td></tr></tbody></table>
+<h3 id="blk-20401">7. Success Criteria</h3>
+<h4 id="blk-20402">Gate A — Decomposition Correctness (MUST PASS)</h4>
+<ol><li><p><code>decompose/1</code> produces correct partitions for κ=1 and κ=2 SCCs</p></li><li><p>Partitions are disjoint and cover all SCC nodes</p></li><li><p>Each partition includes correct boundary context (fault-line neighbors)</p></li><li><p>Partition count is bounded by <code>budget.max_iterations</code></p></li></ol>
+<h4 id="blk-20412">Gate B — Prompt Scoping (MUST PASS)</h4>
+<ol><li><p>Focused prompts contain ONLY partition-relevant nodes</p></li><li><p>No context bleed between partitions</p></li><li><p>Fault-line assumption is clearly stated in prompt</p></li><li><p>Reconciliation prompt includes ALL intermediate conclusions</p></li></ol>
+<h4 id="blk-20422">Gate C — Convergence Behavior (MUST PASS)</h4>
+<ol><li><p>Convergence check uses <code>budget.confidence_threshold</code></p></li><li><p>Divergent results trigger retry (up to budget) then escalation</p></li><li><p>Escalation callback fires with correct reason</p></li><li><p>Budget is never exceeded (no infinite loops)</p></li></ol>
+<h4 id="blk-20432">Gate D — Crystallization (MUST PASS)</h4>
+<ol><li><p>Conclusion nodes created with correct type, confidence, and metadata</p></li><li><p><code>:derived_from</code> edges created to source nodes</p></li><li><p>Graph mutation is atomic (all-or-nothing)</p></li><li><p>Telemetry emitted on crystallization</p></li></ol>
+<h4 id="blk-20442">Gate E — Integration (SHOULD PASS)</h4>
+<ol><li><p>Second retrieval of the same region finds conclusion node</p></li><li><p>Auto-deliberation flag works in Retriever</p></li><li><p>MCP tool returns valid schema-compliant response</p></li><li><p>Escalation to Deliberatic is wired (even if Deliberatic handler is a stub)</p></li></ol>
+<h3 id="blk-20452">8. Architectural Notes</h3>
+<h4 id="blk-20453">Why inject <code>agent_fn</code> instead of hardcoding an LLM call?</h4>
+<p>Testability. The Deliberator's logic is graph decomposition + prompt construction + convergence checking. The actual LLM call is a dependency that should be injected:</p>
+<ul><li><p>In tests: mock function returns deterministic responses</p></li><li><p>In production: wraps the MCP client or direct API call</p></li><li><p>In BendScript (future): wraps a browser-side LLM call</p></li></ul>
+<p>This also means the Deliberator is <strong>model-agnostic</strong> — it works with any LLM that accepts text prompts and returns text responses.</p>
+<h4 id="blk-20463">Why not use Deliberatic for everything?</h4>
+<p>Deliberatic requires:</p>
+<ul><li><p>Multiple agents submitting independent positions</p></li><li><p>Byzantine fault tolerance overhead</p></li><li><p>Evidence chain construction</p></li><li><p>Constitutional constraint checking</p></li><li><p>Moderator election</p></li></ul>
+<p>For a single agent reasoning through a 4-node cycle, this is ~50x more overhead than needed. The Deliberator is the fast path: one agent, focused prompts, write-back. Deliberatic is the escalation path when the fast path fails.</p>
+<h4 id="blk-20477">Why write conclusions back to the graph?</h4>
+<p>Three reasons:</p>
+<ol><li><p><strong>Performance:</strong> Avoids re-deliberating the same cycle on every query</p></li><li><p><strong>Learning:</strong> The graph accumulates knowledge from deliberation, not just from external inputs</p></li><li><p><strong>Epistemic honesty:</strong> The conclusion is a node with confidence and provenance. It can be questioned, contradicted, and decayed — unlike ephemeral chain-of-thought that disappears after the conversation</p></li></ol>
+<h4 id="blk-20486">How does this relate to the Consolidator?</h4>
+<p>The Consolidator already handles:</p>
+<ul><li><p>Confidence decay (unused knowledge fades)</p></li><li><p>Pruning (low-confidence, old, unused nodes removed)</p></li><li><p>Merging (duplicate/near-duplicate nodes consolidated)</p></li></ul>
+<p>Deliberator conclusions participate in all of these. The Consolidator doesn't need to know about the Deliberator — it just sees nodes with metadata. The <code>derived_by: :deliberator</code> metadata is for provenance tracking, not special-case logic.</p>
+<p><strong>Future (not in scope for v1):</strong> The Consolidator could become κ-aware — preferring to prune nodes that don't break SCCs (preserving feedback loop integrity) and merging conclusion nodes that cover the same SCC.</p>
+<h4 id="blk-20497">Thread safety</h4>
+<p>The Deliberator runs as a task under the calling process (Retriever or MCP handler). Multiple deliberations can run concurrently on different SCCs. Graph writes (crystallization) go through the Store, which handles SQLite serialization. No additional locking needed — the Store is the synchronization point.</p>
+<p><strong>Concurrent deliberation on overlapping SCCs:</strong> If two queries trigger deliberation on SCCs that share nodes, they may produce conflicting conclusion nodes. SQLite serialization prevents data corruption but not semantic conflicts. For v1, this is acceptable — the Consolidator's merge/prune cycle will eventually resolve duplicates. For v2, consider a per-SCC deliberation lock (e.g., an ETS-based advisory lock keyed by SCC node set hash) to serialize deliberation on the same region.</p>
+<h4 id="blk-20500">Cost model</h4>
+<p>Deliberation involves LLM calls. Each focused pass and the reconciliation pass are separate LLM invocations. The cost scales with κ and SCC size:</p>
+<pre><code>Per-SCC cost estimate:
+  focused_passes = min(num_fault_lines × 2, budget.max_iterations)
+  reconciliation = 1
+  total_llm_calls = focused_passes + reconciliation
+
+  Per-call token estimate:
+    input  ≈ partition_nodes × avg_node_content_tokens + prompt_template_tokens
+    output ≈ 200-500 tokens (conclusion + confidence + reasoning)
+
+  Example (κ=1 SCC, 5 nodes, ~200 tokens/node):
+    focused_passes = 2
+    reconciliation = 1
+    total_calls = 3
+    input_tokens_per_call ≈ 5 × 200 + 300 = 1,300
+    output_tokens_per_call ≈ 400
+    total_tokens ≈ 3 × 1,700 = ~5,100 tokens
+
+  Example (κ=2 SCC, 10 nodes):
+    total_calls = 5 (4 focused + 1 reconciliation)
+    total_tokens ≈ 5 × 2,300 = ~11,500 tokens</code></pre>
+<p>At current API prices (~$3/M input, ~$15/M output for frontier models), a single deliberation costs $0.01-$0.05. This is acceptable for explicit <code>deliberate</code> calls but adds up fast with auto-deliberation on every retrieval. <strong>This is why auto-deliberation is OFF by default.</strong></p>
+<p>The Attention Engine (ATTENTION_ENGINE_PROMPT.md) adds budget constraints that cap deliberation frequency. The telemetry events (§3.5) should include token counts for cost tracking.</p>
+<h4 id="blk-20505">Convergence properties</h4>
+<p>The Deliberator does not guarantee convergence. LLM responses are stochastic — focused passes on different partitions may produce irreconcilable conclusions. The convergence check (confidence ≥ threshold) is necessary but not sufficient.</p>
+<p><strong>Known failure modes:</strong></p>
+<ol><li><p><strong>Persistent divergence:</strong> Partitions produce contradictory conclusions that reconciliation can't resolve. Capped by <code>max_iterations</code>, then escalates.</p></li><li><p><strong>Hallucination in focused pass:</strong> LLM invents facts not present in the partition context. Mitigated by strict prompt scoping (only partition nodes in context) and confidence calibration.</p></li><li><p><strong>Confidence inflation:</strong> LLM reports high confidence on wrong conclusions. Mitigated by the Consolidator's eventual decay and by outcome grounding via <code>learn_from_outcome</code>.</p></li><li><p><strong>Cascading wrong conclusions:</strong> A crystallized conclusion that's wrong gets used in future retrievals, compounding the error. Mitigated by confidence decay and re-deliberation when contradicting evidence appears.</p></li></ol>
+<p>These are inherent to LLM-based reasoning and not unique to this architecture. The Deliberator's advantage is that failures are <strong>traceable</strong> (provenance metadata on conclusion nodes) and <strong>correctable</strong> (conclusion nodes participate in normal confidence decay/contradiction cycles).</p>
+<h4 id="blk-20518">Evaluation baseline (needed before claiming product effect)</h4>
+<p>Gate D (&quot;Product Effect&quot;) in KAPPA_BUILD_PROMPT requires &quot;directional improvement with logged evidence.&quot; To measure this, establish baselines BEFORE implementing the Deliberator:</p>
+<ol><li><p><strong>Assemble eval set:</strong> 20-30 queries that touch circular knowledge regions (manually identified or auto-detected via κ &gt; 0 on existing graph data)</p></li><li><p><strong>Baseline:</strong> Run each query through standard <code>retrieve_context</code> (no topology, no deliberation). Record answer quality via human eval (1-5 coherence, 1-5 completeness)</p></li><li><p><strong>Treatment:</strong> Run same queries with κ-routed deliberation. Same eval criteria.</p></li><li><p><strong>Metric:</strong> Mean coherence improvement on circular queries. Target: ≥ 0.5 point improvement on 5-point scale.</p></li></ol>
+<p>This baseline must exist before the Deliberator is claimed to work. Telemetry alone is necessary but not sufficient — it measures that the system runs, not that it reasons better.</p>
+<h3 id="blk-20530">9. BendScript Visualization (Future — Path 2 Extension)</h3>
+<p>After Path 2 of KAPPA_BUILD_PROMPT is complete (SCC halos, κ badges), extend BendScript to visualize deliberation:</p>
+<h4 id="blk-20532">9.1 Deliberation Animation</h4>
+<p>When deliberation runs on a visible SCC:</p>
+<ol><li><p><strong>Partition highlight:</strong> Each partition gets a different tint within the SCC halo</p></li><li><p><strong>Focus sweep:</strong> During each focused pass, the active partition's nodes pulse brighter</p></li><li><p><strong>Fault-line glow:</strong> The fault-line edge being examined pulses with a distinct color</p></li><li><p><strong>Conclusion node appearance:</strong> New conclusion node fades in at the SCC centroid with a &quot;crystallize&quot; animation (expanding ring)</p></li><li><p><strong>κ badge update:</strong> Badge value updates after crystallization</p></li></ol>
+<h4 id="blk-20545">9.2 Deliberation HUD</h4>
+<p>Extend the HUD (from KAPPA_BUILD_PROMPT Task 2.3):</p>
+<pre><code>κ: 2 | SCCs: 1 | mode: DELIBERATING (pass 2/3, scc-0)</code></pre>
+<p>After convergence:</p>
+<pre><code>κ: 2 | SCCs: 1 | mode: CRYSTALLIZED (scc-0 → confidence: 0.84)</code></pre>
+<h4 id="blk-20550">9.3 Manual Deliberation Trigger</h4>
+<p>Add to context menu on SCC nodes:</p>
+<ul><li><p><strong>&quot;Deliberate — Reason Through Loop&quot;</strong> — triggers deliberation on the containing SCC</p></li><li><p>Shows progress in HUD</p></li><li><p>Conclusion node appears on canvas when done</p></li></ul>
+<p><em>This is documented here for context but should NOT be built until Paths 1 and 2 from KAPPA_BUILD_PROMPT are working and the Elixir Deliberator is passing all gates.</em></p>
+<p><em>Companion to: `KAPPA_BUILD_PROMPT.md` (κ computation + visualization). This prompt builds the deliberation loop that κ triggers. Together they form the complete system: detect topology → route → deliberate → crystallize → the graph learns from its own reasoning.</em></p>
+<p><em>Reference documents: `graphonomous.com/project_spec/kappa_integration_spec.md`, `graphonomous.com/project_spec/kappa_theory_applied.md`, `deliberatic.com/project_spec/README.md`, `agentromatic.com/project_spec/README.md`, `opensentience.org/project_spec/README.md`.</em></p></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/prompts/KAPPA_DELIBERATOR_PROMPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-20176" class="lvl2">0. The One-Sentence Idea</a><a href="#blk-20178" class="lvl2">1. Why This Exists (The Gap)</a><a href="#blk-20208" class="lvl3">Relationship to Deliberatic</a><a href="#blk-20212" class="lvl2">1.1 Current API Conventions (READ BEFORE IMPLEMENTING)</a><a href="#blk-20228" class="lvl2">2. Architecture</a><a href="#blk-20229" class="lvl3">2.1 The Deliberation Loop</a><a href="#blk-20231" class="lvl3">2.2 Core Insight: Fault Lines Are Prompt Boundaries</a><a href="#blk-20236" class="lvl3">2.3 Graph Crystallization</a><a href="#blk-20242" class="lvl3">2.4 Escalation Rules</a><a href="#blk-20256" class="lvl2">3. What to Build</a><a href="#blk-20257" class="lvl3">3.1 Module: Graphonomous.Deliberator</a><a href="#blk-20260" class="lvl4">3.1.1 Public API</a><a href="#blk-20262" class="lvl4">3.1.2 Internal Functions</a><a href="#blk-20271" class="lvl4">3.1.3 The Loop (putting it together)</a><a href="#blk-20273" class="lvl3">3.2 MCP Tool: Deliberate</a><a href="#blk-20283" class="lvl3">3.3 Wire into Retriever (optional auto-deliberation)</a><a href="#blk-20288" class="lvl3">3.4 [&amp;] Protocol Integration</a><a href="#blk-20295" class="lvl3">3.5 Telemetry</a><a href="#blk-20299" class="lvl2">4. The Crystallization Model (Detailed)</a><a href="#blk-20301" class="lvl3">4.1 How κ Decreases Over Time</a><a href="#blk-20325" class="lvl3">4.2 Conclusion Decay and Re-Deliberation</a><a href="#blk-20338" class="lvl3">4.3 The Consciousness Analogy</a><a href="#blk-20360" class="lvl2">5. Tests</a><a href="#blk-20361" class="lvl3">File: test/graphonomous/deliberator_test.exs</a><a href="#blk-20363" class="lvl3">File: test/graphonomous/deliberator_integration_test.exs</a><a href="#blk-20365" class="lvl2">6. File Manifest</a><a href="#blk-20366" class="lvl3">New files to create:</a><a href="#blk-20383" class="lvl3">Files to modify:</a><a href="#blk-20391" class="lvl3">Depends on (must exist first, from KAPPA_BUILD_PROMPT):</a><a href="#blk-20401" class="lvl2">7. Success Criteria</a><a href="#blk-20402" class="lvl3">Gate A — Decomposition Correctness (MUST PASS)</a><a href="#blk-20412" class="lvl3">Gate B — Prompt Scoping (MUST PASS)</a><a href="#blk-20422" class="lvl3">Gate C — Convergence Behavior (MUST PASS)</a><a href="#blk-20432" class="lvl3">Gate D — Crystallization (MUST PASS)</a><a href="#blk-20442" class="lvl3">Gate E — Integration (SHOULD PASS)</a><a href="#blk-20452" class="lvl2">8. Architectural Notes</a><a href="#blk-20453" class="lvl3">Why inject agent_fn instead of hardcoding an LLM call?</a><a href="#blk-20463" class="lvl3">Why not use Deliberatic for everything?</a><a href="#blk-20477" class="lvl3">Why write conclusions back to the graph?</a><a href="#blk-20486" class="lvl3">How does this relate to the Consolidator?</a><a href="#blk-20497" class="lvl3">Thread safety</a><a href="#blk-20500" class="lvl3">Cost model</a><a href="#blk-20505" class="lvl3">Convergence properties</a><a href="#blk-20518" class="lvl3">Evaluation baseline (needed before claiming product effect)</a><a href="#blk-20530" class="lvl2">9. BendScript Visualization (Future — Path 2 Extension)</a><a href="#blk-20532" class="lvl3">9.1 Deliberation Animation</a><a href="#blk-20545" class="lvl3">9.2 Deliberation HUD</a><a href="#blk-20550" class="lvl3">9.3 Manual Deliberation Trigger</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/prompts/ATTENTION_ENGINE_PROMPT.md/">Attention Engine — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/CODEX_GUIDE.md/">[&amp;] Ecosystem — Codex Prompt Guide</a><a href="/AmpersandBoxDesign/prompts/DUAL_LOOP_MACHINES.md/">Dual- and Triple-Loop Machine Architecture</a><a href="/AmpersandBoxDesign/prompts/GRAPHONOMOUS_PROMPT.md/">GRAPHONOMOUS_PROMPT</a><a href="/AmpersandBoxDesign/prompts/KAPPA_BUILD_PROMPT.md/">κ-Aware Routing — Build Prompt v2 for Graphonomous + BendScript</a><a href="/AmpersandBoxDesign/prompts/MODEL_TIER_PROMPT.md/">Model Tier Adaptation — Build Prompt v1</a><a href="/AmpersandBoxDesign/prompts/PROTOCOL_PROMPT.md/">[&amp;] Protocol — Zed AI Coder Prompt</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierat56w6qa3zuwz7hlwfqybqha4es6rlracigkl2bcib345ols5mvya</div></div></div>
+</div></div>
+</body></html>

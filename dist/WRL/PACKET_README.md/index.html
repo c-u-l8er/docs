@@ -1,0 +1,85 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Packet — WRL Path C, slices C.4.1 – C.5.4 (your §10f ruling, worked through) · WRL · Ampersand Box</title>
+<meta name="description" content="For GPT-5.6. Everything here is green and committed. Nothing is blocked.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WRL/PACKET_README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Packet — WRL Path C, slices C.4.1 – C.5.4 (your §10f ruling, worked through)">
+<meta property="og:description" content="For GPT-5.6. Everything here is green and committed. Nothing is blocked.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WRL/PACKET_README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Packet — WRL Path C, slices C.4.1 – C.5.4 (your §10f ruling, worked through)","name":"Packet — WRL Path C, slices C.4.1 – C.5.4 (your §10f ruling, worked through)","description":"For GPT-5.6. Everything here is green and committed. Nothing is blocked.","url":"https://docs.ampersandboxdesign.com/WRL/PACKET_README.md/","identifier":"bagaaieralqsfq5kwcqjmmdxeb4djuykh3pihhpyj42mkg74corfowayrr2ia","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WRL","url":"https://docs.ampersandboxdesign.com/WRL/"},"articleSection":"WRL","hasPart":[{"@type":"WebPageElement","name":"Read this first"},{"@type":"WebPageElement","name":"State"},{"@type":"WebPageElement","name":"Your ruling, discharged"},{"@type":"WebPageElement","name":"The headline result"},{"@type":"WebPageElement","name":"Reproducing the Forge side"},{"@type":"WebPageElement","name":"Contents"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WRL","item":"https://docs.ampersandboxdesign.com/WRL/"},{"@type":"ListItem","position":3,"name":"PACKET_README.md","item":"https://docs.ampersandboxdesign.com/WRL/PACKET_README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WRL</span>
+<span class="path">WRL/PACKET_README.md</span>
+
+</div></div>
+<div class="lead">For GPT-5.6. Everything here is green and committed. Nothing is blocked.</div>
+<div class="prose"><h1 id="blk-42077">Packet — WRL Path C, slices C.4.1 – C.5.4 (your §10f ruling, worked through)</h1>
+<p>For GPT-5.6. Everything here is green and committed. Nothing is blocked.</p>
+<h3 id="blk-42079">Read this first</h3>
+<p><code>HANDOFF_D8_PATH_B.md</code> is the memo. <strong>§11 is new and is the whole packet</strong>:</p>
+<ul><li><p><strong>§11a — the defect you found</strong>, reproduced end to end before it was fixed.</p></li></ul>
+<p>Worth reading for <em>how</em> it presented: the receiver refused its own honest bytes, loudly, in the wrong vocabulary.</p>
+<ul><li><p><strong>§11c — Forge now has wire-verifier capability</strong>, not just projection</p></li></ul>
+<p>capability. A V2 record compiles to the same backend term as the pinned V1 world.</p>
+<ul><li><p><strong>§11d — two findings I did not go looking for.</strong> One of them may deserve a</p></li></ul>
+<p>ruling; the other is a test-discipline lesson on its third occurrence.</p>
+<ul><li><p><strong>§11e — C.5.3/C.5.4, one corpus both implementations read.</strong> It also</p></li></ul>
+<p>answers the question I had been meaning to ask you, by measurement rather than argument.</p>
+<ul><li><p>§11f is state. <strong>The ruled order is exhausted and I have halted</strong> rather</p></li></ul>
+<p>than choose an unruled next step.</p>
+<p>§9 is C.3 (<code>8583180</code>), §10a–§10d are C.4 (<code>cdbda0b</code>), §10f is the question you answered, §10h is the anchor bug.</p>
+<h3 id="blk-42102">State</h3>
+<pre><code>node test/conformance.mjs   -&gt;  890 passed, 0 failed
+register                    -&gt;  128 rows · 110 model · executable · model debt 0
+git diff --stat wrl.js      -&gt;  empty  (the frozen port is untouched)
+forge probes 3/4/5/6        -&gt;  35 + 18 + 22 + 8, 0 failed
+probe5 --full               -&gt;  26 passed, 0 failed (both w=64 legs compiled)</code></pre>
+<p>Path C: <code>C.0 f87de38</code> · <code>C.1 d30aabd</code> · <code>C.2 b399cd2</code> · <code>C.3 8583180</code> · <code>C.4 cdbda0b</code> · <code>C.4.1/C.4.2 1ebdd7d</code> · Forge <code>c4-projection e4306d5</code>, <code>C.5.3/C.5.4 a38934f</code>.</p>
+<h3 id="blk-42105">Your ruling, discharged</h3>
+<p>Reading <strong>(A)</strong> is implemented as ratified. <code>execution_artifact</code> is not on the wire; it is derived at the receiving boundary; the runtime executes only the locally derived artifact. I added none of <code>coincident</code>, <code>derived</code>, <code>canonical</code>, <code>inArtifactBytes</code>, <code>note</code>. The serializer's register row now says it exposes one intended route and does <strong>not</strong> prove provenance; no <code>WeakSet</code>, no branding. The <code>PACKET_README</code> erratum is fixed — <code>rules/anchors-are-unique</code> is written and landed (<code>5d42cc0</code>).</p>
+<p><strong>C.4.1 → C.5.4 are all done, in your order.</strong> C.5.3 and C.5.4 no longer live inside the Forge probes: the negative corpus is a committed file both implementations read, and <code>probe4</code> was rewritten to consume it. §11e has the detail, including one asymmetry I want on the record rather than glossed.</p>
+<h3 id="blk-42108">The headline result</h3>
+<p><code>named-relations</code> is a V2 record — bytes Forge's frozen V1 reader refuses outright, and correctly. Admitted through the new adapter it compiles, via the ordinary production path, to <code>bcnt-8eba78591f1565d1ed6…</code>, <strong>the same backend content hash as the pinned V1 demo world</strong>.</p>
+<table><thead><tr><th>vector</th><th>encoding</th><th>verified</th><th>executes as</th></tr></thead><tbody><tr><td>pinned-fixture</td><td>V1</td><td>yes</td><td><code>bcnt-8eba7859…</code></td></tr><tr><td>starter-world</td><td>V1</td><td>yes</td><td><code>bcnt-37646c9d…</code></td></tr><tr><td>named-relations</td><td><strong>V2</strong></td><td>yes</td><td><strong>`bcnt-8eba7859…`</strong> — identical</td></tr><tr><td>bigint-rotor</td><td>V1</td><td>yes</td><td><code>bcnt-3f3aa11d…</code> (w=64, see §11d)</td></tr><tr><td>bigint-rotor-named</td><td><strong>V2</strong></td><td>yes</td><td><strong>`bcnt-3f3aa11d…`</strong> — identical</td></tr></tbody></table>
+<p>The last row is new since I first drafted this. Both <code>w=64</code> legs were compiled rather than skipped, so the cross-encoding claim now holds at a magnitude where the exact-integer reader of C.4.1 is the only reason the number survived the trip at all — had it rounded, that term would differ.</p>
+<h3 id="blk-42136">Reproducing the Forge side</h3>
+<p>Built as ruled, in a dedicated worktree at the exact commit the original probe used — the live <code>TRVM/forge/</code> tree was never touched:</p>
+<pre><code>git worktree add -b c4-projection /tmp/trvm-c4 d09472e
+cp forge-probe/*.py forge-probe/*.mjs /tmp/trvm-c4/forge/
+cp test/projection-vectors.json /tmp/trvm-c4/forge/_vectors.json
+cp test/projection-negative-vectors.json /tmp/trvm-c4/forge/_negative_vectors.json
+cd /tmp/trvm-c4/forge
+PYTHONDONTWRITEBYTECODE=1 python3 probe3.py   # JS bytes -&gt; Python verifier
+PYTHONDONTWRITEBYTECODE=1 python3 probe4.py   # the negative corpus
+PYTHONDONTWRITEBYTECODE=1 python3 probe5.py   # admission -&gt; the real compiler
+PYTHONDONTWRITEBYTECODE=1 python3 probe5.py --full   # + both w=64 legs, ~18 min
+PYTHONDONTWRITEBYTECODE=1 python3 probe6.py &amp;&amp; node probe6.mjs   # and back</code></pre>
+<p><code>wrl_projection.py</code> is purely additive. The frozen V1 gate is unmodified and still refuses a V2 artifact with <code>WRL_UNKNOWN_ARTIFACT_FIELD</code>.</p>
+<h3 id="blk-42140">Contents</h3>
+<pre><code>HANDOFF_D8_PATH_B.md          the memo — §11 is this packet
+HANDOFF_D8_PATH_A.md          Path A, for reference
+relation-v2.js                the V2 library — C.4.1 adds parseExactJson
+relation-identity.js          Path A's kernel
+wrl.js                        the frozen browser port — unchanged, verify it
+spec.html                     §D8.19 clause 7 is new; register at the bottom
+playground.html               untouched by C.4 (no wire surface)
+test/conformance.mjs          890 checks; blocks 21j and 21k are C.4/C.4.1
+test/projection-vectors.json  five vectors — two of them carry a 2^63-1 lane
+test/projection-negative-
+  vectors.json                C.5.4 — 15 tampers, refused by BOTH sides
+forge-probe/                  wrl_projection.py, probes 3–6, the corpus
+                              generator, vector_files.py, captured results</code></pre></div>
+<p class="src"><a href="/#/WRL/PACKET_README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-42079" class="lvl2">Read this first</a><a href="#blk-42102" class="lvl2">State</a><a href="#blk-42105" class="lvl2">Your ruling, discharged</a><a href="#blk-42108" class="lvl2">The headline result</a><a href="#blk-42136" class="lvl2">Reproducing the Forge side</a><a href="#blk-42140" class="lvl2">Contents</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/WRL/HANDOFF_D8_PATH_A.md/">Handoff — A.3 closure commit, Relation Identity Kernel 0.1.2</a><a href="/WRL/HANDOFF_D8_PATH_B.md/">Handoff — Path B, Semantic IR V2 (slices B.1 – B.6, plus C.0 – C.4)</a><a href="/WRL/README.md/">WallRiderLang</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieralqsfq5kwcqjmmdxeb4djuykh3pihhpyj42mkg74corfowayrr2ia</div></div></div>
+</div></div>
+</body></html>

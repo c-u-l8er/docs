@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Skill 02 — Agent Lifecycle · opensentience.org · Ampersand Box</title>
+<meta name="description" content="Every governed agent has a lifecycle. The state machine ensures agents cannot skip steps — you cannot run an agent that has not been enabled, and you…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/02_AGENT_LIFECYCLE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill 02 — Agent Lifecycle">
+<meta property="og:description" content="Every governed agent has a lifecycle. The state machine ensures agents cannot skip steps — you cannot run an agent that has not been enabled, and you…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/02_AGENT_LIFECYCLE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 02 — Agent Lifecycle","name":"Skill 02 — Agent Lifecycle","description":"Every governed agent has a lifecycle. The state machine ensures agents cannot skip steps — you cannot run an agent that has not been enabled, and you…","url":"https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/02_AGENT_LIFECYCLE.md/","identifier":"bagaaierakkvdsvualg75s3hlmqplbreu5hwqxjx6sakw3pdrngpzycljiyqq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"Why This Matters"},{"@type":"WebPageElement","name":"The State Machine"},{"@type":"WebPageElement","name":"States"},{"@type":"WebPageElement","name":"Valid Transitions"},{"@type":"WebPageElement","name":"agent_install — Registering an Agent"},{"@type":"WebPageElement","name":"Manifest Schema"},{"@type":"WebPageElement","name":"What Happens on Install"},{"@type":"WebPageElement","name":"Denied Permissions"},{"@type":"WebPageElement","name":"agent_enable — Starting the Agent"},{"@type":"WebPageElement","name":"agent_disable — Stopping the Agent"},{"@type":"WebPageElement","name":"Graceful Stop"},{"@type":"WebPageElement","name":"Emergency Stop"},{"@type":"WebPageElement","name":"GenStateMachine Internals"},{"@type":"WebPageElement","name":"Common Lifecycle Patterns"},{"@type":"WebPageElement","name":"Install-and-Observe"},{"@type":"WebPageElement","name":"Temporary Agent"},{"@type":"WebPageElement","name":"Rolling Restart"},{"@type":"WebPageElement","name":"Querying State"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/"},{"@type":"ListItem","position":5,"name":"02_AGENT_LIFECYCLE.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/skills/02_AGENT_LIFECYCLE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">opensentience.org</span>
+<span class="path">opensentience.org/docs/skills/02_AGENT_LIFECYCLE.md</span>
+
+</div></div>
+<div class="lead">Every governed agent has a lifecycle. The state machine ensures agents cannot skip steps — you cannot run an agent that has not been enabled, and you cannot remove an agent that…</div>
+<div class="prose"><h1 id="blk-74874">Skill 02 — Agent Lifecycle</h1>
+<blockquote><p>Managing agent lifecycle: the state machine, transitions, and GenStateMachine internals.</p></blockquote>
+<h3 id="blk-74877">Why This Matters</h3>
+<p>Every governed agent has a lifecycle. The state machine ensures agents cannot skip steps — you cannot run an agent that has not been enabled, and you cannot remove an agent that is still running. This prevents orphaned processes, ungoverned execution, and permission leaks.</p>
+<h3 id="blk-74879">The State Machine</h3>
+<pre><code>installed --&gt; enabled --&gt; running
+                ^          |
+                |          v
+                +--- enabled (stop)
+                       |
+                       v
+                    disabled --&gt; removed</code></pre>
+<h4 id="blk-74881">States</h4>
+<table><thead><tr><th>State</th><th>Meaning</th><th>Process Running?</th></tr></thead><tbody><tr><td><code>installed</code></td><td>Registered with permissions, awaiting activation</td><td>No</td></tr><tr><td><code>enabled</code></td><td>Supervised process started</td><td>Yes (idle or working)</td></tr><tr><td><code>running</code></td><td>Actively executing a task</td><td>Yes</td></tr><tr><td><code>disabled</code></td><td>Process stopped, can be re-enabled</td><td>No</td></tr><tr><td><code>removed</code></td><td>Fully deregistered, permissions cleared</td><td>No</td></tr></tbody></table>
+<h4 id="blk-74901">Valid Transitions</h4>
+<table><thead><tr><th>From</th><th>To</th><th>Trigger</th><th>Tool</th></tr></thead><tbody><tr><td><code>installed</code></td><td><code>enabled</code></td><td>Operator activates agent</td><td><code>agent_enable</code></td></tr><tr><td><code>enabled</code></td><td><code>running</code></td><td>Agent begins work</td><td>Automatic</td></tr><tr><td><code>running</code></td><td><code>enabled</code></td><td>Agent completes work</td><td>Automatic</td></tr><tr><td><code>enabled</code></td><td><code>disabled</code></td><td>Operator stops agent</td><td><code>agent_disable</code></td></tr><tr><td><code>running</code></td><td><code>disabled</code></td><td>Operator force-stops agent</td><td><code>agent_disable(force: true)</code></td></tr><tr><td><code>disabled</code></td><td><code>enabled</code></td><td>Operator re-activates</td><td><code>agent_enable</code></td></tr><tr><td><code>disabled</code></td><td><code>removed</code></td><td>Operator deregisters</td><td><code>agent_remove</code></td></tr></tbody></table>
+<p>Invalid transitions (e.g., <code>installed</code> directly to <code>running</code>, or <code>removed</code> to any state) are rejected by the GenStateMachine.</p>
+<h3 id="blk-74936">agent_install — Registering an Agent</h3>
+<h4 id="blk-74937">Manifest Schema</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;agent_id&quot;</span>: <span class="t-string">&quot;my-worker&quot;</span>,
+  <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;My Worker Agent&quot;</span>,
+  <span class="t-key">&quot;child_spec&quot;</span>: {<span class="t-key">&quot;module&quot;</span>: <span class="t-string">&quot;MyApp.Worker&quot;</span>, <span class="t-key">&quot;args&quot;</span>: []},
+  <span class="t-key">&quot;permissions&quot;</span>: {
+    <span class="t-key">&quot;granted&quot;</span>: [
+      {<span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;filesystem&quot;</span>, <span class="t-key">&quot;access&quot;</span>: <span class="t-string">&quot;read&quot;</span>, <span class="t-key">&quot;resource&quot;</span>: <span class="t-string">&quot;/data/**&quot;</span>}
+    ],
+    <span class="t-key">&quot;denied&quot;</span>: [
+      {<span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;filesystem&quot;</span>, <span class="t-key">&quot;access&quot;</span>: <span class="t-string">&quot;write&quot;</span>, <span class="t-key">&quot;resource&quot;</span>: <span class="t-string">&quot;/etc/**&quot;</span>}
+    ]
+  },
+  <span class="t-key">&quot;metadata&quot;</span>: {
+    <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;1.0.0&quot;</span>,
+    <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;agentelic&quot;</span>
+  }
+}</code></pre>
+<h4 id="blk-74939">What Happens on Install</h4>
+<ol><li><p>PermissionEngine writes grants and denials to ETS</p></li><li><p>AgentSupervisor starts a new AgentLifecycle GenStateMachine</p></li><li><p>Initial state is set to <code>:installed</code></p></li><li><p>AuditWriter logs the install event with full manifest</p></li></ol>
+<h4 id="blk-74949">Denied Permissions</h4>
+<p>Explicit denials take precedence over grants. If you grant <code>filesystem:read:/data/**</code> but deny <code>filesystem:read:/data/secrets/**</code>, the denial wins for any path matching <code>/data/secrets/**</code>.</p>
+<h3 id="blk-74951">agent_enable — Starting the Agent</h3>
+<pre><code>agent_enable(agent_id: &quot;my-worker&quot;)</code></pre>
+<ol><li><p>GenStateMachine validates the transition (must be in <code>installed</code> or <code>disabled</code>)</p></li><li><p>The wrapped <code>child_spec</code> is started under AgentSupervisor</p></li><li><p>State transitions to <code>enabled</code></p></li><li><p>Audit entry is written</p></li><li><p>AutonomyController sets default level (<code>observe</code>) if not already set</p></li></ol>
+<h3 id="blk-74964">agent_disable — Stopping the Agent</h3>
+<h4 id="blk-74965">Graceful Stop</h4>
+<pre><code>agent_disable(agent_id: &quot;my-worker&quot;)</code></pre>
+<ol><li><p>Sends a shutdown signal to the wrapped process</p></li><li><p>Waits for configurable timeout (default 5 seconds)</p></li><li><p>If process exits cleanly, state transitions to <code>disabled</code></p></li><li><p>Audit entry records graceful shutdown</p></li></ol>
+<h4 id="blk-74976">Emergency Stop</h4>
+<pre><code>agent_disable(agent_id: &quot;my-worker&quot;, force: true)</code></pre>
+<ol><li><p>Immediately kills the wrapped process (<code>:kill</code> signal)</p></li><li><p>State transitions to <code>disabled</code></p></li><li><p>Audit entry records forced shutdown with reason</p></li></ol>
+<h3 id="blk-74985">GenStateMachine Internals</h3>
+<p>Each AgentLifecycle is a <code>gen_statem</code> process with the following structure:</p>
+<ul><li><p><strong>State data:</strong> agent_id, child_spec, current PID (when running), metadata</p></li><li><p><strong>Callbacks:</strong> <code>handle_event/4</code> for each valid transition</p></li><li><p><strong>Invalid transitions:</strong> return <code>{:keep_state_and_data, []}</code> with an error</p></li></ul>
+<p>logged to the audit trail</p>
+<ul><li><p><strong>Crash handling:</strong> if the wrapped process crashes, the AgentLifecycle</p></li></ul>
+<p>transitions back to <code>enabled</code> (not <code>disabled</code>) and the DynamicSupervisor restart strategy applies</p>
+<h3 id="blk-74999">Common Lifecycle Patterns</h3>
+<h4 id="blk-75000">Install-and-Observe</h4>
+<p>The most conservative pattern. Install the agent, enable it at <code>observe</code> level, review its recommendations in the audit trail, then gradually promote to <code>advise</code> and <code>act</code>.</p>
+<pre><code>agent_install(manifest) --&gt; agent_enable(agent_id) --&gt; review audit --&gt; autonomy_level(advise) --&gt; review --&gt; autonomy_level(act)</code></pre>
+<h4 id="blk-75003">Temporary Agent</h4>
+<p>Install, enable, run a specific task, disable, remove. Useful for one-off jobs that should not persist.</p>
+<pre><code>agent_install --&gt; agent_enable --&gt; (task completes) --&gt; agent_disable --&gt; agent_remove</code></pre>
+<h4 id="blk-75006">Rolling Restart</h4>
+<p>Disable the agent, update its child_spec or permissions, re-enable.</p>
+<pre><code>agent_disable --&gt; (update config) --&gt; agent_enable</code></pre>
+<h3 id="blk-75009">Querying State</h3>
+<pre><code>agent_status(agent_id: &quot;my-worker&quot;)</code></pre>
+<p>Returns:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;agent_id&quot;</span>: <span class="t-string">&quot;my-worker&quot;</span>,
+  <span class="t-key">&quot;state&quot;</span>: <span class="t-string">&quot;enabled&quot;</span>,
+  <span class="t-key">&quot;autonomy_level&quot;</span>: <span class="t-string">&quot;observe&quot;</span>,
+  <span class="t-key">&quot;permissions_granted&quot;</span>: <span class="t-num">3</span>,
+  <span class="t-key">&quot;permissions_denied&quot;</span>: <span class="t-num">1</span>,
+  <span class="t-key">&quot;installed_at&quot;</span>: <span class="t-string">&quot;2026-01-15T10:30:00Z&quot;</span>,
+  <span class="t-key">&quot;last_transition&quot;</span>: <span class="t-string">&quot;2026-01-15T10:31:00Z&quot;</span>
+}</code></pre></div>
+<p class="src"><a href="/#/opensentience.org/docs/skills/02_AGENT_LIFECYCLE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-74877" class="lvl2">Why This Matters</a><a href="#blk-74879" class="lvl2">The State Machine</a><a href="#blk-74881" class="lvl3">States</a><a href="#blk-74901" class="lvl3">Valid Transitions</a><a href="#blk-74936" class="lvl2">agent_install — Registering an Agent</a><a href="#blk-74937" class="lvl3">Manifest Schema</a><a href="#blk-74939" class="lvl3">What Happens on Install</a><a href="#blk-74949" class="lvl3">Denied Permissions</a><a href="#blk-74951" class="lvl2">agent_enable — Starting the Agent</a><a href="#blk-74964" class="lvl2">agent_disable — Stopping the Agent</a><a href="#blk-74965" class="lvl3">Graceful Stop</a><a href="#blk-74976" class="lvl3">Emergency Stop</a><a href="#blk-74985" class="lvl2">GenStateMachine Internals</a><a href="#blk-74999" class="lvl2">Common Lifecycle Patterns</a><a href="#blk-75000" class="lvl3">Install-and-Observe</a><a href="#blk-75003" class="lvl3">Temporary Agent</a><a href="#blk-75006" class="lvl3">Rolling Restart</a><a href="#blk-75009" class="lvl2">Querying State</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a><a href="/opensentience.org/docs/skills/SKILLS.md/">OpenSentience — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/docs/skills/01_PROTOCOLS_OVERVIEW.md/">Skill 01 — The Ten Protocols</a><a href="/opensentience.org/docs/skills/03_PERMISSIONS.md/">Skill 03 — Permissions</a><a href="/opensentience.org/docs/skills/04_AUTONOMY_LEVELS.md/">Skill 04 — Autonomy Levels</a><a href="/opensentience.org/docs/skills/05_AUDIT_TRAILS.md/">Skill 05 — Audit Trails</a><a href="/opensentience.org/docs/skills/06_INTEGRATION.md/">Skill 06 — Integration</a><a href="/opensentience.org/docs/skills/07_COGNITIVE_SCIENCE.md/">Skill 07 — Cognitive Science Foundations</a><a href="/opensentience.org/docs/skills/08_ANTI_PATTERNS.md/">Skill 08 — Anti-Patterns</a><a href="/opensentience.org/docs/skills/SKILLS.md/">OpenSentience — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierakkvdsvualg75s3hlmqplbreu5hwqxjx6sakw3pdrngpzycljiyqq</div></div></div>
+</div></div>
+</body></html>

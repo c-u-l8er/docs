@@ -1,0 +1,134 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Skill 08 — Provider Implementation · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="Capabilities are interfaces. Providers are implementations. The protocol is only as useful as the providers that satisfy its contracts. This file teaches…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill 08 — Provider Implementation">
+<meta property="og:description" content="Capabilities are interfaces. Providers are implementations. The protocol is only as useful as the providers that satisfy its contracts. This file teaches…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Skill 08 — Provider Implementation","name":"Skill 08 — Provider Implementation","description":"Capabilities are interfaces. Providers are implementations. The protocol is only as useful as the providers that satisfy its contracts. This file teaches…","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/","identifier":"bagaaierayuzxfybgke6wqyuihvg4sbeb2yqjjxeylkkef62xl3rzoyvo76xa","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why This Matters"},{"@type":"WebPageElement","name":"The Provider Concept"},{"@type":"WebPageElement","name":"Contract Conformance Requirements"},{"@type":"WebPageElement","name":"1. Implement all declared operations"},{"@type":"WebPageElement","name":"2. Accept the declared input types"},{"@type":"WebPageElement","name":"3. Produce the declared output types"},{"@type":"WebPageElement","name":"4. Respect accepts_from / feeds_into"},{"@type":"WebPageElement","name":"5. Expose operations via MCP transport"},{"@type":"WebPageElement","name":"MCP Transport Binding"},{"@type":"WebPageElement","name":"Tool registration"},{"@type":"WebPageElement","name":"Resource registration (optional)"},{"@type":"WebPageElement","name":"Provider Registration"},{"@type":"WebPageElement","name":"Registry entry format"},{"@type":"WebPageElement","name":"Testing Provider Conformance"},{"@type":"WebPageElement","name":"Contract validation"},{"@type":"WebPageElement","name":"Integration testing"},{"@type":"WebPageElement","name":"Common Implementation Patterns"},{"@type":"WebPageElement","name":"Pattern 1: Thin MCP wrapper"},{"@type":"WebPageElement","name":"Pattern 2: Multi-capability provider"},{"@type":"WebPageElement","name":"Pattern 3: Stateless operation provider"},{"@type":"WebPageElement","name":"Pattern 4: Provider with feedback loop"},{"@type":"WebPageElement","name":"Checklist: Shipping a New Provider"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/"},{"@type":"ListItem","position":5,"name":"08_PROVIDER_IMPLEMENTATION.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md</span>
+
+</div></div>
+<div class="lead">Capabilities are interfaces. Providers are implementations. The protocol is only as useful as the providers that satisfy its contracts. This file teaches you how to build one.</div>
+<div class="prose"><h1 id="blk-16982">Skill 08 — Provider Implementation</h1>
+<blockquote><p>How to build a provider that satisfies a [&amp;] Protocol capability contract. Registration, conformance testing, and MCP transport binding.</p></blockquote>
+<h3 id="blk-16985">Why This Matters</h3>
+<p>Capabilities are interfaces. Providers are implementations. The protocol is only as useful as the providers that satisfy its contracts. This file teaches you how to build one.</p>
+<h3 id="blk-16987">The Provider Concept</h3>
+<p>A provider is a service that implements one or more capability contracts. The [&amp;] Protocol ecosystem includes default providers:</p>
+<table><thead><tr><th>Provider</th><th>Capabilities Provided</th></tr></thead><tbody><tr><td>Graphonomous</td><td><code>&amp;memory.graph</code>, <code>&amp;memory.episodic</code>, <code>&amp;reason.deliberate</code>, <code>&amp;reason.attend</code></td></tr><tr><td>TickTickClock</td><td><code>&amp;time.anomaly</code>, <code>&amp;time.forecast</code>, <code>&amp;time.pattern</code>, <code>&amp;time.baseline</code></td></tr><tr><td>GeoFleetic</td><td><code>&amp;space.fleet</code>, <code>&amp;space.geofence</code>, <code>&amp;space.route</code>, <code>&amp;space.region</code></td></tr><tr><td>Deliberatic</td><td><code>&amp;reason.argument</code>, <code>&amp;reason.vote</code></td></tr></tbody></table>
+<p>But any MCP-compatible service can be a provider. The protocol is provider-agnostic by design.</p>
+<h3 id="blk-17001">Contract Conformance Requirements</h3>
+<p>To satisfy a capability contract, a provider MUST:</p>
+<h4 id="blk-17003">1. Implement all declared operations</h4>
+<p>If the contract for <code>&amp;time.anomaly</code> declares <code>detect</code>, <code>enrich</code>, and <code>learn</code> operations, the provider must implement all three.</p>
+<h4 id="blk-17005">2. Accept the declared input types</h4>
+<p>Each operation specifies an <code>in</code> type. The provider must accept data conforming to that type.</p>
+<h4 id="blk-17007">3. Produce the declared output types</h4>
+<p>Each operation specifies an <code>out</code> type. The provider must return data conforming to that type.</p>
+<h4 id="blk-17009">4. Respect accepts_from / feeds_into</h4>
+<p>The provider must accept input from the types listed in <code>accepts_from</code> and produce output consumable by the types in <code>feeds_into</code>.</p>
+<h4 id="blk-17011">5. Expose operations via MCP transport</h4>
+<p>Operations are invoked as MCP tools. The provider must respond to MCP tool calls over stdio or HTTP transport.</p>
+<h3 id="blk-17013">MCP Transport Binding</h3>
+<p>Providers expose their operations as MCP tools. The binding maps contract operations to MCP tool names:</p>
+<pre><code>Contract operation    →    MCP tool name
+─────────────────────────────────────────
+detect                →    detect_anomaly
+enrich                →    enrich_context
+learn                 →    learn_observation</code></pre>
+<h4 id="blk-17016">Tool registration</h4>
+<p>When the provider starts as an MCP server, it registers tools that correspond to its contract operations:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;tools&quot;</span>: [
+    {
+      <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;detect_anomaly&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Detect anomalous events in temporal data streams.&quot;</span>,
+      <span class="t-key">&quot;inputSchema&quot;</span>: {
+        <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;object&quot;</span>,
+        <span class="t-key">&quot;properties&quot;</span>: {
+          <span class="t-key">&quot;data&quot;</span>: { <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;array&quot;</span>, <span class="t-key">&quot;items&quot;</span>: { <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;number&quot;</span> } },
+          <span class="t-key">&quot;streams&quot;</span>: { <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;array&quot;</span>, <span class="t-key">&quot;items&quot;</span>: { <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;string&quot;</span> } }
+        },
+        <span class="t-key">&quot;required&quot;</span>: [<span class="t-string">&quot;data&quot;</span>]
+      }
+    }
+  ]
+}</code></pre>
+<h4 id="blk-17019">Resource registration (optional)</h4>
+<p>Providers can also expose MCP resources for read-only state inspection:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;resources&quot;</span>: [
+    {
+      <span class="t-key">&quot;uri&quot;</span>: <span class="t-string">&quot;provider://runtime/health&quot;</span>,
+      <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;Provider Health&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Runtime health status&quot;</span>
+    }
+  ]
+}</code></pre>
+<h3 id="blk-17022">Provider Registration</h3>
+<p>To make a provider discoverable, register it in the capability registry.</p>
+<h4 id="blk-17024">Registry entry format</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;my-time-provider&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;capabilities&quot;</span>: [<span class="t-string">&quot;&amp;time.anomaly&quot;</span>, <span class="t-string">&quot;&amp;time.forecast&quot;</span>],
+  <span class="t-key">&quot;transport&quot;</span>: <span class="t-string">&quot;stdio&quot;</span>,
+  <span class="t-key">&quot;command&quot;</span>: <span class="t-string">&quot;my-time-provider&quot;</span>,
+  <span class="t-key">&quot;contracts&quot;</span>: [
+    <span class="t-string">&quot;contracts/v0.1.0/time.anomaly.contract.json&quot;</span>,
+    <span class="t-string">&quot;contracts/v0.1.0/time.forecast.contract.json&quot;</span>
+  ],
+  <span class="t-key">&quot;homepage&quot;</span>: <span class="t-string">&quot;https://github.com/org/my-time-provider&quot;</span>
+}</code></pre>
+<p>The registry is used by <code>provider: &quot;auto&quot;</code> resolution and by the <code>compose</code> command to verify that providers exist.</p>
+<h3 id="blk-17027">Testing Provider Conformance</h3>
+<h4 id="blk-17028">Contract validation</h4>
+<p>Verify that your provider's MCP tool surface matches the declared contract:</p>
+<pre data-lang="bash"><code><span class="t-comment"># List your provider's tools</span>
+<span class="t-kw">echo</span> <span class="t-string">'{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;tools/list&quot;,&quot;id&quot;:1}'</span> | my-provider
+
+<span class="t-comment"># Compare against the contract</span>
+ampersand validate-provider \
+ <span class="t-flag"> --provider</span> my-time-provider \
+ <span class="t-flag"> --contract</span> contracts/v0.<span class="t-undefined">1</span>.<span class="t-undefined">0</span>/time.anomaly.contract.json</code></pre>
+<h4 id="blk-17031">Integration testing</h4>
+<p>Test that each operation accepts the declared input type and produces the declared output type:</p>
+<table><thead><tr><th>Test</th><th>What to verify</th></tr></thead><tbody><tr><td>Input acceptance</td><td>Send each <code>in</code> type; verify no error</td></tr><tr><td>Output shape</td><td>Verify output matches <code>out</code> type</td></tr><tr><td>Wildcard compatibility</td><td>Send output from <code>&amp;memory.*</code> provider; verify acceptance</td></tr><tr><td>Error handling</td><td>Send invalid input; verify graceful error response</td></tr><tr><td>Side effects</td><td>Verify <code>side_effects: true</code> operations modify state</td></tr><tr><td>Idempotency</td><td>Verify <code>side_effects: false</code> operations are safe to retry</td></tr></tbody></table>
+<h3 id="blk-17048">Common Implementation Patterns</h3>
+<h4 id="blk-17049">Pattern 1: Thin MCP wrapper</h4>
+<p>Wrap an existing service (database, API, ML model) in an MCP server that maps contract operations to service calls:</p>
+<pre><code>MCP tool call → Provider → Existing service → Response → MCP result</code></pre>
+<p>This is the simplest approach. Graphonomous wraps an Elixir/OTP application. A pgvector provider would wrap PostgreSQL.</p>
+<h4 id="blk-17053">Pattern 2: Multi-capability provider</h4>
+<p>A single provider can satisfy multiple contracts. Graphonomous provides <code>&amp;memory.graph</code>, <code>&amp;memory.episodic</code>, <code>&amp;reason.deliberate</code>, and <code>&amp;reason.attend</code> — all from one MCP server.</p>
+<p>Register each capability separately in the contract, but serve them from one process.</p>
+<h4 id="blk-17056">Pattern 3: Stateless operation provider</h4>
+<p>Some capabilities are stateless — they transform input without maintaining state. These are simpler to implement and test:</p>
+<pre><code>Input → Transform → Output (no state)</code></pre>
+<p>The <code>deterministic: true</code> flag in the contract signals this pattern.</p>
+<h4 id="blk-17060">Pattern 4: Provider with feedback loop</h4>
+<p>Providers with <code>learn</code> operations accept outcome feedback and improve over time. This requires persistent state:</p>
+<pre><code>Input → Process → Output
+                  ↓
+          Feedback → State update</code></pre>
+<p>Mark these operations with <code>side_effects: true</code> in the contract.</p>
+<h3 id="blk-17064">Checklist: Shipping a New Provider</h3>
+<ol><li><p>Choose which capability contracts to satisfy</p></li><li><p>Implement all operations declared in each contract</p></li><li><p>Build an MCP server that exposes operations as tools</p></li><li><p>Write a registry entry for discoverability</p></li><li><p>Test conformance against the contract schemas</p></li><li><p>Publish the provider (npm, hex, crates.io, or standalone binary)</p></li><li><p>Submit a PR to add your provider to the registry</p></li></ol></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/skills/08_PROVIDER_IMPLEMENTATION.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-16985" class="lvl2">Why This Matters</a><a href="#blk-16987" class="lvl2">The Provider Concept</a><a href="#blk-17001" class="lvl2">Contract Conformance Requirements</a><a href="#blk-17003" class="lvl3">1. Implement all declared operations</a><a href="#blk-17005" class="lvl3">2. Accept the declared input types</a><a href="#blk-17007" class="lvl3">3. Produce the declared output types</a><a href="#blk-17009" class="lvl3">4. Respect accepts_from / feeds_into</a><a href="#blk-17011" class="lvl3">5. Expose operations via MCP transport</a><a href="#blk-17013" class="lvl2">MCP Transport Binding</a><a href="#blk-17016" class="lvl3">Tool registration</a><a href="#blk-17019" class="lvl3">Resource registration (optional)</a><a href="#blk-17022" class="lvl2">Provider Registration</a><a href="#blk-17024" class="lvl3">Registry entry format</a><a href="#blk-17027" class="lvl2">Testing Provider Conformance</a><a href="#blk-17028" class="lvl3">Contract validation</a><a href="#blk-17031" class="lvl3">Integration testing</a><a href="#blk-17048" class="lvl2">Common Implementation Patterns</a><a href="#blk-17049" class="lvl3">Pattern 1: Thin MCP wrapper</a><a href="#blk-17053" class="lvl3">Pattern 2: Multi-capability provider</a><a href="#blk-17056" class="lvl3">Pattern 3: Stateless operation provider</a><a href="#blk-17060" class="lvl3">Pattern 4: Provider with feedback loop</a><a href="#blk-17064" class="lvl2">Checklist: Shipping a New Provider</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/skills/01_DECLARATION.md/">Skill 01 — Writing Agent Declarations</a><a href="/AmpersandBoxDesign/docs/skills/02_VALIDATION.md/">Skill 02 — Validation</a><a href="/AmpersandBoxDesign/docs/skills/03_COMPOSITION.md/">Skill 03 — Capability Composition</a><a href="/AmpersandBoxDesign/docs/skills/04_CONTRACTS.md/">Skill 04 — Capability Contracts</a><a href="/AmpersandBoxDesign/docs/skills/05_GENERATION.md/">Skill 05 — Generation</a><a href="/AmpersandBoxDesign/docs/skills/06_CLI_REFERENCE.md/">Skill 06 — CLI Reference</a><a href="/AmpersandBoxDesign/docs/skills/07_INTEGRATION_PATTERNS.md/">Skill 07 — Integration Patterns</a><a href="/AmpersandBoxDesign/docs/skills/09_GOVERNANCE_PROVENANCE.md/">Skill 09 — Governance and Provenance</a><a href="/AmpersandBoxDesign/docs/skills/10_ANTI_PATTERNS.md/">Skill 10 — Anti-Patterns</a><a href="/AmpersandBoxDesign/docs/skills/SKILLS.md/">[&amp;] Protocol — Agent Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierayuzxfybgke6wqyuihvg4sbeb2yqjjxeylkkef62xl3rzoyvo76xa</div></div></div>
+</div></div>
+</body></html>

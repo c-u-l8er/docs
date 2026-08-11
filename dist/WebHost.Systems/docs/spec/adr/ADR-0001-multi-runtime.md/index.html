@@ -1,0 +1,104 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>ADR-0001: Multi-Runtime Strategy (Cloudflare Workers/DO + AWS Bedrock AgentCore) · WebHost.Systems · Ampersand Box</title>
+<meta name="description" content="Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/ADR-0001-multi-runtime.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ADR-0001: Multi-Runtime Strategy (Cloudflare Workers/DO + AWS Bedrock AgentCore)">
+<meta property="og:description" content="Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/ADR-0001-multi-runtime.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"ADR-0001: Multi-Runtime Strategy (Cloudflare Workers/DO + AWS Bedrock AgentCore)","name":"ADR-0001: Multi-Runtime Strategy (Cloudflare Workers/DO + AWS Bedrock AgentCore)","description":"Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/ADR-0001-multi-runtime.md/","identifier":"bagaaierajexv6ohcm4kdgx5d3uxh6ct4s7qtfqrws6kcfn4lfvu3cfnxcj5q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Context"},{"@type":"WebPageElement","name":"Decision"},{"@type":"WebPageElement","name":"Providers in v1"},{"@type":"WebPageElement","name":"TypeScript support across runtimes (explicit)"},{"@type":"WebPageElement","name":"Control plane"},{"@type":"WebPageElement","name":"Contract"},{"@type":"WebPageElement","name":"Alternatives considered"},{"@type":"WebPageElement","name":"A) Single-runtime: Cloudflare-only"},{"@type":"WebPageElement","name":"B) Single-runtime: AgentCore-only"},{"@type":"WebPageElement","name":"C) “Use Convex Agents for hosting”"},{"@type":"WebPageElement","name":"D) Container/Kubernetes-based runtime as default"},{"@type":"WebPageElement","name":"Consequences"},{"@type":"WebPageElement","name":"Positive"},{"@type":"WebPageElement","name":"Negative / costs"},{"@type":"WebPageElement","name":"Implementation details (normative requirements)"},{"@type":"WebPageElement","name":"Operational considerations"},{"@type":"WebPageElement","name":"Success criteria"},{"@type":"WebPageElement","name":"Follow-ups / next ADRs"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/"},{"@type":"ListItem","position":5,"name":"adr","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/"},{"@type":"ListItem","position":6,"name":"ADR-0001-multi-runtime.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/adr/ADR-0001-multi-runtime.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">WebHost.Systems</span>
+<span class="path">WebHost.Systems/docs/spec/adr/ADR-0001-multi-runtime.md</span>
+
+</div></div>
+<div class="lead">Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:</div>
+<div class="prose"><h1 id="blk-50319">ADR-0001: Multi-Runtime Strategy (Cloudflare Workers/DO + AWS Bedrock AgentCore)</h1>
+<p>Status: Accepted (v1) Date: 2026-01-21 Decision Makers: Engineering Related Docs:</p>
+<ul><li><p><code>WebHost.Systems/docs/spec/00_MASTER_SPEC.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md</code></p></li><li><p><code>WebHost.Systems/docs/spec/40_SECURITY_SECRETS_COMPLIANCE.md</code></p></li></ul>
+<h3 id="blk-50330">Context</h3>
+<p>webhost.systems is a platform for deploying, running, and observing AI agents. The platform must serve two competing needs:</p>
+<ol><li><p><strong>Broad adoption and strong economics</strong> for the majority of users:</p></li></ol>
+<ul><li><p>low marginal cost for invocations,</p></li><li><p>low latency,</p></li><li><p>global availability,</p></li><li><p>simple developer experience.</p></li></ul>
+<ol start="2"><li><p><strong>Enterprise-grade capabilities</strong> for premium customers and advanced workloads:</p></li></ol>
+<ul><li><p>long-running sessions and tasks,</p></li><li><p>stronger isolation and security posture,</p></li><li><p>built-in tool ecosystems (e.g., code interpreter, browser automation) where available,</p></li><li><p>operational maturity and support for compliance-aligned deployments.</p></li></ul>
+<p>No single runtime platform optimizes for all of these simultaneously. In addition, vendor lock-in risk is material: a single-provider architecture can force business and technical constraints (pricing changes, platform limits, region constraints).</p>
+<p>We also require:</p>
+<ul><li><p>a unified invocation protocol across runtimes,</p></li><li><p>consistent metering/telemetry and plan enforcement,</p></li><li><p>a path to add additional runtimes later without rewriting the control plane.</p></li></ul>
+<h3 id="blk-50365">Decision</h3>
+<p>Adopt a <strong>multi-runtime architecture</strong> with a single <strong>control plane</strong> and multiple <strong>data plane</strong> runtime providers behind a shared <strong>Runtime Provider Interface (RPI)</strong>.</p>
+<h4 id="blk-50367">Providers in v1</h4>
+<ul><li><p><strong>Default runtime</strong>: Cloudflare Workers + Durable Objects (<code>runtimeProvider = cloudflare</code>)</p></li><li><p>Target: the majority of workloads and tiers (including free acquisition).</p></li><li><p>Rationale: global edge footprint, strong economics, good latency, suitable for typical agent interactions.</p></li><li><p>TypeScript: first-class TypeScript support (Workers + Durable Objects APIs are TypeScript-friendly; many agent frameworks and SDKs work naturally in this environment).</p></li></ul>
+<ul><li><p><strong>Premium/enterprise runtime</strong>: AWS Bedrock AgentCore (<code>runtimeProvider = agentcore</code>)</p></li><li><p>Target: enterprise-tier workloads and advanced/long-running tasks.</p></li><li><p>Rationale: enterprise-grade isolation and runtime capabilities (including long-running sessions), plus a strong TypeScript SDK ecosystem:</p></li><li><p><code>@aws-sdk/client-bedrock-agentcore</code> for TypeScript control plane + runtime invocation</p></li><li><p><code>bedrock-agentcore</code> tools SDK for TypeScript (e.g., Code Interpreter and Browser tool integrations), including modern agent tooling integrations such as Vercel AI SDK</p></li></ul>
+<h4 id="blk-50388">TypeScript support across runtimes (explicit)</h4>
+<p>webhost.systems is intended to be <strong>TypeScript-native end-to-end</strong>:</p>
+<ul><li><p>Control plane: TypeScript (Supabase backend + UI types)</p></li><li><p>Cloudflare runtime: TypeScript (Workers/DO)</p></li><li><p>AgentCore runtime: TypeScript SDK support for both management/invocation and tool ecosystems</p></li></ul>
+<p>This means <strong>no Python requirement</strong> for deploying and operating on AgentCore from webhost.systems; TypeScript can be the primary implementation language for both runtimes.</p>
+<h4 id="blk-50398">Control plane</h4>
+<ul><li><p>The control plane (auth, DB, deployments, billing, telemetry ingestion, aggregation, UI) remains centralized and runtime-agnostic.</p></li><li><p>The control plane chooses the provider at deploy time (and routes invocations based on active deployment).</p></li></ul>
+<h4 id="blk-50404">Contract</h4>
+<ul><li><p>All runtime providers MUST implement the RPI defined in <code>20_RUNTIME_PROVIDER_INTERFACE.md</code>, including:</p></li><li><p><code>deploy(...)</code></p></li><li><p><code>invoke(...)</code> (streaming optional but preferred)</p></li><li><p>telemetry emission strategy and integrity protections</p></li><li><p>normalized error mapping</p></li></ul>
+<h3 id="blk-50416">Alternatives considered</h3>
+<h4 id="blk-50417">A) Single-runtime: Cloudflare-only</h4>
+<p><strong>Pros</strong></p>
+<ul><li><p>Simplest operational model and implementation.</p></li><li><p>Strong edge performance and acquisition economics.</p></li></ul>
+<p><strong>Cons</strong></p>
+<ul><li><p>Hard ceiling on long-running tasks and certain tool ecosystems.</p></li><li><p>Weaker enterprise narrative for isolation/compliance and advanced capabilities.</p></li><li><p>Constrains future product tiers to one platform’s limitations.</p></li></ul>
+<p><strong>Why rejected</strong> Does not meet enterprise/advanced workload requirements without major additional infrastructure.</p>
+<h4 id="blk-50433">B) Single-runtime: AgentCore-only</h4>
+<p><strong>Pros</strong></p>
+<ul><li><p>Strong enterprise posture and capability set.</p></li><li><p>Potentially simpler story for long-running tasks and advanced tools.</p></li></ul>
+<p><strong>Cons</strong></p>
+<ul><li><p>Higher cost structure for broad/free usage; weakens acquisition.</p></li><li><p>Region footprint and latency may be weaker for global edge use-cases.</p></li><li><p>Increased vendor lock-in risk.</p></li></ul>
+<p><strong>Why rejected</strong> Does not meet broad adoption/economics goals; raises lock-in and cost risk for the base tier.</p>
+<h4 id="blk-50449">C) “Use Convex Agents for hosting”</h4>
+<p><strong>Pros</strong></p>
+<ul><li><p>Extremely fast iteration for control plane and simple assistant-like workflows.</p></li><li><p>Unified stack for UI + backend + simple agent logic.</p></li></ul>
+<p><strong>Cons</strong></p>
+<ul><li><p>Not designed as the primary hosting runtime for customer agents at scale.</p></li><li><p>Time and execution constraints; mismatched to long-running and high-volume workloads.</p></li><li><p>Harder to model durable state and provider-level isolation guarantees for untrusted code.</p></li></ul>
+<p><strong>Why rejected</strong> Convex Agents are better suited to control-plane automation (dashboard assistant), not customer agent hosting.</p>
+<h4 id="blk-50465">D) Container/Kubernetes-based runtime as default</h4>
+<p><strong>Pros</strong></p>
+<ul><li><p>Full control of runtime environment and dependencies.</p></li><li><p>Potentially easiest to support arbitrary frameworks.</p></li></ul>
+<p><strong>Cons</strong></p>
+<ul><li><p>Highest operational complexity and ongoing cost.</p></li><li><p>Harder to offer a generous free tier with predictable margins.</p></li><li><p>Slower time-to-market.</p></li></ul>
+<p><strong>Why rejected</strong> Operationally heavy for v1; incompatible with rapid iteration and free-tier economics goals.</p>
+<h3 id="blk-50481">Consequences</h3>
+<h4 id="blk-50482">Positive</h4>
+<ul><li><p><strong>Economic flexibility</strong>: Cloudflare can power free and most paid tiers; AgentCore reserved for premium needs.</p></li><li><p><strong>Product flexibility</strong>: choose best runtime per workload; evolve pricing/tiering by runtime.</p></li><li><p><strong>Risk reduction</strong>: mitigates vendor lock-in through RPI and consistent protocol/telemetry.</p></li><li><p><strong>Future extensibility</strong>: additional providers can be added by implementing the RPI without redesigning the control plane.</p></li></ul>
+<h4 id="blk-50492">Negative / costs</h4>
+<ul><li><p><strong>Engineering complexity</strong>: must implement and maintain multiple adapters and consistent semantics.</p></li><li><p><strong>Consistency challenges</strong>: token counting, streaming, and tool semantics vary by provider.</p></li><li><p><strong>Operational surface area</strong>: two providers mean more credentials, monitoring, and failure modes.</p></li><li><p><strong>Telemetry integrity</strong> must be handled carefully to prevent spoofing and cost manipulation.</p></li></ul>
+<h3 id="blk-50502">Implementation details (normative requirements)</h3>
+<ol><li><p><strong>RPI is mandatory</strong></p></li></ol>
+<ul><li><p>All runtime-specific logic must live behind the RPI.</p></li><li><p>Control plane code must not call provider APIs directly except through the adapter layer.</p></li></ul>
+<ol start="2"><li><p><strong>Invocation protocol is consistent</strong></p></li></ol>
+<ul><li><p>The canonical request/response shapes are defined in <code>10_API_CONTRACTS.md</code> and <code>00_MASTER_SPEC.md</code>.</p></li><li><p>Providers may add extra diagnostics internally, but client-facing outputs must be normalized.</p></li></ul>
+<ol start="3"><li><p><strong>Telemetry is required and integrity-protected</strong></p></li></ol>
+<ul><li><p>Each invocation must produce a telemetry event attributable to <code>{userId, agentId, deploymentId, runtimeProvider}</code>.</p></li><li><p>Telemetry ingestion must verify integrity (deployment-scoped signing) and validate ownership.</p></li></ul>
+<ol start="4"><li><p><strong>Tier gating</strong></p></li></ol>
+<ul><li><p>AgentCore must be gated by tier entitlements (enabled only for premium/enterprise tiers unless explicitly configured otherwise).</p></li><li><p>Both deploy and invoke paths must enforce entitlements (defense in depth).</p></li></ul>
+<ol start="5"><li><p><strong>Secrets handling</strong></p></li></ol>
+<ul><li><p>No plaintext secrets are stored in the primary DB.</p></li><li><p>Secrets are injected using provider-native secret mechanisms.</p></li><li><p>Telemetry signing secrets are deployment-scoped and injected into the data plane.</p></li></ul>
+<ol start="6"><li><p><strong>Resource tagging</strong></p></li></ol>
+<ul><li><p>Provider resources should be tagged/labeled with <code>{userId, agentId, deploymentId}</code> to support cleanup and future billing reconciliation.</p></li></ul>
+<h3 id="blk-50551">Operational considerations</h3>
+<ul><li><p>Track per-provider health and error rates independently.</p></li><li><p>Implement provider-specific circuit breakers if needed (post-v1).</p></li><li><p>Ensure staging environments exist for both providers with separate credentials and billing/webhook settings.</p></li></ul>
+<h3 id="blk-50559">Success criteria</h3>
+<p>This decision is successful if:</p>
+<ul><li><p>Cloudflare deploy/invoke works end-to-end with telemetry and limit enforcement.</p></li><li><p>AgentCore deploy/invoke works end-to-end for entitled users with telemetry and limit enforcement.</p></li><li><p>Control plane routing remains provider-agnostic and uses only the RPI.</p></li><li><p>Adding a new provider would require implementing a new adapter without major changes to the control plane schemas and APIs.</p></li></ul>
+<h3 id="blk-50570">Follow-ups / next ADRs</h3>
+<ul><li><p>ADR-0002: Control plane backend choice (Supabase; supersedes original Convex choice).</p></li><li><p>ADR-0003: Secrets strategy (no plaintext in DB; provider injection).</p></li><li><p>ADR-0004: Telemetry integrity model (deployment-scoped signing) and ingestion validation.</p></li><li><p>ADR-0005: Deployment immutability + active pointer model.</p></li></ul></div>
+<p class="src"><a href="/#/WebHost.Systems/docs/spec/adr/ADR-0001-multi-runtime.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-50330" class="lvl2">Context</a><a href="#blk-50365" class="lvl2">Decision</a><a href="#blk-50367" class="lvl3">Providers in v1</a><a href="#blk-50388" class="lvl3">TypeScript support across runtimes (explicit)</a><a href="#blk-50398" class="lvl3">Control plane</a><a href="#blk-50404" class="lvl3">Contract</a><a href="#blk-50416" class="lvl2">Alternatives considered</a><a href="#blk-50417" class="lvl3">A) Single-runtime: Cloudflare-only</a><a href="#blk-50433" class="lvl3">B) Single-runtime: AgentCore-only</a><a href="#blk-50449" class="lvl3">C) “Use Convex Agents for hosting”</a><a href="#blk-50465" class="lvl3">D) Container/Kubernetes-based runtime as default</a><a href="#blk-50481" class="lvl2">Consequences</a><a href="#blk-50482" class="lvl3">Positive</a><a href="#blk-50492" class="lvl3">Negative / costs</a><a href="#blk-50502" class="lvl2">Implementation details (normative requirements)</a><a href="#blk-50551" class="lvl2">Operational considerations</a><a href="#blk-50559" class="lvl2">Success criteria</a><a href="#blk-50570" class="lvl2">Follow-ups / next ADRs</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/spec/adr/ADR-0002-supabase-control-plane.md/">ADR-0002: Use Supabase as the Control Plane Backend (PostgreSQL + Edge Functions)</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0003-secrets-strategy.md/">ADR-0003: Secrets Handling &amp; Provider Injection Strategy</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0004-telemetry-integrity.md/">ADR-0004: Telemetry Integrity &amp; Attribution Model (Deployment-Scoped Signed Events)</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0005-deployment-immutability.md/">ADR-0005: Deployment Immutability + Active Deployment Pointer Model</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0006-invocation-protocol.md/">ADR-0006: Canonical Invocation Protocol (invoke/v1) and Streaming Strategy</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0007-entitlements-and-limits.md/">ADR-0007: Tier Entitlements, Runtime Gating, and Limit Enforcement Strategy</a><a href="/WebHost.Systems/docs/spec/adr/ADR-0008-delegated-invocation-auth.md/">ADR-0008: Delegated Invocation Auth Mode (Server-to-Server HMAC)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajexv6ohcm4kdgx5d3uxh6ct4s7qtfqrws6kcfn4lfvu3cfnxcj5q</div></div></div>
+</div></div>
+</body></html>

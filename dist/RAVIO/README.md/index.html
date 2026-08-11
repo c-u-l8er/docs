@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>RAVIO · RAVIO · Ampersand Box</title>
+<meta name="description" content="The amp harness&#39;s real work, as a drivable sky road. The signs you pass are the changes that actually happened, altitude is the evidence rung, the gauges…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/RAVIO/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RAVIO">
+<meta property="og:description" content="The amp harness&#39;s real work, as a drivable sky road. The signs you pass are the changes that actually happened, altitude is the evidence rung, the gauges…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/RAVIO/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"RAVIO","name":"RAVIO","description":"The amp harness's real work, as a drivable sky road. The signs you pass are the changes that actually happened, altitude is the evidence rung, the gauges…","url":"https://docs.ampersandboxdesign.com/RAVIO/README.md/","identifier":"bagaaieradmy52drointde5etpf6imkcc7emdh6dhndxglbb67poufdflzy5q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"RAVIO","url":"https://docs.ampersandboxdesign.com/RAVIO/"},"articleSection":"RAVIO","hasPart":[{"@type":"WebPageElement","name":"Running it"},{"@type":"WebPageElement","name":"1. Restore the vendored engine (once, and after any fresh clone)"},{"@type":"WebPageElement","name":"2. The amp console — optional, but it is what the road is ABOUT"},{"@type":"WebPageElement","name":"3. The bridge — this is the server"},{"@type":"WebPageElement","name":"4. Voice — a second terminal; the road drives fine without it"},{"@type":"WebPageElement","name":"5. The social fetcher — only if you want the wall to fill"},{"@type":"WebPageElement","name":"6. Is any of it running?"},{"@type":"WebPageElement","name":"7. Measurement, once it is running"},{"@type":"WebPageElement","name":"Driving it"},{"@type":"WebPageElement","name":"What is deliberately not in the repo"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"RAVIO","item":"https://docs.ampersandboxdesign.com/RAVIO/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/RAVIO/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">RAVIO</span>
+<span class="path">RAVIO/README.md</span>
+
+</div></div>
+<div class="lead">The amp harness&#39;s real work, as a drivable sky road. The signs you pass are the changes that actually happened, altitude is the evidence rung, the gauges are amp&#39;s own per-lane…</div>
+<div class="prose"><h1 id="blk-24004">RAVIO</h1>
+<p><strong>The amp harness's real work, as a drivable sky road.</strong> The signs you pass are the changes that actually happened, altitude is the evidence rung, the gauges are amp's own per-lane ratings, and the dashboard is a page you can scroll, repaint, post from and read your audience on.</p>
+<p>This file is <strong>how to run it</strong>. Two others matter:</p>
+<ul><li><p><code>docs/spec/README.md</code> — the design of record. Read it before changing</p></li></ul>
+<p>anything; it is where the reasons live.</p>
+<ul><li><p><code>PACKET_README.md</code> — the 2026-08-04 status packet: what is measured, what is</p></li></ul>
+<p>claimed, what is blocked, and the four decisions that are not mine to make.</p>
+<h3 id="blk-24015">Running it</h3>
+<p>Nothing below needs anything installed that this machine does not already have. Every service binds <strong>127.0.0.1 only</strong>, and the bridge reads <code>.amp/amp.db</code> <strong>read-only</strong> — it never writes to amp.</p>
+<h4 id="blk-24017">1. Restore the vendored engine (once, and after any fresh clone)</h4>
+<pre><code>cd RAVIO
+python3 tools/vendor.py</code></pre>
+<p><code>world/assets/three.module.js</code>, <code>backdrop.jpg</code> and both logo SVGs are gitignored on purpose: they are unmodified copies of files in <code>~/Projects/Travelmonstr/</code>, and <code>world/assets/PROVENANCE.json</code> records the source path and sha256 of each so drift is detectable. One source of truth.</p>
+<h4 id="blk-24020">2. The amp console — optional, but it is what the road is ABOUT</h4>
+<pre><code>cd ..  &amp;&amp;  ./amp serve      # serves the console on 127.0.0.1:8787</code></pre>
+<p>Without it the derived ratings are simply absent and the road keeps driving — that is deliberate, and the cockpit says which nothing it is showing rather than rendering an encouraging zero. <strong>With</strong> it, three things light up that otherwise cannot: the seven-tube rack, the CONTROLS rows in the deck, and the <code>the code editor · amp console</code> screen (which is proxied same-origin through the bridge, because the console refuses cross-site <code>/api/</code> calls).</p>
+<p>The bridge finds it on 8787. <code>server.py</code> bumps to the next free port if that one is taken, so check what it printed rather than assuming.</p>
+<h4 id="blk-24024">3. The bridge — this is the server</h4>
+<pre><code>python3 bridge.py --port 8890        # then open http://127.0.0.1:8890/
+python3 bridge.py --once             # or: one pass, printing world.json + a probe</code></pre>
+<p><strong>Use `127.0.0.1`, not `localhost`.</strong> They are separate localStorage origins, so opening the other one silently loses your gear, tabs, theme and lane.</p>
+<p>Its routes, so a change here is a change you can see:</p>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><code>/world.json</code></td><td>the journal the road is built from</td></tr><tr><td><code>/controls.json</code></td><td>what amp publishes for a lane — the deck's CONTROLS</td></tr><tr><td><code>/inspect.json</code></td><td>the evidence behind one rating</td></tr><tr><td><code>/narration.json</code>, <code>/speak</code>, <code>/listen</code></td><td>§11's voice</td></tr><tr><td><code>/wall.json</code>, <code>/wall</code>, <code>/wall/ingest</code></td><td>the deck's WALL</td></tr><tr><td><code>/social.json</code>, <code>/social</code>, <code>/social/fetch</code>, <code>/social/heartbeat</code>, <code>/social/status</code></td><td>the deck's ACCOUNTS</td></tr><tr><td><code>/console</code>, <code>/api/…</code>, <code>/ext/&lt;host&gt;</code></td><td>the same-origin proxies</td></tr><tr><td><code>/soak</code></td><td>the §6.5 instrument</td></tr></tbody></table>
+<h4 id="blk-24047">4. Voice — a second terminal; the road drives fine without it</h4>
+<pre><code>bash tools/voicebox.sh              # 127.0.0.1:17493, models load on first use
+curl -s 127.0.0.1:17493/healthz     # says which engine, and whether it fell back</code></pre>
+<p>Kokoro-82M speaks and <code>whisper-base.en</code> hears, out of <code>~/.cache/ravio-voice-venv</code> (created <code>--system-site-packages</code> so it sees the system torch). <code>mms-tts-eng</code> stays as a fallback so a missing model degrades to a worse voice rather than to silence — and <code>/healthz</code> reports which, so the downgrade cannot be silent. A 404 from <code>/listen</code> means &quot;no ear&quot;, not an error.</p>
+<h4 id="blk-24050">5. The social fetcher — only if you want the wall to fill</h4>
+<pre><code>python3 tools/social_fetch.py --login https://x.com/login   # sign in, by hand
+python3 tools/social_fetch.py --once                        # one pass
+python3 tools/social_fetch.py                               # stay up</code></pre>
+<p>Configure the pages, intervals and selectors in the cockpit: lean in (<code>V</code>), scroll the deck up, <strong>ACCOUNTS</strong>. Nothing here handles a password or a token — <code>--login</code> opens a page in the fetcher's own Chrome profile (<code>~/.cache/ravio-social-profile</code>) and stops, and the session lives in that profile.</p>
+<p><strong>Signing in: read this before trying to reuse your own Chrome.</strong></p>
+<p>The obvious plan is to point the fetcher at the browser you are already logged into. <strong>Chrome does not allow it.</strong> Since 136 it refuses to expose a debugging port on the default profile, and says so:</p>
+<pre><code>$ google-chrome-stable --remote-debugging-port=9223
+DevTools remote debugging requires a non-default data directory.
+Specify this using --user-data-dir.</code></pre>
+<p>(And if an instance is already running you do not even get that far — it prints <code>Opening in existing browser session.</code>, hands the URL over and drops the flag silently.) The restriction is deliberate: an open debugging port lets anything local read that profile's cookies. So a port can only ever be opened on a profile that is <strong>not</strong> the one holding your logins, which is precisely the thing that made the idea attractive.</p>
+<p><strong>So: sign in once, in the fetcher's own profile.</strong> Press <strong>SIGN IN</strong> on a card and the fetcher opens that service's login page in the browser it drives (<code>~/.cache/ravio-social-profile</code>) — you type into a real Chrome window, the session stays in that profile, and RAVIO never sees a credential. Then press <strong>CONNECT</strong>. Three sign-ins, once. Equivalent from a terminal:</p>
+<pre><code>python3 tools/social_fetch.py --login x        # or youtube, twitch</code></pre>
+<p><strong>YOUR CHROME · PORT</strong> is still there and still works — it is for a Chrome you start yourself on a non-default profile, and it gets you a browser you can <em>watch</em> the fetcher work in.</p>
+<p><strong>The order matters, because a profile takes exactly one Chrome.</strong> Whichever browser is on <code>~/.cache/ravio-social-profile</code> holds an exclusive <code>SingletonLock</code> on it, so starting a second one there fails with</p>
+<pre><code>Failed to create .../SingletonLock: File exists (17)
+Failed to create a ProcessSingleton for your profile directory. Aborting now
+to avoid profile corruption.</code></pre>
+<p>So: <strong>set the port in ACCOUNTS first.</strong> The fetcher notices within a tick, stops launching its own browser (every call goes through <code>--cdp</code> from then on) and closes the one it had — it logs <code>closed my own browser so you can start one on that profile yourself</code>. Then:</p>
+<pre><code>python3 tools/social_fetch.py --browser</code></pre>
+<p><strong>Use that, not `google-chrome-stable`.</strong> agent-browser ships its own Chrome and writes the profile with it, so opening that profile with the system Chrome is a version <em>downgrade</em>: measured, agent-browser's 147 created the profile, <code>google-chrome-stable</code> (142) opened it, reset the quota database and died with <code>SIGTRAP</code> — <em>after</em> the port was already listening, so it looked like it had worked. <code>--browser</code> picks the same build agent-browser uses, clears a stale <code>SingletonLock</code> if a previous Chrome died without releasing one, waits for the port, and says so:</p>
+<pre><code>[social] cleared a stale lock left by pid 2448741 (that process is gone)
+[social] launching .../chrome-147.0.7727.57/chrome
+[social] up on port 9223</code></pre>
+<p>Each read still opens its own tab and closes it — verified against a real CDP Chrome: a fetch left the pre-existing tab exactly where it was.</p>
+<p>If you want your existing logins in that profile rather than signing in again, the only route is copying them out of <code>~/.config/google-chrome</code> (Cookies, Login Data and Local State, with Chrome closed) — a second copy of your session tokens on disk, a snapshot that drifts, and Google in particular may challenge the session as a new device. Not built, and not recommended over three sign-ins.</p>
+<p><strong>CONNECT, and why it is not OAuth.</strong> Each card has SIGN IN and CONNECT. CONNECT opens that service's own page in the fetcher's profile, reads your handle off it, and points the watch URL at you (<code>https://x.com/{handle}/with_replies</code>, and so on). There is no developer app, no client secret and no token, because none of them would buy anything — the fetcher drives a signed-in browser, so it never uses a token, and OAuth would exist purely to learn one string that this browser can be asked for directly. Also runnable as <code>tools/social_fetch.py --connect x</code>.</p>
+<p>The handle is read one of two ways, both editable: an element on a page only you can see (<code>who.sel</code>), or the address the page <strong>landed on</strong> — the second is sturdier, because <code>studio.youtube.com</code> redirecting to <code>/channel/&lt;you&gt;</code> is a fact about the account rather than a class name somebody can rename. When it fails it says which failure: <em>signed out or the selector moved</em> is a different sentence from <em>could not find a handle in it</em>.</p>
+<p><strong>agent-browser runs one browser per machine.</strong> Measured, twice: <code>--profile</code> is <em>silently ignored</em> whenever a session is already up, and every caller shares that window — so while the fetcher runs, any other <code>agent-browser</code> command lands in the same browser, and a fetch pass will navigate a window you are looking at. The fetcher refuses to read a browser that is on a <em>different</em> profile (what it found there would be somebody else's account), but it cannot tell that you are sharing its own. For real isolation, start a Chrome yourself and point at it:</p>
+<pre><code>google-chrome-stable --remote-debugging-port=9223 --user-data-dir=$HOME/.cache/ravio-social-profile
+python3 tools/social_fetch.py --cdp 9223</code></pre>
+<p>(<code>chrome</code> is not the binary on this machine — <code>google-chrome-stable</code> is. Check with <code>which google-chrome-stable chromium</code> before copying this anywhere else.)</p>
+<p>The default selectors for X, YouTube and Twitch are <strong>unverified guesses</strong> — nobody here has an account to log into. That is why every pass reports <code>matched</code> (what the item selector found) separately from <code>added</code> (what was new): a page that rendered 40 comments and added 0 is a quiet night, a selector that matched 0 is a broken fetch, and one number cannot say which. The ACCOUNTS tab shows both, and the selectors are editable there.</p>
+<h4 id="blk-24074">6. Is any of it running?</h4>
+<pre><code>ss -ltnp | grep -E ':8787|:8890|:17493'     # console · bridge · voice
+curl -s 127.0.0.1:8890/social.json | python3 -m json.tool | grep daemon_at
+tail -f RAVIO/.ravio/bridge.log RAVIO/.ravio/fetch.log</code></pre>
+<p><code>daemon_at</code> is the <strong>only</strong> honest answer to &quot;is the fetcher up&quot;. Not the newest check-in: a loop watching three sources on ten-minute intervals reports nothing for most of its life, and a <code>--once</code> pass that exited two minutes ago still has a fresh one — wrong in both directions. The ACCOUNTS tab reads the same field, which is why FETCH NOW can say <em>&quot;asked, but no fetcher has checked in recently&quot;</em> instead of spinning.</p>
+<p>To stop things: <code>pkill -f social_fetch.py</code>, <code>pkill -f 'bridge.py --port 8890'</code>. Nothing here writes to amp, so nothing is lost by killing it. The bridge's own files (<code>.ravio/</code>) survive a restart; the <strong>social config does not survive a `rm .ravio/social.json`</strong>, and the bridge holds it in memory — so deleting the file under a running bridge does nothing until you restart it.</p>
+<h4 id="blk-24078">7. Measurement, once it is running</h4>
+<pre><code>python3 tools/soak_report.py --hours 24   # §6.5; refuses to extrapolate a short span
+python3 tools/dial_check.py               # the change-rate measurement that set S=300
+bash    tools/legibility.sh               # §6.3 static: needs chrome + ffmpeg
+bash    tools/legibility_motion.sh        # §6.3 approach: the one that actually bites</code></pre>
+<p>The soak needs a <strong>displayed</strong> window. Backgrounded, the page runs at 1 fps and the report will tell you so rather than average it in.</p>
+<h3 id="blk-24081">Driving it</h3>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><code>W A S D</code> / drag the sky</td><td>fly</td></tr><tr><td><code>V</code></td><td>lean into the cockpit — opens the deck</td></tr><tr><td>wheel</td><td>scrub the road while flying; <strong>scroll the deck</strong> while leaned in</td></tr><tr><td><code>G</code> / <code>Esc</code></td><td>walk the P/R/C/D gate · <code>Esc</code> in D closes the innermost open thing</td></tr><tr><td><code>PgUp/PgDn</code>, <code>,</code> <code>.</code></td><td>scrub the journal · step to the next thing that actually happened</td></tr><tr><td><code>1</code>–<code>7</code></td><td>pick a tube · <code>O</code> the tape · <code>M</code> mute · <code>B</code> status · <code>T</code> reply · <code>K</code> camera</td></tr><tr><td><code>[</code> <code>]</code> / <code>{</code> <code>}</code></td><td>walk the lane roster / the districts</td></tr></tbody></table>
+<p><strong>The deck</strong> is the dashboard as a page: lean in for a peek, keep scrolling and the dash rises off it. Four tabs — <strong>CONTROLS</strong> (what amp publishes for this lane), <strong>THEME</strong> (the paint on the ship, remembered per browser), <strong>THE WALL</strong> (what this cockpit posted and what came back), <strong>ACCOUNTS</strong> (§5 above).</p>
+<p>A page you open on the screen keeps its state — the amp console holds all its navigation in memory and never touches the URL, so only keeping the document alive can bring it back where you left it. <code>◀ CONTROLS</code> on the page's header bar, or <code>Esc</code>, closes it and lands on the deck.</p>
+<h3 id="blk-24101">What is deliberately not in the repo</h3>
+<p>The vendored engine and sky (§1), <code>dist/</code> (24 MB of PNG evidence), and <code>.ravio/</code> (the runtime journal, the soak log, the wall and the accounts config). <code>.ravio/social.json</code> in particular is per-machine and holds the pages you watch; it holds no credential, and there is nothing in it worth committing.</p></div>
+<p class="src"><a href="/#/RAVIO/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-24015" class="lvl2">Running it</a><a href="#blk-24017" class="lvl3">1. Restore the vendored engine (once, and after any fresh clone)</a><a href="#blk-24020" class="lvl3">2. The amp console — optional, but it is what the road is ABOUT</a><a href="#blk-24024" class="lvl3">3. The bridge — this is the server</a><a href="#blk-24047" class="lvl3">4. Voice — a second terminal; the road drives fine without it</a><a href="#blk-24050" class="lvl3">5. The social fetcher — only if you want the wall to fill</a><a href="#blk-24074" class="lvl3">6. Is any of it running?</a><a href="#blk-24078" class="lvl3">7. Measurement, once it is running</a><a href="#blk-24081" class="lvl2">Driving it</a><a href="#blk-24101" class="lvl2">What is deliberately not in the repo</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/RAVIO/PACKET_README.md/">RAVIO — M1 + M2 packet, 2026-08-04</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieradmy52drointde5etpf6imkcc7emdh6dhndxglbb67poufdflzy5q</div></div></div>
+</div></div>
+</body></html>

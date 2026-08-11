@@ -1,0 +1,244 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;reason: Deliberation, Evaluation, and Decision-Making · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="The &amp;reason capability family models how an agent decides.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/reason.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;reason: Deliberation, Evaluation, and Decision-Making">
+<meta property="og:description" content="The &amp;reason capability family models how an agent decides.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/reason.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&reason: Deliberation, Evaluation, and Decision-Making","name":"&reason: Deliberation, Evaluation, and Decision-Making","description":"The &reason capability family models how an agent decides.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/reason.md/","identifier":"bagaaieraozy7g3fytqjdsmzyafyhnskusht54pn3sodaxiwnfr6il3m4jadq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"Why &reason exists as a first-class primitive"},{"@type":"WebPageElement","name":"What &reason means in the protocol"},{"@type":"WebPageElement","name":"Typical &reason subtypes"},{"@type":"WebPageElement","name":"&reason.argument"},{"@type":"WebPageElement","name":"&reason.vote"},{"@type":"WebPageElement","name":"&reason.plan"},{"@type":"WebPageElement","name":"&reason.deliberate"},{"@type":"WebPageElement","name":"&reason.attend"},{"@type":"WebPageElement","name":"Other plausible future subtypes"},{"@type":"WebPageElement","name":"Why reasoning should be modeled separately from memory"},{"@type":"WebPageElement","name":"&memory answers:"},{"@type":"WebPageElement","name":"&reason answers:"},{"@type":"WebPageElement","name":"Architecture patterns for &reason"},{"@type":"WebPageElement","name":"1. Evidence-first reasoning"},{"@type":"WebPageElement","name":"2. Policy-grounded support reasoning"},{"@type":"WebPageElement","name":"3. Multi-agent consensus reasoning"},{"@type":"WebPageElement","name":"4. Planning-oriented reasoning"},{"@type":"WebPageElement","name":"Governance and &reason"},{"@type":"WebPageElement","name":"Provenance implications"},{"@type":"WebPageElement","name":"Contract patterns for &reason"},{"@type":"WebPageElement","name":"Protocol shape for the &reason primitive"},{"@type":"WebPageElement","name":"Schema considerations for &reason"},{"@type":"WebPageElement","name":"Example providers"},{"@type":"WebPageElement","name":"deliberatic"},{"@type":"WebPageElement","name":"graphonomous"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"capabilities","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/"},{"@type":"ListItem","position":5,"name":"reason.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/capabilities/reason.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/capabilities/reason.md</span>
+
+</div></div>
+<div class="lead">The &amp;reason capability family models how an agent decides.</div>
+<div class="prose"><h1 id="blk-4190"><code>&amp;reason</code>: Deliberation, Evaluation, and Decision-Making</h1>
+<p>The <code>&amp;reason</code> capability family models <strong>how an agent decides</strong>.</p>
+<p>If <code>&amp;memory</code> is about what an agent can retain and retrieve, <code>&amp;reason</code> is about what it does with that context once a decision is required. In the [&amp;] Protocol, reasoning is not treated as a vague &quot;the model thinks here&quot; step. It is a composable, inspectable capability domain with explicit subtypes, contracts, governance hooks, and downstream integration paths.</p>
+<p>This page is the deep dive for the <code>&amp;reason</code> primitive in the documentation hub.</p>
+<h3 id="blk-4194">Why <code>&amp;reason</code> exists as a first-class primitive</h3>
+<p>A lot of agent systems collapse reasoning into one of two extremes:</p>
+<ol><li><p>&quot;the base model already reasons&quot;</p></li><li><p>&quot;a chain-of-thought prompt is enough&quot;</p></li></ol>
+<p>That is often too weak for real systems.</p>
+<p>Production agents usually need one or more of the following:</p>
+<ul><li><p>argument-based evaluation</p></li><li><p>policy-aware decision review</p></li><li><p>multi-option comparison</p></li><li><p>constitutional or constraint-aware deliberation</p></li><li><p>planning over multiple steps</p></li><li><p>voting or consensus between candidate actions</p></li><li><p>escalation when confidence is too low</p></li><li><p>explicit evidence tracking for audits</p></li></ul>
+<p>These are not all the same thing.</p>
+<p>An agent that uses a deliberative argument engine behaves differently from one that uses a simple plan generator. An agent that can justify tradeoffs under governance constraints is different from one that can only rank options heuristically. The protocol models those differences explicitly through namespaced <code>&amp;reason</code> subtypes.</p>
+<h3 id="blk-4222">What <code>&amp;reason</code> means in the protocol</h3>
+<p><code>&amp;reason</code> captures the part of cognition that answers questions like:</p>
+<ul><li><p>What action should be taken?</p></li><li><p>Which explanation is best supported by evidence?</p></li><li><p>Which candidate response is safest under policy?</p></li><li><p>Which plan best satisfies the goal with the current constraints?</p></li><li><p>Should the system act, ask for clarification, or escalate?</p></li></ul>
+<p>In protocol terms, <code>&amp;reason</code> is responsible for:</p>
+<ul><li><p>evaluating context</p></li><li><p>comparing alternatives</p></li><li><p>selecting actions</p></li><li><p>applying governance-aware decision criteria</p></li><li><p>producing a decision artifact suitable for downstream execution or escalation</p></li></ul>
+<p>The key idea is that <strong>reasoning is a capability interface</strong>, not a vendor name and not a hidden runtime detail.</p>
+<h3 id="blk-4248">Typical <code>&amp;reason</code> subtypes</h3>
+<p>The subtype system keeps the top-level primitive compact while allowing specialization.</p>
+<h4 id="blk-4250"><code>&amp;reason.argument</code></h4>
+<p>Use when the agent should evaluate claims, evidence, and tradeoffs explicitly.</p>
+<p>Good fit for:</p>
+<ul><li><p>incident response</p></li><li><p>policy-grounded support</p></li><li><p>compliance review</p></li><li><p>research synthesis</p></li><li><p>decision justification</p></li></ul>
+<p>Typical operations:</p>
+<ul><li><p><code>evaluate</code></p></li><li><p><code>deliberate</code></p></li><li><p><code>justify</code></p></li><li><p><code>compare</code></p></li></ul>
+<h4 id="blk-4274"><code>&amp;reason.vote</code></h4>
+<p>Use when multiple candidate actions, models, or sub-agents should be aggregated into a single choice.</p>
+<p>Good fit for:</p>
+<ul><li><p>ensemble decisions</p></li><li><p>committee-style workflows</p></li><li><p>multi-agent consensus</p></li><li><p>ranking multiple candidate outputs</p></li></ul>
+<p>Typical operations:</p>
+<ul><li><p><code>propose</code></p></li><li><p><code>vote</code></p></li><li><p><code>aggregate</code></p></li><li><p><code>select</code></p></li></ul>
+<h4 id="blk-4296"><code>&amp;reason.plan</code></h4>
+<p>Use when the agent should produce or refine an action sequence rather than only picking one decision.</p>
+<p>Good fit for:</p>
+<ul><li><p>workflow orchestration</p></li><li><p>task decomposition</p></li><li><p>route or sequence planning</p></li><li><p>tool-using agents with multi-step goals</p></li></ul>
+<p>Typical operations:</p>
+<ul><li><p><code>plan</code></p></li><li><p><code>revise</code></p></li><li><p><code>simulate</code></p></li><li><p><code>commit</code></p></li></ul>
+<h4 id="blk-4318"><code>&amp;reason.deliberate</code></h4>
+<p>Use when the agent must reason through <strong>feedback loops</strong> or cyclic knowledge regions, not just rank independent options.</p>
+<p>Good fit for:</p>
+<ul><li><p>graph-topology-aware reasoning</p></li><li><p>circular dependency analysis</p></li><li><p>fault-line decomposition and reconciliation</p></li><li><p>high-ambiguity domains where single-pass reasoning is brittle</p></li></ul>
+<p>Typical operations:</p>
+<ul><li><p><code>deliberate</code></p></li><li><p><code>decompose</code></p></li><li><p><code>reconcile</code></p></li></ul>
+<p>This subtype is commonly paired with <code>&amp;memory.graph</code> topology outputs (for example SCC and κ analysis) before writing crystallized conclusions back to memory.</p>
+<h4 id="blk-4339"><code>&amp;reason.attend</code></h4>
+<p>Use when the agent should proactively decide <strong>what to think about next</strong> under budget and governance constraints.</p>
+<p>Good fit for:</p>
+<ul><li><p>attention map generation from active goals</p></li><li><p>coverage-gap triage</p></li><li><p>bounded autonomous dispatch loops</p></li><li><p>observe/advise/act autonomy workflows</p></li></ul>
+<p>Typical operations:</p>
+<ul><li><p><code>survey</code></p></li><li><p><code>triage</code></p></li><li><p><code>dispatch</code></p></li></ul>
+<p>This subtype is a meta-reasoning surface: it orchestrates focus, escalation, and proposal behavior rather than only producing one local decision.</p>
+<h4 id="blk-4360">Other plausible future subtypes</h4>
+<p>The namespace should stay disciplined, but the model allows future additions such as:</p>
+<ul><li><p><code>&amp;reason.reflect</code></p></li><li><p><code>&amp;reason.verify</code></p></li><li><p><code>&amp;reason.rank</code></p></li><li><p><code>&amp;reason.policy</code></p></li></ul>
+<p>The rule of thumb is simple: add a subtype only if it represents a distinct interface and contract, not just a prompt style.</p>
+<h3 id="blk-4372">Why reasoning should be modeled separately from memory</h3>
+<p>It is tempting to say that &quot;memory + a strong model&quot; already gives you reasoning. In practice, separating the two capabilities gives you better architecture.</p>
+<h4 id="blk-4374"><code>&amp;memory</code> answers:</h4>
+<ul><li><p>What does the agent know?</p></li><li><p>What examples, incidents, facts, or relationships can it retrieve?</p></li></ul>
+<h4 id="blk-4380"><code>&amp;reason</code> answers:</h4>
+<ul><li><p>Given this evidence, what should the agent conclude or do?</p></li><li><p>How should tradeoffs be evaluated?</p></li><li><p>Is the output safe under governance?</p></li><li><p>Is escalation required?</p></li></ul>
+<p>This separation matters because it enables:</p>
+<ul><li><p>provider-agnostic reasoning interfaces</p></li><li><p>explicit pipeline validation</p></li><li><p>audit-friendly decision stages</p></li><li><p>governance-aware decision points</p></li><li><p>distinct A2A skill mapping for reasoning surfaces</p></li></ul>
+<h3 id="blk-4402">Architecture patterns for <code>&amp;reason</code></h3>
+<h4 id="blk-4403">1. Evidence-first reasoning</h4>
+<p>Pattern:</p>
+<ul><li><p>retrieve memory</p></li><li><p>enrich with current context</p></li><li><p>pass enriched context into a reasoning capability</p></li><li><p>produce a decision plus supporting explanation</p></li></ul>
+<p>Common flow:</p>
+<p>stream_data</p>
+<p>Use this when the system should justify decisions based on retrievable evidence.</p>
+<h4 id="blk-4417">2. Policy-grounded support reasoning</h4>
+<p>Pattern:</p>
+<ul><li><p>retrieve support policy and customer context</p></li><li><p>compare candidate responses</p></li><li><p>apply safety and escalation rules</p></li><li><p>return a response plan or escalate</p></li></ul>
+<p>Common flow:</p>
+<p>support_case</p>
+<p>Use this when support quality and governance matter more than raw speed.</p>
+<h4 id="blk-4431">3. Multi-agent consensus reasoning</h4>
+<p>Pattern:</p>
+<ul><li><p>generate multiple candidate actions</p></li><li><p>collect votes or rankings</p></li><li><p>aggregate into a final decision</p></li><li><p>publish a consensus artifact</p></li></ul>
+<p>Common flow:</p>
+<p>candidate_actions</p>
+<p>Use this when one heuristic or one model should not decide alone.</p>
+<h4 id="blk-4445">4. Planning-oriented reasoning</h4>
+<p>Pattern:</p>
+<ul><li><p>infer goal state</p></li><li><p>generate possible plans</p></li><li><p>evaluate feasibility and constraints</p></li><li><p>output an ordered action plan</p></li></ul>
+<p>Common flow:</p>
+<p>task_context</p>
+<p>Use this when the output must be a sequence rather than a single judgment.</p>
+<h3 id="blk-4459">Governance and <code>&amp;reason</code></h3>
+<p><code>&amp;reason</code> is where governance becomes operational.</p>
+<p>The declaration-level governance object may include:</p>
+<ul><li><p><code>hard</code></p></li><li><p><code>soft</code></p></li><li><p><code>escalate_when</code></p></li></ul>
+<p>Reasoning capabilities are often the place where those rules are actually interpreted or enforced in decision selection.</p>
+<p>Examples:</p>
+<ul><li><p>hard: &quot;Never expose private customer data&quot;</p></li><li><p>soft: &quot;Prefer conservative remediation over risky automation&quot;</p></li><li><p>escalate: &quot;confidence_below = 0.7&quot;</p></li></ul>
+<p>This makes <code>&amp;reason</code> the natural capability domain for:</p>
+<ul><li><p>policy application</p></li><li><p>constitutional decision filters</p></li><li><p>escalation thresholds</p></li><li><p>evidence-weighted override logic</p></li></ul>
+<p>If a system has governance requirements but no explicit reasoning layer, those rules often end up scattered across prompts, middleware, and hidden business logic.</p>
+<h3 id="blk-4489">Provenance implications</h3>
+<p>A <code>&amp;reason</code> step should be one of the most visible parts of the provenance chain.</p>
+<p>A reasoning operation typically consumes multiple upstream artifacts and emits a high-value output such as:</p>
+<ul><li><p><code>decision</code></p></li><li><p><code>action_recommendation</code></p></li><li><p><code>ranked_options</code></p></li><li><p><code>response_plan</code></p></li><li><p><code>escalation_request</code></p></li></ul>
+<p>That means provenance for <code>&amp;reason</code> often needs to preserve:</p>
+<ul><li><p>which upstream capability outputs were used</p></li><li><p>which provider produced the reasoning step</p></li><li><p>which operation was used</p></li><li><p>what governance profile was active</p></li><li><p>hashes of the input and output artifacts</p></li><li><p>any transport trace IDs if the provider is reached over MCP</p></li></ul>
+<p>A reasoning capability is often the step auditors ask about first:</p>
+<blockquote><p>Why did the system choose this action?</p></blockquote>
+<p>That is why reasoning and provenance should stay tightly connected in the protocol.</p>
+<h3 id="blk-4521">Contract patterns for <code>&amp;reason</code></h3>
+<p>A capability contract makes <code>&amp;reason</code> machine-checkable.</p>
+<p>A typical argument-style contract might look like this:</p>
+<p>{ &quot;capability&quot;: &quot;&amp;reason.argument&quot;, &quot;operations&quot;: { &quot;evaluate&quot;:   { &quot;in&quot;: &quot;enriched_context&quot;, &quot;out&quot;: &quot;decision&quot; }, &quot;deliberate&quot;: { &quot;in&quot;: &quot;candidate_set&quot;,    &quot;out&quot;: &quot;ranked_options&quot; }, &quot;justify&quot;:    { &quot;in&quot;: &quot;decision&quot;,         &quot;out&quot;: &quot;justification&quot; } }, &quot;accepts_from&quot;: [&quot;&amp;memory.*&quot;, &quot;&amp;time.*&quot;, &quot;&amp;space.*&quot;, &quot;context&quot;], &quot;feeds_into&quot;:   [&quot;&amp;memory.*&quot;, &quot;output&quot;], &quot;a2a_skills&quot;:   [&quot;decision-evaluation&quot;, &quot;evidence-based-deliberation&quot;] }</p>
+<p>This contract does three useful things:</p>
+<ol><li><p>defines legal operations</p></li><li><p>defines type boundaries</p></li><li><p>defines what can precede or follow the reasoning step</p></li></ol>
+<p>That lets a conforming implementation reject pipelines that &quot;look plausible&quot; but do not compose correctly.</p>
+<h3 id="blk-4534">Protocol shape for the <code>&amp;reason</code> primitive</h3>
+<p>In a registry-oriented shape, the <code>&amp;reason</code> primitive may be published like this:</p>
+<p>{ &quot;&amp;reason&quot;: { &quot;subtypes&quot;: { &quot;argument&quot;: { &quot;ops&quot;: [&quot;evaluate&quot;, &quot;deliberate&quot;, &quot;justify&quot;, &quot;compare&quot;], &quot;description&quot;: &quot;Evidence-weighted argumentative reasoning.&quot; }, &quot;vote&quot;: { &quot;ops&quot;: [&quot;propose&quot;, &quot;vote&quot;, &quot;aggregate&quot;, &quot;select&quot;], &quot;description&quot;: &quot;Consensus or committee-style decision aggregation.&quot; }, &quot;plan&quot;: { &quot;ops&quot;: [&quot;plan&quot;, &quot;revise&quot;, &quot;simulate&quot;, &quot;commit&quot;], &quot;description&quot;: &quot;Goal-oriented sequencing and plan generation.&quot; } }, &quot;providers&quot;: [ { &quot;id&quot;: &quot;deliberatic&quot;, &quot;subtypes&quot;: [&quot;argument&quot;, &quot;vote&quot;], &quot;protocol&quot;: &quot;mcp_v1&quot; } ] } }</p>
+<p>This is not a complete registry; it is the primitive-level shape a registry entry may take.</p>
+<h3 id="blk-4538">Schema considerations for <code>&amp;reason</code></h3>
+<p>At the declaration level, a <code>&amp;reason</code> capability appears in <code>capabilities</code> just like any other protocol capability:</p>
+<p>{ &quot;&amp;reason.argument&quot;: { &quot;provider&quot;: &quot;deliberatic&quot;, &quot;config&quot;: { &quot;governance&quot;: &quot;constitutional&quot; } } }</p>
+<p>At the contract level, a <code>&amp;reason</code> capability should define:</p>
+<ul><li><p>supported operations</p></li><li><p>input and output types</p></li><li><p>composition adjacency via <code>accepts_from</code></p></li><li><p>composition adjacency via <code>feeds_into</code></p></li><li><p>optional A2A skill mappings</p></li></ul>
+<p>At the registry level, <code>&amp;reason</code> should publish:</p>
+<ul><li><p>subtype names</p></li><li><p>operation sets</p></li><li><p>providers that satisfy those subtypes</p></li><li><p>optional transport and metadata</p></li></ul>
+<h3 id="blk-4563">Example providers</h3>
+<p>These are examples of provider categories and ecosystem fits, not an exhaustive registry.</p>
+<h4 id="blk-4565"><code>deliberatic</code></h4>
+<p>Default ecosystem example for argumentation, consensus, and planning-oriented reasoning.</p>
+<p>Likely fit for:</p>
+<ul><li><p><code>&amp;reason.argument</code></p></li><li><p><code>&amp;reason.vote</code></p></li><li><p><code>&amp;reason.plan</code></p></li></ul>
+<h4 id="blk-4575"><code>graphonomous</code></h4>
+<p>Default ecosystem example for topology-aware deliberation and proactive attention orchestration.</p>
+<p>Likely fit for:</p>
+<ul><li><p><code>&amp;reason.deliberate</code></p></li><li><p><code>&amp;reason.attend</code></p></li></ul>
+<p>Typical strengths include:</p>
+<ul><li><p>κ-aware routing from graph topology into focused reasoning</p></li><li><p>decomposition/reconciliation flows for cyclic regions</p></li><li><p>bounded survey/triage/dispatch attention loops with autonomy controls</p></li></ul>
+<h4 id="blk-4591">Custom policy engine</h4>
+<p>A custom enterprise reasoner may satisfy:</p>
+<ul><li><p><code>&amp;reason.argument</code></p></li><li><p><code>&amp;reason.plan</code></p></li><li><p><code>&amp;reason.attend</code></p></li></ul>
+<p>especially where governance and auditability are more important than model creativity, and where organizations need explicit control over escalation and approval gates.</p>
+<h4 id="blk-4601">Framework-native planner</h4>
+<p>A planner embedded in a workflow engine may satisfy:</p>
+<ul><li><p><code>&amp;reason.plan</code></p></li></ul>
+<p>if it can expose stable contracts and operations.</p>
+<h4 id="blk-4607">Ensemble consensus service</h4>
+<p>A committee or voting service may satisfy:</p>
+<ul><li><p><code>&amp;reason.vote</code></p></li></ul>
+<p>when the system combines multiple candidate outputs before selection.</p>
+<h4 id="blk-4613">Specialized deliberation runtime</h4>
+<p>A dedicated deliberation runtime may satisfy:</p>
+<ul><li><p><code>&amp;reason.deliberate</code></p></li></ul>
+<p>when it can consume topology-rich inputs (for example SCC/κ/fault-line context) and produce confidence-bearing conclusions with provenance linkage.</p>
+<p>The key protocol point is not which provider is &quot;best.&quot; It is that a provider should satisfy the declared interface and contract.</p>
+<h3 id="blk-4620">Example <code>ampersand.json</code> fragment</h3>
+<p>A governance-aware reasoning binding might look like this:</p>
+<p>{ &quot;&amp;reason.argument&quot;: { &quot;provider&quot;: &quot;deliberatic&quot;, &quot;config&quot;: { &quot;governance&quot;: &quot;constitutional&quot;, &quot;mode&quot;: &quot;evidence-first&quot; } } }</p>
+<p>A planning-focused binding might look like this:</p>
+<p>{ &quot;&amp;reason.plan&quot;: { &quot;provider&quot;: &quot;auto&quot;, &quot;need&quot;: &quot;multi-step operational planning with policy-aware revision&quot; } }</p>
+<h3 id="blk-4625">Example pipeline using <code>&amp;reason</code></h3>
+<h4 id="blk-4626">Infrastructure operations pipeline</h4>
+<p>stream_data</p>
+<p>Interpretation:</p>
+<ul><li><p><code>&amp;time.anomaly.detect()</code> finds anomalous patterns</p></li><li><p><code>&amp;memory.graph.enrich()</code> adds similar incident history</p></li><li><p><code>&amp;space.fleet.enrich()</code> adds regional or fleet state</p></li><li><p><code>&amp;reason.argument.evaluate()</code> decides what action is justified</p></li></ul>
+<h4 id="blk-4638">Customer support pipeline</h4>
+<p>support_case</p>
+<p>Interpretation:</p>
+<ul><li><p>knowledge base retrieval adds policy and product context</p></li><li><p>episodic memory adds prior interactions</p></li><li><p>reasoning chooses the safest and most useful response path</p></li></ul>
+<h4 id="blk-4648">Planning pipeline</h4>
+<p>task_context</p>
+<p>Interpretation:</p>
+<ul><li><p>graph memory supplies dependency context</p></li><li><p>spatial routing supplies route constraints</p></li><li><p>planning produces an executable sequence</p></li></ul>
+<h3 id="blk-4658">A2A implications</h3>
+<p>A reasoning capability may also advertise A2A-facing skills.</p>
+<p>Examples:</p>
+<ul><li><p><code>decision-evaluation</code></p></li><li><p><code>evidence-based-deliberation</code></p></li><li><p><code>policy-grounded-response-selection</code></p></li><li><p><code>multi-agent-consensus</code></p></li><li><p><code>goal-plan-generation</code></p></li></ul>
+<p>This matters because <code>&amp;reason</code> often maps cleanly to externally advertised agent behavior.</p>
+<p>An A2A agent card generated from a declaration containing <code>&amp;reason.argument</code> may publish a skill that reflects its ability to evaluate evidence and justify decisions, rather than just saying the agent has &quot;reasoning.&quot;</p>
+<h3 id="blk-4674">Research grounding</h3>
+<p>The <code>&amp;reason</code> primitive sits at the intersection of several useful research threads.</p>
+<h4 id="blk-4676">Cognitive architectures</h4>
+<p>Research on cognitive architectures supports decomposing intelligence into functional systems rather than treating it as a monolith. <code>&amp;reason</code> is the protocol expression of the deliberation and decision layer in that decomposition.</p>
+<h4 id="blk-4678">Argumentation and deliberation</h4>
+<p>Formal argumentation, evidence comparison, and structured deliberation all support the idea that &quot;reasoning&quot; should be treated as more than one hidden model call.</p>
+<h4 id="blk-4680">Planning systems</h4>
+<p>Planning research reinforces the need to separate decision selection from sequence generation. This is why <code>&amp;reason.plan</code> should remain distinct from <code>&amp;reason.argument</code>.</p>
+<h4 id="blk-4682">Constitutional and policy-aware AI</h4>
+<p>Work on constraint-aware or constitution-guided model behavior supports the protocol's decision to connect reasoning closely with governance.</p>
+<h4 id="blk-4684">Multi-agent consensus</h4>
+<p>Ensemble and committee-style decision systems support <code>&amp;reason.vote</code> as a meaningful interface rather than just an implementation trick.</p>
+<p>The protocol is not trying to encode all of these fields directly. It is taking the practical step of giving them a shared declarative surface.</p>
+<h3 id="blk-4687">Design rules for adding new <code>&amp;reason</code> subtypes</h3>
+<p>If you want to extend the namespace, use a high bar.</p>
+<p>A new subtype should:</p>
+<ul><li><p>represent a distinct reasoning interface</p></li><li><p>imply a meaningful contract difference</p></li><li><p>support stable operation names</p></li><li><p>be useful across more than one provider</p></li><li><p>not just duplicate an existing subtype with different branding</p></li></ul>
+<p>Good reasons to add a subtype:</p>
+<ul><li><p>different input/output contract</p></li><li><p>materially different decision semantics</p></li><li><p>distinct governance or provenance requirements</p></li><li><p>reusable external skill mapping</p></li></ul>
+<p>Bad reasons to add a subtype:</p>
+<ul><li><p>different prompt wording</p></li><li><p>one-off product packaging</p></li><li><p>marketing differentiation without contract difference</p></li></ul>
+<h3 id="blk-4719">Practical guidance</h3>
+<p>Use <code>&amp;reason.argument</code> when you need:</p>
+<ul><li><p>evidence-weighted evaluation</p></li><li><p>justifiable decisions</p></li><li><p>governance-aware deliberation</p></li><li><p>auditable tradeoff analysis</p></li></ul>
+<p>Use <code>&amp;reason.vote</code> when you need:</p>
+<ul><li><p>committee-style consensus</p></li><li><p>ensemble aggregation</p></li><li><p>multi-agent ranking and selection</p></li></ul>
+<p>Use <code>&amp;reason.plan</code> when you need:</p>
+<ul><li><p>multi-step plans</p></li><li><p>revisable action sequences</p></li><li><p>structured decomposition of goals into steps</p></li></ul>
+<h3 id="blk-4746">Summary</h3>
+<p><code>&amp;reason</code> is the capability family for <strong>decision-making in the [&amp;] Protocol</strong>.</p>
+<p>It exists so that reasoning can be:</p>
+<ul><li><p>declared explicitly</p></li><li><p>separated from memory and retrieval</p></li><li><p>validated through contracts</p></li><li><p>connected to governance</p></li><li><p>preserved in provenance</p></li><li><p>published as A2A-facing skill surfaces</p></li><li><p>compiled into downstream runtime configuration</p></li></ul>
+<p>Without <code>&amp;reason</code>, an agent declaration can say what information exists but not how decisions are formed.</p>
+<p>With <code>&amp;reason</code>, the protocol can describe not only what the agent knows, but <strong>how it decides</strong>.</p>
+<h3 id="blk-4766">Related pages</h3>
+<ul><li><p><code>docs/capabilities/memory.md</code></p></li><li><p><code>docs/capabilities/time.md</code></p></li><li><p><code>docs/capabilities/space.md</code></p></li><li><p><code>docs/architecture.md</code></p></li><li><p><code>docs/research.md</code></p></li><li><p><code>SPEC.md</code></p></li></ul></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/capabilities/reason.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-4194" class="lvl2">Why &amp;reason exists as a first-class primitive</a><a href="#blk-4222" class="lvl2">What &amp;reason means in the protocol</a><a href="#blk-4248" class="lvl2">Typical &amp;reason subtypes</a><a href="#blk-4250" class="lvl3">&amp;reason.argument</a><a href="#blk-4274" class="lvl3">&amp;reason.vote</a><a href="#blk-4296" class="lvl3">&amp;reason.plan</a><a href="#blk-4318" class="lvl3">&amp;reason.deliberate</a><a href="#blk-4339" class="lvl3">&amp;reason.attend</a><a href="#blk-4360" class="lvl3">Other plausible future subtypes</a><a href="#blk-4372" class="lvl2">Why reasoning should be modeled separately from memory</a><a href="#blk-4374" class="lvl3">&amp;memory answers:</a><a href="#blk-4380" class="lvl3">&amp;reason answers:</a><a href="#blk-4402" class="lvl2">Architecture patterns for &amp;reason</a><a href="#blk-4403" class="lvl3">1. Evidence-first reasoning</a><a href="#blk-4417" class="lvl3">2. Policy-grounded support reasoning</a><a href="#blk-4431" class="lvl3">3. Multi-agent consensus reasoning</a><a href="#blk-4445" class="lvl3">4. Planning-oriented reasoning</a><a href="#blk-4459" class="lvl2">Governance and &amp;reason</a><a href="#blk-4489" class="lvl2">Provenance implications</a><a href="#blk-4521" class="lvl2">Contract patterns for &amp;reason</a><a href="#blk-4534" class="lvl2">Protocol shape for the &amp;reason primitive</a><a href="#blk-4538" class="lvl2">Schema considerations for &amp;reason</a><a href="#blk-4563" class="lvl2">Example providers</a><a href="#blk-4565" class="lvl3">deliberatic</a><a href="#blk-4575" class="lvl3">graphonomous</a><a href="#blk-4591" class="lvl3">Custom policy engine</a><a href="#blk-4601" class="lvl3">Framework-native planner</a><a href="#blk-4607" class="lvl3">Ensemble consensus service</a><a href="#blk-4613" class="lvl3">Specialized deliberation runtime</a><a href="#blk-4620" class="lvl2">Example ampersand.json fragment</a><a href="#blk-4625" class="lvl2">Example pipeline using &amp;reason</a><a href="#blk-4626" class="lvl3">Infrastructure operations pipeline</a><a href="#blk-4638" class="lvl3">Customer support pipeline</a><a href="#blk-4648" class="lvl3">Planning pipeline</a><a href="#blk-4658" class="lvl2">A2A implications</a><a href="#blk-4674" class="lvl2">Research grounding</a><a href="#blk-4676" class="lvl3">Cognitive architectures</a><a href="#blk-4678" class="lvl3">Argumentation and deliberation</a><a href="#blk-4680" class="lvl3">Planning systems</a><a href="#blk-4682" class="lvl3">Constitutional and policy-aware AI</a><a href="#blk-4684" class="lvl3">Multi-agent consensus</a><a href="#blk-4687" class="lvl2">Design rules for adding new &amp;reason subtypes</a><a href="#blk-4719" class="lvl2">Practical guidance</a><a href="#blk-4746" class="lvl2">Summary</a><a href="#blk-4766" class="lvl2">Related pages</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/capabilities/govern.md/">&amp;govern: Cross-Cutting Governance for Agents</a><a href="/AmpersandBoxDesign/docs/capabilities/memory.md/">&amp;memory: Capability Deep Dive</a><a href="/AmpersandBoxDesign/docs/capabilities/space.md/">&amp;space: Spatial Intelligence for Agents</a><a href="/AmpersandBoxDesign/docs/capabilities/time.md/">&amp;time: Temporal Intelligence in the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraozy7g3fytqjdsmzyafyhnskusht54pn3sodaxiwnfr6il3m4jadq</div></div></div>
+</div></div>
+</body></html>

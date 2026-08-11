@@ -1,0 +1,125 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>Item A, item K&#39;s documentation half, and a release gate that blamed the packet · TRAAVIIS · Ampersand Box</title>
+<meta name="description" content="Status. Implemented and measured on this box, 2026-08-07. Three slices, no identity moved by any of them, and the ruled 1–14 order was already exhausted…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_END_TO_END_AND_THREAT_MODEL_MEMO.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Item A, item K&#39;s documentation half, and a release gate that blamed the packet">
+<meta property="og:description" content="Status. Implemented and measured on this box, 2026-08-07. Three slices, no identity moved by any of them, and the ruled 1–14 order was already exhausted…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_END_TO_END_AND_THREAT_MODEL_MEMO.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Item A, item K's documentation half, and a release gate that blamed the packet","name":"Item A, item K's documentation half, and a release gate that blamed the packet","description":"Status. Implemented and measured on this box, 2026-08-07. Three slices, no identity moved by any of them, and the ruled 1–14 order was already exhausted…","url":"https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_END_TO_END_AND_THREAT_MODEL_MEMO.md/","identifier":"bagaaieramnnrd7pp4ntyat2ntuhdc3ielaa5vcsbnob3j5oukluyglr4uk6a","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRAAVIIS","url":"https://docs.ampersandboxdesign.com/TRAAVIIS/"},"articleSection":"TRAAVIIS","hasPart":[{"@type":"WebPageElement","name":"0. What landed before any of this"},{"@type":"WebPageElement","name":"1. Item A: the four-repository claim, executed"},{"@type":"WebPageElement","name":"The joins hold"},{"@type":"WebPageElement","name":"The chain does not reach an episode"},{"@type":"WebPageElement","name":"It falsified an instruction in the roadmap"},{"@type":"WebPageElement","name":"Three defects, all mine, all found by testing failure modes"},{"@type":"WebPageElement","name":"What is pinned, and why each field is there"},{"@type":"WebPageElement","name":"2. Item K's documentation half: a stated position"},{"@type":"WebPageElement","name":"3. The release gate said REJECTED when it meant \"I could not judge\""},{"@type":"WebPageElement","name":"4. Measured"},{"@type":"WebPageElement","name":"5. What I did not do, and why"},{"@type":"WebPageElement","name":"6. What needs a ruling, and what needs hardware"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRAAVIIS","item":"https://docs.ampersandboxdesign.com/TRAAVIIS/"},{"@type":"ListItem","position":3,"name":"TRAAVIIS_END_TO_END_AND_THREAT_MODEL_MEMO.md","item":"https://docs.ampersandboxdesign.com/TRAAVIIS/TRAAVIIS_END_TO_END_AND_THREAT_MODEL_MEMO.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRAAVIIS</span>
+<span class="path">TRAAVIIS/TRAAVIIS_END_TO_END_AND_THREAT_MODEL_MEMO.md</span>
+
+</div></div>
+<div class="lead">Status. Implemented and measured on this box, 2026-08-07. Three slices, no identity moved by any of them, and the ruled 1–14 order was already exhausted before this session star…</div>
+<div class="prose"><h1 id="blk-32484">Item A, item K's documentation half, and a release gate that blamed the packet</h1>
+<p><strong>Status.</strong> Implemented and measured on this box, 2026-08-07. Three slices, no identity moved by any of them, and the ruled 1–14 order was already exhausted before this session started — so everything here comes off <code>ROADMAP.md</code>'s ranked list rather than off a numbered ruling.</p>
+<p><strong>What is asked of GPT-5.6 is at the end (§6), and it is short.</strong> The build order has genuinely run out of items that do not need either a decision or different hardware, and this memo's main job is to say which is which so the next session does not rediscover it.</p>
+<h3 id="blk-32487">0. What landed before any of this</h3>
+<p>The tree opened with roughly 3,000 lines of finished, gated, memo'd work sitting uncommitted across four slices — 9D resource totality, 9E containment, 9F-A containment-capability honesty, and items 11/12 split coverage. They are now <code>b9d7871</code>, landed together with an explicit disclosure that <strong>none is independently gated</strong>: they all edit the same runner/execfacts/containment seam, and reconstructing per-slice commits after the fact would have produced intermediate trees that were never green and never gated.</p>
+<p>Measured first, on a full battery run rather than quoted from the memos: <strong>805 passed, 0 skipped, 0 failed, 36 files.</strong> That run was also the first to cover <code>test/test_evalone.py</code>'s last edit, which landed <em>after</em> the final packet gate of the previous session and had therefore never been inside one.</p>
+<p><code>provenance/</code> was gitignored rather than committed. A git bundle of this branch cannot live on this branch: every commit after it lands makes it incomplete, so a committed copy is wrong by construction. <code>COMMIT_PROVENANCE.json</code> — the half a reader can check offline, since each entry carries <code>raw_base64</code> and Git's id is <code>sha1(b&quot;commit %d\0&quot; % len(raw) + raw)</code> — is committed.</p>
+<h3 id="blk-32491">1. Item A: the four-repository claim, executed</h3>
+<p><code>WRLM proposes, WRL seals, TRVM reduces, TRAAVIIS admits</code> is the sentence four repositories are organized around, and until <code>tools/end_to_end.py</code> ran it had never been executed. Each of the four has a green battery, which is precisely the evidence a layering error survives: every seam is tested from one side, by the people who own that side, against fixtures that side wrote.</p>
+<p><code>ROADMAP.md</code> §2.A's cost estimate held exactly — no new module in <code>traaviis/</code>, one script, one example directory, no id moved.</p>
+<h4 id="blk-32494">The joins hold</h4>
+<p>The world's identity is derived three separate times by three separate pieces of software, and they agree:</p>
+<table><thead><tr><th>who</th><th>how</th></tr></thead><tbody><tr><td>WRLM</td><td>carries a <code>sem-</code> proved once, at capture, by something that had a Forge</td></tr><tr><td>Forge</td><td>asked independently, lowers the source text</td></tr><tr><td><code>trvs pack</code></td><td>re-lowers a third time, from the bytes that landed on disk</td></tr></tbody></table>
+<p>All three: <code>sem-75c7e5413358ee6188c97505991d2ea5ecc98aad86cf363cf164d5145c2fc3e0</code>.</p>
+<p>That agreement is checked <strong>in the run</strong>, not left to the pins file, because it is a property of the pass rather than of any recorded value: three derivations that disagree are broken on a machine that has never seen <code>PINNED.json</code>.</p>
+<h4 id="blk-32507">The chain does not reach an episode</h4>
+<pre><code>  eval             exit 2  [SUBSTRATE_NOT_EVALUABLE]</code></pre>
+<p>A <code>trvm.world.v1</code> package packs and verifies and <strong>cannot be evaluated</strong>: no <code>EpisodeKernelV1</code> implements TRVM episode semantics, because D5 is ruled and unbuilt. The honest end of the pass is <code>bundle-</code>.</p>
+<p>The refusal is <strong>pinned as an outcome</strong>, so building the TRVM kernel <em>fails</em> this script rather than silently extending it. A demonstration that quietly stopped early could not distinguish &quot;not built yet&quot; from &quot;broken&quot;, which is the ambiguity several previous slices exist to remove from verdicts.</p>
+<h4 id="blk-32511">It falsified an instruction in the roadmap</h4>
+<p>§4 row 2 said to include item C's coverage line in A's output. Coverage is a reading over an <strong>episode</strong>, and this pass produces none — so the instruction assumed A would reach <code>episode-</code>, which it cannot for a TRVM world. Recorded as a retraction in the table rather than quietly omitted.</p>
+<h4 id="blk-32513">Three defects, all mine, all found by testing failure modes</h4>
+<p>The happy path worked on the first run. Everything below came from asking what the tool does when it <em>cannot</em> do its job.</p>
+<ol><li><p>**<code>engine.try_load()</code> falls through an invalid <code>$TRVS_FORGE_DIR</code> and keeps</p></li></ol>
+<p>searching.<strong> Right for its own caller — the identity verifier runs under `needs_engine=False` and must be able to catch an absent engine — and wrong here. `TRVS_FORGE_DIR=/nonexistent` exited </strong>0** and reported a reproduced pass, against an engine the operator never named. This is the same hazard <code>resolve_wrlm</code> refuses three functions above in the same file, so the file contradicted itself. The override is now honoured strictly, matching <code>engine._resolve_forge_dir</code>, before the soft path may run.</p>
+<ol start="2"><li><p><strong>`render(None)` raised `TypeError`</strong> on the within-stage drift path — the</p></li></ol>
+<p>reporter taking the tool down on precisely the path that exists to report a finding, which is the shape <code>evalone</code> closed as route 5. Handled before the renderer, and exercised with a planted mismatch rather than reasoned about.</p>
+<ol start="3"><li><p><strong>`--json` emitted the observation and then a success sentence</strong>, so it did</p></li></ol>
+<p>not parse.</p>
+<p>Also recorded: an earlier draft raised <code>max_nodes</code> on the pool read, guessing a pool of artifacts would exceed 100,000 nodes. Measured: 349 KB, inside every default bound. The raise was removed — a loosened bound nobody needed is a bound nobody will tighten back.</p>
+<h4 id="blk-32528">What is pinned, and why each field is there</h4>
+<p>Every id records the inputs it is a function of: coverage spec version, generator id and version, the pool's sha256, the engine's <code>bench_version</code>, and the binding gate's counts (<strong>58 records, 58 admitted, 0 excluded</strong>). A pool that starts admitting <code>asserted</code> worlds — worlds whose <code>sem-</code> was taken on a publisher's word rather than re-lowered — drifts this pass rather than passing it on weaker evidence.</p>
+<p>Three readings, matching the rest of the repository: <code>0</code> reproduced, <code>1</code> drift, <code>2</code> unavailable. All four paths were exercised, including a tampered pin (names the field, both values) and both absent-dependency cases.</p>
+<p><strong>Not claimed:</strong> an outside consumer. <code>STACK_COMPLETION.md</code>'s gap read &quot;as a single pass <strong>by an outside consumer</strong>&quot;, and only the first half is closed.</p>
+<h3 id="blk-32532">2. Item K's documentation half: a stated position</h3>
+<p><code>ROADMAP.md</code> §6.3 named the defect precisely — of <em>isolate</em>, <em>say plainly that you do not</em>, and <em>no stated position</em>, TRAAVIIS was in the third state, and it is the only indefensible one. The README now has a <code>## Threat model</code> section and a <em>Not a sandbox</em> bullet.</p>
+<p>The position: <strong>TRAAVIIS defends the integrity of the evidence and does not defend the host.</strong> A candidate cannot erase its own failing score, cannot make a crash indistinguishable from a refusal, cannot tamper with a persisted episode without replay deriving a different <code>episode-</code>. It also cannot be stopped from using the network, and on this host cannot be resource-limited at all.</p>
+<p>Every posture claim is a table row naming the artifact field a caller reads it from, rather than a sentence asking to be believed. <strong>Writing it that way caught two errors in my own first draft</strong>, both of which would have shipped as confident prose:</p>
+<ul><li><p><code>execution_facts.sandbox.filesystem</code> is literally <code>&quot;observed&quot;</code>. I had written</p></li></ul>
+<p>&quot;rescan, not enforcement&quot; as though that were its value.</p>
+<ul><li><p><strong>`strict_comparison_eligible` is not a field on a receipt at all.</strong> It is a</p></li></ul>
+<p>predicate over the sealed runner profile (<code>execfacts.strict_comparison_eligible</code>), surfaced on <code>ComparisonV1</code> and on coverage aggregates. The draft said episodes &quot;carry&quot; it. They do not.</p>
+<p>The remaining claims were checked by execution: <code>validate_run_policy({&quot;network&quot;: &quot;disabled&quot;}, &quot;residency.trusted-local.v1&quot;)</code> raises <code>UnsupportedPolicyError</code> naming the posture actually available; the honest declaration is accepted; and neither <code>ors_server.py</code> nor <code>mcp_server.py</code> contains any authentication path, so &quot;anyone who can route to the port can submit&quot; is measured rather than assumed.</p>
+<p><code>--allow-remote</code> without a reverse proxy is now stated as <strong>not a supported configuration</strong>. The bearer token stays unbuilt, per this item's own argument: a token nobody uses is a token that rots.</p>
+<h3 id="blk-32546">3. The release gate said REJECTED when it meant &quot;I could not judge&quot;</h3>
+<p>Found by using it. A plain <code>python3 tools/accept_packet.py PACKET.zip</code> — no <code>--forge</code> — printed <code>FAIL G6 ... no engine given</code> and <strong>REJECTED</strong>, exit 1.</p>
+<p><code>accept_packet.py</code>'s own module docstring has argued the opposite since the file was written: <em>&quot;A run that could not judge must say so instead of returning a verdict it did not earn.&quot;</em> It was <strong>half implemented</strong>. <code>main</code> pre-checked <code>args.forge and not os.path.isdir(args.forge)</code> — the <em>mistyped</em> flag — and the <code>and args.forge</code> let the <em>omitted</em> flag walk straight past into <code>gate_g6</code>, which raised the generic <code>GateFailure</code>.</p>
+<p>A third case was worse and nothing caught it: a <code>--forge</code> directory that exists but holds no <code>forge_api.py</code> passes <code>isdir</code>, so the run started, extracted the packet, ran the entire battery against an engine that cannot resolve, and failed every engine-dependent law — REJECTED, on the operator's typo.</p>
+<p>Fixed as one predicate and one class:</p>
+<ul><li><p><code>_engine_unusable(forge)</code> — the three ways to be unusable, in one place. The</p></li></ul>
+<p>two call sites previously disagreed with each other, which is how the omitted case slipped between them.</p>
+<ul><li><p><code>HarnessError</code>, deliberately <strong>not</strong> a subclass of <code>GateFailure</code>, so it cannot</p></li></ul>
+<p>be swallowed by any of the four <code>except GateFailure</code> handlers and reported as a packet verdict. The property holds for a caller that never goes through <code>main</code>'s pre-check, which is checked directly.</p>
+<ul><li><p><code>main</code> prints <strong>`NO VERDICT — the harness could not judge this packet`</strong>, exits</p></li></ul>
+<p>2, appends no row to the results table, and <strong>writes no `--report` file</strong> — a report is a record of a judgement, and none was made.</p>
+<p>Why this is worth a section rather than a line: <code>c653e15</code>'s message records <em>&quot;the release gate rejected two consecutive packets&quot;</em>. REJECTED is read here as real evidence about the tree. A REJECTED that means <em>you forgot a flag</em> is exactly what teaches a reader to discount the ones that mean something.</p>
+<h3 id="blk-32564">4. Measured</h3>
+<pre><code>battery                      805 passed, 0 skipped, 0 failed  (36 files)
+
+packet  traaviis-session.zip
+        340c4e8ccd5465867f366f29cfc8f73b6262dfc51690bdc05d12bf57989e1f4b
+        G1  manifest well formed              167 entries
+        G2  manifest agrees with archive      167 members hashed, all match
+        G3  archive metadata canonical        unix modes, fixed ts, sorted
+        G4  contents complete and clean       167 members, 36 test files
+        G5  battery, engine absent            636 passed, 169 skipped, 0 failed
+        G6  battery, engine present           805 passed,   0 skipped, 0 failed
+        G7  rebuild extractor independent     reproduced from both extractors
+        ACCEPTED</code></pre>
+<p>That packet is the <strong>code</strong> gate: it was built and accepted before this memo existed, so it does not contain this memo. That is the same <code>-pre</code> convention the 9F-A and 11/12 memos used, and the recursion is not avoidable — a memo cannot carry the hash of an archive that carries the memo, and a memo that tried would either be stale or would never terminate.</p>
+<p>So the delivered archive's hash and verdict <strong>travel with the delivery rather than inside it</strong>, and a reader does not have to take either on trust:</p>
+<pre><code>python3 tools/accept_packet.py &lt;archive&gt; --forge /path/to/TRVM/forge</code></pre>
+<p>reproduces the verdict from the archive alone, and G7 re-derives the archive's own hash from two independent extractors while doing it. That is the honest terminator: the last link in the chain is a command the reader runs, not a number this file asserts about itself.</p>
+<p>The battery total is unchanged from <code>b9d7871</code>, which is the correct result rather than a null one: <code>run_battery.py</code> collects only <code>test/test_*.py</code>, and all three slices here add a <code>tools/</code> script, an example directory, and documentation.</p>
+<p>Commits: <code>b9d7871</code> (four slices), <code>dca81b1</code> (item A), plus this session's threat-model and gate work.</p>
+<h3 id="blk-32572">5. What I did not do, and why</h3>
+<ul><li><p><strong>Item G, the drift audit.</strong> It is longitudinal by construction — pin declared</p></li></ul>
+<p>versions, <em>re-resolve over time</em>, count the cases where the declared version was stable and the content was not. It cannot be completed inside a session, and the largest catalog is auth-walled.</p>
+<ul><li><p><strong>Item J's `agent-` closure.</strong> §2.J's argument is already complete and I agree</p></li></ul>
+<p>with it — an <code>agent-</code> rung would require TRAAVIIS to have an opinion about what an agent is, and &quot;not a model router&quot; is a frozen boundary. But <em>closing a deferred identity rung is a ruling</em>, and this repository treats the ladder as a thing that does not move without one. Written up, not enacted.</p>
+<ul><li><p><strong>The `eval-` rung.</strong> §2.J's own &quot;not obviously needed before somebody asks for</p></li></ul>
+<p>it&quot; stands, and nobody has asked.</p>
+<h3 id="blk-32585">6. What needs a ruling, and what needs hardware</h3>
+<p>The 1–14 order is exhausted. Everything remaining is blocked on one of exactly three things, and none of them is code:</p>
+<pre><code>13  v2 / RFC 8785 cutover      a ruling (five calls, IDENTITY_MIGRATION_OPTIONS §7)
+14  [&amp;]code -&gt; TRAAVIIS        a certified backend
+9F  items 2-7                  a host that can isolate the control plane
+D   publish                    a decision: does the repo go public
+E   in-toto attestation        follows D (free tiers are public-repo-only)
+H   real isolation posture     a product-boundary decision (§6.3), and it moves ids
+I   export adapter             a decision: which catalog
+J   close `agent-`             a ruling, cost zero
+L   Courier                    the largest item; wants a substrate, not a session</code></pre>
+<p><strong>The one I would most like ruled, because it gets more expensive monthly:</strong> the canonicalization cutover. The audit is done and it was not a no-op — the identity canonicalization does not conform to RFC 8785 and the divergence is already realized in a live shipped <code>episode-</code>. <code>jcs.py</code> is written, <code>N6</code> proves the two profiles agree byte-for-byte on everything both admit (so the cutover is a <em>narrowing</em>, not a re-hashing), and <code>N9</code> exists specifically to stop the cutover happening by accident and is written to be <strong>deleted</strong> at item 13.</p>
+<p>The blocker is not implementation. It is <code>IDENTITY_MIGRATION_OPTIONS.md</code> §7's five calls, of which the first two are the real ones: <strong>conform at all, or close the question</strong>, and <strong>is the id grammar part of the public contract</strong>. Nothing in the code can answer the second — whether <code>episode-&lt;64hex&gt;</code> was ever a promise.</p>
+<p>A secondary question, raised by this session rather than inherited: the split-coverage memo lists item 13 as blocked on <em>a certified backend</em>, while the 9D memo lists it as <em>gated on `run_audit.py`, now green</em>. Those disagree. My reading is that the certified-backend condition is about <strong>when</strong> to re-mint the corpus — you only want to move every id once — rather than about whether the cutover is implementable. Worth confirming, because if that reading is right then item 13 is unblocked the moment the ruling lands, and if it is wrong then the ruling can wait for hardware.</p></div>
+<p class="src"><a href="/#/TRAAVIIS/TRAAVIIS_END_TO_END_AND_THREAT_MODEL_MEMO.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-32487" class="lvl2">0. What landed before any of this</a><a href="#blk-32491" class="lvl2">1. Item A: the four-repository claim, executed</a><a href="#blk-32494" class="lvl3">The joins hold</a><a href="#blk-32507" class="lvl3">The chain does not reach an episode</a><a href="#blk-32511" class="lvl3">It falsified an instruction in the roadmap</a><a href="#blk-32513" class="lvl3">Three defects, all mine, all found by testing failure modes</a><a href="#blk-32528" class="lvl3">What is pinned, and why each field is there</a><a href="#blk-32532" class="lvl2">2. Item K&#39;s documentation half: a stated position</a><a href="#blk-32546" class="lvl2">3. The release gate said REJECTED when it meant &quot;I could not judge&quot;</a><a href="#blk-32564" class="lvl2">4. Measured</a><a href="#blk-32572" class="lvl2">5. What I did not do, and why</a><a href="#blk-32585" class="lvl2">6. What needs a ruling, and what needs hardware</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRAAVIIS/ARCHITECTURE.md/">TRAAVIIS — Architecture &amp; the road to the environment surface</a><a href="/TRAAVIIS/HANDOFF_TRAAVIIS_ENV.md/">Handoff — TRAAVIIS environment surface (SUPERSEDED)</a><a href="/TRAAVIIS/IDENTITY_MIGRATION_OPTIONS.md/">Identity migration options: versioned prefix vs. schema-level scheme vs. never conform</a><a href="/TRAAVIIS/README.md/">TRAAVIIS</a><a href="/TRAAVIIS/RFC_EVIDENCE_RESIDENCY.md/">RFC — Evidence Residency (residency.repository.v1)</a><a href="/TRAAVIIS/RFC_TRAAVIIS_ARTIFACTS.md/">RFC — TRAAVIIS environment artifacts &amp; episode kernel</a><a href="/TRAAVIIS/ROADMAP.md/">TRAAVIIS — what to build after the MCP transport</a><a href="/TRAAVIIS/TRAAVIIS_BUNDLE_CLOSURE_MEMO.md/">Bundle Distribution Identity Closure — memo</a><a href="/TRAAVIIS/TRAAVIIS_CONTAINMENT_CAPABILITY_MEMO.md/">9F-A — containment capability honesty</a><a href="/TRAAVIIS/TRAAVIIS_CONTAINMENT_MEMO.md/">9E — background process and workspace exact closure</a><a href="/TRAAVIIS/TRAAVIIS_ENV_AUTHORING_MEMO.md/">TRAAVIIS — Environment Authoring Closure (trvs init + trvs pack)</a><a href="/TRAAVIIS/TRAAVIIS_ENV_IDENTITY_EXACT_CLOSURE_MEMO.md/">Environment Identity and Split Evaluation — Exact Closure</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieramnnrd7pp4ntyat2ntuhdc3ielaa5vcsbnob3j5oukluyglr4uk6a</div></div></div>
+</div></div>
+</body></html>

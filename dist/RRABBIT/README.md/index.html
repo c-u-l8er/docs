@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>RRABBIT · RRABBIT · Ampersand Box</title>
+<meta name="description" content="The road as a windowing system — half of T&amp;R (Travel &amp; RRABBIT).">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/RRABBIT/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RRABBIT">
+<meta property="og:description" content="The road as a windowing system — half of T&amp;R (Travel &amp; RRABBIT).">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/RRABBIT/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"RRABBIT","name":"RRABBIT","description":"The road as a windowing system — half of T&R (Travel & RRABBIT).","url":"https://docs.ampersandboxdesign.com/RRABBIT/README.md/","identifier":"bagaaierafevm6oyr4ssrmdbzbxnyzmkfijzvs5echdavles3tk4outrir44q","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"RRABBIT","url":"https://docs.ampersandboxdesign.com/RRABBIT/"},"articleSection":"RRABBIT","hasPart":[{"@type":"WebPageElement","name":"Status"},{"@type":"WebPageElement","name":"Local patches — do not lose these"},{"@type":"WebPageElement","name":"Lineage"},{"@type":"WebPageElement","name":"Licence"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"RRABBIT","item":"https://docs.ampersandboxdesign.com/RRABBIT/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/RRABBIT/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">RRABBIT</span>
+<span class="path">RRABBIT/README.md</span>
+
+</div></div>
+<div class="lead">The road as a windowing system — half of T&amp;R (Travel &amp; RRABBIT).</div>
+<div class="prose"><h1 id="blk-26319">RRABBIT</h1>
+<p>The road as a windowing system — half of <strong>T&amp;R (Travel &amp; RRABBIT)</strong>.</p>
+<p><strong>Travel and RRABBIT are two personalities, not two layers.</strong> Travel wants to navigate: the road, the camera, the flight into a window, the districts. RRABBIT wants to <em>be</em> the windows — the sign standing on the road, the surface that flattens to 1:1 under you, the rect that decides a click is yours. One likes going; the other likes being gone to.</p>
+<p>This repo is a fork of <a href="../RAVIO" target="_blank" rel="noopener">RAVIO</a>'s world, re-missioned from <em>rendering a build harness</em> to <em>managing an operating system's windows</em>, and it holds both of them — as two modules rather than one file:</p>
+<table><thead><tr><th>file</th><th>who</th><th>what is in it</th></tr></thead><tbody><tr><td><a href="m2/travel.js" target="_blank" rel="noopener">`m2/travel.js`</a></td><td>Travel</td><td>poses, districts, overview, the flatten, the flight, input routing</td></tr><tr><td><a href="m2/rrabbit.js" target="_blank" rel="noopener">`m2/rrabbit.js`</a></td><td>RRABBIT</td><td>texture adoption, signs, popups, the ledger rect</td></tr><tr><td><a href="m2/world.js" target="_blank" rel="noopener">`m2/world.js`</a></td><td>neither</td><td>the stage: scene handles, the <code>signs</code> ledger, the numbers the HUD reads</td></tr><tr><td><a href="m2/shell.js" target="_blank" rel="noopener">`m2/shell.js`</a></td><td>the wiring</td><td>builds the world, drives the frame, owns the diagnostics</td></tr></tbody></table>
+<p>They say very little to each other. Travel reads two things and both come through the shared ledger rather than a call — which sign stands at an address, and what rect it owns in the flat output. RRABBIT calls Travel <strong>once</strong>: when a window dies while you are standing in it, it tells Travel to let go. That is the whole conversation, and it runs in one direction.</p>
+<p><a href="https://github.com/c-u-l8er/travel-and-rrabbit" target="_blank" rel="noopener">travel-and-rrabbit</a> is the distribution — it carries Travel's name and is not Travel either.</p>
+<p>Signs on the road are no longer journal rows. <strong>They are the running applications.</strong> The vacuum tubes are no longer lane ratings; they are CPU, RAM, swap, disk, net, temp and load. Districts are no longer amp workspaces; they are desktop workspaces. You drive past your windows, fly into one, and it flattens into a real, square, pixel-exact surface you can type into.</p>
+<p>It shows only windows launched into it. It does not replace your desktop.</p>
+<p><strong>Read [`docs/spec/README.md`](docs/spec/README.md) first</strong> — in particular §2, which records what does <em>not</em> work about the obvious integration and why.</p>
+<h3 id="blk-26344">Status</h3>
+<p><strong>M0–M5 built, M0–M4 measured</strong> (2026-08-08), each with measurements rather than screenshots alone — spec §10–§12 and §14–§17. <strong>Booted on T&amp;R 2026-08-09.</strong></p>
+<ul><li><p><strong>M0</strong> — the road occludes a live Wayland surface. This was the gate.</p></li><li><p><strong>M1</strong> — many windows ride the road as signs, one adopted GPU texture each,</p></li></ul>
+<p>at stable milepost addresses. No Greenfield patch was needed after all (§11.1).</p>
+<ul><li><p><strong>M2</strong> — flying into a sign arrives fronto-parallel at exactly 1:1, where it</p></li></ul>
+<p>can be pointed at, typed into, and left with a chord no client can swallow.</p>
+<ul><li><p><strong>M3</strong> — seven tubes reading the real machine, and a rack that is not allowed</p></li></ul>
+<p>to show a number it cannot explain.</p>
+<ul><li><p><strong>M4</strong> — three districts as workspaces, each a road of its own, and a ledger</p></li></ul>
+<p>where every window has its own rect so input resolves by position (§15.2).</p>
+<ul><li><p><strong>popups</strong> — §7's open problem, closed (§16). Also found that an <code>xdg_popup</code></p></li></ul>
+<p>cannot map at all in Greenfield rc1.</p>
+<ul><li><p><strong>M5</strong> — runs as a session: Python-only on the target, and Firefox runs the</p></li></ul>
+<p>whole shell.</p>
+<ul><li><p><strong>BOOT</strong> — <strong>runs on a T&amp;R image</strong> (2026-08-09). Greeter to road on the</p></li></ul>
+<p>distribution it is built for, in a 4 GB guest with no GPU. Six of seven tubes read the real FreeBSD machine; <code>temp</code> reports its own absence, because a VM has no <code>dev.cpu.0.temperature</code>.</p>
+<p>Three things that only a real boot could have found, all now fixed:</p>
+<ul><li><p><strong>`make.sh` could not carry the shell to the builder at all.</strong> <code>build-image.sh</code></p></li></ul>
+<p>reads <code>RRABBIT_DIST</code> as a path on the machine doing the build, and that machine is never the workstation — so there was no route from a built bundle to an image. It pushes <code>dist/</code> + <code>bridge.py</code> now, and refuses a <code>dist/</code> older than its sources.</p>
+<ul><li><p><strong>The FreeBSD tube reader had never executed.</strong> <code>net</code> raised <code>TypeError</code> on a</p></li></ul>
+<p><code>None</code> peak the first time it ran. Fixed by giving it the same prior-peak protocol <code>LinuxReader</code> already had — patching only the crash would have re-introduced the bug that note describes, where the first byte pins the gauge at 100%.</p>
+<ul><li><p><strong>The greeter preselected RRABBIT, and could not select anything else.</strong> Two</p></li></ul>
+<p><code>.desktop</code> entries, picked by sort order, and <code>rrabbit</code> sorts before <code>tandr</code> — so a fresh image logged into the 3D shell, which is precisely what <code>rrabbit-session</code> says must never happen. The session label was blank as well: it asked SDDM's <code>SessionModel</code> for <code>Qt.DisplayRole</code>, which that model does not publish. T&amp;R now seeds the default and the greeter takes <strong>F2</strong> to change it.</p>
+<p><strong>Native applications work</strong> (§18). A real <code>xterm</code> runs on the road — X11 → XWayland → nested compositor → h264 → browser → GPU texture → sign — flattened to <strong>960×653 at `scale 1.0000`</strong>, prompt legible. §13 spent its whole length searching the environment and the cause was not in the environment: the official addon build <strong>compiles its own GStreamer at branch 1.20</strong> and this machine runs <strong>1.28.6</strong>, so the shipped <code>libproxy-encoding.so</code> linked a GStreamer GL that was not the installed one. Every symbol resolved the entire time it was silently emitting nothing — <code>ldd</code> resolving is not evidence a native module matches its dependencies. The rebuild is now <code>npm run addons</code>, pinned and hash-checked (§19).</p>
+<p>Still true, and not smoothed over:</p>
+<ul><li><p><strong>Frames tear — two thirds fixed, and the rest now measured</strong> (§20). It was</p></li></ul>
+<p>never a damage-region problem. three left a <strong>vertex array bound</strong> and Greenfield's YUV→RGB pass binds none of its own, so it recorded its attribute pointers into three's VAO and drew with three's leftovers; that was the full-canvas magnified-glyph artifact, and it is gone. Separately the decoded texture is <strong>larger than the surface</strong> — 1024×770 for a 960×653 xterm — and the sign was mapping the padding too; it now samples the same sub-rect Greenfield's own shader does. What remains is a constant-slope diagonal with flat cyan below it, inside the decoded content: chroma left at default, so never written. That is upstream in <code>@gfld/compositor</code>, and the encoder A/B that would narrow it could not be run — see §20.3.</p>
+<ul><li><p><strong>Per-window encode cost is still unpriced, and §21.2 says why.</strong> Two</p></li></ul>
+<p>harnesses, neither monotonic in window count. What they did establish: the proxy is flat at ~0.4% CPU while the browser sits at 425%, so the expensive half is decode and composite, not encode — &quot;per-window encode cost&quot; may be the wrong first question.</p>
+<ul><li><p><strong>Native launches drop above two</strong> (§21.3). Ask for four windows, get two,</p></li></ul>
+<p>with nothing reported. Found while measuring something else, not diagnosed. The multi-window case is not just unpriced, it is unreliable.</p>
+<ul><li><p><strong>Signs carry no titles yet.</strong></p></li></ul>
+<p>Closed since: a <strong>reload no longer strands the remote client</strong> (§21.1) — each page load takes a fresh session id and <code>pagehide</code> reaps the old one, verified across three reloads against a proxy that was never restarted, leaving exactly one <code>xterm</code> behind.</p>
+<p><code>xdg_popup</code> is no longer on this list — §16 closed it, and found on the way that a popup cannot map at all in Greenfield rc1.</p>
+<h3 id="blk-26408">Local patches — do not lose these</h3>
+<p>RRABBIT carries a <strong>required</strong> one-line fix to <code>@gfld/compositor</code>: without it an <code>xdg_popup</code> can never map, so <strong>no client can show a menu, dropdown or tooltip</strong>. <code>node_modules/</code> is gitignored, so the fix lives in <a href="patches/" target="_blank" rel="noopener">`patches/`</a> and is re-applied by <code>postinstall</code> and by <code>build</code>. A runtime detector warns if it is ever missing rather than silently repairing it.</p>
+<p>Read <a href="patches/README.md" target="_blank" rel="noopener">`patches/README.md`</a> before touching <code>package.json</code> scripts or upgrading <code>@gfld/compositor</code>.</p>
+<h3 id="blk-26411">Lineage</h3>
+<ul><li><p><a href="../RAVIO" target="_blank" rel="noopener">RAVIO</a> — the world this forks, and the source of every measured</p></li></ul>
+<p>constant (<code>S</code>, <code>BOOST_X</code>, <code>MIR_TILT</code>, the hood clip, the yoke camera framing)</p>
+<ul><li><p><a href="https://github.com/c-u-l8er/PARKVPS" target="_blank" rel="noopener">PARKVPS</a> — the fleet whose rail proved</p></li></ul>
+<p>the tab strip shape, and the origin of the <code>Ctrl+Alt+Shift+Esc</code> escape hatch</p>
+<ul><li><p><a href="https://github.com/udevbe/greenfield" target="_blank" rel="noopener">Greenfield</a> — the in-browser Wayland</p></li></ul>
+<p>compositor, AGPL-3.0</p>
+<ul><li><p><a href="https://www.collabora.com/news-and-blog/news-and-events/wxrd-a-standalone-wayland-compositor-for-xrdesktop.html" target="_blank" rel="noopener">wxrd</a></p></li></ul>
+<p>/ <a href="https://github.com/evil0sheep/motorcar" target="_blank" rel="noopener">motorcar</a> — the 3D-windowing prior art, and where the scoping decision comes from</p>
+<h3 id="blk-26428">Licence</h3>
+<p>AGPL-3.0, inherited from Greenfield. See spec §9.</p></div>
+<p class="src"><a href="/#/RRABBIT/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-26344" class="lvl2">Status</a><a href="#blk-26408" class="lvl2">Local patches — do not lose these</a><a href="#blk-26411" class="lvl2">Lineage</a><a href="#blk-26428" class="lvl2">Licence</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierafevm6oyr4ssrmdbzbxnyzmkfijzvs5echdavles3tk4outrir44q</div></div></div>
+</div></div>
+</body></html>

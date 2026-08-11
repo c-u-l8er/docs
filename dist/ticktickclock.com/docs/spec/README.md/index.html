@@ -1,0 +1,693 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>TickTickClock — Temporal Intelligence Engine · ticktickclock.com · Ampersand Box</title>
+<meta name="description" content="Date: March 25, 2026 Status: Draft Author: [&amp;] Ampersand Box Design License: MIT (open core) Stack: Elixir · OTP · Phoenix · Ecto · PostgreSQL +…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/ticktickclock.com/docs/spec/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TickTickClock — Temporal Intelligence Engine">
+<meta property="og:description" content="Date: March 25, 2026 Status: Draft Author: [&amp;] Ampersand Box Design License: MIT (open core) Stack: Elixir · OTP · Phoenix · Ecto · PostgreSQL +…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/ticktickclock.com/docs/spec/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"TickTickClock — Temporal Intelligence Engine","name":"TickTickClock — Temporal Intelligence Engine","description":"Date: March 25, 2026 Status: Draft Author: [&] Ampersand Box Design License: MIT (open core) Stack: Elixir · OTP · Phoenix · Ecto · PostgreSQL +…","url":"https://docs.ampersandboxdesign.com/ticktickclock.com/docs/spec/README.md/","identifier":"bagaaieraambedkmjkph3sl5zumsnv27kddlibyvfy4rcgzwbraf3clyl7cuq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"ticktickclock.com","url":"https://docs.ampersandboxdesign.com/ticktickclock.com/"},"articleSection":"ticktickclock.com","hasPart":[{"@type":"WebPageElement","name":"Technical Specification v0.1"},{"@type":"WebPageElement","name":"1. Overview"},{"@type":"WebPageElement","name":"1.1 The Problem"},{"@type":"WebPageElement","name":"1.2 Design Principles"},{"@type":"WebPageElement","name":"1.3 Why Elixir"},{"@type":"WebPageElement","name":"1.4 One-Liner"},{"@type":"WebPageElement","name":"2. Architecture"},{"@type":"WebPageElement","name":"2.1 Component Summary"},{"@type":"WebPageElement","name":"2.2 OTP Supervision Tree"},{"@type":"WebPageElement","name":"3. Technology Stack"},{"@type":"WebPageElement","name":"4. Core Engines"},{"@type":"WebPageElement","name":"4.1 Anomaly Engine — Adaptive State-Space Detection"},{"@type":"WebPageElement","name":"4.2 Forecast Engine — Continual Compositionality & Orchestration (CCO)"},{"@type":"WebPageElement","name":"4.3 Pattern Engine — Temporal Structure Detection"},{"@type":"WebPageElement","name":"5. CRDT Replication — Epoch-Aware Delta Sync"},{"@type":"WebPageElement","name":"6. [&] Capability Contracts"},{"@type":"WebPageElement","name":"6.1 &time.anomaly"},{"@type":"WebPageElement","name":"6.2 &time.forecast"},{"@type":"WebPageElement","name":"6.3 &time.pattern"},{"@type":"WebPageElement","name":"7. Integration Points"},{"@type":"WebPageElement","name":"7.1 PULSE Loop Manifest"},{"@type":"WebPageElement","name":"8. MCP Tools"},{"@type":"WebPageElement","name":"8.1 Anomaly Tools"},{"@type":"WebPageElement","name":"8.2 Forecast Tools"},{"@type":"WebPageElement","name":"8.3 Pattern Tools"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"ticktickclock.com","item":"https://docs.ampersandboxdesign.com/ticktickclock.com/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/ticktickclock.com/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/ticktickclock.com/docs/spec/"},{"@type":"ListItem","position":5,"name":"README.md","item":"https://docs.ampersandboxdesign.com/ticktickclock.com/docs/spec/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">ticktickclock.com</span>
+<span class="path">ticktickclock.com/docs/spec/README.md</span>
+
+</div></div>
+<div class="lead">Date: March 25, 2026 Status: Draft Author: [&amp;] Ampersand Box Design License: MIT (open core) Stack: Elixir · OTP · Phoenix · Ecto · PostgreSQL + TimescaleDB</div>
+<div class="prose"><h1 id="blk-85928">TickTickClock — Temporal Intelligence Engine</h1>
+<h3 id="blk-85929">Technical Specification v0.1</h3>
+<p><strong>Date:</strong> March 25, 2026 <strong>Status:</strong> Draft <strong>Author:</strong> [&amp;] Ampersand Box Design <strong>License:</strong> MIT (open core) <strong>Stack:</strong> Elixir · OTP · Phoenix · Ecto · PostgreSQL + TimescaleDB</p>
+<h3 id="blk-85931">1. Overview</h3>
+<p>TickTickClock is the <strong>temporal intelligence layer</strong> for the [&amp;] Protocol ecosystem. It provides time-series anomaly detection, forecasting, and pattern recognition as continual learning services — exposed as <code>&amp;time.anomaly</code>, <code>&amp;time.forecast</code>, and <code>&amp;time.pattern</code> capability contracts. Every tick is a learning opportunity. Every pattern has a rhythm.</p>
+<p>TickTickClock does not store business data, host agents, or manage workflows. It ingests temporal signals, learns their structure continuously, and returns anomalies, forecasts, and patterns to upstream consumers via MCP tools. It is the <code>&amp;time</code> primitive provider — the temporal complement to Graphonomous (<code>&amp;memory</code>) and GeoFleetic (<code>&amp;space</code>).</p>
+<h4 id="blk-85934">1.1 The Problem</h4>
+<p>Time-series intelligence in production systems is fragmented. Anomaly detection runs as a batch job in a separate pipeline. Forecasting lives in a notebook. Pattern detection is a dashboard someone checks on Mondays. None of these systems learn continuously from the signals they monitor, and none of them talk to each other. When an infrastructure incident happens at 3 AM, the anomaly detector fires an alert, but the forecasting model has no idea, and the pattern detector won't notice the recurrence until next quarter's review.</p>
+<p>Meanwhile, the underlying models suffer from catastrophic forgetting — retrained monthly on a window of recent data, discarding everything the previous model learned about long-range seasonality. Multi-timescale temporal behavior (hourly spikes, weekly cycles, quarterly trends) requires multi-timescale memory, and no production system provides it.</p>
+<h4 id="blk-85937">1.2 Design Principles</h4>
+<ol><li><p><strong>Continual learning</strong> — Models update at inference time. No batch retraining. No forgetting.</p></li><li><p><strong>Multi-timescale memory</strong> — Fast (seconds), medium (hours), slow (days), glacial (months). Each timescale consolidates independently.</p></li><li><p><strong>Streaming-first</strong> — Designed for unbounded streams, not fixed datasets. Backfill is supported but not the primary path.</p></li><li><p><strong>MCP-first API</strong> — Every capability is an MCP tool. No REST API needed unless you want one.</p></li><li><p><strong>Edge-capable</strong> — SQLite + Bumblebee models run on constrained devices. TimescaleDB for server mode.</p></li><li><p><strong>Conflict-free replication</strong> — Multi-node sync via epoch-aware delta-CRDTs. Convergence under arbitrary network conditions.</p></li><li><p><strong>Composable with [&amp;]</strong> — Implements <code>&amp;time.*</code> contracts. Composes with <code>&amp;memory.*</code>, <code>&amp;space.*</code>, <code>&amp;reason.*</code> via the [&amp;] Protocol.</p></li></ol>
+<h4 id="blk-85953">1.3 Why Elixir</h4>
+<p>Streaming time-series processing maps directly to OTP patterns. Each monitored stream is a GenServer process. Anomaly detection runs as a supervised pipeline stage. Multi-timescale memory consolidation is a set of GenServers ticking at different intervals — fast memory every second, slow memory every hour — supervised by the same application tree. The BEAM scheduler handles tens of thousands of concurrent streams without thread pool tuning. Phoenix PubSub delivers real-time anomaly events to subscribers with zero additional infrastructure. Delta-CRDT replication between nodes uses native distributed Erlang or <code>libcluster</code> for discovery.</p>
+<h4 id="blk-85955">1.4 One-Liner</h4>
+<blockquote><p>&quot;Every tick is a learning opportunity. Every pattern has a rhythm. Temporal intelligence that never forgets.&quot;</p></blockquote>
+<h3 id="blk-85958">2. Architecture</h3>
+<pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                        TICKTICKCLOCK                              │
+│                  Temporal Intelligence Engine                      │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│   MCP Server (Hermes)               Phoenix LiveView (optional)    │
+│   ├── anomaly_detect                 └── Stream dashboard          │
+│   ├── anomaly_subscribe              └── Anomaly timeline          │
+│   ├── forecast_predict               └── Forecast explorer         │
+│   ├── forecast_explain               └── Pattern viewer            │
+│   ├── pattern_detect                                               │
+│   ├── pattern_summarize                                            │
+│   ├── temporal_enrich                                              │
+│   └── temporal_learn                                               │
+│                                                                    │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│   ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐   │
+│   │  Anomaly Engine  │  │  Forecast Engine │  │  Pattern Engine  │  │
+│   │                  │  │                  │  │                  │  │
+│   │  Adaptive SSM    │  │  Multi-timescale │  │  Cycle &amp; motif   │  │
+│   │  (Mamba-style)   │  │  CCO prediction  │  │  detection via   │  │
+│   │  Selective state  │  │  Fast→slow       │  │  spectral +      │  │
+│   │  gating on each  │  │  memory promote  │  │  autocorrelation  │  │
+│   │  stream tick     │  │  No forgetting   │  │  analysis         │  │
+│   └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘  │
+│            │                     │                      │            │
+│   ┌────────▼─────────────────────▼──────────────────────▼─────────┐  │
+│   │              Multi-Timescale Memory Store                      │  │
+│   │                                                                │  │
+│   │  Fast (ETS)        │ seconds  │ per-tick state snapshots       │  │
+│   │  Medium (SQLite/TS) │ hours    │ aggregated state vectors       │  │
+│   │  Slow (SQLite/TS)   │ days     │ consolidated summaries         │  │
+│   │  Glacial (SQLite/TS) │ months   │ long-range seasonal models     │  │
+│   └────────────────────────┬───────────────────────────────────────┘  │
+│                            │                                         │
+│   ┌────────────────────────▼───────────────────────────────────────┐  │
+│   │              CRDT Replication Layer                             │  │
+│   │                                                                │  │
+│   │  Epoch-aware delta-CRDTs · ACI merge functions                 │  │
+│   │  Convergence under reorder, delay, partition                   │  │
+│   │  Distributed Erlang / libcluster for node discovery            │  │
+│   └────────────────────────┬───────────────────────────────────────┘  │
+│                            │                                         │
+├────────────────────────────┼─────────────────────────────────────────┤
+│   Storage Layer            │                                         │
+│   ├── TimescaleDB (server) │  Hypertables, continuous aggregates     │
+│   ├── SQLite (edge)        │  Single-file, embedded                  │
+│   ├── ETS (hot cache)      │  Fast-memory ring buffers               │
+│   └── DETS (warm cache)    │  Spill from ETS on memory pressure      │
+└────────────────────────────┘─────────────────────────────────────────┘</code></pre>
+<h4 id="blk-85960">2.1 Component Summary</h4>
+<table><thead><tr><th>Component</th><th>Responsibility</th><th>OTP Pattern</th></tr></thead><tbody><tr><td><code>TickTickClock.AnomalyEngine</code></td><td>Adaptive state-space anomaly detection on streaming data. Selective gating per tick.</td><td>GenServer per stream</td></tr><tr><td><code>TickTickClock.ForecastEngine</code></td><td>Multi-timescale prediction via Continual Compositionality &amp; Orchestration.</td><td>GenServer per forecast context</td></tr><tr><td><code>TickTickClock.PatternEngine</code></td><td>Cycle detection, seasonality analysis, motif extraction.</td><td>GenServer per analysis window</td></tr><tr><td><code>TickTickClock.MemoryStore</code></td><td>Multi-timescale memory (fast/medium/slow/glacial). Promotion and consolidation.</td><td>Supervisor over timescale GenServers</td></tr><tr><td><code>TickTickClock.StreamManager</code></td><td>Manages concurrent stream ingestion. One GenServer per stream. Backpressure via Broadway.</td><td>DynamicSupervisor + Broadway</td></tr><tr><td><code>TickTickClock.CRDTReplicator</code></td><td>Epoch-aware delta-CRDT sync between nodes. ACI merge.</td><td>GenServer + distributed Erlang</td></tr><tr><td><code>TickTickClock.MCP.Server</code></td><td>MCP tool/resource exposure via Hermes.</td><td>Hermes.Server</td></tr><tr><td><code>TickTickClock.Consolidator</code></td><td>Promotes fast memory to slow memory during idle periods. Prunes expired state.</td><td>GenServer + <code>:timer</code></td></tr></tbody></table>
+<h4 id="blk-85989">2.2 OTP Supervision Tree</h4>
+<pre><code>TickTickClock.Application
+├── TickTickClock.Repo (Ecto / TimescaleDB or SQLite)
+├── TickTickClockWeb.Endpoint (Phoenix)
+├── TickTickClock.MCP.Server (Hermes MCP)
+├── TickTickClock.MemoryStore.Supervisor
+│   ├── TickTickClock.MemoryStore.Fast (ETS owner, ring buffers)
+│   ├── TickTickClock.MemoryStore.Medium (GenServer, hourly aggregation)
+│   ├── TickTickClock.MemoryStore.Slow (GenServer, daily consolidation)
+│   └── TickTickClock.MemoryStore.Glacial (GenServer, monthly models)
+├── TickTickClock.StreamManager (DynamicSupervisor)
+│   ├── TickTickClock.Stream (&quot;cpu:host-01&quot; — GenServer)
+│   ├── TickTickClock.Stream (&quot;latency:api-gw&quot; — GenServer)
+│   └── TickTickClock.Stream (&quot;error_rate:checkout&quot; — GenServer)
+├── TickTickClock.AnomalyEngine.Supervisor (DynamicSupervisor)
+│   ├── TickTickClock.AnomalyEngine (&quot;cpu:host-01&quot;)
+│   └── TickTickClock.AnomalyEngine (&quot;latency:api-gw&quot;)
+├── TickTickClock.ForecastEngine.Supervisor (DynamicSupervisor)
+├── TickTickClock.PatternEngine.Supervisor (DynamicSupervisor)
+├── TickTickClock.Consolidator (timed promotion cycles)
+├── TickTickClock.CRDTReplicator (delta-CRDT sync)
+└── Phoenix.PubSub (anomaly event broadcasts)</code></pre>
+<h3 id="blk-85991">3. Technology Stack</h3>
+<table><thead><tr><th>Layer</th><th>Technology</th><th>Rationale</th></tr></thead><tbody><tr><td><strong>Language</strong></td><td>Elixir 1.17+ / OTP 27</td><td>Fault-tolerant concurrent stream processing. GenServer-per-stream. Distributed Erlang for CRDT replication.</td></tr><tr><td><strong>MCP Server</strong></td><td><code>hermes_mcp</code> (v0.8+)</td><td>Most mature Elixir MCP SDK. Streamable HTTP transport. JSON-RPC 2.0 compliant.</td></tr><tr><td><strong>Framework</strong></td><td>Phoenix 1.8+</td><td>LiveView for real-time dashboards. PubSub for anomaly event delivery. Channels for stream subscriptions.</td></tr><tr><td><strong>Time-Series DB (server)</strong></td><td>PostgreSQL 16+ / TimescaleDB</td><td>Hypertables with automatic partitioning. Continuous aggregates for medium/slow/glacial tiers. Compression for cold data.</td></tr><tr><td><strong>Embedded DB (edge)</strong></td><td>SQLite via <code>exqlite</code></td><td>Zero-config, single-file. Edge deployments on constrained hardware.</td></tr><tr><td><strong>SSM Models</strong></td><td>Bumblebee + ONNX</td><td>Local Mamba-style selective state-space models via Nx/ONNX runtime. No EXLA dependency (consistent with portfolio convention).</td></tr><tr><td><strong>Hot Cache</strong></td><td>ETS</td><td>Fast-memory ring buffers. Per-stream state snapshots. Read concurrency enabled. Sub-microsecond lookups.</td></tr><tr><td><strong>Warm Cache</strong></td><td>DETS</td><td>Spill target for ETS under memory pressure. Disk-backed but still fast.</td></tr><tr><td><strong>Background Jobs</strong></td><td>Oban</td><td>Scheduled consolidation, CRDT sync retries, stale stream cleanup.</td></tr><tr><td><strong>Telemetry</strong></td><td><code>:telemetry</code> + Prometheus</td><td>Stream throughput, anomaly detection latency, forecast accuracy, memory tier sizes.</td></tr><tr><td><strong>Deployment</strong></td><td>Mix release + Docker</td><td>Single BEAM node or clustered via <code>libcluster</code>.</td></tr></tbody></table>
+<h3 id="blk-86029">4. Core Engines</h3>
+<h4 id="blk-86030">4.1 Anomaly Engine — Adaptive State-Space Detection</h4>
+<p>Inspired by the Mamba architecture (Gu &amp; Dao, 2023), the anomaly engine uses selective state-space models with adaptive gating to process streaming temporal data in linear time.</p>
+<p><strong>Key properties:</strong></p>
+<ul><li><p>Linear-time sequence modeling (O(n) in sequence length, not O(n^2) like attention)</p></li><li><p>Selective gating: each tick updates or ignores state dimensions based on input-dependent gate values</p></li><li><p>Captures both short-range transients (CPU spike) and long-range dependencies (weekly seasonality)</p></li><li><p>Runs as an Nx-backed ONNX model via Bumblebee (no EXLA)</p></li></ul>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">TickTickClock.AnomalyEngine</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">GenServer</span>
+
+  <span class="t-attr">@moduledoc</span> <span class="t-string">&quot;&quot;&quot;
+  Per-stream anomaly detection using adaptive state-space models.
+  Each stream gets its own GenServer with independent SSM state.
+  &quot;&quot;&quot;</span>
+
+  <span class="t-kw">defstruct</span> [
+    <span class="t-atom">:stream_id</span>,
+    <span class="t-atom">:ssm_state</span>,        <span class="t-comment"># Selective state-space hidden state (Nx tensor)</span>
+    <span class="t-atom">:gate_params</span>,      <span class="t-comment"># Adaptive gating parameters</span>
+    <span class="t-atom">:threshold</span>,        <span class="t-comment"># Dynamic threshold (updated via EMA)</span>
+    <span class="t-atom">:tick_count</span>,       <span class="t-comment"># Total ticks processed</span>
+    <span class="t-atom">:last_anomaly_at</span>   <span class="t-comment"># Timestamp of most recent anomaly</span>
+  ]
+
+  <span class="t-kw">def</span> init(%{stream_id: stream_id}) <span class="t-kw">do</span>
+    state = %__<span class="t-type">MODULE__</span>{
+      stream_id: stream_id,
+      ssm_state: initialize_ssm_state(),
+      gate_params: load_gate_params(stream_id),
+      threshold: initial_threshold(),
+      tick_count: <span class="t-num">0</span>,
+      last_anomaly_at: <span class="t-lit">nil</span>
+    }
+    {<span class="t-atom">:ok</span>, state}
+  <span class="t-kw">end</span>
+
+  <span class="t-kw">def</span> handle_cast({<span class="t-atom">:tick</span>, value, timestamp}, state) <span class="t-kw">do</span>
+    <span class="t-comment"># 1. Compute input-dependent gate</span>
+    gate = compute_selective_gate(value, state.gate_params)
+
+    <span class="t-comment"># 2. Update SSM state (selective: gate controls which dims update)</span>
+    new_ssm = selective_state_update(state.ssm_state, value, gate)
+
+    <span class="t-comment"># 3. Compute reconstruction / predicted value</span>
+    predicted = ssm_output(new_ssm)
+
+    <span class="t-comment"># 4. Score = deviation from prediction</span>
+    score = anomaly_score(value, predicted)
+
+    <span class="t-comment"># 5. Adaptive threshold (exponential moving average of scores)</span>
+    new_threshold = update_threshold(state.threshold, score)
+
+    <span class="t-comment"># 6. If anomalous, broadcast via PubSub</span>
+    <span class="t-kw">if</span> score &gt; new_threshold * <span class="t-attr">@sensitivity_multiplier</span> <span class="t-kw">do</span>
+      anomaly = %{
+        stream_id: state.stream_id,
+        timestamp: timestamp,
+        value: value,
+        predicted: predicted,
+        score: score,
+        threshold: new_threshold
+      }
+      <span class="t-type">Phoenix.PubSub</span>.broadcast(
+        <span class="t-type">TickTickClock.PubSub</span>,
+        <span class="t-string">&quot;anomaly:#{state.stream_id}&quot;</span>,
+        {<span class="t-atom">:anomaly_detected</span>, anomaly}
+      )
+      <span class="t-type">TickTickClock.MemoryStore</span>.record_anomaly(anomaly)
+    <span class="t-kw">end</span>
+
+    {<span class="t-atom">:noreply</span>, %{state |
+      ssm_state: new_ssm,
+      threshold: new_threshold,
+      tick_count: state.tick_count + <span class="t-num">1</span>
+    }}
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<p><strong>Invariants:</strong></p>
+<ul><li><p>One GenServer per stream. Streams are identified by <code>stream_id</code> (e.g., <code>&quot;cpu:host-01&quot;</code>).</p></li><li><p>SSM state is never shared between streams. Each stream has independent learned dynamics.</p></li><li><p>Anomaly threshold adapts to the stream's own baseline, not a global threshold.</p></li><li><p>Gate parameters are persisted to storage on consolidation and restored on stream restart.</p></li></ul>
+<h4 id="blk-86053">4.2 Forecast Engine — Continual Compositionality &amp; Orchestration (CCO)</h4>
+<p>The forecast engine implements multi-timescale memory modules updating at different frequencies, inspired by Nested Learning (NeurIPS 2025) and the Titans architecture. Fast memory captures recent dynamics. Slow memory captures long-range trends. Forecasts compose across timescales.</p>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">TickTickClock.ForecastEngine</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">GenServer</span>
+
+  <span class="t-attr">@moduledoc</span> <span class="t-string">&quot;&quot;&quot;
+  Multi-timescale forecasting via Continual Compositionality.
+  Memory modules at different frequencies compose into forecasts.
+  &quot;&quot;&quot;</span>
+
+  <span class="t-kw">defstruct</span> [
+    <span class="t-atom">:context_id</span>,
+    <span class="t-atom">:fast_memory</span>,     <span class="t-comment"># Updates every tick. Short-horizon dynamics.</span>
+    <span class="t-atom">:medium_memory</span>,   <span class="t-comment"># Updates every ~60 ticks. Medium trends.</span>
+    <span class="t-atom">:slow_memory</span>,     <span class="t-comment"># Updates every ~1440 ticks. Daily/weekly patterns.</span>
+    <span class="t-atom">:glacial_memory</span>,  <span class="t-comment"># Updates every ~43200 ticks. Seasonal models.</span>
+    <span class="t-atom">:horizon_config</span>   <span class="t-comment"># Supported horizons: 1h, 24h, 7d</span>
+  ]
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;&quot;&quot;
+  Generate forecast over requested horizon.
+  Composes predictions from all memory timescales.
+  &quot;&quot;&quot;</span>
+  <span class="t-kw">def</span> handle_call({<span class="t-atom">:predict</span>, horizon}, _from, state) <span class="t-kw">do</span>
+    <span class="t-comment"># 1. Query each timescale for its contribution</span>
+    fast_pred = <span class="t-type">TickTickClock.Memory.Fast</span>.predict(state.fast_memory, horizon)
+    medium_pred = <span class="t-type">TickTickClock.Memory.Medium</span>.predict(state.medium_memory, horizon)
+    slow_pred = <span class="t-type">TickTickClock.Memory.Slow</span>.predict(state.slow_memory, horizon)
+    glacial_pred = <span class="t-type">TickTickClock.Memory.Glacial</span>.predict(state.glacial_memory, horizon)
+
+    <span class="t-comment"># 2. Compose: weight by horizon relevance</span>
+    <span class="t-comment">#    Short horizons favor fast memory. Long horizons favor slow/glacial.</span>
+    weights = horizon_weights(horizon)
+    forecast = compose_forecast([
+      {fast_pred, weights.fast},
+      {medium_pred, weights.medium},
+      {slow_pred, weights.slow},
+      {glacial_pred, weights.glacial}
+    ])
+
+    <span class="t-comment"># 3. Compute confidence intervals from per-timescale uncertainty</span>
+    confidence = compute_confidence(forecast, state)
+
+    result = %{
+      horizon: horizon,
+      values: forecast.values,
+      timestamps: forecast.timestamps,
+      confidence_lower: confidence.lower,
+      confidence_upper: confidence.upper,
+      contributing_timescales: weights
+    }
+
+    {<span class="t-atom">:reply</span>, {<span class="t-atom">:ok</span>, result}, state}
+  <span class="t-kw">end</span>
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;&quot;&quot;
+  Incorporate outcome feedback. Adjusts timescale weights
+  and memory contents without full retraining.
+  &quot;&quot;&quot;</span>
+  <span class="t-kw">def</span> handle_cast({<span class="t-atom">:learn</span>, observation}, state) <span class="t-kw">do</span>
+    <span class="t-comment"># Update the timescale whose horizon matches the observation window</span>
+    timescale = match_timescale(observation.window)
+    new_state = update_memory(state, timescale, observation)
+    {<span class="t-atom">:noreply</span>, new_state}
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<p><strong>Memory promotion (consolidation):</strong></p>
+<pre><code>Fast Memory (ETS, seconds)
+    │
+    ├── Every 60s: summarize → promote to Medium
+    │
+Medium Memory (DB, hours)
+    │
+    ├── Every 1h: consolidate → promote to Slow
+    │
+Slow Memory (DB, days)
+    │
+    ├── Every 24h: compress → promote to Glacial
+    │
+Glacial Memory (DB, months)
+    └── Persistent. Never discarded. Seasonal models live here.</code></pre>
+<h4 id="blk-86058">4.3 Pattern Engine — Temporal Structure Detection</h4>
+<p>The pattern engine detects recurring temporal structures: seasonality, trend cycles, motifs, and anomaly recurrence. It combines spectral analysis (FFT for periodicity), autocorrelation (lag detection), and motif discovery (subsequence matching via Matrix Profile).</p>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">TickTickClock.PatternEngine</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">GenServer</span>
+
+  <span class="t-kw">defstruct</span> [
+    <span class="t-atom">:context_id</span>,
+    <span class="t-atom">:window</span>,           <span class="t-comment"># Analysis window: 24h, 7d, 30d</span>
+    <span class="t-atom">:spectral_state</span>,   <span class="t-comment"># Running FFT accumulator</span>
+    <span class="t-atom">:acf_state</span>,        <span class="t-comment"># Autocorrelation function state</span>
+    <span class="t-atom">:motif_index</span>,      <span class="t-comment"># Matrix Profile index for motif detection</span>
+    <span class="t-atom">:known_patterns</span>    <span class="t-comment"># Previously detected patterns (for recurrence)</span>
+  ]
+
+  <span class="t-kw">def</span> handle_call({<span class="t-atom">:detect</span>, time_series, window}, _from, state) <span class="t-kw">do</span>
+    <span class="t-comment"># 1. Spectral analysis: dominant frequencies</span>
+    frequencies = spectral_decompose(time_series, window)
+
+    <span class="t-comment"># 2. Autocorrelation: significant lags</span>
+    lags = compute_acf(time_series, max_lag: window_to_lags(window))
+
+    <span class="t-comment"># 3. Motif discovery: recurring subsequences</span>
+    motifs = matrix_profile_motifs(time_series, subsequence_length: auto_length(window))
+
+    <span class="t-comment"># 4. Match against known patterns for recurrence detection</span>
+    recurrences = match_known_patterns(state.known_patterns, frequencies, lags, motifs)
+
+    patterns = %{
+      seasonality: extract_seasonal(frequencies, lags),
+      trend_cycles: extract_trends(frequencies),
+      motifs: motifs,
+      recurrences: recurrences,
+      window: window,
+      confidence: pattern_confidence(frequencies, lags)
+    }
+
+    {<span class="t-atom">:reply</span>, {<span class="t-atom">:ok</span>, patterns}, update_known_patterns(state, patterns)}
+  <span class="t-kw">end</span>
+
+  <span class="t-kw">def</span> handle_call({<span class="t-atom">:summarize</span>, pattern_set}, _from, state) <span class="t-kw">do</span>
+    summary = %{
+      dominant_period: strongest_period(pattern_set.seasonality),
+      trend_direction: trend_direction(pattern_set.trend_cycles),
+      recurring_count: length(pattern_set.recurrences),
+      narrative: generate_narrative(pattern_set)
+    }
+    {<span class="t-atom">:reply</span>, {<span class="t-atom">:ok</span>, summary}, state}
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h3 id="blk-86061">5. CRDT Replication — Epoch-Aware Delta Sync</h3>
+<p>Multi-node TickTickClock deployments synchronize via epoch-aware delta-CRDTs, based on the GeoCoCo 2025 framework. Each node maintains local state and periodically exchanges deltas. ACI (Associative, Commutative, Idempotent) merge functions guarantee convergence under arbitrary message reordering, delays, and network partitions.</p>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">TickTickClock.CRDTReplicator</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">GenServer</span>
+
+  <span class="t-attr">@moduledoc</span> <span class="t-string">&quot;&quot;&quot;
+  Epoch-aware delta-CRDT replication between TickTickClock nodes.
+  Guarantees convergence under arbitrary reordering, delays, partitions.
+  &quot;&quot;&quot;</span>
+
+  <span class="t-kw">defstruct</span> [
+    <span class="t-atom">:node_id</span>,
+    <span class="t-atom">:epoch</span>,            <span class="t-comment"># Logical epoch counter</span>
+    <span class="t-atom">:pending_deltas</span>,   <span class="t-comment"># Deltas not yet acknowledged by peers</span>
+    <span class="t-atom">:peer_epochs</span>,      <span class="t-comment"># Map of peer_id → last known epoch</span>
+    <span class="t-atom">:merge_fun</span>         <span class="t-comment"># ACI merge function</span>
+  ]
+
+  <span class="t-attr">@doc</span> <span class="t-string">&quot;&quot;&quot;
+  Merge incoming delta from peer. ACI properties guarantee:
+  - Associative: merge(merge(a, b), c) == merge(a, merge(b, c))
+  - Commutative: merge(a, b) == merge(b, a)
+  - Idempotent:  merge(a, a) == a
+  &quot;&quot;&quot;</span>
+  <span class="t-kw">def</span> handle_cast({<span class="t-atom">:receive_delta</span>, peer_id, peer_epoch, delta}, state) <span class="t-kw">do</span>
+    <span class="t-kw">if</span> peer_epoch &gt; <span class="t-type">Map</span>.get(state.peer_epochs, peer_id, <span class="t-num">0</span>) <span class="t-kw">do</span>
+      merged_state = aci_merge(state, delta)
+      new_peer_epochs = <span class="t-type">Map</span>.put(state.peer_epochs, peer_id, peer_epoch)
+      {<span class="t-atom">:noreply</span>, %{merged_state | peer_epochs: new_peer_epochs}}
+    <span class="t-kw">else</span>
+      <span class="t-comment"># Already seen this epoch — idempotent, safe to ignore</span>
+      {<span class="t-atom">:noreply</span>, state}
+    <span class="t-kw">end</span>
+  <span class="t-kw">end</span>
+
+  <span class="t-kw">defp</span> aci_merge(state, delta) <span class="t-kw">do</span>
+    <span class="t-comment"># Anomaly thresholds: MAX (most conservative wins)</span>
+    <span class="t-comment"># Forecast weights: WEIGHTED AVERAGE by tick count</span>
+    <span class="t-comment"># Pattern models: UNION of known patterns</span>
+    <span class="t-comment"># Memory summaries: LATEST epoch wins (LWW per timescale)</span>
+    state.merge_fun.(state, delta)
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<p><strong>Convergence guarantees:</strong></p>
+<ul><li><p>Under network partition: each node continues processing locally. On reconnect, delta exchange brings all nodes to identical state.</p></li><li><p>Under message reordering: ACI merge produces identical result regardless of delivery order.</p></li><li><p>Under message duplication: idempotent merge. Applying the same delta twice is a no-op.</p></li><li><p>Epoch tracking prevents processing stale deltas from slow peers.</p></li></ul>
+<h3 id="blk-86074">6. [&amp;] Capability Contracts</h3>
+<p>TickTickClock implements three [&amp;] Protocol capability contracts:</p>
+<h4 id="blk-86076">6.1 <code>&amp;time.anomaly</code></h4>
+<table><thead><tr><th>Operation</th><th>Input</th><th>Output</th><th>Side Effects</th></tr></thead><tbody><tr><td><code>detect</code></td><td><code>stream_data</code></td><td><code>anomaly_set</code></td><td>No</td></tr><tr><td><code>enrich</code></td><td><code>context</code></td><td><code>enriched_context</code></td><td>No</td></tr><tr><td><code>learn</code></td><td><code>observation</code></td><td><code>ack</code></td><td>Yes — updates SSM state and threshold</td></tr></tbody></table>
+<p><strong>Recommended streams:</strong> <code>cpu</code>, <code>mem</code>, <code>latency</code>, <code>error_rate</code>, <code>throughput</code> <strong>Use cases:</strong> infrastructure incidents, support volume spikes, regional demand anomalies, fleet telemetry</p>
+<h4 id="blk-86095">6.2 <code>&amp;time.forecast</code></h4>
+<table><thead><tr><th>Operation</th><th>Input</th><th>Output</th><th>Side Effects</th></tr></thead><tbody><tr><td><code>predict</code></td><td><code>time_series</code></td><td><code>forecast_set</code></td><td>No</td></tr><tr><td><code>explain</code></td><td><code>forecast_set</code></td><td><code>forecast_explanation</code></td><td>No</td></tr><tr><td><code>enrich</code></td><td><code>context</code></td><td><code>enriched_context</code></td><td>No</td></tr><tr><td><code>learn</code></td><td><code>observation</code></td><td><code>ack</code></td><td>Yes — updates timescale memory</td></tr></tbody></table>
+<p><strong>Recommended horizons:</strong> <code>1h</code>, <code>24h</code>, <code>7d</code> <strong>Use cases:</strong> demand spike prediction, capacity planning, incident volume forecasting</p>
+<h4 id="blk-86118">6.3 <code>&amp;time.pattern</code></h4>
+<table><thead><tr><th>Operation</th><th>Input</th><th>Output</th><th>Side Effects</th></tr></thead><tbody><tr><td><code>detect</code></td><td><code>time_series</code></td><td><code>pattern_set</code></td><td>No</td></tr><tr><td><code>summarize</code></td><td><code>pattern_set</code></td><td><code>pattern_summary</code></td><td>No</td></tr><tr><td><code>enrich</code></td><td><code>context</code></td><td><code>enriched_context</code></td><td>No</td></tr></tbody></table>
+<p><strong>Recommended windows:</strong> <code>24h</code>, <code>7d</code>, <code>30d</code> <strong>Use cases:</strong> seasonality analysis, trend cycle detection, recurring incidents, demand rhythm</p>
+<h3 id="blk-86137">7. Integration Points</h3>
+<table><thead><tr><th>Product</th><th>Integration</th><th>Description</th></tr></thead><tbody><tr><td><strong>GeoFleetic</strong> (<code>&amp;space</code>)</td><td>Spatial complement</td><td>&quot;When AND where.&quot; TickTickClock provides temporal context; GeoFleetic provides spatial context. Composed via `&amp;time.anomaly \</td><td>&gt; &amp;space.fleet` for spatiotemporal incident detection.</td></tr><tr><td><strong>Graphonomous</strong> (<code>&amp;memory</code>)</td><td>Temporal patterns persisted</td><td>Detected patterns, anomalies, and forecast accuracy are stored as nodes/edges in the Graphonomous knowledge graph. Long-term temporal memory lives in Graphonomous; TickTickClock provides the inference.</td></tr><tr><td><strong>Deliberatic</strong> (<code>&amp;reason</code>)</td><td>Temporal disputes</td><td>When two agents disagree about a forecast or anomaly classification, Deliberatic resolves the dispute via structured argumentation. TickTickClock provides temporal evidence as arguments.</td></tr><tr><td><strong>Delegatic</strong></td><td>Time-based policies</td><td>Deadline enforcement, SLA monitoring, time-window access policies. Delegatic references TickTickClock forecasts to pre-authorize capacity scaling before predicted demand spikes.</td></tr><tr><td><strong>FleetPrompt</strong></td><td>Temporal agents</td><td>Anomaly detection, forecasting, and pattern analysis agents published to the FleetPrompt marketplace. Each wraps TickTickClock MCP tools.</td></tr><tr><td><strong>WebHost.Systems</strong></td><td>Hosting</td><td>WebHost.Systems hosts TickTickClock MCP servers. Convex backend stores user stream configurations and subscription state.</td></tr><tr><td><strong>Agentelic</strong></td><td>Agent builder</td><td>Agentelic agents can include <code>&amp;time.*</code> capabilities in their specs. The build pipeline validates against TickTickClock's contracts.</td></tr><tr><td><strong>SpecPrompt</strong></td><td>Spec standard</td><td>TickTickClock capability contracts follow the SpecPrompt specification format.</td></tr></tbody></table>
+<h3 id="blk-86167">7.1 PULSE Loop Manifest</h3>
+<p>TickTickClock is a <strong>PULSE-conforming loop</strong> under OS-010 with two distinguishing characteristics: it is one of the few [&amp;] loops whose canonical cadence is <code>streaming</code> (continuous tick ingestion), and it serves as the <strong>canonical PULSE substrate for `time`</strong> — other loops reference <code>ticktickclock://workspace/{ws_id}</code> in the <code>time</code> slot of their substrates block.</p>
+<p><strong>Loop ID:</strong> <code>ticktickclock.temporal_intelligence</code> <strong>Loop name:</strong> TickTickClock Temporal Intelligence Loop <strong>Version:</strong> 0.1.0 <strong>Owner:</strong> ticktickclock.com <strong>Workspace scope:</strong> required</p>
+<p><strong>Phases (5 canonical kinds — multi-timescale consolidation maps directly to PULSE):</strong></p>
+<table><thead><tr><th>Phase ID</th><th>Kind</th><th>Description</th></tr></thead><tbody><tr><td><code>retrieve_window</code></td><td><code>retrieve</code></td><td>Pull stream window (raw ticks + cached features) for the active query/subscription</td></tr><tr><td><code>route_inference</code></td><td><code>route</code></td><td>Decide between fast detector (Mamba SSM) and slow forecaster based on horizon and confidence budget</td></tr><tr><td><code>act_publish</code></td><td><code>act</code></td><td>Emit detected anomalies, forecasts, and patterns; commit feature deltas to CRDT</td></tr><tr><td><code>learn_outcome</code></td><td><code>learn</code></td><td>Update detector confidence from human/automated feedback (<code>feedback_immutability</code>)</td></tr><tr><td><code>consolidate_epoch</code></td><td><code>consolidate</code></td><td>Multi-timescale consolidation (Titans-inspired): roll fast → medium → slow → glacial</td></tr></tbody></table>
+<p><strong>Closure:</strong> <code>consolidate_epoch → retrieve_window</code> via epoch-aware delta-CRDT, guarantee <code>next_tick</code>.</p>
+<p><strong>Cadence:</strong></p>
+<ul><li><p>Primary: <code>streaming</code> (params: <code>tick_source</code>, <code>window_ms</code>)</p></li><li><p>Fallback: <code>periodic</code> (consolidation epochs)</p></li></ul>
+<p><strong>Nesting:</strong> root loop. May be invoked as an inner loop by <code>geofleetic.spatial_intelligence</code> for spatiotemporal incident detection.</p>
+<p><strong>Substrates:</strong></p>
+<ul><li><p><code>memory</code>: <code>graphonomous://workspace/{ws_id}</code></p></li><li><p><code>policy</code>: <code>delegatic://workspace/{ws_id}</code></p></li><li><p><code>audit</code>: <code>delegatic://workspace/{ws_id}/audit</code></p></li><li><p><code>auth</code>: <code>open_sentience://workspace/{ws_id}</code></p></li><li><p><code>transport</code>: <code>mcp</code></p></li><li><p><code>time</code>: <strong>self</strong> (<code>ticktickclock://workspace/{ws_id}</code> — TickTickClock is the canonical time substrate for the entire ecosystem)</p></li></ul>
+<p><strong>Invariants enabled:</strong> <code>phase_atomicity</code>, <code>feedback_immutability</code>, <code>append_only_audit</code>, <code>outcome_grounding</code>, <code>trace_id_propagation</code>. <code>kappa_routing</code> and <code>quorum_before_commit</code> are not used (routing is horizon-based, not topology-based; commits are CRDT-converged, not quorum-validated).</p>
+<p><strong>Cross-loop connections:</strong></p>
+<ul><li><p><code>anomaly_to_attention</code> — emits <code>OutcomeSignal</code> (anomaly detected) from <code>act_publish</code> to attention engines on subscribing loops</p></li><li><p><code>consolidation_to_prism</code> — emits <code>ConsolidationEvent</code> from <code>consolidate_epoch</code> to <code>prism.benchmark.observe</code></p></li><li><p><code>forecast_to_geofleetic</code> — emits <code>TopologyContext</code> (temporal-spatial overlay) when paired with GeoFleetic</p></li></ul>
+<p><strong>Why this matters:</strong> TickTickClock is the only loop in the portfolio that can declare itself as the <code>time</code> substrate. PULSE's six-slot substrate model makes this referenceable — any other loop that wants epoch-aware time coordinates simply names TickTickClock in its manifest.</p>
+<h3 id="blk-86222">8. MCP Tools</h3>
+<p>All tools are exposed via <code>hermes_mcp</code> and follow the MCP tool calling convention.</p>
+<h4 id="blk-86224">8.1 Anomaly Tools</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Input</th><th>Output</th></tr></thead><tbody><tr><td><code>anomaly_detect</code></td><td>Detect anomalies from stream or historical data</td><td><code>{stream_id, data?, window?}</code></td><td><code>{anomalies: [...], stream_id, window}</code></td></tr><tr><td><code>anomaly_subscribe</code></td><td>Subscribe to real-time anomaly events on a stream</td><td><code>{stream_id, threshold?}</code></td><td><code>{subscription_id, stream_id}</code> (then async events via PubSub)</td></tr></tbody></table>
+<h4 id="blk-86238">8.2 Forecast Tools</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Input</th><th>Output</th></tr></thead><tbody><tr><td><code>forecast_predict</code></td><td>Generate forecast over requested horizon</td><td><code>{context_id, horizon, data?}</code></td><td><code>{values, timestamps, confidence_lower, confidence_upper}</code></td></tr><tr><td><code>forecast_explain</code></td><td>Explain forecast drivers and confidence</td><td><code>{forecast_id}</code></td><td><code>{drivers: [...], confidence, contributing_timescales}</code></td></tr></tbody></table>
+<h4 id="blk-86252">8.3 Pattern Tools</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Input</th><th>Output</th></tr></thead><tbody><tr><td><code>pattern_detect</code></td><td>Detect recurring temporal structures</td><td><code>{context_id, data, window}</code></td><td><code>{seasonality, trend_cycles, motifs, recurrences}</code></td></tr><tr><td><code>pattern_summarize</code></td><td>Interpretable summary of detected patterns</td><td><code>{pattern_set}</code></td><td><code>{dominant_period, trend_direction, recurring_count, narrative}</code></td></tr></tbody></table>
+<h4 id="blk-86266">8.4 Cross-Cutting Tools</h4>
+<table><thead><tr><th>Tool</th><th>Description</th><th>Input</th><th>Output</th></tr></thead><tbody><tr><td><code>temporal_enrich</code></td><td>Attach temporal context to upstream artifacts</td><td><code>{context, stream_ids?, capabilities?}</code></td><td><code>{enriched_context}</code> with anomaly, forecast, and pattern annotations</td></tr><tr><td><code>temporal_learn</code></td><td>Incorporate outcome feedback to improve models</td><td><code>{observation, stream_id, outcome}</code></td><td><code>{ack, updated_timescales}</code></td></tr></tbody></table>
+<h4 id="blk-86280">8.5 MCP Tool Implementation</h4>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">TickTickClock.MCP.Tools</span> <span class="t-kw">do</span>
+  <span class="t-attr">@moduledoc</span> <span class="t-string">&quot;MCP tool definitions for TickTickClock temporal intelligence.&quot;</span>
+
+  <span class="t-kw">def</span> tool_definitions <span class="t-kw">do</span>
+    [
+      %{
+        name: <span class="t-string">&quot;anomaly_detect&quot;</span>,
+        description: <span class="t-string">&quot;Detect anomalies from stream or historical time-series data.&quot;</span>,
+        input_schema: %{
+          type: <span class="t-string">&quot;object&quot;</span>,
+          properties: %{
+            stream_id: %{type: <span class="t-string">&quot;string&quot;</span>, description: <span class="t-string">&quot;Stream identifier (e.g., cpu:host-01)&quot;</span>},
+            data: %{type: <span class="t-string">&quot;array&quot;</span>, items: %{type: <span class="t-string">&quot;number&quot;</span>}, description: <span class="t-string">&quot;Optional historical data array&quot;</span>},
+            window: %{type: <span class="t-string">&quot;string&quot;</span>, enum: [<span class="t-string">&quot;1h&quot;</span>, <span class="t-string">&quot;6h&quot;</span>, <span class="t-string">&quot;24h&quot;</span>], description: <span class="t-string">&quot;Detection window&quot;</span>}
+          },
+          required: [<span class="t-string">&quot;stream_id&quot;</span>]
+        }
+      },
+      %{
+        name: <span class="t-string">&quot;anomaly_subscribe&quot;</span>,
+        description: <span class="t-string">&quot;Subscribe to real-time anomaly events on a stream.&quot;</span>,
+        input_schema: %{
+          type: <span class="t-string">&quot;object&quot;</span>,
+          properties: %{
+            stream_id: %{type: <span class="t-string">&quot;string&quot;</span>},
+            threshold: %{type: <span class="t-string">&quot;number&quot;</span>, description: <span class="t-string">&quot;Custom anomaly score threshold (optional)&quot;</span>}
+          },
+          required: [<span class="t-string">&quot;stream_id&quot;</span>]
+        }
+      },
+      %{
+        name: <span class="t-string">&quot;forecast_predict&quot;</span>,
+        description: <span class="t-string">&quot;Generate a forecast over the requested horizon.&quot;</span>,
+        input_schema: %{
+          type: <span class="t-string">&quot;object&quot;</span>,
+          properties: %{
+            context_id: %{type: <span class="t-string">&quot;string&quot;</span>, description: <span class="t-string">&quot;Forecast context identifier&quot;</span>},
+            horizon: %{type: <span class="t-string">&quot;string&quot;</span>, enum: [<span class="t-string">&quot;1h&quot;</span>, <span class="t-string">&quot;24h&quot;</span>, <span class="t-string">&quot;7d&quot;</span>]},
+            data: %{type: <span class="t-string">&quot;array&quot;</span>, items: %{type: <span class="t-string">&quot;number&quot;</span>}, description: <span class="t-string">&quot;Optional seed data&quot;</span>}
+          },
+          required: [<span class="t-string">&quot;context_id&quot;</span>, <span class="t-string">&quot;horizon&quot;</span>]
+        }
+      },
+      %{
+        name: <span class="t-string">&quot;forecast_explain&quot;</span>,
+        description: <span class="t-string">&quot;Explain forecast drivers, confidence, and contributing signals.&quot;</span>,
+        input_schema: %{
+          type: <span class="t-string">&quot;object&quot;</span>,
+          properties: %{
+            forecast_id: %{type: <span class="t-string">&quot;string&quot;</span>}
+          },
+          required: [<span class="t-string">&quot;forecast_id&quot;</span>]
+        }
+      },
+      %{
+        name: <span class="t-string">&quot;pattern_detect&quot;</span>,
+        description: <span class="t-string">&quot;Detect recurring temporal structures (cycles, seasonality, motifs).&quot;</span>,
+        input_schema: %{
+          type: <span class="t-string">&quot;object&quot;</span>,
+          properties: %{
+            context_id: %{type: <span class="t-string">&quot;string&quot;</span>},
+            data: %{type: <span class="t-string">&quot;array&quot;</span>, items: %{type: <span class="t-string">&quot;number&quot;</span>}},
+            window: %{type: <span class="t-string">&quot;string&quot;</span>, enum: [<span class="t-string">&quot;24h&quot;</span>, <span class="t-string">&quot;7d&quot;</span>, <span class="t-string">&quot;30d&quot;</span>]}
+          },
+          required: [<span class="t-string">&quot;context_id&quot;</span>, <span class="t-string">&quot;data&quot;</span>, <span class="t-string">&quot;window&quot;</span>]
+        }
+      },
+      %{
+        name: <span class="t-string">&quot;pattern_summarize&quot;</span>,
+        description: <span class="t-string">&quot;Generate interpretable summary of detected patterns.&quot;</span>,
+        input_schema: %{
+          type: <span class="t-string">&quot;object&quot;</span>,
+          properties: %{
+            pattern_set: %{type: <span class="t-string">&quot;object&quot;</span>, description: <span class="t-string">&quot;Output from pattern_detect&quot;</span>}
+          },
+          required: [<span class="t-string">&quot;pattern_set&quot;</span>]
+        }
+      },
+      %{
+        name: <span class="t-string">&quot;temporal_enrich&quot;</span>,
+        description: <span class="t-string">&quot;Attach temporal context (anomalies, forecasts, patterns) to upstream artifacts.&quot;</span>,
+        input_schema: %{
+          type: <span class="t-string">&quot;object&quot;</span>,
+          properties: %{
+            context: %{type: <span class="t-string">&quot;object&quot;</span>, description: <span class="t-string">&quot;Upstream context to enrich&quot;</span>},
+            stream_ids: %{type: <span class="t-string">&quot;array&quot;</span>, items: %{type: <span class="t-string">&quot;string&quot;</span>}},
+            capabilities: %{type: <span class="t-string">&quot;array&quot;</span>, items: %{type: <span class="t-string">&quot;string&quot;</span>, enum: [<span class="t-string">&quot;anomaly&quot;</span>, <span class="t-string">&quot;forecast&quot;</span>, <span class="t-string">&quot;pattern&quot;</span>]}}
+          },
+          required: [<span class="t-string">&quot;context&quot;</span>]
+        }
+      },
+      %{
+        name: <span class="t-string">&quot;temporal_learn&quot;</span>,
+        description: <span class="t-string">&quot;Incorporate outcome feedback to improve temporal models.&quot;</span>,
+        input_schema: %{
+          type: <span class="t-string">&quot;object&quot;</span>,
+          properties: %{
+            stream_id: %{type: <span class="t-string">&quot;string&quot;</span>},
+            observation: %{type: <span class="t-string">&quot;object&quot;</span>, description: <span class="t-string">&quot;Observed outcome&quot;</span>},
+            outcome: %{type: <span class="t-string">&quot;string&quot;</span>, enum: [<span class="t-string">&quot;confirmed&quot;</span>, <span class="t-string">&quot;false_positive&quot;</span>, <span class="t-string">&quot;missed&quot;</span>]}
+          },
+          required: [<span class="t-string">&quot;stream_id&quot;</span>, <span class="t-string">&quot;observation&quot;</span>, <span class="t-string">&quot;outcome&quot;</span>]
+        }
+      }
+    ]
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h3 id="blk-86282">9. Data Model (Ecto Schemas)</h3>
+<h4 id="blk-86283">9.1 Streams</h4>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">TickTickClock.Streams.Stream</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
+
+  schema <span class="t-string">&quot;streams&quot;</span> <span class="t-kw">do</span>
+    field <span class="t-atom">:stream_id</span>, <span class="t-atom">:string</span>        <span class="t-comment"># e.g., &quot;cpu:host-01&quot;</span>
+    field <span class="t-atom">:source</span>, <span class="t-atom">:string</span>           <span class="t-comment"># e.g., &quot;prometheus&quot;, &quot;custom&quot;</span>
+    field <span class="t-atom">:metric_type</span>, <span class="t-atom">:string</span>      <span class="t-comment"># e.g., &quot;gauge&quot;, &quot;counter&quot;, &quot;histogram&quot;</span>
+    field <span class="t-atom">:status</span>, <span class="t-type">Ecto.Enum</span>, values: [<span class="t-atom">:active</span>, <span class="t-atom">:paused</span>, <span class="t-atom">:archived</span>]
+    field <span class="t-atom">:metadata</span>, <span class="t-atom">:map</span>, default: %{}
+    field <span class="t-atom">:tick_count</span>, <span class="t-atom">:integer</span>, default: <span class="t-num">0</span>
+    field <span class="t-atom">:last_tick_at</span>, <span class="t-atom">:utc_datetime_usec</span>
+
+    has_many <span class="t-atom">:anomalies</span>, <span class="t-type">TickTickClock.Anomalies.Anomaly</span>
+    has_many <span class="t-atom">:forecasts</span>, <span class="t-type">TickTickClock.Forecasts.Forecast</span>
+
+    timestamps()
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-86285">9.2 Anomalies</h4>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">TickTickClock.Anomalies.Anomaly</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
+  <span class="t-attr">@primary_key</span> {<span class="t-atom">:id</span>, <span class="t-atom">:binary_id</span>, autogenerate: <span class="t-lit">true</span>}
+
+  schema <span class="t-string">&quot;anomalies&quot;</span> <span class="t-kw">do</span>
+    belongs_to <span class="t-atom">:stream</span>, <span class="t-type">TickTickClock.Streams.Stream</span>
+
+    field <span class="t-atom">:timestamp</span>, <span class="t-atom">:utc_datetime_usec</span>
+    field <span class="t-atom">:value</span>, <span class="t-atom">:float</span>
+    field <span class="t-atom">:predicted</span>, <span class="t-atom">:float</span>
+    field <span class="t-atom">:score</span>, <span class="t-atom">:float</span>
+    field <span class="t-atom">:threshold</span>, <span class="t-atom">:float</span>
+    field <span class="t-atom">:outcome</span>, <span class="t-type">Ecto.Enum</span>, values: [<span class="t-atom">:unreviewed</span>, <span class="t-atom">:confirmed</span>, <span class="t-atom">:false_positive</span>]
+    field <span class="t-atom">:metadata</span>, <span class="t-atom">:map</span>, default: %{}
+
+    timestamps(updated_at: <span class="t-lit">false</span>)  <span class="t-comment"># append-only</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-86287">9.3 Forecasts</h4>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">TickTickClock.Forecasts.Forecast</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
+  <span class="t-attr">@primary_key</span> {<span class="t-atom">:id</span>, <span class="t-atom">:binary_id</span>, autogenerate: <span class="t-lit">true</span>}
+
+  schema <span class="t-string">&quot;forecasts&quot;</span> <span class="t-kw">do</span>
+    belongs_to <span class="t-atom">:stream</span>, <span class="t-type">TickTickClock.Streams.Stream</span>
+
+    field <span class="t-atom">:horizon</span>, <span class="t-atom">:string</span>               <span class="t-comment"># &quot;1h&quot;, &quot;24h&quot;, &quot;7d&quot;</span>
+    field <span class="t-atom">:values</span>, {<span class="t-atom">:array</span>, <span class="t-atom">:float</span>}
+    field <span class="t-atom">:timestamps</span>, {<span class="t-atom">:array</span>, <span class="t-atom">:utc_datetime_usec</span>}
+    field <span class="t-atom">:confidence_lower</span>, {<span class="t-atom">:array</span>, <span class="t-atom">:float</span>}
+    field <span class="t-atom">:confidence_upper</span>, {<span class="t-atom">:array</span>, <span class="t-atom">:float</span>}
+    field <span class="t-atom">:contributing_timescales</span>, <span class="t-atom">:map</span>   <span class="t-comment"># %{fast: 0.6, medium: 0.3, ...}</span>
+    field <span class="t-atom">:accuracy</span>, <span class="t-atom">:float</span>               <span class="t-comment"># filled in by temporal_learn</span>
+
+    timestamps()
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-86289">9.4 Patterns</h4>
+<pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">TickTickClock.Patterns.Pattern</span> <span class="t-kw">do</span>
+  <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
+  <span class="t-attr">@primary_key</span> {<span class="t-atom">:id</span>, <span class="t-atom">:binary_id</span>, autogenerate: <span class="t-lit">true</span>}
+
+  schema <span class="t-string">&quot;patterns&quot;</span> <span class="t-kw">do</span>
+    belongs_to <span class="t-atom">:stream</span>, <span class="t-type">TickTickClock.Streams.Stream</span>
+
+    field <span class="t-atom">:window</span>, <span class="t-atom">:string</span>                <span class="t-comment"># &quot;24h&quot;, &quot;7d&quot;, &quot;30d&quot;</span>
+    field <span class="t-atom">:pattern_type</span>, <span class="t-type">Ecto.Enum</span>, values: [<span class="t-atom">:seasonality</span>, <span class="t-atom">:trend_cycle</span>, <span class="t-atom">:motif</span>, <span class="t-atom">:recurrence</span>]
+    field <span class="t-atom">:dominant_period</span>, <span class="t-atom">:float</span>        <span class="t-comment"># seconds</span>
+    field <span class="t-atom">:confidence</span>, <span class="t-atom">:float</span>
+    field <span class="t-atom">:details</span>, <span class="t-atom">:map</span>                  <span class="t-comment"># type-specific structure</span>
+    field <span class="t-atom">:first_detected_at</span>, <span class="t-atom">:utc_datetime_usec</span>
+    field <span class="t-atom">:last_seen_at</span>, <span class="t-atom">:utc_datetime_usec</span>
+    field <span class="t-atom">:occurrence_count</span>, <span class="t-atom">:integer</span>, default: <span class="t-num">1</span>
+
+    timestamps()
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<h4 id="blk-86291">9.5 TimescaleDB Hypertable Setup</h4>
+<pre data-lang="sql"><code>-- Streams table is standard PostgreSQL
+-- Time-series data uses TimescaleDB hypertables
+
+CREATE TABLE stream_ticks (
+    stream_id   TEXT NOT NULL,
+    timestamp   TIMESTAMPTZ NOT NULL,
+    value       DOUBLE PRECISION NOT NULL,
+    metadata    JSONB DEFAULT '{}'
+);
+SELECT create_hypertable('stream_ticks', 'timestamp');
+
+-- Continuous aggregates for medium/slow/glacial tiers
+CREATE MATERIALIZED VIEW hourly_aggregates
+WITH (timescaledb.continuous) AS
+SELECT
+    stream_id,
+    time_bucket('1 hour', timestamp) AS bucket,
+    avg(value) AS avg_value,
+    min(value) AS min_value,
+    max(value) AS max_value,
+    stddev(value) AS stddev_value,
+    count(*) AS tick_count
+FROM stream_ticks
+GROUP BY stream_id, bucket;
+
+CREATE MATERIALIZED VIEW daily_aggregates
+WITH (timescaledb.continuous) AS
+SELECT
+    stream_id,
+    time_bucket('1 day', timestamp) AS bucket,
+    avg(value) AS avg_value,
+    min(value) AS min_value,
+    max(value) AS max_value,
+    stddev(value) AS stddev_value,
+    count(*) AS tick_count
+FROM stream_ticks
+GROUP BY stream_id, bucket;
+
+-- Compression policy: compress chunks older than 7 days
+SELECT add_compression_policy('stream_ticks', INTERVAL '7 days');</code></pre>
+<h3 id="blk-86293">10. Performance Targets</h3>
+<table><thead><tr><th>Metric</th><th>Target</th></tr></thead><tbody><tr><td>Anomaly detection latency (per tick)</td><td>&lt; 1ms p99</td></tr><tr><td>Forecast generation (single horizon)</td><td>&lt; 50ms p99</td></tr><tr><td>Pattern detection (7d window)</td><td>&lt; 200ms p99</td></tr><tr><td>Stream sync precision (cross-node)</td><td>&lt; 10ms</td></tr><tr><td>Concurrent streams (single BEAM node)</td><td>100,000+</td></tr><tr><td>Memory promotion (fast → medium)</td><td>&lt; 5ms</td></tr><tr><td>CRDT delta merge</td><td>&lt; 1ms</td></tr><tr><td>ETS hot-cache lookup</td><td>&lt; 1us p99</td></tr><tr><td>Temporal forgetting</td><td>Zero (by design)</td></tr></tbody></table>
+<h3 id="blk-86315">11. Research Foundations</h3>
+<table><thead><tr><th>Foundation</th><th>Application in TickTickClock</th><th>Reference</th></tr></thead><tbody><tr><td><strong>Selective State-Space Models (Mamba)</strong></td><td>Anomaly engine uses input-dependent selective gating for linear-time sequence processing. Captures short and long-range temporal dependencies without quadratic attention cost.</td><td>Gu &amp; Dao, &quot;Mamba: Linear-Time Sequence Modeling with Selective State Spaces,&quot; 2023</td></tr><tr><td><strong>Delta-CRDT Replication</strong></td><td>CRDT replication layer uses ACI merge functions and epoch-aware delta exchange. Guarantees eventual consistency under arbitrary network conditions.</td><td>Almeida et al., &quot;Delta State Replicated Data Types,&quot; J. Parallel Distrib. Comput., 2018; GeoCoCo 2025</td></tr><tr><td><strong>Multi-Timescale Consolidation</strong></td><td>Forecast engine uses nested learning with memory modules at different update frequencies. Fast memory promotes to slow memory. Prevents catastrophic forgetting by isolating timescale dynamics.</td><td>&quot;Nested Learning,&quot; NeurIPS 2025; Titans architecture</td></tr><tr><td><strong>Matrix Profile</strong></td><td>Pattern engine uses Matrix Profile for motif discovery and discord detection in time-series subsequences.</td><td>Yeh et al., &quot;Matrix Profile I: All Pairs Similarity Joins for Time Series,&quot; ICDM 2016</td></tr><tr><td><strong>MCP-First API Design</strong></td><td>All capabilities exposed as MCP tools via Hermes. No proprietary API layer.</td><td>Model Context Protocol Specification</td></tr></tbody></table>
+<h3 id="blk-86335">12. Implementation Roadmap</h3>
+<h4 id="blk-86336">Pre-Phase: Feasibility Validation (Weeks 0–2)</h4>
+<p>Before committing to the full implementation, validate the three highest-risk technical assumptions:</p>
+<p><strong>FV-1: Selective state-space model (Mamba) on Nx without EXLA</strong></p>
+<ul><li><p>[ ] Load a pre-trained Mamba-style SSM via <code>Bumblebee</code> + ONNX runtime (no EXLA — consistent with portfolio EXLA exclusion)</p></li><li><p>[ ] Run inference on a synthetic time-series stream (1000 ticks, 4 features)</p></li><li><p>[ ] Measure per-tick inference latency and memory footprint</p></li><li><p><strong>Pass criteria:</strong> Per-tick inference &lt;50ms on commodity hardware; RSS &lt;500MB for a single stream model</p></li><li><p><strong>Fallback:</strong> If Mamba ONNX models are unavailable or too slow, evaluate a simpler adaptive threshold model (EMA + Z-score) as the MVP anomaly detector, with SSM as a Phase 2 upgrade</p></li></ul>
+<p><strong>FV-2: Multi-timescale consolidation as GenServer ticking</strong></p>
+<ul><li><p>[ ] Prototype four GenServers ticking at different intervals (1s, 1min, 1h, 1d simulated)</p></li><li><p>[ ] Feed synthetic anomaly events through the fast tier and verify promotion to medium/slow tiers</p></li><li><p>[ ] Measure memory pressure under sustained high-throughput input (10K events/sec)</p></li><li><p><strong>Pass criteria:</strong> Promotion pipeline completes without message queue backlog &gt;1000; ETS fast-memory ring buffer stays within 100MB for 100 concurrent streams</p></li></ul>
+<p><strong>FV-3: Delta-CRDT convergence for temporal state</strong></p>
+<ul><li><p>[ ] Prototype epoch-aware delta-CRDTs for anomaly state (same CRDT approach as GeoFleetic)</p></li><li><p>[ ] Simulate 5-node cluster with network partitions during active anomaly detection</p></li><li><p>[ ] Verify that anomaly history converges correctly after partition heal</p></li><li><p><strong>Pass criteria:</strong> 100% eventual consistency; no phantom anomalies or lost detections</p></li></ul>
+<p><strong>FV-4: SQLite-first for MVP (defer TimescaleDB)</strong></p>
+<ul><li><p>[ ] Evaluate whether SQLite (via <code>exqlite</code>) can serve as the sole storage layer for Phase 0 and Phase 1</p></li><li><p>[ ] Prototype medium-tier aggregation queries on SQLite with 1M rows</p></li><li><p><strong>Pass criteria:</strong> Aggregation queries &lt;100ms for daily summaries; if not, TimescaleDB is required from Phase 0</p></li></ul>
+<h4 id="blk-86378">Acceptance Test Criteria</h4>
+<p><strong>Anomaly Engine:</strong></p>
+<ul><li><p>Given a stream with a 3σ spike → <code>anomaly_detect</code> returns anomaly with <code>anomaly_score &gt; threshold</code> within 50ms</p></li><li><p>Given a stream with no anomalies → false positive rate &lt; 5% over 10K ticks</p></li><li><p>Given a new stream → SSM hidden state initializes correctly; first anomaly detection within 10 ticks</p></li><li><p>Given <code>anomaly_subscribe</code> → PubSub delivers anomaly events to subscriber within 100ms of detection</p></li></ul>
+<p><strong>Forecast Engine:</strong></p>
+<ul><li><p>Given a stream with 1000 historical ticks → <code>forecast_predict</code> returns prediction with confidence interval within 500ms</p></li><li><p>Given a forecast + actual outcome → <code>temporal_learn</code> updates confidence and model weights</p></li><li><p>Given multi-timescale memory → fast (1s) events promote to medium (1min) tier correctly; no data loss during promotion</p></li><li><p>Given <code>forecast_explain</code> → response includes human-readable temporal factors (trend, seasonality, recent anomalies)</p></li></ul>
+<p><strong>Pattern Engine:</strong></p>
+<ul><li><p>Given a stream with daily seasonality → <code>pattern_detect</code> identifies the 24h cycle within 48h of data</p></li><li><p>Given a stream with a known motif → motif discovery via Matrix Profile finds the pattern with &gt; 80% recall</p></li><li><p>Given <code>pattern_summarize</code> → returns structured summary with detected frequencies, trends, and confidence scores</p></li></ul>
+<p><strong>Delta-CRDTs:</strong></p>
+<ul><li><p>Given 5 nodes with divergent anomaly state after partition → states converge within 5s of partition heal</p></li><li><p>Given concurrent anomaly detections on 2 nodes → delta merge produces correct final anomaly history (no phantom anomalies, no lost detections)</p></li></ul>
+<p><strong>`&amp;govern` Integration:</strong></p>
+<p>TickTickClock emits telemetry via <code>&amp;govern.telemetry.emit</code>:</p>
+<ul><li><p><code>anomaly.detected</code> — anomaly events with stream_id, score, threshold</p></li><li><p><code>forecast.generated</code> — forecast computation with horizon, confidence, compute duration</p></li><li><p><code>pattern.detected</code> — pattern discovery events with frequency, significance</p></li><li><p><code>stream.created</code> / <code>stream.removed</code> — lifecycle events for capacity tracking</p></li></ul>
+<p>When anomaly detection compute exceeds <code>max_compute_ms_per_task</code> (from Delegatic policy), TickTickClock falls back to the EMA+Z-score fast path and emits <code>&amp;govern.telemetry.emit</code> with <code>status: &quot;degraded&quot;</code>. If a forecast confidence falls below <code>escalate_when.confidence_below</code>, it escalates via <code>&amp;govern.escalation.escalate</code>.</p>
+<h4 id="blk-86425">Phase 0: Foundation (Weeks 3–6)</h4>
+<ul><li><p>[ ] Mix project scaffold (<code>tick_tick_clock</code>)</p></li><li><p>[ ] Ecto schemas + migrations (streams, anomalies, forecasts, patterns)</p></li><li><p>[ ] TimescaleDB hypertable setup + continuous aggregates (or SQLite-first per FV-4 outcome)</p></li><li><p>[ ] StreamManager DynamicSupervisor + per-stream GenServer</p></li><li><p>[ ] ETS-backed fast memory ring buffers</p></li><li><p>[ ] Basic tick ingestion pipeline (Broadway)</p></li></ul>
+<h4 id="blk-86439">Phase 1: Anomaly Engine (Weeks 5–8)</h4>
+<ul><li><p>[ ] SSM model loading via Bumblebee/ONNX</p></li><li><p>[ ] Selective state update + adaptive gating</p></li><li><p>[ ] Dynamic threshold computation (EMA)</p></li><li><p>[ ] Anomaly event broadcast via Phoenix PubSub</p></li><li><p>[ ] MCP tools: <code>anomaly_detect</code>, <code>anomaly_subscribe</code></p></li><li><p>[ ] Hermes MCP server integration</p></li></ul>
+<h4 id="blk-86453">Phase 2: Forecast Engine (Weeks 9–12)</h4>
+<ul><li><p>[ ] Multi-timescale memory store (fast/medium/slow/glacial GenServers)</p></li><li><p>[ ] Memory promotion pipeline (Consolidator)</p></li><li><p>[ ] CCO prediction: compose across timescales</p></li><li><p>[ ] Confidence interval computation</p></li><li><p>[ ] MCP tools: <code>forecast_predict</code>, <code>forecast_explain</code></p></li><li><p>[ ] Outcome feedback via <code>temporal_learn</code></p></li></ul>
+<h4 id="blk-86467">Phase 3: Pattern Engine (Weeks 13–16)</h4>
+<ul><li><p>[ ] Spectral decomposition (FFT via Nx)</p></li><li><p>[ ] Autocorrelation function computation</p></li><li><p>[ ] Matrix Profile motif discovery</p></li><li><p>[ ] Recurrence detection against known patterns</p></li><li><p>[ ] MCP tools: <code>pattern_detect</code>, <code>pattern_summarize</code></p></li><li><p>[ ] <code>temporal_enrich</code> cross-cutting tool</p></li></ul>
+<h4 id="blk-86481">Phase 4: Replication &amp; Edge (Weeks 17–22)</h4>
+<ul><li><p>[ ] Delta-CRDT replication module</p></li><li><p>[ ] ACI merge functions for each state type</p></li><li><p>[ ] Epoch tracking + delta exchange protocol</p></li><li><p>[ ] <code>libcluster</code> node discovery</p></li><li><p>[ ] SQLite backend for edge deployments</p></li><li><p>[ ] Bumblebee model quantization for constrained devices</p></li></ul>
+<h4 id="blk-86495">Phase 5: Integration &amp; Enterprise (Weeks 23–30)</h4>
+<ul><li><p>[ ] Phoenix LiveView dashboard (stream, anomaly, forecast, pattern views)</p></li><li><p>[ ] GeoFleetic integration (<code>&amp;time \|&gt; &amp;space</code> composition)</p></li><li><p>[ ] Graphonomous integration (persist patterns as knowledge graph nodes)</p></li><li><p>[ ] Deliberatic integration (temporal evidence for dispute resolution)</p></li><li><p>[ ] SSO/SAML, multi-tenant stream isolation</p></li><li><p>[ ] Prometheus telemetry export</p></li></ul>
+<h3 id="blk-86509">13. Pricing</h3>
+<table><thead><tr><th>Tier</th><th>Price</th><th>Streams</th><th>Features</th></tr></thead><tbody><tr><td><strong>Developer</strong></td><td>Free</td><td>5 streams</td><td>Anomaly detection, 1h forecasts, 24h patterns. Single node. Community support.</td></tr><tr><td><strong>Team</strong></td><td>$99/mo</td><td>100 streams</td><td>All capabilities. All horizons/windows. 3 nodes. CRDT replication. Email support.</td></tr><tr><td><strong>Business</strong></td><td>$499/mo</td><td>1,000 streams</td><td>Everything in Team + TimescaleDB, Phoenix dashboard, Graphonomous integration, priority support.</td></tr><tr><td><strong>Enterprise</strong></td><td>Custom</td><td>Unlimited</td><td>Dedicated infra, SSO/SAML, SLA, multi-region CRDT clusters, white-glove onboarding.</td></tr></tbody></table>
+<h3 id="blk-86531">14. ADR Summary</h3>
+<h4 id="blk-86532">ADR-0001: GenServer-Per-Stream</h4>
+<p>Each monitored stream is an independent GenServer process. Streams share no state. Fault isolation is automatic — a crash in one stream's anomaly detector does not affect others. The BEAM scheduler handles 100K+ lightweight processes.</p>
+<h4 id="blk-86534">ADR-0002: Multi-Timescale Memory as Separate GenServers</h4>
+<p>Each timescale (fast/medium/slow/glacial) is a separate supervised GenServer with its own tick interval. This mirrors the Nested Learning architecture and prevents fast-frequency noise from corrupting slow-frequency models. Promotion between timescales is explicit and auditable.</p>
+<h4 id="blk-86536">ADR-0003: ETS for Fast Memory, DB for Everything Else</h4>
+<p>Fast memory (sub-second) lives in ETS ring buffers for sub-microsecond access. Medium through glacial tiers live in TimescaleDB (server) or SQLite (edge). The boundary is configurable via application config. DETS serves as a spill target when ETS memory pressure exceeds threshold.</p>
+<h4 id="blk-86538">ADR-0004: Epoch-Aware Delta-CRDTs over Raft</h4>
+<p>TickTickClock chose delta-CRDTs over Raft consensus because temporal intelligence tolerates brief inconsistency (two nodes may disagree on a threshold for milliseconds) but cannot tolerate unavailability (a partitioned node must continue detecting anomalies). AP over CP. Epoch tracking prevents stale delta application.</p>
+<h4 id="blk-86540">ADR-0005: No EXLA Dependency</h4>
+<p>Consistent with the portfolio convention. Nx computations use binary backend or ONNX runtime via Bumblebee. Avoids NIF/CUDA compilation issues on edge devices and CI environments.</p>
+<p><em>TickTickClock: Every tick is a learning opportunity. Every pattern has a rhythm.</em></p></div>
+<p class="src"><a href="/#/ticktickclock.com/docs/spec/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-85929" class="lvl2">Technical Specification v0.1</a><a href="#blk-85931" class="lvl2">1. Overview</a><a href="#blk-85934" class="lvl3">1.1 The Problem</a><a href="#blk-85937" class="lvl3">1.2 Design Principles</a><a href="#blk-85953" class="lvl3">1.3 Why Elixir</a><a href="#blk-85955" class="lvl3">1.4 One-Liner</a><a href="#blk-85958" class="lvl2">2. Architecture</a><a href="#blk-85960" class="lvl3">2.1 Component Summary</a><a href="#blk-85989" class="lvl3">2.2 OTP Supervision Tree</a><a href="#blk-85991" class="lvl2">3. Technology Stack</a><a href="#blk-86029" class="lvl2">4. Core Engines</a><a href="#blk-86030" class="lvl3">4.1 Anomaly Engine — Adaptive State-Space Detection</a><a href="#blk-86053" class="lvl3">4.2 Forecast Engine — Continual Compositionality &amp; Orchestration (CCO)</a><a href="#blk-86058" class="lvl3">4.3 Pattern Engine — Temporal Structure Detection</a><a href="#blk-86061" class="lvl2">5. CRDT Replication — Epoch-Aware Delta Sync</a><a href="#blk-86074" class="lvl2">6. [&amp;] Capability Contracts</a><a href="#blk-86076" class="lvl3">6.1 &amp;time.anomaly</a><a href="#blk-86095" class="lvl3">6.2 &amp;time.forecast</a><a href="#blk-86118" class="lvl3">6.3 &amp;time.pattern</a><a href="#blk-86137" class="lvl2">7. Integration Points</a><a href="#blk-86167" class="lvl2">7.1 PULSE Loop Manifest</a><a href="#blk-86222" class="lvl2">8. MCP Tools</a><a href="#blk-86224" class="lvl3">8.1 Anomaly Tools</a><a href="#blk-86238" class="lvl3">8.2 Forecast Tools</a><a href="#blk-86252" class="lvl3">8.3 Pattern Tools</a><a href="#blk-86266" class="lvl3">8.4 Cross-Cutting Tools</a><a href="#blk-86280" class="lvl3">8.5 MCP Tool Implementation</a><a href="#blk-86282" class="lvl2">9. Data Model (Ecto Schemas)</a><a href="#blk-86283" class="lvl3">9.1 Streams</a><a href="#blk-86285" class="lvl3">9.2 Anomalies</a><a href="#blk-86287" class="lvl3">9.3 Forecasts</a><a href="#blk-86289" class="lvl3">9.4 Patterns</a><a href="#blk-86291" class="lvl3">9.5 TimescaleDB Hypertable Setup</a><a href="#blk-86293" class="lvl2">10. Performance Targets</a><a href="#blk-86315" class="lvl2">11. Research Foundations</a><a href="#blk-86335" class="lvl2">12. Implementation Roadmap</a><a href="#blk-86336" class="lvl3">Pre-Phase: Feasibility Validation (Weeks 0–2)</a><a href="#blk-86378" class="lvl3">Acceptance Test Criteria</a><a href="#blk-86425" class="lvl3">Phase 0: Foundation (Weeks 3–6)</a><a href="#blk-86439" class="lvl3">Phase 1: Anomaly Engine (Weeks 5–8)</a><a href="#blk-86453" class="lvl3">Phase 2: Forecast Engine (Weeks 9–12)</a><a href="#blk-86467" class="lvl3">Phase 3: Pattern Engine (Weeks 13–16)</a><a href="#blk-86481" class="lvl3">Phase 4: Replication &amp; Edge (Weeks 17–22)</a><a href="#blk-86495" class="lvl3">Phase 5: Integration &amp; Enterprise (Weeks 23–30)</a><a href="#blk-86509" class="lvl2">13. Pricing</a><a href="#blk-86531" class="lvl2">14. ADR Summary</a><a href="#blk-86532" class="lvl3">ADR-0001: GenServer-Per-Stream</a><a href="#blk-86534" class="lvl3">ADR-0002: Multi-Timescale Memory as Separate GenServers</a><a href="#blk-86536" class="lvl3">ADR-0003: ETS for Fast Memory, DB for Everything Else</a><a href="#blk-86538" class="lvl3">ADR-0004: Epoch-Aware Delta-CRDTs over Raft</a><a href="#blk-86540" class="lvl3">ADR-0005: No EXLA Dependency</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/ticktickclock.com/docs/index.md/">TickTickClock Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraambedkmjkph3sl5zumsnv27kddlibyvfy4rcgzwbraf3clyl7cuq</div></div></div>
+</div></div>
+</body></html>

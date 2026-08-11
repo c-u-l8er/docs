@@ -1,0 +1,333 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>&amp;time.pattern — Pattern Detection as a Capability · AmpersandBoxDesign · Ampersand Box</title>
+<meta name="description" content="&amp;time.pattern is a capability page for the [&amp;] Protocol&#39;s temporal pattern detection subtype.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/time.pattern.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="&amp;time.pattern — Pattern Detection as a Capability">
+<meta property="og:description" content="&amp;time.pattern is a capability page for the [&amp;] Protocol&#39;s temporal pattern detection subtype.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/time.pattern.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"&time.pattern — Pattern Detection as a Capability","name":"&time.pattern — Pattern Detection as a Capability","description":"&time.pattern is a capability page for the [&] Protocol's temporal pattern detection subtype.","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/time.pattern.md/","identifier":"bagaaieratloywjxvjxfxhhkrsxaui7ze4hf5ksgsqq7pwnq6tt66kjd3f5da","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"AmpersandBoxDesign","url":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},"articleSection":"AmpersandBoxDesign","hasPart":[{"@type":"WebPageElement","name":"1. Definition"},{"@type":"WebPageElement","name":"2. Why this capability matters"},{"@type":"WebPageElement","name":"3. Capability role in the four-primitive model"},{"@type":"WebPageElement","name":"4. Typical use cases"},{"@type":"WebPageElement","name":"Support ticket seasonality"},{"@type":"WebPageElement","name":"Research trend cycles"},{"@type":"WebPageElement","name":"Recurring incident patterns"},{"@type":"WebPageElement","name":"Demand rhythm characterization"},{"@type":"WebPageElement","name":"Operational baseline profiling"},{"@type":"WebPageElement","name":"Maintenance window optimization"},{"@type":"WebPageElement","name":"5. Example declaration"},{"@type":"WebPageElement","name":"6. Compatible providers"},{"@type":"WebPageElement","name":"7. Example capability contract"},{"@type":"WebPageElement","name":"8. Example provider configuration patterns"},{"@type":"WebPageElement","name":"Windows"},{"@type":"WebPageElement","name":"Targets"},{"@type":"WebPageElement","name":"Minimum strength"},{"@type":"WebPageElement","name":"Pattern types"},{"@type":"WebPageElement","name":"Region or segment scope"},{"@type":"WebPageElement","name":"9. Architecture patterns"},{"@type":"WebPageElement","name":"Pattern A: pattern -> forecast"},{"@type":"WebPageElement","name":"Pattern B: pattern -> reason"},{"@type":"WebPageElement","name":"Pattern C: pattern -> memory"},{"@type":"WebPageElement","name":"Pattern D: memory -> pattern -> forecast -> reason"},{"@type":"WebPageElement","name":"10. Architecture diagram"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"AmpersandBoxDesign","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/"},{"@type":"ListItem","position":4,"name":"registry","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/"},{"@type":"ListItem","position":5,"name":"time.pattern.md","item":"https://docs.ampersandboxdesign.com/AmpersandBoxDesign/docs/registry/time.pattern.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">AmpersandBoxDesign</span>
+<span class="path">AmpersandBoxDesign/docs/registry/time.pattern.md</span>
+
+</div></div>
+<div class="lead">&amp;time.pattern is a capability page for the [&amp;] Protocol&#39;s temporal pattern detection subtype.</div>
+<div class="prose"><h1 id="blk-15001"><code>&amp;time.pattern</code> — Pattern Detection as a Capability</h1>
+<p><code>&amp;time.pattern</code> is a capability page for the [&amp;] Protocol's temporal pattern detection subtype.</p>
+<p>It describes a composable interface for agents that need to identify recurring temporal structures in historical or streaming data. The goal is not to standardize one pattern detection algorithm. The goal is to standardize how an agent declares, validates, and composes pattern detection ability as part of its cognitive architecture.</p>
+<p>In protocol terms:</p>
+<ul><li><p>primitive: <code>&amp;time</code></p></li><li><p>subtype: <code>pattern</code></p></li><li><p>full capability id: <code>&amp;time.pattern</code></p></li></ul>
+<h3 id="blk-15012">1. Definition</h3>
+<p><code>&amp;time.pattern</code> is the protocol capability for <strong>temporal structure identification</strong>.</p>
+<p>It answers questions like:</p>
+<ul><li><p>What recurring behaviors exist in this data?</p></li><li><p>Is there a weekly or seasonal cycle driving this signal?</p></li><li><p>Which motifs repeat across different time windows?</p></li><li><p>How strong and stable is the detected periodicity?</p></li><li><p>What rhythm characterizes the operational baseline?</p></li></ul>
+<p>A provider that satisfies <code>&amp;time.pattern</code> should expose operations that turn temporal data into pattern-oriented artifacts that downstream capabilities can consume.</p>
+<p>This is distinct from:</p>
+<ul><li><p><code>&amp;time.anomaly</code> — detecting what is unusual in current or recent behavior</p></li><li><p><code>&amp;time.forecast</code> — predicting what is likely to happen next</p></li></ul>
+<p><code>&amp;time.pattern</code> is about <strong>identifying what recurs</strong>.</p>
+<h3 id="blk-15034">2. Why this capability matters</h3>
+<p>A large class of useful agents need more than retrieval and reasoning over current context.</p>
+<p>They need to recognize structure:</p>
+<ul><li><p>support ticket seasonality</p></li><li><p>recurring incident patterns</p></li><li><p>demand rhythms</p></li><li><p>research trend cycles</p></li><li><p>periodic load spikes</p></li><li><p>weekly or monthly behavioral shifts</p></li><li><p>recurring failure modes</p></li><li><p>staffing demand cadence</p></li><li><p>cyclical resource consumption</p></li></ul>
+<p>Without an explicit pattern detection capability, systems often hide structural temporal logic inside:</p>
+<ul><li><p>custom analytics code</p></li><li><p>prompts</p></li><li><p>ad hoc tool wrappers</p></li><li><p>vendor-specific integrations</p></li><li><p>application business logic</p></li></ul>
+<p>That makes architectures hard to compare, validate, and reuse.</p>
+<p>By treating pattern detection as a protocol capability, the [&amp;] Protocol makes it possible to:</p>
+<ul><li><p>declare pattern detection explicitly</p></li><li><p>bind it to a provider</p></li><li><p>validate pipelines that depend on pattern output</p></li><li><p>preserve provenance for pattern-driven decisions</p></li><li><p>generate downstream MCP and A2A artifacts from the same declaration</p></li></ul>
+<h3 id="blk-15081">3. Capability role in the four-primitive model</h3>
+<p>The [&amp;] Protocol organizes cognition around four top-level domains:</p>
+<ul><li><p><code>&amp;memory</code> — what the agent knows</p></li><li><p><code>&amp;reason</code> — how the agent decides</p></li><li><p><code>&amp;time</code> — when things happen</p></li><li><p><code>&amp;space</code> — where things are</p></li></ul>
+<p>Within that model, <code>&amp;time.pattern</code> provides the agent's ability to recognize recurring temporal structure in past and present data.</p>
+<p>It often works best when composed with:</p>
+<ul><li><p><code>&amp;time.forecast</code> for turning detected patterns into predictions</p></li><li><p><code>&amp;memory.*</code> for pattern-enriched knowledge and structural context</p></li><li><p><code>&amp;reason.*</code> for acting on detected rhythms and cycles</p></li></ul>
+<p>A useful shorthand is:</p>
+<blockquote><p><code>&amp;time.pattern</code> tells the agent what temporal structures are stable enough to reason about.</p></blockquote>
+<h3 id="blk-15104">4. Typical use cases</h3>
+<h4 id="blk-15105">Support ticket seasonality</h4>
+<p>Detect recurring weekly or monthly cycles in support volume to anticipate staffing needs.</p>
+<h4 id="blk-15107">Research trend cycles</h4>
+<p>Identify periodic surges in topic interest, publication volume, or signal activity.</p>
+<h4 id="blk-15109">Recurring incident patterns</h4>
+<p>Recognize repeating failure modes tied to deployment cadence, maintenance windows, or load cycles.</p>
+<h4 id="blk-15111">Demand rhythm characterization</h4>
+<p>Profile the underlying periodicity of demand signals across regions, products, or service lines.</p>
+<h4 id="blk-15113">Operational baseline profiling</h4>
+<p>Establish what normal recurring behavior looks like so that deviations become meaningful.</p>
+<h4 id="blk-15115">Maintenance window optimization</h4>
+<p>Detect when recurring low-activity periods occur to inform scheduling decisions.</p>
+<h3 id="blk-15117">5. Example declaration</h3>
+<p>A basic <code>ampersand.json</code> fragment using <code>&amp;time.pattern</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;time.pattern&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+    <span class="t-key">&quot;config&quot;</span>: {
+      <span class="t-key">&quot;windows&quot;</span>: [<span class="t-string">&quot;24h&quot;</span>, <span class="t-string">&quot;7d&quot;</span>, <span class="t-string">&quot;30d&quot;</span>],
+      <span class="t-key">&quot;targets&quot;</span>: [<span class="t-string">&quot;support_volume&quot;</span>, <span class="t-string">&quot;incident_rate&quot;</span>]
+    }
+  }
+}</code></pre>
+<p>A goal-driven version using auto resolution:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;&amp;time.pattern&quot;</span>: {
+    <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;auto&quot;</span>,
+    <span class="t-key">&quot;need&quot;</span>: <span class="t-string">&quot;detect weekly seasonality in customer support ticket volume&quot;</span>
+  }
+}</code></pre>
+<p>See also: <code>customer-support.ampersand.json</code> and <code>research-agent.ampersand.json</code> for full declaration examples.</p>
+<h3 id="blk-15123">6. Compatible providers</h3>
+<p>The protocol is provider-agnostic. The capability is the contract; providers are implementations.</p>
+<p>Representative providers for <code>&amp;time.pattern</code> may include:</p>
+<ul><li><p><code>ticktickclock</code></p></li><li><p>seasonal decomposition services</p></li><li><p>motif detection engines</p></li><li><p>time-series analysis platforms with periodicity APIs</p></li><li><p>domain-specific pattern recognition services</p></li></ul>
+<p>A provider should be considered compatible when it can satisfy the capability contract, not merely because it performs some pattern-related function in marketing language.</p>
+<h3 id="blk-15138">7. Example capability contract</h3>
+<p>A representative contract artifact for <code>&amp;time.pattern</code>:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;$schema&quot;</span>: <span class="t-string">&quot;https://protocol.ampersandboxdesign.com/schema/v0.1.0/capability-contract.schema.json&quot;</span>,
+  <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;time.pattern&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+  <span class="t-key">&quot;version&quot;</span>: <span class="t-string">&quot;0.1.0&quot;</span>,
+  <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Temporal pattern detection contract for identifying recurring behaviors, seasonality, and trend cycles.&quot;</span>,
+  <span class="t-key">&quot;operations&quot;</span>: {
+    <span class="t-key">&quot;detect&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;time_series&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;pattern_set&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Identify recurring temporal structures including cycles, seasonality, and motifs.&quot;</span>,
+      <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+      <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">false</span>
+    },
+    <span class="t-key">&quot;summarize&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;pattern_set&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;pattern_summary&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Convert detected patterns into interpretable signals with strength and periodicity metadata.&quot;</span>,
+      <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+      <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">false</span>
+    },
+    <span class="t-key">&quot;enrich&quot;</span>: {
+      <span class="t-key">&quot;in&quot;</span>: <span class="t-string">&quot;context&quot;</span>,
+      <span class="t-key">&quot;out&quot;</span>: <span class="t-string">&quot;enriched_context&quot;</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Attach pattern and seasonality context to an existing decision or planning payload.&quot;</span>,
+      <span class="t-key">&quot;deterministic&quot;</span>: <span class="t-lit">false</span>,
+      <span class="t-key">&quot;side_effects&quot;</span>: <span class="t-lit">false</span>
+    }
+  },
+  <span class="t-key">&quot;accepts_from&quot;</span>: [
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;&amp;space.*&quot;</span>,
+    <span class="t-string">&quot;raw_data&quot;</span>,
+    <span class="t-string">&quot;time_series&quot;</span>,
+    <span class="t-string">&quot;context&quot;</span>
+  ],
+  <span class="t-key">&quot;feeds_into&quot;</span>: [
+    <span class="t-string">&quot;&amp;time.forecast&quot;</span>,
+    <span class="t-string">&quot;&amp;reason.*&quot;</span>,
+    <span class="t-string">&quot;&amp;memory.*&quot;</span>,
+    <span class="t-string">&quot;output&quot;</span>
+  ],
+  <span class="t-key">&quot;a2a_skills&quot;</span>: [
+    <span class="t-string">&quot;temporal-pattern-detection&quot;</span>,
+    <span class="t-string">&quot;seasonality-analysis&quot;</span>
+  ]
+}</code></pre>
+<p>This contract matters because it makes pattern detection composable in a typed system.</p>
+<h3 id="blk-15142">8. Example provider configuration patterns</h3>
+<p>The protocol does not hardcode one configuration shape, but these fields are common and useful.</p>
+<h4 id="blk-15144">Windows</h4>
+<p>Which time windows to analyze for recurring structure.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;windows&quot;</span>: [<span class="t-string">&quot;24h&quot;</span>, <span class="t-string">&quot;7d&quot;</span>, <span class="t-string">&quot;30d&quot;</span>]
+}</code></pre>
+<h4 id="blk-15147">Targets</h4>
+<p>Which signals or domains are being analyzed for patterns.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;targets&quot;</span>: [<span class="t-string">&quot;support_volume&quot;</span>, <span class="t-string">&quot;incident_rate&quot;</span>]
+}</code></pre>
+<h4 id="blk-15150">Minimum strength</h4>
+<p>Filter for patterns that meet a minimum strength threshold.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;min_strength&quot;</span>: <span class="t-num">0.6</span>
+}</code></pre>
+<h4 id="blk-15153">Pattern types</h4>
+<p>Optionally constrain which types of temporal structure to search for.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;pattern_types&quot;</span>: [<span class="t-string">&quot;seasonality&quot;</span>, <span class="t-string">&quot;cycle&quot;</span>, <span class="t-string">&quot;motif&quot;</span>]
+}</code></pre>
+<h4 id="blk-15156">Region or segment scope</h4>
+<p>Useful for spatially-aware pattern detection.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;regions&quot;</span>: [<span class="t-string">&quot;us-east&quot;</span>, <span class="t-string">&quot;eu-west&quot;</span>]
+}</code></pre>
+<p>These are implementation patterns, not mandatory protocol fields.</p>
+<h3 id="blk-15160">9. Architecture patterns</h3>
+<h4 id="blk-15161">Pattern A: pattern -&gt; forecast</h4>
+<p>Use detected patterns to inform predictions.</p>
+<pre><code>time_series
+|&gt; &amp;time.pattern.detect()
+|&gt; &amp;time.forecast.predict()</code></pre>
+<p>Use when recurring structure in historical data should improve forecast accuracy.</p>
+<h4 id="blk-15165">Pattern B: pattern -&gt; reason</h4>
+<p>Use detected patterns directly as decision input.</p>
+<pre><code>time_series
+|&gt; &amp;time.pattern.detect()
+|&gt; &amp;time.pattern.summarize()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use when a detected rhythm or cycle can directly support a decision, recommendation, or escalation.</p>
+<h4 id="blk-15169">Pattern C: pattern -&gt; memory</h4>
+<p>Use detected patterns to enrich durable knowledge.</p>
+<pre><code>time_series
+|&gt; &amp;time.pattern.detect()
+|&gt; &amp;time.pattern.enrich()
+|&gt; &amp;memory.graph.store()</code></pre>
+<p>Use when identified patterns should become part of organizational memory for future retrieval.</p>
+<h4 id="blk-15173">Pattern D: memory -&gt; pattern -&gt; forecast -&gt; reason</h4>
+<p>Full temporal pipeline from history through structure to prediction and action.</p>
+<pre><code>query_context
+|&gt; &amp;memory.graph.recall()
+|&gt; &amp;time.pattern.detect()
+|&gt; &amp;time.forecast.predict()
+|&gt; &amp;reason.argument.evaluate()</code></pre>
+<p>Use when the agent needs to recall historical data, identify its structure, project forward, and decide.</p>
+<h3 id="blk-15177">10. Architecture diagram</h3>
+<p>A simple conceptual view of <code>&amp;time.pattern</code> in composition:</p>
+<pre><code>historical data / stream data
+            |
+            v
+   +----------------------+
+   |   &amp;time.pattern      |
+   | detect / summarize   |
+   +----------------------+
+            |
+            v
+       pattern_set
+            |
+     +------+------+
+     |             |
+     v             v
+&amp;time.forecast  &amp;memory.*
+  predict        store
+     |             |
+     +------+------+
+            |
+            v
+       &amp;reason.*
+        evaluate
+            |
+            v
+         output</code></pre>
+<p>This is why contract typing matters: downstream capabilities need to know what kind of artifact they are receiving.</p>
+<h3 id="blk-15181">11. Example API shape</h3>
+<p>A provider-specific API will vary, but a pattern detection provider commonly exposes a shape like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;detect&quot;</span>,
+  <span class="t-key">&quot;input&quot;</span>: {
+    <span class="t-key">&quot;series&quot;</span>: [
+      { <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-02-22T00:00:00Z&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-num">142</span> },
+      { <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-02-22T01:00:00Z&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-num">155</span> },
+      { <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-02-23T00:00:00Z&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-num">148</span> },
+      { <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-02-23T01:00:00Z&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-num">160</span> }
+    ],
+    <span class="t-key">&quot;windows&quot;</span>: [<span class="t-string">&quot;24h&quot;</span>, <span class="t-string">&quot;7d&quot;</span>]
+  }
+}</code></pre>
+<p>Representative response:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;patterns&quot;</span>: [
+    {
+      <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;seasonality&quot;</span>,
+      <span class="t-key">&quot;period&quot;</span>: <span class="t-string">&quot;24h&quot;</span>,
+      <span class="t-key">&quot;strength&quot;</span>: <span class="t-num">0.87</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Strong daily cycle with peak activity between 09:00 and 11:00 UTC.&quot;</span>
+    },
+    {
+      <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;cycle&quot;</span>,
+      <span class="t-key">&quot;period&quot;</span>: <span class="t-string">&quot;7d&quot;</span>,
+      <span class="t-key">&quot;strength&quot;</span>: <span class="t-num">0.72</span>,
+      <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Moderate weekly rhythm with reduced activity on weekends.&quot;</span>
+    }
+  ],
+  <span class="t-key">&quot;summary&quot;</span>: <span class="t-string">&quot;Two recurring patterns detected: a strong daily peak and a moderate weekly cycle.&quot;</span>
+}</code></pre>
+<p>The protocol does not require this exact transport shape. It requires that the provider satisfy the declared capability contract.</p>
+<h3 id="blk-15187">12. Governance implications</h3>
+<p>Patterns are often used to justify structural assumptions about system behavior. That makes governance important.</p>
+<p>Common governance examples for pattern-driven systems:</p>
+<h4 id="blk-15190">Hard constraints</h4>
+<ul><li><p>never treat a detected pattern as ground truth without sufficient observation windows</p></li><li><p>never automate staffing changes from pattern output alone</p></li><li><p>never suppress audit logging for pattern-driven decisions</p></li></ul>
+<h4 id="blk-15198">Soft constraints</h4>
+<ul><li><p>prefer longer observation windows over short ones when pattern stability is uncertain</p></li><li><p>prefer explicit seasonality detection over inferred periodicity</p></li><li><p>prefer validated patterns over single-window detections</p></li></ul>
+<h4 id="blk-15206">Escalation rules</h4>
+<p>Pattern-driven systems often combine well with:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;escalate_when&quot;</span>: {
+    <span class="t-key">&quot;pattern_strength_below&quot;</span>: <span class="t-num">0.5</span>,
+    <span class="t-key">&quot;conflicting_patterns_detected&quot;</span>: <span class="t-lit">true</span>,
+    <span class="t-key">&quot;observation_window_insufficient&quot;</span>: <span class="t-lit">true</span>
+  }
+}</code></pre>
+<p>This is one reason <code>&amp;time.pattern</code> often composes closely with <code>&amp;reason.argument</code> or <code>&amp;reason.plan</code>.</p>
+<h3 id="blk-15210">13. Provenance implications</h3>
+<p>Patterns can strongly influence planning, resource allocation, and operational assumptions, so provenance should be explicit.</p>
+<p>A provenance record for a pattern detection step may include:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;source&quot;</span>: <span class="t-string">&quot;&amp;time.pattern&quot;</span>,
+  <span class="t-key">&quot;provider&quot;</span>: <span class="t-string">&quot;ticktickclock&quot;</span>,
+  <span class="t-key">&quot;operation&quot;</span>: <span class="t-string">&quot;detect&quot;</span>,
+  <span class="t-key">&quot;timestamp&quot;</span>: <span class="t-string">&quot;2026-03-15T12:00:00Z&quot;</span>,
+  <span class="t-key">&quot;input_hash&quot;</span>: <span class="t-string">&quot;sha256:abcd1234...&quot;</span>,
+  <span class="t-key">&quot;output_hash&quot;</span>: <span class="t-string">&quot;sha256:efgh5678...&quot;</span>,
+  <span class="t-key">&quot;parent_hash&quot;</span>: <span class="t-string">&quot;sha256:0000...&quot;</span>,
+  <span class="t-key">&quot;mcp_trace_id&quot;</span>: <span class="t-string">&quot;ttc-pattern-17&quot;</span>
+}</code></pre>
+<p>This helps answer questions like:</p>
+<ul><li><p>Why did the system assume weekly seasonality?</p></li><li><p>Which provider identified this recurring structure?</p></li><li><p>What observation windows informed the detected pattern?</p></li><li><p>Which upstream context produced this pattern set?</p></li></ul>
+<p>Patterns without provenance are difficult to audit and easy to over-trust.</p>
+<h3 id="blk-15225">14. A2A implications</h3>
+<p>A pattern detection capability may map naturally to A2A-advertised skills such as:</p>
+<ul><li><p><code>temporal-pattern-detection</code></p></li><li><p><code>seasonality-analysis</code></p></li></ul>
+<p>That means an agent card generated from an <code>ampersand.json</code> declaration can advertise pattern detection as a reusable, discoverable coordination-facing skill.</p>
+<p>This is one example of how the [&amp;] Protocol complements A2A rather than replacing it.</p>
+<h3 id="blk-15234">15. MCP implications</h3>
+<p>A pattern detection provider may also compile into MCP-facing configuration if the implementation exposes a tool or service endpoint.</p>
+<p>For example, a declaration containing <code>&amp;time.pattern</code> may generate MCP configuration that wires in a pattern detection provider alongside memory and reasoning providers.</p>
+<p>This is one example of how the [&amp;] Protocol complements MCP rather than replacing it.</p>
+<h3 id="blk-15238">16. Research references and grounding</h3>
+<p>The design of <code>&amp;time.pattern</code> is informed by overlapping areas of work:</p>
+<ul><li><p>seasonal decomposition</p></li><li><p>motif discovery</p></li><li><p>periodicity detection</p></li><li><p>cycle analysis</p></li><li><p>temporal data mining</p></li><li><p>time-series structural analysis</p></li><li><p>recurring behavior characterization in operational systems</p></li></ul>
+<p>The important protocol-level insight is not that pattern detection is new. It is that <strong>pattern detection should be represented explicitly as a composable capability</strong> rather than hidden in framework logic.</p>
+<p>That shift enables:</p>
+<ul><li><p>schema validation</p></li><li><p>typed pipelines</p></li><li><p>provider interchangeability</p></li><li><p>governance-aware decisions</p></li><li><p>provenance-preserving execution</p></li></ul>
+<h3 id="blk-15268">17. Anti-patterns</h3>
+<h4 id="blk-15269">Anti-pattern 1: conflate pattern detection and anomaly detection</h4>
+<p>They are complementary temporal capabilities, but they are not the same interface. Anomaly detection finds what is unusual. Pattern detection finds what recurs.</p>
+<h4 id="blk-15271">Anti-pattern 2: treat detected patterns as permanent</h4>
+<p>Patterns can decay, shift, or disappear. A pattern detected over one window may not hold over another.</p>
+<h4 id="blk-15273">Anti-pattern 3: treat pattern detection as generic analytics</h4>
+<p>If pattern detection is bundled into a broad &quot;analytics&quot; block, its contract and pipeline role become unclear.</p>
+<h4 id="blk-15275">Anti-pattern 4: hardwire the protocol to one provider</h4>
+<p><code>&amp;time.pattern</code> should remain a portable capability contract.</p>
+<h3 id="blk-15277">18. Good default guidance</h3>
+<p>Use <code>&amp;time.pattern</code> when:</p>
+<ul><li><p>the system needs to identify recurring temporal structures</p></li><li><p>a planner or forecaster must act on detected periodicity or seasonality</p></li><li><p>demand, load, or incident rhythms matter operationally</p></li><li><p>a declaration should express structural temporal intelligence explicitly</p></li></ul>
+<p>Prefer composing it with:</p>
+<ul><li><p><code>&amp;time.forecast</code> when detected patterns should inform predictions</p></li><li><p><code>&amp;memory.*</code> when patterns should enrich durable knowledge</p></li><li><p><code>&amp;reason.*</code> when detected rhythms influence action selection</p></li></ul>
+<p>Recommended observation windows: 24h, 7d, 30d.</p>
+<h3 id="blk-15297">19. Summary</h3>
+<p><code>&amp;time.pattern</code> is the [&amp;] Protocol capability for detecting recurring temporal structure.</p>
+<p>It exists to make structural temporal intelligence:</p>
+<ul><li><p>explicit</p></li><li><p>composable</p></li><li><p>contract-aware</p></li><li><p>provider-agnostic</p></li><li><p>governable</p></li><li><p>provenance-friendly</p></li><li><p>generatable into MCP and A2A surfaces</p></li></ul>
+<p>In short:</p>
+<blockquote><p><code>&amp;time.pattern</code> gives an agent a standard way to declare that it can identify recurring temporal structures and use that knowledge safely within a composed cognitive system.</p></blockquote></div>
+<p class="src"><a href="/#/AmpersandBoxDesign/docs/registry/time.pattern.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-15012" class="lvl2">1. Definition</a><a href="#blk-15034" class="lvl2">2. Why this capability matters</a><a href="#blk-15081" class="lvl2">3. Capability role in the four-primitive model</a><a href="#blk-15104" class="lvl2">4. Typical use cases</a><a href="#blk-15105" class="lvl3">Support ticket seasonality</a><a href="#blk-15107" class="lvl3">Research trend cycles</a><a href="#blk-15109" class="lvl3">Recurring incident patterns</a><a href="#blk-15111" class="lvl3">Demand rhythm characterization</a><a href="#blk-15113" class="lvl3">Operational baseline profiling</a><a href="#blk-15115" class="lvl3">Maintenance window optimization</a><a href="#blk-15117" class="lvl2">5. Example declaration</a><a href="#blk-15123" class="lvl2">6. Compatible providers</a><a href="#blk-15138" class="lvl2">7. Example capability contract</a><a href="#blk-15142" class="lvl2">8. Example provider configuration patterns</a><a href="#blk-15144" class="lvl3">Windows</a><a href="#blk-15147" class="lvl3">Targets</a><a href="#blk-15150" class="lvl3">Minimum strength</a><a href="#blk-15153" class="lvl3">Pattern types</a><a href="#blk-15156" class="lvl3">Region or segment scope</a><a href="#blk-15160" class="lvl2">9. Architecture patterns</a><a href="#blk-15161" class="lvl3">Pattern A: pattern -&gt; forecast</a><a href="#blk-15165" class="lvl3">Pattern B: pattern -&gt; reason</a><a href="#blk-15169" class="lvl3">Pattern C: pattern -&gt; memory</a><a href="#blk-15173" class="lvl3">Pattern D: memory -&gt; pattern -&gt; forecast -&gt; reason</a><a href="#blk-15177" class="lvl2">10. Architecture diagram</a><a href="#blk-15181" class="lvl2">11. Example API shape</a><a href="#blk-15187" class="lvl2">12. Governance implications</a><a href="#blk-15190" class="lvl3">Hard constraints</a><a href="#blk-15198" class="lvl3">Soft constraints</a><a href="#blk-15206" class="lvl3">Escalation rules</a><a href="#blk-15210" class="lvl2">13. Provenance implications</a><a href="#blk-15225" class="lvl2">14. A2A implications</a><a href="#blk-15234" class="lvl2">15. MCP implications</a><a href="#blk-15238" class="lvl2">16. Research references and grounding</a><a href="#blk-15268" class="lvl2">17. Anti-patterns</a><a href="#blk-15269" class="lvl3">Anti-pattern 1: conflate pattern detection and anomaly detection</a><a href="#blk-15271" class="lvl3">Anti-pattern 2: treat detected patterns as permanent</a><a href="#blk-15273" class="lvl3">Anti-pattern 3: treat pattern detection as generic analytics</a><a href="#blk-15275" class="lvl3">Anti-pattern 4: hardwire the protocol to one provider</a><a href="#blk-15277" class="lvl2">18. Good default guidance</a><a href="#blk-15297" class="lvl2">19. Summary</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/AmpersandBoxDesign/docs/index.md/">[&amp;] Protocol Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/AmpersandBoxDesign/docs/registry/README.md/">Capability Registry Pages</a><a href="/AmpersandBoxDesign/docs/registry/body.browser.md/">&amp;body.browser</a><a href="/AmpersandBoxDesign/docs/registry/body.os.md/">&amp;body.os</a><a href="/AmpersandBoxDesign/docs/registry/govern.escalation.md/">&amp;govern.escalation — Human-in-the-Loop Escalation and Governance Handoff</a><a href="/AmpersandBoxDesign/docs/registry/govern.identity.md/">&amp;govern.identity — Agent Identity, Verification, and Trust</a><a href="/AmpersandBoxDesign/docs/registry/govern.telemetry.md/">&amp;govern.telemetry — Observability, Cost Tracking, and Budget Enforcement</a><a href="/AmpersandBoxDesign/docs/registry/memory.episodic.md/">&amp;memory.episodic — Experience, Session History, and Replayable Context</a><a href="/AmpersandBoxDesign/docs/registry/memory.graph.md/">&amp;memory.graph — Graph-Structured Memory Capability</a><a href="/AmpersandBoxDesign/docs/registry/memory.vector.md/">&amp;memory.vector -- Semantic Vector Retrieval Capability</a><a href="/AmpersandBoxDesign/docs/registry/reason.argument.md/">&amp;reason.argument — Evidence-Weighted Deliberation for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.attend.md/">&amp;reason.attend — Proactive Attention and Bounded Autonomy for the [&amp;] Protocol</a><a href="/AmpersandBoxDesign/docs/registry/reason.deliberate.md/">&amp;reason.deliberate — κ-Aware Deliberation for the [&amp;] Protocol</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieratloywjxvjxfxhhkrsxaui7ze4hf5ksgsqq7pwnq6tt66kjd3f5da</div></div></div>
+</div></div>
+</body></html>

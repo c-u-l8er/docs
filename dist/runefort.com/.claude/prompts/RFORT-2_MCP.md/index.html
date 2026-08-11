@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="cf099d43fadfb757b7917c602703138aee896100">
+<title>RFort-2: MCP Proxy + Client + Connection Panel · runefort.com · Ampersand Box</title>
+<meta name="description" content="Add MCP server connectivity to RuneFort. A SvelteKit server route proxies JSON-RPC to external MCP servers (avoiding CORS). A client library discovers…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-2_MCP.md/">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RFort-2: MCP Proxy + Client + Connection Panel">
+<meta property="og:description" content="Add MCP server connectivity to RuneFort. A SvelteKit server route proxies JSON-RPC to external MCP servers (avoiding CORS). A client library discovers…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-2_MCP.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"RFort-2: MCP Proxy + Client + Connection Panel","name":"RFort-2: MCP Proxy + Client + Connection Panel","description":"Add MCP server connectivity to RuneFort. A SvelteKit server route proxies JSON-RPC to external MCP servers (avoiding CORS). A client library discovers…","url":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-2_MCP.md/","identifier":"bagaaieracwrqgfioqjh525og3fyakajckoblbz4k25pyisnnsniirs6ilgnq","inLanguage":"en","dateModified":"2026-08-10","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"runefort.com","url":"https://docs.ampersandboxdesign.com/runefort.com/"},"articleSection":"runefort.com","hasPart":[{"@type":"WebPageElement","name":"Goal"},{"@type":"WebPageElement","name":"Reference Implementation"},{"@type":"WebPageElement","name":"Files to Create"},{"@type":"WebPageElement","name":"src/routes/api/mcp-proxy/+server.js"},{"@type":"WebPageElement","name":"src/lib/play/mcp-client.js"},{"@type":"WebPageElement","name":"src/lib/play/default-servers.js"},{"@type":"WebPageElement","name":"src/lib/play/tools.js"},{"@type":"WebPageElement","name":"src/lib/stores/mcp.svelte.js"},{"@type":"WebPageElement","name":"src/components/app/McpPanel.svelte"},{"@type":"WebPageElement","name":"Integration Point"},{"@type":"WebPageElement","name":"Constraints"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"runefort.com","item":"https://docs.ampersandboxdesign.com/runefort.com/"},{"@type":"ListItem","position":3,"name":".claude","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/"},{"@type":"ListItem","position":4,"name":"prompts","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/"},{"@type":"ListItem","position":5,"name":"RFORT-2_MCP.md","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-2_MCP.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">runefort.com</span>
+<span class="path">runefort.com/.claude/prompts/RFORT-2_MCP.md</span>
+
+</div></div>
+<div class="lead">Add MCP server connectivity to RuneFort. A SvelteKit server route proxies JSON-RPC to external MCP servers (avoiding CORS). A client library discovers tools and calls them. A UI…</div>
+<div class="prose"><h1 id="blk-82803">RFort-2: MCP Proxy + Client + Connection Panel</h1>
+<h3 id="blk-82804">Goal</h3>
+<p>Add MCP server connectivity to RuneFort. A SvelteKit server route proxies JSON-RPC to external MCP servers (avoiding CORS). A client library discovers tools and calls them. A UI panel manages connections.</p>
+<h3 id="blk-82806">Reference Implementation</h3>
+<p>Port from these BendScript files, adapting to RuneFort's structure:</p>
+<ul><li><p><code>bendscript.com/src/routes/api/play/mcp-proxy/+server.js</code> — proxy route</p></li><li><p><code>bendscript.com/src/lib/play/mcp-client.js</code> — client library</p></li><li><p><code>bendscript.com/src/lib/play/default-servers.js</code> — default servers</p></li><li><p><code>bendscript.com/src/lib/play/tools.js</code> — MCP→OpenAI tool converter</p></li><li><p><code>bendscript.com/src/components/play/McpPanel.svelte</code> — connection UI</p></li></ul>
+<h3 id="blk-82819">Files to Create</h3>
+<h4 id="blk-82820"><code>src/routes/api/mcp-proxy/+server.js</code></h4>
+<p>SvelteKit server route (POST handler). Receives:</p>
+<pre data-lang="json"><code>{ <span class="t-key">&quot;serverUrl&quot;</span>: <span class="t-string">&quot;https://...&quot;</span>, <span class="t-key">&quot;authHeader&quot;</span>: <span class="t-string">&quot;Bearer ...&quot;</span>, <span class="t-key">&quot;sessionId&quot;</span>: <span class="t-string">&quot;...&quot;</span>, <span class="t-key">&quot;request&quot;</span>: { <span class="t-key">&quot;jsonrpc&quot;</span>: <span class="t-string">&quot;2.0&quot;</span>, ... } }</code></pre>
+<p>Forwards to <code>serverUrl</code> with auth headers. Returns JSON or parses SSE. Security: block private network addresses in production, 64KB body limit, 30s timeout.</p>
+<h4 id="blk-82824"><code>src/lib/play/mcp-client.js</code></h4>
+<p>Functions:</p>
+<ul><li><p><code>discoverTools(serverUrl, authHeader)</code> — sends <code>initialize</code> → <code>notifications/initialized</code> → <code>tools/list</code> through proxy. Returns <code>{ name, version, tools, sessionId }</code>.</p></li><li><p><code>callTool(serverUrl, authHeader, toolName, args, sessionId, signal)</code> — sends <code>tools/call</code> through proxy. Returns result.</p></li></ul>
+<p>All calls go through <code>/api/mcp-proxy</code> to avoid CORS.</p>
+<h4 id="blk-82832"><code>src/lib/play/default-servers.js</code></h4>
+<pre data-lang="js"><code><span class="t-kw">export</span> <span class="t-kw">const</span> <span class="t-type">DEFAULT_MCP_SERVERS</span> = [
+  { url: <span class="t-string">'https://graphonomous-mcp.fly.dev/mcp'</span>, name: <span class="t-string">'graphonomous'</span>, label: <span class="t-string">'Graphonomous Memory'</span> },
+  { url: <span class="t-string">'https://prism-eval.fly.dev/mcp'</span>, name: <span class="t-string">'os-prism'</span>, label: <span class="t-string">'PRISM Benchmarks'</span> },
+  { url: <span class="t-string">'https://box-and-box-mcp.fly.dev/mcp'</span>, name: <span class="t-string">'box-and-box'</span>, label: <span class="t-string">'[&amp;] Protocol'</span> },
+  { url: <span class="t-string">'https://os-pulse-mcp.fly.dev/mcp'</span>, name: <span class="t-string">'os-pulse'</span>, label: <span class="t-string">'PULSE Manifests'</span> },
+];</code></pre>
+<h4 id="blk-82834"><code>src/lib/play/tools.js</code></h4>
+<ul><li><p><code>mcpToolsToOpenAI(serverName, mcpTools)</code> — converts MCP tool schemas to OpenAI function-calling format, namespaced as <code>mcp__&lt;serverName&gt;__&lt;toolName&gt;</code>.</p></li><li><p><code>parseMcpToolName(name)</code> — extracts <code>{ serverName, toolName }</code> from namespaced name.</p></li><li><p><code>BUILTIN_TOOLS</code> array with RuneFort-specific tools:</p></li><li><p><code>navigate_fort</code> — zoom to a specific level/node</p></li><li><p><code>list_forts</code> — list loaded forts</p></li><li><p><code>get_fort_info</code> — get current fort metadata</p></li><li><p><code>save_blueprint</code> — save current fort to Supabase</p></li></ul>
+<h4 id="blk-82850"><code>src/lib/stores/mcp.svelte.js</code></h4>
+<p>Svelte 5 rune store:</p>
+<pre data-lang="js"><code><span class="t-kw">let</span> _connections = <span class="t-fn">$state</span>([]);  <span class="t-comment">// { url, name, label, version, tools, openaiTools, sessionId, status }</span>
+<span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">getConnections</span>() { <span class="t-kw">return</span> _connections; }
+<span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">addConnection</span>(conn) { ... }
+<span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">removeConnection</span>(name) { ... }
+<span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">getAllTools</span>() { <span class="t-kw">return</span> _connections.<span class="t-fn">flatMap</span>(c =&gt; c.openaiTools); }
+<span class="t-kw">export</span> <span class="t-kw">async</span> <span class="t-kw">function</span> <span class="t-fn">autoConnect</span>() { <span class="t-comment">/* discover defaults + saved custom */</span> }</code></pre>
+<h4 id="blk-82853"><code>src/components/app/McpPanel.svelte</code></h4>
+<p>Slide-out panel (right side). Shows:</p>
+<ul><li><p>Connected servers with tool count badges</p></li><li><p>URL + optional auth token input for custom servers</p></li><li><p>Connect/disconnect buttons</p></li><li><p>Status indicators (connecting/connected/error)</p></li><li><p>Matches RuneFort dark amber theme</p></li></ul>
+<h3 id="blk-82866">Integration Point</h3>
+<p>Add a plug/connection icon button to the <code>/app</code> toolbar. Opens McpPanel as a slide-over. Badge shows connected server count.</p>
+<h3 id="blk-82868">Constraints</h3>
+<ul><li><p>Proxy must handle both JSON and SSE responses</p></li><li><p>MCP JSON-RPC 2.0 protocol (initialize → notifications/initialized → tools/list)</p></li><li><p>Session ID must persist across calls to same server</p></li><li><p>Save custom connections to localStorage via <code>saveMcpConnections()</code></p></li><li><p>Auto-connect to defaults on page load</p></li></ul></div>
+<p class="src"><a href="/#/runefort.com/.claude/prompts/RFORT-2_MCP.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-82804" class="lvl2">Goal</a><a href="#blk-82806" class="lvl2">Reference Implementation</a><a href="#blk-82819" class="lvl2">Files to Create</a><a href="#blk-82820" class="lvl3">src/routes/api/mcp-proxy/+server.js</a><a href="#blk-82824" class="lvl3">src/lib/play/mcp-client.js</a><a href="#blk-82832" class="lvl3">src/lib/play/default-servers.js</a><a href="#blk-82834" class="lvl3">src/lib/play/tools.js</a><a href="#blk-82850" class="lvl3">src/lib/stores/mcp.svelte.js</a><a href="#blk-82853" class="lvl3">src/components/app/McpPanel.svelte</a><a href="#blk-82866" class="lvl2">Integration Point</a><a href="#blk-82868" class="lvl2">Constraints</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a></div><div class="card"><div class="lab">in this folder</div><a href="/runefort.com/.claude/prompts/RFORT-1_BYOK.md/">RFort-1: BYOK Modal + OpenRouter Key Storage</a><a href="/runefort.com/.claude/prompts/RFORT-3_CHAT.md/">RFort-3: Chat Panel with Fort-Aware Navigation</a><a href="/runefort.com/.claude/prompts/RFORT-4_TOKENFLOWS.md/">RFort-4: Token Flow Animations on Edges</a><a href="/runefort.com/.claude/prompts/RFORT-5_REPO_IMPORT.md/">RFort-5: Repo Import → Fort Generator</a><a href="/runefort.com/.claude/prompts/RFORT-6_WORKSPACES.md/">RFort-6: Workspace Switcher + Supabase Persistence</a><a href="/runefort.com/.claude/prompts/RFORT-BUILD-ORDER.md/">RuneFort Interactive Layer — Build Order</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieracwrqgfioqjh525og3fyakajckoblbz4k25pyisnnsniirs6ilgnq</div></div></div>
+</div></div>
+</body></html>
