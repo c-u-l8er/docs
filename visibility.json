@@ -1,0 +1,51 @@
+{
+  "_comment": "Publication policy for the docs atlas. Precedence, most binding first: (1) ceilings — a repository cap on how public a path may ever be, which a document cannot escape; (2) the document's own `visibility:` YAML front matter; (3) pattern defaults, which are a starting position and not a verdict; (4) `default`. Classes: public (prerendered, in sitemap, listed in hubs, in the SPA), unlisted (prerendered and in the SPA, but noindex+nofollow, absent from sitemap and hub listings), private (removed from the build entirely — the only class that withholds content, because dist/index.html inlines every page the build knows about). Every ceiling override of a declaration is reported at build time.",
+
+  "default": "public",
+
+  "ceilings": [
+    {
+      "match": "toolboxhvac.com/**",
+      "max": "private",
+      "why": "Separate product, unrelated to the [&] stack, untracked in git as of 2026-08-11. Its docs include LEGAL-REVIEW-SIGNOFF.md, TECHNICAL-REVIEW-SIGNOFF.md and PUBLISHING.md. A ceiling rather than a default because no document inside that tree should be able to publish itself onto the [&] documentation site by declaring `visibility: public` — that decision belongs to whoever owns the repository boundary. Remove this ceiling deliberately if the intent changes."
+    },
+    {
+      "match": "**/{secrets,credentials,private}/**",
+      "max": "private",
+      "why": "Defence in depth: a document filed under a secrets/credentials/private directory does not publish, whatever it declares. Scoped to directories on purpose. A first attempt matched `**/*SECRET*` and immediately capped WebHost.Systems/docs/spec/40_SECURITY_SECRETS_COMPLIANCE.md and docs/skills/07_SECURITY_AND_SECRETS.md — both legitimate specs *about* secret handling. A ceiling cannot be escaped by declaration, so a false-positive ceiling is unfixable by the author; that makes over-broad ceilings worse than none. Filename-keyword judgement belongs in `review`, not here."
+    }
+  ],
+
+  "defaults": [
+    {
+      "match": "**/.*/**",
+      "class": "unlisted",
+      "why": "Dot-directory content — in practice runefort.com/.claude/prompts/*. tree.mjs opts .claude in deliberately ('the committed ones that really do hold docs'), and that decision was made when the atlas had one indexable URL, so inclusion meant browsable, not indexed. Prerendering changed what inclusion means. `unlisted` honors both decisions: still reachable, never a canonical indexed URL. Any of these may declare otherwise in its own front matter."
+    },
+    {
+      "match": "**/CLAUDE.md",
+      "class": "unlisted",
+      "why": "Agent instruction files. Legitimate to reach, but they describe how the team works rather than what the stack is, and should not compete with real documentation for citation."
+    },
+    {
+      "match": "**/AGENTS.md",
+      "class": "unlisted",
+      "why": "Same as CLAUDE.md."
+    }
+  ],
+
+  "review": [
+    {
+      "match": "**/prompts/**",
+      "why": "Implementation prompts. AmpersandBoxDesign/prompts/* are referenced by CLAUDE.md as part of the spec-driven workflow, so they are plausibly intentional public artifacts — but that is not true of every prompt in the tree. Filename cannot decide this; each doc should declare."
+    },
+    {
+      "match": "**/{HANDOFF,MEMO,RFC}*",
+      "why": "Working documents. A public RFC and a private handoff are both entirely plausible and look identical to a glob. These need per-document rulings, which is what the front-matter declaration is for."
+    },
+    {
+      "match": "**/*SECURITY*",
+      "why": "Security specs are usually fine to publish; confirm none names a real control, endpoint or credential."
+    }
+  ]
+}
