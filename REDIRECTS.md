@@ -1,7 +1,32 @@
 # Collapsing the docs atlas onto one canonical host
 
-**Status:** pending — the rules below have not been applied. Written 2026-08-13.
-**Closes:** `ACADEMY.md` Lane A step **A1b**.
+> ## ⚠ NOT ADOPTED — decided against 2026-08-13, the same day this was written.
+>
+> This document was written to execute `ACADEMY.md` step A1b as that step was worded. Measuring
+> the premise afterwards showed the step was asserting a **mechanism** (301s exist) rather than
+> the **outcome** it wanted (one host accumulates the citations) — and the outcome already holds
+> without any redirect:
+>
+> - every page on all twelve non-canonical hosts declares `canonical → docs.ampersandboxdesign.com`
+> - the sitemap they serve lists **only** canonical-host URLs — they do not advertise themselves
+> - their `robots.txt` points its `Sitemap:` line at the canonical host
+> - **nothing links to them.** The shared nav links the canonical host 34×; across every marketing
+>   site it is the only docs link
+>
+> Unlinked, unsitemapped and self-declaring as copies, the twelve are effectively undiscoverable,
+> and an engine that does reach one consolidates it. Buying that with twelve permanent edge rules
+> — whose failure mode is a loop that takes the atlas down on all thirteen hostnames at once —
+> is a bad trade.
+>
+> **Everything below is retained deliberately, not by neglect.** If the decision is revisited, the
+> configuration is here and the reasoning does not have to be re-derived. `verify-canonical.sh`
+> still works and still exits 1, which is now the *expected* result rather than a pending task.
+>
+> The live question A1b leaves behind is not a redirect: **why are twelve unused custom domains
+> attached to the Pages project?** Detaching them dissolves the question entirely.
+
+**Status:** written 2026-08-13, **not applied and not planned**.
+**Supersedes:** nothing. **Superseded by:** the measurement above.
 
 The `docs` Cloudflare Pages project has thirteen custom domains attached. All thirteen serve
 byte-identical content at HTTP 200, so 434 documents are published at roughly 5,600 URLs. Every
