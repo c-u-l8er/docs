@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>PARKVPS — a local VPS fleet and a FreeBSD distro to run on it · PARKVPS · Ampersand Box</title>
 <meta name="description" content="Status: working end to end, 2026-08-07. Five instances booted concurrently on this machine; a custom-assembled FreeBSD distro boots, self-configures and…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/PARKVPS/docs/spec/README.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"PARKVPS — a local VPS fleet and a FreeBSD distro to run on it","name":"PARKVPS — a local VPS fleet and a FreeBSD distro to run on it","description":"Status: working end to end, 2026-08-07. Five instances booted concurrently on this machine; a custom-assembled FreeBSD distro boots, self-configures and…","url":"https://docs.ampersandboxdesign.com/PARKVPS/docs/spec/README.md/","identifier":"bagaaieravaik442dsgku27w4pcaqblcn5i5kmdhwmivfnypn7f6edsjo7naa","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"PARKVPS","url":"https://docs.ampersandboxdesign.com/PARKVPS/"},"articleSection":"PARKVPS","hasPart":[{"@type":"WebPageElement","name":"1. What is here"},{"@type":"WebPageElement","name":"2. Host architecture and why"},{"@type":"WebPageElement","name":"Commands"},{"@type":"WebPageElement","name":"3. FreeBSD 15 facts that cost real time"},{"@type":"WebPageElement","name":"4. The distro"},{"@type":"WebPageElement","name":"5. Measured results"},{"@type":"WebPageElement","name":"6. The API, the console, and the PARK scene"},{"@type":"WebPageElement","name":"The server — vpsd/api.py (port 8905, stdlib, localhost)"},{"@type":"WebPageElement","name":"RAVIO side"},{"@type":"WebPageElement","name":"The desktop"},{"@type":"WebPageElement","name":"Two things that are not optional, and both looked like something else"},{"@type":"WebPageElement","name":"Getting the keyboard back"},{"@type":"WebPageElement","name":"Sound"},{"@type":"WebPageElement","name":"Theming — the cockpit"},{"@type":"WebPageElement","name":"SDDM — the greeter is the cockpit too"},{"@type":"WebPageElement","name":"Browser"},{"@type":"WebPageElement","name":"Three defects this work exposed, all worth generalising"},{"@type":"WebPageElement","name":"7. Known gaps"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"PARKVPS","item":"https://docs.ampersandboxdesign.com/PARKVPS/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/PARKVPS/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/PARKVPS/docs/spec/"},{"@type":"ListItem","position":5,"name":"README.md","item":"https://docs.ampersandboxdesign.com/PARKVPS/docs/spec/README.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"PARKVPS — a local VPS fleet and a FreeBSD distro to run on it","name":"PARKVPS — a local VPS fleet and a FreeBSD distro to run on it","description":"Status: working end to end, 2026-08-07. Five instances booted concurrently on this machine; a custom-assembled FreeBSD distro boots, self-configures and…","url":"https://docs.ampersandboxdesign.com/PARKVPS/docs/spec/README.md/","identifier":"bagaaieraqndwodph5bsgmevlclc6iiu5qwy5x5pxswjdqovsru6qjczrij3q","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"PARKVPS","url":"https://docs.ampersandboxdesign.com/PARKVPS/"},"articleSection":"PARKVPS","hasPart":[{"@type":"WebPageElement","name":"1. What is here"},{"@type":"WebPageElement","name":"2. Host architecture and why"},{"@type":"WebPageElement","name":"Commands"},{"@type":"WebPageElement","name":"3. FreeBSD 15 facts that cost real time"},{"@type":"WebPageElement","name":"4. The distro"},{"@type":"WebPageElement","name":"5. Measured results"},{"@type":"WebPageElement","name":"6. The API, the console, and the PARK scene"},{"@type":"WebPageElement","name":"The server — vpsd/api.py (port 8905, stdlib, localhost)"},{"@type":"WebPageElement","name":"RAVIO side"},{"@type":"WebPageElement","name":"The desktop"},{"@type":"WebPageElement","name":"Two things that are not optional, and both looked like something else"},{"@type":"WebPageElement","name":"Getting the keyboard back"},{"@type":"WebPageElement","name":"Sound"},{"@type":"WebPageElement","name":"Theming — the cockpit"},{"@type":"WebPageElement","name":"SDDM — the greeter is the cockpit too"},{"@type":"WebPageElement","name":"Browser"},{"@type":"WebPageElement","name":"Three defects this work exposed, all worth generalising"},{"@type":"WebPageElement","name":"7. Known gaps"},{"@type":"WebPageElement","name":"28.5 The image has no compiler, and that is the right answer"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"PARKVPS","item":"https://docs.ampersandboxdesign.com/PARKVPS/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/PARKVPS/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/PARKVPS/docs/spec/"},{"@type":"ListItem","position":5,"name":"README.md","item":"https://docs.ampersandboxdesign.com/PARKVPS/docs/spec/README.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,10 +23,10 @@
 
 </div></div>
 <div class="lead">Status: working end to end, 2026-08-07. Five instances booted concurrently on this machine; a custom-assembled FreeBSD distro boots, self-configures and accepts SSH.</div>
-<div class="prose"><h1 id="blk-21790">PARKVPS — a local VPS fleet and a FreeBSD distro to run on it</h1>
+<div class="prose"><h1 id="blk-21811">PARKVPS — a local VPS fleet and a FreeBSD distro to run on it</h1>
 <p>Status: <strong>working end to end, 2026-08-07.</strong> Five instances booted concurrently on this machine; a custom-assembled FreeBSD distro boots, self-configures and accepts SSH.</p>
 <p>PARKVPS exists to replace the proxied-web &quot;fake browser&quot; behind RAVIO's PARK scene with real machines: spin up operating systems, tab between them, drive them from the cockpit. This document is the authoritative description of what was built and what was measured.</p>
-<h3 id="blk-21793">1. What is here</h3>
+<h3 id="blk-21814">1. What is here</h3>
 <pre><code>vpsd/vps.py           the instance supervisor (Python stdlib only, no root)
 vpsd/api.py           HTTP API, serial-console broker, VNC WebSocket proxy
 vpsd/fetch_base.sh    download + SHA512-verify + expand a FreeBSD base image
@@ -33,7 +34,7 @@ vpsd/web/             the fleet UI, the terminal, and the framebuffer viewer
 var/                  images, per-instance overlays, seeds, sockets, logs (gitignored)</code></pre>
 <p><strong>The distro moved out.</strong> T&amp;R — Travel &amp; RRABBIT — is everything that used to be <code>distro/</code>, and is now its own repo: &lt;https://github.com/c-u-l8er/travel-and-rrabbit&gt;. It stopped being a detail of this hypervisor and became a thing in its own right.</p>
 <p>The seam was already here: <strong>vpsd runs machines, the distro makes the thing they run</strong>, and neither imports the other. Sections 3, 4 and the FreeBSD-specific findings below are kept because they are the record of how these images came to exist and of what this supervisor had to accommodate — but the authoritative copy of the distro's own documentation now lives in that repo's README.</p>
-<h3 id="blk-21797">2. Host architecture and why</h3>
+<h3 id="blk-21818">2. Host architecture and why</h3>
 <p>Measured on this box: 24 cores, AMD-V, <code>/dev/kvm</code> mode <code>0666</code>, 550 GB free.</p>
 <p><strong>No root anywhere in the normal path.</strong> <code>/dev/kvm</code> is world read-write here, so guests run as the calling user. Three consequences follow and they are the main design constraints:</p>
 <ul><li><p><strong>No bridged/TAP networking</strong> (needs root). Instances use user-mode SLIRP with</p></li></ul>
@@ -43,7 +44,7 @@ var/                  images, per-instance overlays, seeds, sockets, logs (gitig
 <ul><li><p><strong>UEFI via OVMF.</strong> Firmware code is shared read-only; only the variable store</p></li></ul>
 <p>is per-instance.</p>
 <p>Instances are qcow2 overlays on one shared golden image, so spawning costs kilobytes rather than gigabytes.</p>
-<h4 id="blk-21813">Commands</h4>
+<h4 id="blk-21834">Commands</h4>
 <pre><code>python3 vpsd/vps.py doctor                    # check host prerequisites
 python3 vpsd/vps.py create NAME --start
 python3 vpsd/vps.py list
@@ -51,7 +52,7 @@ python3 vpsd/vps.py console NAME              # serial console, Ctrl-] detaches
 python3 vpsd/vps.py ssh NAME -- uname -a
 python3 vpsd/vps.py reimage NAME --start      # reset disk to golden + fresh seed
 python3 vpsd/vps.py stop|destroy NAME</code></pre>
-<h3 id="blk-21815">3. FreeBSD 15 facts that cost real time</h3>
+<h3 id="blk-21836">3. FreeBSD 15 facts that cost real time</h3>
 <p>These are the things that were wrong in the obvious approach. All verified on 15.1-RELEASE-p2.</p>
 <p><strong>FreeBSD 15 ships pkgbase.</strong> The base system is ~509 packages in a <code>FreeBSD-base</code> repo. Building a root filesystem is <code>pkg -r &lt;dir&gt; install</code> — no source tree, no buildworld, no release tarballs. This is what makes the distro a days-long job rather than a months-long one, and it is the single most important fact in this document.</p>
 <p><strong>`pkg -r` resolves everything against the target root, including trust.</strong> An empty directory has no signing keys, so pkg fails with &quot;Error opening the trusted directory&quot;, which reads like a network problem and is not. Copy <code>/usr/share/keys/pkgbase-15</code> and <code>/etc/pkg/*.conf</code> into the staged root first.</p>
@@ -68,7 +69,7 @@ python3 vpsd/vps.py stop|destroy NAME</code></pre>
 <p><strong>Four base packages look optional and are not.</strong> <code>FreeBSD-runtime</code> alone gives you a kernel that mounts root and then fails:</p>
 <table><thead><tr><th>missing</th><th>symptom</th></tr></thead><tbody><tr><td><code>FreeBSD-rc</code></td><td>no <code>/etc/rc</code> at all → straight to <code>Enter full pathname of shell</code></td></tr><tr><td><code>FreeBSD-ufs</code></td><td><code>fsck_ufs</code> not found → <code>ERROR: ABORTING BOOT</code>, single-user</td></tr><tr><td><code>FreeBSD-geom</code></td><td><code>gpart</code> missing → growfs cannot expand the partition</td></tr><tr><td><code>FreeBSD-utilities</code></td><td>no <code>awk</code>, which the rc scripts use constantly</td></tr></tbody></table>
 <p>Plus <code>FreeBSD-pam</code>, without which sshd cannot authenticate anyone. Note the ssh package is <code>FreeBSD-ssh</code>, <strong>not</strong> <code>FreeBSD-openssh</code>.</p>
-<h3 id="blk-21846">4. The distro</h3>
+<h3 id="blk-21867">4. The distro</h3>
 <p><code>../travel-and-rrabbit/tandr.conf</code> <strong>is</strong> the distro — package set, enabled services, identity, image geometry. <code>build-image.sh</code> is mechanism and should not need editing to produce a different flavour. An operator <code>../travel-and-rrabbit/overlay/</code> tree is copied over the staged root last, so local changes never require editing the script.</p>
 <p>The assembler is the NomadBSD approach updated for pkgbase: seed trust → install base packages → install ports packages → write configuration → <code>makefs</code> an ESP and a UFS root → <code>mkimg</code> a GPT image.</p>
 <p>Choices worth stating:</p>
@@ -84,13 +85,13 @@ python3 vpsd/vps.py stop|destroy NAME</code></pre>
 <p>packages, all <code>lib32</code> packages.</p>
 <p>Build it:</p>
 <pre data-lang="bash"><code>../travel-and-rrabbit/make.sh builder</code></pre>
-<h3 id="blk-21872">5. Measured results</h3>
+<h3 id="blk-21893">5. Measured results</h3>
 <table><thead><tr><th></th><th>stock FreeBSD 15.1 cloud image</th><th>T&amp;R 0.1</th></tr></thead><tbody><tr><td>golden image on disk</td><td>2.51 GiB</td><td><strong>363 MiB</strong></td></tr><tr><td>packages installed</td><td>504</td><td><strong>50</strong></td></tr><tr><td>per-instance overlay after boot</td><td><strong>2,999 MB</strong></td><td><strong>51 MB</strong></td></tr><tr><td>first-boot network download</td><td>~512 MiB</td><td>none</td></tr></tbody></table>
 <p>Five instances ran concurrently (1 × 2560 MB, 2 × 1024 MB, 2 × 768 MB) on a host with ~5 GB free. <code>growfs</code> correctly expanded the 3 GB image to fill a 9.6 GB overlay with no help from the seed.</p>
 <p>The per-instance figure is the one that matters for PARK: at 51 MB and 768 MB of RAM, a dozen tabs is a disk rounding error and a RAM question only.</p>
-<h3 id="blk-21891">6. The API, the console, and the PARK scene</h3>
+<h3 id="blk-21912">6. The API, the console, and the PARK scene</h3>
 <p><strong>Done and verified: a machine is a tab.</strong> Opening <code>⬢ MACHINES</code> in PARK's rail lists the fleet; clicking a running instance opens its serial console as a tab in the same strip the web reader uses, with a live root shell inside.</p>
-<h4 id="blk-21893">The server — <code>vpsd/api.py</code> (port 8905, stdlib, localhost)</h4>
+<h4 id="blk-21914">The server — <code>vpsd/api.py</code> (port 8905, stdlib, localhost)</h4>
 <table><thead><tr><th>route</th><th></th></tr></thead><tbody><tr><td><code>GET /api/fleet</code></td><td>instances + available golden images</td></tr><tr><td><code>GET /api/instance/&lt;n&gt;</code></td><td>one instance</td></tr><tr><td><code>POST /api/instance/&lt;n&gt;/{start,stop,reimage,destroy}</code></td><td>lifecycle</td></tr><tr><td><code>POST /api/create</code></td><td>new instance</td></tr><tr><td><code>GET /api/console/&lt;n&gt;/stream</code></td><td>serial output, SSE, base64 frames</td></tr><tr><td><code>POST /api/console/&lt;n&gt;/input</code></td><td>keystrokes in</td></tr><tr><td><code>GET /console/&lt;n&gt;</code></td><td>the terminal page, built to be iframed</td></tr><tr><td><code>GET /</code></td><td>a standalone fleet UI</td></tr></tbody></table>
 <p>Deliberate choices:</p>
 <ul><li><p><strong>The console is a broker, not a connection per viewer.</strong> A QEMU</p></li></ul>
@@ -103,7 +104,7 @@ python3 vpsd/vps.py stop|destroy NAME</code></pre>
 <p>resize, so a terminal that reflowed to the pane would wrap where the guest does not.</p>
 <ul><li><p><strong>Mutations require an `x-parkvps` header</strong>, which a cross-origin form cannot</p></li></ul>
 <p>send, so it forces a preflight that the origin allowlist refuses. Binding to localhost is <em>not</em> protection — localhost is reachable from any page the operator happens to be browsing.</p>
-<h4 id="blk-21934">RAVIO side</h4>
+<h4 id="blk-21955">RAVIO side</h4>
 <p><code>world/index.html</code> only: a <code>#tabvps</code> button and <code>#vpslist</code> in the rail, <code>newVpsTab()</code>, a <code>vps</code> branch in <code>tabTitle</code>, and <code>vps</code> carried through <code>tabsSave</code>/<code>tabsRestore</code>. The tab machinery is otherwise untouched — select, close, and the frame kept alive behind the active one all already did the right thing for anything that is a page.</p>
 <p>Two things that are not obvious:</p>
 <ul><li><p><strong>A machine tab cannot be restored from its URL.</strong> <code>tabsRestore</code> runs every</p></li></ul>
@@ -111,7 +112,7 @@ python3 vpsd/vps.py stop|destroy NAME</code></pre>
 <ul><li><p><strong>The console must not go through `/ext/`</strong> at all: that proxy is a GET-only</p></li></ul>
 <p>reader, and a terminal needs to POST keystrokes. Proxying it would produce a terminal that displays perfectly and cannot be typed into.</p>
 <p>The rail manages the fleet fully: selecting a machine opens an action strip (<strong>console · desktop · start/stop · reimage · destroy</strong>) and <code>＋ NEW MACHINE</code> creates one, with a &quot;give it a screen&quot; checkbox that maps to <code>graphics=std</code>. Selection is keyed by <strong>name, not index</strong>, or the strip would jump to a different machine whenever the 4-second poll re-sorted the list. <code>destroy</code> and <code>reimage</code> confirm; in-flight actions disable their buttons, because <code>destroy</code> is not a thing to fire twice on a double click. <code>desktop</code> is offered only for a machine that has a display adapter — otherwise it would open a tab whose only content is an apology.</p>
-<h4 id="blk-21946">The desktop</h4>
+<h4 id="blk-21967">The desktop</h4>
 <p><strong>Done: a FreeBSD desktop in the browser</strong>, via <code>GET /desktop/&lt;name&gt;</code>. icewm on X.org, keyboard and mouse verified reaching the guest.</p>
 <p>Four things had to be true, and the first was not:</p>
 <ul><li><p><strong>`-nodefaults` means no display adapter.</strong> Every instance had an open VNC</p></li></ul>
@@ -125,7 +126,7 @@ python3 vpsd/vps.py stop|destroy NAME</code></pre>
 <p>The terminal and the framebuffer make the same call for the same reason: <strong>scale to fit, never reflow/resize.</strong> A serial line has no in-band resize, and a plain VGA has no guest agent to receive a resize request, so a viewer that claimed to change the guest's geometry would be lying.</p>
 <p><code>../travel-and-rrabbit/tandr-desktop.conf</code> is the graphical flavour — a <strong>separate config, not a flag</strong>, because the whole point of the server image is that an instance costs 51 MB. It autologins root on <code>ttyv0</code> only (via its own <code>Pc-autologin</code> gettytab entry, so the serial console keeps a normal login) and starts X from <code>.profile</code> <strong>without `exec`</strong> — an <code>exec</code> would end the session on failure, getty would autologin and retry, and the only symptom of the resulting boot loop would be a flickering black screen.</p>
 <p><strong>It costs 4.92 GB</strong> against the server image's 364 MB. Most of that is <code>/usr/local</code>, because <code>xorg-minimal</code> pulls Mesa which on FreeBSD pulls LLVM for software rasterisation; Firefox and the fonts add ~450 MB on top. Not yet optimised.</p>
-<h5 id="blk-21968">Two things that are not optional, and both looked like something else</h5>
+<h5 id="blk-21989">Two things that are not optional, and both looked like something else</h5>
 <p><strong>Fonts.</strong> <code>xorg-minimal</code> installs the font <em>libraries</em> — freetype, fontconfig, libXft — and <strong>zero font files</strong>. <code>fc-list</code> returns 0 on a fresh image. The damage is far worse than missing text:</p>
 <ul><li><p>icewm draws menus, titles and the taskbar as blank strips, icons only;</p></li><li><p><strong>icewm also stops moving windows.</strong> Press, drag, release moved a window by</p></li></ul>
 <p>exactly its decoration offset (+4, +24) and no further, at any drag distance. That reads as &quot;click and drag is broken&quot; and sent me through noVNC, the WebSocket proxy, the pointer device, X input and XTEST before the cause turned out to be a missing font;</p>
@@ -133,16 +134,16 @@ python3 vpsd/vps.py stop|destroy NAME</code></pre>
 <p><code>font-misc-misc</code> provides the core <code>fixed</code> a WM falls back to; <code>dejavu</code> is what fontconfig resolves <code>sans-serif</code> to. Both, plus core <code>FontPath</code> entries in <code>xorg.conf.d</code>, plus a firstboot <code>fc-cache</code>. <strong>Verified after the fix: a drag of (+400, +190) moved the window exactly (+400, +190).</strong></p>
 <p><strong>A USB tablet.</strong> VNC speaks <em>absolute</em> pointer positions. With only the default PS/2 mouse, QEMU converts them to relative motion and the guest cursor drifts away from where you actually clicked — press, move and release land in three inconsistent places, so every drag fails even once the WM is healthy. Adding <code>qemu-xhci</code> + <code>usb-tablet</code> made it exact: a pointer driven to a client position mapping to guest (721,485) reported <code>x:720 y:484</code> via <code>xdotool getmouselocation</code>.</p>
 <p>The isolating measurement worth reusing: <code>xev</code> on <strong>its own window</strong> (which gets an implicit grab on button press) counted 6 MotionNotify events, all with <code>state 0x100</code>, during a drag. That proved X, libinput, the tablet, the proxy and noVNC were all correct and the fault was above them, in the WM.</p>
-<h5 id="blk-21982">Getting the keyboard back</h5>
+<h5 id="blk-22003">Getting the keyboard back</h5>
 <p>Once the canvas has focus, noVNC forwards <strong>every</strong> keystroke to the guest — Escape included, which is what RAVIO uses for &quot;back to the road&quot;. So from inside a machine tab no key reaches the page around it. Both the console and the desktop view listen in the <strong>capture phase</strong> (or the chord is swallowed before they see it) for <strong>Ctrl+Alt+Shift+Esc</strong>, blur the guest, take focus, and <code>postMessage</code> a release to the parent, which RAVIO validates by origin. There is also a visible <code>⎋ RELEASE</code> button, because a chord nobody can discover is not an escape hatch.</p>
 <p>Not Esc+CapsLock, which was the suggestion: CapsLock is a <em>lock</em>, not a modifier, so &quot;Escape while CapsLock is on&quot; silently steals Escape from vi for as long as the light is on and the browser cannot show you that it is. <code>RELEASE_ON_CAPSLOCK</code> in <code>desktop.html</code> turns it on anyway — one line.</p>
-<h5 id="blk-21985">Sound</h5>
+<h5 id="blk-22006">Sound</h5>
 <p>Guest audio is wired to the host through an <code>intel-hda</code> + <code>hda-duplex</code> pair on a detected <code>-audiodev</code>. Two things to know:</p>
 <ul><li><p><strong>It comes out of the host's speakers, not the browser.</strong> VNC has no audio</p></li></ul>
 <p>channel and neither does a serial console. A machine's sound arrives the way a machine on your desk would.</p>
 <ul><li><p><strong>QEMU's audio drivers are separate packages.</strong> A stock Arch <code>qemu-base</code></p></li></ul>
 <p>offers only <code>none</code>, <code>spice</code> and <code>wav</code>, and naming a driver that is not installed makes QEMU <em>refuse to start</em> — so the backend is probed from <code>-audiodev help</code> at run time and simply omitted when there is none. Install <code>qemu-audio-pipewire</code> and restart an instance; nothing here needs editing. <code>vps.py doctor</code> reports which backend it found, or the command to get one.</p>
-<h5 id="blk-21995">Theming — the cockpit</h5>
+<h5 id="blk-22016">Theming — the cockpit</h5>
 <p>The desktop uses RAVIO's own palette, read out of <code>world/index.html</code> rather than eyeballed: <code>--acc #F2C14E</code> amber, <code>--cool #2DE2E6</code> cyan, <code>--rim #C8862A</code> bronze, <code>--warn #FF5A3C</code>, on <code>#03040a</code> with <code>#f3ead4</code> text. Amber is the focused window, the way the lit gauge is the one currently reading.</p>
 <p>Everything lives in <code>../travel-and-rrabbit/overlay-desktop/</code>, named by <code>OVERLAY_DIR</code> in the flavour config so none of it can land in the server image, which has no X to theme.</p>
 <ul><li><p><strong>Wallpaper</strong> is <code>banner.jpg</code> from the c-u-l8er.link header — the checkerboard</p></li></ul>
@@ -154,7 +155,7 @@ python3 vpsd/vps.py stop|destroy NAME</code></pre>
 <p>Two gotchas worth keeping:</p>
 <ul><li><p>**<code>panel_size</code> is <code>width height</code> for a horizontal tint2 panel and SWAPPED for</p></li></ul>
 <p>a vertical one.** A 62 px full-height column is <code>100% 62</code>, not <code>62 100%</code>. Writing it the intuitive way produces a full-width bar 62 px tall, which looks exactly like the <code>vertical</code> keyword being ignored — and isn't: tint2 read the orientation, swapped the pair, and did what it was told.</p>
-<h5 id="blk-22015">SDDM — the greeter is the cockpit too</h5>
+<h5 id="blk-22036">SDDM — the greeter is the cockpit too</h5>
 <p>Built and working. <code>DISPLAY_MANAGER=&quot;sddm&quot;</code> in the flavour config; leaving it empty goes back to autologin-into-startx, and <code>build-image.sh</code> sets up exactly one of the two, never both — they would fight over <code>ttyv0</code> and the symptom is a screen flickering between a greeter and a shell.</p>
 <p>The greeter is a <strong>QML theme of our own</strong> (<code>themes/parkbsd/Main.qml</code>): the road behind, an amber <code>T&amp;R</code> over the machine's own hostname, cyan-focused USER and KEY fields, and an <strong>IGNITION</strong> button. Deliberately <strong>QtQuick only</strong> — no <code>QtQuick.Controls</code>, no <code>SddmComponents</code>. A greeter whose imports fail shows a blank screen with no way in, and the only trace is a log inside a machine you now cannot log into.</p>
 <p>Cost: <strong>127 packages, ~966 MiB</strong> (<code>qt6-base</code>, <code>qt6-declarative</code>, <code>consolekit2</code>), which is why <code>ROOT_SIZE</code> is 9g and the image is 5.16 GB.</p>
@@ -167,10 +168,10 @@ python3 vpsd/vps.py stop|destroy NAME</code></pre>
 <p>the nuageinit user has a locked password, so the image carries a real desktop user — <code>driver</code> / <code>driver</code>, set in the flavour config.</p>
 <p><code>lightdm</code> + <code>lightdm-gtk-greeter</code> remains the ~1.7 MiB alternative if the Qt6 weight is ever unwelcome.</p>
 <blockquote><p><strong>The `driver` password is in the config file, in the clear.</strong> It is defensible only because these guests are reachable through a unix socket on one machine, and root already has an empty password on a <code>secure</code> console. Change it before anything here listens on a real address.</p></blockquote>
-<h5 id="blk-22035">Browser</h5>
+<h5 id="blk-22056">Browser</h5>
 <p>Firefox is in the image and renders real sites, video included. Lighter swaps that exist here: <code>netsurf</code> (4.6 MB, own engine, weak JS), <code>dillo</code> (1.7 MB, no JS), <code>badwolf</code>/<code>luakit</code> (WebKitGTK). One line in <code>PORT_PKGS</code>.</p>
 <p><strong>Unexplained:</strong> a freshly booted instance's Firefox opened one of the operator's own sites on first launch. The image carries no Mozilla profile, no <code>distribution/policies.json</code> and no <code>browser.startup.homepage</code> pref — all three checked and absent — so this is recorded as an open question rather than explained away.</p>
-<h4 id="blk-22038">Three defects this work exposed, all worth generalising</h4>
+<h4 id="blk-22059">Three defects this work exposed, all worth generalising</h4>
 <ul><li><p><strong>An instrument that ruins what it measures.</strong> <code>status()</code> probed readiness by</p></li></ul>
 <p>reading sshd's banner and closing, which sshd logs at error level, which FreeBSD's syslog sends to <code>/dev/console</code>. Polling <code>/api/fleet</code> every 3s flooded every guest's console <em>at exactly the poll rate</em>. Measured 690 bytes per 20s before, 0 per 25s after caching readiness per pid.</p>
 <ul><li><p><strong>Replaying a recording into a live terminal is not display-only.</strong> xterm.js</p></li></ul>
@@ -178,7 +179,7 @@ python3 vpsd/vps.py stop|destroy NAME</code></pre>
 <ul><li><p><strong>A broker must notice its guest leaving.</strong> The reader thread exited on EOF</p></li></ul>
 <p>but left the socket set, so the next keystroke after a <code>reimage</code> wrote to a dead fd and took the request handler down with no response at all.</p>
 <p>Independently, the distro stopped probing the terminal: FreeBSD's <code>/root/.profile</code> runs <code>resizewin -z</code> on serial lines, whose reply arrives after the probe has timed out. Replaced with <code>stty rows 24 cols 80</code>, which is the answer it would have got. Verified: <code>stty size</code> → <code>24 80</code>.</p>
-<h3 id="blk-22052">7. Known gaps</h3>
+<h3 id="blk-22073">7. Known gaps</h3>
 <ul><li><p><strong>Instances cannot talk to each other.</strong> SLIRP isolates them. QEMU's <code>socket</code></p></li></ul>
 <p>netdev is the unprivileged fix and is unimplemented.</p>
 <ul><li><p><strong>No PULSE Loop Manifest yet.</strong> Per the repo convention every product declares</p></li></ul>
@@ -197,9 +198,15 @@ python3 vpsd/vps.py stop|destroy NAME</code></pre>
 <p>uncommitted lines from other work when this landed, and committing would have swept up someone else's in-progress changes.</p>
 <ul><li><p><strong>The name `T&amp;R` is a placeholder.</strong> Rename it in <code>tandr.conf</code> and the</p></li></ul>
 <p>image, hostname, MOTD and artifact name all follow.</p>
-<ul><li><p><strong>The golden image is built from `quarterly`</strong>, not <code>latest</code>.</p></li></ul></div>
+<ul><li><p><strong>The golden image is built from `quarterly`</strong>, not <code>latest</code>.</p></li></ul>
+<h4 id="blk-22115">28.5 The image has no compiler, and that is the right answer</h4>
+<p>First build attempt: <code>No CMAKE_C_COMPILER could be found</code>. The T&amp;R image is pkgbase and minimal, and ships <strong>no toolchain at all</strong> — deliberately. This is the same constraint <code>ic32</code> already lives under: it is C, it is compiled on the FreeBSD <strong>builder</strong> guest, and the image ships a binary.</p>
+<p>So the addon follows that pattern rather than fighting it, and the split is:</p>
+<table><thead><tr><th>built on the builder</th><th>shipped in the image</th></tr></thead><tbody><tr><td>clang, cmake, ninja, greenfield source</td><td><code>libproxy-encoding.so</code> + the <code>.node</code> addons</td></tr><tr><td></td><td><code>gstreamer1</code>, <code>gstreamer1-plugins</code>, <code>-plugins-gl</code>, <code>-plugins-x264</code>, <code>mesa-dri</code>, <code>node24</code></td></tr></tbody></table>
+<p>Which is better for the download than it sounds: the runtime set is what costs image size, and no user ever needs the 1 GB of LLVM.</p>
+<p>Note the pkg repo here is FreeBSD's <strong>quarterly</strong> branch and carries no <code>FreeBSD-clang</code> (pkgbase sets live in a separate <code>FreeBSD-base</code> repo). The ports compilers available are <code>llvm19</code>…<code>llvm22</code> and <code>gcc15</code>…<code>gcc17</code>; <code>llvm19-lite</code> is the smallest thing that can do this job.</p></div>
 <p class="src"><a href="/#/PARKVPS/docs/spec/README.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-21793" class="lvl2">1. What is here</a><a href="#blk-21797" class="lvl2">2. Host architecture and why</a><a href="#blk-21813" class="lvl3">Commands</a><a href="#blk-21815" class="lvl2">3. FreeBSD 15 facts that cost real time</a><a href="#blk-21846" class="lvl2">4. The distro</a><a href="#blk-21872" class="lvl2">5. Measured results</a><a href="#blk-21891" class="lvl2">6. The API, the console, and the PARK scene</a><a href="#blk-21893" class="lvl3">The server — vpsd/api.py (port 8905, stdlib, localhost)</a><a href="#blk-21934" class="lvl3">RAVIO side</a><a href="#blk-21946" class="lvl3">The desktop</a><a href="#blk-21968" class="lvl4">Two things that are not optional, and both looked like something else</a><a href="#blk-21982" class="lvl4">Getting the keyboard back</a><a href="#blk-21985" class="lvl4">Sound</a><a href="#blk-21995" class="lvl4">Theming — the cockpit</a><a href="#blk-22015" class="lvl4">SDDM — the greeter is the cockpit too</a><a href="#blk-22035" class="lvl4">Browser</a><a href="#blk-22038" class="lvl3">Three defects this work exposed, all worth generalising</a><a href="#blk-22052" class="lvl2">7. Known gaps</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/PARKVPS/README.md/">PARKVPS</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieravaik442dsgku27w4pcaqblcn5i5kmdhwmivfnypn7f6edsjo7naa</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-21814" class="lvl2">1. What is here</a><a href="#blk-21818" class="lvl2">2. Host architecture and why</a><a href="#blk-21834" class="lvl3">Commands</a><a href="#blk-21836" class="lvl2">3. FreeBSD 15 facts that cost real time</a><a href="#blk-21867" class="lvl2">4. The distro</a><a href="#blk-21893" class="lvl2">5. Measured results</a><a href="#blk-21912" class="lvl2">6. The API, the console, and the PARK scene</a><a href="#blk-21914" class="lvl3">The server — vpsd/api.py (port 8905, stdlib, localhost)</a><a href="#blk-21955" class="lvl3">RAVIO side</a><a href="#blk-21967" class="lvl3">The desktop</a><a href="#blk-21989" class="lvl4">Two things that are not optional, and both looked like something else</a><a href="#blk-22003" class="lvl4">Getting the keyboard back</a><a href="#blk-22006" class="lvl4">Sound</a><a href="#blk-22016" class="lvl4">Theming — the cockpit</a><a href="#blk-22036" class="lvl4">SDDM — the greeter is the cockpit too</a><a href="#blk-22056" class="lvl4">Browser</a><a href="#blk-22059" class="lvl3">Three defects this work exposed, all worth generalising</a><a href="#blk-22073" class="lvl2">7. Known gaps</a><a href="#blk-22115" class="lvl3">28.5 The image has no compiler, and that is the right answer</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/PARKVPS/README.md/">PARKVPS</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraqndwodph5bsgmevlclc6iiu5qwy5x5pxswjdqovsru6qjczrij3q</div></div></div>
 </div></div>
 </body></html>

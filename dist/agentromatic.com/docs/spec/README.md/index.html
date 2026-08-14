@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>AgenTroMatic — Automatic Deliberation Engine · agentromatic.com · Ampersand Box</title>
 <meta name="description" content="Date: February 21, 2026 Status: Draft Author: [&amp;] Ampersand Box Design License: MIT (open core) Stack: Elixir · OTP · Ra · Phoenix · Ecto · PostgreSQL">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/agentromatic.com/docs/spec/README.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"AgenTroMatic — Automatic Deliberation Engine","name":"AgenTroMatic — Automatic Deliberation Engine","description":"Date: February 21, 2026 Status: Draft Author: [&] Ampersand Box Design License: MIT (open core) Stack: Elixir · OTP · Ra · Phoenix · Ecto · PostgreSQL","url":"https://docs.ampersandboxdesign.com/agentromatic.com/docs/spec/README.md/","identifier":"bagaaieracymmylweathar2y525aqsmfeelenqh22m2u5oqfude5kjb5xa3ta","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"agentromatic.com","url":"https://docs.ampersandboxdesign.com/agentromatic.com/"},"articleSection":"agentromatic.com","hasPart":[{"@type":"WebPageElement","name":"Technical Specification v0.2 (Elixir/OTP)"},{"@type":"WebPageElement","name":"1. Overview"},{"@type":"WebPageElement","name":"1.1 The Problem"},{"@type":"WebPageElement","name":"1.2 Design Principles"},{"@type":"WebPageElement","name":"1.3 Why Elixir"},{"@type":"WebPageElement","name":"1.4 One-Liner"},{"@type":"WebPageElement","name":"2. Architecture"},{"@type":"WebPageElement","name":"2.1 OTP Supervision Tree"},{"@type":"WebPageElement","name":"2.2 Component Summary"},{"@type":"WebPageElement","name":"3. The Deliberation Protocol"},{"@type":"WebPageElement","name":"3.1 GenStateMachine States"},{"@type":"WebPageElement","name":"3.2 Latency Budget"},{"@type":"WebPageElement","name":"4. Data Structures"},{"@type":"WebPageElement","name":"4.1 Bid"},{"@type":"WebPageElement","name":"4.2 Negotiation Round"},{"@type":"WebPageElement","name":"4.3 Reputation Record (Ecto)"},{"@type":"WebPageElement","name":"4.4 Deliberation Trace (Ecto)"},{"@type":"WebPageElement","name":"5. Ra (Raft) Integration"},{"@type":"WebPageElement","name":"5.1 Why Ra"},{"@type":"WebPageElement","name":"5.2 Ra State Machine"},{"@type":"WebPageElement","name":"5.3 Cluster Setup"},{"@type":"WebPageElement","name":"6. Reputation System"},{"@type":"WebPageElement","name":"6.1 Engine"},{"@type":"WebPageElement","name":"6.2 Reputation Dynamics"},{"@type":"WebPageElement","name":"7. A2A Integration"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"agentromatic.com","item":"https://docs.ampersandboxdesign.com/agentromatic.com/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/agentromatic.com/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/agentromatic.com/docs/spec/"},{"@type":"ListItem","position":5,"name":"README.md","item":"https://docs.ampersandboxdesign.com/agentromatic.com/docs/spec/README.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"AgenTroMatic — Automatic Deliberation Engine","name":"AgenTroMatic — Automatic Deliberation Engine","description":"Date: February 21, 2026 Status: Draft Author: [&] Ampersand Box Design License: MIT (open core) Stack: Elixir · OTP · Ra · Phoenix · Ecto · PostgreSQL","url":"https://docs.ampersandboxdesign.com/agentromatic.com/docs/spec/README.md/","identifier":"bagaaierazq3l5hveg4arrc2ckaz3yjrnr5cxorrkfrtjjub2a5xbx26iylwq","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"agentromatic.com","url":"https://docs.ampersandboxdesign.com/agentromatic.com/"},"articleSection":"agentromatic.com","hasPart":[{"@type":"WebPageElement","name":"Technical Specification v0.2 (Elixir/OTP)"},{"@type":"WebPageElement","name":"1. Overview"},{"@type":"WebPageElement","name":"1.1 The Problem"},{"@type":"WebPageElement","name":"1.2 Design Principles"},{"@type":"WebPageElement","name":"1.3 Why Elixir"},{"@type":"WebPageElement","name":"1.4 One-Liner"},{"@type":"WebPageElement","name":"2. Architecture"},{"@type":"WebPageElement","name":"2.1 OTP Supervision Tree"},{"@type":"WebPageElement","name":"2.2 Component Summary"},{"@type":"WebPageElement","name":"3. The Deliberation Protocol"},{"@type":"WebPageElement","name":"3.1 GenStateMachine States"},{"@type":"WebPageElement","name":"3.2 Latency Budget"},{"@type":"WebPageElement","name":"4. Data Structures"},{"@type":"WebPageElement","name":"4.1 Bid"},{"@type":"WebPageElement","name":"4.2 Negotiation Round"},{"@type":"WebPageElement","name":"4.3 Reputation Record (Ecto)"},{"@type":"WebPageElement","name":"4.4 Deliberation Trace (Ecto)"},{"@type":"WebPageElement","name":"5. Ra (Raft) Integration"},{"@type":"WebPageElement","name":"5.1 Why Ra"},{"@type":"WebPageElement","name":"5.2 Ra State Machine"},{"@type":"WebPageElement","name":"5.3 Cluster Setup"},{"@type":"WebPageElement","name":"6. Reputation System"},{"@type":"WebPageElement","name":"6.1 Engine"},{"@type":"WebPageElement","name":"6.2 Reputation Dynamics"},{"@type":"WebPageElement","name":"7. A2A Integration"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"agentromatic.com","item":"https://docs.ampersandboxdesign.com/agentromatic.com/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/agentromatic.com/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/agentromatic.com/docs/spec/"},{"@type":"ListItem","position":5,"name":"README.md","item":"https://docs.ampersandboxdesign.com/agentromatic.com/docs/spec/README.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,24 +23,24 @@
 
 </div></div>
 <div class="lead">Date: February 21, 2026 Status: Draft Author: [&amp;] Ampersand Box Design License: MIT (open core) Stack: Elixir · OTP · Ra · Phoenix · Ecto · PostgreSQL</div>
-<div class="prose"><h1 id="blk-55681">AgenTroMatic — Automatic Deliberation Engine</h1>
-<h3 id="blk-55682">Technical Specification v0.2 (Elixir/OTP)</h3>
+<div class="prose"><h1 id="blk-56436">AgenTroMatic — Automatic Deliberation Engine</h1>
+<h3 id="blk-56437">Technical Specification v0.2 (Elixir/OTP)</h3>
 <p><strong>Date:</strong> February 21, 2026 <strong>Status:</strong> Draft <strong>Author:</strong> [&amp;] Ampersand Box Design <strong>License:</strong> MIT (open core) <strong>Stack:</strong> Elixir · OTP · Ra · Phoenix · Ecto · PostgreSQL</p>
-<h3 id="blk-55684">1. Overview</h3>
+<h3 id="blk-56439">1. Overview</h3>
 <p>AgenTroMatic is the <strong>automatic deliberation engine</strong> for multi-agent AI systems. When a task arrives, agents bid based on ability, debate when capabilities overlap, elect leaders by consensus, execute under quorum validation, and build reputation over time. No human routing required — ever.</p>
 <p>AgenTroMatic is <strong>not</strong> an orchestrator (that's Delegatic) or a framework for building agents (that's Agentelic). It is the automation layer that sits between human-defined governance and raw agent execution — making self-organization reliable, visible, and auditable.</p>
-<h4 id="blk-55687">1.1 The Problem</h4>
+<h4 id="blk-56442">1.1 The Problem</h4>
 <p>Google's Agent-to-Agent (A2A) protocol solves agent discovery and communication, but leaves five critical gaps:</p>
 <table><thead><tr><th>Gap</th><th>Impact</th></tr></thead><tbody><tr><td>No built-in consensus mechanism</td><td>Conflicting decisions, split-brain failures</td></tr><tr><td>No durable state management</td><td>Long-running workflows lose context</td></tr><tr><td>Client-server only — no multi-party consensus</td><td>Can't do N-agent voting or collective reasoning</td></tr><tr><td>No machine-readable skill I/O schemas</td><td>Orchestrators can't deterministically route tasks</td></tr><tr><td>Authorization creep — tokens used beyond scope</td><td>Security risk in cascading agent chains</td></tr></tbody></table>
 <p><strong>The analogy:</strong> A2A is TCP/IP for agents. AgenTroMatic is the service mesh that sits on top — adding consensus, resilience, observability, and governance without replacing the underlying protocol.</p>
-<h4 id="blk-55703">1.2 Design Principles</h4>
+<h4 id="blk-56458">1.2 Design Principles</h4>
 <ol><li><p><strong>Deliberation over routing</strong> — Static routing is the wrong abstraction for overlapping, evolving capabilities. Agents negotiate every time.</p></li><li><p><strong>A2A-native</strong> — Every inter-agent message flows through standard A2A protocol. AgenTroMatic wraps, not replaces.</p></li><li><p><strong>Reputation is memory</strong> — The cluster learns who delivers. Past performance shapes future assignments. Overconfident agents lose weight.</p></li><li><p><strong>Visible by default</strong> — Every deliberation is traceable. The Observatory is not optional — it's the product.</p></li><li><p><strong>Consensus before commit</strong> — Results publish only when quorum validates. No single agent commits unilaterally.</p></li><li><p><strong>Ra under the hood</strong> — Leader election, log replication, and heartbeats use Ra (RabbitMQ's battle-tested Raft library for Erlang/OTP).</p></li></ol>
-<h4 id="blk-55717">1.3 Why Elixir</h4>
+<h4 id="blk-56472">1.3 Why Elixir</h4>
 <p>The deliberation protocol is fundamentally a <strong>concurrent message-passing system with timeouts, voting, and state machines</strong> — that's literally what the BEAM was designed for.</p>
 <ul><li><p>Each deliberation is a <code>GenStateMachine</code> — states map 1:1 to protocol phases</p></li><li><p>Bid collection with timeout — <code>GenServer.call/3</code> with <code>:timeout</code> is exactly this</p></li><li><p>Ra (the RabbitMQ Raft library) is battle-tested, production-grade, Erlang-native — no custom Raft needed</p></li><li><p>Phoenix LiveView replaces React for Observatory — real-time deliberation streaming, zero JS bundle</p></li><li><p>Process-per-deliberation scales naturally — BEAM handles millions of lightweight processes</p></li><li><p>Hot code upgrades — deploy new deliberation logic without dropping active deliberations</p></li></ul>
-<h4 id="blk-55732">1.4 One-Liner</h4>
+<h4 id="blk-56487">1.4 One-Liner</h4>
 <blockquote><p>&quot;Your agents don't need a boss. They need a deliberation.&quot;</p></blockquote>
-<h3 id="blk-55735">2. Architecture</h3>
+<h3 id="blk-56490">2. Architecture</h3>
 <pre><code>┌──────────────────────────────────────────────────────────────┐
 │                       AGENTROMATIC                            │
 │              Automatic Deliberation Engine (Elixir/OTP)        │
@@ -80,7 +81,7 @@
 │   ├── PostgreSQL — durable reputation, deliberation traces     │
 │   └── Ra log — consensus state (Raft log)                      │
 └──────────────────────────────────────────────────────────────┘</code></pre>
-<h4 id="blk-55737">2.1 OTP Supervision Tree</h4>
+<h4 id="blk-56492">2.1 OTP Supervision Tree</h4>
 <pre><code>AgenTroMatic.Application
 ├── AgenTroMatic.Repo (Ecto/Postgres)
 ├── AgenTroMaticWeb.Endpoint (Phoenix)
@@ -94,10 +95,10 @@
 ├── AgenTroMatic.ClusterRegistry (Registry — maps cluster_id → agents)
 ├── AgenTroMatic.TraceWriter (Broadway — batched trace persistence)
 └── Phoenix.PubSub (deliberation events → LiveView Observatory)</code></pre>
-<h4 id="blk-55739">2.2 Component Summary</h4>
+<h4 id="blk-56494">2.2 Component Summary</h4>
 <table><thead><tr><th>Component</th><th>Responsibility</th><th>OTP Pattern</th></tr></thead><tbody><tr><td><code>AgenTroMatic.Deliberation</code></td><td>One active deliberation. Progresses through phases: bidding → overlap → negotiation → election → execution → commit → learn.</td><td>GenStateMachine under DynamicSupervisor</td></tr><tr><td><code>AgenTroMatic.Ra.Supervisor</code></td><td>Manages Ra cluster for Raft consensus. Leader election, log replication, quorum validation.</td><td>Ra server (Erlang) wrapped in Elixir supervisor</td></tr><tr><td><code>AgenTroMatic.ReputationEngine</code></td><td>Per-capability scores, calibration tracking, trend detection. ETS for hot reads, Postgres for persistence.</td><td>GenServer + ETS table owner</td></tr><tr><td><code>AgenTroMatic.A2AGateway</code></td><td>HTTP client pool for outbound A2A protocol calls. Agent Card parsing. Bid/rebuttal transport.</td><td>GenServer + Finch connection pool</td></tr><tr><td><code>AgenTroMatic.TraceWriter</code></td><td>Batches deliberation traces for Postgres persistence. Append-only.</td><td>Broadway pipeline</td></tr><tr><td><code>AgenTroMaticWeb.ObservatoryLive</code></td><td>Real-time deliberation visualization. Reputation dashboards. What-if simulation.</td><td>Phoenix LiveView</td></tr></tbody></table>
-<h3 id="blk-55762">3. The Deliberation Protocol</h3>
-<h4 id="blk-55763">3.1 GenStateMachine States</h4>
+<h3 id="blk-56517">3. The Deliberation Protocol</h3>
+<h4 id="blk-56518">3.1 GenStateMachine States</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.Deliberation</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">GenStateMachine</span>, callback_mode: <span class="t-atom">:state_functions</span>
 
@@ -308,11 +309,11 @@
 
   <span class="t-kw">def</span> completed(<span class="t-atom">:cast</span>, _, data), <span class="t-kw">do</span>: {<span class="t-atom">:keep_state</span>, data}
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-55765">3.2 Latency Budget</h4>
+<h4 id="blk-56520">3.2 Latency Budget</h4>
 <table><thead><tr><th>Phase</th><th>Target</th><th>Notes</th></tr></thead><tbody><tr><td>Broadcast + bid collection</td><td>1–3s</td><td>Parallel; timeout configurable</td></tr><tr><td>Overlap analysis</td><td>200–500ms</td><td>Single LLM call via Task.async</td></tr><tr><td>Negotiation (if triggered)</td><td>2–5s</td><td>1–2 rounds of argumentation</td></tr><tr><td>Assignment</td><td>&lt; 100ms</td><td>Deterministic from vote tallies</td></tr><tr><td><strong>Total deliberation overhead</strong></td><td><strong>3–8s</strong></td><td>Only for complex tasks</td></tr></tbody></table>
 <p>Simple, unambiguous tasks (one agent clearly best-fit, no overlap) complete in &lt; 2s. Negotiation fires for ~20–40% of tasks.</p>
-<h3 id="blk-55786">4. Data Structures</h3>
-<h4 id="blk-55787">4.1 Bid</h4>
+<h3 id="blk-56541">4. Data Structures</h3>
+<h4 id="blk-56542">4.1 Bid</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.Bid</span> <span class="t-kw">do</span>
   <span class="t-kw">defstruct</span> [
     <span class="t-atom">:agent_id</span>,
@@ -327,7 +328,7 @@
     <span class="t-atom">:raft_term</span>
   ]
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-55789">4.2 Negotiation Round</h4>
+<h4 id="blk-56544">4.2 Negotiation Round</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.NegotiationRound</span> <span class="t-kw">do</span>
   <span class="t-kw">defstruct</span> [
     <span class="t-atom">:subtask</span>,
@@ -337,7 +338,7 @@
     <span class="t-atom">:result</span>             <span class="t-comment"># %{leader, support, method, margin}</span>
   ]
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-55791">4.3 Reputation Record (Ecto)</h4>
+<h4 id="blk-56546">4.3 Reputation Record (Ecto)</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.Reputation.AgentScore</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
 
@@ -354,7 +355,7 @@
     timestamps()
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-55793">4.4 Deliberation Trace (Ecto)</h4>
+<h4 id="blk-56548">4.4 Deliberation Trace (Ecto)</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.Traces.Trace</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
   <span class="t-attr">@primary_key</span> {<span class="t-atom">:id</span>, <span class="t-atom">:binary_id</span>, autogenerate: <span class="t-lit">true</span>}
@@ -373,10 +374,10 @@
     timestamps(updated_at: <span class="t-lit">false</span>)    <span class="t-comment"># Append-only</span>
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h3 id="blk-55795">5. Ra (Raft) Integration</h3>
-<h4 id="blk-55796">5.1 Why Ra</h4>
+<h3 id="blk-56550">5. Ra (Raft) Integration</h3>
+<h4 id="blk-56551">5.1 Why Ra</h4>
 <p>Ra is RabbitMQ's Raft implementation for Erlang/OTP. It handles leader election, log replication, heartbeats, and cluster membership — battle-tested at massive scale. No need to write custom Raft.</p>
-<h4 id="blk-55798">5.2 Ra State Machine</h4>
+<h4 id="blk-56553">5.2 Ra State Machine</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.Ra.Machine</span> <span class="t-kw">do</span>
   <span class="t-attr">@behaviour</span> <span class="t-atom">:ra_machine</span>
 
@@ -401,7 +402,7 @@
     {state, <span class="t-atom">:ok</span>, [{<span class="t-atom">:mod_call</span>, <span class="t-type">AgenTroMatic.ReputationEngine</span>, <span class="t-atom">:apply_update</span>, [agent_id, updates]}]}
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-55800">5.3 Cluster Setup</h4>
+<h4 id="blk-56555">5.3 Cluster Setup</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.Ra.Supervisor</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">Supervisor</span>
 
@@ -423,8 +424,8 @@
     <span class="t-type">Supervisor</span>.init(children, strategy: <span class="t-atom">:one_for_one</span>)
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h3 id="blk-55802">6. Reputation System</h3>
-<h4 id="blk-55803">6.1 Engine</h4>
+<h3 id="blk-56557">6. Reputation System</h3>
+<h4 id="blk-56558">6.1 Engine</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.ReputationEngine</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">GenServer</span>
 
@@ -493,10 +494,10 @@
     <span class="t-num">1.0</span> - error
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-55805">6.2 Reputation Dynamics</h4>
+<h4 id="blk-56560">6.2 Reputation Dynamics</h4>
 <table><thead><tr><th>Event</th><th>Effect</th></tr></thead><tbody><tr><td>Win + quality ≥ confidence</td><td>Score increases. Calibration improves.</td></tr><tr><td>Win + quality &lt; confidence</td><td>Score decreases. Marked overconfident.</td></tr><tr><td>Abstain from capability area</td><td>Neutral — no penalty.</td></tr><tr><td>Peer endorsement</td><td>Small boost to endorsed capability.</td></tr><tr><td>Inactive &gt; 30 days on capability</td><td>Score decays toward 0.5 (uncertainty).</td></tr></tbody></table>
-<h3 id="blk-55819">7. A2A Integration</h3>
-<h4 id="blk-55820">7.1 Gateway</h4>
+<h3 id="blk-56574">7. A2A Integration</h3>
+<h4 id="blk-56575">7.1 Gateway</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.A2AGateway</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">GenServer</span>
 
@@ -531,7 +532,7 @@
     <span class="t-type">Req</span>.post(agent.url &lt;&gt; <span class="t-string">&quot;/a2a/argue&quot;</span>, json: %{overlap: overlap})
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-55822">7.2 Agent Card Enrichment</h4>
+<h4 id="blk-56577">7.2 Agent Card Enrichment</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.A2A.AgentCard</span> <span class="t-kw">do</span>
   <span class="t-attr">@doc</span> <span class="t-string">&quot;Enriches a standard A2A Agent Card with reputation metadata.&quot;</span>
   <span class="t-kw">def</span> enrich(agent_card, agent_id) <span class="t-kw">do</span>
@@ -547,7 +548,7 @@
     })
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-55824">7.3 Elixir SDK (for agent developers)</h4>
+<h4 id="blk-56579">7.3 Elixir SDK (for agent developers)</h4>
 <pre data-lang="elixir"><code><span class="t-comment"># 3 lines to join a deliberation cluster</span>
 <span class="t-kw">defmodule</span> <span class="t-type">MyAgent</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">AgenTroMatic.Agent</span>,
@@ -574,7 +575,7 @@
     {<span class="t-atom">:ok</span>, %{output: <span class="t-string">&quot;...&quot;</span>, quality_self_assessment: <span class="t-num">0.88</span>}}
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h3 id="blk-55826">8. Observatory (Phoenix LiveView)</h3>
+<h3 id="blk-56581">8. Observatory (Phoenix LiveView)</h3>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMaticWeb.ObservatoryLive</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">AgenTroMaticWeb</span>, <span class="t-atom">:live_view</span>
 
@@ -616,9 +617,9 @@
     {<span class="t-atom">:noreply</span>, assign(socket, <span class="t-atom">:phase</span>, <span class="t-atom">:completed</span>)}
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-55828">8.1 Views</h4>
+<h4 id="blk-56583">8.1 Views</h4>
 <table><thead><tr><th>View</th><th>Description</th></tr></thead><tbody><tr><td><strong>Live Deliberation</strong></td><td>Real-time bid/argument/vote stream via PubSub → LiveView</td></tr><tr><td><strong>Decision Trace</strong></td><td>Click any output → full deliberation chain from Postgres</td></tr><tr><td><strong>Reputation Dashboard</strong></td><td>Agent scores, calibration trends, trajectories (LiveView + charting)</td></tr><tr><td><strong>What-If Simulation</strong></td><td>Replay past deliberation with different agents/thresholds</td></tr><tr><td><strong>Cluster Topology</strong></td><td>D3.js embedded in LiveView — agent nodes, connections, state</td></tr></tbody></table>
-<h3 id="blk-55842">9. Quorum Policies</h3>
+<h3 id="blk-56597">9. Quorum Policies</h3>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.Quorum</span> <span class="t-kw">do</span>
   <span class="t-attr">@doc</span> <span class="t-string">&quot;Validates results against quorum policy.&quot;</span>
   <span class="t-kw">def</span> validate(results, <span class="t-atom">:majority</span>) <span class="t-kw">do</span>
@@ -640,7 +641,7 @@
     {<span class="t-atom">:escalate</span>, <span class="t-atom">:requires_human_approval</span>}
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-55844">Domain Templates</h4>
+<h4 id="blk-56599">Domain Templates</h4>
 <pre data-lang="elixir"><code><span class="t-comment"># Financial services</span>
 %<span class="t-type">AgenTroMatic.QuorumPolicy</span>{
   default: <span class="t-atom">:weighted</span>,
@@ -651,8 +652,8 @@
   },
   escalation: %{max_rounds: <span class="t-num">2</span>, target: <span class="t-string">&quot;compliance_team&quot;</span>}
 }</code></pre>
-<h3 id="blk-55846">10. Delegatic &amp; Deliberatic Integration</h3>
-<h4 id="blk-55847">10.1 Delegatic (Governance)</h4>
+<h3 id="blk-56601">10. Delegatic &amp; Deliberatic Integration</h3>
+<h4 id="blk-56602">10.1 Delegatic (Governance)</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.PolicyCheck</span> <span class="t-kw">do</span>
   <span class="t-attr">@doc</span> <span class="t-string">&quot;Checks Delegatic governance before executing.&quot;</span>
   <span class="t-kw">def</span> authorize(org_id, task) <span class="t-kw">do</span>
@@ -672,7 +673,7 @@
     <span class="t-kw">do</span>: {<span class="t-atom">:error</span>, <span class="t-string">&quot;Org policy denies external API access&quot;</span>}
   <span class="t-kw">defp</span> check_external_api(_, _), <span class="t-kw">do</span>: <span class="t-atom">:ok</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-55849">10.2 Deliberatic (Decision Protocol)</h4>
+<h4 id="blk-56604">10.2 Deliberatic (Decision Protocol)</h4>
 <p>Deliberatic is the formal argumentation and consensus protocol that powers AgenTroMatic's deliberation engine. Where AgenTroMatic is the automation runtime (bidding, overlap detection, reputation), Deliberatic provides the decision science underneath — formal semantics, Byzantine fault tolerance, constitutional guardrails, and Merkle-chained evidence chains.</p>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">AgenTroMatic.Deliberatic</span> <span class="t-kw">do</span>
   <span class="t-attr">@moduledoc</span> <span class="t-string">&quot;&quot;&quot;
@@ -723,8 +724,8 @@
 <span class="t-kw">end</span></code></pre>
 <p><strong>Key integration points:</strong></p>
 <table><thead><tr><th>Deliberatic Concept</th><th>AgenTroMatic Usage</th></tr></thead><tbody><tr><td>DAF (Argumentation Framework)</td><td>Structures the negotiation phase — competing bids become formal positions with attack/support relations</td></tr><tr><td>Graded Semantics (σ)</td><td>Computes acceptability scores that drive leader election</td></tr><tr><td>Constitution DSL</td><td>Hard boundaries from Delegatic policies + soft preferences from cluster config</td></tr><tr><td>Evidence Chains</td><td>Every deliberation produces a Merkle-chained audit log for compliance</td></tr><tr><td>Two-Phase Consensus</td><td>Fast path (Raft) for clear winners, conflict path (PBFT) for close calls</td></tr><tr><td>Reputation (ρ)</td><td>Deliberatic's ELO-derived reputation feeds back into AgenTroMatic's ReputationEngine</td></tr><tr><td>Vindicated Dissent</td><td>Agents who correctly dissented get 1.5× reputation bonus — prevents groupthink</td></tr></tbody></table>
-<h3 id="blk-55870">11. Portfolio Integration</h3>
-<h4 id="blk-55871">11.1 Position in the [&amp;] Stack</h4>
+<h3 id="blk-56625">11. Portfolio Integration</h3>
+<h4 id="blk-56626">11.1 Position in the [&amp;] Stack</h4>
 <pre><code>SPECPROMPT (specifications — Elixir)
   │  defines contracts that...
   ▼
@@ -751,9 +752,9 @@ OPENSENTIENCE (runtime — Elixir/OTP)
   ▼
 WEBHOST SYSTEMS (hosting)</code></pre>
 <p>All Elixir. One BEAM. Shared PubSub. Shared Ecto Repo. Shared Telemetry. Shared deployment.</p>
-<h4 id="blk-55874">11.2 Integration Contracts</h4>
+<h4 id="blk-56629">11.2 Integration Contracts</h4>
 <table><thead><tr><th>Integration</th><th>Mechanism</th></tr></thead><tbody><tr><td>SpecPrompt → AgenTroMatic</td><td>Agents reference specs during bidding. Bids validated against capability contracts.</td></tr><tr><td>Agentelic → AgenTroMatic</td><td>Telespace events trigger deliberations via PubSub.</td></tr><tr><td>FleetPrompt → AgenTroMatic</td><td>Cluster queries FleetPrompt for available capabilities.</td></tr><tr><td>AgenTroMatic → Deliberatic</td><td><code>Deliberatic.open_round/2</code> when overlaps detected. Graded semantics drive leader election. Evidence chains logged.</td></tr><tr><td>AgenTroMatic → Delegatic</td><td><code>PolicyCheck.authorize/2</code> before every execution. Delegatic policies feed Deliberatic constitutions.</td></tr><tr><td>AgenTroMatic → Graphonomous</td><td>Deliberation outcomes feed continual learning engine.</td></tr><tr><td>AgenTroMatic → WHS</td><td>Agent invocations dispatched to WHS runtime.</td></tr></tbody></table>
-<h3 id="blk-55892">11.1 PULSE Loop Manifest</h3>
+<h3 id="blk-56647">11.1 PULSE Loop Manifest</h3>
 <p>AgenTroMatic is a <strong>PULSE-conforming loop</strong> under OS-010. Its temporal topology is declared in <a href="../../../PULSE/manifests/agentromatic.deliberation.json" target="_blank" rel="noopener">`/PULSE/manifests/agentromatic.deliberation.json`</a> against schema <code>pulse-loop-manifest.v0.1.json</code>.</p>
 <p><strong>Loop ID:</strong> <code>agentromatic.deliberation</code> <strong>Loop name:</strong> AgenTroMatic Deliberation Loop <strong>Version:</strong> 0.2.0 <strong>Owner:</strong> agentromatic.com <strong>Workspace scope:</strong> required</p>
 <p><strong>Phases (7 — uses canonical `act` and `learn`, plus four custom kinds for the deliberation-specific protocol):</strong></p>
@@ -767,9 +768,9 @@ WEBHOST SYSTEMS (hosting)</code></pre>
 <p><strong>Cross-loop connections:</strong></p>
 <ul><li><p><code>rep_to_fleetprompt</code> — emits <code>ReputationUpdate</code> from <code>learn_rep</code> to <code>fleetprompt.trust.trust_recompute</code> (CloudEvents v1, async, at-least-once)</p></li><li><p><code>outcome_to_prism</code> — emits <code>OutcomeSignal</code> from <code>commit</code> to <code>prism.benchmark.observe</code> (CloudEvents v1, async, at-least-once)</p></li></ul>
 <p><strong>Why this matters:</strong> AgenTroMatic's loop is structurally different from Graphonomous's (7 phases, four custom kinds, consensus-required) but PULSE accommodates both under one schema. PRISM can benchmark either without code changes — it reads the manifest, finds the <code>learn</code> phase, and listens for <code>OutcomeSignal</code>.</p>
-<h3 id="blk-55946">12. Tech Stack</h3>
+<h3 id="blk-56701">12. Tech Stack</h3>
 <table><thead><tr><th>Layer</th><th>Technology</th><th>Rationale</th></tr></thead><tbody><tr><td>Language</td><td>Elixir 1.17+</td><td>BEAM concurrency = perfect for deliberation protocol</td></tr><tr><td>Consensus</td><td>Ra (Erlang)</td><td>RabbitMQ's battle-tested Raft. No custom impl.</td></tr><tr><td>Framework</td><td>Phoenix 1.8+</td><td>LiveView for Observatory. PubSub for real-time events.</td></tr><tr><td>State Machine</td><td>GenStateMachine</td><td>States map 1:1 to deliberation phases.</td></tr><tr><td>Database</td><td>PostgreSQL 16+</td><td>Durable reputation scores, deliberation traces.</td></tr><tr><td>Hot Cache</td><td>ETS</td><td>Reputation lookups, active deliberation state.</td></tr><tr><td>Trace Pipeline</td><td>Broadway</td><td>Batched trace writes with back-pressure.</td></tr><tr><td>HTTP Client</td><td>Req + Finch</td><td>A2A protocol calls. Connection pooling.</td></tr><tr><td>Background Jobs</td><td>Oban</td><td>Reputation decay, cleanup, notifications.</td></tr><tr><td>Telemetry</td><td>:telemetry + Prometheus</td><td>Deliberation latency, bid collection timing.</td></tr><tr><td>Deployment</td><td>Mix release + Docker</td><td>Single BEAM or clustered via libcluster + Ra.</td></tr></tbody></table>
-<h3 id="blk-55984">13. Acceptance Test Criteria</h3>
+<h3 id="blk-56739">13. Acceptance Test Criteria</h3>
 <p>Acceptance tests derived from spec invariants. Each maps to a verifiable assertion:</p>
 <p><strong>Deliberation Protocol:</strong></p>
 <ul><li><p>Given a task with 3 bidding agents → all 3 bids are collected within <code>bid_timeout_ms</code>; late bids are rejected</p></li><li><p>Given overlapping capabilities in 2+ bids → overlap_analysis phase detects and reports overlapping subtasks</p></li><li><p>Given a negotiation round → agents exchange positions; round completes within <code>negotiation_timeout_ms</code></p></li><li><p>Given a Ra quorum with 3 nodes → commit succeeds with 2/3 agreement; fails with 1/3</p></li><li><p>Given a successful consensus_commit → reputation scores update for all participants within 1s</p></li><li><p>Given a deliberation timeout at any phase → GenStateMachine transitions to <code>:failed</code> with phase-specific error</p></li></ul>
@@ -779,7 +780,7 @@ WEBHOST SYSTEMS (hosting)</code></pre>
 <ul><li><p>Given an A2A bid message → A2AGateway parses, validates, and routes to the correct deliberation GenServer</p></li><li><p>Given an invalid A2A message → returns structured error (not crash); deliberation continues with remaining agents</p></li></ul>
 <p><strong>Observatory:</strong></p>
 <ul><li><p>Given an active deliberation → LiveView renders phase transitions within 50ms of PubSub broadcast</p></li><li><p>Given a completed deliberation → full trace (all phases, timings, bids, votes) is persisted via Broadway</p></li></ul>
-<h4 id="blk-56022">13.1 <code>&amp;govern</code> Integration</h4>
+<h4 id="blk-56777">13.1 <code>&amp;govern</code> Integration</h4>
 <p>AgenTroMatic integrates with the <code>&amp;govern</code> primitive:</p>
 <p><strong>`&amp;govern.telemetry` — Deliberation Telemetry:</strong> Every deliberation emits structured telemetry events via <code>&amp;govern.telemetry.emit</code>:</p>
 <ul><li><p><code>deliberation.started</code> — task_id, participating agents, quorum policy</p></li><li><p><code>deliberation.phase_changed</code> — phase name, duration, agent count</p></li><li><p><code>deliberation.completed</code> — outcome, winner, consensus type, total duration</p></li><li><p><code>deliberation.failed</code> — failure reason, phase at failure</p></li></ul>
@@ -788,24 +789,24 @@ WEBHOST SYSTEMS (hosting)</code></pre>
 <ul><li><p><code>trigger</code>: <code>confidence_below</code> or <code>no_quorum</code></p></li><li><p><code>proposed_action</code>: the highest-ranked bid's action plan</p></li><li><p><code>context</code>: full deliberation trace for human review</p></li></ul>
 <p><strong>`&amp;govern.identity` — Agent Verification in Deliberation:</strong> Before accepting bids, the deliberation coordinator verifies each agent's identity via <code>&amp;govern.identity.verify</code>:</p>
 <ul><li><p>Manifest hash matches registered identity</p></li><li><p>Agent's declared capabilities include the required subtask capabilities</p></li><li><p>Prevents impersonation attacks (OS-007 threat: agent impersonation)</p></li></ul>
-<h3 id="blk-56051">14. Roadmap</h3>
-<h4 id="blk-56052">Phase 1: MVP — The Deliberation Engine (Q2 2026)</h4>
+<h3 id="blk-56806">14. Roadmap</h3>
+<h4 id="blk-56807">Phase 1: MVP — The Deliberation Engine (Q2 2026)</h4>
 <ul><li><p>[ ] GenStateMachine deliberation loop</p></li><li><p>[ ] Ra cluster setup for consensus</p></li><li><p>[ ] Basic ReputationEngine (ETS + Postgres)</p></li><li><p>[ ] A2AGateway with Req/Finch</p></li><li><p>[ ] CLI Observatory (IEx helpers + :observer)</p></li><li><p>[ ] Open-source release + Hex package</p></li><li><p>[ ] Elixir SDK (<code>use AgenTroMatic.Agent</code>)</p></li></ul>
-<h4 id="blk-56068">Phase 2: Observatory + Platform (Q3 2026)</h4>
+<h4 id="blk-56823">Phase 2: Observatory + Platform (Q3 2026)</h4>
 <ul><li><p>[ ] Phoenix LiveView Observatory (live deliberation view)</p></li><li><p>[ ] Reputation dashboard LiveView</p></li><li><p>[ ] What-if simulation (replay deliberations)</p></li><li><p>[ ] Quorum policy templates</p></li></ul>
-<h4 id="blk-56078">Phase 3: Enterprise (Q4 2026)</h4>
+<h4 id="blk-56833">Phase 3: Enterprise (Q4 2026)</h4>
 <ul><li><p>[ ] Deliberatic protocol integration (DAF engine, graded semantics, evidence chains)</p></li><li><p>[ ] Deliberatic Constitution DSL for cluster governance</p></li><li><p>[ ] Delegatic policy integration (feeds Deliberatic constitutions)</p></li><li><p>[ ] HITL escalation via Oban jobs</p></li><li><p>[ ] SOC 2 audit trace exports (Merkle-chained evidence from Deliberatic)</p></li><li><p>[ ] Industry quorum templates</p></li></ul>
-<h4 id="blk-56092">Phase 4: Intelligence (2027)</h4>
+<h4 id="blk-56847">Phase 4: Intelligence (2027)</h4>
 <ul><li><p>[ ] Self-optimizing deliberation (Graphonomous feedback loop)</p></li><li><p>[ ] Cross-org reputation federation (distributed Erlang)</p></li><li><p>[ ] Capability evolution detection</p></li><li><p>[ ] Property-based testing with StreamData</p></li></ul>
-<h3 id="blk-56102">15. Pricing</h3>
+<h3 id="blk-56857">15. Pricing</h3>
 <table><thead><tr><th>Plan</th><th>Price</th><th>Agents</th><th>Deliberations/mo</th><th>Features</th></tr></thead><tbody><tr><td><strong>Open Source</strong></td><td>Free</td><td>5</td><td>1,000</td><td>Core engine, basic reputation, CLI observatory</td></tr><tr><td><strong>Team</strong></td><td>$99/mo</td><td>25</td><td>25,000</td><td>Full Observatory, reputation dashboard, A2A middleware</td></tr><tr><td><strong>Business</strong></td><td>$349/mo</td><td>100</td><td>100,000</td><td>Governance, HITL, SSO, what-if simulation</td></tr><tr><td><strong>Enterprise</strong></td><td>Custom</td><td>Unlimited</td><td>Unlimited</td><td>SLA, on-prem, compliance packages</td></tr></tbody></table>
-<h3 id="blk-56129">16. Success Metrics</h3>
+<h3 id="blk-56884">16. Success Metrics</h3>
 <table><thead><tr><th>Metric</th><th>Target</th></tr></thead><tbody><tr><td>Deliberation latency (simple, no overlap)</td><td>&lt; 2s</td></tr><tr><td>Deliberation latency (complex + negotiation)</td><td>&lt; 8s</td></tr><tr><td>Reputation lookup (ETS hot)</td><td>&lt; 5μs p99</td></tr><tr><td>Concurrent active deliberations</td><td>&gt; 10K (BEAM process limit: millions)</td></tr><tr><td>Observatory LiveView latency</td><td>&lt; 50ms event-to-render</td></tr></tbody></table>
-<h3 id="blk-56143">17. Why This Wins</h3>
+<h3 id="blk-56898">17. Why This Wins</h3>
 <ol><li><p><strong>Right abstraction.</strong> Static routing is wrong for overlapping, evolving capabilities. Deliberation is how teams work.</p></li><li><p><strong>Deliberatic is the science.</strong> Formal argumentation semantics (Dung/Potyka), Byzantine fault tolerance, and constitutional guardrails give AgenTroMatic academic rigor and enterprise trust that no competitor has.</p></li><li><p><strong>The demo is a moat.</strong> Watching agents deliberate in the LiveView Observatory is inherently compelling. Viral content that converts.</p></li><li><p><strong>Reputation compounds.</strong> Longer runtime → better routing. Switching costs increase. Reputation data is irreplaceable.</p></li><li><p><strong>A2A is the trojan horse.</strong> Native A2A → inherit 150+ org ecosystem. Every team hitting the &quot;routing wall&quot; finds AgenTroMatic.</p></li><li><p><strong>Observability sells governance.</strong> Deliberatic evidence chains = Merkle-chained audit trails. One feature, two markets.</p></li><li><p><strong>BEAM advantage.</strong> Process-per-deliberation, Ra for consensus, LiveView for Observatory, PubSub for real-time — all native. Zero glue code.</p></li></ol>
 <p><em>AgenTroMatic: Your agents don't need a boss. They need a deliberation.</em></p></div>
 <p class="src"><a href="/#/agentromatic.com/docs/spec/README.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-55682" class="lvl2">Technical Specification v0.2 (Elixir/OTP)</a><a href="#blk-55684" class="lvl2">1. Overview</a><a href="#blk-55687" class="lvl3">1.1 The Problem</a><a href="#blk-55703" class="lvl3">1.2 Design Principles</a><a href="#blk-55717" class="lvl3">1.3 Why Elixir</a><a href="#blk-55732" class="lvl3">1.4 One-Liner</a><a href="#blk-55735" class="lvl2">2. Architecture</a><a href="#blk-55737" class="lvl3">2.1 OTP Supervision Tree</a><a href="#blk-55739" class="lvl3">2.2 Component Summary</a><a href="#blk-55762" class="lvl2">3. The Deliberation Protocol</a><a href="#blk-55763" class="lvl3">3.1 GenStateMachine States</a><a href="#blk-55765" class="lvl3">3.2 Latency Budget</a><a href="#blk-55786" class="lvl2">4. Data Structures</a><a href="#blk-55787" class="lvl3">4.1 Bid</a><a href="#blk-55789" class="lvl3">4.2 Negotiation Round</a><a href="#blk-55791" class="lvl3">4.3 Reputation Record (Ecto)</a><a href="#blk-55793" class="lvl3">4.4 Deliberation Trace (Ecto)</a><a href="#blk-55795" class="lvl2">5. Ra (Raft) Integration</a><a href="#blk-55796" class="lvl3">5.1 Why Ra</a><a href="#blk-55798" class="lvl3">5.2 Ra State Machine</a><a href="#blk-55800" class="lvl3">5.3 Cluster Setup</a><a href="#blk-55802" class="lvl2">6. Reputation System</a><a href="#blk-55803" class="lvl3">6.1 Engine</a><a href="#blk-55805" class="lvl3">6.2 Reputation Dynamics</a><a href="#blk-55819" class="lvl2">7. A2A Integration</a><a href="#blk-55820" class="lvl3">7.1 Gateway</a><a href="#blk-55822" class="lvl3">7.2 Agent Card Enrichment</a><a href="#blk-55824" class="lvl3">7.3 Elixir SDK (for agent developers)</a><a href="#blk-55826" class="lvl2">8. Observatory (Phoenix LiveView)</a><a href="#blk-55828" class="lvl3">8.1 Views</a><a href="#blk-55842" class="lvl2">9. Quorum Policies</a><a href="#blk-55844" class="lvl3">Domain Templates</a><a href="#blk-55846" class="lvl2">10. Delegatic &amp; Deliberatic Integration</a><a href="#blk-55847" class="lvl3">10.1 Delegatic (Governance)</a><a href="#blk-55849" class="lvl3">10.2 Deliberatic (Decision Protocol)</a><a href="#blk-55870" class="lvl2">11. Portfolio Integration</a><a href="#blk-55871" class="lvl3">11.1 Position in the [&amp;] Stack</a><a href="#blk-55874" class="lvl3">11.2 Integration Contracts</a><a href="#blk-55892" class="lvl2">11.1 PULSE Loop Manifest</a><a href="#blk-55946" class="lvl2">12. Tech Stack</a><a href="#blk-55984" class="lvl2">13. Acceptance Test Criteria</a><a href="#blk-56022" class="lvl3">13.1 &amp;govern Integration</a><a href="#blk-56051" class="lvl2">14. Roadmap</a><a href="#blk-56052" class="lvl3">Phase 1: MVP — The Deliberation Engine (Q2 2026)</a><a href="#blk-56068" class="lvl3">Phase 2: Observatory + Platform (Q3 2026)</a><a href="#blk-56078" class="lvl3">Phase 3: Enterprise (Q4 2026)</a><a href="#blk-56092" class="lvl3">Phase 4: Intelligence (2027)</a><a href="#blk-56102" class="lvl2">15. Pricing</a><a href="#blk-56129" class="lvl2">16. Success Metrics</a><a href="#blk-56143" class="lvl2">17. Why This Wins</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/agentromatic.com/docs/index.md/">AgenTroMatic Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieracymmylweathar2y525aqsmfeelenqh22m2u5oqfude5kjb5xa3ta</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-56437" class="lvl2">Technical Specification v0.2 (Elixir/OTP)</a><a href="#blk-56439" class="lvl2">1. Overview</a><a href="#blk-56442" class="lvl3">1.1 The Problem</a><a href="#blk-56458" class="lvl3">1.2 Design Principles</a><a href="#blk-56472" class="lvl3">1.3 Why Elixir</a><a href="#blk-56487" class="lvl3">1.4 One-Liner</a><a href="#blk-56490" class="lvl2">2. Architecture</a><a href="#blk-56492" class="lvl3">2.1 OTP Supervision Tree</a><a href="#blk-56494" class="lvl3">2.2 Component Summary</a><a href="#blk-56517" class="lvl2">3. The Deliberation Protocol</a><a href="#blk-56518" class="lvl3">3.1 GenStateMachine States</a><a href="#blk-56520" class="lvl3">3.2 Latency Budget</a><a href="#blk-56541" class="lvl2">4. Data Structures</a><a href="#blk-56542" class="lvl3">4.1 Bid</a><a href="#blk-56544" class="lvl3">4.2 Negotiation Round</a><a href="#blk-56546" class="lvl3">4.3 Reputation Record (Ecto)</a><a href="#blk-56548" class="lvl3">4.4 Deliberation Trace (Ecto)</a><a href="#blk-56550" class="lvl2">5. Ra (Raft) Integration</a><a href="#blk-56551" class="lvl3">5.1 Why Ra</a><a href="#blk-56553" class="lvl3">5.2 Ra State Machine</a><a href="#blk-56555" class="lvl3">5.3 Cluster Setup</a><a href="#blk-56557" class="lvl2">6. Reputation System</a><a href="#blk-56558" class="lvl3">6.1 Engine</a><a href="#blk-56560" class="lvl3">6.2 Reputation Dynamics</a><a href="#blk-56574" class="lvl2">7. A2A Integration</a><a href="#blk-56575" class="lvl3">7.1 Gateway</a><a href="#blk-56577" class="lvl3">7.2 Agent Card Enrichment</a><a href="#blk-56579" class="lvl3">7.3 Elixir SDK (for agent developers)</a><a href="#blk-56581" class="lvl2">8. Observatory (Phoenix LiveView)</a><a href="#blk-56583" class="lvl3">8.1 Views</a><a href="#blk-56597" class="lvl2">9. Quorum Policies</a><a href="#blk-56599" class="lvl3">Domain Templates</a><a href="#blk-56601" class="lvl2">10. Delegatic &amp; Deliberatic Integration</a><a href="#blk-56602" class="lvl3">10.1 Delegatic (Governance)</a><a href="#blk-56604" class="lvl3">10.2 Deliberatic (Decision Protocol)</a><a href="#blk-56625" class="lvl2">11. Portfolio Integration</a><a href="#blk-56626" class="lvl3">11.1 Position in the [&amp;] Stack</a><a href="#blk-56629" class="lvl3">11.2 Integration Contracts</a><a href="#blk-56647" class="lvl2">11.1 PULSE Loop Manifest</a><a href="#blk-56701" class="lvl2">12. Tech Stack</a><a href="#blk-56739" class="lvl2">13. Acceptance Test Criteria</a><a href="#blk-56777" class="lvl3">13.1 &amp;govern Integration</a><a href="#blk-56806" class="lvl2">14. Roadmap</a><a href="#blk-56807" class="lvl3">Phase 1: MVP — The Deliberation Engine (Q2 2026)</a><a href="#blk-56823" class="lvl3">Phase 2: Observatory + Platform (Q3 2026)</a><a href="#blk-56833" class="lvl3">Phase 3: Enterprise (Q4 2026)</a><a href="#blk-56847" class="lvl3">Phase 4: Intelligence (2027)</a><a href="#blk-56857" class="lvl2">15. Pricing</a><a href="#blk-56884" class="lvl2">16. Success Metrics</a><a href="#blk-56898" class="lvl2">17. Why This Wins</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/agentromatic.com/docs/index.md/">AgenTroMatic Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierazq3l5hveg4arrc2ckaz3yjrnr5cxorrkfrtjjub2a5xbx26iylwq</div></div></div>
 </div></div>
 </body></html>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>PARKVPS · PARKVPS · Ampersand Box</title>
 <meta name="description" content="A local VPS fleet you can drive from a browser. QEMU/KVM, no root, no libvirt, Python stdlib only.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/PARKVPS/README.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"PARKVPS","name":"PARKVPS","description":"A local VPS fleet you can drive from a browser. QEMU/KVM, no root, no libvirt, Python stdlib only.","url":"https://docs.ampersandboxdesign.com/PARKVPS/README.md/","identifier":"bagaaieradckknn7smhfbfefivt3cof5n62m4ggux3owf7ccqaknr55b2loha","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"PARKVPS","url":"https://docs.ampersandboxdesign.com/PARKVPS/"},"articleSection":"PARKVPS","hasPart":[{"@type":"WebPageElement","name":"Why it looks like this"},{"@type":"WebPageElement","name":"The web side"},{"@type":"WebPageElement","name":"Things worth knowing"},{"@type":"WebPageElement","name":"Status"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"PARKVPS","item":"https://docs.ampersandboxdesign.com/PARKVPS/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/PARKVPS/README.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"PARKVPS","name":"PARKVPS","description":"A local VPS fleet you can drive from a browser. QEMU/KVM, no root, no libvirt, Python stdlib only.","url":"https://docs.ampersandboxdesign.com/PARKVPS/README.md/","identifier":"bagaaiera5vzl4cdossdqdzhgtxjed65lwgdqjfx4jziwj4ka3gtwdbnrf3za","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"PARKVPS","url":"https://docs.ampersandboxdesign.com/PARKVPS/"},"articleSection":"PARKVPS","hasPart":[{"@type":"WebPageElement","name":"Why it looks like this"},{"@type":"WebPageElement","name":"The web side"},{"@type":"WebPageElement","name":"Things worth knowing"},{"@type":"WebPageElement","name":"Status"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"PARKVPS","item":"https://docs.ampersandboxdesign.com/PARKVPS/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/PARKVPS/README.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,7 +23,7 @@
 
 </div></div>
 <div class="lead">A local VPS fleet you can drive from a browser. QEMU/KVM, no root, no libvirt, Python stdlib only.</div>
-<div class="prose"><h1 id="blk-21733">PARKVPS</h1>
+<div class="prose"><h1 id="blk-21751">PARKVPS</h1>
 <p>A local VPS fleet you can drive from a browser. QEMU/KVM, <strong>no root, no libvirt</strong>, Python stdlib only.</p>
 <pre data-lang="bash"><code>python3 vpsd/vps.py doctor              <span class="t-comment"># check the host</span>
 python3 vpsd/vps.py create web1<span class="t-flag"> --start</span>
@@ -30,15 +31,20 @@ python3 vpsd/vps.py list
 python3 vpsd/vps.py console web1        <span class="t-comment"># serial console, Ctrl-] detaches</span>
 python3 vpsd/vps.py ssh web1 -- uname<span class="t-flag"> -a</span>
 python3 vpsd/api.py<span class="t-flag"> --port</span> <span class="t-undefined">8905</span>         <span class="t-comment"># fleet UI + web console at :8905</span></code></pre>
+<p>A graphical guest can be watched and driven without a browser and without anything running inside it, because QEMU will do both:</p>
+<pre data-lang="bash"><code>python3 vpsd/vps.py screenshot tr4 /tmp/g.ppm   <span class="t-comment"># the framebuffer, as QEMU sees it</span>
+python3 vpsd/vps.py type tr4 driver @tab driver @ret   <span class="t-comment"># log in at the greeter</span>
+python3 vpsd/vps.py click tr4 <span class="t-undefined">640</span> <span class="t-undefined">400</span>           <span class="t-comment"># absolute tablet, so screenshot px == click px</span></code></pre>
+<p>That pair reaches what ssh cannot: the display manager before anyone has logged in, a session that failed to start, a boot menu, single-user mode. <code>ssh</code> tells you what a shell says is true; <code>screenshot</code> shows you the screen. QEMU writes PPM — <code>magick /tmp/g.ppm /tmp/g.png</code> if you want to look at it.</p>
 <p>It builds nothing. The images it runs come from <a href="https://github.com/c-u-l8er/travel-and-rrabbit" target="_blank" rel="noopener">T&amp;R</a>, which is the distro; this is the thing that runs it. The two do not import each other.</p>
-<h3 id="blk-21737">Why it looks like this</h3>
+<h3 id="blk-21758">Why it looks like this</h3>
 <ul><li><p><strong>No root anywhere in the normal path.</strong> <code>/dev/kvm</code> is usually <code>0666</code>, so</p></li></ul>
 <p>guests run as you. The price is user-mode (SLIRP) networking with recorded port forwards instead of bridges — instances are reachable from the host, and not yet from each other.</p>
 <ul><li><p><strong>No libvirt.</strong> One QEMU process per instance, supervised by pid + a QMP</p></li></ul>
 <p>socket, with all state on disk as JSON. Anything that can read a directory can report on the fleet, which is what makes the web UI trivial.</p>
 <ul><li><p><strong>Instances are cheap.</strong> Every disk is a qcow2 overlay on one shared golden</p></li></ul>
 <p>image, so spawning costs kilobytes. A T&amp;R server instance settles at ~51 MB.</p>
-<h3 id="blk-21750">The web side</h3>
+<h3 id="blk-21771">The web side</h3>
 <p><code>vpsd/api.py</code> serves the fleet as JSON, lifecycle actions, and two ways into a guest:</p>
 <ul><li><p><strong>`/console/&lt;name&gt;`</strong> — the serial console over SSE, in xterm.js. The broker</p></li></ul>
 <p>is the <em>sole</em> client of QEMU's chardev socket (it only accepts one) and fans out to viewers, connecting lazily so <code>vps.py console</code> still works when the web console is closed. Scrollback is primed from QEMU's own log, so you see the boot you were not present for.</p>
@@ -46,7 +52,7 @@ python3 vpsd/api.py<span class="t-flag"> --port</span> <span class="t-undefined"
 <p>proxy implemented here because <code>websockify</code> is one more system dependency than ~80 lines of RFC 6455 framing is worth.</p>
 <p>Both are built to be dropped into an <code>&lt;iframe&gt;</code>, which is how they end up inside <a href="https://github.com/c-u-l8er/RAVIO" target="_blank" rel="noopener">RAVIO</a>'s drive-in screen as tabs.</p>
 <p>Mutations require an <code>x-parkvps</code> header, which a cross-origin form cannot send, so it forces a preflight the origin allowlist then refuses. Binding to localhost is <strong>not</strong> protection: localhost is reachable from any page you happen to be browsing.</p>
-<h3 id="blk-21762">Things worth knowing</h3>
+<h3 id="blk-21783">Things worth knowing</h3>
 <ul><li><p><strong>A SLIRP `hostfwd` TCP connect proves nothing.</strong> QEMU accepts the host side</p></li></ul>
 <p>before knowing whether the guest is listening, so &quot;port open&quot; reports ready for a guest still in the boot loader. Read the SSH banner instead.</p>
 <ul><li><p><strong>Readiness probing is not free to the guest.</strong> Reading sshd's banner and</p></li></ul>
@@ -60,10 +66,10 @@ python3 vpsd/api.py<span class="t-flag"> --port</span> <span class="t-undefined"
 <ul><li><p><strong>A guest needs a `usb-tablet` for the desktop to be usable.</strong> VNC speaks</p></li></ul>
 <p>absolute pointer positions; with only a PS/2 mouse, press/move/release land in three different places and every drag fails.</p>
 <p>Full detail, including the FreeBSD-specific traps, is in <a href="#/PARKVPS/docs/spec/README.md" data-link>docs/spec/README.md</a>.</p>
-<h3 id="blk-21788">Status</h3>
+<h3 id="blk-21809">Status</h3>
 <p>Works, and has no test suite — everything here was verified by running it, which is not the same thing. <code>strip_queries</code> is the only unit-tested piece.</p></div>
 <p class="src"><a href="/#/PARKVPS/README.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-21737" class="lvl2">Why it looks like this</a><a href="#blk-21750" class="lvl2">The web side</a><a href="#blk-21762" class="lvl2">Things worth knowing</a><a href="#blk-21788" class="lvl2">Status</a></nav></div><div class="card"><div class="lab">links to</div><a href="/PARKVPS/docs/spec/README.md/">PARKVPS — a local VPS fleet and a FreeBSD distro to run on it</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieradckknn7smhfbfefivt3cof5n62m4ggux3owf7ccqaknr55b2loha</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-21758" class="lvl2">Why it looks like this</a><a href="#blk-21771" class="lvl2">The web side</a><a href="#blk-21783" class="lvl2">Things worth knowing</a><a href="#blk-21809" class="lvl2">Status</a></nav></div><div class="card"><div class="lab">links to</div><a href="/PARKVPS/docs/spec/README.md/">PARKVPS — a local VPS fleet and a FreeBSD distro to run on it</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera5vzl4cdossdqdzhgtxjed65lwgdqjfx4jziwj4ka3gtwdbnrf3za</div></div></div>
 </div></div>
 </body></html>

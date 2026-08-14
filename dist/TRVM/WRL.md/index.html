@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>WallRiderLang (WRL) — Complete Design Draft · TRVM · Ampersand Box</title>
 <meta name="description" content="A spatial actor language in which computation is represented as staged movement through bounded space. This document defines the language in full: its…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/WRL.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"WallRiderLang (WRL) — Complete Design Draft","name":"WallRiderLang (WRL) — Complete Design Draft","description":"A spatial actor language in which computation is represented as staged movement through bounded space. This document defines the language in full: its…","url":"https://docs.ampersandboxdesign.com/TRVM/WRL.md/","identifier":"bagaaieralo47pjo2o3uixzahqvb6tkrfx6t4c7elrinhvtevzankofl3ztta","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"Status and stability (READ FIRST)"},{"@type":"WebPageElement","name":"Three stability tiers"},{"@type":"WebPageElement","name":"Section classification"},{"@type":"WebPageElement","name":"The frozen extract"},{"@type":"WebPageElement","name":"Implementation reality check (updated for Core 0.1.2, 2026-07-25)"},{"@type":"WebPageElement","name":"1. Introduction"},{"@type":"WebPageElement","name":"1.1 Two notations, one language"},{"@type":"WebPageElement","name":"1.2 The architectural creed"},{"@type":"WebPageElement","name":"1.3 The four reading laws"},{"@type":"WebPageElement","name":"1.4 Conceptual lineage (for orientation)"},{"@type":"WebPageElement","name":"1.5 Relationship to the surrounding ecosystem"},{"@type":"WebPageElement","name":"2. Design principles"},{"@type":"WebPageElement","name":"3. Notation at a glance"},{"@type":"WebPageElement","name":"4. Lexical structure"},{"@type":"WebPageElement","name":"5. Delimiters and scope"},{"@type":"WebPageElement","name":"5.1 The colon is a staging prefix"},{"@type":"WebPageElement","name":"5.2 Fragments and stencils are the only paired scopes"},{"@type":"WebPageElement","name":"5.3 A lone slash is a boundary node, never a closer"},{"@type":"WebPageElement","name":"5.4 Depth is categorical and capped at three"},{"@type":"WebPageElement","name":"6. Containers and the shape-as-kind system"},{"@type":"WebPageElement","name":"7. Identity and addressing"},{"@type":"WebPageElement","name":"8. Routes"},{"@type":"WebPageElement","name":"8.1 Core textures"},{"@type":"WebPageElement","name":"8.2 Derived textures (sugar)"},{"@type":"WebPageElement","name":"8.3 Labels, payloads, guards"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"WRL.md","item":"https://docs.ampersandboxdesign.com/TRVM/WRL.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"WallRiderLang (WRL) — Complete Design Draft","name":"WallRiderLang (WRL) — Complete Design Draft","description":"A spatial actor language in which computation is represented as staged movement through bounded space. This document defines the language in full: its…","url":"https://docs.ampersandboxdesign.com/TRVM/WRL.md/","identifier":"bagaaieraaxbn5jyidr3ts22hvz6lcfmgyayjx3ezleyirul53yjqc4be3kua","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"Status and stability (READ FIRST)"},{"@type":"WebPageElement","name":"Three stability tiers"},{"@type":"WebPageElement","name":"Section classification"},{"@type":"WebPageElement","name":"The frozen extract"},{"@type":"WebPageElement","name":"Implementation reality check (updated for Core 0.1.2, 2026-07-25)"},{"@type":"WebPageElement","name":"1. Introduction"},{"@type":"WebPageElement","name":"1.1 Two notations, one language"},{"@type":"WebPageElement","name":"1.2 The architectural creed"},{"@type":"WebPageElement","name":"1.3 The four reading laws"},{"@type":"WebPageElement","name":"1.4 Conceptual lineage (for orientation)"},{"@type":"WebPageElement","name":"1.5 Relationship to the surrounding ecosystem"},{"@type":"WebPageElement","name":"2. Design principles"},{"@type":"WebPageElement","name":"3. Notation at a glance"},{"@type":"WebPageElement","name":"4. Lexical structure"},{"@type":"WebPageElement","name":"5. Delimiters and scope"},{"@type":"WebPageElement","name":"5.1 The colon is a staging prefix"},{"@type":"WebPageElement","name":"5.2 Fragments and stencils are the only paired scopes"},{"@type":"WebPageElement","name":"5.3 A lone slash is a boundary node, never a closer"},{"@type":"WebPageElement","name":"5.4 Depth is categorical and capped at three"},{"@type":"WebPageElement","name":"6. Containers and the shape-as-kind system"},{"@type":"WebPageElement","name":"7. Identity and addressing"},{"@type":"WebPageElement","name":"8. Routes"},{"@type":"WebPageElement","name":"8.1 Core textures"},{"@type":"WebPageElement","name":"8.2 Derived textures (sugar)"},{"@type":"WebPageElement","name":"8.3 Labels, payloads, guards"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"WRL.md","item":"https://docs.ampersandboxdesign.com/TRVM/WRL.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,52 +23,52 @@
 
 </div></div>
 <div class="lead">A spatial actor language in which computation is represented as staged movement through bounded space. This document defines the language in full: its notation, its meaning, its…</div>
-<div class="prose"><h1 id="blk-36859">WallRiderLang (WRL) — Complete Design Draft</h1>
+<div class="prose"><h1 id="blk-37575">WallRiderLang (WRL) — Complete Design Draft</h1>
 <p><em>A spatial actor language in which computation is represented as staged movement through bounded space. This document defines the language in full: its notation, its meaning, its execution model, its metaprogramming system, and its content-identity model. It is written to be read cold — no prior context is assumed.</em></p>
 <p><strong>Contents.</strong> Part I — Foundations (§1–9). Part II — The Expression Notation (§10–17). Part III — Process Semantics (§18–27). Part IV — Metaprogramming (§28–34). Part V — Programs at Scale (§35–38). Part VI — Reference (§39–46).</p>
-<h3 id="blk-36862">Status and stability (READ FIRST)</h3>
+<h3 id="blk-37578">Status and stability (READ FIRST)</h3>
 <blockquote><p>**This is a complete <em>design draft</em>, not a frozen specification.<strong> The document below describes WallRiderLang in full so it can be read and evaluated cold. It is deliberately ambitious and its detailed rules are </strong>not yet frozen**. Do not implement it verbatim as if it were a ratified standard, and do not announce any part of it as &quot;shipped&quot; until it has been extracted into a frozen core (see below).</p></blockquote>
 <p><strong>Grounding.</strong> WRL is the surface language for the <strong>canonical Forge semantic graph</strong>. The stable, implementation-grounded slice of this draft is exactly the part that the TRVM runtime has already proven: content-addressed objects, monotone facts, separate immutable receipts, deterministic reduction, and replayable <em>films</em>. Everything else is design ahead of implementation.</p>
 <p><strong>Architectural rule (normative for implementers).</strong> WRL denotes the <strong>Forge semantic graph</strong>. It MUST NOT be lowered by compiling its surface syntax directly to hand-written interaction-calculus text. The path is always: WRL source/canvas → canonical semantic graph → Forge semantic IR → TRVM facts/films/reductions. A future <em>Forge Semantic IR v1</em> (a separate, gated deliverable) is the only sanctioned lowering target.</p>
-<h4 id="blk-36867">Three stability tiers</h4>
+<h4 id="blk-37583">Three stability tiers</h4>
 <p>Every section is classified into one of three tiers. The tiers say <strong>how settled the meaning is</strong>, not how important it is.</p>
 <ul><li><p><strong>Core</strong> — meaning <em>families</em> that TRVM/Forge has grounded and that the frozen <strong>WRL Core 0.1</strong> extract commits to (families only, not every detailed rule). Stable enough to build against.</p></li><li><p><strong>Experimental</strong> — coherent, designed, and intended, but <strong>not yet grounded</strong> in a running implementation. Rules here may change as they meet the runtime.</p></li><li><p><strong>Proposed</strong> — speculative or explicitly deferred surface (distributed settlement, mobile-code metaprogramming, scale/build tooling). Present for completeness; expect substantial change or removal.</p></li></ul>
-<h4 id="blk-36876">Section classification</h4>
+<h4 id="blk-37592">Section classification</h4>
 <table><thead><tr><th>Tier</th><th>Sections</th></tr></thead><tbody><tr><td><strong>Core</strong></td><td>§1 Introduction · §2 Design principles · §3 Notation at a glance · §4 Lexical structure · §5 Delimiters and scope · §6 Containers (shape-as-kind) · §7 Identity and addressing · §8 Routes · §9 Time · §18 Memory model · §19 Runtime entities · §20 Execution model (deterministic reactive floor + films) · §22 Merging replicated facts (union law only) · §23 Verification and sealing · §39 Canonicalization and content identity · §42 Grammar · §46 Conformance</td></tr><tr><td><strong>Experimental</strong></td><td>Part II — Expression Notation (§10–17) · §21 Effects, capabilities, entropy · §24 Supervision, faults, error ladder · §25 Mailboxes, streams, backpressure · §26 Actor behavior blocks · §27 Evolution: migration &amp; compatibility · §20.7 Podium / ranking · §37 Testing &amp; conformance monitoring · §40 Static checks · §41 Execution profiles</td></tr><tr><td><strong>Proposed</strong></td><td>Part IV — Metaprogramming (§28–34: fragments, stencils, derives, sealed compiler tools, reflection) · §35 Modules &amp; builds · §36 Build films · §38 Foreign functions · §22 distributed/trust settlement (Stage-Three, Byzantine modes) · §45 Reserved &amp; implementation-defined</td></tr></tbody></table>
 <p>Note: a few sections straddle tiers. §22 fact-union is <strong>Core</strong>; its distributed trust/settlement policy is <strong>Proposed</strong>. §20 deterministic reactive floor + film emission is <strong>Core</strong>; the podium/ranking ceiling (§20.7) is <strong>Experimental</strong>. §44 Exclusions applies across all tiers (permanent negative space).</p>
-<h4 id="blk-36887">The frozen extract</h4>
+<h4 id="blk-37603">The frozen extract</h4>
 <p>The <strong>families</strong> committed by this draft are frozen separately in <strong>`WRL_CORE_0.1.md`</strong> (the Phase 1 extract, currently at revision <strong>0.1.2</strong>). When in conflict, <code>WRL_CORE_0.1.md</code> — not this draft — is authoritative for what is <em>actually settled</em>. This draft remains the full design rationale and forward map.</p>
-<h4 id="blk-36889">Implementation reality check (updated for Core 0.1.2, 2026-07-25)</h4>
+<h4 id="blk-37605">Implementation reality check (updated for Core 0.1.2, 2026-07-25)</h4>
 <p>This draft was written ahead of the implementation, and the implementation has since settled several things the draft either assumes differently or does not mention at all. Read these four before building against any section:</p>
 <p><strong>1. &quot;Grounded&quot; splits in two.</strong> A construct being <em>IR/runtime-grounded</em> (the canonical IR declares it, the runtime executes it, a battery covers it) is <strong>not</strong> the same as it being <em>surface-grounded</em> (WRL source can declare it, the formatter can emit it, it round-trips through the canonical bytes). Only surface-grounded constructs are eligible for promotion into a frozen family. See <code>WRL_CORE_0.1.md</code> §14b.</p>
 <p><strong>2. The mailbox is not a sixth role.</strong> <code>MailboxDecl</code> is IR/runtime-grounded, but the <code>~~</code> route construct is <strong>not surface-emittable</strong> and has <strong>no structural `EdgeDecl`</strong>. Wherever this draft's §25 (Mailboxes, streams, backpressure) reads as though the async route is available, it is describing design, not shipped surface. An async route is not an ordinary structural edge — it does not settle within the period — so grounding it requires a <strong>canonical logical route declaration distinct from `EdgeDecl`</strong>.</p>
 <p><strong>3. A world and a run of a world are different documents.</strong> This draft does not draw the distinction; the implementation does, and it is normative. <code>periods</code> and <code>[epoch:N]</code> claims are <strong>run inputs</strong> carried by a <code>ScenarioV1</code>, and they are deliberately <strong>outside</strong> the <code>SemanticArtifactID</code> — the same world can be run by many scenarios without its identity moving. Anywhere below that shows periods or epoch claims inline with world declarations is showing a <strong>pre-boundary combined document</strong>, which is now read only through an explicitly-named compatibility parser. See <code>WRL_CORE_0.1.md</code> §15.</p>
 <p><strong>4. Of the four route textures, only `--` is surface-grounded.</strong> <code>~~</code>, <code>==</code>, and <code>!!</code> are all <strong>partial</strong>. In particular <code>==</code> is <em>not</em> nearly-done just because ADMIT accepts claims: the declaration <code>==</code> would introduce is authorization structure, whereas the frozen texture denotes an evidence-backed transition. It is grounded only when ADMIT enforces the claimant, the target, the operation family, <strong>and</strong> a named policy. See <code>WRL_CORE_0.1.md</code> §16.1.</p>
 <p>The steered promotion order toward Core 0.2 is recorded in <code>WRL_CORE_0.1.md</code> §16. It is <strong>steered, not merely preferred</strong> — each step supplies something the next one needs.</p>
-<h2 id="blk-36896">Part I — Foundations</h2>
-<h3 id="blk-36897">1. Introduction</h3>
+<h2 id="blk-37612">Part I — Foundations</h2>
+<h3 id="blk-37613">1. Introduction</h3>
 <p>WallRiderLang — WRL for short — is a programming language for actor systems, graph rewriting, simulation, generative worlds, distributed execution, and machine-assisted fabrication. A program is a graph of durable identities connected by textured routes and separated by boundaries. The name is literal: programs are made of <em>riders</em> — identities in motion along routes — and <em>walls</em> — the boundaries that gate, commit, and seal what they do. The surface reads like a route map or a piece of graffiti, but the meaning is a precise, canonicalizable graph.</p>
 <p>The governing idea is that the <em>appearance</em> of the code reveals <em>runtime facts</em> that are usually hidden: where identity lives, what state may change, which transitions are deterministic, which messages are asynchronous, where authority or effects cross a boundary, what can be copied and moved as code, and what has been verified and sealed.</p>
-<h4 id="blk-36900">1.1 Two notations, one language</h4>
+<h4 id="blk-37616">1.1 Two notations, one language</h4>
 <p>WRL has exactly two notations and one language:</p>
 <ul><li><p>The <strong>process notation</strong> — routes, boundaries, containers, textures — describes the <em>architecture of computation</em>: identity, state, topology, movement, time, authority, quotation, ranking.</p></li><li><p>The <strong>expression notation</strong> — values, functions, types, pattern matching — describes <em>computation itself</em>: arithmetic, data manipulation, local logic.</p></li></ul>
 <p>Both notations share one grammar, one type system, one checker, and one canonical form. The expression notation can be evaluated at three moments — expansion time, verification time, and run time (§28) — but it is the same language at each; there is no separate macro or template dialect.</p>
-<h4 id="blk-36908">1.2 The architectural creed</h4>
+<h4 id="blk-37624">1.2 The architectural creed</h4>
 <blockquote><p><strong>Functions calculate. Actors persist. Routes communicate. Walls authorize. Periods order. Fragments carry code. Stencils construct graphs. Derives transform typed graphs. Films prove what occurred. Hashes identify what was built.</strong></p></blockquote>
 <p>Every construct in this document is one of these ten things.</p>
-<h4 id="blk-36912">1.3 The four reading laws</h4>
+<h4 id="blk-37628">1.3 The four reading laws</h4>
 <p>Everything in the notation follows four laws. If in doubt, apply them.</p>
 <blockquote><p><strong>Shape says what a thing is.</strong> Brackets identify the <em>kind</em> of computational object.  <strong>Line texture says how it moves.</strong> The style of a route identifies the <em>operational guarantee</em> of a transition.  <strong>The colon introduces; the slash bounds.</strong> Colons bring things into being; slashes mark places where propagation changes. Both families cap at three strokes, ordered by permanence: transient, committed, sealed.  <strong>Marks for architecture, words for computation.</strong> The process notation owns punctuation; the expression notation defaults to words (§10.1).</p></blockquote>
-<h4 id="blk-36916">1.4 Conceptual lineage (for orientation)</h4>
+<h4 id="blk-37632">1.4 Conceptual lineage (for orientation)</h4>
 <p>The execution model is synchronous-reactive and deterministic in the manner of the reactor/logical-time family; structure separates <em>placing</em> (containment) from <em>linking</em> (communication) in the manner of bigraphs; identity is content-addressed in the manner of Unison; compartments and membranes echo membrane computing; authority follows object-capability discipline (no ambient authority); replicated knowledge merges as CRDT join-semilattices; metaprogramming follows the hermetic compile-time-evaluation discipline and the typed-staging guarantee that generated code is well-typed by construction; and the runtime is a deterministic-simulation substrate in the tradition of simulation-tested distributed databases. An agent fluent in those models can map WRL onto them quickly. No familiarity with them is required to use this document.</p>
-<h4 id="blk-36918">1.5 Relationship to the surrounding ecosystem</h4>
+<h4 id="blk-37634">1.5 Relationship to the surrounding ecosystem</h4>
 <p>WRL is a standalone language and can be implemented and reasoned about entirely on its own. It is also designed to sit above two systems it is commonly paired with:</p>
 <ul><li><p><strong>Forge</strong> — an authoring and world environment that can present one WRL program through several coordinated views (a spatial canvas, canonical text, a runtime timeline, or a playable world).</p></li><li><p><strong>TRVM</strong> — a deterministic graph runtime providing content-addressed objects, monotonic facts, deterministic reduction, and replayable event logs called <em>films</em>.</p></li></ul>
 <p>The mapping is: WRL source and canvas → canonical graph → Forge authoring → TRVM facts, films, reductions, and actors → native device runtimes.</p>
-<h3 id="blk-36926">2. Design principles</h3>
+<h3 id="blk-37642">2. Design principles</h3>
 <p>These are the invariants the language holds to. They are normative: a feature that violates one is not part of the language.</p>
 <ol><li><p><strong>Visual law before visual novelty.</strong> Every symbol family expresses one durable computational distinction. A mark that is clever but does not improve reading, composition, checking, or execution is not admitted.</p></li><li><p><strong>Structured source, not pixel art.</strong> The surface may be spatial, but the canonical artifact is a graph. Layout, line length, paint, and typography are presentation metadata; they never affect meaning.</p></li><li><p><strong>Deterministic floor, expressive ceiling.</strong> The runtime core is deterministic and replayable. Ranking, generation, inference, and other heuristic behavior are explicit scored or effectful routes layered above that floor.</p></li><li><p><strong>Code can move.</strong> A quoted fragment is a first-class value that can be copied, sent, stored, signed, stamped, and pasted. A stencil produces such fragments from parameters. Mobility is decided by the type system, not by ceremony (§12.4).</p></li><li><p><strong>Boundaries are first-class.</strong> A slash is not punctuation after the fact. It is a membrane, a capability gate, a commit point, or a sealed-artifact boundary, each with a defined runtime effect.</p></li><li><p><strong>Texture conveys causality.</strong> A reader can see, without a legend, whether a transition is local, asynchronous, delayed, verified, or a fault.</p></li><li><p><strong>Canonicalization precedes identity.</strong> Comments, spacing, alignment, decorative line length, and presentation color cannot affect the semantic hash. Meaning is normalized before content addressing.</p></li><li><p><strong>Failure is visible.</strong> Crashes, rejected proofs, unavailable capabilities, and quarantined effects appear as explicit graph events, never as silent exceptions.</p></li><li><p><strong>No ambient authority — at run time and at expansion time.</strong> Effects cross named walls; a copied fragment inherits no capability it did not explicitly capture; a metaprogram gains nothing from the machine that runs it.</p></li><li><p><strong>Marks for architecture, words for computation.</strong> The process alphabet owns punctuation globally. The expression notation may claim a punctuation token only if it collides with no process glyph, in both lexer and eye (§10.1).</p></li><li><p><strong>Expansion is hermetic and host-blind.</strong> Compile-time evaluation performs no I/O and cannot observe the build machine. The same source produces the same canonical bytes on every host.</p></li><li><p><strong>Generated structure remains visible.</strong> Every expanded or derived node carries provenance; tooling can always show the collapsed invocation, the expanded graph, and which invocation produced which node.</p></li></ol>
-<h3 id="blk-36953">3. Notation at a glance</h3>
+<h3 id="blk-37669">3. Notation at a glance</h3>
 <p>A single actor, fully formed, is legible on sight:</p>
 <pre><code>[rider:a](
   energy=74,
@@ -81,7 +82,7 @@
 <ul><li><p><code>[rider:a]</code> — a durable identity (this box <em>is</em> the actor).</p></li><li><p><code>(…)</code> — its current state cell.</p></li><li><p><code>{…}</code> — its permitted ports and capabilities.</p></li></ul>
 <p>A master table of every symbol family follows. Each is defined normatively in its own section.</p>
 <table><thead><tr><th>Family</th><th>Forms</th><th>Meaning</th><th>Section</th></tr></thead><tbody><tr><td>Containers</td><td><code>[x]</code> <code>(x)</code> <code>{x}</code></td><td>identity / state / wiring</td><td>6</td></tr><tr><td>Staging</td><td><code>: x</code></td><td>introduce one form into the configuration</td><td>5</td></tr><tr><td>Fragment</td><td><code>:: x //</code></td><td>quote a movable graph fragment</td><td>30</td></tr><tr><td>Stencil</td><td><code>::: x ///</code></td><td>define a reusable parameterized producer</td><td>31</td></tr><tr><td>Boundaries</td><td><code>/x</code> <code>//x</code> <code>///x</code></td><td>gate / commit / seal</td><td>23, §20.6</td></tr><tr><td>Podium</td><td><code>oN.</code></td><td>ranked top-N result with provenance</td><td>§20.7</td></tr><tr><td>Routes</td><td><code>--</code> <code>~~</code> <code>==</code> <code>!!</code> (+ sugar)</td><td>transition textures</td><td>8</td></tr><tr><td>Identity</td><td><code>#</code> <code>@</code> <code>?</code> <code>*</code></td><td>hash / address / variable / wildcard</td><td>7</td></tr><tr><td>Composition</td><td><code>+</code> <code>&amp;</code> `\</td><td><code> </code>\</td><td>\</td><td>`</td><td>union / composition / branch / parallel</td><td>8</td></tr><tr><td>Control glyphs</td><td><code>_</code> <code>^</code></td><td>rest / supervision</td><td>24</td></tr><tr><td>Time</td><td><code>.</code> <code>.n</code> <code>...</code></td><td>tick / repeat / continue</td><td>9</td></tr><tr><td>Expression notation</td><td>words, <code>+ - = &lt; &gt;</code> etc.</td><td>values, functions, types</td><td>Part II</td></tr></tbody></table>
-<h3 id="blk-37020">4. Lexical structure</h3>
+<h3 id="blk-37736">4. Lexical structure</h3>
 <p>A source file is UTF-8. Executable punctuation is ASCII. Whitespace and line length are presentation, except that indentation may disambiguate a multi-line continuation; a structured editor may write the graph directly and serialize canonical text.</p>
 <p><strong>Comments.</strong> Because <code>//</code> and <code>///</code> bound scopes, slash comments do not exist. Non-semantic notes use a semicolon:</p>
 <pre><code>; this line is commentary
@@ -97,24 +98,24 @@
 <pre><code>%   $   ~ (as a unary operator)   ` (backtick)
 &lt; &gt; (as standalone delimiters — attached generics are legal, §14)</code></pre>
 <p>A small coherent alphabet is preferred to a large one.</p>
-<h3 id="blk-37033">5. Delimiters and scope</h3>
+<h3 id="blk-37749">5. Delimiters and scope</h3>
 <p>Colons and slashes are two independent families. They coincide as open/close only at the two levels that require an explicit end.</p>
-<h4 id="blk-37035">5.1 The colon is a staging prefix</h4>
+<h4 id="blk-37751">5.1 The colon is a staging prefix</h4>
 <p><code>:</code> introduces exactly one form into the initial configuration. It opens no region and requires no closer, because the form it stages is self-delimiting through its own brackets:</p>
 <pre><code>: [rider:a](energy=100, watts=330){road, radio, team}</code></pre>
 <p>Multiple staged forms are multiple <code>:</code> lines. <code>:</code> places a form; it does not imply the form has already run.</p>
-<h4 id="blk-37039">5.2 Fragments and stencils are the only paired scopes</h4>
+<h4 id="blk-37755">5.2 Fragments and stencils are the only paired scopes</h4>
 <p>Two constructs need an explicit end, and they borrow a doubled or tripled slash as the closer:</p>
 <table><thead><tr><th>Open</th><th>Close</th><th>Construct</th></tr></thead><tbody><tr><td><code>::</code></td><td><code>//</code></td><td>quoted graph fragment (§30)</td></tr><tr><td><code>:::</code></td><td><code>///</code></td><td>stencil / reusable producer (§31)</td></tr></tbody></table>
-<h4 id="blk-37051">5.3 A lone slash is a boundary node, never a closer</h4>
+<h4 id="blk-37767">5.3 A lone slash is a boundary node, never a closer</h4>
 <p><code>/name</code>, <code>//name</code>, and <code>///name</code> are <em>first-class boundary nodes</em> — places in the graph (§23, §20.6), not punctuation. <code>/net</code>, <code>//finish</code>, and <code>///world17</code> are things you route to and from.</p>
 <p>The disambiguation rule is exactly one sentence:</p>
 <blockquote><p>A <code>//</code> or <code>///</code> <strong>closes</strong> the nearest open <code>::</code> or <code>:::</code> at the current depth if one is open; otherwise it is a <strong>boundary node reference</strong>. A single <code>/</code> is <em>always</em> a boundary node.</p></blockquote>
 <p>This is why the slash is free to mean <em>membrane</em>: it is never asked to also mean <em>the end of a staged form</em>.</p>
-<h4 id="blk-37057">5.4 Depth is categorical and capped at three</h4>
+<h4 id="blk-37773">5.4 Depth is categorical and capped at three</h4>
 <p>The three levels form a closed set ordered by <strong>permanence</strong>. There is no four-stroke form; <code>::::</code> and <code>////</code> are reserved and undefined.</p>
 <table><thead><tr><th>Strokes</th><th>Colon (introduce)</th><th>Slash (bound)</th><th>Permanence</th></tr></thead><tbody><tr><td>one</td><td>stage a form</td><td>local gate</td><td>transient / most local</td></tr><tr><td>two</td><td>quote a fragment</td><td>commit a fragment</td><td>committed, movable</td></tr><tr><td>three</td><td>seal a stencil</td><td>seal an artifact</td><td>sealed, content-addressed</td></tr></tbody></table>
-<h3 id="blk-37076">6. Containers and the shape-as-kind system</h3>
+<h3 id="blk-37792">6. Containers and the shape-as-kind system</h3>
 <p>Container shape is a kind marker. The parser reads the shape to know what sort of object it is holding.</p>
 <table><thead><tr><th>Form</th><th>Kind</th></tr></thead><tbody><tr><td><code>[x]</code></td><td>durable identity — actor, region, mailbox, named artifact</td></tr><tr><td><code>(x)</code></td><td>state — value, payload, cell, mutable contents</td></tr><tr><td><code>{x}</code></td><td>wiring — topology, capability set, ports, rules, relationships</td></tr></tbody></table>
 <p><code>{…}</code> describes <em>permitted or static</em> structure (what routes are legal, what capabilities are held), distinct from <code>(…)</code>, which is <em>current mutable</em> state. A topology block can constrain which routes are legal and provide default ports:</p>
@@ -123,29 +124,29 @@
   [rider:*] ~~draft~~&gt; [rider:next]
   [timing] ==result==&gt; //finish
 }</code></pre>
-<h3 id="blk-37089">7. Identity and addressing</h3>
+<h3 id="blk-37805">7. Identity and addressing</h3>
 <table><thead><tr><th>Symbol</th><th>Question it answers</th><th>Meaning</th><th>Example</th></tr></thead><tbody><tr><td><code>#</code></td><td><em>what is it?</em></td><td>canonical identity / content hash / tag</td><td><code>[film:#8f21ac]</code></td></tr><tr><td><code>@</code></td><td><em>where / which one?</em></td><td>address, placement, stamp (of a stencil or derive)</td><td><code>@rider(a)</code></td></tr><tr><td><code>?</code></td><td><em>unknown</em></td><td>pattern variable introduced by matching</td><td><code>(energy=?e)</code></td></tr><tr><td><code>*</code></td><td><em>which set?</em></td><td>wildcard match, or replication by position</td><td><code>[rider:*]</code>, <code>*@seed</code></td></tr></tbody></table>
 <p>Position distinguishes the two senses of <code>*</code>:</p>
 <pre><code>[rider:*]        wildcard — every matching identity
 *@rider(300)     replication — spawn requests</code></pre>
 <blockquote><p><strong>Surface status (Core 0.1.2).</strong> Only the <strong>replication-by-position</strong> sense is implemented. It ships as bounded, identity-equivalent surface sugar: <code>[relay:r*3]</code> desugars to the three explicit declarations, seals to the same <code>SemanticArtifactID</code> the explicit spelling would, rejects absurd counts with a typed diagnostic before allocating, and preserves the authored spans for diagnostics and editor operations. <strong>Wildcard matching remains reserved</strong> — no lowering exists. See <code>WRL_CORE_0.1.md</code> §4 and §17.</p></blockquote>
 <p>Human aliases are words; executable identity is a hash. <code>#name</code> names a thing; <code>@name</code> points at one or stamps one.</p>
-<h3 id="blk-37116">8. Routes</h3>
+<h3 id="blk-37832">8. Routes</h3>
 <p>A route is a directed edge whose <em>texture</em> carries an operational guarantee. Decorative line length is not stored; <code>[a] --go--&gt; [b]</code> and <code>[a] ----------go----------&gt; [b]</code> are the same edge.</p>
-<h4 id="blk-37118">8.1 Core textures</h4>
+<h4 id="blk-37834">8.1 Core textures</h4>
 <p>Four textures are semantically irreducible. The reduction relation (§20) is defined over exactly these.</p>
 <table><thead><tr><th>Texture</th><th>Class</th><th>Guarantee</th><th>Surface status</th></tr></thead><tbody><tr><td><code>--x--&gt;</code></td><td>solid</td><td>deterministic local transition; settles within the period</td><td><strong>surface-grounded</strong></td></tr><tr><td><code>~~x~~&gt;</code></td><td>async</td><td>asynchronous message; appended to a mailbox, observable next period</td><td><strong>partial</strong> — IR/runtime-grounded, not surface-emittable, no structural <code>EdgeDecl</code></td></tr><tr><td><code>==x==&gt;</code></td><td>verified</td><td>evidence-backed / committed transition under a named policy</td><td><strong>partial</strong> — see the reality check, item 4</td></tr><tr><td><code>!!x!!&gt;</code></td><td>fault</td><td>crash, cancellation, rejection, or interrupt; engages supervision</td><td><strong>partial</strong> — fault <em>state</em> only; no supervision floor exists</td></tr></tbody></table>
 <blockquote><p>The <em>guarantee</em> column is frozen (<code>WRL_CORE_0.1.md</code> §5). The <em>surface status</em> column is the implementation reality as of Core 0.1.2: only the solid route can actually be written, emitted, and round-tripped today.</p></blockquote>
-<h4 id="blk-37143">8.2 Derived textures (sugar)</h4>
+<h4 id="blk-37859">8.2 Derived textures (sugar)</h4>
 <p>The following read naturally and are retained in the surface, but they canonicalize to a core texture plus an attribute. A conforming parser rewrites them during canonicalization.</p>
 <table><thead><tr><th>Surface</th><th>Canonicalizes to</th></tr></thead><tbody><tr><td><code>..x..&gt;</code> (delayed)</td><td><code>--x--&gt;</code> with a schedule attribute (§9)</td></tr><tr><td><code>??x??&gt;</code> (query)</td><td><code>--x--&gt;</code> labelled as an ask, returning a binding</td></tr><tr><td><code>&lt;~x~&gt;</code> (merge)</td><td><code>==x==&gt;</code> with <code>policy=crdt</code> (§22)</td></tr><tr><td><code>&lt;--x--&gt;</code> (rendezvous)</td><td><code>~~x~~&gt;</code> plus an explicit continuation and timeout</td></tr></tbody></table>
-<h4 id="blk-37156">8.3 Labels, payloads, guards</h4>
+<h4 id="blk-37872">8.3 Labels, payloads, guards</h4>
 <p>A route body is a label with optional arguments: <code>--pedal(cost=8)--&gt;</code>. A guard filters eligibility:</p>
 <pre><code>[rider](energy=?e)
   --when(?e &gt; 30)--&gt;
 [road]</code></pre>
 <p>Guard expressions use the expression notation (§10): comparisons <code>=</code> <code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code>, connectives <code>and</code> <code>or</code> <code>not</code>.</p>
-<h4 id="blk-37160">8.4 Branches and parallel lanes</h4>
+<h4 id="blk-37876">8.4 Branches and parallel lanes</h4>
 <p>A guarded branch selects one lane. Guards are evaluated in canonical order; overlapping deterministic guards are a static error (§40) unless the branch is explicitly <code>scored</code>.</p>
 <pre><code>[rider](energy=?e) --&gt;
   | when ?e &gt; 30  --attack--&gt; [road]
@@ -155,11 +156,11 @@
   [camera] --record--&gt; [archive]
   [timing] --measure--&gt; [results]
 }</code></pre>
-<h4 id="blk-37165">8.5 Composition operators</h4>
+<h4 id="blk-37881">8.5 Composition operators</h4>
 <table><thead><tr><th>Operator</th><th>Meaning</th></tr></thead><tbody><tr><td><code>+</code></td><td>monotonic union / accumulation (§22)</td></tr><tr><td><code>&amp;</code></td><td>composition that retains named parts</td></tr><tr><td>`\</td><td>`</td><td>one alternative lane or guarded branch</td></tr><tr><td>`\</td><td>\</td><td>`</td><td>a parallel lane group</td></tr></tbody></table>
 <pre><code>[layout] &amp; [report:roads] &amp; [report:budget] ==verified(policy=world.v1)==&gt; [film:#w]</code></pre>
 <p><code>+</code> and <code>&amp;</code> are process-notation operators over graph values. Arithmetic addition occurs only inside expression position (§15); boolean conjunction is the word <code>and</code>.</p>
-<h3 id="blk-37182">9. Time</h3>
+<h3 id="blk-37898">9. Time</h3>
 <p>Logical time is state and is replayable. Wall-clock time is an effect (§21).</p>
 <table><thead><tr><th>Form</th><th>Meaning</th></tr></thead><tbody><tr><td><code>.</code></td><td>one logical period (tick) when used as an operator</td></tr><tr><td><code>.n</code></td><td>repeat / advance n logical periods</td></tr><tr><td><code>.....</code></td><td>presentation sugar for <code>.5</code> (repeat-suffix position only)</td></tr><tr><td><code>...</code></td><td>continue until an enclosing stop, budget, or boundary decides</td></tr><tr><td><code>..after(k)..&gt;</code></td><td>schedule an event k periods ahead</td></tr></tbody></table>
 <p>A closed fragment may be repeated a fixed number of periods; <code>.....</code> is the graffiti-friendly form and <code>.5</code> is the canonical form of the same count:</p>
@@ -170,15 +171,15 @@
 <p><strong>The dot family means logical time and nothing else.</strong> Four things that other languages conflate are distinct here, and only the first uses periods:</p>
 <table><thead><tr><th>Need</th><th>Construct</th></tr></thead><tbody><tr><td>advance logical time / keep a process alive across periods</td><td><code>.n</code>, <code>...</code>, quiescence and wake (§24.2)</td></tr><tr><td>iterate over data</td><td><code>for x in xs { … }</code>, <code>map</code>, <code>fold</code> (§16)</td></tr><tr><td>repeat a pure computation</td><td>an ordinary loop or recursion in expression notation</td></tr><tr><td>schedule a future event</td><td><code>..after(k)..&gt;</code></td></tr></tbody></table>
 <p><strong>Superdense tags.</strong> Internally, every event carries a tag <code>(t, m)</code>: a logical period <code>t</code> and a microstep <code>m</code> within it. Same-period events are ordered by microstep. This is defined in §20.2.</p>
-<h2 id="blk-37213">Part II — The Expression Notation</h2>
-<h3 id="blk-37214">10. Overview and the punctuation rule</h3>
+<h2 id="blk-37929">Part II — The Expression Notation</h2>
+<h3 id="blk-37930">10. Overview and the punctuation rule</h3>
 <p>The expression notation is where ordinary computation lives: values, records, arithmetic, functions, pattern matching, collections. It appears inside state cells, route arguments, guards, behavior blocks, derives, and tests. It is deliberately conventional — the visual symbols describe the architecture of computation, not arithmetic.</p>
-<h4 id="blk-37216">10.1 The punctuation rule</h4>
+<h4 id="blk-37932">10.1 The punctuation rule</h4>
 <blockquote><p><strong>The process alphabet owns punctuation globally. The expression notation defaults to words, and may claim a punctuation token only after passing a collision audit against every process glyph — in both lexer and eye.</strong></p></blockquote>
 <p>The sanctioned expression tokens, and the collisions they were audited against:</p>
 <table><thead><tr><th>Purpose</th><th>Token</th><th>Audit note</th></tr></thead><tbody><tr><td>arithmetic</td><td><code>+</code> <code>-</code></td><td><code>+</code> is graph-union only in process position; context-split by grammar</td></tr><tr><td>multiplication / division / remainder</td><td><code>mul</code> <code>div</code> <code>rem</code></td><td>words — <code>*</code> is wildcard/replication, <code>/</code> is a boundary</td></tr><tr><td>comparison</td><td><code>=</code> <code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code></td><td><code>=</code> is equality in guard/pattern position, field assignment in cells; never <code>==</code> (verified route) or <code>!=</code> (<code>!</code> is the fault family)</td></tr><tr><td>logic</td><td><code>and</code> <code>or</code> <code>not</code></td><td>never <code>&amp;&amp;</code> (<code>&amp;</code> is composition), `\</td><td>\</td><td><code> (parallel lanes), </code>!` (faults)</td></tr><tr><td>error propagation</td><td><code>try expr</code></td><td>a word — postfix <code>?</code> would collide with <code>?x</code> pattern variables</td></tr><tr><td>paths / field access</td><td><code>.</code></td><td><code>Command.attack</code>, <code>race.timing</code>, <code>state.status</code> — never <code>::</code> (fragment opener)</td></tr><tr><td>match arms</td><td><code>=&gt;</code></td><td>permitted; the formatter must never let an arm line resemble a <code>==&gt;</code> route</td></tr><tr><td>function return type</td><td><code>-&gt;</code></td><td>permitted; one dash vs. two is the learnable distinction from <code>--&gt;</code></td></tr><tr><td>generics</td><td><code>&lt;T&gt;</code> attached to an identifier</td><td><code>Mailbox&lt;T&gt;</code>, <code>Fixed&lt;16&gt;</code>; standalone <code>&lt;</code> <code>&gt;</code> delimiters remain reserved</td></tr><tr><td>binding</td><td><code>let</code> <code>var</code> <code>&lt;-</code></td><td><code>&lt;-</code> binds a pattern to a result (<code>[winner] &lt;- o3.</code>)</td></tr><tr><td>record update</td><td><code>with</code></td><td><code>rider with { energy=e }</code></td></tr><tr><td>closures</td><td><code>fn(x) expr</code></td><td>never `\</td><td>x\</td><td>` (lanes)</td></tr></tbody></table>
 <p>Nothing else. Operator overloading of punctuation does not exist (§44).</p>
-<h3 id="blk-37265">11. Values and data types</h3>
+<h3 id="blk-37981">11. Values and data types</h3>
 <p>The language has algebraic data types: records, variants, tuples, and recursive data. There is no <code>null</code>.</p>
 <pre><code>type Rider = {
   name: Name,
@@ -198,12 +199,12 @@ enum Option&lt;T&gt; { some(T), none }
 enum Result&lt;T, E&gt; { ok(T), err(E) }</code></pre>
 <p>These are the foundation of messages, actor state, boundary responses, films, and evidence. Absence is <code>Option</code>; expected failure is <code>Result</code>; a genuine fault travels on <code>!!</code> (§24.3). Values are immutable; &quot;updating&quot; produces a new value:</p>
 <pre><code>let next = rider with { energy = rider.energy - cost }</code></pre>
-<h3 id="blk-37270">12. Bindings, functions, and closures</h3>
-<h4 id="blk-37271">12.1 Bindings</h4>
+<h3 id="blk-37986">12. Bindings, functions, and closures</h3>
+<h4 id="blk-37987">12.1 Bindings</h4>
 <p><code>let</code> introduces an immutable binding. <code>var</code> permits local mutation as sugar; it lowers to immutable form, and shared mutable variables are impossible by construction (§18).</p>
 <pre><code>let cost = grade_cost(course.grade)
 var total = 0        ; local only; lowers to SSA</code></pre>
-<h4 id="blk-37274">12.2 Pure functions</h4>
+<h4 id="blk-37990">12.2 Pure functions</h4>
 <p>Actors do not replace functions. Actors are for identity, concurrency, persistence, and fault domains; pure functions are for local calculation. A function declares its effect row with <code>uses</code>; an empty row means pure.</p>
 <pre><code>fn drain(rider: Rider, cost: Energy) -&gt; Result&lt;Rider, Exhausted&gt;
   uses {} {
@@ -214,15 +215,15 @@ var total = 0        ; local only; lowers to SSA</code></pre>
   }
 }</code></pre>
 <p>Pure functions have no hidden effects, are deterministic, are callable from guards and metaprograms, and never require spawning an actor.</p>
-<h4 id="blk-37278">12.3 Effect rows</h4>
+<h4 id="blk-37994">12.3 Effect rows</h4>
 <p>A function that performs effects names the capabilities it uses; the checker proves the row:</p>
 <pre><code>fn download_world(id: WorldId) -&gt; Result&lt;Bytes, NetError&gt;
   uses { net.send, storage.write }</code></pre>
 <p>Effect rows are the type-level face of the capability walls in §21: a call whose row is non-empty can only execute where an actor's ports grant those capabilities.</p>
-<h4 id="blk-37282">12.4 Closures and portability</h4>
+<h4 id="blk-37998">12.4 Closures and portability</h4>
 <p>Closures exist: <code>riders.filter(fn(r) r.watts &gt; 350)</code>.</p>
 <p><strong>Portability is decided by the type system, not by ceremony.</strong> A closure whose effect row is empty and whose captures are all content-addressed values has a canonical graph — it <em>is</em> a fragment, and may travel as a message, be stored, or be stamped. A closure capturing a live capability or an affine resource handle is not portable, and using it where a portable value is required is a compile error naming the offending capture. The <code>:: … //</code> syntax (§30) is the <em>literal notation</em> for fragment values and the home of typed holes and explicit captures — the notation for the property, not its source. This is also how &quot;a copied fragment inherits no ambient authority&quot; is a theorem rather than a rule.</p>
-<h3 id="blk-37285">13. Pattern matching</h3>
+<h3 id="blk-38001">13. Pattern matching</h3>
 <p><code>match</code> is the ordinary conditional over data, with guards:</p>
 <pre><code>match message {
   Command.attack(at=?p)            =&gt; …
@@ -235,14 +236,14 @@ var total = 0        ; local only; lowers to SSA</code></pre>
 /feed-zone</code></pre>
 <p><strong>Matching is bounded and deterministic.</strong> There is no implicit search in the ordinary language:</p>
 <ul><li><p><strong>Rule patterns are anchored.</strong> The left side of a solid rule may match its own subject actor's cell and mailbox head — tree matching, cheap by construction. Topology-wide relational patterns are legal only in derives (§32), which are offline, stratified, and budgeted, or in explicitly <code>scored</code>/search contexts on the expressive ceiling.</p></li><li><p>Non-exhaustive matches over variants are static errors unless a <code>_</code> arm exists.</p></li></ul>
-<h3 id="blk-37296">14. Generics and traits</h3>
-<h4 id="blk-37297">14.1 Generics</h4>
+<h3 id="blk-38012">14. Generics and traits</h3>
+<h4 id="blk-38013">14.1 Generics</h4>
 <p>Generics are parametric (never token-templates), with const parameters where needed:</p>
 <pre><code>type Mailbox&lt;T&gt;        type Port&lt;T&gt;        type Graph&lt;T&gt;
 type Fragment&lt;T&gt;       type Result&lt;T, E&gt;   type Vector&lt;T, N: Int32&gt;
 fn map&lt;T, U&gt;(items: List&lt;T&gt;, f: fn(T) -&gt; U) -&gt; List&lt;U&gt;</code></pre>
 <p>Stencil parameters and type parameters are related but distinct; a stencil may take both: <code>::: cache&lt;K, V&gt;(name, capacity: Int32) … ///</code>.</p>
-<h4 id="blk-37301">14.2 Traits</h4>
+<h4 id="blk-38017">14.2 Traits</h4>
 <p>Traits are the abstraction mechanism; there is no class inheritance (§44).</p>
 <pre><code>trait Hashable {
   fn hash(self) -&gt; Hash
@@ -257,10 +258,10 @@ trait Verify&lt;Candidate, Evidence&gt; {
     -&gt; Result&lt;Verified&lt;Candidate&gt;, Rejection&gt;
 }</code></pre>
 <p>Traits map directly onto runtime policies: <code>Merge</code> instances implement <code>&lt;~merge~&gt;</code>; <code>Verify</code> instances implement <code>==verified==&gt;</code> checkers; boundary adapters are trait implementations.</p>
-<h4 id="blk-37305">14.3 Coherence is hash-pinned</h4>
+<h4 id="blk-38021">14.3 Coherence is hash-pinned</h4>
 <p>Instance resolution is a <strong>correctness</strong> property here, not a style preference. <code>&lt;~merge~&gt;</code> converges <em>because</em> every replica applies the same commutative, associative, idempotent join; if two replicas resolved <code>Merge&lt;FactSet&lt;T&gt;&gt;</code> to different instances, they would diverge while each believed it had merged correctly.</p>
 <p>Therefore: during canonicalization, every trait-method call site is resolved to a concrete instance, and <strong>the instance's content hash is baked into the canonical bytes</strong> (§39.1, step 7). Two replicas holding the same program hash hold the same join function, by construction. Instance selection can never vary by context, import order, or build.</p>
-<h3 id="blk-37308">15. Numerics and determinism classes</h3>
+<h3 id="blk-38024">15. Numerics and determinism classes</h3>
 <p>Numeric types are explicit and fixed-width:</p>
 <pre><code>Int8  Int16  Int32  Int64      UInt8 … UInt64
 Float32  Float64                Decimal
@@ -269,7 +270,7 @@ Fixed&lt;Q&gt;                        Duration   Period</code></pre>
 <p><strong>Floating point is a determinism hazard and is treated as one.</strong> Identical executables on identical hardware reproduce float results; across hardware, compilers, or optimization settings they do not — fused multiply-add, SIMD variation, and transcendental library differences all break bit-equality. The language's answer is <em>determinism classes bound to execution profiles</em> (§41):</p>
 <table><thead><tr><th>Profile</th><th>Simulation-state numerics</th><th>Floats</th></tr></thead><tbody><tr><td><code>world</code> (lockstep console/desktop simulation)</td><td><code>Fixed&lt;Q&gt;</code>, integers</td><td>forbidden in state cells; permitted on the presentation/effect side only (rendering, audio)</td></tr><tr><td><code>pure</code> / <code>replay</code></td><td><code>Fixed&lt;Q&gt;</code>, integers; <code>Float64</code> with <code>#[det=bitexact]</code></td><td>strict IEEE-754, no FMA, no fast-math, pinned softfloat transcendental artifact</td></tr><tr><td>effect side of any wall</td><td>anything</td><td>float results are observations; their hashes enter the film like any effect</td></tr></tbody></table>
 <p>The corresponding static check: <strong>a `Float` type may not appear in a state cell of a `world`-profile actor</strong> (§40). <code>Duration</code> is a wall-clock quantity and therefore effect-side; <code>Period</code> is logical time and replayable.</p>
-<h3 id="blk-37327">16. Collections, strings, and symbols</h3>
+<h3 id="blk-38043">16. Collections, strings, and symbols</h3>
 <p>The minimum standard vocabulary:</p>
 <pre><code>List&lt;T&gt;   Vector&lt;T, N&gt;   Map&lt;K, V&gt;   Set&lt;T&gt;   Bytes   String
 Queue&lt;T&gt;  Mailbox&lt;T&gt;     FactSet&lt;T&gt;  Stream&lt;T&gt;</code></pre>
@@ -285,7 +286,7 @@ rider_a        identifier — a name in source
 #rider-a       tag / content identity
 @rider-a       address / stamp</code></pre>
 <p>Interned symbols exist as <code>Symbol</code>; the intern table is bounded per sealed scope and cannot grow without limit at runtime.</p>
-<h3 id="blk-37337">17. Resources and ownership</h3>
+<h3 id="blk-38053">17. Resources and ownership</h3>
 <p>The ownership model is small and sufficient:</p>
 <ul><li><p>values are immutable;</p></li><li><p>actor state is singly owned (§18);</p></li><li><p>messages are immutable;</p></li><li><p>large binaries use shared <em>immutable</em> storage;</p></li><li><p>external resources are <strong>affine handles</strong>;</p></li><li><p>capabilities cannot be duplicated unless their type permits it.</p></li></ul>
 <pre><code>resource FileHandle
@@ -295,38 +296,38 @@ resource Socket
 fn upload(buffer: borrow GpuBuffer) -&gt; Result&lt;Receipt, GpuError&gt;
 fn close(socket: move Socket)</code></pre>
 <p>A resource is consumed, moved, or explicitly borrowed. There are no shared mutable pointers anywhere in the language.</p>
-<h2 id="blk-37354">Part III — Process Semantics</h2>
-<h3 id="blk-37355">18. Memory model</h3>
+<h2 id="blk-38070">Part III — Process Semantics</h2>
+<h3 id="blk-38071">18. Memory model</h3>
 <p>Different container shapes are different <em>kinds of memory</em>. An agent can read the kind of memory off the shape.</p>
 <table><thead><tr><th>Shape</th><th>Memory kind</th><th>Mutability / lifetime</th><th>Physical intuition</th></tr></thead><tbody><tr><td><code>(state)</code></td><td>volatile cell</td><td>mutable by replacement; one logical step, then a new value at the same identity</td><td>working memory — what is held right now</td></tr><tr><td><code>{facts}</code></td><td>monotonic knowledge</td><td>grow-only; merges by lattice union; never retracts</td><td>a ledger — lines are added, never erased</td></tr><tr><td><code>[archive]</code></td><td>durable store</td><td>persistent addressable actor; survives restart</td><td>an archive room — walked to, looked up, outlives the session</td></tr><tr><td><code>:: fragment //</code></td><td>code memory</td><td>quoted graph as data; portable, signable, stampable</td><td>a stencil — a pattern carried and stamped elsewhere</td></tr><tr><td><code>#hash</code></td><td>sealed identity</td><td>immutable forever; content-addressed</td><td>a sealed vault whose address is its contents</td></tr></tbody></table>
 <p>A <code>(state)</code> cell belongs to exactly one actor. Shared <em>knowledge</em> is <code>{facts}</code> (merged monotonically); shared <em>identity</em> is <code>[archive]</code> (a durable actor). There is no shared mutable cell. This single-owner discipline is what makes the execution model deterministic without a runtime conflict resolver (§20.4).</p>
-<h3 id="blk-37383">19. Runtime entities</h3>
+<h3 id="blk-38099">19. Runtime entities</h3>
 <p>An implementation needs six semantic entity types.</p>
 <ul><li><p><strong>Actor</strong> — a stable identity, a current state cell, a mailbox, a declared port/capability set, an optional supervisor, a deterministic behavior table (the solid rules whose source is this actor), and resource counters and status.</p></li><li><p><strong>Value</strong> — immutable. Updating state produces a new value at the same identity at the next logical step.</p></li><li><p><strong>Edge</strong> — source, destination, label, texture, payload expression, policy, and provenance. Decorative line length is not stored.</p></li><li><p><strong>Boundary</strong> — mediates propagation: stop, filter, authorize, commit, snapshot, rank, externalize, or seal.</p></li><li><p><strong>Fragment</strong> — quoted graph data with hygienic holes and explicitly captured identities; typed as <code>Fragment&lt;T&gt;</code>.</p></li><li><p><strong>Stencil</strong> — a deterministic, hygienic, resource-bounded, canonicalizable map from parameters to a fragment; typed as <code>Stencil&lt;Args, Fragment&lt;T&gt;&gt;</code>.</p></li></ul>
 <pre><code>[actor:#id](state){ports}</code></pre>
-<h3 id="blk-37399">20. Execution model</h3>
+<h3 id="blk-38115">20. Execution model</h3>
 <p>This section defines what a program <em>does</em> and why it does the same thing on every machine.</p>
-<h4 id="blk-37401">20.1 The configuration</h4>
+<h4 id="blk-38117">20.1 The configuration</h4>
 <p>A <strong>configuration</strong> is the runtime state at a moment in logical time:</p>
 <ul><li><p><strong>Actors</strong>, each with identity, current state cell, mailbox, port set, optional supervisor, behavior table, status (<code>runnable</code> / <code>quiescent</code>), and resource counters.</p></li><li><p><strong>Scheduled events</strong>, keyed by the logical time they are due.</p></li><li><p><strong>Boundaries</strong> and their policies.</p></li><li><p><strong>Fact sets</strong> <code>{facts}</code> — monotonic CRDT lattices.</p></li><li><p><strong>The film</strong> — an append-only event log; the replayable record.</p></li></ul>
 <p>Two invariants make the model tractable and are enforced by static checks (§40):</p>
 <ol><li><p><strong>Single-owner cells.</strong> A <code>(state)</code> cell belongs to exactly one actor. No shared mutable cells.</p></li><li><p><strong>Disjoint deterministic guards.</strong> Within one actor, at most one deterministic rule is enabled per state; overlapping deterministic guards are a compile error. Genuine choice must be an explicit <code>scored</code> branch.</p></li></ol>
-<h4 id="blk-37420">20.2 Logical time is superdense</h4>
+<h4 id="blk-38136">20.2 Logical time is superdense</h4>
 <p>Every event carries a tag <code>(t, m)</code>: a logical period <code>t</code> and a microstep <code>m</code>. Same-period events are ordered by <code>m</code>. Wall-clock time enters only through a <code>/time</code> boundary that converts a duration into a period count, recorded as a signed fact in the film. Logical time is replayable state; wall-clock is not.</p>
-<h4 id="blk-37422">20.3 The period cycle (five phases)</h4>
+<h4 id="blk-38138">20.3 The period cycle (five phases)</h4>
 <p>Each period <code>t</code> runs a settle-and-commit cycle.</p>
 <ol><li><p><strong>Collect</strong> the eligible set: solid rules whose pattern matches and guard holds; messages deliverable at <code>t</code>; scheduled events due at <code>t</code>; boundary arrivals.</p></li><li><p><strong>Order</strong> by a total <strong>canonical event key</strong> = the content hash of <code>(source_id, rule_or_label, matched_binding, arg_hash)</code>. Never by worker arrival. A full binding makes key collisions impossible for genuinely distinct events.</p></li><li><p><strong>Reduce</strong> to a fixpoint (§20.5).</p></li><li><p><strong>Commit</strong> the settled result: new cells at the same identities; messages appended to mailboxes; facts lattice-joined; boundary outputs; spawned actors; supervision actions. This snapshot is what other actors and the next period observe.</p></li><li><p><strong>Record</strong> the film entries needed to replay <code>t</code>: rules fired and their microstep order, bindings, messages, scheduled events, boundary crossings, effect observations (as signed hashes), and verification results.</p></li></ol>
-<h4 id="blk-37435">20.4 Conflicts dissolve</h4>
+<h4 id="blk-38151">20.4 Conflicts dissolve</h4>
 <p>Given the two invariants, ask what two same-period events can contend over:</p>
 <table><thead><tr><th>Contended thing</th><th>Destructive conflict possible?</th><th>Why</th></tr></thead><tbody><tr><td>an actor's state cell</td><td>no</td><td>single-owner + at most one enabled deterministic rule</td></tr><tr><td>a mailbox (two senders)</td><td>no — ordering only</td><td>both are appends; ordered by canonical key</td></tr><tr><td>a fact set (two contributors)</td><td>no</td><td>lattice join is commutative, associative, idempotent</td></tr><tr><td>a spawn (colliding ids)</td><td>caught at expansion</td><td>stencil expansion allocates deterministic ids hygienically (§31.2)</td></tr></tbody></table>
 <p>The only concurrently-written structures are <strong>mailboxes</strong> and <strong>fact sets</strong>, and both have deterministic merges. There is no destructive write-write conflict on state. The ownership discipline <em>buys</em> determinism rather than requiring a runtime resolver.</p>
-<h4 id="blk-37454">20.5 Within-period fixpoint</h4>
+<h4 id="blk-38170">20.5 Within-period fixpoint</h4>
 <p>Within a period, deterministic local reduction settles to a fixpoint, like a synchronous circuit settling within a clock tick. Independent events (disjoint read/write footprints) commit at the same microstep. Dependent events (one reads another's output — a chain such as <code>--grind--&gt; --brew--&gt;</code>) fire at the next microstep, seeing the settled value. Enablement is re-derived after each microstep until no further local progress is possible. Committed cell writes and sent messages become observable at the <em>next</em> period.</p>
-<h4 id="blk-37456">20.6 Boundaries as reduction operators</h4>
+<h4 id="blk-38172">20.6 Boundaries as reduction operators</h4>
 <p>A boundary mediates propagation. Each boundary is a reduction operator with a defined effect on memory.</p>
 <table><thead><tr><th>Boundary</th><th>Reduction effect</th></tr></thead><tbody><tr><td><code>/gate</code></td><td>require the named capability in the crossing fragment's ports; emit an <em>effect-request node</em> rather than performing I/O</td></tr><tr><td><code>//commit</code></td><td>canonicalize the fragment so far, assign it a content id; it becomes immutable</td></tr><tr><td><code>//finish</code></td><td>a commit boundary that may also receive race or workflow arrivals</td></tr><tr><td><code>///seal</code></td><td>perform <code>//commit</code>, then register the artifact under a content hash (and optional name)</td></tr></tbody></table>
 <p>A gate authorizes and externalizes; a commit freezes; a seal freezes and content-addresses. The finish line is literal: crossing <code>//finish</code> <em>is</em> the canonicalize-and-record reduction, which is why it can feed a podium directly.</p>
-<h4 id="blk-37470">20.7 Podium — ranked selection with provenance</h4>
+<h4 id="blk-38186">20.7 Podium — ranked selection with provenance</h4>
 <p><code>oN.</code> consumes an eligible result set that has crossed a boundary this run and reduces to a provenance-carrying object with N named places:</p>
 <pre><code>Podium {
   places: [r; N],        ; missing places are explicit _
@@ -337,19 +338,19 @@ fn close(socket: move Socket)</code></pre>
 <p>Ranking must name a stable tie-breaker — arrival order and scheduling are never acceptable implicit tie-breakers. The podium can rank anything, not only race results. <code>o0.</code> is accepted as sugar for <code>o3.</code> where the three-place podium reading is intended.</p>
 <pre><code>//finish ==rank(by=time, tie=#id)==&gt; o3.
 [winner, second, third] &lt;- o3.</code></pre>
-<h4 id="blk-37475">20.8 Messages</h4>
+<h4 id="blk-38191">20.8 Messages</h4>
 <p>A <code>~~msg~~&gt;</code> in period <code>t</code> appends an immutable fact:</p>
 <pre><code>{ msg_id, sender, receiver, payload_hash,
   send_tag=(t,m), delivery_policy, provenance }</code></pre>
 <p>Delivery is a separate event. Under the default policy a message sent at <code>(t, m)</code> becomes deliverable no earlier than <code>(t+1, 0)</code>; an actor cannot observe its own send within the same period, which keeps periods well-founded and forbids same-period causal loops. Exactly-once processing is not assumed; deduplication keys and acknowledgements are explicit.</p>
-<h4 id="blk-37479">20.9 Scheduled events</h4>
+<h4 id="blk-38195">20.9 Scheduled events</h4>
 <p><code>..after(periods=k)..&gt;</code> at period <code>t</code> creates an event due at <code>t+k</code>. <code>..after(5s)..&gt;</code> desugars through a <code>/time</code> wall that converts the duration into a period count; the observed conversion is a signed fact, so replay uses the recorded count, not a live clock.</p>
-<h4 id="blk-37481">20.10 Determinism</h4>
+<h4 id="blk-38197">20.10 Determinism</h4>
 <p><strong>Property.</strong> Given the same initial configuration and the same sequence of external observations (the signed facts crossing effect walls), the committed film is byte-identical across any hardware scheduling.</p>
 <p>Phases 1–2 depend only on configuration content; phase 3's independent set commits order-independently (disjoint footprints commute) and its dependent cascade is serialized by microstep as a pure function of content; §20.4 shows no destructive state conflict, only commutative appends and joins; phases 4–5 are deterministic functions of phase 3. The only entry point for nondeterminism is effect-wall observations, which are captured in the film — so replay is exact. Consequently, &quot;the same sealed film runs identically on desktop and console&quot; is a testable property, not a hope — provided the numeric rules of §15 are respected.</p>
-<h4 id="blk-37484">20.11 Termination and quiescence</h4>
+<h4 id="blk-38200">20.11 Termination and quiescence</h4>
 <p>A graph is locally <strong>quiescent</strong> when no solid transition is enabled, no message is deliverable this period, no scheduled event is due, no actor is runnable, and all required boundary commits are complete. A distributed run is <strong>complete</strong> only under an explicit termination detector or a sealed finite-horizon film. Importing state that marks actors runnable invalidates a prior quiescence conclusion; restored work must be rescheduled before termination is declared.</p>
-<h3 id="blk-37486">21. Effects, capabilities, and entropy</h3>
+<h3 id="blk-38202">21. Effects, capabilities, and entropy</h3>
 <p>All non-deterministic or external action crosses a named wall. No effect happens invisibly.</p>
 <pre><code>[request] --&gt; /net
 [frame]   --&gt; /gpu
@@ -362,12 +363,12 @@ fn close(socket: move Socket)</code></pre>
 [request] --&gt; /net requires net.send</code></pre>
 <p><strong>Randomness is an effect.</strong> All randomness — simulation noise, scored-branch exploration seeds, scheduler-fuzzing seeds — enters through <code>/entropy</code> as seeded streams whose seeds are recorded as facts. Any run, including a randomized test exploration, therefore replays exactly from its film.</p>
 <p>Effect walls are the <em>only</em> source of nondeterminism in the language. Everything else is a pure function of configuration content.</p>
-<h3 id="blk-37495">22. Merging replicated facts</h3>
+<h3 id="blk-38211">22. Merging replicated facts</h3>
 <p>Monotonic knowledge merges as a CRDT join-semilattice. The merge is commutative, associative, and idempotent; convergence follows from these laws.</p>
 <pre><code>[node:a] &lt;~merge(facts)~&gt; [node:b]
 [node:a]{facts} + [node:b]{facts} --&gt; [facts:joined]</code></pre>
 <p><code>&lt;~merge~&gt;</code> canonicalizes both fact sets, unions them, and deterministically reduces. <code>+</code> denotes monotonic union or accumulation, not arithmetic addition. The join function is a <code>Merge&lt;T&gt;</code> instance whose content hash is pinned into the program's canonical identity (§14.3) — so every replica of a given program hash provably applies the same join. Semantic convergence is a separate concern from work efficiency; an implementation reports duplicate work, verifier work, and divergence cost independently.</p>
-<h3 id="blk-37499">23. Verification and sealing</h3>
+<h3 id="blk-38215">23. Verification and sealing</h3>
 <p>A verified route requires evidence satisfying a named policy. The runtime does not infer what &quot;verified&quot; means; verification is a protocol with an explicit checker identity (a <code>Verify</code> instance, §14.2), a policy version, inputs, a result, and an evidence hash.</p>
 <pre><code>[candidate]
   ==verified(by=proof, policy=forge.v1)==&gt;
@@ -375,23 +376,23 @@ fn close(socket: move Socket)</code></pre>
 <p>A failed verification travels on an explicit rejection route to a quarantine boundary:</p>
 <pre><code>[candidate] !!reject(reason=?r)!!&gt; /quarantine</code></pre>
 <p>Sealing (<code>///</code>) content-addresses the result, making it a reusable, immutable artifact.</p>
-<h3 id="blk-37505">24. Supervision, faults, and the error ladder</h3>
-<h4 id="blk-37506">24.1 Supervision</h4>
+<h3 id="blk-38221">24. Supervision, faults, and the error ladder</h3>
+<h4 id="blk-38222">24.1 Supervision</h4>
 <p>The caret denotes upward supervision or promotion:</p>
 <pre><code>[worker:a] ^ [supervisor:pool]</code></pre>
 <p>A supervisor deterministically chooses a policy in response to a fault:</p>
 <pre><code>[supervisor:pool](policy=restart_one)
   --on(crash(worker=?w))--&gt;
 @worker(id=?w, restored_from=last_checkpoint)</code></pre>
-<h4 id="blk-37511">24.2 Rest and wake</h4>
+<h4 id="blk-38227">24.2 Rest and wake</h4>
 <p>The underscore is a parked or quiescent actor state — observable, and useful for defining termination, snapshot safety, and scheduler economics:</p>
 <pre><code>[worker:a] --&gt; _
 [queue] ~~job(?j)~~&gt; [worker:a] _--&gt; active(job=?j)</code></pre>
-<h4 id="blk-37514">24.3 The error ladder</h4>
+<h4 id="blk-38230">24.3 The error ladder</h4>
 <p>Three levels, kept distinct, with the distinction statically checked:</p>
 <table><thead><tr><th>Level</th><th>Meaning</th><th>Form</th></tr></thead><tbody><tr><td>normal absence / alternative</td><td>not an error at all</td><td><code>Option&lt;T&gt;</code></td></tr><tr><td>expected failure</td><td>an anticipated bad outcome; a value</td><td><code>Result&lt;T, E&gt;</code> — e.g. <code>err(file_not_found)</code></td></tr><tr><td>fault</td><td>corrupted invariant, crashed adapter, genuine breakage</td><td><code>!!crash(reason)!!&gt;</code> — engages supervision</td></tr></tbody></table>
 <p>A missing file is <code>err(file_not_found)</code>. A corrupted driver is <code>[storage] !!crash(reason=corrupt_driver)!!&gt; [supervisor]</code>. A path that is a normal outcome must not silently become a fault; <code>!!</code> is reserved for faults, and the checker rejects the promotion (§40).</p>
-<h3 id="blk-37530">25. Mailboxes, streams, and backpressure</h3>
+<h3 id="blk-38246">25. Mailboxes, streams, and backpressure</h3>
 <p><strong>Mailboxes are bounded by default.</strong> An unbounded mailbox is rejected unless an explicit policy says otherwise:</p>
 <pre><code>Mailbox&lt;Job, capacity=1024, overflow=reject&gt;</code></pre>
 <p>Overflow policies: <code>reject</code> (sender receives a normal <code>Result</code>-level refusal), <code>shed_oldest</code>, <code>shed_newest</code>, <code>backpressure</code> (participate in demand signaling). Shedding and refusal are recorded as facts.</p>
@@ -399,7 +400,7 @@ fn close(socket: move Socket)</code></pre>
 <pre><code>[consumer] ~~demand(32)~~&gt; [producer]
 [producer] ~~items(batch)~~&gt; [consumer]</code></pre>
 <p>The stream vocabulary: <code>Stream&lt;T&gt;</code>, <code>Subscription&lt;T&gt;</code>, <code>CancelToken</code>, <code>Demand</code>. Cancellation is a normal message, observable in the film; a canceled producer winds down through ordinary routes, not through faults.</p>
-<h3 id="blk-37537">26. Actor behavior blocks</h3>
+<h3 id="blk-38253">26. Actor behavior blocks</h3>
 <p>Routes are excellent for diagrams; complex actors also need an organized textual home. A behavior block declares an actor's state shape, ports, and handlers in one place:</p>
 <pre><code>actor rider(name: Name, watts: Watts) {
   state (name=name, watts=watts, energy=100, status=staged)
@@ -422,25 +423,25 @@ fn close(socket: move Socket)</code></pre>
   }
 }</code></pre>
 <p><strong>A behavior block is a projection, not a second semantics.</strong> It canonicalizes to exactly the same behavior table — and therefore the same content hash — as the equivalent drawn routes. This is a conformance requirement (§46): for every construct with both a drawn and a textual form, the two forms produce identical canonical bytes. The language has two surfaces and one meaning, permanently.</p>
-<h3 id="blk-37541">27. Evolution: state migration and message compatibility</h3>
-<h4 id="blk-37542">27.1 Live-state migration</h4>
+<h3 id="blk-38257">27. Evolution: state migration and message compatibility</h3>
+<h4 id="blk-38258">27.1 Live-state migration</h4>
 <p>Content-addressed modules (§35) evolve <em>code</em>: a new implementation is a new hash, and names re-point. But a persistent actor in the <code>world</code> profile holds state typed by the old version, and re-pointing a name transforms nothing. Live state evolves through an explicit, verified migration:</p>
 <pre><code>(state: Rider@#a91) ==migrate(policy=rider.upgrade.v1v2, by=#m7)==&gt; (state: Rider@#b12)</code></pre>
 <p>A migration is a verified route: evidence-carrying, recorded in the film, orchestrated by supervisors (drain to <code>_</code>, migrate, wake), and replayable. A world upgrade is a sequence of migrations, not an improvisation.</p>
-<h4 id="blk-37546">27.2 Message compatibility</h4>
+<h4 id="blk-38262">27.2 Message compatibility</h4>
 <p>Message types are content-addressed like everything else. A mailbox accepts the message hashes its port type declares; an unrecognized hash is a <strong>normal outcome</strong> (an <code>unknown</code> arm at Result level), never a fault — leaving room for explicit adapter routes between versions:</p>
 <pre><code>on ~~unknown(#msg)~~&gt; {
   [self] --forward(#msg)--&gt; /adapter.v1v2
 }</code></pre>
-<h2 id="blk-37549">Part IV — Metaprogramming</h2>
+<h2 id="blk-38265">Part IV — Metaprogramming</h2>
 <p>Metaprogramming is a defining capability of the language, not an accessory — and it is <em>not</em> textual substitution. WRL is homoiconic over its <strong>canonical graph</strong>, not its surface text: a metaprogram inspects and produces typed graph nodes and can never distinguish <code>--go--&gt;</code> from <code>----go----&gt;</code>, because those are the same edge. Raw token arrays are not exposed.</p>
-<h3 id="blk-37551">28. Phases</h3>
+<h3 id="blk-38267">28. Phases</h3>
 <p>The expression notation evaluates at three moments. It is the same language at each; the phase determines only what exists to be touched.</p>
 <table><thead><tr><th>Phase</th><th>What runs</th><th>Capabilities available</th></tr></thead><tbody><tr><td><strong>expansion time</strong></td><td>stencil bodies; derives over <code>Graph&lt;T&gt;</code></td><td>pure only; no walls exist yet; fuel-bounded; host-blind</td></tr><tr><td><strong>verification time</strong></td><td><code>Verify</code> policy checkers behind <code>==verified==&gt;</code></td><td>the checker's declared capabilities only</td></tr><tr><td><strong>run time</strong></td><td>guards, cell updates, handlers, ordinary computation</td><td>whatever the actor's ports grant</td></tr></tbody></table>
 <p>The build pipeline (§39.1) fixes when expansion happens: stencils expand, then derives evaluate to fixpoint, before canonicalization and hashing — and long before any reduction runs. Metaprograms cannot modify sealed artifacts; they produce new graphs, and therefore new hashes.</p>
-<h3 id="blk-37567">29. The six laws of metaprogramming</h3>
+<h3 id="blk-38283">29. The six laws of metaprogramming</h3>
 <ol><li><p><strong>Hygiene by default.</strong> Identities minted by an expansion never collide with identities at the expansion site. <code>@worker_pool(a)</code> and <code>@worker_pool(b)</code> produce distinct internal queues, clocks, and supervisors unless a capture is explicitly shared (<code>capture [shared:clock]</code>).</p></li><li><p><strong>Phase separation.</strong> Every metaprogram knows which phase it runs in; expansion-time code cannot reach forward into run time, and sealed artifacts cannot be reached backward.</p></li><li><p><strong>No ambient authority.</strong> A metaprogram gains no network, filesystem, model, clock, or package access from the compiler that runs it. Pure by default; anything else is a sealed tool behind <code>/compiler</code> (§33).</p></li><li><p><strong>Resource-bounded expansion.</strong> Stencil recursion must be structurally decreasing; general expansion carries explicit fuel (<code>#[meta_fuel=10_000, max_nodes=50_000]</code>). A build that exhausts fuel <strong>fails</strong>; it never silently emits a partially expanded program.</p></li><li><p><strong>Generated structure remains visible.</strong> Tooling always offers: the collapsed invocation, the expanded graph, per-node provenance, the canonical bytes actually hashed, and diffs between expansions. Invisible macro magic does not exist.</p></li><li><p><strong>Expansion is hermetic and host-blind.</strong> Expansion-time code has no I/O facilities at all and cannot observe the build machine — no host paths, clocks, endianness, or environment. Consequently expansion is reproducible and cacheable everywhere (§35.2).</p></li></ol>
-<h3 id="blk-37581">30. Fragments</h3>
+<h3 id="blk-38297">30. Fragments</h3>
 <p><code>::</code> opens a quoted graph fragment; <code>//</code> closes it. A fragment is a first-class value of type <code>Fragment&lt;T&gt;</code> — data until stamped or explicitly executed. It supports typed holes, explicit captures, hygienic local identities, copying, transport as a message, signing, storage, inspection, and canonical hashing.</p>
 <pre><code>:: breakaway(leader=?l, mate=?m)
   [rider:?l] ~~signal~~&gt; [rider:?m]
@@ -453,8 +454,8 @@ fn close(socket: move Socket)</code></pre>
 <p>Copying a fragment mints fresh local identities unless an identity is explicitly marked shared. Because a fragment is a value, it travels as a message payload — code as a message:</p>
 <pre><code>[coach] --plan(::breakaway//)--&gt; [team]</code></pre>
 <p>A fragment does not run merely because it exists. It must be stamped, executed, or crossed through an appropriate boundary.</p>
-<h3 id="blk-37589">31. Stencils</h3>
-<h4 id="blk-37590">31.1 Stencils are the ordinary metaprogramming mechanism</h4>
+<h3 id="blk-38305">31. Stencils</h3>
+<h4 id="blk-38306">31.1 Stencils are the ordinary metaprogramming mechanism</h4>
 <p><code>:::</code> opens a typed, hygienic graph constructor; <code>///</code> seals it. Most things that are classes, component definitions, declarative macros, annotations, or infrastructure templates elsewhere are stencils here.</p>
 <pre><code>::: rider(name: Name, watts: Watts)
   : [rider:#name](
@@ -467,13 +468,13 @@ fn close(socket: move Socket)</code></pre>
     }
 ///</code></pre>
 <p>Stamping instantiates: <code>: @rider(a, 330)</code>. Idiomatic stencils scale from one actor to whole architectures: <code>@supervised_pool(workers=8)</code>, <code>@replicated_archive(nodes=3)</code>, <code>@forge_pipeline(policy=world.v1)</code>.</p>
-<h4 id="blk-37594">31.2 Identity derivation</h4>
+<h4 id="blk-38310">31.2 Identity derivation</h4>
 <p>Hygiene demands fresh identities per site; incremental builds and stable diffs demand the <em>same</em> identities on every rebuild. Both hold via one normative formula:</p>
 <pre><code>#child = H( stencil#, canonical(args), path-within-expansion )</code></pre>
 <p>Same stencil, same arguments, same position ⇒ the same identity on every rebuild. Different site or arguments ⇒ a different identity. Colliding identities are caught at expansion, never at run time.</p>
-<h4 id="blk-37598">31.3 Expansion pipeline</h4>
+<h4 id="blk-38314">31.3 Expansion pipeline</h4>
 <p>Stamping performs, deterministically: normalize arguments → allocate derived identities by §31.2 → substitute parameters → alpha-rename locals → validate capabilities and budget → canonicalize → attach provenance.</p>
-<h3 id="blk-37600">32. Derives</h3>
+<h3 id="blk-38316">32. Derives</h3>
 <p>Some transformations are inconvenient as stencils — cross-cutting rules like &quot;every faultable actor gets a supervisor.&quot; These are <strong>derives</strong>: expression-notation functions over typed graphs, evaluated at expansion time.</p>
 <pre><code>derive supervise_faulting(g: Graph&lt;Actor&gt;) -&gt; Graph&lt;Supervision&gt; {
   for actor in g.actors
@@ -484,19 +485,19 @@ fn close(socket: move Socket)</code></pre>
 <p>Three normative restrictions give derives their guarantees:</p>
 <ol><li><p><strong>Derives are intrinsically typed.</strong> A <code>derive f(g: Graph&lt;A&gt;) -&gt; Graph&lt;B&gt;</code> is checked once at its definition; the type system guarantees every output is a well-formed <code>Graph&lt;B&gt;</code>, in the manner of typed staged programming, where a well-typed generator can only generate well-typed code. Derive output therefore needs no re-checking, and the build pipeline never loops.</p></li><li><p><strong>Derives are stratified and monotonic.</strong> A derive may read, filter, and <code>emit</code>; it may not delete or mutate emitted structure; negation only across strata. This yields <strong>termination</strong> (stratified evaluation reaches a fixpoint), <strong>confluence</strong> (monotonic rules commute, so derive order cannot change the result — the same law that makes fact merges safe), and <strong>incrementality</strong> (monotonic rules recompute efficiently under the memo table of §35.2).</p></li><li><p><strong>Derives receive semantics, not spelling.</strong> A derive sees typed canonical nodes; it cannot observe formatting, layout, comments, or anything else that canonicalization removes.</p></li></ol>
 <p>Anything genuinely non-monotonic — deletion, rewriting, arbitrary recursion — belongs to sealed tools (§33). That is the principled boundary between the two levels.</p>
-<h3 id="blk-37613">33. Sealed tools behind /compiler</h3>
+<h3 id="blk-38329">33. Sealed tools behind /compiler</h3>
 <p>Parsers, schema generators, GPU layout generators, binding generators, asset importers — procedural power that cannot live in the stratified system — run as <strong>sealed tools</strong> behind an explicit compiler capability wall:</p>
 <pre><code>[schema:#game] --&gt; /compiler
 /compiler ==generated(tool=#generator-hash)==&gt; [bindings:#hash]</code></pre>
 <p>A sealed tool requires: a pinned tool hash; explicit input hashes; declared capabilities; CPU and memory budgets; deterministic output where possible; recorded provenance; and a sealed generated artifact. Because tools are content-addressed, capability-declared, and budgeted, they can be published, signed, and verified with the same <code>==verified==&gt;</code> machinery as everything else — compiler extensibility without compiler trust. Every tool invocation appears in the build film (§36).</p>
-<h3 id="blk-37617">34. Reflection</h3>
+<h3 id="blk-38333">34. Reflection</h3>
 <p>Compile-time reflection over canonical structure is rich and free:</p>
 <pre><code>graph.actors      graph.routes       graph.boundaries
 type.fields       fragment.holes     fragment.capabilities</code></pre>
 <p>Runtime reflection is capability-controlled: a mirror over an actor is a capability (<code>{reflect: Capability&lt;Mirror&lt;Pool&gt;&gt;}</code>) that must be granted like any other port. Unrestricted runtime reflection over private actor state does not exist.</p>
-<h2 id="blk-37621">Part V — Programs at Scale</h2>
-<h3 id="blk-37622">35. Modules, builds, and the no-build property</h3>
-<h4 id="blk-37623">35.1 Content-addressed modules</h4>
+<h2 id="blk-38337">Part V — Programs at Scale</h2>
+<h3 id="blk-38338">35. Modules, builds, and the no-build property</h3>
+<h4 id="blk-38339">35.1 Content-addressed modules</h4>
 <pre><code>module race.timing@#a184
 
 export { Time, FinishResult, rank_finish }
@@ -506,15 +507,15 @@ import forge.world@#33ae as world</code></pre>
 <p>Human-readable names and versions are metadata that point to immutable hashes:</p>
 <pre><code>race.timing@1.4 -&gt; #a184</code></pre>
 <p>A locked build stores the hashes, not only the human versions. Upgrading never mutates a sealed artifact; it produces a <em>new</em> artifact with a <em>new</em> hash, and names re-point. Because downstream references are to hashes, nothing silently changes underneath a consumer; a consumer opts into a new version by re-pointing a name. Live actor state evolves separately, by migration (§27.1).</p>
-<h4 id="blk-37628">35.2 The no-build property</h4>
+<h4 id="blk-38344">35.2 The no-build property</h4>
 <p><strong>Property.</strong> Given pure, host-blind, fuel-bounded expansion (Laws 3, 4, 6) over content-addressed inputs, build caching by</p>
 <pre><code>memo[ (transform#, input#) ] = output#</code></pre>
 <p>is sound with <strong>no invalidation logic</strong>: a hash either matches or it does not. Incremental compilation, distributed build caches, and perfect reuse across machines follow immediately. The hard problem of incremental build systems — knowing when a cached result is still valid — does not exist here, because validity <em>is</em> hash equality.</p>
-<h3 id="blk-37632">36. Build films</h3>
+<h3 id="blk-38348">36. Build films</h3>
 <p>The build pipeline (§39.1) is itself a deterministic process with effects only at declared walls — so it is recorded as one. Every build emits a <strong>build film</strong>: which stencils expanded with which arguments, which derives fired, which trait instances were resolved and pinned, which sealed tools ran against which input hashes, and what was hashed.</p>
 <p>Consequences: <code>wrl replay build.film</code> reproduces any build bit-for-bit; provenance views (§29, Law 5) are film queries; and &quot;why does this node exist?&quot; has the same kind of answer at compile time as at run time. One mechanism, both worlds.</p>
-<h3 id="blk-37635">37. Testing and conformance monitoring</h3>
-<h4 id="blk-37636">37.1 Tests are first-class graph specifications</h4>
+<h3 id="blk-38351">37. Testing and conformance monitoring</h3>
+<h4 id="blk-38352">37.1 Tests are first-class graph specifications</h4>
 <pre><code>test &quot;formatting does not affect identity&quot; {
   hash(program_a) = hash(program_b)
 }
@@ -528,16 +529,16 @@ film_test &quot;worker restart&quot; {
   restore checkpoint
   expect same observables
 }</code></pre>
-<h4 id="blk-37638">37.2 The language is simulation-native</h4>
+<h4 id="blk-38354">37.2 The language is simulation-native</h4>
 <p>Every prerequisite of deterministic simulation testing — a deterministic scheduler, virtualized time, randomness funneled through recorded seeds, effects behind mockable walls — is a construction property of the language, not a retrofit. The test runner therefore explores adversity as ordinary execution:</p>
 <pre><code>check schedules=10_000
 check partitions=100
 check restores=100
 check scores=all          ; systematically enumerate scored-branch choices</code></pre>
 <p>Exploration randomness enters through <code>/entropy</code> (§21), so <strong>every failing exploration replays exactly</strong> from its film. Scheduler randomization, fault injection, partition simulation, and restore testing are modes of the one deterministic machine.</p>
-<h4 id="blk-37642">37.3 Film conformance monitoring</h4>
+<h4 id="blk-38358">37.3 Film conformance monitoring</h4>
 <p>A film is a total record, and a sealed specification is executable — so conformance is a diff. An implementation may continuously validate <strong>production films against a sealed specification film's invariants</strong>, closing the gap between the verified design and the running system: the model and the implementation are the same graph.</p>
-<h3 id="blk-37644">38. Foreign functions</h3>
+<h3 id="blk-38360">38. Foreign functions</h3>
 <p>The FFI is boundary-based. Impure native calls cross a named wall and return observations:</p>
 <pre><code>[physics_request] --&gt; /native.physics
 /native.physics ==observed(result=#hash)==&gt; [world]</code></pre>
@@ -545,8 +546,8 @@ check scores=all          ; systematically enumerate scored-branch choices</code
 <pre><code>extern pure fn vec_dot(a: Vec3, b: Vec3) -&gt; Fixed&lt;16&gt;
   from artifact #native-math-v3</code></pre>
 <p>Every extern pins: target ABI; compiler/toolchain hash; native artifact hash; declared effects; and determinism class (§15). An <code>extern pure</code> claiming bit-exact determinism is testable against that claim (§46) and is rejected if the artifact's outputs vary across supported targets.</p>
-<h2 id="blk-37650">Part VI — Reference</h2>
-<h3 id="blk-37651">39. Canonicalization and content identity</h3>
+<h2 id="blk-38366">Part VI — Reference</h2>
+<h3 id="blk-38367">39. Canonicalization and content identity</h3>
 <p>The canonical form contains no decorative line lengths and no source coordinates in semantic nodes.</p>
 <pre><code>Program
   declarations[]  actors[]  edges[]  boundaries[]
@@ -561,10 +562,10 @@ check scores=all          ; systematically enumerate scored-branch choices</code
   <span class="t-key">&quot;target&quot;</span>: <span class="t-string">&quot;actor:#rider-a&quot;</span>,
   <span class="t-key">&quot;policy&quot;</span>: <span class="t-string">&quot;mailbox.default&quot;</span>
 }</code></pre>
-<h4 id="blk-37656">39.1 The canonicalization pipeline</h4>
+<h4 id="blk-38372">39.1 The canonicalization pipeline</h4>
 <ol><li><p>Parse source, or load the structured editor graph.</p></li><li><p>Remove comments and non-executable presentation annotations.</p></li><li><p>Normalize identifiers, numeric forms, strings, and route aliases (derived textures → core, §8.2).</p></li><li><p>Expand stencils under the hygiene rules and identity formula (§31).</p></li><li><p>Evaluate derives to a fixpoint (stratified, monotonic, intrinsically typed; §32).</p></li><li><p>Resolve addresses and explicit shared captures.</p></li><li><p>Resolve every trait-method call site to a concrete instance and pin the instance hashes (§14.3).</p></li><li><p>Sort unordered fields and topology sets by canonical key.</p></li><li><p>Normalize route line lengths to texture tokens; convert visual dot counts to numeric period counts.</p></li><li><p>Validate types, effect rows, capabilities, boundaries, guards, and profile restrictions.</p></li><li><p>Serialize canonical graph bytes.</p></li><li><p>Hash the canonical bytes to obtain the content identity.</p></li></ol>
 <p>The entire pipeline is recorded as a build film (§36).</p>
-<h4 id="blk-37683">39.2 Formatting invariance (worked)</h4>
+<h4 id="blk-38399">39.2 Formatting invariance (worked)</h4>
 <p>Two visibly different surfaces normalize to the same canonical graph and therefore the same hash.</p>
 <p>Surface 1:</p>
 <pre><code>: [rider:a](energy=100){road}
@@ -590,16 +591,16 @@ check scores=all          ; systematically enumerate scored-branch choices</code
   ]
 }</code></pre>
 <p>Nothing decorative — line length, port order, staging order among independent forms, spacing, comments — survives into the semantic node set. Equal canonical bytes yield equal hashes. The same invariance holds between a behavior block and its equivalent drawn routes (§26, §46).</p>
-<h3 id="blk-37692">40. Static checks</h3>
+<h3 id="blk-38408">40. Static checks</h3>
 <p>A conforming checker rejects:</p>
 <ul><li><p>duplicate durable identities in one sealed scope;</p></li><li><p>unbound pattern variables; free variables in quoted fragments;</p></li><li><p>overlapping deterministic branch guards (§20.1);</p></li><li><p>shared mutable cells (§18);</p></li><li><p>routes crossing undeclared capability walls; direct effects outside named boundaries;</p></li><li><p>a <code>Float</code> type in a state cell of a <code>world</code>-profile actor (§15);</p></li><li><p>an unbounded mailbox without an explicit overflow policy (§25);</p></li><li><p>a non-anchored multi-node pattern on a rule's left side (§13);</p></li><li><p>a capability or affine-resource capture in a value used where portability is required (§12.4);</p></li><li><p>expression-layer punctuation outside the sanctioned set (§10.1);</p></li><li><p>a Level-3 derive that deletes or mutates emitted structure (§32);</p></li><li><p>a normal-outcome path promoted to a fault, or a fault demoted to a value (§24.3);</p></li><li><p>non-exhaustive matches over variants without a <code>_</code> arm;</p></li><li><p>missing stable tie-breakers for <code>oN.</code>;</p></li><li><p>recursive stencil expansion without a decreasing budget; expansion exceeding declared fuel;</p></li><li><p>mutation of content-addressed sealed artifacts;</p></li><li><p>scheduler arrival order used as semantic data;</p></li><li><p>mismatched <code>:: //</code> or <code>::: ///</code> scopes.</p></li></ul>
-<h3 id="blk-37731">41. Execution profiles</h3>
+<h3 id="blk-38447">41. Execution profiles</h3>
 <p>An implementation may offer restricted profiles that trade expressiveness for guarantees:</p>
 <table><thead><tr><th>Profile</th><th>Characteristics</th><th>Simulation-state numerics</th></tr></thead><tbody><tr><td><code>pure</code></td><td>no effect walls; finite fuel</td><td>integers, <code>Fixed&lt;Q&gt;</code>; <code>Float64</code> only with <code>#[det=bitexact]</code></td></tr><tr><td><code>replay</code></td><td>effects supplied only from a film</td><td>as <code>pure</code></td></tr><tr><td><code>sandbox</code></td><td>named adapters with quotas</td><td>as <code>pure</code></td></tr><tr><td><code>world</code></td><td>persistent actors; bounded per-period reductions; lockstep-capable</td><td>integers, <code>Fixed&lt;Q&gt;</code>; floats forbidden in state cells</td></tr><tr><td><code>forge</code></td><td>generation plus verification gates</td><td>as <code>pure</code></td></tr><tr><td><code>cluster</code></td><td>replicated facts and reconciliation; termination distinct from quiescence</td><td>as <code>pure</code></td></tr></tbody></table>
 <p>A <strong>minimal conforming implementation</strong> supports staged actors, the four core route textures, single <code>/</code> walls, <code>:: … //</code> fragments, <code>.n</code> period repetition, <code>?</code> variables, <code>|</code> guarded branches, <code>_</code> quiescence, and the expression core (records, variants, <code>Option</code>/<code>Result</code>, pure functions, <code>match</code>) — enough to observe the deterministic reduction property. Podium, stencils, derives, verified routes, merge, behavior blocks, streams, and the spatial canvas may be added incrementally without changing the core semantics.</p>
-<h3 id="blk-37756">42. Grammar</h3>
+<h3 id="blk-38472">42. Grammar</h3>
 <p>Illustrative EBNF. A conforming tokenizer uses explicit token classes for each route texture rather than recognizing arbitrary runs of punctuation.</p>
-<h4 id="blk-37758">42.1 Process notation</h4>
+<h4 id="blk-38474">42.1 Process notation</h4>
 <pre><code>program        = { declaration | statement } ;
 
 declaration    = stencil_decl | fragment_decl | derive_decl | actor_decl
@@ -653,7 +654,7 @@ bind_stmt      = pattern &quot;&lt;-&quot; expression ;
 
 annotation     = &quot;#[&quot; field_list &quot;]&quot; ;
 comment        = &quot;;&quot; { any_character_except_newline } ;</code></pre>
-<h4 id="blk-37760">42.2 Expression and declaration notation (sketch)</h4>
+<h4 id="blk-38476">42.2 Expression and declaration notation (sketch)</h4>
 <pre><code>expression     = literal | variable | path | call | match_expr | closure
                | record_expr | record_update | &quot;(&quot; expression &quot;)&quot;
                | expression binop expression | &quot;not&quot; expression
@@ -692,9 +693,9 @@ test_decl      = ( &quot;test&quot; | &quot;property&quot; | &quot;film_test&quo
 
 extern_decl    = &quot;extern&quot; &quot;pure&quot; fn_sig &quot;from&quot; &quot;artifact&quot; hash ;</code></pre>
 <p>Disambiguation notes: <code>(x=1)</code> is a cell, <code>(expr)</code> is grouping, and a field-form parenthesis attached to <code>[actor]</code> is always state; <code>.5</code> is a period count, <code>.....</code> is its sugar in repeat position, <code>...</code> is continuation, the <code>.</code> in <code>oN.</code> belongs to the podium token, and a <code>.</code> between identifiers is a path; <code>*</code> inside an identity selector is a wildcard and before a stamp is replication, with <code>mul</code> for multiplication; angle brackets are legal only attached to an identifier.</p>
-<h3 id="blk-37763">43. Worked examples</h3>
+<h3 id="blk-38479">43. Worked examples</h3>
 <p>These seven span sports, distributed systems, fabrication, biology, machine-assisted patching, and a versioned service. Together they exercise every construct in the language.</p>
-<h4 id="blk-37765">43.1 Criterium race — staging, stencils, periods, async, finish, podium</h4>
+<h4 id="blk-38481">43.1 Criterium race — staging, stencils, periods, async, finish, podium</h4>
 <pre><code>; a five-lap criterium with async team radio and a podium
 
 ::: rider(name, watts)
@@ -725,7 +726,7 @@ extern_decl    = &quot;extern&quot; &quot;pure&quot; fn_sig &quot;from&quot; &qu
 //finish ==rank(by=time, tie=#id)==&gt; o3.
 [winner, second, third] &lt;- o3.
 ///race-result</code></pre>
-<h4 id="blk-37767">43.2 Supervised worker pool — mailboxes, quiescence, faults, restart</h4>
+<h4 id="blk-38483">43.2 Supervised worker pool — mailboxes, quiescence, faults, restart</h4>
 <pre><code>::: worker(id)
   [worker:#id](status=idle, checkpoint=0){jobs: Mailbox&lt;Job, capacity=256, overflow=reject&gt;, supervisor}
 ///
@@ -750,7 +751,7 @@ extern_decl    = &quot;extern&quot; &quot;pure&quot; fn_sig &quot;from&quot; &qu
 @worker(?w, restored_from=last_checkpoint)
 
 [supervisor:pool] ==pool_quiescent==&gt; //done</code></pre>
-<h4 id="blk-37769">43.3 Replicated fact lattice — CRDT merge, partition, convergence</h4>
+<h4 id="blk-38485">43.3 Replicated fact lattice — CRDT merge, partition, convergence</h4>
 <pre><code>: [node:a]{facts, peers}
 : [node:b]{facts, peers}
 : [node:c]{facts, peers}
@@ -773,7 +774,7 @@ extern_decl    = &quot;extern&quot; &quot;pure&quot; fn_sig &quot;from&quot; &qu
 [node:a]{facts} ==same_hash==&gt; [node:b]{facts}
 [node:b]{facts} ==same_hash==&gt; [node:c]{facts}
 ///converged</code></pre>
-<h4 id="blk-37771">43.4 Forge world fabrication — model wall, checks, verification, seal</h4>
+<h4 id="blk-38487">43.4 Forge world fabrication — model wall, checks, verification, seal</h4>
 <pre><code>: [brief](goal=&quot;coastal cycling city&quot;, players=64)
 : [seed:#city17]
 
@@ -794,7 +795,7 @@ extern_decl    = &quot;extern&quot; &quot;pure&quot; fn_sig &quot;from&quot; &qu
 /gpu ==preview(frame=#preview17)==&gt; [designer]
 [designer] ~~approve~~&gt; [film:#world17]
 [film:#world17] ==seal==&gt; ///world17</code></pre>
-<h4 id="blk-37773">43.5 Cell signaling — membranes, diffusion, decay</h4>
+<h4 id="blk-38489">43.5 Cell signaling — membranes, diffusion, decay</h4>
 <pre><code>::: cell(id, kind)
   [cell:#id](kind=kind, active=false, energy=50){membrane, neighbors}
 ///
@@ -816,7 +817,7 @@ extern_decl    = &quot;extern&quot; &quot;pure&quot; fn_sig &quot;from&quot; &qu
 [cell:c] --contract--&gt; (cell:c energy=energy-5)
 
 ([field] --decay(1)--&gt; [field]).10</code></pre>
-<h4 id="blk-37775">43.6 Proof-carrying patch — parallel checks, verified acceptance, seal</h4>
+<h4 id="blk-38491">43.6 Proof-carrying patch — parallel checks, verified acceptance, seal</h4>
 <pre><code>: [issue:#217](failure=&quot;stale imported schedule&quot;)
 : [repo:#trvm](revision=#a91)
 
@@ -838,7 +839,7 @@ extern_decl    = &quot;extern&quot; &quot;pure&quot; fn_sig &quot;from&quot; &qu
 [film:#accepted-p44] ==merge_candidate==&gt; //review
 [reviewer] ~~approve~~&gt; //review
 //review ==seal==&gt; ///release-candidate</code></pre>
-<h4 id="blk-37777">43.7 Versioned telemetry ingest — expression notation, behavior block, backpressure, migration, test</h4>
+<h4 id="blk-38493">43.7 Versioned telemetry ingest — expression notation, behavior block, backpressure, migration, test</h4>
 <pre><code>module ingest@#b12
 
 type Reading = { sensor: SensorId, value: Fixed&lt;16&gt;, at: Period }
@@ -885,18 +886,18 @@ test &quot;validation rejects out of range&quot; {
 }
 
 check schedules=10_000</code></pre>
-<h3 id="blk-37779">44. Exclusions</h3>
+<h3 id="blk-38495">44. Exclusions</h3>
 <p>The following are permanently excluded. They are not &quot;future work&quot;; each would break a stated principle.</p>
 <ul><li><p>textual or unhygienic macros; raw token-array metaprogramming</p></li><li><p>operator overloading of punctuation</p></li><li><p>implicit conversions</p></li><li><p><code>null</code></p></li><li><p>class inheritance; deep hierarchies; implicit virtual dispatch; actors inheriting actor implementations</p></li><li><p>hidden exceptions</p></li><li><p>shared mutable global state; shared mutable pointers</p></li><li><p>nondeterministic map or set iteration</p></li><li><p>ambient filesystem / network / model / clock access — at run time or compile time</p></li><li><p>arbitrary compile-time I/O; compile-time host introspection</p></li><li><p>scheduler-dependent mailbox selection; scheduler arrival order as data</p></li><li><p>semantics derived from canvas coordinates</p></li><li><p>a new punctuation symbol for every conventional feature</p></li></ul>
-<h3 id="blk-37808">45. Reserved and implementation-defined</h3>
+<h3 id="blk-38524">45. Reserved and implementation-defined</h3>
 <p>The following are intentionally left open; a conforming implementation may specify them, but the language does not fix them:</p>
 <ul><li><p><strong>Byzantine trust modes.</strong> The CRDT laws (§22) guarantee convergence among honest replicas. The trust and evidence policy for dishonest peers is implementation-defined (<code>trust=</code> on merge routes).</p></li><li><p><strong>Distributed termination detection.</strong> The specific detector that distinguishes true termination from temporary quiescence (§20.11) is implementation-defined.</p></li><li><p><strong>Scoring functions.</strong> A scored branch must record its scores as facts so replay is exact (§21, §37.2); the scoring function itself is implementation-defined.</p></li><li><p><strong>Four-stroke delimiters</strong> (<code>::::</code>, <code>////</code>): reserved, undefined.</p></li><li><p><strong>Backtick blocks</strong>: reserved for raw or foreign-code embedding beyond §38, admitted only behind an authority wall with a pinned toolchain and artifact hash.</p></li><li><p><strong>Explicit spatial predicates</strong> (e.g. <code>#[inside=/district.north]</code>, <code>#[near=[station], distance&lt;20m]</code>): reserved. Spatial layout is presentation only; geometry becomes semantic only when explicitly declared.</p></li></ul>
-<h3 id="blk-37823">46. Conformance</h3>
+<h3 id="blk-38539">46. Conformance</h3>
 <p>An implementation conforms if it satisfies the following observable properties. They double as a test matrix.</p>
 <table><thead><tr><th>Property</th><th>Test</th></tr></thead><tbody><tr><td>Formatting invariance</td><td>random spaces and line lengths retain the semantic hash</td></tr><tr><td>Two-surface isomorphism</td><td>a behavior block and its equivalent drawn routes produce identical canonical bytes</td></tr><tr><td>Scheduler invariance</td><td>randomized worker ordering retains the committed film</td></tr><tr><td>Replay exactness</td><td>a live run and its replay share all observables</td></tr><tr><td>Build invariance</td><td>the same inputs produce an identical build film and identical hashes on different hosts</td></tr><tr><td>Memoized-build soundness</td><td>reusing <code>(transform#, input#)</code> cache entries yields outputs identical to a cold build</td></tr><tr><td>Fragment hygiene</td><td>copied fragments do not alias local identities; rebuilds reproduce derived identities (§31.2)</td></tr><tr><td>Merge laws</td><td>fact union is commutative, associative, idempotent; the pinned join instance is identical across replicas of one program hash</td></tr><tr><td>Boundary safety</td><td>undeclared effects cannot cross walls; capability-capturing values cannot travel</td></tr><tr><td>Ranking stability</td><td><code>oN.</code> is unaffected by arrival order</td></tr><tr><td>Numeric portability</td><td><code>world</code>-profile simulations produce identical films across supported targets; <code>extern pure</code> artifacts honor their declared determinism class</td></tr><tr><td>Restore correctness</td><td>imported stale work prevents false termination</td></tr><tr><td>Resource safety</td><td>loops, mailboxes, streams, and expansion respect budgets and bounds</td></tr><tr><td>Portability</td><td>the same sealed film executes identically across runtimes</td></tr></tbody></table>
 <p><em>End of specification. The language becomes real when one small set of reading laws — shape says what a thing is, texture says how it moves, colons introduce and slashes bound, marks for architecture and words for computation — accurately expresses a bike race, a supervised server, a replicated document, a generated world, a biological pathway, a proof-carrying patch, and a versioned service, and all of them compile to one inspectable canonical graph whose build, execution, and history are equally replayable.</em></p></div>
 <p class="src"><a href="/#/TRVM/WRL.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-36862" class="lvl2">Status and stability (READ FIRST)</a><a href="#blk-36867" class="lvl3">Three stability tiers</a><a href="#blk-36876" class="lvl3">Section classification</a><a href="#blk-36887" class="lvl3">The frozen extract</a><a href="#blk-36889" class="lvl3">Implementation reality check (updated for Core 0.1.2, 2026-07-25)</a><a href="#blk-36897" class="lvl2">1. Introduction</a><a href="#blk-36900" class="lvl3">1.1 Two notations, one language</a><a href="#blk-36908" class="lvl3">1.2 The architectural creed</a><a href="#blk-36912" class="lvl3">1.3 The four reading laws</a><a href="#blk-36916" class="lvl3">1.4 Conceptual lineage (for orientation)</a><a href="#blk-36918" class="lvl3">1.5 Relationship to the surrounding ecosystem</a><a href="#blk-36926" class="lvl2">2. Design principles</a><a href="#blk-36953" class="lvl2">3. Notation at a glance</a><a href="#blk-37020" class="lvl2">4. Lexical structure</a><a href="#blk-37033" class="lvl2">5. Delimiters and scope</a><a href="#blk-37035" class="lvl3">5.1 The colon is a staging prefix</a><a href="#blk-37039" class="lvl3">5.2 Fragments and stencils are the only paired scopes</a><a href="#blk-37051" class="lvl3">5.3 A lone slash is a boundary node, never a closer</a><a href="#blk-37057" class="lvl3">5.4 Depth is categorical and capped at three</a><a href="#blk-37076" class="lvl2">6. Containers and the shape-as-kind system</a><a href="#blk-37089" class="lvl2">7. Identity and addressing</a><a href="#blk-37116" class="lvl2">8. Routes</a><a href="#blk-37118" class="lvl3">8.1 Core textures</a><a href="#blk-37143" class="lvl3">8.2 Derived textures (sugar)</a><a href="#blk-37156" class="lvl3">8.3 Labels, payloads, guards</a><a href="#blk-37160" class="lvl3">8.4 Branches and parallel lanes</a><a href="#blk-37165" class="lvl3">8.5 Composition operators</a><a href="#blk-37182" class="lvl2">9. Time</a><a href="#blk-37214" class="lvl2">10. Overview and the punctuation rule</a><a href="#blk-37216" class="lvl3">10.1 The punctuation rule</a><a href="#blk-37265" class="lvl2">11. Values and data types</a><a href="#blk-37270" class="lvl2">12. Bindings, functions, and closures</a><a href="#blk-37271" class="lvl3">12.1 Bindings</a><a href="#blk-37274" class="lvl3">12.2 Pure functions</a><a href="#blk-37278" class="lvl3">12.3 Effect rows</a><a href="#blk-37282" class="lvl3">12.4 Closures and portability</a><a href="#blk-37285" class="lvl2">13. Pattern matching</a><a href="#blk-37296" class="lvl2">14. Generics and traits</a><a href="#blk-37297" class="lvl3">14.1 Generics</a><a href="#blk-37301" class="lvl3">14.2 Traits</a><a href="#blk-37305" class="lvl3">14.3 Coherence is hash-pinned</a><a href="#blk-37308" class="lvl2">15. Numerics and determinism classes</a><a href="#blk-37327" class="lvl2">16. Collections, strings, and symbols</a><a href="#blk-37337" class="lvl2">17. Resources and ownership</a><a href="#blk-37355" class="lvl2">18. Memory model</a><a href="#blk-37383" class="lvl2">19. Runtime entities</a><a href="#blk-37399" class="lvl2">20. Execution model</a><a href="#blk-37401" class="lvl3">20.1 The configuration</a><a href="#blk-37420" class="lvl3">20.2 Logical time is superdense</a><a href="#blk-37422" class="lvl3">20.3 The period cycle (five phases)</a><a href="#blk-37435" class="lvl3">20.4 Conflicts dissolve</a><a href="#blk-37454" class="lvl3">20.5 Within-period fixpoint</a><a href="#blk-37456" class="lvl3">20.6 Boundaries as reduction operators</a><a href="#blk-37470" class="lvl3">20.7 Podium — ranked selection with provenance</a><a href="#blk-37475" class="lvl3">20.8 Messages</a><a href="#blk-37479" class="lvl3">20.9 Scheduled events</a><a href="#blk-37481" class="lvl3">20.10 Determinism</a><a href="#blk-37484" class="lvl3">20.11 Termination and quiescence</a><a href="#blk-37486" class="lvl2">21. Effects, capabilities, and entropy</a><a href="#blk-37495" class="lvl2">22. Merging replicated facts</a><a href="#blk-37499" class="lvl2">23. Verification and sealing</a><a href="#blk-37505" class="lvl2">24. Supervision, faults, and the error ladder</a><a href="#blk-37506" class="lvl3">24.1 Supervision</a><a href="#blk-37511" class="lvl3">24.2 Rest and wake</a><a href="#blk-37514" class="lvl3">24.3 The error ladder</a><a href="#blk-37530" class="lvl2">25. Mailboxes, streams, and backpressure</a><a href="#blk-37537" class="lvl2">26. Actor behavior blocks</a><a href="#blk-37541" class="lvl2">27. Evolution: state migration and message compatibility</a><a href="#blk-37542" class="lvl3">27.1 Live-state migration</a><a href="#blk-37546" class="lvl3">27.2 Message compatibility</a><a href="#blk-37551" class="lvl2">28. Phases</a><a href="#blk-37567" class="lvl2">29. The six laws of metaprogramming</a><a href="#blk-37581" class="lvl2">30. Fragments</a><a href="#blk-37589" class="lvl2">31. Stencils</a><a href="#blk-37590" class="lvl3">31.1 Stencils are the ordinary metaprogramming mechanism</a><a href="#blk-37594" class="lvl3">31.2 Identity derivation</a><a href="#blk-37598" class="lvl3">31.3 Expansion pipeline</a><a href="#blk-37600" class="lvl2">32. Derives</a><a href="#blk-37613" class="lvl2">33. Sealed tools behind /compiler</a><a href="#blk-37617" class="lvl2">34. Reflection</a><a href="#blk-37622" class="lvl2">35. Modules, builds, and the no-build property</a><a href="#blk-37623" class="lvl3">35.1 Content-addressed modules</a><a href="#blk-37628" class="lvl3">35.2 The no-build property</a><a href="#blk-37632" class="lvl2">36. Build films</a><a href="#blk-37635" class="lvl2">37. Testing and conformance monitoring</a><a href="#blk-37636" class="lvl3">37.1 Tests are first-class graph specifications</a><a href="#blk-37638" class="lvl3">37.2 The language is simulation-native</a><a href="#blk-37642" class="lvl3">37.3 Film conformance monitoring</a><a href="#blk-37644" class="lvl2">38. Foreign functions</a><a href="#blk-37651" class="lvl2">39. Canonicalization and content identity</a><a href="#blk-37656" class="lvl3">39.1 The canonicalization pipeline</a><a href="#blk-37683" class="lvl3">39.2 Formatting invariance (worked)</a><a href="#blk-37692" class="lvl2">40. Static checks</a><a href="#blk-37731" class="lvl2">41. Execution profiles</a><a href="#blk-37756" class="lvl2">42. Grammar</a><a href="#blk-37758" class="lvl3">42.1 Process notation</a><a href="#blk-37760" class="lvl3">42.2 Expression and declaration notation (sketch)</a><a href="#blk-37763" class="lvl2">43. Worked examples</a><a href="#blk-37765" class="lvl3">43.1 Criterium race — staging, stencils, periods, async, finish, podium</a><a href="#blk-37767" class="lvl3">43.2 Supervised worker pool — mailboxes, quiescence, faults, restart</a><a href="#blk-37769" class="lvl3">43.3 Replicated fact lattice — CRDT merge, partition, convergence</a><a href="#blk-37771" class="lvl3">43.4 Forge world fabrication — model wall, checks, verification, seal</a><a href="#blk-37773" class="lvl3">43.5 Cell signaling — membranes, diffusion, decay</a><a href="#blk-37775" class="lvl3">43.6 Proof-carrying patch — parallel checks, verified acceptance, seal</a><a href="#blk-37777" class="lvl3">43.7 Versioned telemetry ingest — expression notation, behavior block, backpressure, migration, test</a><a href="#blk-37779" class="lvl2">44. Exclusions</a><a href="#blk-37808" class="lvl2">45. Reserved and implementation-defined</a><a href="#blk-37823" class="lvl2">46. Conformance</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a><a href="/TRVM/README.md/">TRVM — a coordination-free distributed interaction-calculus runtime</a><a href="/TRVM/WRLM_RESEARCH_BRIEF.md/">WRLM Research Brief</a><a href="/TRVM/WRL_CORE_0.1.md/">WRL Core 0.1.3 — Frozen Family Extract</a><a href="/TRVM/WRL_CORE_0.2.md/">WRL Core 0.2.1 — Frozen Family Extract</a><a href="/TRVM/WRL_LANGUAGE_TRACK_L0_CLOSURE_MEMO.md/">WallRiderLang — LANGUAGE TRACK, L-0 CLOSURE memo</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieralo47pjo2o3uixzahqvb6tkrfx6t4c7elrinhvtevzankofl3ztta</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-37578" class="lvl2">Status and stability (READ FIRST)</a><a href="#blk-37583" class="lvl3">Three stability tiers</a><a href="#blk-37592" class="lvl3">Section classification</a><a href="#blk-37603" class="lvl3">The frozen extract</a><a href="#blk-37605" class="lvl3">Implementation reality check (updated for Core 0.1.2, 2026-07-25)</a><a href="#blk-37613" class="lvl2">1. Introduction</a><a href="#blk-37616" class="lvl3">1.1 Two notations, one language</a><a href="#blk-37624" class="lvl3">1.2 The architectural creed</a><a href="#blk-37628" class="lvl3">1.3 The four reading laws</a><a href="#blk-37632" class="lvl3">1.4 Conceptual lineage (for orientation)</a><a href="#blk-37634" class="lvl3">1.5 Relationship to the surrounding ecosystem</a><a href="#blk-37642" class="lvl2">2. Design principles</a><a href="#blk-37669" class="lvl2">3. Notation at a glance</a><a href="#blk-37736" class="lvl2">4. Lexical structure</a><a href="#blk-37749" class="lvl2">5. Delimiters and scope</a><a href="#blk-37751" class="lvl3">5.1 The colon is a staging prefix</a><a href="#blk-37755" class="lvl3">5.2 Fragments and stencils are the only paired scopes</a><a href="#blk-37767" class="lvl3">5.3 A lone slash is a boundary node, never a closer</a><a href="#blk-37773" class="lvl3">5.4 Depth is categorical and capped at three</a><a href="#blk-37792" class="lvl2">6. Containers and the shape-as-kind system</a><a href="#blk-37805" class="lvl2">7. Identity and addressing</a><a href="#blk-37832" class="lvl2">8. Routes</a><a href="#blk-37834" class="lvl3">8.1 Core textures</a><a href="#blk-37859" class="lvl3">8.2 Derived textures (sugar)</a><a href="#blk-37872" class="lvl3">8.3 Labels, payloads, guards</a><a href="#blk-37876" class="lvl3">8.4 Branches and parallel lanes</a><a href="#blk-37881" class="lvl3">8.5 Composition operators</a><a href="#blk-37898" class="lvl2">9. Time</a><a href="#blk-37930" class="lvl2">10. Overview and the punctuation rule</a><a href="#blk-37932" class="lvl3">10.1 The punctuation rule</a><a href="#blk-37981" class="lvl2">11. Values and data types</a><a href="#blk-37986" class="lvl2">12. Bindings, functions, and closures</a><a href="#blk-37987" class="lvl3">12.1 Bindings</a><a href="#blk-37990" class="lvl3">12.2 Pure functions</a><a href="#blk-37994" class="lvl3">12.3 Effect rows</a><a href="#blk-37998" class="lvl3">12.4 Closures and portability</a><a href="#blk-38001" class="lvl2">13. Pattern matching</a><a href="#blk-38012" class="lvl2">14. Generics and traits</a><a href="#blk-38013" class="lvl3">14.1 Generics</a><a href="#blk-38017" class="lvl3">14.2 Traits</a><a href="#blk-38021" class="lvl3">14.3 Coherence is hash-pinned</a><a href="#blk-38024" class="lvl2">15. Numerics and determinism classes</a><a href="#blk-38043" class="lvl2">16. Collections, strings, and symbols</a><a href="#blk-38053" class="lvl2">17. Resources and ownership</a><a href="#blk-38071" class="lvl2">18. Memory model</a><a href="#blk-38099" class="lvl2">19. Runtime entities</a><a href="#blk-38115" class="lvl2">20. Execution model</a><a href="#blk-38117" class="lvl3">20.1 The configuration</a><a href="#blk-38136" class="lvl3">20.2 Logical time is superdense</a><a href="#blk-38138" class="lvl3">20.3 The period cycle (five phases)</a><a href="#blk-38151" class="lvl3">20.4 Conflicts dissolve</a><a href="#blk-38170" class="lvl3">20.5 Within-period fixpoint</a><a href="#blk-38172" class="lvl3">20.6 Boundaries as reduction operators</a><a href="#blk-38186" class="lvl3">20.7 Podium — ranked selection with provenance</a><a href="#blk-38191" class="lvl3">20.8 Messages</a><a href="#blk-38195" class="lvl3">20.9 Scheduled events</a><a href="#blk-38197" class="lvl3">20.10 Determinism</a><a href="#blk-38200" class="lvl3">20.11 Termination and quiescence</a><a href="#blk-38202" class="lvl2">21. Effects, capabilities, and entropy</a><a href="#blk-38211" class="lvl2">22. Merging replicated facts</a><a href="#blk-38215" class="lvl2">23. Verification and sealing</a><a href="#blk-38221" class="lvl2">24. Supervision, faults, and the error ladder</a><a href="#blk-38222" class="lvl3">24.1 Supervision</a><a href="#blk-38227" class="lvl3">24.2 Rest and wake</a><a href="#blk-38230" class="lvl3">24.3 The error ladder</a><a href="#blk-38246" class="lvl2">25. Mailboxes, streams, and backpressure</a><a href="#blk-38253" class="lvl2">26. Actor behavior blocks</a><a href="#blk-38257" class="lvl2">27. Evolution: state migration and message compatibility</a><a href="#blk-38258" class="lvl3">27.1 Live-state migration</a><a href="#blk-38262" class="lvl3">27.2 Message compatibility</a><a href="#blk-38267" class="lvl2">28. Phases</a><a href="#blk-38283" class="lvl2">29. The six laws of metaprogramming</a><a href="#blk-38297" class="lvl2">30. Fragments</a><a href="#blk-38305" class="lvl2">31. Stencils</a><a href="#blk-38306" class="lvl3">31.1 Stencils are the ordinary metaprogramming mechanism</a><a href="#blk-38310" class="lvl3">31.2 Identity derivation</a><a href="#blk-38314" class="lvl3">31.3 Expansion pipeline</a><a href="#blk-38316" class="lvl2">32. Derives</a><a href="#blk-38329" class="lvl2">33. Sealed tools behind /compiler</a><a href="#blk-38333" class="lvl2">34. Reflection</a><a href="#blk-38338" class="lvl2">35. Modules, builds, and the no-build property</a><a href="#blk-38339" class="lvl3">35.1 Content-addressed modules</a><a href="#blk-38344" class="lvl3">35.2 The no-build property</a><a href="#blk-38348" class="lvl2">36. Build films</a><a href="#blk-38351" class="lvl2">37. Testing and conformance monitoring</a><a href="#blk-38352" class="lvl3">37.1 Tests are first-class graph specifications</a><a href="#blk-38354" class="lvl3">37.2 The language is simulation-native</a><a href="#blk-38358" class="lvl3">37.3 Film conformance monitoring</a><a href="#blk-38360" class="lvl2">38. Foreign functions</a><a href="#blk-38367" class="lvl2">39. Canonicalization and content identity</a><a href="#blk-38372" class="lvl3">39.1 The canonicalization pipeline</a><a href="#blk-38399" class="lvl3">39.2 Formatting invariance (worked)</a><a href="#blk-38408" class="lvl2">40. Static checks</a><a href="#blk-38447" class="lvl2">41. Execution profiles</a><a href="#blk-38472" class="lvl2">42. Grammar</a><a href="#blk-38474" class="lvl3">42.1 Process notation</a><a href="#blk-38476" class="lvl3">42.2 Expression and declaration notation (sketch)</a><a href="#blk-38479" class="lvl2">43. Worked examples</a><a href="#blk-38481" class="lvl3">43.1 Criterium race — staging, stencils, periods, async, finish, podium</a><a href="#blk-38483" class="lvl3">43.2 Supervised worker pool — mailboxes, quiescence, faults, restart</a><a href="#blk-38485" class="lvl3">43.3 Replicated fact lattice — CRDT merge, partition, convergence</a><a href="#blk-38487" class="lvl3">43.4 Forge world fabrication — model wall, checks, verification, seal</a><a href="#blk-38489" class="lvl3">43.5 Cell signaling — membranes, diffusion, decay</a><a href="#blk-38491" class="lvl3">43.6 Proof-carrying patch — parallel checks, verified acceptance, seal</a><a href="#blk-38493" class="lvl3">43.7 Versioned telemetry ingest — expression notation, behavior block, backpressure, migration, test</a><a href="#blk-38495" class="lvl2">44. Exclusions</a><a href="#blk-38524" class="lvl2">45. Reserved and implementation-defined</a><a href="#blk-38539" class="lvl2">46. Conformance</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a><a href="/TRVM/README.md/">TRVM — a coordination-free distributed interaction-calculus runtime</a><a href="/TRVM/WRLM_RESEARCH_BRIEF.md/">WRLM Research Brief</a><a href="/TRVM/WRL_CORE_0.1.md/">WRL Core 0.1.3 — Frozen Family Extract</a><a href="/TRVM/WRL_CORE_0.2.md/">WRL Core 0.2.1 — Frozen Family Extract</a><a href="/TRVM/WRL_LANGUAGE_TRACK_L0_CLOSURE_MEMO.md/">WallRiderLang — LANGUAGE TRACK, L-0 CLOSURE memo</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraaxbn5jyidr3ts22hvz6lcfmgyayjx3ezleyirul53yjqc4be3kua</div></div></div>
 </div></div>
 </body></html>

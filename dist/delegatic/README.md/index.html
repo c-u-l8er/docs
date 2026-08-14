@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>delegatic · delegatic · Ampersand Box</title>
 <meta name="description" content="OS-006 Governance Shim — authorization kernel for the [&amp;] Protocol ecosystem.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/delegatic/README.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"delegatic","name":"delegatic","description":"OS-006 Governance Shim — authorization kernel for the [&] Protocol ecosystem.","url":"https://docs.ampersandboxdesign.com/delegatic/README.md/","identifier":"bagaaieraxb6xlzisuyqjtmy5zo2tfwzccj7jr5wifxvzzpnfu3etenp2mj5a","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"delegatic","url":"https://docs.ampersandboxdesign.com/delegatic/"},"articleSection":"delegatic","hasPart":[{"@type":"WebPageElement","name":"Status"},{"@type":"WebPageElement","name":"MCP surface"},{"@type":"WebPageElement","name":"Contract"},{"@type":"WebPageElement","name":"AuthorizationBlock"},{"@type":"WebPageElement","name":"Policy semantics"},{"@type":"WebPageElement","name":"Wiring Delegatic into OS-011 replay"},{"@type":"WebPageElement","name":"Running the suite"},{"@type":"WebPageElement","name":"References"},{"@type":"WebPageElement","name":"License"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"delegatic","item":"https://docs.ampersandboxdesign.com/delegatic/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/delegatic/README.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"delegatic","name":"delegatic","description":"OS-006 Governance Shim — authorization kernel for the [&] Protocol ecosystem.","url":"https://docs.ampersandboxdesign.com/delegatic/README.md/","identifier":"bagaaierawklv63ycvqvs6od7aj7lstiqvuuse4dcl7lbttxb6sgkay5n4rsa","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"delegatic","url":"https://docs.ampersandboxdesign.com/delegatic/"},"articleSection":"delegatic","hasPart":[{"@type":"WebPageElement","name":"Status"},{"@type":"WebPageElement","name":"MCP surface"},{"@type":"WebPageElement","name":"Contract"},{"@type":"WebPageElement","name":"AuthorizationBlock"},{"@type":"WebPageElement","name":"Policy semantics"},{"@type":"WebPageElement","name":"Wiring Delegatic into OS-011 replay"},{"@type":"WebPageElement","name":"Running the suite"},{"@type":"WebPageElement","name":"References"},{"@type":"WebPageElement","name":"License"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"delegatic","item":"https://docs.ampersandboxdesign.com/delegatic/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/delegatic/README.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,12 +23,12 @@
 
 </div></div>
 <div class="lead">OS-006 Governance Shim — authorization kernel for the [&amp;] Protocol ecosystem.</div>
-<div class="prose"><h1 id="blk-59336">delegatic</h1>
+<div class="prose"><h1 id="blk-60106">delegatic</h1>
 <p>OS-006 Governance Shim — authorization kernel for the [&amp;] Protocol ecosystem.</p>
 <p>Issues signed, expiring <code>AuthorizationBlock</code>s to destructive edges in OS-011 <code>&amp;body.*</code> replay flows. Policy-based, deny-by-default, pluggable policy store.</p>
-<h3 id="blk-59339">Status</h3>
+<h3 id="blk-60109">Status</h3>
 <ul><li><p><strong>Library:</strong> v0.1.0 production-ready</p></li><li><p><strong>Tests:</strong> 42/42 (25 unit + 3 integration + 14 MCP tool tests) + 2 body-os end-to-end integration tests</p></li><li><p><strong>Storage:</strong> in-memory ETS-backed <code>PolicyStore</code> — Postgres-backed adapter is a future additive release</p></li><li><p><strong>MCP server:</strong> shipped — 6 tools on the <code>delegatic</code> namespace (put/get/list/delete policy + authorize + verify) with Anubis stdio/HTTP transport</p></li><li><p><strong>Deployment:</strong> <code>fly.toml</code> + <code>Dockerfile</code> ready for Fly.io (<code>delegatic-mcp</code>, port 4400)</p></li></ul>
-<h3 id="blk-59351">MCP surface</h3>
+<h3 id="blk-60121">MCP surface</h3>
 <pre><code>delegatic_put_policy       — register or replace a Policy
 delegatic_get_policy       — look up a Policy by id
 delegatic_list_policies    — list every registered Policy
@@ -36,7 +37,7 @@ delegatic_authorize        — issue a fresh AuthorizationBlock
 delegatic_verify           — verify a block's HMAC signature + TTL</code></pre>
 <p>Remote agents (body-browser-mcp, body-os-mcp, FleetPrompt's InstallEngine, Graphonomous replay flows) call <code>delegatic_authorize</code> to obtain the fresh blocks they need for destructive edges per OS-011 §4.4.</p>
 <p>This is the <em>authorization kernel</em> — the minimum needed to close the OS-011 destructive-edge loop. The full Delegatic spec (<code>delegatic.com/docs/spec/</code>) layers on org trees, memberships, effective-policy computation, and a LiveView dashboard; those are future work.</p>
-<h3 id="blk-59355">Contract</h3>
+<h3 id="blk-60125">Contract</h3>
 <pre data-lang="elixir"><code><span class="t-comment"># 1. Register a policy</span>
 <span class="t-atom">:ok</span> =
   <span class="t-type">Delegatic</span>.put_policy(
@@ -68,29 +69,29 @@ authorizer =
 
 <span class="t-comment"># 4. Wire it into body-os replay</span>
 <span class="t-type">BodyOs.Replay</span>.execute(session, trace, authorizer: authorizer)</code></pre>
-<h3 id="blk-59357">AuthorizationBlock</h3>
+<h3 id="blk-60127">AuthorizationBlock</h3>
 <p>Every issued block carries:</p>
 <table><thead><tr><th>Field</th><th>Example</th></tr></thead><tbody><tr><td><code>policy_id</code></td><td><code>&quot;delegatic://ws-42/ops&quot;</code></td></tr><tr><td><code>approved_by</code></td><td><code>&quot;supervisor@acme&quot;</code></td></tr><tr><td><code>approved_at</code></td><td>ISO8601 UTC</td></tr><tr><td><code>expires_at</code></td><td>ISO8601 UTC (capped at <code>policy.max_ttl_seconds</code>)</td></tr><tr><td><code>authorization_token</code></td><td><code>&quot;sha256:&lt;64-hex&gt;&quot;</code> — HMAC over the other fields</td></tr></tbody></table>
 <p>The token is <em>tamper-evident</em>, not secret — any consumer can call <code>Delegatic.AuthorizationBlock.verify/1</code> to detect forgery or expiration.</p>
 <p>The HMAC key lives in <code>config :delegatic, :hmac_key</code>. A per-process random fallback is used when unset (fine for tests, unsafe for prod).</p>
-<h3 id="blk-59374">Policy semantics</h3>
+<h3 id="blk-60144">Policy semantics</h3>
 <ol><li><p><strong>`action in deny_actions`</strong> → <code>{:error, :denied_by_policy}</code></p></li><li><p><strong>`agents` set and `agent_id` not in it</strong> → <code>{:error, :agent_not_allowed}</code></p></li><li><p><strong>`action not in allow_actions`</strong> → <code>{:error, :not_in_allowlist}</code> (deny-by-default)</p></li><li><p>Otherwise → <code>:ok</code></p></li></ol>
-<h3 id="blk-59384">Wiring Delegatic into OS-011 replay</h3>
+<h3 id="blk-60154">Wiring Delegatic into OS-011 replay</h3>
 <p>The OS-011 spec §4.4 requires that every destructive replay edge obtain a <em>fresh</em> authorization — prior authorization does not carry. Delegatic's <code>authorizer_for/1</code> returns a function that re-issues a new block on every call, producing exactly the semantics OS-011 demands:</p>
 <pre data-lang="elixir"><code><span class="t-comment"># Recorded trace: destructive edges carry OLD authorization blocks</span>
 <span class="t-comment"># Replay stripper: body-os.Replay strips them before dispatch</span>
 <span class="t-comment"># Delegatic authorizer: fresh block for every edge that makes it through policy</span>
 <span class="t-comment"># Session: enforces the destructive-action gate on the fresh block</span></code></pre>
 <p>See <code>body-os/test/delegatic_integration_test.exs</code> for the end-to-end test that exercises this flow — both the success path (allowlist policy → replay succeeds) and the failure path (readonly policy → replay halts with <code>reason: &quot;authorization_failure&quot;</code>).</p>
-<h3 id="blk-59388">Running the suite</h3>
+<h3 id="blk-60158">Running the suite</h3>
 <pre><code>mix deps.get
 mix test</code></pre>
-<h3 id="blk-59390">References</h3>
+<h3 id="blk-60160">References</h3>
 <ul><li><p><code>delegatic.com/docs/spec/README.md</code> — full v0.2 spec (organizations, memberships, effective policy, dashboard)</p></li><li><p><code>opensentience.org/docs/spec/OS-011-EMBODIMENT.md</code> §4.4 — AuthorizationBlock contract</p></li><li><p><code>body-os/</code> + <code>body-browser/</code> — OS-011 providers whose Replay flows consume Delegatic authorizers</p></li></ul>
-<h3 id="blk-59398">License</h3>
+<h3 id="blk-60168">License</h3>
 <p>Apache-2.0</p></div>
 <p class="src"><a href="/#/delegatic/README.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-59339" class="lvl2">Status</a><a href="#blk-59351" class="lvl2">MCP surface</a><a href="#blk-59355" class="lvl2">Contract</a><a href="#blk-59357" class="lvl2">AuthorizationBlock</a><a href="#blk-59374" class="lvl2">Policy semantics</a><a href="#blk-59384" class="lvl2">Wiring Delegatic into OS-011 replay</a><a href="#blk-59388" class="lvl2">Running the suite</a><a href="#blk-59390" class="lvl2">References</a><a href="#blk-59398" class="lvl2">License</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraxb6xlzisuyqjtmy5zo2tfwzccj7jr5wifxvzzpnfu3etenp2mj5a</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-60109" class="lvl2">Status</a><a href="#blk-60121" class="lvl2">MCP surface</a><a href="#blk-60125" class="lvl2">Contract</a><a href="#blk-60127" class="lvl2">AuthorizationBlock</a><a href="#blk-60144" class="lvl2">Policy semantics</a><a href="#blk-60154" class="lvl2">Wiring Delegatic into OS-011 replay</a><a href="#blk-60158" class="lvl2">Running the suite</a><a href="#blk-60160" class="lvl2">References</a><a href="#blk-60168" class="lvl2">License</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierawklv63ycvqvs6od7aj7lstiqvuuse4dcl7lbttxb6sgkay5n4rsa</div></div></div>
 </div></div>
 </body></html>

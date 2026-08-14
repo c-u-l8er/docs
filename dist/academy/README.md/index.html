@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
+<title>Academy — prototype · academy · Ampersand Box</title>
+<meta name="description" content="A placeholder surface for the [&amp;] Academy: the institutional loop where the stack teaches, and proves the teaching took.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/academy/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Academy — prototype">
+<meta property="og:description" content="A placeholder surface for the [&amp;] Academy: the institutional loop where the stack teaches, and proves the teaching took.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/academy/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Academy — prototype","name":"Academy — prototype","description":"A placeholder surface for the [&] Academy: the institutional loop where the stack teaches, and proves the teaching took.","url":"https://docs.ampersandboxdesign.com/academy/README.md/","identifier":"bagaaierajotil2vurw3dez4siugt7l72bzeqnqwjkg6e2dixzmnfdkzo6uaa","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"academy","url":"https://docs.ampersandboxdesign.com/academy/"},"articleSection":"academy","hasPart":[{"@type":"WebPageElement","name":"This is a prototype, and it says so on every page"},{"@type":"WebPageElement","name":"Keeping it out of the index"},{"@type":"WebPageElement","name":"Running it"},{"@type":"WebPageElement","name":"Deploying"},{"@type":"WebPageElement","name":"The nav"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"academy","item":"https://docs.ampersandboxdesign.com/academy/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/academy/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">academy</span>
+<span class="path">academy/README.md</span>
+
+</div></div>
+<div class="lead">A placeholder surface for the [&amp;] Academy: the institutional loop where the stack teaches, and proves the teaching took.</div>
+<div class="prose"><h1 id="blk-55135">Academy — prototype</h1>
+<p><strong>A placeholder surface for the [&amp;] Academy: the institutional loop where the stack teaches, and proves the teaching took.</strong></p>
+<p>Four static pages, no build step, no framework, no dependencies. They exist so the design can be reacted to while it is built, and so a B1 participant has a real URL to be handed.</p>
+<p>Spec: <code>ACADEMY.md</code>. Evidence base: <code>alkeyword.com/prototype/runs/PORTFOLIO_GAP_QUEUE.md</code>. Both live in the portfolio repo (<code>c-u-l8er/ProjectAmp2</code>), which is <strong>private</strong> — named rather than linked, since a link that 404s for everyone but its author is worse than a path.</p>
+<h3 id="blk-55139">This is a prototype, and it says so on every page</h3>
+<table><thead><tr><th>Page</th><th>What it is</th></tr></thead><tbody><tr><td><code>index.html</code></td><td>The loop, the three layers, what is measurably true today, the two-lane build order</td></tr><tr><td><code>read.html</code></td><td>Layer 1 — a grounded article where every factual sentence shows its source, plus a published refusal</td></tr><tr><td><code>practice.html</code></td><td>Layer 2 — a Runefort task floor, and an honest account of what blocks it</td></tr><tr><td><code>prove.html</code></td><td>Layer 3 — the six real proof gates and the SkillBundle shape</td></tr><tr><td><code>B1_PROTOCOL.md</code></td><td>The falsification run: how to give one outsider one real task and what to record</td></tr></tbody></table>
+<p>Every panel carries an <strong>evidence edge</strong> — a colour saying whether it is <code>live</code>, <code>mock</code>, <code>spec-only</code> or <code>blocked</code>, with a legend in the header of each page. Real data, real gate IDs and real blockers throughout; the article prose, tile states and bundle values are marked mock.</p>
+<p>That grammar is the point. A screenshot of a prototype becomes evidence that the thing exists, so the pages are built to refuse that reading.</p>
+<h3 id="blk-55155">Keeping it out of the index</h3>
+<p>Two mechanisms, and the combination is deliberate:</p>
+<ul><li><p><strong>`&lt;meta name=&quot;robots&quot; content=&quot;noindex, nofollow&quot;&gt;`</strong> on every page, plus an <code>X-Robots-Tag</code></p></li></ul>
+<p>header in <code>_headers</code> for crawlers that never parse the HTML.</p>
+<ul><li><p><strong>`robots.txt` allows crawling.</strong> This looks backwards and is not. A crawler must fetch a page</p></li></ul>
+<p>to read its <code>noindex</code>. <code>Disallow</code> blocks the fetch, the <code>noindex</code> is never seen, and the URL can still be indexed from inbound links as a bare title with no content — the worst of both outcomes. <strong>Allow + noindex keeps a page out; Disallow + noindex does not.</strong></p>
+<p>When Academy becomes real, remove the meta tags and the <code>X-Robots-Tag</code> header, then add a sitemap. Not before.</p>
+<h3 id="blk-55166">Running it</h3>
+<pre data-lang="bash"><code>python3<span class="t-flag"> -m</span> http.server <span class="t-undefined">8125</span></code></pre>
+<p>No install, no build. Also registered in the portfolio's <code>.claude/launch.json</code> as <code>academy</code>.</p>
+<h3 id="blk-55169">Deploying</h3>
+<p>Cloudflare Pages, no build command, output directory <code>/</code>. The repository root is the site.</p>
+<h3 id="blk-55171">The nav</h3>
+<p><code>amp-nav.js</code> is a synced copy of the shared portfolio component; the source of truth is <code>ampersand-nav/src/amp-nav.js</code> in the portfolio repo, propagated by <code>sync-nav.sh</code>. <strong>Do not edit it here</strong> — the next sync will overwrite it.</p>
+<p>The pages declare <code>property=&quot;academy&quot;</code>, which highlights the Academy category and deliberately claims no item inside it. There is no Academy entry in the nav yet, and there should not be one until the reading layer serves a real page (<code>ACADEMY.md</code> §6, C1). The nav's own convention, in a comment beside the subscribe CTA: <em>if a real thing ever exists, swap the href; do not swap the label ahead of it.</em></p></div>
+<p class="src"><a href="/#/academy/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-55139" class="lvl2">This is a prototype, and it says so on every page</a><a href="#blk-55155" class="lvl2">Keeping it out of the index</a><a href="#blk-55166" class="lvl2">Running it</a><a href="#blk-55169" class="lvl2">Deploying</a><a href="#blk-55171" class="lvl2">The nav</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/academy/B1_PROTOCOL.md/">B1 — the falsification run</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajotil2vurw3dez4siugt7l72bzeqnqwjkg6e2dixzmnfdkzo6uaa</div></div></div>
+</div></div>
+</body></html>

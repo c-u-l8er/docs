@@ -1,0 +1,164 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
+<title>RRABBIT runbook — bringing the stack up, and proving it · RRABBIT · Ampersand Box</title>
+<meta name="description" content="The spec (docs/spec/README.md) records what was found and why. This file is the other half: the commands, the port map, and the measurements that settle…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/RRABBIT/docs/RUNBOOK.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RRABBIT runbook — bringing the stack up, and proving it">
+<meta property="og:description" content="The spec (docs/spec/README.md) records what was found and why. This file is the other half: the commands, the port map, and the measurements that settle…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/RRABBIT/docs/RUNBOOK.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"RRABBIT runbook — bringing the stack up, and proving it","name":"RRABBIT runbook — bringing the stack up, and proving it","description":"The spec (docs/spec/README.md) records what was found and why. This file is the other half: the commands, the port map, and the measurements that settle…","url":"https://docs.ampersandboxdesign.com/RRABBIT/docs/RUNBOOK.md/","identifier":"bagaaierabvfnddka5c5bcez7a42eha5jno56tguilqn2l473bhu5h4ykrg6a","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"RRABBIT","url":"https://docs.ampersandboxdesign.com/RRABBIT/"},"articleSection":"RRABBIT","hasPart":[{"@type":"WebPageElement","name":"1. The port map"},{"@type":"WebPageElement","name":"2. Launching a window"},{"@type":"WebPageElement","name":"Which programs actually open, measured 2026-08-13"},{"@type":"WebPageElement","name":"3. Measurements that settle arguments"},{"@type":"WebPageElement","name":"Is a frame reaching the browser, and what shape is it?"},{"@type":"WebPageElement","name":"Which way is a window up?"},{"@type":"WebPageElement","name":"Where is a control on the cockpit?"},{"@type":"WebPageElement","name":"Logging out — the power key, and why it can refuse"},{"@type":"WebPageElement","name":"The target has no devtools — use the report endpoint"},{"@type":"WebPageElement","name":"Does the quad carry a picture?"},{"@type":"WebPageElement","name":"Is the built bundle the shell you tested?"},{"@type":"WebPageElement","name":"4. The shared GL context — the rule the whole shell turns on"},{"@type":"WebPageElement","name":"5. Driving a FreeBSD guest with no browser at all"},{"@type":"WebPageElement","name":"Getting a new shell build into a running guest"},{"@type":"WebPageElement","name":"Native programs inside the guest — the host's proxy, over the network"},{"@type":"WebPageElement","name":"Where it shows up"},{"@type":"WebPageElement","name":"6. Harness traps (agent-browser)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"RRABBIT","item":"https://docs.ampersandboxdesign.com/RRABBIT/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/RRABBIT/docs/"},{"@type":"ListItem","position":4,"name":"RUNBOOK.md","item":"https://docs.ampersandboxdesign.com/RRABBIT/docs/RUNBOOK.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">RRABBIT</span>
+<span class="path">RRABBIT/docs/RUNBOOK.md</span>
+
+</div></div>
+<div class="lead">The spec (docs/spec/README.md) records what was found and why. This file is the other half: the commands, the port map, and the measurements that settle an argument. It exists b…</div>
+<div class="prose"><h1 id="blk-26463">RRABBIT runbook — bringing the stack up, and proving it</h1>
+<p>The spec (<code>docs/spec/README.md</code>) records <em>what was found and why</em>. This file is the other half: the commands, the port map, and the measurements that settle an argument. It exists because every session so far has re-derived the same six facts before it could start work.</p>
+<p>Nothing here is optional folklore — each rule below is a trap someone already fell into, with the section of the spec that records it.</p>
+<h3 id="blk-26466">1. The port map</h3>
+<p>Five servers, and they are not interchangeable.</p>
+<table><thead><tr><th>port</th><th>what</th><th>started by</th><th>notes</th></tr></thead><tbody><tr><td><strong>8911</strong></td><td>vite dev — the shell from source, HMR</td><td><code>npm run m0</code></td><td>iterate here</td></tr><tr><td><strong>8912</strong></td><td>compositor-proxy — native applications</td><td><code>npm run proxy</code></td><td>needs the addon and a GL device</td></tr><tr><td><strong>8913</strong></td><td><code>bridge.py</code> — the <strong>built</strong> shell + the seven tubes</td><td><code>python3 bridge.py 8913</code></td><td>stdlib only; this is what the distro ships</td></tr><tr><td><strong>8905</strong></td><td>PARKVPS <code>vpsd/api.py</code> — the machines</td><td><code>python3 vpsd/api.py --port 8905</code></td><td>QEMU lives behind this</td></tr><tr><td><strong>8890</strong></td><td>RAVIO <code>bridge.py</code> — the sky road</td><td><code>python3 bridge.py --port 8890</code></td><td>its MACHINES rail reads 8905</td></tr></tbody></table>
+<p>All are in the repo-root <code>.claude/launch.json</code> (<code>rrabbit-m0</code>, <code>rrabbit-bridge</code>, <code>parkvps</code>, <code>ravio</code>).</p>
+<p><strong>`--allow-origin` must name the page's port, not the proxy's.</strong> It now defaults to <strong>both</strong> (<code>8911,8913</code>) and <code>proxy.sh</code> prints what it allowed — a list needs <code>patches/proxy-cli-multi-origin.md</code>, because upstream wrote the value into the header verbatim and <code>Access-Control-Allow-Origin</code> may name exactly one origin, so a comma list refused every entry.</p>
+<p>If you serve the shell from anywhere else, say so, or the launch fails with a CORS refusal that reads exactly like the proxy being down:</p>
+<pre data-lang="bash"><code>RRABBIT_ALLOW_ORIGIN=http://<span class="t-undefined">127</span>.<span class="t-undefined">0</span>.<span class="t-undefined">0</span>.<span class="t-undefined">1</span>:<span class="t-undefined">9000</span> npm run proxy</code></pre>
+<p><strong>Restart the proxy between page reloads.</strong> A proxy session outlives the page and is keyed by <code>compositorSessionId</code>, so a reload joins a session whose client is gone — a window that never appears, with nothing in any log. Spec §21.1.</p>
+<h3 id="blk-26498">2. Launching a window</h3>
+<pre data-lang="js"><code>window.<span class="t-fn">__launch</span>(<span class="t-string">'/tandr-tr4-foot'</span>)     <span class="t-comment">// any path in proxy/applications.json</span></code></pre>
+<p><code>?remote=…</code> fires during <strong>boot</strong>, which makes it useless for anything that has to be armed <em>before</em> the first frame — a probe on the decoder, say. <code>__launch</code> is the same one launch path, on demand.</p>
+<p><code>proxy/applications.json</code> is schema-validated with <code>additionalProperties:false</code>. An extra annotation field makes compositor-proxy <strong>throw before opening the socket</strong> — the whole proxy goes down for one stray key.</p>
+<p>It ships in the build now (<code>shipApplications()</code> in <code>vite.config.ts</code>), so the built menu is the real list rather than <code>NATIVE_MIRROR</code>. Add a program in one place.</p>
+<h4 id="blk-26503">Which programs actually open, measured 2026-08-13</h4>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><code>xterm</code>, <code>glxgears</code></td><td>open (XWayland)</td></tr><tr><td><code>foot · tr4</code></td><td>opens (guest, via waypipe)</td></tr><tr><td><code>gnome-text-editor</code></td><td>opens <strong>only</strong> with <code>DBUS_SESSION_BUS_ADDRESS</code> pointed at a nonexistent path</td></tr></tbody></table>
+<p>A GTK application inherits <code>DBUS_SESSION_BUS_ADDRESS</code>, finds the copy already running on your desktop, hands off and exits 0 in under 100 ms. It looks exactly like a crash and it is a feature. Any single-instance GTK app needs the same entry. <code>WAYLAND_DISPLAY</code> is <em>not</em> the problem — <code>launchApplication</code> sets it to the proxy's own socket, last, over <code>process.env</code>.</p>
+<h3 id="blk-26514">3. Measurements that settle arguments</h3>
+<p>These are the probes that actually decided things. Prefer them to reasoning.</p>
+<h4 id="blk-26516">Is a frame reaching the browser, and what shape is it?</h4>
+<p>Monkey-patch the decoder from the console <em>before</em> launching:</p>
+<pre data-lang="js"><code><span class="t-kw">var</span> <span class="t-type">RealVD</span> = window.<span class="t-type">VideoDecoder</span>
+window.<span class="t-type">VideoDecoder</span> = <span class="t-kw">function</span> (init) {
+  <span class="t-kw">var</span> d = <span class="t-kw">new</span> <span class="t-type">RealVD</span>({ output: f =&gt; { console.<span class="t-fn">log</span>(f.format, f.codedWidth, f.codedHeight,
+                                                  f.visibleRect, f.<span class="t-fn">allocationSize</span>()); init.<span class="t-fn">output</span>(f) },
+                       error: init.error })
+  <span class="t-kw">return</span> d
+}
+window.<span class="t-type">VideoDecoder</span>.isConfigSupported = <span class="t-type">RealVD</span>.isConfigSupported.<span class="t-fn">bind</span>(<span class="t-type">RealVD</span>)</code></pre>
+<p>Wrapping <code>VideoFrame.prototype.copyTo</code> and logging the returned <code>PlaneLayout[]</code> gives the per-plane offset and stride — which is how you tell a padded decode from a stride bug. This single probe is what found §23.</p>
+<h4 id="blk-26520">Which way is a window up?</h4>
+<p>Inject a texture that is asymmetric <em>by construction</em> through the real upload path, and read the glass back:</p>
+<pre data-lang="js"><code><span class="t-kw">var</span> cv = <span class="t-kw">new</span> <span class="t-type">OffscreenCanvas</span>(<span class="t-type">W</span>, <span class="t-type">H</span>), cx = cv.<span class="t-fn">getContext</span>(<span class="t-string">'2d'</span>)
+cx.fillStyle = <span class="t-string">'#ff0000'</span>; cx.<span class="t-fn">fillRect</span>(<span class="t-num">0</span>, <span class="t-num">0</span>, <span class="t-type">W</span>, <span class="t-type">H</span> / <span class="t-num">2</span>)      <span class="t-comment">// FIRST rows</span>
+cx.fillStyle = <span class="t-string">'#0000ff'</span>; cx.<span class="t-fn">fillRect</span>(<span class="t-num">0</span>, <span class="t-type">H</span> / <span class="t-num">2</span>, <span class="t-type">W</span>, <span class="t-type">H</span> / <span class="t-num">2</span>)
+scene[<span class="t-string">'image/bitmap'</span>]({ size: { width: <span class="t-type">W</span>, height: <span class="t-type">H</span> },
+                        pixelContent: <span class="t-kw">await</span> <span class="t-fn">createImageBitmap</span>(cv) }, renderState)</code></pre>
+<p>Red at the top of the sign means texel row 0 renders at the top, which means a window is upright.</p>
+<p><strong>`simple-shm` cannot settle orientation.</strong> Its pattern is mirror-symmetric about its own midline, so no sample of it can decide the flip — <code>__orient</code> correctly reports <code>inconclusive</code>. Do not try to read it by eye either.</p>
+<h4 id="blk-26525">Where is a control on the cockpit?</h4>
+<p>Compute it. <strong>Do not scan with `window.__dashAt`</strong> — it calls <code>hooks.dashHit</code>, which is <em>not</em> pure: it toggles the ST&amp;RT menu and knocks the gear stick, so a scan closes the menu it is measuring and you conclude the menu will not stay open. (<code>dash.hit()</code> is pure; <code>hooks.dashHit</code> is the layer that acts on it.)</p>
+<p>The dash is drawn in a 1920×1080 design box (<code>dash.js</code>, <code>layout()</code>):</p>
+<pre><code>s = W / 1920                         // W, H are the canvas size
+ty = H - 1080 * s                    // + the hidden-slide term when it is sliding
+clientX = design.x * s
+clientY = design.y * s + ty</code></pre>
+<p><code>__dash()</code> reports every rectangle in design space (<code>startRect</code>, <code>startMenu</code>), and <code>startMenuRect</code>/<code>startRows</code> in <code>dash.js</code> derive the rows from the list length. One conversion, no probing, no side effects.</p>
+<h4 id="blk-26530">Logging out — the power key, and why it can refuse</h4>
+<p>The cockpit's bottom-left corner is now two controls: <strong>POWER</strong> at design <code>x=22</code> and <strong>ST&amp;RT</strong> moved right to <code>x=80</code>. Power opens a confirm plate; the one row on it posts <code>bridge.py /api/logout</code>.</p>
+<p><strong>Nothing in the browser can end the session.</strong> <code>window.close()</code> will not close the last window of a kiosk, and the page has no session to end. The chain is:</p>
+<pre><code>shell POST /api/logout  -&gt;  bridge reads the pidfile  -&gt;  SIGTERM the browser
+     -&gt;  `wait` in rrabbit-session returns  -&gt;  the script exits  -&gt;  the greeter</code></pre>
+<p>The pidfile (<code>/tmp/rrabbit-browser.pid</code>, <code>RRABBIT_BROWSER_PIDFILE</code>) holds <code>&lt;pid&gt; &lt;comm&gt;</code>. Both fields are checked before anything is signalled: pids are reused, and a session that died without clearing its file would otherwise arm this endpoint against whatever inherited the number. <code>comm</code> is recorded by <code>rrabbit-session</code> <em>at launch</em> rather than assumed here, because <code>firefox</code> may be a wrapper and then the waited-on process is not called <code>firefox</code> at all.</p>
+<p><strong>A bridge you started by hand REFUSES, and that is correct</strong> — there is no session, and a shell that reached for the nearest Firefox would kill the one you are developing in. The refusal is printed on the plate itself:</p>
+<pre data-lang="bash"><code>curl<span class="t-flag"> -s</span><span class="t-flag"> -X</span> POST http://<span class="t-undefined">127</span>.<span class="t-undefined">0</span>.<span class="t-undefined">0</span>.<span class="t-undefined">1</span>:<span class="t-undefined">8913</span>/api/logout</code></pre>
+<table><thead><tr><th>answer</th><th>what it means</th></tr></thead><tbody><tr><td><code>409 no session to end — nothing wrote …</code></td><td>served outside a session; expected on a workstation</td></tr><tr><td><code>409 pid N is X, not Y</code></td><td>stale pidfile, or the wrong process inherited the pid</td></tr><tr><td><code>409 pid N is not running</code></td><td>the session died without clearing its file</td></tr><tr><td><code>200 {ok, pid, signal}</code></td><td>signalled — if the page is still there, the browser ignored it</td></tr></tbody></table>
+<p><code>__dash().powerWhy</code> is the sentence on the plate; <code>__m1().lastLogout</code> carries the status code and pid behind it. <strong>Any message left on that plate is a fault</strong>, successes included — a logout that worked takes the page with it.</p>
+<h4 id="blk-26549">The target has no devtools — use the report endpoint</h4>
+<p>The only machine that matters runs a kiosk Firefox with no address bar and no console, so a diagnostic you cannot reach there is not a diagnostic.</p>
+<pre><code>RRABBIT_URL_EXTRA=&quot;remote=/notes,/firefox&amp;report=45&quot;   # in rrabbit-session
+grep -a REPORT /tmp/rrabbit-bridge.log | tail -1 | sed 's/^REPORT //' | python3 -m json.tool</code></pre>
+<p><code>?remote=</code> launches at boot — <strong>comma-separated, so it opens more than one</strong> — and <code>?report=&lt;secs&gt;</code> posts to <code>bridge.py /api/report</code>, which prints it. <strong>No clicking</strong>, which matters — see the click note under §5.</p>
+<p><strong>The report REPEATS, so `tail -1` is &quot;what is true now&quot;.</strong> It used to fire once, which meant every question about a <em>window</em> had to be asked by guessing, before the page loaded and from a shell script, how long it would take to open one — and anything needing two programs up at the same time was a race against a timer set in the past. It now re-arms after each POST settles (one in flight, never a queue). Set <code>report=10</code> while iterating.</p>
+<p><strong>Do not `: &gt;` the bridge log to clear it.</strong> bridge.py holds it open at its current offset, so truncating punches a NUL hole that the next write skips past — and <code>grep</code> then treats the file as binary and silently matches nothing. Use <code>grep -a</code>, or restart the bridge.</p>
+<p>The fields that actually discriminate, and what each rules out:</p>
+<p><code>views: []</code> with <code>appStates: open</code> means the signalling socket connected and <strong>no surface ever existed</strong> — a completely different fault from a view that exists with <code>hasBuffer:false</code>. That pair is what found §27.7 after two turns of guessing.</p>
+<p><code>errors</code> is bounded at 20 and keeps the <strong>first</strong>, not the last: the tube poll can emit hundreds of identical failures, and the error that explains a failure is almost always the first one.</p>
+<h4 id="blk-26558">Does the quad carry a picture?</h4>
+<p><code>state.decodes</code> is <strong>declared and never incremented</strong> (spec §19.5). It reads as &quot;no frames decoded&quot; and means nothing. Use a GL readback:</p>
+<pre data-lang="js"><code><span class="t-kw">var</span> c = document.<span class="t-fn">querySelector</span>(<span class="t-string">'#gl'</span>), g = c.<span class="t-fn">getContext</span>(<span class="t-string">'webgl'</span>), px = <span class="t-kw">new</span> <span class="t-type">Uint8Array</span>(<span class="t-num">4</span>)
+g.<span class="t-fn">readPixels</span>(x, c.height - y, <span class="t-num">1</span>, <span class="t-num">1</span>, g.<span class="t-type">RGBA</span>, g.<span class="t-type">UNSIGNED_BYTE</span>, px)</code></pre>
+<p>or <code>__views()</code> for <code>hasBuffer</code>/<code>rect</code>, or <code>__orient()</code> for the flip.</p>
+<h4 id="blk-26562">Is the built bundle the shell you tested?</h4>
+<p>Minification mangles class names, so <code>constructor.name === 'Surface'</code> checks are dead in the shipped artifact and nothing errors (spec §18.3). Identify by shape (<code>isSurface</code>, <code>positionerState</code>), and grep the bundle for the strings your fix depends on:</p>
+<pre data-lang="bash"><code>npm run build
+grep<span class="t-flag"> -c</span> <span class="t-string">&quot;video/h264\|UNPACK_FLIP_Y_WEBGL\|resetState&quot;</span> dist/assets/shell-*.js</code></pre>
+<p><strong>Testing that the bundle runs is not testing that its features still work in it.</strong></p>
+<h3 id="blk-26566">4. The shared GL context — the rule the whole shell turns on</h3>
+<p>three.js and Greenfield draw into <strong>one</strong> WebGL context. Upstream that context is Greenfield's alone, so its passes set only what they use and inherit defaults for everything else. Here they inherit whatever three left switched on.</p>
+<p><code>fenceScenePasses()</code> in <code>shell.js</code> is the one seam that fixes this, and it wraps all three of <code>Scene</code>'s entry points — <code>video/h264</code>, <code>image/bitmap</code>, <code>image/png</code>.</p>
+<p>Two things about it that are not negotiable:</p>
+<ul><li><p><strong>Per-pass, not around `renderer.render`.</strong> The passes run in a microtask that</p></li></ul>
+<p><code>render()</code> queues, so state set outside it is only still true by luck.</p>
+<ul><li><p><strong>`renderer.resetState()` on the way out</strong>, or three keeps drawing the road on</p></li></ul>
+<p>Greenfield's settings.</p>
+<p>If you ever add a fourth entry point to <code>Scene</code>, it goes in the fence. Spec §23.</p>
+<h3 id="blk-26579">5. Driving a FreeBSD guest with no browser at all</h3>
+<p>The T&amp;R image is graphical, and for a long time the only way to look at it was a browser pointed at PARKVPS. It is not. QEMU will hand you the framebuffer and take keystrokes directly:</p>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> PARKVPS
+python3 vpsd/vps.py screenshot tr4 /tmp/g.ppm &amp;&amp; magick /tmp/g.ppm /tmp/g.png
+python3 vpsd/vps.py type tr4 driver @tab driver @ret      <span class="t-comment"># log in at the greeter</span>
+python3 vpsd/vps.py type tr4 @<span class="t-undefined">2</span>                           <span class="t-comment"># a key the shell reads</span>
+python3 vpsd/vps.py click tr4 <span class="t-undefined">72</span> <span class="t-undefined">702</span>                      <span class="t-comment"># the ST&amp;RT button</span></code></pre>
+<p>The guest has a <code>usb-tablet</code>, which is <strong>absolute</strong> — a pixel on the screenshot is a pixel to click, with no pointer warping and no relative drift. Screenshot, read the coordinate off the picture, click it.</p>
+<p><strong>This reaches places ssh cannot.</strong> ssh tells you what a shell says is true; <code>screenshot</code> shows you the screen — the greeter before anyone has logged in, a session that failed to start, an X server on the wrong VT. <code>ps aux | grep firefox</code> returning rows does not mean anything is on the display.</p>
+<p><code>magick</code> is present on this host; there is no python <code>PIL</code>.</p>
+<h4 id="blk-26585">Getting a new shell build into a running guest</h4>
+<p>The image ships <code>dist/</code> and <code>bridge.py</code> to <code>/usr/local/share/rrabbit/</code> and runs them under Firefox kiosk. Replacing the bundle in a running instance takes about a second and does not need an image rebuild:</p>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> RRABBIT &amp;&amp; npm run build
+tar czf - dist | ssh <span class="t-var">$OPTS</span> park@<span class="t-undefined">127</span>.<span class="t-undefined">0</span>.<span class="t-undefined">0</span>.<span class="t-undefined">1</span> \
+  <span class="t-string">'sudo rm -rf /usr/local/share/rrabbit/dist.new &amp;&amp;
+   sudo mkdir -p /usr/local/share/rrabbit/dist.new &amp;&amp;
+   sudo tar xzf - -C /usr/local/share/rrabbit/dist.new --strip-components=1 &amp;&amp;
+   sudo mv /usr/local/share/rrabbit/dist /usr/local/share/rrabbit/dist.old &amp;&amp;
+   sudo mv /usr/local/share/rrabbit/dist.new /usr/local/share/rrabbit/dist'</span></code></pre>
+<p>Then <strong>reboot the guest</strong> — <code>service sddm restart</code> orphans an Xorg on VT 9, after which every new display server <em>and</em> the greeter crash in ~22 ms, which presents exactly like the session you just installed being broken.</p>
+<p>Confirm you are running what you built, by hash, not by looking:</p>
+<pre data-lang="bash"><code>ssh <span class="t-var">$OPTS</span> park@<span class="t-undefined">127</span>.<span class="t-undefined">0</span>.<span class="t-undefined">0</span>.<span class="t-undefined">1</span> <span class="t-string">'sha256 -q /usr/local/share/rrabbit/dist/assets/shell-*.js'</span>
+sha256sum dist/assets/shell-*.js</code></pre>
+<p><strong>Replace `dist`, never overlay it.</strong> The 0.4 image carried <strong>five</strong> orphan <code>shell-*.js</code> bundles from earlier builds. Same class of bug as the addons manifest (spec §19): an overlay leaves files that then look like they belong.</p>
+<h4 id="blk-26592">Native programs inside the guest — the host's proxy, over the network</h4>
+<p>The image carries no compositor-proxy and cannot (no node, no gstreamer, no <code>/dev/dri</code>). It does not need its own: under QEMU user-mode networking the host answers on the default gateway and SLIRP maps it to the host's <strong>loopback</strong>, so <code>--bind-ip=127.0.0.1</code> is already reachable from the guest at <code>10.0.2.2:8912</code> with nothing exposed.</p>
+<p><code>rrabbit-session</code> appends <code>?proxy=http://10.0.2.2:8912</code> <strong>only when the default route is `10.0.2.2`</strong> — anywhere else that is someone else's router. <code>RRABBIT_PROXY</code> overrides in either direction (empty string = never).</p>
+<p>This also needs <code>publicBaseURL</code> in <code>patches/proxy-cli-multi-origin.md</code>: the proxy hands back a <code>signalURL</code> built from <code>--base-url</code>, and a static value would tell the guest to connect to <em>itself</em>. Check it landed by grepping the proxy log for the address the client came back on:</p>
+<pre data-lang="bash"><code>grep <span class="t-string">&quot;New signaling connection&quot;</span> proxy.log      <span class="t-comment"># must say 10.0.2.2 for a guest</span></code></pre>
+<p>It also needs the <strong>client-side</strong> correction in <code>shell.js</code>: the proxy builds each application's protocol-channel URL from the static <code>--base-url</code> with no request in scope, so it tells a guest to connect to <code>127.0.0.1</code> — itself. The shell rewrites the proxy's own <code>/channel</code> and <code>/signal</code> WebSocket URLs to the host it actually reached the proxy on. Server-side and client-side corrections carry <em>different transports</em> (HTTP vs WebSocket); neither is redundant.</p>
+<p><strong>Working</strong>: a host application renders on the guest's road (<code>docs/m12-host-app-in-guest.png</code>).</p>
+<h4 id="blk-26599">Where it shows up</h4>
+<p>RAVIO's <strong>MACHINES</strong> rail (shift into <strong>P — the drive-in</strong>, <code>g</code> cycles gears) lists <code>PARKVPS /api/fleet</code> and opens each guest as a tab at <code>http://127.0.0.1:8905/desktop/&lt;name&gt;</code>. That URL is a plain page and can be opened on its own — which is the quickest way to see a guest's screen in a browser, and it does not need RAVIO to be running.</p>
+<h3 id="blk-26601">6. Harness traps (agent-browser)</h3>
+<ul><li><p><strong>Isolated session + software GL, or you measure nothing:</strong></p></li></ul>
+<p><code>--args &quot;--use-angle=swiftshader,--enable-unsafe-swiftshader,--disable-gpu-vsync,--disable-frame-rate-limit&quot;</code>. <code>--args</code> is <strong>ignored if the daemon is already running</strong> — <code>agent-browser close --all</code> first, or set <code>AGENT_BROWSER_ARGS</code> in the environment, which survives.</p>
+<ul><li><p><strong>A blocked profile stays blocked.</strong> After repeated context losses Chrome</p></li></ul>
+<p>answers <code>Web page caused context loss and was blocked</code> and <em>every</em> later <code>getContext('webgl')</code> in that profile returns null. A fresh <code>--session</code> name is a fresh profile.</p>
+<ul><li><p><strong>RRABBIT survives SwiftShader; RAVIO does not.</strong> RRABBIT (4 canvases) renders</p></li></ul>
+<p>headless. RAVIO (5) loses its context on load, which kills the dash canvas that owns gear changes and key handling — so <code>g</code> does nothing and the app looks broken. It is the harness. Do not report it as a RAVIO fault without a real-GPU browser (spec §&quot;READ FIRST&quot; in the start-menu notes).</p>
+<ul><li><p><strong>`screenshot` takes an absolute path.</strong> A relative one is written relative to</p></li></ul>
+<p>the daemon's cwd, not yours, and the command still prints <code>✓ saved</code>.</p>
+<ul><li><p><strong>`click` takes a selector, not coordinates.</strong> <code>click 1120 737</code> matches nothing,</p></li></ul>
+<p><strong>exits 0 and dispatches no event</strong>. A coordinate click is <code>mouse move X Y</code> → <code>mouse down</code> → <code>mouse up</code>. Prove the event arrived before trusting it.</p>
+<ul><li><p><strong>`console` output is cumulative across page loads</strong>, so a stale error from a</p></li></ul>
+<p>previous load reads as a live one.</p></div>
+<p class="src"><a href="/#/RRABBIT/docs/RUNBOOK.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-26466" class="lvl2">1. The port map</a><a href="#blk-26498" class="lvl2">2. Launching a window</a><a href="#blk-26503" class="lvl3">Which programs actually open, measured 2026-08-13</a><a href="#blk-26514" class="lvl2">3. Measurements that settle arguments</a><a href="#blk-26516" class="lvl3">Is a frame reaching the browser, and what shape is it?</a><a href="#blk-26520" class="lvl3">Which way is a window up?</a><a href="#blk-26525" class="lvl3">Where is a control on the cockpit?</a><a href="#blk-26530" class="lvl3">Logging out — the power key, and why it can refuse</a><a href="#blk-26549" class="lvl3">The target has no devtools — use the report endpoint</a><a href="#blk-26558" class="lvl3">Does the quad carry a picture?</a><a href="#blk-26562" class="lvl3">Is the built bundle the shell you tested?</a><a href="#blk-26566" class="lvl2">4. The shared GL context — the rule the whole shell turns on</a><a href="#blk-26579" class="lvl2">5. Driving a FreeBSD guest with no browser at all</a><a href="#blk-26585" class="lvl3">Getting a new shell build into a running guest</a><a href="#blk-26592" class="lvl3">Native programs inside the guest — the host&#39;s proxy, over the network</a><a href="#blk-26599" class="lvl3">Where it shows up</a><a href="#blk-26601" class="lvl2">6. Harness traps (agent-browser)</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierabvfnddka5c5bcez7a42eha5jno56tguilqn2l473bhu5h4ykrg6a</div></div></div>
+</div></div>
+</body></html>

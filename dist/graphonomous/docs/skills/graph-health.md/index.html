@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>Graph Health Check · graphonomous · Ampersand Box</title>
 <meta name="description" content="Combined diagnostic that assesses knowledge graph quality in one pass.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/graph-health.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graph Health Check","name":"Graph Health Check","description":"Combined diagnostic that assesses knowledge graph quality in one pass.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/graph-health.md/","identifier":"bagaaieravw24lvzo5ebtedn5ofxnizglbfjcfvwii24xhgrm6tza47biy7uq","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Arguments"},{"@type":"WebPageElement","name":"Quick Health Check"},{"@type":"WebPageElement","name":"Step 1 — Graph stats"},{"@type":"WebPageElement","name":"Step 2 — Interpret and report"},{"@type":"WebPageElement","name":"Full Audit (--full)"},{"@type":"WebPageElement","name":"Step 3 — Find weak knowledge"},{"@type":"WebPageElement","name":"Step 4 — Epistemic frontier"},{"@type":"WebPageElement","name":"Step 5 — Check for staleness"},{"@type":"WebPageElement","name":"Step 6 — Orphan details"},{"@type":"WebPageElement","name":"Auto-Fix (--fix)"},{"@type":"WebPageElement","name":"Fix orphans — connect or prune"},{"@type":"WebPageElement","name":"Fix weak nodes — reinforce or decay"},{"@type":"WebPageElement","name":"Fix staleness — flag for sync"},{"@type":"WebPageElement","name":"Health Report Format"},{"@type":"WebPageElement","name":"Combining with Other Skills"},{"@type":"WebPageElement","name":"Anti-patterns to avoid"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/"},{"@type":"ListItem","position":5,"name":"graph-health.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/graph-health.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Graph Health Check","name":"Graph Health Check","description":"Combined diagnostic that assesses knowledge graph quality in one pass.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/graph-health.md/","identifier":"bagaaieraqfnvqdvjr2k4klwissp7cpsoywkdl55cngb7dhbltimkdho5am6a","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Arguments"},{"@type":"WebPageElement","name":"Quick Health Check"},{"@type":"WebPageElement","name":"Step 1 — Graph stats"},{"@type":"WebPageElement","name":"Step 2 — Interpret and report"},{"@type":"WebPageElement","name":"Full Audit (--full)"},{"@type":"WebPageElement","name":"Step 3 — Find weak knowledge"},{"@type":"WebPageElement","name":"Step 4 — Epistemic frontier"},{"@type":"WebPageElement","name":"Step 5 — Check for staleness"},{"@type":"WebPageElement","name":"Step 6 — Orphan details"},{"@type":"WebPageElement","name":"Auto-Fix (--fix)"},{"@type":"WebPageElement","name":"Fix orphans — connect or prune"},{"@type":"WebPageElement","name":"Fix weak nodes — reinforce or decay"},{"@type":"WebPageElement","name":"Fix staleness — flag for sync"},{"@type":"WebPageElement","name":"Health Report Format"},{"@type":"WebPageElement","name":"Combining with Other Skills"},{"@type":"WebPageElement","name":"Anti-patterns to avoid"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/"},{"@type":"ListItem","position":5,"name":"graph-health.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/graph-health.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,44 +23,44 @@
 
 </div></div>
 <div class="lead">Combined diagnostic that assesses knowledge graph quality in one pass.</div>
-<div class="prose"><h1 id="blk-67590">Graph Health Check</h1>
+<div class="prose"><h1 id="blk-68418">Graph Health Check</h1>
 <p>Combined diagnostic that assesses knowledge graph quality in one pass.</p>
-<h3 id="blk-67592">Arguments</h3>
+<h3 id="blk-68420">Arguments</h3>
 <p>Optional flags: $ARGUMENTS</p>
 <ul><li><p>No arguments: quick health summary (stats + top issues)</p></li><li><p><code>--full</code>: deep audit (stats + weak nodes + orphans + frontier + staleness)</p></li><li><p><code>--fix</code>: auto-fix found issues (prune orphans, decay stale nodes)</p></li></ul>
-<h3 id="blk-67601">Quick Health Check</h3>
-<h4 id="blk-67602">Step 1 — Graph stats</h4>
+<h3 id="blk-68429">Quick Health Check</h3>
+<h4 id="blk-68430">Step 1 — Graph stats</h4>
 <pre><code>consolidate(action: &quot;stats&quot;)</code></pre>
 <p>Returns: node count, edge count, type distributions, confidence stats (mean/min/max/std_dev), orphan count.</p>
-<h4 id="blk-67605">Step 2 — Interpret and report</h4>
+<h4 id="blk-68433">Step 2 — Interpret and report</h4>
 <table><thead><tr><th>Metric</th><th>Healthy</th><th>Warning</th><th>Critical</th></tr></thead><tbody><tr><td>Orphan ratio</td><td>&lt; 10%</td><td>10–30%</td><td>&gt; 30%</td></tr><tr><td>Mean confidence</td><td>&gt; 0.5</td><td>0.3–0.5</td><td>&lt; 0.3</td></tr><tr><td>Edge/node ratio</td><td>&gt; 1.5</td><td>0.5–1.5</td><td>&lt; 0.5</td></tr><tr><td>Confidence std_dev</td><td>&lt; 0.25</td><td>0.25–0.35</td><td>&gt; 0.35</td></tr></tbody></table>
 <p>Report a summary like:</p>
 <blockquote><p><strong>Graph Health: Good</strong> — 142 nodes, 238 edges (1.68 edge/node), mean confidence 0.64, 8 orphans (5.6%)</p></blockquote>
-<h3 id="blk-67630">Full Audit (--full)</h3>
-<h4 id="blk-67631">Step 3 — Find weak knowledge</h4>
+<h3 id="blk-68458">Full Audit (--full)</h3>
+<h4 id="blk-68459">Step 3 — Find weak knowledge</h4>
 <pre><code>consolidate(action: &quot;query&quot;, operation: &quot;list_nodes&quot;, min_confidence: 0.0, max_confidence: 0.3, limit: 20)</code></pre>
 <p>Nodes below 0.3 confidence are speculative — candidates for reinforcement or pruning.</p>
-<h4 id="blk-67634">Step 4 — Epistemic frontier</h4>
+<h4 id="blk-68462">Step 4 — Epistemic frontier</h4>
 <pre><code>retrieve(action: &quot;frontier&quot;, limit: 10)</code></pre>
 <p>Identifies where uncertainty is highest — the most valuable areas to investigate next.</p>
-<h4 id="blk-67637">Step 5 — Check for staleness</h4>
+<h4 id="blk-68465">Step 5 — Check for staleness</h4>
 <pre><code>retrieve(action: &quot;episodic&quot;, since: null, until: null, limit: 5)</code></pre>
 <p>If the most recent episodic node is old, the graph may be stale.</p>
-<h4 id="blk-67640">Step 6 — Orphan details</h4>
+<h4 id="blk-68468">Step 6 — Orphan details</h4>
 <p>If orphan count &gt; 10%, list them:</p>
 <pre><code>consolidate(action: &quot;query&quot;, operation: &quot;list_nodes&quot;, limit: 50)</code></pre>
 <p>Cross-reference with edge data to identify which nodes lack connections.</p>
-<h3 id="blk-67644">Auto-Fix (--fix)</h3>
+<h3 id="blk-68472">Auto-Fix (--fix)</h3>
 <p>When <code>--fix</code> is passed, take corrective action on found issues:</p>
-<h4 id="blk-67646">Fix orphans — connect or prune</h4>
+<h4 id="blk-68474">Fix orphans — connect or prune</h4>
 <p>For each orphan node:</p>
 <ol><li><p>Search for related nodes: <code>consolidate(action: &quot;query&quot;, operation: &quot;similarity_search&quot;, query: &quot;&lt;orphan content&gt;&quot;, limit: 3)</code></p></li><li><p>If similarity &gt; 0.5 with any node → create <code>related_to</code> edge</p></li><li><p>If no matches and confidence &lt; 0.3 → prune: <code>act(action: &quot;forget_node&quot;, node_id: &quot;&lt;id&gt;&quot;, strategy: &quot;soft&quot;)</code></p></li></ol>
-<h4 id="blk-67655">Fix weak nodes — reinforce or decay</h4>
+<h4 id="blk-68483">Fix weak nodes — reinforce or decay</h4>
 <p>For nodes with confidence &lt; 0.2:</p>
 <ol><li><p>Check if still relevant (search for supporting context)</p></li><li><p>If supporting evidence exists → <code>learn(action: &quot;from_feedback&quot;, node_id: &quot;&lt;id&gt;&quot;, feedback_type: &quot;positive&quot;)</code></p></li><li><p>If no support → <code>act(action: &quot;forget_node&quot;, node_id: &quot;&lt;id&gt;&quot;, strategy: &quot;soft&quot;)</code></p></li></ol>
-<h4 id="blk-67664">Fix staleness — flag for sync</h4>
+<h4 id="blk-68492">Fix staleness — flag for sync</h4>
 <p>If graph is stale (no episodic nodes in 7+ days), recommend running <code>/graphonomous:sync</code> to ingest recent filesystem changes.</p>
-<h3 id="blk-67666">Health Report Format</h3>
+<h3 id="blk-68494">Health Report Format</h3>
 <pre><code>## Graph Health Report
 
 **Overall: [Good|Warning|Critical]**
@@ -80,12 +81,12 @@
 **Recommendations:**
 - Run `/graphonomous:sync` to update filesystem nodes
 - Review weak nodes: [list IDs]</code></pre>
-<h3 id="blk-67668">Combining with Other Skills</h3>
+<h3 id="blk-68496">Combining with Other Skills</h3>
 <table><thead><tr><th>Situation</th><th>Follow-up</th></tr></thead><tbody><tr><td>High orphan count</td><td><code>/graphonomous:sync --full</code> to rebuild edges</td></tr><tr><td>Low mean confidence</td><td><code>/graphonomous:consolidate</code> to merge and strengthen</td></tr><tr><td>Frontier gaps</td><td><code>/graphonomous:retrieve &lt;frontier topic&gt;</code> to fill gaps</td></tr><tr><td>Stale graph</td><td><code>/graphonomous:watch &lt;dir&gt;</code> for continuous sync</td></tr></tbody></table>
-<h3 id="blk-67680">Anti-patterns to avoid</h3>
+<h3 id="blk-68508">Anti-patterns to avoid</h3>
 <ul><li><p>Running health checks too frequently — once per session or after major changes is enough</p></li><li><p>Auto-fixing without reporting what was changed — always show the user what --fix did</p></li><li><p>Treating orphans as always bad — some nodes are intentionally standalone (e.g., one-off observations)</p></li><li><p>Ignoring the frontier — it tells you where to invest learning effort next</p></li></ul></div>
 <p class="src"><a href="/#/graphonomous/docs/skills/graph-health.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-67592" class="lvl2">Arguments</a><a href="#blk-67601" class="lvl2">Quick Health Check</a><a href="#blk-67602" class="lvl3">Step 1 — Graph stats</a><a href="#blk-67605" class="lvl3">Step 2 — Interpret and report</a><a href="#blk-67630" class="lvl2">Full Audit (--full)</a><a href="#blk-67631" class="lvl3">Step 3 — Find weak knowledge</a><a href="#blk-67634" class="lvl3">Step 4 — Epistemic frontier</a><a href="#blk-67637" class="lvl3">Step 5 — Check for staleness</a><a href="#blk-67640" class="lvl3">Step 6 — Orphan details</a><a href="#blk-67644" class="lvl2">Auto-Fix (--fix)</a><a href="#blk-67646" class="lvl3">Fix orphans — connect or prune</a><a href="#blk-67655" class="lvl3">Fix weak nodes — reinforce or decay</a><a href="#blk-67664" class="lvl3">Fix staleness — flag for sync</a><a href="#blk-67666" class="lvl2">Health Report Format</a><a href="#blk-67668" class="lvl2">Combining with Other Skills</a><a href="#blk-67680" class="lvl2">Anti-patterns to avoid</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a><a href="/graphonomous/docs/skills/attention.md/">Attention Engine</a><a href="/graphonomous/docs/skills/belief.md/">Belief Revision</a><a href="/graphonomous/docs/skills/bootstrap.md/">Graphonomous Bootstrap</a><a href="/graphonomous/docs/skills/consolidate.md/">Consolidation</a><a href="/graphonomous/docs/skills/deliberate.md/">Topology and Deliberation</a><a href="/graphonomous/docs/skills/epistemic-frontier.md/">Epistemic Frontier — Uncertainty-Guided Investigation</a><a href="/graphonomous/docs/skills/forgetting.md/">Intentional Forgetting — Structured Knowledge Removal</a><a href="/graphonomous/docs/skills/goals.md/">Goal Management</a><a href="/graphonomous/docs/skills/inspect.md/">Graph Inspection</a><a href="/graphonomous/docs/skills/learn.md/">Learning Loop</a><a href="/graphonomous/docs/skills/retrieve.md/">Retrieve and Remember</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieravw24lvzo5ebtedn5ofxnizglbfjcfvwii24xhgrm6tza47biy7uq</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-68420" class="lvl2">Arguments</a><a href="#blk-68429" class="lvl2">Quick Health Check</a><a href="#blk-68430" class="lvl3">Step 1 — Graph stats</a><a href="#blk-68433" class="lvl3">Step 2 — Interpret and report</a><a href="#blk-68458" class="lvl2">Full Audit (--full)</a><a href="#blk-68459" class="lvl3">Step 3 — Find weak knowledge</a><a href="#blk-68462" class="lvl3">Step 4 — Epistemic frontier</a><a href="#blk-68465" class="lvl3">Step 5 — Check for staleness</a><a href="#blk-68468" class="lvl3">Step 6 — Orphan details</a><a href="#blk-68472" class="lvl2">Auto-Fix (--fix)</a><a href="#blk-68474" class="lvl3">Fix orphans — connect or prune</a><a href="#blk-68483" class="lvl3">Fix weak nodes — reinforce or decay</a><a href="#blk-68492" class="lvl3">Fix staleness — flag for sync</a><a href="#blk-68494" class="lvl2">Health Report Format</a><a href="#blk-68496" class="lvl2">Combining with Other Skills</a><a href="#blk-68508" class="lvl2">Anti-patterns to avoid</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a><a href="/graphonomous/docs/skills/attention.md/">Attention Engine</a><a href="/graphonomous/docs/skills/belief.md/">Belief Revision</a><a href="/graphonomous/docs/skills/bootstrap.md/">Graphonomous Bootstrap</a><a href="/graphonomous/docs/skills/consolidate.md/">Consolidation</a><a href="/graphonomous/docs/skills/deliberate.md/">Topology and Deliberation</a><a href="/graphonomous/docs/skills/epistemic-frontier.md/">Epistemic Frontier — Uncertainty-Guided Investigation</a><a href="/graphonomous/docs/skills/forgetting.md/">Intentional Forgetting — Structured Knowledge Removal</a><a href="/graphonomous/docs/skills/goals.md/">Goal Management</a><a href="/graphonomous/docs/skills/inspect.md/">Graph Inspection</a><a href="/graphonomous/docs/skills/learn.md/">Learning Loop</a><a href="/graphonomous/docs/skills/retrieve.md/">Retrieve and Remember</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraqfnvqdvjr2k4klwissp7cpsoywkdl55cngb7dhbltimkdho5am6a</div></div></div>
 </div></div>
 </body></html>

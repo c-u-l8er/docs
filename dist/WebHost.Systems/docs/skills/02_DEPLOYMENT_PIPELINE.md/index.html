@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>02 — Deployment Pipeline · WebHost.Systems · Ampersand Box</title>
 <meta name="description" content="Deployments are immutable records. Once created, a deployment&#39;s artifact, version, and configuration never change. Only status and error_message are…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"02 — Deployment Pipeline","name":"02 — Deployment Pipeline","description":"Deployments are immutable records. Once created, a deployment's artifact, version, and configuration never change. Only status and error_message are…","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/","identifier":"bagaaieran54fe3agl2foqiuytgipqxpottltzootrug3cz6lhzkex5li3x2a","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Deployment Model"},{"@type":"WebPageElement","name":"Deployment Fields"},{"@type":"WebPageElement","name":"Deploy Flow"},{"@type":"WebPageElement","name":"Required Manifest: agent.config.json"},{"@type":"WebPageElement","name":"Validation Rules (MUST)"},{"@type":"WebPageElement","name":"Version Monotonicity"},{"@type":"WebPageElement","name":"Rollback"},{"@type":"WebPageElement","name":"AgentCore Container Build Pipeline"},{"@type":"WebPageElement","name":"Concurrent Deploy Guard"},{"@type":"WebPageElement","name":"Checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/"},{"@type":"ListItem","position":5,"name":"02_DEPLOYMENT_PIPELINE.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"02 — Deployment Pipeline","name":"02 — Deployment Pipeline","description":"Deployments are immutable records. Once created, a deployment's artifact, version, and configuration never change. Only status and error_message are…","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/","identifier":"bagaaieraq5ddoiiknetylbhnlsn7oplttaz43uv25ccsmdjlmrwqlbqmleia","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Deployment Model"},{"@type":"WebPageElement","name":"Deployment Fields"},{"@type":"WebPageElement","name":"Deploy Flow"},{"@type":"WebPageElement","name":"Required Manifest: agent.config.json"},{"@type":"WebPageElement","name":"Validation Rules (MUST)"},{"@type":"WebPageElement","name":"Version Monotonicity"},{"@type":"WebPageElement","name":"Rollback"},{"@type":"WebPageElement","name":"AgentCore Container Build Pipeline"},{"@type":"WebPageElement","name":"Concurrent Deploy Guard"},{"@type":"WebPageElement","name":"Checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/"},{"@type":"ListItem","position":5,"name":"02_DEPLOYMENT_PIPELINE.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,13 +23,13 @@
 
 </div></div>
 <div class="lead">Deployments are immutable records. Once created, a deployment&#39;s artifact, version, and configuration never change. Only status and error_message are updated during the lifecycle…</div>
-<div class="prose"><h1 id="blk-43119">02 — Deployment Pipeline</h1>
+<div class="prose"><h1 id="blk-43835">02 — Deployment Pipeline</h1>
 <blockquote><p><strong>Purpose:</strong> How bundles are uploaded, validated, and deployed to runtime providers. Covers the immutable deployment model, version monotonicity, rollback mechanics, and the AgentCore container build pipeline.</p></blockquote>
-<h3 id="blk-43122">Deployment Model</h3>
+<h3 id="blk-43838">Deployment Model</h3>
 <p>Deployments are <strong>immutable records</strong>. Once created, a deployment's artifact, version, and configuration never change. Only <code>status</code> and <code>error_message</code> are updated during the lifecycle. Rollback works by switching the agent's <code>active_deployment_id</code> pointer -- not by modifying old deployments.</p>
-<h3 id="blk-43124">Deployment Fields</h3>
+<h3 id="blk-43840">Deployment Fields</h3>
 <table><thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>id</code></td><td>UUID</td><td>Immutable deployment identifier</td></tr><tr><td><code>agent_id</code></td><td>UUID</td><td>Parent agent</td></tr><tr><td><code>version</code></td><td>int</td><td>Monotonically increasing per agent</td></tr><tr><td><code>runtime_provider</code></td><td>enum</td><td><code>cloudflare</code> or <code>agentcore</code></td></tr><tr><td><code>status</code></td><td>enum</td><td><code>deploying</code> / <code>active</code> / <code>failed</code> / <code>rolled_back</code></td></tr><tr><td><code>artifact</code></td><td>JSONB</td><td>Upload reference (checksum, size)</td></tr><tr><td><code>provider_ref</code></td><td>JSONB</td><td>Provider-specific deployment reference</td></tr><tr><td><code>commit_hash</code></td><td>string?</td><td>Optional git commit</td></tr><tr><td><code>error_message</code></td><td>string?</td><td>Failure details (sanitized, no secrets)</td></tr></tbody></table>
-<h3 id="blk-43156">Deploy Flow</h3>
+<h3 id="blk-43872">Deploy Flow</h3>
 <pre><code>1. UI uploads bundle (zip/tar)
 2. POST /functions/v1/deploy
 3. Edge Function:
@@ -43,7 +44,7 @@
       - UPDATE deployment status -&gt; failed
       - SET error_message
       - SET agents.status -&gt; error</code></pre>
-<h3 id="blk-43158">Required Manifest: <code>agent.config.json</code></h3>
+<h3 id="blk-43874">Required Manifest: <code>agent.config.json</code></h3>
 <p>Every bundle must include this file at the root:</p>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;entrypoint&quot;</span>: <span class="t-string">&quot;src/index.ts&quot;</span>,
@@ -59,22 +60,22 @@
   }
 }</code></pre>
 <table><thead><tr><th>Field</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>entrypoint</code></td><td>Yes</td><td>Path to main file</td></tr><tr><td><code>runtime</code></td><td>Yes</td><td>Must match agent's <code>runtime_provider</code></td></tr><tr><td><code>protocol</code></td><td>Yes</td><td>Must be <code>invoke/v1</code></td></tr><tr><td><code>env.requiredKeys</code></td><td>Yes</td><td>Secret keys that must exist in Vault</td></tr><tr><td><code>capabilities</code></td><td>Yes</td><td>Feature flags</td></tr></tbody></table>
-<h3 id="blk-43180">Validation Rules (MUST)</h3>
+<h3 id="blk-43896">Validation Rules (MUST)</h3>
 <ul><li><p>[ ] <code>agent.config.json</code> exists and parses as valid JSON</p></li><li><p>[ ] <code>entrypoint</code> file exists in the bundle</p></li><li><p>[ ] <code>runtime</code> matches the agent's <code>runtime_provider</code></p></li><li><p>[ ] <code>protocol</code> is <code>invoke/v1</code></p></li><li><p>[ ] Bundle size within limits (compressed and extracted)</p></li><li><p>[ ] File count within limits</p></li><li><p>[ ] No path traversal entries or unsafe symlinks</p></li><li><p>[ ] Version is strictly greater than the previous deployment's version</p></li></ul>
-<h3 id="blk-43198">Version Monotonicity</h3>
+<h3 id="blk-43914">Version Monotonicity</h3>
 <p>Versions are monotonically increasing integers per agent. The platform auto-assigns the next version if not provided. Attempting to deploy a version less than or equal to the current maximum is rejected.</p>
 <pre><code>agent_id | version | status
 ---------+---------+--------
 abc      | 1       | rolled_back
 abc      | 2       | rolled_back
 abc      | 3       | active     &lt;-- current</code></pre>
-<h3 id="blk-43201">Rollback</h3>
+<h3 id="blk-43917">Rollback</h3>
 <p>Rollback does <strong>not</strong> create a new deployment. It switches the active pointer:</p>
 <pre data-lang="bash"><code>curl<span class="t-flag"> -X</span> POST <span class="t-string">&quot;$SUPABASE_URL/rest/v1/rpc/rollback_deployment&quot;</span> \
  <span class="t-flag"> -H</span> <span class="t-string">&quot;Authorization: Bearer $TOKEN&quot;</span> \
  <span class="t-flag"> -d</span> <span class="t-string">'{ &quot;agent_id&quot;: &quot;&lt;uuid&gt;&quot;, &quot;deployment_id&quot;: &quot;&lt;target-uuid&gt;&quot; }'</span></code></pre>
 <p>The target deployment must have status <code>active</code> or <code>rolled_back</code> and belong to the same agent. The current active deployment is marked <code>rolled_back</code>.</p>
-<h3 id="blk-43205">AgentCore Container Build Pipeline</h3>
+<h3 id="blk-43921">AgentCore Container Build Pipeline</h3>
 <p>When <code>runtime=agentcore</code>, the control plane converts the uploaded bundle into a container image:</p>
 <pre><code>1. Extract and validate archive
 2. Build user code (TypeScript -&gt; Node.js 20 artifact)
@@ -84,12 +85,12 @@ abc      | 3       | active     &lt;-- current</code></pre>
 6. Create/update AgentCore runtime with image URI
 7. Inject env vars (telemetry key + user secrets)</code></pre>
 <p>The pipeline is idempotent per <code>deployment_id</code> -- retries produce the same provider state.</p>
-<h3 id="blk-43209">Concurrent Deploy Guard</h3>
+<h3 id="blk-43925">Concurrent Deploy Guard</h3>
 <p>Only one deployment can be in <code>deploying</code> status per agent at a time. The Edge Function must check for existing in-progress deployments and reject concurrent attempts with an appropriate error.</p>
-<h3 id="blk-43211">Checklist</h3>
+<h3 id="blk-43927">Checklist</h3>
 <ul><li><p>[ ] Bundle includes valid <code>agent.config.json</code></p></li><li><p>[ ] Entrypoint file exists</p></li><li><p>[ ] Runtime matches agent configuration</p></li><li><p>[ ] Version is monotonically increasing</p></li><li><p>[ ] Bundle passes size and file count limits</p></li><li><p>[ ] No concurrent deploys for the same agent</p></li><li><p>[ ] Secrets referenced in manifest exist in Vault</p></li><li><p>[ ] Deployment record is immutable after creation (except status/error)</p></li><li><p>[ ] AgentCore builds produce deterministic container images</p></li></ul></div>
 <p class="src"><a href="/#/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-43122" class="lvl2">Deployment Model</a><a href="#blk-43124" class="lvl2">Deployment Fields</a><a href="#blk-43156" class="lvl2">Deploy Flow</a><a href="#blk-43158" class="lvl2">Required Manifest: agent.config.json</a><a href="#blk-43180" class="lvl2">Validation Rules (MUST)</a><a href="#blk-43198" class="lvl2">Version Monotonicity</a><a href="#blk-43201" class="lvl2">Rollback</a><a href="#blk-43205" class="lvl2">AgentCore Container Build Pipeline</a><a href="#blk-43209" class="lvl2">Concurrent Deploy Guard</a><a href="#blk-43211" class="lvl2">Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/">01 — Agent Management</a><a href="/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/">03 — Invocation Gateway</a><a href="/WebHost.Systems/docs/skills/04_RUNTIME_PROVIDERS.md/">04 — Runtime Providers</a><a href="/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/">05 — Telemetry and Metrics</a><a href="/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/">06 — Billing and Limits</a><a href="/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/">07 — Security and Secrets</a><a href="/WebHost.Systems/docs/skills/08_AMPERSAND_INTEGRATION.md/">08 — [&amp;] Protocol Integration</a><a href="/WebHost.Systems/docs/skills/09_ANTI_PATTERNS.md/">09 — Anti-Patterns</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieran54fe3agl2foqiuytgipqxpottltzootrug3cz6lhzkex5li3x2a</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-43838" class="lvl2">Deployment Model</a><a href="#blk-43840" class="lvl2">Deployment Fields</a><a href="#blk-43872" class="lvl2">Deploy Flow</a><a href="#blk-43874" class="lvl2">Required Manifest: agent.config.json</a><a href="#blk-43896" class="lvl2">Validation Rules (MUST)</a><a href="#blk-43914" class="lvl2">Version Monotonicity</a><a href="#blk-43917" class="lvl2">Rollback</a><a href="#blk-43921" class="lvl2">AgentCore Container Build Pipeline</a><a href="#blk-43925" class="lvl2">Concurrent Deploy Guard</a><a href="#blk-43927" class="lvl2">Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/">01 — Agent Management</a><a href="/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/">03 — Invocation Gateway</a><a href="/WebHost.Systems/docs/skills/04_RUNTIME_PROVIDERS.md/">04 — Runtime Providers</a><a href="/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/">05 — Telemetry and Metrics</a><a href="/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/">06 — Billing and Limits</a><a href="/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/">07 — Security and Secrets</a><a href="/WebHost.Systems/docs/skills/08_AMPERSAND_INTEGRATION.md/">08 — [&amp;] Protocol Integration</a><a href="/WebHost.Systems/docs/skills/09_ANTI_PATTERNS.md/">09 — Anti-Patterns</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraq5ddoiiknetylbhnlsn7oplttaz43uv25ccsmdjlmrwqlbqmleia</div></div></div>
 </div></div>
 </body></html>

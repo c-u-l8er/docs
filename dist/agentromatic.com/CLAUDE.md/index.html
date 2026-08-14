@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>AgenTroMatic — Automatic Deliberation Engine · agentromatic.com · Ampersand Box</title>
 <meta name="description" content="Automatic deliberation engine for multi-agent AI systems. Agents bid, debate, elect leaders by consensus, execute under quorum, and build reputation over…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/agentromatic.com/CLAUDE.md/">
@@ -13,7 +13,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"AgenTroMatic — Automatic Deliberation Engine","name":"AgenTroMatic — Automatic Deliberation Engine","description":"Automatic deliberation engine for multi-agent AI systems. Agents bid, debate, elect leaders by consensus, execute under quorum, and build reputation over…","url":"https://docs.ampersandboxdesign.com/agentromatic.com/CLAUDE.md/","identifier":"bagaaieranc2wdlocbhh6f4pbkyf2nu5oufwb2d5a2ybztlvpbqeeeeurrkkq","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"agentromatic.com","url":"https://docs.ampersandboxdesign.com/agentromatic.com/"},"articleSection":"agentromatic.com","hasPart":[{"@type":"WebPageElement","name":"Source-of-truth spec"},{"@type":"WebPageElement","name":"Role in [&] Ecosystem"},{"@type":"WebPageElement","name":"Design principles"},{"@type":"WebPageElement","name":"Tech stack"},{"@type":"WebPageElement","name":"Status"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"agentromatic.com","item":"https://docs.ampersandboxdesign.com/agentromatic.com/"},{"@type":"ListItem","position":3,"name":"CLAUDE.md","item":"https://docs.ampersandboxdesign.com/agentromatic.com/CLAUDE.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"AgenTroMatic — Automatic Deliberation Engine","name":"AgenTroMatic — Automatic Deliberation Engine","description":"Automatic deliberation engine for multi-agent AI systems. Agents bid, debate, elect leaders by consensus, execute under quorum, and build reputation over…","url":"https://docs.ampersandboxdesign.com/agentromatic.com/CLAUDE.md/","identifier":"bagaaiera7uu3ew23hr4c5re2ol7kpbms5cvy57qepemr5twk5wqm6ej37k4a","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"agentromatic.com","url":"https://docs.ampersandboxdesign.com/agentromatic.com/"},"articleSection":"agentromatic.com","hasPart":[{"@type":"WebPageElement","name":"Source-of-truth spec"},{"@type":"WebPageElement","name":"Role in [&] Ecosystem"},{"@type":"WebPageElement","name":"Design principles"},{"@type":"WebPageElement","name":"Tech stack"},{"@type":"WebPageElement","name":"Status"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"agentromatic.com","item":"https://docs.ampersandboxdesign.com/agentromatic.com/"},{"@type":"ListItem","position":3,"name":"CLAUDE.md","item":"https://docs.ampersandboxdesign.com/agentromatic.com/CLAUDE.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -23,20 +24,20 @@
 
 </div></div>
 <div class="lead">Automatic deliberation engine for multi-agent AI systems. Agents bid, debate, elect leaders by consensus, execute under quorum, and build reputation over time.</div>
-<div class="prose"><h1 id="blk-55509">AgenTroMatic — Automatic Deliberation Engine</h1>
+<div class="prose"><h1 id="blk-56264">AgenTroMatic — Automatic Deliberation Engine</h1>
 <p>Automatic deliberation engine for multi-agent AI systems. Agents bid, debate, elect leaders by consensus, execute under quorum, and build reputation over time.</p>
-<h3 id="blk-55511">Source-of-truth spec</h3>
+<h3 id="blk-56266">Source-of-truth spec</h3>
 <ul><li><p><code>docs/spec/README.md</code> — AgenTroMatic technical specification</p></li></ul>
-<h3 id="blk-55515">Role in [&amp;] Ecosystem</h3>
+<h3 id="blk-56270">Role in [&amp;] Ecosystem</h3>
 <p>AgenTroMatic is the <strong>automation layer</strong> — the service mesh that sits between governance (Delegatic) and raw agent execution. It adds consensus, resilience, observability, and reputation tracking on top of Google's A2A protocol.</p>
-<h3 id="blk-55517">Design principles</h3>
+<h3 id="blk-56272">Design principles</h3>
 <ol><li><p>Deliberation over routing — agents negotiate every time</p></li><li><p>A2A-native — all inter-agent messages flow through standard A2A protocol</p></li><li><p>Reputation is memory — past performance shapes future assignments</p></li><li><p>Visible by default — every deliberation is traceable via the Observatory</p></li><li><p>Consensus before commit — Ra (Raft) quorum validation required</p></li><li><p>Governance-aware — respects Delegatic policy boundaries</p></li></ol>
-<h3 id="blk-55531">Tech stack</h3>
+<h3 id="blk-56286">Tech stack</h3>
 <p>Elixir/OTP, Phoenix LiveView, Ra (Raft), PostgreSQL, ETS</p>
-<h3 id="blk-55533">Status</h3>
+<h3 id="blk-56288">Status</h3>
 <p>This is a spec + marketing site. No implementation code yet. Implementation will be Elixir/OTP.</p></div>
 <p class="src"><a href="/#/agentromatic.com/CLAUDE.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-55511" class="lvl2">Source-of-truth spec</a><a href="#blk-55515" class="lvl2">Role in [&amp;] Ecosystem</a><a href="#blk-55517" class="lvl2">Design principles</a><a href="#blk-55531" class="lvl2">Tech stack</a><a href="#blk-55533" class="lvl2">Status</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/agentromatic.com/AGENTS.md/">AgenTroMatic — Agent Interface</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieranc2wdlocbhh6f4pbkyf2nu5oufwb2d5a2ybztlvpbqeeeeurrkkq</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-56266" class="lvl2">Source-of-truth spec</a><a href="#blk-56270" class="lvl2">Role in [&amp;] Ecosystem</a><a href="#blk-56272" class="lvl2">Design principles</a><a href="#blk-56286" class="lvl2">Tech stack</a><a href="#blk-56288" class="lvl2">Status</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/agentromatic.com/AGENTS.md/">AgenTroMatic — Agent Interface</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera7uu3ew23hr4c5re2ol7kpbms5cvy57qepemr5twk5wqm6ej37k4a</div></div></div>
 </div></div>
 </body></html>

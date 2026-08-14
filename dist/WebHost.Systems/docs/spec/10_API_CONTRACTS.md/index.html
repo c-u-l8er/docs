@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>webhost.systems — API Contracts (v1) · WebHost.Systems · Ampersand Box</title>
 <meta name="description" content="Version: 1.1 Status: Implementation-ready Last updated: 2026-03-28">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/10_API_CONTRACTS.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"webhost.systems — API Contracts (v1)","name":"webhost.systems — API Contracts (v1)","description":"Version: 1.1 Status: Implementation-ready Last updated: 2026-03-28","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/10_API_CONTRACTS.md/","identifier":"bagaaiera5jtt5ylqwzgwekznif4db77oqflbogtvghirjripfqaeif7zdbpa","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"1) Principles"},{"@type":"WebPageElement","name":"1.1 Control plane vs data plane"},{"@type":"WebPageElement","name":"1.2 Implementation model"},{"@type":"WebPageElement","name":"1.3 Stability rules"},{"@type":"WebPageElement","name":"1.4 Authentication/authorization"},{"@type":"WebPageElement","name":"1.5 Idempotency"},{"@type":"WebPageElement","name":"1.6 Time"},{"@type":"WebPageElement","name":"2) Common types"},{"@type":"WebPageElement","name":"2.1 IDs"},{"@type":"WebPageElement","name":"2.2 Runtime providers"},{"@type":"WebPageElement","name":"2.3 Agent status"},{"@type":"WebPageElement","name":"2.4 Deployment status"},{"@type":"WebPageElement","name":"2.5 Pagination"},{"@type":"WebPageElement","name":"2.6 Trace and correlation"},{"@type":"WebPageElement","name":"3) Normalized errors (REQUIRED)"},{"@type":"WebPageElement","name":"3.1 Error envelope"},{"@type":"WebPageElement","name":"3.2 Error codes"},{"@type":"WebPageElement","name":"3.3 HTTP mapping (recommended)"},{"@type":"WebPageElement","name":"3.4 Validation errors"},{"@type":"WebPageElement","name":"4) Authentication"},{"@type":"WebPageElement","name":"4.1 Control plane auth"},{"@type":"WebPageElement","name":"4.2 Invocation auth (MVP default)"},{"@type":"WebPageElement","name":"4.3 Telemetry auth (data plane -> control plane)"},{"@type":"WebPageElement","name":"4.4 Delegated invocation auth (server-to-server; internal)"},{"@type":"WebPageElement","name":"5) Resource shapes"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/"},{"@type":"ListItem","position":5,"name":"10_API_CONTRACTS.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/10_API_CONTRACTS.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"webhost.systems — API Contracts (v1)","name":"webhost.systems — API Contracts (v1)","description":"Version: 1.1 Status: Implementation-ready Last updated: 2026-03-28","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/10_API_CONTRACTS.md/","identifier":"bagaaierapxxf6h5t2jjdmnvdlsidbejoq2r5i327fagu2vhemrdd33mji4qq","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"1) Principles"},{"@type":"WebPageElement","name":"1.1 Control plane vs data plane"},{"@type":"WebPageElement","name":"1.2 Implementation model"},{"@type":"WebPageElement","name":"1.3 Stability rules"},{"@type":"WebPageElement","name":"1.4 Authentication/authorization"},{"@type":"WebPageElement","name":"1.5 Idempotency"},{"@type":"WebPageElement","name":"1.6 Time"},{"@type":"WebPageElement","name":"2) Common types"},{"@type":"WebPageElement","name":"2.1 IDs"},{"@type":"WebPageElement","name":"2.2 Runtime providers"},{"@type":"WebPageElement","name":"2.3 Agent status"},{"@type":"WebPageElement","name":"2.4 Deployment status"},{"@type":"WebPageElement","name":"2.5 Pagination"},{"@type":"WebPageElement","name":"2.6 Trace and correlation"},{"@type":"WebPageElement","name":"3) Normalized errors (REQUIRED)"},{"@type":"WebPageElement","name":"3.1 Error envelope"},{"@type":"WebPageElement","name":"3.2 Error codes"},{"@type":"WebPageElement","name":"3.3 HTTP mapping (recommended)"},{"@type":"WebPageElement","name":"3.4 Validation errors"},{"@type":"WebPageElement","name":"4) Authentication"},{"@type":"WebPageElement","name":"4.1 Control plane auth"},{"@type":"WebPageElement","name":"4.2 Invocation auth (MVP default)"},{"@type":"WebPageElement","name":"4.3 Telemetry auth (data plane -> control plane)"},{"@type":"WebPageElement","name":"4.4 Delegated invocation auth (server-to-server; internal)"},{"@type":"WebPageElement","name":"5) Resource shapes"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/"},{"@type":"ListItem","position":5,"name":"10_API_CONTRACTS.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/spec/10_API_CONTRACTS.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,48 +23,48 @@
 
 </div></div>
 <div class="lead">Version: 1.1 Status: Implementation-ready Last updated: 2026-03-28</div>
-<div class="prose"><h1 id="blk-45362">webhost.systems — API Contracts (v1)</h1>
+<div class="prose"><h1 id="blk-46078">webhost.systems — API Contracts (v1)</h1>
 <p>Version: 1.1 Status: Implementation-ready Last updated: 2026-03-28</p>
 <p>This document defines the <strong>control plane</strong> and <strong>invocation gateway</strong> API contracts for webhost.systems, including request/response formats, normalized errors, idempotency, pagination, and telemetry ingestion.</p>
 <blockquote><p>Normative language: MUST, MUST NOT, SHOULD, MAY.</p></blockquote>
-<h3 id="blk-45367">1) Principles</h3>
-<h4 id="blk-45368">1.1 Control plane vs data plane</h4>
+<h3 id="blk-46083">1) Principles</h3>
+<h4 id="blk-46084">1.1 Control plane vs data plane</h4>
 <ul><li><p><strong>Control plane APIs</strong> manage users, agents, deployments, billing, and metrics aggregation.</p></li><li><p><strong>Data plane</strong> executes agent code on runtime providers and reports telemetry to the control plane.</p></li></ul>
-<h4 id="blk-45374">1.2 Implementation model</h4>
+<h4 id="blk-46090">1.2 Implementation model</h4>
 <p>Control plane APIs are implemented via:</p>
 <ul><li><p><strong>PostgREST</strong> (auto-generated REST from PostgreSQL schema) for simple CRUD with RLS enforcement.</p></li><li><p><strong>Supabase RPC functions</strong> (PostgreSQL functions exposed via PostgREST) for business logic that needs transactional guarantees.</p></li><li><p><strong>Supabase Edge Functions</strong> (Deno-based server functions) for server-only operations: deployment orchestration, invocation gateway, telemetry ingestion, billing webhooks.</p></li></ul>
-<h4 id="blk-45383">1.3 Stability rules</h4>
+<h4 id="blk-46099">1.3 Stability rules</h4>
 <ul><li><p>Endpoints and payloads defined here are <strong>public contracts</strong>.</p></li><li><p>Additive changes are allowed (adding fields, adding enum values with backward compatibility).</p></li><li><p>Breaking changes require a new version (<code>/v2/...</code>) and a deprecation plan.</p></li></ul>
-<h4 id="blk-45391">1.4 Authentication/authorization</h4>
+<h4 id="blk-46107">1.4 Authentication/authorization</h4>
 <ul><li><p>All control plane endpoints are <strong>authenticated</strong> unless explicitly marked public.</p></li><li><p>Authentication uses <strong>Supabase Auth JWTs</strong> passed as <code>Authorization: Bearer &lt;token&gt;</code>.</p></li><li><p>Authorization is tenant-scoped via <strong>RLS policies</strong>:</p></li><li><p>The caller can only access resources they own, unless they have an administrative role (not in MVP).</p></li><li><p>Invocation can be:</p></li><li><p>authenticated-only (MVP default), OR</p></li><li><p>optionally public via per-agent API key (post-MVP).</p></li></ul>
-<h4 id="blk-45407">1.5 Idempotency</h4>
+<h4 id="blk-46123">1.5 Idempotency</h4>
 <ul><li><p>All endpoints that create side effects (create agent, deploy, report metrics) SHOULD accept an <code>Idempotency-Key</code> header.</p></li><li><p>The server MUST treat retries with the same idempotency key as a single logical operation.</p></li></ul>
-<h4 id="blk-45413">1.6 Time</h4>
+<h4 id="blk-46129">1.6 Time</h4>
 <ul><li><p>All timestamps are RFC3339 UTC (<code>2026-01-21T00:00:00Z</code>) or unix ms; this spec uses RFC3339 for external APIs.</p></li><li><p>Server MAY store timestamps as <code>timestamptz</code> or integers internally.</p></li></ul>
-<h3 id="blk-45419">2) Common types</h3>
-<h4 id="blk-45420">2.1 IDs</h4>
+<h3 id="blk-46135">2) Common types</h3>
+<h4 id="blk-46136">2.1 IDs</h4>
 <p>All IDs are UUIDs. Clients MUST NOT infer meaning from them.</p>
 <ul><li><p><code>UserId</code>: UUID string</p></li><li><p><code>AgentId</code>: UUID string</p></li><li><p><code>DeploymentId</code>: UUID string</p></li><li><p><code>MetricEventId</code>: UUID string</p></li></ul>
-<h4 id="blk-45431">2.2 Runtime providers</h4>
+<h4 id="blk-46147">2.2 Runtime providers</h4>
 <p><code>RuntimeProvider</code> enum:</p>
 <ul><li><p><code>cloudflare</code></p></li><li><p><code>agentcore</code></p></li></ul>
-<h4 id="blk-45438">2.3 Agent status</h4>
+<h4 id="blk-46154">2.3 Agent status</h4>
 <p><code>AgentStatus</code> enum:</p>
 <ul><li><p><code>created</code></p></li><li><p><code>deploying</code></p></li><li><p><code>active</code></p></li><li><p><code>error</code></p></li><li><p><code>disabled</code></p></li></ul>
-<h4 id="blk-45451">2.4 Deployment status</h4>
+<h4 id="blk-46167">2.4 Deployment status</h4>
 <p><code>DeploymentStatus</code> enum:</p>
 <ul><li><p><code>deploying</code></p></li><li><p><code>active</code></p></li><li><p><code>failed</code></p></li><li><p><code>rolled_back</code></p></li></ul>
-<h4 id="blk-45462">2.5 Pagination</h4>
+<h4 id="blk-46178">2.5 Pagination</h4>
 <p>For list endpoints, use cursor pagination:</p>
 <p>Request query params:</p>
 <ul><li><p><code>limit</code> (integer, default 25, max 100)</p></li><li><p><code>cursor</code> (string, optional)</p></li></ul>
 <p>Response fields:</p>
 <ul><li><p><code>items</code>: array</p></li><li><p><code>nextCursor</code>: string | null</p></li></ul>
 <p>Note: PostgREST endpoints may alternatively use <code>Range</code> headers or <code>offset</code>/<code>limit</code> query params. RPC functions and Edge Functions SHOULD use cursor pagination.</p>
-<h4 id="blk-45477">2.6 Trace and correlation</h4>
+<h4 id="blk-46193">2.6 Trace and correlation</h4>
 <ul><li><p><code>traceId</code>: server-generated string on every request (also accepted if provided).</p></li><li><p>All responses SHOULD include <code>traceId</code>.</p></li><li><p>Data plane telemetry MUST include <code>traceId</code> when possible.</p></li></ul>
-<h3 id="blk-45485">3) Normalized errors (REQUIRED)</h3>
-<h4 id="blk-45486">3.1 Error envelope</h4>
+<h3 id="blk-46201">3) Normalized errors (REQUIRED)</h3>
+<h4 id="blk-46202">3.1 Error envelope</h4>
 <p>All non-2xx responses MUST use:</p>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;error&quot;</span>: {
@@ -79,12 +80,12 @@
   },
   <span class="t-key">&quot;traceId&quot;</span>: <span class="t-string">&quot;trc_01J3...&quot;</span>
 }</code></pre>
-<h4 id="blk-45489">3.2 Error codes</h4>
+<h4 id="blk-46205">3.2 Error codes</h4>
 <p><code>ErrorCode</code> enum (MVP set; extensible):</p>
 <ul><li><p><code>UNAUTHENTICATED</code> — missing/invalid session or JWT</p></li><li><p><code>UNAUTHORIZED</code> — authenticated but not allowed (tenant boundary)</p></li><li><p><code>NOT_FOUND</code> — resource does not exist or not visible</p></li><li><p><code>INVALID_REQUEST</code> — validation failure (schema, required fields, etc.)</p></li><li><p><code>CONFLICT</code> — resource state conflict (e.g., deploy while already deploying)</p></li><li><p><code>RATE_LIMITED</code> — request rate exceeded (may be added later)</p></li><li><p><code>LIMIT_EXCEEDED</code> — plan/usage limit exceeded</p></li><li><p><code>DEPLOYMENT_FAILED</code> — deployment failed (includes provider message sanitized)</p></li><li><p><code>RUNTIME_ERROR</code> — runtime invocation failure (provider/runtime/tool error)</p></li><li><p><code>INTERNAL</code> — unexpected server failure</p></li></ul>
-<h4 id="blk-45512">3.3 HTTP mapping (recommended)</h4>
+<h4 id="blk-46228">3.3 HTTP mapping (recommended)</h4>
 <ul><li><p><code>UNAUTHENTICATED</code> -&gt; 401</p></li><li><p><code>UNAUTHORIZED</code> -&gt; 403</p></li><li><p><code>NOT_FOUND</code> -&gt; 404</p></li><li><p><code>INVALID_REQUEST</code> -&gt; 400</p></li><li><p><code>CONFLICT</code> -&gt; 409</p></li><li><p><code>RATE_LIMITED</code> -&gt; 429</p></li><li><p><code>LIMIT_EXCEEDED</code> -&gt; 402 (or 403). Use 402 if you want &quot;upgrade to continue&quot; semantics.</p></li><li><p><code>DEPLOYMENT_FAILED</code> -&gt; 502 (or 500). Use 502 if the provider is the failure boundary.</p></li><li><p><code>RUNTIME_ERROR</code> -&gt; 502</p></li><li><p><code>INTERNAL</code> -&gt; 500</p></li></ul>
-<h4 id="blk-45534">3.4 Validation errors</h4>
+<h4 id="blk-46250">3.4 Validation errors</h4>
 <p>For <code>INVALID_REQUEST</code>, <code>details</code> SHOULD include field-level issues:</p>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;error&quot;</span>: {
@@ -100,22 +101,22 @@
   },
   <span class="t-key">&quot;traceId&quot;</span>: <span class="t-string">&quot;trc_...&quot;</span>
 }</code></pre>
-<h3 id="blk-45537">4) Authentication</h3>
-<h4 id="blk-45538">4.1 Control plane auth</h4>
+<h3 id="blk-46253">4) Authentication</h3>
+<h4 id="blk-46254">4.1 Control plane auth</h4>
 <ul><li><p>Clients authenticate via Supabase Auth (JWT-based).</p></li><li><p>The frontend obtains JWTs via Supabase client SDK (<code>supabase.auth.getSession()</code>).</p></li><li><p>All API requests include <code>Authorization: Bearer &lt;access_token&gt;</code>.</p></li><li><p>Server derives <code>userId</code> from <code>auth.uid()</code> (the JWT subject claim).</p></li><li><p>If no valid JWT: return <code>UNAUTHENTICATED</code>.</p></li></ul>
-<h4 id="blk-45550">4.2 Invocation auth (MVP default)</h4>
+<h4 id="blk-46266">4.2 Invocation auth (MVP default)</h4>
 <ul><li><p>Invocation endpoint requires authentication (same as control plane), unless agent is explicitly configured as public (post-MVP).</p></li></ul>
-<h4 id="blk-45554">4.3 Telemetry auth (data plane -&gt; control plane)</h4>
+<h4 id="blk-46270">4.3 Telemetry auth (data plane -&gt; control plane)</h4>
 <p>Telemetry ingestion MUST be protected against spoofing.</p>
 <p>MVP requirement:</p>
 <ul><li><p>Each deployment MUST have an associated <code>telemetrySecret</code> (HMAC key) that is injected into the runtime provider as a secret.</p></li><li><p>The control plane database stores the <code>telemetrySecret</code> in <strong>Supabase Vault</strong> (encrypted at rest). The plaintext value MUST NOT be stored in regular PostgreSQL tables.</p></li><li><p>Telemetry requests MUST include a signature header:</p></li><li><p><code>X-Telemetry-Signature: v1=&lt;hex-hmac-sha256(body)&gt;</code></p></li><li><p><code>X-Telemetry-Deployment-Id: &lt;deploymentId&gt;</code></p></li><li><p>Control plane (Edge Function) verifies signatures by retrieving the secret from Supabase Vault.</p></li><li><p>Rotation:</p></li><li><p>Rotating <code>telemetrySecret</code> MUST be supported by updating the Vault entry and the provider secret (and must be auditable).</p></li><li><p>If you need zero-downtime rotation, support a short overlap window where both &quot;current&quot; and &quot;previous&quot; secrets are accepted for verification.</p></li><li><p>Anti-replay (recommended, non-breaking):</p></li><li><p>Include a timestamp header (e.g., <code>X-Telemetry-Timestamp</code>) and reject signatures outside a small window, or include a nonce/eventId with dedupe at ingestion.</p></li></ul>
-<h4 id="blk-45580">4.4 Delegated invocation auth (server-to-server; internal)</h4>
+<h4 id="blk-46296">4.4 Delegated invocation auth (server-to-server; internal)</h4>
 <p>WHS MAY support a <strong>delegated invocation</strong> auth mode for trusted backend callers (e.g., a workflow orchestrator) to invoke an agent <strong>on behalf of</strong> an end user <strong>without forwarding browser JWTs</strong>.</p>
 <p>If enabled, delegated invocation MUST:</p>
 <ul><li><p>authenticate the delegator using <strong>HMAC over raw request bytes</strong> (signature header + timestamp window),</p></li><li><p>include a delegated end-user identity in the request body (e.g., <code>delegation.externalUserId</code>),</p></li><li><p>enforce WHS authorization, limits, and billing <strong>as the delegated user</strong> (no bypass),</p></li><li><p>require an idempotency key and dedupe by <code>(delegated user, agentId, idempotencyKey)</code> to prevent duplicate cost/side effects under retries.</p></li></ul>
 <p>This auth mode is <strong>service authentication</strong> for the delegator, not user authentication. It MUST NOT weaken tenant isolation.</p>
-<h3 id="blk-45593">5) Resource shapes</h3>
-<h4 id="blk-45594">5.1 User</h4>
+<h3 id="blk-46309">5) Resource shapes</h3>
+<h4 id="blk-46310">5.1 User</h4>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;uuid-...&quot;</span>,
   <span class="t-key">&quot;email&quot;</span>: <span class="t-string">&quot;user@example.com&quot;</span>,
@@ -124,7 +125,7 @@
   <span class="t-key">&quot;defaultRuntimeProvider&quot;</span>: <span class="t-string">&quot;cloudflare&quot;</span>,
   <span class="t-key">&quot;createdAt&quot;</span>: <span class="t-string">&quot;2026-01-01T00:00:00Z&quot;</span>
 }</code></pre>
-<h4 id="blk-45596">5.2 Agent</h4>
+<h4 id="blk-46312">5.2 Agent</h4>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;uuid-...&quot;</span>,
   <span class="t-key">&quot;userId&quot;</span>: <span class="t-string">&quot;uuid-...&quot;</span>,
@@ -149,7 +150,7 @@
 }</code></pre>
 <p>Notes:</p>
 <ul><li><p><code>providerConfig.cloudflare</code> and <code>providerConfig.agentcore</code> are mutually exclusive based on <code>runtimeProvider</code>.</p></li><li><p>Server MAY return both blocks but MUST set the non-applicable one to <code>null</code>.</p></li></ul>
-<h4 id="blk-45604">5.3 Deployment</h4>
+<h4 id="blk-46320">5.3 Deployment</h4>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;uuid-...&quot;</span>,
   <span class="t-key">&quot;agentId&quot;</span>: <span class="t-string">&quot;uuid-...&quot;</span>,
@@ -176,9 +177,9 @@
   <span class="t-key">&quot;deployedAt&quot;</span>: <span class="t-string">&quot;2026-01-20T00:00:00Z&quot;</span>,
   <span class="t-key">&quot;deployedBy&quot;</span>: <span class="t-string">&quot;uuid-...&quot;</span>
 }</code></pre>
-<h3 id="blk-45606">6) Control plane endpoints (HTTP form)</h3>
+<h3 id="blk-46322">6) Control plane endpoints (HTTP form)</h3>
 <blockquote><p>CRUD operations use PostgREST (auto-generated REST with RLS) or Supabase RPC functions. Server-only operations use Edge Functions. Both produce the same payload shapes and error normalization.</p></blockquote>
-<h4 id="blk-45609">6.1 Get current user</h4>
+<h4 id="blk-46325">6.1 Get current user</h4>
 <p><strong>GET</strong> <code>/rest/v1/rpc/get_current_user</code></p>
 <p>Response 200:</p>
 <pre data-lang="json"><code>{
@@ -186,8 +187,8 @@
   <span class="t-key">&quot;traceId&quot;</span>: <span class="t-string">&quot;trc_...&quot;</span>
 }</code></pre>
 <p>Errors: <code>UNAUTHENTICATED</code>.</p>
-<h3 id="blk-45614">7) Agents API</h3>
-<h4 id="blk-45615">7.1 Create agent</h4>
+<h3 id="blk-46330">7) Agents API</h3>
+<h4 id="blk-46331">7.1 Create agent</h4>
 <p><strong>POST</strong> <code>/rest/v1/rpc/create_agent</code></p>
 <p>Headers:</p>
 <ul><li><p><code>Authorization: Bearer &lt;token&gt;</code></p></li><li><p><code>Idempotency-Key: &lt;string&gt;</code> (recommended)</p></li></ul>
@@ -208,7 +209,7 @@
 <ul><li><p><code>name</code> required; 3-64 chars; <code>[a-zA-Z0-9-_]</code> recommended.</p></li><li><p><code>runtime_provider</code> required.</p></li><li><p><code>env_var_keys</code> MAY be empty; keys MUST be 1-128 chars, uppercase + underscores recommended.</p></li></ul>
 <p>Errors:</p>
 <ul><li><p><code>INVALID_REQUEST</code></p></li><li><p><code>CONFLICT</code> (if name uniqueness enforced per user)</p></li></ul>
-<h4 id="blk-45641">7.2 List agents</h4>
+<h4 id="blk-46357">7.2 List agents</h4>
 <p><strong>GET</strong> <code>/rest/v1/agents?select=*&amp;order=created_at.desc&amp;limit=25</code></p>
 <p>RLS automatically filters to current user's agents.</p>
 <p>Response 200:</p>
@@ -219,7 +220,7 @@
 }</code></pre>
 <p>Errors:</p>
 <ul><li><p><code>UNAUTHENTICATED</code></p></li></ul>
-<h4 id="blk-45650">7.3 Get agent</h4>
+<h4 id="blk-46366">7.3 Get agent</h4>
 <p><strong>GET</strong> <code>/rest/v1/agents?id=eq.&lt;agentId&gt;&amp;select=*</code></p>
 <p>Response 200:</p>
 <pre data-lang="json"><code>{
@@ -228,7 +229,7 @@
 }</code></pre>
 <p>Errors:</p>
 <ul><li><p><code>NOT_FOUND</code></p></li><li><p><code>UNAUTHORIZED</code></p></li></ul>
-<h4 id="blk-45660">7.4 Update agent</h4>
+<h4 id="blk-46376">7.4 Update agent</h4>
 <p><strong>POST</strong> <code>/rest/v1/rpc/update_agent</code></p>
 <p>Request (all fields optional; server applies partial update):</p>
 <pre data-lang="json"><code>{
@@ -248,7 +249,7 @@
 <ul><li><p>Changing <code>runtime_provider</code> SHOULD be allowed only if:</p></li><li><p>the agent has no active deployment OR</p></li><li><p>the client explicitly triggers a new deployment afterwards.</p></li><li><p>Server MUST validate entitlement when setting <code>runtime_provider=agentcore</code>.</p></li></ul>
 <p>Errors:</p>
 <ul><li><p><code>INVALID_REQUEST</code></p></li><li><p><code>LIMIT_EXCEEDED</code> (tier gating for AgentCore)</p></li><li><p><code>CONFLICT</code> (e.g., agent currently deploying)</p></li><li><p><code>NOT_FOUND</code> / <code>UNAUTHORIZED</code></p></li></ul>
-<h4 id="blk-45686">7.5 Disable agent</h4>
+<h4 id="blk-46402">7.5 Disable agent</h4>
 <p><strong>POST</strong> <code>/rest/v1/rpc/disable_agent</code></p>
 <p>Request: <code>{ &quot;agent_id&quot;: &quot;uuid-...&quot; }</code></p>
 <p>Response 200:</p>
@@ -258,7 +259,7 @@
 }</code></pre>
 <p>Errors:</p>
 <ul><li><p><code>NOT_FOUND</code> / <code>UNAUTHORIZED</code></p></li></ul>
-<h4 id="blk-45695">7.6 Delete agent</h4>
+<h4 id="blk-46411">7.6 Delete agent</h4>
 <p><strong>POST</strong> <code>/rest/v1/rpc/delete_agent</code></p>
 <p>Request: <code>{ &quot;agent_id&quot;: &quot;uuid-...&quot; }</code></p>
 <p>Response 204: no body.</p>
@@ -266,8 +267,8 @@
 <ul><li><p>Server SHOULD attempt to deprovision provider resources (best-effort).</p></li><li><p>Server MUST soft-delete (set <code>deleted_at</code>) and related resources according to retention policies.</p></li></ul>
 <p>Errors:</p>
 <ul><li><p><code>NOT_FOUND</code> / <code>UNAUTHORIZED</code></p></li><li><p><code>CONFLICT</code> if deletion blocked by in-progress deployment (optional)</p></li></ul>
-<h3 id="blk-45711">8) Deployments API</h3>
-<h4 id="blk-45712">8.1 Create and deploy (single step)</h4>
+<h3 id="blk-46427">8) Deployments API</h3>
+<h4 id="blk-46428">8.1 Create and deploy (single step)</h4>
 <p><strong>POST</strong> <code>/functions/v1/deploy</code></p>
 <p>This is an <strong>Edge Function</strong> because it performs server-only provider API calls.</p>
 <p>Headers:</p>
@@ -292,7 +293,7 @@
 <ul><li><p>Deploy is async; client polls deployment status or uses Supabase Realtime subscription for live updates.</p></li><li><p>Server MUST validate runtime gating (tier) and artifact constraints before creating provider resources.</p></li></ul>
 <p>Errors:</p>
 <ul><li><p><code>INVALID_REQUEST</code></p></li><li><p><code>LIMIT_EXCEEDED</code> (runtime gated)</p></li><li><p><code>CONFLICT</code> (deploy in progress)</p></li><li><p><code>NOT_FOUND</code> / <code>UNAUTHORIZED</code></p></li></ul>
-<h4 id="blk-45741">8.2 List deployments</h4>
+<h4 id="blk-46457">8.2 List deployments</h4>
 <p><strong>GET</strong> <code>/rest/v1/deployments?agent_id=eq.&lt;agentId&gt;&amp;order=created_at.desc&amp;limit=25</code></p>
 <p>RLS automatically filters to current user's deployments.</p>
 <p>Response 200:</p>
@@ -303,7 +304,7 @@
 }</code></pre>
 <p>Errors:</p>
 <ul><li><p><code>NOT_FOUND</code> / <code>UNAUTHORIZED</code></p></li></ul>
-<h4 id="blk-45750">8.3 Get deployment</h4>
+<h4 id="blk-46466">8.3 Get deployment</h4>
 <p><strong>GET</strong> <code>/rest/v1/deployments?id=eq.&lt;deploymentId&gt;&amp;select=*</code></p>
 <p>Response 200:</p>
 <pre data-lang="json"><code>{
@@ -312,7 +313,7 @@
 }</code></pre>
 <p>Errors:</p>
 <ul><li><p><code>NOT_FOUND</code> / <code>UNAUTHORIZED</code></p></li></ul>
-<h4 id="blk-45758">8.4 Rollback (set active deployment)</h4>
+<h4 id="blk-46474">8.4 Rollback (set active deployment)</h4>
 <p><strong>POST</strong> <code>/functions/v1/activate-deployment</code></p>
 <p>This is an <strong>Edge Function</strong> because it may coordinate with provider APIs.</p>
 <p>Request:</p>
@@ -329,7 +330,7 @@
 }</code></pre>
 <p>Errors:</p>
 <ul><li><p><code>NOT_FOUND</code> / <code>UNAUTHORIZED</code></p></li><li><p><code>CONFLICT</code> (deployment not in a valid state to activate)</p></li></ul>
-<h4 id="blk-45771">8.5 Get deployment logs (MVP minimal)</h4>
+<h4 id="blk-46487">8.5 Get deployment logs (MVP minimal)</h4>
 <p><strong>POST</strong> <code>/rest/v1/rpc/get_deployment_logs</code></p>
 <p>Request: <code>{ &quot;deployment_id&quot;: &quot;uuid-...&quot; }</code></p>
 <p>Response 200 (MVP shape):</p>
@@ -343,8 +344,8 @@
 }</code></pre>
 <p>Errors:</p>
 <ul><li><p><code>NOT_FOUND</code> / <code>UNAUTHORIZED</code></p></li></ul>
-<h3 id="blk-45780">9) Secrets &amp; configuration API (recommended)</h3>
-<h4 id="blk-45781">9.1 Set agent env secrets (write-only)</h4>
+<h3 id="blk-46496">9) Secrets &amp; configuration API (recommended)</h3>
+<h4 id="blk-46497">9.1 Set agent env secrets (write-only)</h4>
 <p><strong>POST</strong> <code>/functions/v1/set-secrets</code></p>
 <p>This is an <strong>Edge Function</strong> because it writes to Supabase Vault and provider secret stores.</p>
 <p>Request:</p>
@@ -360,8 +361,8 @@
 <ul><li><p>Server MUST NOT return secret values.</p></li><li><p>Server MUST store secrets in Supabase Vault (encrypted) and inject into provider secret store(s) at deploy time.</p></li><li><p>Server MUST redact secrets from logs.</p></li></ul>
 <p>Errors:</p>
 <ul><li><p><code>INVALID_REQUEST</code></p></li><li><p><code>NOT_FOUND</code> / <code>UNAUTHORIZED</code></p></li><li><p><code>CONFLICT</code> if agent is mid-deploy (optional)</p></li></ul>
-<h3 id="blk-45803">10) Invocation gateway API (canonical)</h3>
-<h4 id="blk-45804">10.1 Invoke agent (non-streaming)</h4>
+<h3 id="blk-46519">10) Invocation gateway API (canonical)</h3>
+<h4 id="blk-46520">10.1 Invoke agent (non-streaming)</h4>
 <p><strong>POST</strong> <code>/functions/v1/invoke/&lt;agentId&gt;</code></p>
 <p>This is an <strong>Edge Function</strong> that authenticates, checks limits, and routes to the provider.</p>
 <p>Request (<code>messages</code> form):</p>
@@ -403,7 +404,7 @@
 <ul><li><p>Resolve agent ownership (unless public invocation enabled).</p></li><li><p>Ensure agent is not disabled.</p></li><li><p>Ensure agent has an active deployment.</p></li><li><p>Enforce plan limits before routing to runtime provider.</p></li><li><p>Route invocation to the active deployment's runtime provider.</p></li><li><p>Generate <code>traceId</code> if missing.</p></li><li><p>Normalize provider errors into the error envelope.</p></li></ul>
 <p>Errors:</p>
 <ul><li><p><code>UNAUTHENTICATED</code> / <code>UNAUTHORIZED</code> (MVP default)</p></li><li><p><code>NOT_FOUND</code></p></li><li><p><code>LIMIT_EXCEEDED</code></p></li><li><p><code>RUNTIME_ERROR</code></p></li><li><p><code>INVALID_REQUEST</code></p></li></ul>
-<h4 id="blk-45841">10.2 Invoke agent (streaming; SSE)</h4>
+<h4 id="blk-46557">10.2 Invoke agent (streaming; SSE)</h4>
 <p><strong>POST</strong> <code>/functions/v1/invoke/&lt;agentId&gt;/stream</code></p>
 <p>Accept: <code>text/event-stream</code></p>
 <p>Request: same as non-streaming.</p>
@@ -426,15 +427,15 @@ event: done
 data: {}</code></pre>
 <p>Notes:</p>
 <ul><li><p>Streaming is optional per runtime provider; if unsupported, server MAY emulate streaming by chunking buffered output.</p></li></ul>
-<h4 id="blk-45863">10.3 Invoke agent (delegated; server-to-server, internal)</h4>
+<h4 id="blk-46579">10.3 Invoke agent (delegated; server-to-server, internal)</h4>
 <p><strong>POST</strong> <code>/functions/v1/delegated/invoke/&lt;agentId&gt;</code> <strong>Purpose:</strong> Allow trusted backend systems (e.g., workflow runners) to invoke an agent on behalf of a delegated end user without forwarding browser JWTs.</p>
 <p>This endpoint is <strong>internal</strong> and MUST NOT be used by browsers.</p>
-<h5 id="blk-45866">Authentication (REQUIRED)</h5>
+<h5 id="blk-46582">Authentication (REQUIRED)</h5>
 <p>Request MUST include:</p>
 <ul><li><p><code>X-WHS-Delegation-Source: &lt;string&gt;</code> (e.g., <code>agentromatic</code>)</p></li><li><p><code>X-WHS-Delegation-Timestamp: &lt;epoch_ms&gt;</code></p></li><li><p><code>X-WHS-Delegation-Signature: v1=&lt;hex-hmac-sha256(raw_body_bytes)&gt;</code></p></li></ul>
 <p>Server behavior (MUST):</p>
 <ul><li><p>Verify HMAC signature over the exact raw request bytes using <code>WHS_DELEGATION_SECRET</code>.</p></li><li><p>Validate timestamp within an allowed skew window (recommended +/-5 minutes).</p></li><li><p>Optionally enforce a source allowlist (<code>X-WHS-Delegation-Source</code>) (recommended).</p></li><li><p>Reject invalid signatures/timestamps with <code>UNAUTHENTICATED</code>.</p></li></ul>
-<h5 id="blk-45885">Request body (REQUIRED)</h5>
+<h5 id="blk-46601">Request body (REQUIRED)</h5>
 <p>The request body MUST include:</p>
 <ul><li><p>a delegation envelope (delegated identity + idempotency),</p></li><li><p>the normal invocation request shape under <code>invoke</code> (compatible with <code>InvokeRequest</code>).</p></li></ul>
 <p>Example:</p>
@@ -470,18 +471,18 @@ data: {}</code></pre>
 }</code></pre>
 <p>Rules:</p>
 <ul><li><p><code>delegation.externalUserId</code> MUST be the Supabase Auth user ID (UUID) for the end user.</p></li><li><p><code>delegation.idempotencyKey</code> is REQUIRED and MUST be:</p></li><li><p>deterministic for a single logical invocation,</p></li><li><p>secret-free,</p></li><li><p>bounded in length.</p></li><li><p>The request body MUST NOT include plaintext secrets or end-user auth tokens.</p></li></ul>
-<h5 id="blk-45908">Response</h5>
+<h5 id="blk-46624">Response</h5>
 <p>On success, response MUST match the canonical invocation response (same as non-streaming invoke), including <code>traceId</code>.</p>
-<h5 id="blk-45910">Authorization &amp; billing (MUST)</h5>
+<h5 id="blk-46626">Authorization &amp; billing (MUST)</h5>
 <p>Server MUST:</p>
 <ul><li><p>resolve the delegated user (<code>externalUserId</code> -&gt; WHS user row),</p></li><li><p>enforce agent visibility/ownership <strong>as that user</strong>,</p></li><li><p>enforce plan limits and runtime gating <strong>as that user</strong>,</p></li><li><p>route to the active deployment (or a specified deployment if WHS later supports it).</p></li></ul>
-<h5 id="blk-45921">Idempotency (MUST)</h5>
+<h5 id="blk-46637">Idempotency (MUST)</h5>
 <p>Server MUST dedupe requests by <code>(delegation.externalUserId, agentId, delegation.idempotencyKey)</code>:</p>
 <ul><li><p>repeated requests with the same tuple MUST NOT double-run or double-charge,</p></li><li><p>reusing the same idempotency key with a different payload MUST return <code>CONFLICT</code>.</p></li></ul>
 <p>Errors:</p>
 <ul><li><p><code>UNAUTHENTICATED</code> (bad signature, stale timestamp, unknown source)</p></li><li><p><code>UNAUTHORIZED</code> / <code>NOT_FOUND</code> (agent not visible to delegated user)</p></li><li><p><code>LIMIT_EXCEEDED</code></p></li><li><p><code>RUNTIME_ERROR</code></p></li><li><p><code>INVALID_REQUEST</code></p></li><li><p><code>CONFLICT</code> (idempotency key reuse with different payload)</p></li></ul>
-<h3 id="blk-45942">11) Telemetry ingestion API (data plane -&gt; control plane)</h3>
-<h4 id="blk-45943">11.1 Report telemetry event</h4>
+<h3 id="blk-46658">11) Telemetry ingestion API (data plane -&gt; control plane)</h3>
+<h4 id="blk-46659">11.1 Report telemetry event</h4>
 <p><strong>POST</strong> <code>/functions/v1/telemetry/report</code></p>
 <p>This is an <strong>Edge Function</strong> that validates signatures and persists events.</p>
 <p>Headers:</p>
@@ -517,8 +518,8 @@ data: {}</code></pre>
 <ul><li><p>Verify signature against telemetry secret retrieved from Supabase Vault.</p></li><li><p>Ensure <code>(userId, agentId, deploymentId)</code> are consistent and owned by the same user.</p></li><li><p>Reject events with missing required attribution or invalid enums.</p></li></ul>
 <p>Errors:</p>
 <ul><li><p><code>UNAUTHENTICATED</code> (bad signature)</p></li><li><p><code>INVALID_REQUEST</code></p></li><li><p><code>UNAUTHORIZED</code> (attribution mismatch)</p></li><li><p><code>NOT_FOUND</code> (deployment does not exist)</p></li></ul>
-<h3 id="blk-45976">12) Metrics &amp; usage APIs</h3>
-<h4 id="blk-45977">12.1 Get usage for current billing period</h4>
+<h3 id="blk-46692">12) Metrics &amp; usage APIs</h3>
+<h4 id="blk-46693">12.1 Get usage for current billing period</h4>
 <p><strong>POST</strong> <code>/rest/v1/rpc/get_billing_usage</code></p>
 <p>Request: <code>{ &quot;period&quot;: &quot;2026-01&quot; }</code> (period optional; defaults to current)</p>
 <p>Response 200:</p>
@@ -545,7 +546,7 @@ data: {}</code></pre>
 }</code></pre>
 <p>Errors:</p>
 <ul><li><p><code>UNAUTHENTICATED</code></p></li></ul>
-<h4 id="blk-45986">12.2 Query metrics time series (per agent)</h4>
+<h4 id="blk-46702">12.2 Query metrics time series (per agent)</h4>
 <p><strong>POST</strong> <code>/rest/v1/rpc/get_agent_metrics</code></p>
 <p>Request:</p>
 <pre data-lang="json"><code>{
@@ -575,8 +576,8 @@ data: {}</code></pre>
 }</code></pre>
 <p>Errors:</p>
 <ul><li><p><code>NOT_FOUND</code> / <code>UNAUTHORIZED</code></p></li></ul>
-<h3 id="blk-45996">13) Billing APIs (LemonSqueezy-style)</h3>
-<h4 id="blk-45997">13.1 Create checkout</h4>
+<h3 id="blk-46712">13) Billing APIs (LemonSqueezy-style)</h3>
+<h4 id="blk-46713">13.1 Create checkout</h4>
 <p><strong>POST</strong> <code>/functions/v1/billing/checkout</code></p>
 <p>This is an <strong>Edge Function</strong> because it calls the billing provider API.</p>
 <p>Request:</p>
@@ -590,7 +591,7 @@ data: {}</code></pre>
 }</code></pre>
 <p>Errors:</p>
 <ul><li><p><code>INVALID_REQUEST</code></p></li><li><p><code>UNAUTHENTICATED</code></p></li></ul>
-<h4 id="blk-46010">13.2 Billing webhooks (server-only)</h4>
+<h4 id="blk-46726">13.2 Billing webhooks (server-only)</h4>
 <p><strong>POST</strong> <code>/functions/v1/billing/webhook</code></p>
 <p>Notes:</p>
 <ul><li><p>This Edge Function MUST verify the billing provider signature.</p></li><li><p>It is not called by browsers.</p></li><li><p>It updates entitlements and subscription state in PostgreSQL.</p></li></ul>
@@ -600,17 +601,17 @@ data: {}</code></pre>
 }</code></pre>
 <p>Errors:</p>
 <ul><li><p><code>UNAUTHENTICATED</code> (signature invalid)</p></li></ul>
-<h3 id="blk-46026">14) State machines (normative)</h3>
-<h4 id="blk-46027">14.1 Agent state</h4>
+<h3 id="blk-46742">14) State machines (normative)</h3>
+<h4 id="blk-46743">14.1 Agent state</h4>
 <ul><li><p><code>created</code> -&gt; <code>deploying</code> (when deployment starts)</p></li><li><p><code>deploying</code> -&gt; <code>active</code> (deployment succeeds and becomes active)</p></li><li><p><code>deploying</code> -&gt; <code>error</code> (deployment fails)</p></li><li><p>any -&gt; <code>disabled</code> (manual disable)</p></li><li><p><code>disabled</code> -&gt; <code>active</code> (manual enable; optional endpoint)</p></li></ul>
-<h4 id="blk-46039">14.2 Deployment state</h4>
+<h4 id="blk-46755">14.2 Deployment state</h4>
 <ul><li><p><code>deploying</code> -&gt; <code>active</code> (success)</p></li><li><p><code>deploying</code> -&gt; <code>failed</code> (failure)</p></li><li><p><code>active</code> -&gt; <code>rolled_back</code> (when superseded by rollback/activation of different deployment; optional bookkeeping)</p></li></ul>
-<h3 id="blk-46047">15) Security &amp; privacy requirements for API responses</h3>
+<h3 id="blk-46763">15) Security &amp; privacy requirements for API responses</h3>
 <ul><li><p>Responses MUST NOT include secret values.</p></li><li><p>Error messages MUST be sanitized (no provider credentials, no stack traces).</p></li><li><p><code>details</code> MAY include internal error ids; never include raw provider error dumps unless explicitly whitelisted and sanitized.</p></li></ul>
-<h3 id="blk-46055">16) Compatibility notes (implementation)</h3>
+<h3 id="blk-46771">16) Compatibility notes (implementation)</h3>
 <ul><li><p>PostgREST endpoints automatically enforce RLS policies for tenant isolation.</p></li><li><p>RPC functions (PostgreSQL functions) MUST use <code>auth.uid()</code> for authorization.</p></li><li><p>Edge Functions MUST validate Supabase Auth JWTs and use the Supabase client with service role only for server-side operations (never expose the service role key to clients).</p></li><li><p>Use middleware patterns in Edge Functions for auth, traceId, and error normalization.</p></li></ul></div>
 <p class="src"><a href="/#/WebHost.Systems/docs/spec/10_API_CONTRACTS.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-45367" class="lvl2">1) Principles</a><a href="#blk-45368" class="lvl3">1.1 Control plane vs data plane</a><a href="#blk-45374" class="lvl3">1.2 Implementation model</a><a href="#blk-45383" class="lvl3">1.3 Stability rules</a><a href="#blk-45391" class="lvl3">1.4 Authentication/authorization</a><a href="#blk-45407" class="lvl3">1.5 Idempotency</a><a href="#blk-45413" class="lvl3">1.6 Time</a><a href="#blk-45419" class="lvl2">2) Common types</a><a href="#blk-45420" class="lvl3">2.1 IDs</a><a href="#blk-45431" class="lvl3">2.2 Runtime providers</a><a href="#blk-45438" class="lvl3">2.3 Agent status</a><a href="#blk-45451" class="lvl3">2.4 Deployment status</a><a href="#blk-45462" class="lvl3">2.5 Pagination</a><a href="#blk-45477" class="lvl3">2.6 Trace and correlation</a><a href="#blk-45485" class="lvl2">3) Normalized errors (REQUIRED)</a><a href="#blk-45486" class="lvl3">3.1 Error envelope</a><a href="#blk-45489" class="lvl3">3.2 Error codes</a><a href="#blk-45512" class="lvl3">3.3 HTTP mapping (recommended)</a><a href="#blk-45534" class="lvl3">3.4 Validation errors</a><a href="#blk-45537" class="lvl2">4) Authentication</a><a href="#blk-45538" class="lvl3">4.1 Control plane auth</a><a href="#blk-45550" class="lvl3">4.2 Invocation auth (MVP default)</a><a href="#blk-45554" class="lvl3">4.3 Telemetry auth (data plane -&gt; control plane)</a><a href="#blk-45580" class="lvl3">4.4 Delegated invocation auth (server-to-server; internal)</a><a href="#blk-45593" class="lvl2">5) Resource shapes</a><a href="#blk-45594" class="lvl3">5.1 User</a><a href="#blk-45596" class="lvl3">5.2 Agent</a><a href="#blk-45604" class="lvl3">5.3 Deployment</a><a href="#blk-45606" class="lvl2">6) Control plane endpoints (HTTP form)</a><a href="#blk-45609" class="lvl3">6.1 Get current user</a><a href="#blk-45614" class="lvl2">7) Agents API</a><a href="#blk-45615" class="lvl3">7.1 Create agent</a><a href="#blk-45641" class="lvl3">7.2 List agents</a><a href="#blk-45650" class="lvl3">7.3 Get agent</a><a href="#blk-45660" class="lvl3">7.4 Update agent</a><a href="#blk-45686" class="lvl3">7.5 Disable agent</a><a href="#blk-45695" class="lvl3">7.6 Delete agent</a><a href="#blk-45711" class="lvl2">8) Deployments API</a><a href="#blk-45712" class="lvl3">8.1 Create and deploy (single step)</a><a href="#blk-45741" class="lvl3">8.2 List deployments</a><a href="#blk-45750" class="lvl3">8.3 Get deployment</a><a href="#blk-45758" class="lvl3">8.4 Rollback (set active deployment)</a><a href="#blk-45771" class="lvl3">8.5 Get deployment logs (MVP minimal)</a><a href="#blk-45780" class="lvl2">9) Secrets &amp; configuration API (recommended)</a><a href="#blk-45781" class="lvl3">9.1 Set agent env secrets (write-only)</a><a href="#blk-45803" class="lvl2">10) Invocation gateway API (canonical)</a><a href="#blk-45804" class="lvl3">10.1 Invoke agent (non-streaming)</a><a href="#blk-45841" class="lvl3">10.2 Invoke agent (streaming; SSE)</a><a href="#blk-45863" class="lvl3">10.3 Invoke agent (delegated; server-to-server, internal)</a><a href="#blk-45866" class="lvl4">Authentication (REQUIRED)</a><a href="#blk-45885" class="lvl4">Request body (REQUIRED)</a><a href="#blk-45908" class="lvl4">Response</a><a href="#blk-45910" class="lvl4">Authorization &amp; billing (MUST)</a><a href="#blk-45921" class="lvl4">Idempotency (MUST)</a><a href="#blk-45942" class="lvl2">11) Telemetry ingestion API (data plane -&gt; control plane)</a><a href="#blk-45943" class="lvl3">11.1 Report telemetry event</a><a href="#blk-45976" class="lvl2">12) Metrics &amp; usage APIs</a><a href="#blk-45977" class="lvl3">12.1 Get usage for current billing period</a><a href="#blk-45986" class="lvl3">12.2 Query metrics time series (per agent)</a><a href="#blk-45996" class="lvl2">13) Billing APIs (LemonSqueezy-style)</a><a href="#blk-45997" class="lvl3">13.1 Create checkout</a><a href="#blk-46010" class="lvl3">13.2 Billing webhooks (server-only)</a><a href="#blk-46026" class="lvl2">14) State machines (normative)</a><a href="#blk-46027" class="lvl3">14.1 Agent state</a><a href="#blk-46039" class="lvl3">14.2 Deployment state</a><a href="#blk-46047" class="lvl2">15) Security &amp; privacy requirements for API responses</a><a href="#blk-46055" class="lvl2">16) Compatibility notes (implementation)</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/spec/00_MASTER_SPEC.md/">webhost.systems — MASTER ENGINEERING SPEC (v1)</a><a href="/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md/">webhost.systems — Runtime Provider Interface (RPI) &amp; Adapter Guidance (v1)</a><a href="/WebHost.Systems/docs/spec/30_DATA_MODEL_SUPABASE.md/">webhost.systems — Data Model (Supabase/PostgreSQL) &amp; Access Control (v1)</a><a href="/WebHost.Systems/docs/spec/40_SECURITY_SECRETS_COMPLIANCE.md/">webhost.systems — Security, Secrets, and Compliance (v1)</a><a href="/WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md/">webhost.systems — Observability, Metering, Cost, Tiers, and Limit Enforcement (v1)</a><a href="/WebHost.Systems/docs/spec/60_TESTING_ACCEPTANCE.md/">webhost.systems — Testing Plan &amp; Acceptance Criteria (v1)</a><a href="/WebHost.Systems/docs/spec/70_AMPERSAND_PROTOCOL_INTEGRATION.md/">webhost.systems — [&amp;] Protocol Integration Spec (v1)</a><a href="/WebHost.Systems/docs/spec/README.md/">webhost.systems — Spec v1 (Implementation-Ready Document Set)</a><a href="/WebHost.Systems/docs/spec/REALIGNMENT_PLAN.md/">webhost.systems — Spec-to-Implementation Realignment Plan (v1)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera5jtt5ylqwzgwekznif4db77oqflbogtvghirjripfqaeif7zdbpa</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-46083" class="lvl2">1) Principles</a><a href="#blk-46084" class="lvl3">1.1 Control plane vs data plane</a><a href="#blk-46090" class="lvl3">1.2 Implementation model</a><a href="#blk-46099" class="lvl3">1.3 Stability rules</a><a href="#blk-46107" class="lvl3">1.4 Authentication/authorization</a><a href="#blk-46123" class="lvl3">1.5 Idempotency</a><a href="#blk-46129" class="lvl3">1.6 Time</a><a href="#blk-46135" class="lvl2">2) Common types</a><a href="#blk-46136" class="lvl3">2.1 IDs</a><a href="#blk-46147" class="lvl3">2.2 Runtime providers</a><a href="#blk-46154" class="lvl3">2.3 Agent status</a><a href="#blk-46167" class="lvl3">2.4 Deployment status</a><a href="#blk-46178" class="lvl3">2.5 Pagination</a><a href="#blk-46193" class="lvl3">2.6 Trace and correlation</a><a href="#blk-46201" class="lvl2">3) Normalized errors (REQUIRED)</a><a href="#blk-46202" class="lvl3">3.1 Error envelope</a><a href="#blk-46205" class="lvl3">3.2 Error codes</a><a href="#blk-46228" class="lvl3">3.3 HTTP mapping (recommended)</a><a href="#blk-46250" class="lvl3">3.4 Validation errors</a><a href="#blk-46253" class="lvl2">4) Authentication</a><a href="#blk-46254" class="lvl3">4.1 Control plane auth</a><a href="#blk-46266" class="lvl3">4.2 Invocation auth (MVP default)</a><a href="#blk-46270" class="lvl3">4.3 Telemetry auth (data plane -&gt; control plane)</a><a href="#blk-46296" class="lvl3">4.4 Delegated invocation auth (server-to-server; internal)</a><a href="#blk-46309" class="lvl2">5) Resource shapes</a><a href="#blk-46310" class="lvl3">5.1 User</a><a href="#blk-46312" class="lvl3">5.2 Agent</a><a href="#blk-46320" class="lvl3">5.3 Deployment</a><a href="#blk-46322" class="lvl2">6) Control plane endpoints (HTTP form)</a><a href="#blk-46325" class="lvl3">6.1 Get current user</a><a href="#blk-46330" class="lvl2">7) Agents API</a><a href="#blk-46331" class="lvl3">7.1 Create agent</a><a href="#blk-46357" class="lvl3">7.2 List agents</a><a href="#blk-46366" class="lvl3">7.3 Get agent</a><a href="#blk-46376" class="lvl3">7.4 Update agent</a><a href="#blk-46402" class="lvl3">7.5 Disable agent</a><a href="#blk-46411" class="lvl3">7.6 Delete agent</a><a href="#blk-46427" class="lvl2">8) Deployments API</a><a href="#blk-46428" class="lvl3">8.1 Create and deploy (single step)</a><a href="#blk-46457" class="lvl3">8.2 List deployments</a><a href="#blk-46466" class="lvl3">8.3 Get deployment</a><a href="#blk-46474" class="lvl3">8.4 Rollback (set active deployment)</a><a href="#blk-46487" class="lvl3">8.5 Get deployment logs (MVP minimal)</a><a href="#blk-46496" class="lvl2">9) Secrets &amp; configuration API (recommended)</a><a href="#blk-46497" class="lvl3">9.1 Set agent env secrets (write-only)</a><a href="#blk-46519" class="lvl2">10) Invocation gateway API (canonical)</a><a href="#blk-46520" class="lvl3">10.1 Invoke agent (non-streaming)</a><a href="#blk-46557" class="lvl3">10.2 Invoke agent (streaming; SSE)</a><a href="#blk-46579" class="lvl3">10.3 Invoke agent (delegated; server-to-server, internal)</a><a href="#blk-46582" class="lvl4">Authentication (REQUIRED)</a><a href="#blk-46601" class="lvl4">Request body (REQUIRED)</a><a href="#blk-46624" class="lvl4">Response</a><a href="#blk-46626" class="lvl4">Authorization &amp; billing (MUST)</a><a href="#blk-46637" class="lvl4">Idempotency (MUST)</a><a href="#blk-46658" class="lvl2">11) Telemetry ingestion API (data plane -&gt; control plane)</a><a href="#blk-46659" class="lvl3">11.1 Report telemetry event</a><a href="#blk-46692" class="lvl2">12) Metrics &amp; usage APIs</a><a href="#blk-46693" class="lvl3">12.1 Get usage for current billing period</a><a href="#blk-46702" class="lvl3">12.2 Query metrics time series (per agent)</a><a href="#blk-46712" class="lvl2">13) Billing APIs (LemonSqueezy-style)</a><a href="#blk-46713" class="lvl3">13.1 Create checkout</a><a href="#blk-46726" class="lvl3">13.2 Billing webhooks (server-only)</a><a href="#blk-46742" class="lvl2">14) State machines (normative)</a><a href="#blk-46743" class="lvl3">14.1 Agent state</a><a href="#blk-46755" class="lvl3">14.2 Deployment state</a><a href="#blk-46763" class="lvl2">15) Security &amp; privacy requirements for API responses</a><a href="#blk-46771" class="lvl2">16) Compatibility notes (implementation)</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/spec/00_MASTER_SPEC.md/">webhost.systems — MASTER ENGINEERING SPEC (v1)</a><a href="/WebHost.Systems/docs/spec/20_RUNTIME_PROVIDER_INTERFACE.md/">webhost.systems — Runtime Provider Interface (RPI) &amp; Adapter Guidance (v1)</a><a href="/WebHost.Systems/docs/spec/30_DATA_MODEL_SUPABASE.md/">webhost.systems — Data Model (Supabase/PostgreSQL) &amp; Access Control (v1)</a><a href="/WebHost.Systems/docs/spec/40_SECURITY_SECRETS_COMPLIANCE.md/">webhost.systems — Security, Secrets, and Compliance (v1)</a><a href="/WebHost.Systems/docs/spec/50_OBSERVABILITY_BILLING_LIMITS.md/">webhost.systems — Observability, Metering, Cost, Tiers, and Limit Enforcement (v1)</a><a href="/WebHost.Systems/docs/spec/60_TESTING_ACCEPTANCE.md/">webhost.systems — Testing Plan &amp; Acceptance Criteria (v1)</a><a href="/WebHost.Systems/docs/spec/70_AMPERSAND_PROTOCOL_INTEGRATION.md/">webhost.systems — [&amp;] Protocol Integration Spec (v1)</a><a href="/WebHost.Systems/docs/spec/README.md/">webhost.systems — Spec v1 (Implementation-Ready Document Set)</a><a href="/WebHost.Systems/docs/spec/REALIGNMENT_PLAN.md/">webhost.systems — Spec-to-Implementation Realignment Plan (v1)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierapxxf6h5t2jjdmnvdlsidbejoq2r5i327fagu2vhemrdd33mji4qq</div></div></div>
 </div></div>
 </body></html>

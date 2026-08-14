@@ -1,0 +1,102 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
+<title>Ingest spike — Claude Code transcripts → SkillBundles · workbench · Ampersand Box</title>
+<meta name="description" content="Date: 2026-08-11 · Status: run, answered · Code: app/src/lib/ingest/, app/tools/ingest-transcript.ts">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/workbench/docs/INGEST_SPIKE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ingest spike — Claude Code transcripts → SkillBundles">
+<meta property="og:description" content="Date: 2026-08-11 · Status: run, answered · Code: app/src/lib/ingest/, app/tools/ingest-transcript.ts">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/workbench/docs/INGEST_SPIKE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Ingest spike — Claude Code transcripts → SkillBundles","name":"Ingest spike — Claude Code transcripts → SkillBundles","description":"Date: 2026-08-11 · Status: run, answered · Code: app/src/lib/ingest/, app/tools/ingest-transcript.ts","url":"https://docs.ampersandboxdesign.com/workbench/docs/INGEST_SPIKE.md/","identifier":"bagaaieracgcazkejegjwgrfrsx345noysdmihljenn32bzd3waz2kte5ykgq","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"workbench","url":"https://docs.ampersandboxdesign.com/workbench/"},"articleSection":"workbench","hasPart":[{"@type":"WebPageElement","name":"What was tested"},{"@type":"WebPageElement","name":"The four questions"},{"@type":"WebPageElement","name":"1. Does the mapping hold? — Yes, with no new edge kinds."},{"@type":"WebPageElement","name":"2. Do the gates carry signal? — Yes. Measured, not assumed."},{"@type":"WebPageElement","name":"3. Does the format survive real scale? — Yes, given streaming + segmentation."},{"@type":"WebPageElement","name":"4. Does the phase model survive real tool loops? — No. Fixed 2026-08-11."},{"@type":"WebPageElement","name":"Defects found and fixed"},{"@type":"WebPageElement","name":"A. canonicalize threw on any object with an undefined-valued key"},{"@type":"WebPageElement","name":"B. transcript_pii redaction never walked tool_call.arguments — a live secret leak"},{"@type":"WebPageElement","name":"C. applyProfile never redacted the manifest"},{"@type":"WebPageElement","name":"Kill criteria — none tripped"},{"@type":"WebPageElement","name":"Status"},{"@type":"WebPageElement","name":"What shipped on top of the spike"},{"@type":"WebPageElement","name":"Not done"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"workbench","item":"https://docs.ampersandboxdesign.com/workbench/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/workbench/docs/"},{"@type":"ListItem","position":4,"name":"INGEST_SPIKE.md","item":"https://docs.ampersandboxdesign.com/workbench/docs/INGEST_SPIKE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">workbench</span>
+<span class="path">workbench/docs/INGEST_SPIKE.md</span>
+
+</div></div>
+<div class="lead">Date: 2026-08-11 · Status: run, answered · Code: app/src/lib/ingest/, app/tools/ingest-transcript.ts</div>
+<div class="prose"><h1 id="blk-88049">Ingest spike — Claude Code transcripts → SkillBundles</h1>
+<p><strong>Date:</strong> 2026-08-11 · <strong>Status:</strong> run, answered · <strong>Code:</strong> <code>app/src/lib/ingest/</code>, <code>app/tools/ingest-transcript.ts</code></p>
+<h3 id="blk-88051">What was tested</h3>
+<p>Whether a real Claude Code session transcript (<code>~/.claude/projects/&lt;slug&gt;/&lt;id&gt;.jsonl</code>) can be turned into a real, scored SkillBundle using the verifier that already exists — with no new chat UI, no OpenRouter key, and no changes to the six gates.</p>
+<p>Reproduce:</p>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> workbench/app &amp;&amp; npm test</code></pre>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> workbench/app &amp;&amp; ./node_modules/.bin/vite-node tools/ingest-transcript.ts ~/.claude/projects/&lt;slug&gt;/&lt;id&gt;.jsonl</code></pre>
+<h3 id="blk-88056">The four questions</h3>
+<h4 id="blk-88057">1. Does the mapping hold? — <strong>Yes, with no new edge kinds.</strong></h4>
+<p>Claude Code records project onto the existing <code>TraceEdgeKind</code> union without extension:</p>
+<table><thead><tr><th>Transcript</th><th>TraceEdge</th></tr></thead><tbody><tr><td><code>user</code> record, string content</td><td><code>user_message</code></td></tr><tr><td><code>assistant</code> <code>text</code> block</td><td><code>assistant_message</code></td></tr><tr><td><code>assistant</code> <code>tool_use</code>, builtin</td><td><code>act</code> + <code>capability</code> + <code>tool_call</code></td></tr><tr><td><code>assistant</code> <code>tool_use</code>, <code>mcp__*</code></td><td><code>mcp_call</code> + <code>capability</code> + <code>tool_call</code></td></tr><tr><td><code>user</code> <code>tool_result</code> (+ <code>toolUseResult</code>)</td><td><code>observe</code> + <code>observation</code> + <code>state_hash</code></td></tr><tr><td><code>assistant</code> <code>thinking</code> block</td><td>dropped, <strong>counted</strong></td></tr><tr><td><code>isSidechain</code> record</td><td>dropped, <strong>counted</strong></td></tr></tbody></table>
+<p>The derived manifest validates against <code>SKILL_MANIFEST.v0.schema.json</code> unmodified. Edge <code>ts</code> comes from the transcript, not from ingestion time.</p>
+<p>One constraint the schema forced: <code>capabilities_required</code> items must match <code>^(&amp;[a-z]+\.[a-z_]+|ambient)$</code> — two segments, lowercase. So <code>&amp;host.fs_read</code>, not <code>&amp;host.fs.read</code>. And <code>skill_id</code> / <code>derived_from_trace_id</code> are <code>format: uuid</code>, so ids are UUIDv5-derived from <code>(sessionId, segmentIndex)</code> — deterministic, so re-ingesting a segment yields the same ids.</p>
+<h4 id="blk-88078">2. Do the gates carry signal? — <strong>Yes. Measured, not assumed.</strong></h4>
+<p>Each segment is sealed twice: once with every observed capability declared, once with the most-used capability deliberately dropped.</p>
+<pre><code>  honest manifest — every observed capability declared
+  PASS   gate.content_hash            L14/topological
+  PASS   gate.trace_completeness      L11/L14/spatial
+  PASS   gate.no_hidden_capability    L11/L14/spatial
+  PASS   gate.authority               L14/governance
+  PASS   gate.redaction_verify        L12/L14/topological
+  PASS   gate.replay_fidelity         L12/L14/topological
+  → overall PASS
+
+  understated manifest — &quot;&amp;host.fs_read&quot; deliberately not declared
+  FAIL   gate.no_hidden_capability    undeclared: &amp;host.fs_read
+  FAIL   gate.authority               undeclared capability invokes implicit grant: &amp;host.fs_read
+  → overall FAIL</code></pre>
+<p>The understated run fails on every real session tried. The gate is not decoration.</p>
+<h4 id="blk-88082">3. Does the format survive real scale? — <strong>Yes, given streaming + segmentation.</strong></h4>
+<p>Largest session on disk: <strong>202 MB / 10,040 records / 75 segments.</strong></p>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Index pass (streaming, no records retained)</td><td><strong>936 ms</strong></td></tr><tr><td>Build the largest segment (304 records → 270 edges)</td><td><strong>1,031 ms</strong></td></tr><tr><td>Resulting bundle</td><td><strong>21.1 MB</strong></td></tr></tbody></table>
+<p>Two passes, deliberately: pass 1 indexes prompts / tool counts / capabilities without retaining records, pass 2 retains exactly one segment. An ingester that must hold the file to answer &quot;what is in here?&quot; would not survive this corpus.</p>
+<p><strong>Segmentation is load-bearing.</strong> A whole-session bundle would be a full day of unrelated work. Per-user-turn segmentation yields 75 candidate skills from that session, the largest of which is 21 MB.</p>
+<p><strong>Finding: `deriveEvidence` doubles every bundle.</strong> Measured on a 1.57 MB bundle — trace 0.79 MB, evidence 0.79 MB, the <em>same</em> trace re-embedded. Exactly 50% of every bundle is duplication. <code>builder.ts</code> calls this &quot;re-projects rather than duplicating storage&quot;, which is true of the in-memory intent but not of the serialized artifact. Worth revisiting before bundles are stored in bulk.</p>
+<h4 id="blk-88096">4. Does the phase model survive real tool loops? — <strong>No. Fixed 2026-08-11.</strong></h4>
+<blockquote><p><strong>Resolved.</strong> <code>checkPhaseOrder</code> now closes a cycle when feedback arrives and the next step is not after it. The 22 MB session below went from <strong>94 violations / 1 cycle</strong> to <strong>0 violations / 95 cycles</strong>. Only a phase at or past <code>learn</code> opens a new cycle, so <code>act → route</code> (authorize-after-act) is still reported and is pinned by a test. The original finding is kept below because it is why the change was made.</p></blockquote>
+<p><code>ia/phase_check.ts</code> maps <code>act → act</code> and <code>observe → learn</code>. A normal Claude Code tool loop is <code>act, observe, act, observe, …</code>, so every second transition is a backward <code>learn → act</code>:</p>
+<table><thead><tr><th>Session</th><th>edges</th><th>violations</th><th>all of kind</th></tr></thead><tbody><tr><td>4.5 MB, segment 0</td><td>63</td><td>25</td><td><code>learn → act</code></td></tr><tr><td>202 MB, segment 37</td><td>270</td><td>124</td><td><code>learn → act</code></td></tr><tr><td>22 MB, segment 27</td><td>209</td><td>94</td><td><code>learn → act</code></td></tr></tbody></table>
+<p>Every violation on every real segment is the same transition. The count is exactly the number of tool calls.</p>
+<p>This is not a trace defect — it is the phase model applied at the wrong granularity. <code>checkPhaseOrder</code> segments cycles at <code>user_message</code>, which means one user turn with 124 tool calls is treated as a single cycle that must be phase-monotone. <strong>A tool call is its own micro-cycle</strong>: retrieve the state, act, observe the result. Either <code>checkPhaseOrder</code> should segment at <code>observe → act</code> boundaries as well, or <code>edgeToPhase</code> should not map <code>observe</code> to <code>learn</code>.</p>
+<p>Until that is decided, this warning must not be surfaced in a UI — it would fire on every ingested trace and mean nothing. The test suite pins the current behaviour so a change is noticed rather than absorbed.</p>
+<h3 id="blk-88120">Defects found and fixed</h3>
+<p>The spike found three bugs in shipped code. All predate it; the transcripts just exercised paths the fixtures never did.</p>
+<h4 id="blk-88122">A. <code>canonicalize</code> threw on any object with an undefined-valued key</h4>
+<p><code>appendEdge(trace, { kind: 'act' })</code> — a legal edge with no observation — produces <code>{ state_hash: undefined }</code>, and <code>bundleContentHash</code> then threw <code>Unsupported value type: undefined</code>. Any teach flow appending an edge without an observation would have crashed at crystallize time.</p>
+<p>Fixed in <code>lib/hash.ts</code> by omitting undefined-valued keys, matching <code>JSON.stringify</code>. This cannot change any existing hash: such inputs used to throw, so no bundle's hash depended on them.</p>
+<h4 id="blk-88125">B. <code>transcript_pii</code> redaction never walked <code>tool_call.arguments</code> — a live secret leak</h4>
+<p><code>redactEdges</code> walked <code>observation</code> only. A secret handed to a <em>tool</em> — <code>export TOKEN=…</code> in a Bash command, a key written into a config file, a bearer token in a fetched URL — survived redaction completely.</p>
+<p>This is not theoretical. Scanning this project's transcripts for key-shaped strings:</p>
+<pre><code>  f88583bb    3 hits  (202M)      aa0e23f6   40 hits  (31M)
+  8a486fc0    1 hits  (96M)       060546cb    5 hits  (31M)
+  1c2d0f5e    3 hits  (90M)       43945ded  260 hits  (22M)
+  5a3360dc    9 hits  (75M)       75b61ded   65 hits  (21M)</code></pre>
+<p>One ingested segment carried <strong>86 key-shaped strings, 4 of them in tool arguments</strong>. After the fix: 0 remaining.</p>
+<p>Also fixed: the <code>full</code> profile — the one described as &quot;for publishing a bundle for third-party inspection&quot; — kept <code>tool_call.arguments</code> verbatim. It now drops them, keeping <code>server</code> + <code>name</code> so the replay skeleton survives.</p>
+<h4 id="blk-88131">C. <code>applyProfile</code> never redacted the manifest</h4>
+<p><code>name</code>, <code>description</code> and <code>slug</code> were untouched by every profile. In the teach flow the author typed them; in the ingest flow they are derived from the user's prompt — which is precisely where a pasted key lands. A <code>full</code>-profile bundle still shipped the secret in <code>manifest.name</code>.</p>
+<p>Fixed in <code>lib/redact.ts</code>. The slug is re-derived after redaction, because <code>[REDACTED_API_KEY]</code> does not satisfy the slug pattern <em>and</em> a lowercase-hyphenated secret slugifies unscathed. <code>isIdempotent</code> now compares the manifest too, so <code>gate.redaction_verify</code> covers everything <code>applyProfile</code> touches.</p>
+<h3 id="blk-88134">Kill criteria — none tripped</h3>
+<ul><li><p>Understated manifests fail the gate on every real session. Signal confirmed.</p></li><li><p>Segment bundles are 0.3–21 MB. Large, but hashable and storable.</p></li><li><p><code>checkPhaseOrder</code> flags every segment — this <strong>was</strong> the third kill criterion, and it fired.</p></li></ul>
+<p>It is recorded as a substrate bug to fix rather than a reason to stop, because the failure is uniform, fully explained, and in the checker rather than in the ingested traces.</p>
+<h3 id="blk-88143">Status</h3>
+<p>150/150 vitest tests pass (132 pre-existing + 18 new). <code>npm run check</code> goes 26 → 27 errors; the one added is the same pre-existing &quot;no declaration file for <code>uuid</code>&quot; error that <code>trace.ts</code>, <code>builder.ts</code>, <code>replay.ts</code> and <code>charter.ts</code> already carry. <code>@types/uuid</code> would clear five of them at once.</p>
+<h3 id="blk-88145">What shipped on top of the spike</h3>
+<ul><li><p><strong>`/record`</strong> (<code>app/src/routes/record/+page.svelte</code>) — drop a transcript, see the session</p></li></ul>
+<p>index and its excluded counts, pick a segment, get six gate verdicts with their law and IA family, choose a redaction profile, save to the library. Verified in-browser end to end: saved with <code>transcript_pii</code> and read straight back out of IndexedDB — 0 raw key occurrences, 8 redaction markers, manifest name redacted.</p>
+<ul><li><p><strong>`app/src/lib/ingest/stream.ts`</strong> — browser line reader over <code>File.stream()</code>. <code>file.text()</code></p></li></ul>
+<p>is not an option at 202 MB.</p>
+<ul><li><p><strong>`checkPhaseOrder` cycle boundaries</strong> — see §4 above.</p></li></ul>
+<h3 id="blk-88157">Not done</h3>
+<p>No Claude Code hooks integration, no <code>claude -p</code> driving, no local-app shell, no changes to the marketing site or Academy, and the OpenRouter path is untouched. Those depend on this answer, which is: <strong>the recorder thesis holds.</strong></p></div>
+<p class="src"><a href="/#/workbench/docs/INGEST_SPIKE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-88051" class="lvl2">What was tested</a><a href="#blk-88056" class="lvl2">The four questions</a><a href="#blk-88057" class="lvl3">1. Does the mapping hold? — Yes, with no new edge kinds.</a><a href="#blk-88078" class="lvl3">2. Do the gates carry signal? — Yes. Measured, not assumed.</a><a href="#blk-88082" class="lvl3">3. Does the format survive real scale? — Yes, given streaming + segmentation.</a><a href="#blk-88096" class="lvl3">4. Does the phase model survive real tool loops? — No. Fixed 2026-08-11.</a><a href="#blk-88120" class="lvl2">Defects found and fixed</a><a href="#blk-88122" class="lvl3">A. canonicalize threw on any object with an undefined-valued key</a><a href="#blk-88125" class="lvl3">B. transcript_pii redaction never walked tool_call.arguments — a live secret leak</a><a href="#blk-88131" class="lvl3">C. applyProfile never redacted the manifest</a><a href="#blk-88134" class="lvl2">Kill criteria — none tripped</a><a href="#blk-88143" class="lvl2">Status</a><a href="#blk-88145" class="lvl2">What shipped on top of the spike</a><a href="#blk-88157" class="lvl2">Not done</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/workbench/README.md/">Workbench</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieracgcazkejegjwgrfrsx345noysdmihljenn32bzd3waz2kte5ykgq</div></div></div>
+</div></div>
+</body></html>

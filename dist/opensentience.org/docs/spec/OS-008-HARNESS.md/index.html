@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>OS-008: Agent Harness Protocol · opensentience.org · Ampersand Box</title>
 <meta name="description" content="Status: Draft Implements: &amp;govern.harness (orchestration enforcement subsystem) Reference Implementation: OpenSentience harness module (planned) Cognitive…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/opensentience.org/docs/spec/OS-008-HARNESS.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"OS-008: Agent Harness Protocol","name":"OS-008: Agent Harness Protocol","description":"Status: Draft Implements: &govern.harness (orchestration enforcement subsystem) Reference Implementation: OpenSentience harness module (planned) Cognitive…","url":"https://docs.ampersandboxdesign.com/opensentience.org/docs/spec/OS-008-HARNESS.md/","identifier":"bagaaierapqksoistk2tq5nhan57g54v76c27xslfzwzsc6xykvh4fx4wwo2q","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"0. The One-Sentence Idea"},{"@type":"WebPageElement","name":"1. Why This Exists (The Enforcement Gap)"},{"@type":"WebPageElement","name":"1.1 What a Harness Is (and Is Not)"},{"@type":"WebPageElement","name":"1.2 Cognitive Science Grounding"},{"@type":"WebPageElement","name":"2. Architecture"},{"@type":"WebPageElement","name":"2.1 OTP Supervision Tree"},{"@type":"WebPageElement","name":"2.2 Component Summary"},{"@type":"WebPageElement","name":"3. The Two Enforced Pipelines"},{"@type":"WebPageElement","name":"3.1 Reactive Pipeline (Query-Triggered)"},{"@type":"WebPageElement","name":"3.2 Proactive Pipeline (Heartbeat-Triggered)"},{"@type":"WebPageElement","name":"3.3 The Coverage → Dispatch Routing Matrix"},{"@type":"WebPageElement","name":"4. The Three Agent Roles"},{"@type":"WebPageElement","name":"4.1 Planner Role"},{"@type":"WebPageElement","name":"4.2 Generator Role"},{"@type":"WebPageElement","name":"4.3 Evaluator Role"},{"@type":"WebPageElement","name":"4.4 Why Separate Contexts Matter"},{"@type":"WebPageElement","name":"5. Pipeline Enforcement (Prerequisites)"},{"@type":"WebPageElement","name":"5.1 Prerequisite Rules"},{"@type":"WebPageElement","name":"5.2 Enforcement Mechanism"},{"@type":"WebPageElement","name":"5.3 Integration with OS-006"},{"@type":"WebPageElement","name":"6. Quality Gate Engine"},{"@type":"WebPageElement","name":"6.1 Grading Process"},{"@type":"WebPageElement","name":"6.2 Evaluator Tuning"},{"@type":"WebPageElement","name":"6.3 Iteration Loop"},{"@type":"WebPageElement","name":"7. Contract Validation"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/spec/"},{"@type":"ListItem","position":5,"name":"OS-008-HARNESS.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/spec/OS-008-HARNESS.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"OS-008: Agent Harness Protocol","name":"OS-008: Agent Harness Protocol","description":"Status: Draft Implements: &govern.harness (orchestration enforcement subsystem) Reference Implementation: OpenSentience harness module (planned) Cognitive…","url":"https://docs.ampersandboxdesign.com/opensentience.org/docs/spec/OS-008-HARNESS.md/","identifier":"bagaaieraciltey6l3bx62ftxgqsf62elwb2knhxsvsop4jz4n73lci6ipe4a","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"0. The One-Sentence Idea"},{"@type":"WebPageElement","name":"1. Why This Exists (The Enforcement Gap)"},{"@type":"WebPageElement","name":"1.1 What a Harness Is (and Is Not)"},{"@type":"WebPageElement","name":"1.2 Cognitive Science Grounding"},{"@type":"WebPageElement","name":"2. Architecture"},{"@type":"WebPageElement","name":"2.1 OTP Supervision Tree"},{"@type":"WebPageElement","name":"2.2 Component Summary"},{"@type":"WebPageElement","name":"3. The Two Enforced Pipelines"},{"@type":"WebPageElement","name":"3.1 Reactive Pipeline (Query-Triggered)"},{"@type":"WebPageElement","name":"3.2 Proactive Pipeline (Heartbeat-Triggered)"},{"@type":"WebPageElement","name":"3.3 The Coverage → Dispatch Routing Matrix"},{"@type":"WebPageElement","name":"4. The Three Agent Roles"},{"@type":"WebPageElement","name":"4.1 Planner Role"},{"@type":"WebPageElement","name":"4.2 Generator Role"},{"@type":"WebPageElement","name":"4.3 Evaluator Role"},{"@type":"WebPageElement","name":"4.4 Why Separate Contexts Matter"},{"@type":"WebPageElement","name":"5. Pipeline Enforcement (Prerequisites)"},{"@type":"WebPageElement","name":"5.1 Prerequisite Rules"},{"@type":"WebPageElement","name":"5.2 Enforcement Mechanism"},{"@type":"WebPageElement","name":"5.3 Integration with OS-006"},{"@type":"WebPageElement","name":"6. Quality Gate Engine"},{"@type":"WebPageElement","name":"6.1 Grading Process"},{"@type":"WebPageElement","name":"6.2 Evaluator Tuning"},{"@type":"WebPageElement","name":"6.3 Iteration Loop"},{"@type":"WebPageElement","name":"7. Contract Validation"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/spec/"},{"@type":"ListItem","position":5,"name":"OS-008-HARNESS.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/docs/spec/OS-008-HARNESS.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,25 +23,25 @@
 
 </div></div>
 <div class="lead">Status: Draft Implements: &amp;govern.harness (orchestration enforcement subsystem) Reference Implementation: OpenSentience harness module (planned) Cognitive Grounding: Supervisory…</div>
-<div class="prose"><h1 id="blk-76285">OS-008: Agent Harness Protocol</h1>
+<div class="prose"><h1 id="blk-77113">OS-008: Agent Harness Protocol</h1>
 <p><strong>Status:</strong> Draft <strong>Implements:</strong> <code>&amp;govern.harness</code> (orchestration enforcement subsystem) <strong>Reference Implementation:</strong> OpenSentience harness module (planned) <strong>Cognitive Grounding:</strong> Supervisory attentional system — Norman &amp; Shallice (1986) <strong>Date:</strong> March 31, 2026 <strong>Author:</strong> [&amp;] Ampersand Box Design <strong>Version:</strong> 0.1.0 <strong>Depends on:</strong> OS-001 (Continual Learning), OS-002 (κ-Routing), OS-004 (Attention Engine), OS-005 (Model Tier Adaptation), OS-006 (Agent Governance Shim), OS-007 (Adversarial Robustness)</p>
-<h3 id="blk-76287">0. The One-Sentence Idea</h3>
+<h3 id="blk-77115">0. The One-Sentence Idea</h3>
 <p><strong>The Harness Protocol is the enforcement runtime that sits above agents and below humans — it orchestrates the [&amp;] pipelines, enforces governance contracts, gates execution on epistemic confidence, and ensures that no agent skips retrieval, fabricates provenance, or acts beyond its coverage.</strong></p>
-<h3 id="blk-76289">1. Why This Exists (The Enforcement Gap)</h3>
+<h3 id="blk-77117">1. Why This Exists (The Enforcement Gap)</h3>
 <p>The [&amp;] ecosystem has complete cognitive infrastructure:</p>
 <table><thead><tr><th>Capability</th><th>Protocol</th><th>Implementation</th><th>Limitation</th></tr></thead><tbody><tr><td><strong>Remember</strong> — persistent knowledge graph</td><td>OS-001</td><td>Graphonomous</td><td>Agent chooses when to call it</td></tr><tr><td><strong>Route</strong> — topology-aware κ gating</td><td>OS-002</td><td>Graphonomous</td><td>Agent can skip topology check</td></tr><tr><td><strong>Deliberate</strong> — multi-agent consensus</td><td>OS-003</td><td>AgenTroMatic</td><td>Agent can ignore deliberation result</td></tr><tr><td><strong>Attend</strong> — proactive survey/triage/dispatch</td><td>OS-004</td><td>Graphonomous Attention</td><td>Agent can override dispatch mode</td></tr><tr><td><strong>Adapt</strong> — model tier selection</td><td>OS-005</td><td>Graphonomous/Agentelic</td><td>Agent can request wrong tier</td></tr><tr><td><strong>Govern</strong> — permissions, lifecycle, audit</td><td>OS-006</td><td>OpenSentience shim</td><td>Enforces permissions, not pipelines</td></tr><tr><td><strong>Defend</strong> — adversarial robustness</td><td>OS-007</td><td>Planned</td><td>Detects attacks, doesn't enforce workflow</td></tr></tbody></table>
 <p>Every piece is advisory. Nothing enforces the composition. The governance shim (OS-006) enforces <strong>permissions</strong> (can this agent call this tool?) but not <strong>pipelines</strong> (did this agent retrieve before acting? did it check coverage before dispatching? did it store its outcome?).</p>
 <p>The industry has converged on the same insight. Anthropic's harness research (2026) demonstrated that separating generation from evaluation — and having an external orchestrator enforce the loop — was the difference between non-functional output and working software. OpenAI's Codex harness engineering showed that mechanical invariants in CI outperform prompt-based instructions. The formal finding: <strong>the agent model is not the bottleneck; the harness is.</strong></p>
-<h4 id="blk-76326">1.1 What a Harness Is (and Is Not)</h4>
+<h4 id="blk-77154">1.1 What a Harness Is (and Is Not)</h4>
 <p>A harness is <strong>not</strong> a tool the agent calls. It is the runtime that <strong>calls the agent</strong>.</p>
 <table><thead><tr><th>Layer</th><th>Position</th><th>Controls</th><th>Example</th></tr></thead><tbody><tr><td><strong>Harness</strong></td><td>Above agent</td><td>Agent lifecycle, pipeline sequencing, quality gates</td><td>OS-008 (this protocol)</td></tr><tr><td><strong>Governance</strong></td><td>At agent boundary</td><td>Permissions, audit, autonomy levels</td><td>OS-006</td></tr><tr><td><strong>Tools</strong></td><td>Below agent</td><td>Memory, reasoning, deliberation</td><td>Graphonomous MCP, AgenTroMatic</td></tr></tbody></table>
 <p>The harness wraps agents like a supervisor wraps processes — it doesn't do the work, it ensures the work is done correctly.</p>
-<h4 id="blk-76346">1.2 Cognitive Science Grounding</h4>
+<h4 id="blk-77174">1.2 Cognitive Science Grounding</h4>
 <p>Norman &amp; Shallice's Supervisory Attentional System (SAS, 1986) proposes that routine behavior is managed by &quot;contention scheduling&quot; (automatic, schema-driven) while novel or dangerous situations require a supervisory system that can override, inhibit, or redirect automatic routines.</p>
 <p>OS-008 maps this directly:</p>
 <ul><li><p><strong>Contention scheduling</strong> = the reactive pipeline (<code>query |&gt; recall |&gt; topology |&gt; deliberate |&gt; store</code>). Runs automatically.</p></li><li><p><strong>Supervisory system</strong> = the harness. Intervenes when coverage is low, confidence drops, constraints are violated, or quality gates fail.</p></li></ul>
 <p>The SAS is not the attention system (OS-004) — it is the system that <strong>governs</strong> the attention system. OS-004 decides <em>what</em> to attend to. OS-008 ensures the attention system's decisions are <em>followed through</em>.</p>
-<h3 id="blk-76355">2. Architecture</h3>
+<h3 id="blk-77183">2. Architecture</h3>
 <pre><code>┌──────────────────────────────────────────────────────────────────┐
 │                        OS-008: HARNESS                           │
 │                                                                  │
@@ -79,7 +80,7 @@
 │   ├── [&amp;] Protocol (governance block contracts)                  │
 │   └── SpecPrompt (acceptance criteria source)                    │
 └──────────────────────────────────────────────────────────────────┘</code></pre>
-<h4 id="blk-76357">2.1 OTP Supervision Tree</h4>
+<h4 id="blk-77185">2.1 OTP Supervision Tree</h4>
 <pre><code>OpenSentience.Application
 ├── ... (existing OS-006 components)
 ├── OpenSentience.Harness.Supervisor (DynamicSupervisor)
@@ -94,11 +95,11 @@
 │   └── ...
 └── OpenSentience.Harness.Telemetry</code></pre>
 <p>Each <code>Harness.Session</code> supervises one orchestrated task — a bounded unit of work with a goal, acceptance criteria, and a pipeline to execute. Sessions are independent and concurrent.</p>
-<h4 id="blk-76360">2.2 Component Summary</h4>
+<h4 id="blk-77188">2.2 Component Summary</h4>
 <table><thead><tr><th>Component</th><th>Responsibility</th><th>OTP Pattern</th></tr></thead><tbody><tr><td><code>Harness.PipelineEnforcer</code></td><td>Ensures pipeline stages execute in order. Blocks tool calls that violate prerequisites.</td><td>GenServer with stage state machine</td></tr><tr><td><code>Harness.QualityGate</code></td><td>Evaluator agent. Grades outputs against acceptance criteria. Returns pass/fail with actionable feedback.</td><td>GenServer spawning evaluator agent</td></tr><tr><td><code>Harness.ContractValidator</code></td><td>Validates [&amp;] governance blocks at composition and runtime. Enforces hard constraints, routes soft constraints.</td><td>GenServer + ETS</td></tr><tr><td><code>Harness.SprintController</code></td><td>Decomposes tasks into sprints. Routes between planner/generator/evaluator roles. Manages iteration loops.</td><td>GenStateMachine</td></tr><tr><td><code>Harness.ContextManager</code></td><td>Monitors context window utilization. Triggers compaction. Manages subagent delegation. Injects retrieval.</td><td>GenServer</td></tr></tbody></table>
-<h3 id="blk-76380">3. The Two Enforced Pipelines</h3>
+<h3 id="blk-77208">3. The Two Enforced Pipelines</h3>
 <p>OS-008 enforces the two [&amp;] Protocol pipelines as mandatory sequences — not suggestions.</p>
-<h4 id="blk-76382">3.1 Reactive Pipeline (Query-Triggered)</h4>
+<h4 id="blk-77210">3.1 Reactive Pipeline (Query-Triggered)</h4>
 <pre><code>query
   |&gt; &amp;memory.graph.recall()        # STAGE 1: Retrieve (MANDATORY)
   |&gt; &amp;memory.graph.topology()      # STAGE 2: Topology analysis
@@ -106,7 +107,7 @@
   |&gt; &amp;memory.graph.store()         # STAGE 4: Store outcomes (MANDATORY)</code></pre>
 <p><strong>Enforcement rules:</strong></p>
 <table><thead><tr><th>Rule</th><th>Constraint</th><th>Enforcement</th></tr></thead><tbody><tr><td><strong>Retrieve-before-act</strong></td><td>Stage 1 MUST complete before any tool call that modifies state</td><td>PipelineEnforcer blocks write-class tool calls until retrieval completes</td></tr><tr><td><strong>Topology-before-deliberate</strong></td><td>Stage 2 MUST complete before Stage 3</td><td>PipelineEnforcer sequences stages</td></tr><tr><td><strong>κ-gated deliberation</strong></td><td>Stage 3 is skipped if κ = 0 (DAG)</td><td>PipelineEnforcer checks topology result</td></tr><tr><td><strong>Mandatory outcome storage</strong></td><td>Stage 4 MUST execute after any action</td><td>PipelineEnforcer blocks session completion without store</td></tr></tbody></table>
-<h4 id="blk-76401">3.2 Proactive Pipeline (Heartbeat-Triggered)</h4>
+<h4 id="blk-77229">3.2 Proactive Pipeline (Heartbeat-Triggered)</h4>
 <pre><code>heartbeat
   |&gt; &amp;reason.attend.survey()    # STAGE 1: Survey active goals + coverage
   |&gt; &amp;reason.attend.triage()    # STAGE 2: Rank by urgency/gap/κ/surprise
@@ -114,7 +115,7 @@
   |&gt; &amp;memory.graph.store()      # STAGE 4: Store outcomes</code></pre>
 <p><strong>Enforcement rules:</strong></p>
 <table><thead><tr><th>Rule</th><th>Constraint</th><th>Enforcement</th></tr></thead><tbody><tr><td><strong>Heartbeat cadence</strong></td><td>Proactive pipeline runs on <code>governance.autonomy.heartbeat_seconds</code></td><td>Harness timer, not agent initiative</td></tr><tr><td><strong>Coverage-gated dispatch</strong></td><td>Dispatch mode determined by <code>Coverage.recommend/2</code>, not agent preference</td><td>PipelineEnforcer injects coverage result</td></tr><tr><td><strong>Autonomy-gated execution</strong></td><td>Execution filtered by autonomy level (observe/advise/act)</td><td>PipelineEnforcer enforces OS-006 autonomy</td></tr><tr><td><strong>Budget enforcement</strong></td><td>Per-cycle limits (max_items, max_explore, max_actions) from model tier</td><td>PipelineEnforcer tracks budget consumption</td></tr></tbody></table>
-<h4 id="blk-76420">3.3 The Coverage → Dispatch Routing Matrix</h4>
+<h4 id="blk-77248">3.3 The Coverage → Dispatch Routing Matrix</h4>
 <p>The harness enforces this routing matrix. Agents cannot override it.</p>
 <pre><code>coverage.decision    κ value    autonomy    → dispatch_mode
 ─────────────────    ───────    ─────────   ─────────────────
@@ -128,9 +129,9 @@
 none + gap &gt; 0.3     any        :act        → :propose
 none + gap &gt; 0.3     any        other       → :deferred
 none + gap ≤ 0.3     any        any         → :idle (consolidate)</code></pre>
-<h3 id="blk-76423">4. The Three Agent Roles</h3>
+<h3 id="blk-77251">4. The Three Agent Roles</h3>
 <p>OS-008 defines three agent roles within a harness session. These are not separate agent types — they are <strong>capability contracts</strong> that any agent may satisfy. An agent's role determines what [&amp;] capabilities it may invoke during its turn.</p>
-<h4 id="blk-76425">4.1 Planner Role</h4>
+<h4 id="blk-77253">4.1 Planner Role</h4>
 <p><strong>[&amp;] Capability Contract:</strong> <code>&amp;reason.plan</code></p>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.plan&quot;</span>,
@@ -164,7 +165,7 @@ none + gap ≤ 0.3     any        any         → :idle (consolidate)</code></pr
   <span class="t-key">&quot;retrieval_context_id&quot;</span>: <span class="t-string">&quot;node-abc123&quot;</span>,
   <span class="t-key">&quot;coverage_assessment&quot;</span>: { <span class="t-key">&quot;decision&quot;</span>: <span class="t-string">&quot;act&quot;</span>, <span class="t-key">&quot;coverage_score&quot;</span>: <span class="t-num">0.78</span> }
 }</code></pre>
-<h4 id="blk-76442">4.2 Generator Role</h4>
+<h4 id="blk-77270">4.2 Generator Role</h4>
 <p><strong>[&amp;] Capability Contract:</strong> <code>&amp;reason.generate</code></p>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.generate&quot;</span>,
@@ -182,7 +183,7 @@ none + gap ≤ 0.3     any        any         → :idle (consolidate)</code></pr
 }</code></pre>
 <p>The generator:</p>
 <ol><li><p>Receives a sprint spec with acceptance criteria</p></li><li><p>Retrieves relevant context from Graphonomous (enforced)</p></li><li><p>Implements the sprint</p></li><li><p>Commits changes (git or equivalent)</p></li><li><p>Passes output to evaluator</p></li><li><p>If evaluator returns failure, receives specific feedback and iterates (up to <code>max_iterations_per_sprint</code>)</p></li><li><p>Stores outcomes via <code>learn_from_outcome</code> (enforced)</p></li></ol>
-<h4 id="blk-76461">4.3 Evaluator Role</h4>
+<h4 id="blk-77289">4.3 Evaluator Role</h4>
 <p><strong>[&amp;] Capability Contract:</strong> <code>&amp;reason.evaluate</code></p>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;capability&quot;</span>: <span class="t-string">&quot;&amp;reason.evaluate&quot;</span>,
@@ -212,14 +213,14 @@ none + gap ≤ 0.3     any        any         → :idle (consolidate)</code></pr
   <span class="t-key">&quot;max_iterations&quot;</span>: <span class="t-num">5</span>,
   <span class="t-key">&quot;evaluator_confidence&quot;</span>: <span class="t-num">0.85</span>
 }</code></pre>
-<h4 id="blk-76480">4.4 Why Separate Contexts Matter</h4>
+<h4 id="blk-77308">4.4 Why Separate Contexts Matter</h4>
 <p>Anthropic's research demonstrated that when a generator evaluates its own work, it consistently produces over-praising (&quot;the code looks great, all tests pass&quot;) even when the output is non-functional. The generator has sunk-cost bias toward its own decisions.</p>
 <p>OS-008 enforces this separation:</p>
 <ul><li><p>The evaluator gets a <strong>fresh context</strong> containing only: the sprint spec, acceptance criteria, and the generator's output artifacts</p></li><li><p>The evaluator does NOT see the generator's reasoning, planning context, or prior iterations</p></li><li><p>The evaluator is tuned toward skepticism — it must find specific evidence for each criterion, not infer correctness</p></li></ul>
 <p>This maps to the cognitive science concept of <strong>metacognitive monitoring</strong> — the brain's ability to evaluate its own cognitive processes is separate from the processes themselves (Flavell, 1979). OS-008 makes this separation architectural.</p>
-<h3 id="blk-76491">5. Pipeline Enforcement (Prerequisites)</h3>
+<h3 id="blk-77319">5. Pipeline Enforcement (Prerequisites)</h3>
 <p>The PipelineEnforcer implements a <strong>prerequisite constraint model</strong> — the key missing piece identified in the OS-006 gap analysis.</p>
-<h4 id="blk-76493">5.1 Prerequisite Rules</h4>
+<h4 id="blk-77321">5.1 Prerequisite Rules</h4>
 <pre data-lang="elixir"><code><span class="t-attr">@prerequisites</span> %{
   <span class="t-comment"># Before any state-modifying tool call, retrieval must have occurred</span>
   {<span class="t-atom">:any</span>, <span class="t-atom">:write</span>} =&gt; [{<span class="t-atom">:completed</span>, <span class="t-atom">:retrieve_context</span>}],
@@ -239,7 +240,7 @@ none + gap ≤ 0.3     any        any         → :idle (consolidate)</code></pr
   <span class="t-comment"># Before sprint advancement, quality gate must pass</span>
   {<span class="t-atom">:sprint</span>, <span class="t-atom">:advance</span>} =&gt; [{<span class="t-atom">:completed</span>, <span class="t-atom">:quality_gate</span>, result: <span class="t-atom">:pass</span>}]
 }</code></pre>
-<h4 id="blk-76495">5.2 Enforcement Mechanism</h4>
+<h4 id="blk-77323">5.2 Enforcement Mechanism</h4>
 <p>The PipelineEnforcer wraps MCP tool dispatch:</p>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">OpenSentience.Harness.PipelineEnforcer</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">GenServer</span>
@@ -282,7 +283,7 @@ none + gap ≤ 0.3     any        any         → :idle (consolidate)</code></pr
     <span class="t-kw">end</span>
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-76498">5.3 Integration with OS-006</h4>
+<h4 id="blk-77326">5.3 Integration with OS-006</h4>
 <p>The PipelineEnforcer operates <strong>above</strong> OS-006's permission checks:</p>
 <pre><code>Agent requests tool call
   │
@@ -300,9 +301,9 @@ Tool executes
   ▼
 OS-008 PipelineEnforcer: Update stage state
 OS-006 AuditWriter: Log execution</code></pre>
-<h3 id="blk-76501">6. Quality Gate Engine</h3>
+<h3 id="blk-77329">6. Quality Gate Engine</h3>
 <p>The QualityGate is the evaluator orchestrator. It manages evaluator agent lifecycle, grades outputs, and controls the generator iteration loop.</p>
-<h4 id="blk-76503">6.1 Grading Process</h4>
+<h4 id="blk-77331">6.1 Grading Process</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">OpenSentience.Harness.QualityGate</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">GenServer</span>
 
@@ -338,10 +339,10 @@ OS-006 AuditWriter: Log execution</code></pre>
     result
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-76505">6.2 Evaluator Tuning</h4>
+<h4 id="blk-77333">6.2 Evaluator Tuning</h4>
 <p>The evaluator is deliberately tuned toward skepticism:</p>
 <table><thead><tr><th>Parameter</th><th>Default</th><th>Rationale</th></tr></thead><tbody><tr><td><code>pass_threshold</code></td><td>1.0 (all criteria must pass)</td><td>No partial credit. Every criterion is testable.</td></tr><tr><td><code>require_evidence</code></td><td>true</td><td>Pass judgments must cite specific evidence</td></tr><tr><td><code>max_evaluation_time</code></td><td>120 seconds</td><td>Evaluators should not investigate — only grade</td></tr><tr><td><code>adversarial_prompt</code></td><td>true</td><td>System prompt emphasizes finding failures</td></tr><tr><td><code>separate_context</code></td><td>true (enforced)</td><td>Evaluator never sees generator reasoning</td></tr></tbody></table>
-<h4 id="blk-76526">6.3 Iteration Loop</h4>
+<h4 id="blk-77354">6.3 Iteration Loop</h4>
 <pre><code>Planner produces sprint spec + acceptance criteria
   │
   ▼
@@ -368,9 +369,9 @@ Evaluator grades against criteria
                                          │
                                          ▼
                                     ESCALATE to human</code></pre>
-<h3 id="blk-76528">7. Contract Validation</h3>
+<h3 id="blk-77356">7. Contract Validation</h3>
 <p>The ContractValidator enforces [&amp;] Protocol governance blocks as runtime constraints — not documentation.</p>
-<h4 id="blk-76530">7.1 Hard Constraint Enforcement</h4>
+<h4 id="blk-77358">7.1 Hard Constraint Enforcement</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">OpenSentience.Harness.ContractValidator</span> <span class="t-kw">do</span>
   <span class="t-attr">@doc</span> <span class="t-string">&quot;&quot;&quot;
   Validate an action against the agent's governance block.
@@ -393,9 +394,9 @@ Evaluator grades against criteria
     <span class="t-kw">end</span>
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-76532">7.2 Governance Block Runtime Semantics</h4>
+<h4 id="blk-77360">7.2 Governance Block Runtime Semantics</h4>
 <table><thead><tr><th>Constraint Type</th><th>Composition Time</th><th>Runtime</th></tr></thead><tbody><tr><td><code>hard</code></td><td>Validated by <code>ampersand compose</code></td><td>Enforced by ContractValidator pre-execution</td></tr><tr><td><code>soft</code></td><td>Passed to planner as preferences</td><td>Logged as warnings if overridden</td></tr><tr><td><code>escalate_when.confidence_below</code></td><td>N/A</td><td>Checked against coverage_score before dispatch</td></tr><tr><td><code>escalate_when.cost_exceeds_usd</code></td><td>N/A</td><td>Checked against cumulative session cost</td></tr><tr><td><code>autonomy.level</code></td><td>Capped by Delegatic org policy</td><td>Enforced by OS-006 + PipelineEnforcer</td></tr><tr><td><code>autonomy.budget</code></td><td>Validated for tier compatibility</td><td>Enforced per-cycle by PipelineEnforcer</td></tr></tbody></table>
-<h4 id="blk-76555">7.3 Confidence-Gated Execution</h4>
+<h4 id="blk-77383">7.3 Confidence-Gated Execution</h4>
 <p>A key gap in OS-006 was the lack of confidence-based gating. OS-008 adds:</p>
 <pre data-lang="elixir"><code><span class="t-kw">def</span> check_confidence_gate(coverage_assessment, governance_block) <span class="t-kw">do</span>
   threshold = get_in(governance_block, [<span class="t-atom">:escalate_when</span>, <span class="t-atom">:confidence_below</span>]) || <span class="t-num">0.7</span>
@@ -407,11 +408,11 @@ Evaluator grades against criteria
     <span class="t-atom">:ok</span>
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h3 id="blk-76558">8. Context Management</h3>
+<h3 id="blk-77386">8. Context Management</h3>
 <p>The ContextManager addresses the central technical challenge of long-running agent harnesses: <strong>context degradation</strong>.</p>
-<h4 id="blk-76560">8.1 The 60% Rule</h4>
+<h4 id="blk-77388">8.1 The 60% Rule</h4>
 <p>Research consensus (Chroma 2026, Factory.ai 2026, morphllm 2026): output quality degrades at approximately 60% context utilization, not at the hard limit. A 200K-token model becomes unreliable around 130K tokens. Performance follows a U-shaped curve — models attend strongly to beginning and end of context but poorly to the middle (&quot;lost in the middle&quot;).</p>
-<h4 id="blk-76562">8.2 Context Management Strategy</h4>
+<h4 id="blk-77390">8.2 Context Management Strategy</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">OpenSentience.Harness.ContextManager</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">GenServer</span>
 
@@ -455,7 +456,7 @@ Evaluator grades against criteria
     {<span class="t-atom">:compacted</span>, %{state | compaction_count: state.compaction_count + <span class="t-num">1</span>}}
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-76564">8.3 Subagent Delegation</h4>
+<h4 id="blk-77392">8.3 Subagent Delegation</h4>
 <p>For tasks that would exceed context limits, the harness delegates to subagents:</p>
 <pre data-lang="elixir"><code><span class="t-kw">def</span> delegate_to_subagent(state, subtask, opts \\ []) <span class="t-kw">do</span>
   <span class="t-comment"># 1. Spawn subagent with fresh context (via OS-006)</span>
@@ -466,9 +467,9 @@ Evaluator grades against criteria
   <span class="t-comment"># 6. Subagent lifecycle managed by OS-006 (permissions, audit)</span>
 <span class="t-kw">end</span></code></pre>
 <p>Key design: <strong>Graphonomous is the shared memory substrate between parent and subagent contexts.</strong> The parent doesn't need to receive the full subagent transcript — durable knowledge is stored in the graph and retrievable by any future context.</p>
-<h3 id="blk-76568">9. Sprint Controller</h3>
+<h3 id="blk-77396">9. Sprint Controller</h3>
 <p>The SprintController manages the planner → generator → evaluator loop as a state machine.</p>
-<h4 id="blk-76570">9.1 Sprint Lifecycle States</h4>
+<h4 id="blk-77398">9.1 Sprint Lifecycle States</h4>
 <pre><code>                    plan
                      │
                      ▼
@@ -519,7 +520,7 @@ All sprints passed:
          ┌──────────┐
          │ completed │ → learn_from_outcome + consolidate
          └──────────┘</code></pre>
-<h4 id="blk-76572">9.2 Sprint Contract</h4>
+<h4 id="blk-77400">9.2 Sprint Contract</h4>
 <p>Before each sprint begins, the SprintController produces a <strong>sprint contract</strong> — an explicit agreement between planner, generator, and evaluator:</p>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;sprint_id&quot;</span>: <span class="t-string">&quot;sprint-001&quot;</span>,
@@ -549,9 +550,9 @@ All sprints passed:
     <span class="t-key">&quot;goal_id&quot;</span>: <span class="t-string">&quot;goal-123&quot;</span>
   }
 }</code></pre>
-<h3 id="blk-76575">10. Unified Audit Trail</h3>
+<h3 id="blk-77403">10. Unified Audit Trail</h3>
 <p>OS-008 extends the OS-006 audit schema with harness-specific events and provenance linking.</p>
-<h4 id="blk-76577">10.1 Extended Event Types</h4>
+<h4 id="blk-77405">10.1 Extended Event Types</h4>
 <pre data-lang="elixir"><code><span class="t-comment"># OS-008 additions to audit event_type</span>
 <span class="t-atom">:pipeline_stage_completed</span>    <span class="t-comment"># A pipeline stage finished</span>
 <span class="t-atom">:pipeline_stage_blocked</span>      <span class="t-comment"># A prerequisite check blocked execution</span>
@@ -567,7 +568,7 @@ All sprints passed:
 <span class="t-atom">:subagent_delegated</span>          <span class="t-comment"># Work delegated to subagent</span>
 <span class="t-atom">:harness_session_started</span>     <span class="t-comment"># Harness session began</span>
 <span class="t-atom">:harness_session_completed</span>   <span class="t-comment"># Harness session finished successfully</span></code></pre>
-<h4 id="blk-76579">10.2 Provenance Fields</h4>
+<h4 id="blk-77407">10.2 Provenance Fields</h4>
 <p>Every harness audit entry includes provenance linking:</p>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">OpenSentience.Harness.AuditEntry</span> <span class="t-kw">do</span>
   <span class="t-attr">@type</span> t :: %__<span class="t-type">MODULE__</span>{
@@ -586,40 +587,40 @@ All sprints passed:
   }
 <span class="t-kw">end</span></code></pre>
 <p>This closes the audit trail continuity gap identified in the portfolio analysis — every harness action can be traced back to: what knowledge informed it (Graphonomous node IDs), what goal it serves (Delegatic goal ID), what policy governed it (Delegatic policy ID), and how confident the system was (coverage assessment).</p>
-<h3 id="blk-76583">11. Model Tier Adaptation</h3>
+<h3 id="blk-77411">11. Model Tier Adaptation</h3>
 <p>OS-008 adapts its behavior to the model tier (per OS-005), since the harness overhead must be proportional to model capability.</p>
-<h4 id="blk-76585">11.1 Tier-Specific Harness Behavior</h4>
+<h4 id="blk-77413">11.1 Tier-Specific Harness Behavior</h4>
 <table><thead><tr><th>Parameter</th><th>local_small</th><th>local_large</th><th>cloud_frontier</th></tr></thead><tbody><tr><td><code>planner_enabled</code></td><td>false (skip, single-sprint)</td><td>true</td><td>true</td></tr><tr><td><code>evaluator_enabled</code></td><td>false (self-evaluate)</td><td>true (lightweight)</td><td>true (full adversarial)</td></tr><tr><td><code>separate_evaluator_context</code></td><td>false</td><td>false</td><td>true</td></tr><tr><td><code>max_sprints_per_task</code></td><td>1</td><td>3</td><td>10</td></tr><tr><td><code>max_iterations_per_sprint</code></td><td>2</td><td>3</td><td>5</td></tr><tr><td><code>context_compaction_threshold</code></td><td>0.40 (4K context is tiny)</td><td>0.55</td><td>0.55</td></tr><tr><td><code>subagent_delegation</code></td><td>disabled</td><td>limited</td><td>full</td></tr><tr><td><code>sprint_contracts</code></td><td>implicit</td><td>explicit</td><td>explicit with negotiation</td></tr></tbody></table>
 <p><strong>Key design:</strong> On <code>local_small</code>, the harness is minimal — no separate planner, no separate evaluator, single sprint. The pipeline enforcement and prerequisite checks still apply (retrieve-before-act is enforced at all tiers). The harness scales with the model, not against it.</p>
-<h4 id="blk-76624">11.2 Graceful Degradation</h4>
+<h4 id="blk-77452">11.2 Graceful Degradation</h4>
 <p>When the current tier fails (confidence too low, iterations exhausted), the harness can escalate:</p>
 <pre><code>local_small fails → retry at local_large
 local_large fails → retry at cloud_frontier
 cloud_frontier fails → escalate to human</code></pre>
 <p>This is specified in OS-005 but enforced by OS-008. The SprintController manages tier escalation as a fallback strategy.</p>
-<h3 id="blk-76628">12. Integration Points</h3>
-<h4 id="blk-76629">12.1 Graphonomous</h4>
+<h3 id="blk-77456">12. Integration Points</h3>
+<h4 id="blk-77457">12.1 Graphonomous</h4>
 <p>Graphonomous is the <strong>memory substrate</strong> for the harness. Every harness session:</p>
 <ol><li><p><strong>Retrieves</strong> before any action (enforced by PipelineEnforcer)</p></li><li><p><strong>Stores</strong> sprint plans, outcomes, and evaluations as durable knowledge</p></li><li><p><strong>Queries coverage</strong> before dispatch decisions</p></li><li><p><strong>Reports outcomes</strong> via <code>learn_from_outcome</code> for confidence calibration</p></li><li><p><strong>Consolidates</strong> at session end or during idle cycles</p></li></ol>
 <p>The harness does not replace Graphonomous — it ensures Graphonomous is used correctly.</p>
-<h4 id="blk-76643">12.2 Delegatic</h4>
+<h4 id="blk-77471">12.2 Delegatic</h4>
 <p>Delegatic is the <strong>policy source</strong> for the harness:</p>
 <ul><li><p>Governance block hard/soft constraints come from Delegatic policy trees</p></li><li><p>Autonomy level caps are enforced at composition time (Delegatic) and runtime (OS-006 + OS-008)</p></li><li><p>Budget limits (tokens, cost, compute) are sourced from Delegatic and enforced by the SprintController</p></li><li><p>Goal IDs link harness sessions to Delegatic organizational goals</p></li></ul>
-<h4 id="blk-76654">12.3 [&amp;] Protocol</h4>
+<h4 id="blk-77482">12.3 [&amp;] Protocol</h4>
 <p>The [&amp;] Protocol is the <strong>contract language</strong> for the harness:</p>
 <ul><li><p><code>ampersand.json</code> governance blocks define the constraints the harness enforces</p></li><li><p>Capability contracts (<code>accepts_from</code>, <code>feeds_into</code>) validate pipeline stage compatibility</p></li><li><p>Provenance records link harness audit entries to [&amp;] trace chains</p></li><li><p>The three new capability contracts (<code>&amp;reason.plan</code>, <code>&amp;reason.generate</code>, <code>&amp;reason.evaluate</code>) extend the <code>&amp;reason</code> primitive</p></li></ul>
-<h4 id="blk-76665">12.4 SpecPrompt</h4>
+<h4 id="blk-77493">12.4 SpecPrompt</h4>
 <p>SpecPrompt is the <strong>acceptance criteria source</strong>:</p>
 <ul><li><p>Sprint acceptance criteria derive from SpecPrompt's formal spec sections</p></li><li><p>The planner maps SpecPrompt acceptance tests to sprint-level criteria</p></li><li><p>The evaluator grades against these criteria mechanically</p></li></ul>
-<h4 id="blk-76674">12.5 Agentelic</h4>
+<h4 id="blk-77502">12.5 Agentelic</h4>
 <p>Agentelic is the <strong>agent builder</strong> that produces agents the harness orchestrates:</p>
 <ul><li><p>Agents built in Agentelic carry manifests with governance blocks → consumed by OS-008</p></li><li><p>Agentelic's build pipeline (PARSE → GENERATE → COMPILE → TEST) is itself a harness pattern that OS-008 can orchestrate</p></li><li><p>The harness validates that Agentelic-built agents satisfy their declared capability contracts before deployment</p></li></ul>
-<h4 id="blk-76683">12.6 OS-006 (Governance Shim)</h4>
+<h4 id="blk-77511">12.6 OS-006 (Governance Shim)</h4>
 <p>OS-008 sits <strong>above</strong> OS-006 in the enforcement stack:</p>
 <ul><li><p>OS-006 answers: &quot;Is this agent allowed to call this tool?&quot; (permissions)</p></li><li><p>OS-008 answers: &quot;Has this agent followed the correct process to reach this point?&quot; (pipeline enforcement)</p></li><li><p>Both must pass for an action to execute</p></li><li><p>Both log to the same audit trail (with OS-008 adding provenance fields)</p></li></ul>
-<h3 id="blk-76694">13. MCP Tools (Harness Operations)</h3>
+<h3 id="blk-77522">13. MCP Tools (Harness Operations)</h3>
 <p>OS-008 exposes harness operations as MCP tools for external orchestrators:</p>
-<h4 id="blk-76696">13.1 <code>harness_start_session</code></h4>
+<h4 id="blk-77524">13.1 <code>harness_start_session</code></h4>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;harness_start_session&quot;</span>,
   <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Start a new harness session for a task. Returns session_id.&quot;</span>,
@@ -637,7 +638,7 @@ cloud_frontier fails → escalate to human</code></pre>
     <span class="t-key">&quot;required&quot;</span>: [<span class="t-string">&quot;workspace_id&quot;</span>, <span class="t-string">&quot;task_description&quot;</span>]
   }
 }</code></pre>
-<h4 id="blk-76698">13.2 <code>harness_sprint_status</code></h4>
+<h4 id="blk-77526">13.2 <code>harness_sprint_status</code></h4>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;harness_sprint_status&quot;</span>,
   <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Get the current sprint status for a harness session.&quot;</span>,
@@ -649,7 +650,7 @@ cloud_frontier fails → escalate to human</code></pre>
     <span class="t-key">&quot;required&quot;</span>: [<span class="t-string">&quot;session_id&quot;</span>]
   }
 }</code></pre>
-<h4 id="blk-76700">13.3 <code>harness_approve_action</code></h4>
+<h4 id="blk-77528">13.3 <code>harness_approve_action</code></h4>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;harness_approve_action&quot;</span>,
   <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Approve a deferred action (advise mode). Required when autonomy is advise and dispatch mode is act or propose.&quot;</span>,
@@ -664,7 +665,7 @@ cloud_frontier fails → escalate to human</code></pre>
     <span class="t-key">&quot;required&quot;</span>: [<span class="t-string">&quot;session_id&quot;</span>, <span class="t-string">&quot;action_id&quot;</span>, <span class="t-string">&quot;approved&quot;</span>]
   }
 }</code></pre>
-<h4 id="blk-76702">13.4 <code>harness_escalation_response</code></h4>
+<h4 id="blk-77530">13.4 <code>harness_escalation_response</code></h4>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;harness_escalation_response&quot;</span>,
   <span class="t-key">&quot;description&quot;</span>: <span class="t-string">&quot;Respond to a harness escalation (sprint failure at max iterations, confidence gate, etc.).&quot;</span>,
@@ -679,8 +680,8 @@ cloud_frontier fails → escalate to human</code></pre>
     <span class="t-key">&quot;required&quot;</span>: [<span class="t-string">&quot;session_id&quot;</span>, <span class="t-string">&quot;escalation_id&quot;</span>, <span class="t-string">&quot;action&quot;</span>]
   }
 }</code></pre>
-<h3 id="blk-76704">14. Multi-Tenant Dark Factory Integration</h3>
-<h4 id="blk-76705">14.1 Workspace-Scoped Sessions</h4>
+<h3 id="blk-77532">14. Multi-Tenant Dark Factory Integration</h3>
+<h4 id="blk-77533">14.1 Workspace-Scoped Sessions</h4>
 <p>OS-008 sessions operate within the shared [&amp;] Supabase ecosystem. Each session is scoped to a workspace:</p>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">OpenSentience.Harness.Session</span> <span class="t-kw">do</span>
   <span class="t-comment"># Session is always workspace-scoped</span>
@@ -691,14 +692,14 @@ cloud_frontier fails → escalate to human</code></pre>
 <span class="t-kw">end</span></code></pre>
 <p>Workspace scoping ensures:</p>
 <ul><li><p>PipelineEnforcer only allows retrieval from workspace-scoped Graphonomous data</p></li><li><p>QualityGate evaluators cannot access other workspaces' knowledge</p></li><li><p>ContractValidator checks governance policies scoped to the workspace's Delegatic org</p></li><li><p>Audit trail entries include <code>workspace_id</code> for multi-tenant audit compliance</p></li><li><p>Subagent delegation inherits parent session's workspace scope</p></li></ul>
-<h4 id="blk-76720">14.2 Cross-Session Learning (Resolved)</h4>
+<h4 id="blk-77548">14.2 Cross-Session Learning (Resolved)</h4>
 <p><strong>Previously open question #5.</strong> Now resolved:</p>
 <p>Yes — retried sessions SHOULD access prior session traces. Implementation:</p>
 <ol><li><p>On session failure, the harness stores a structured outcome node in Graphonomous:</p></li></ol>
 <p>``<code> {type: &quot;harness_outcome&quot;, status: &quot;failed&quot;, session_id, workspace_id, sprint_results: [...], failure_reason, context_snapshot_ref} </code>``</p>
 <ol start="2"><li><p>On session retry, PipelineEnforcer's mandatory retrieval phase pulls prior harness outcomes for the same <code>{agent_id, spec_hash}</code> tuple</p></li><li><p>The planner receives prior failure context and adapts its sprint decomposition</p></li><li><p>This creates a closed learning loop: harness → Graphonomous → harness (next attempt)</p></li></ol>
 <p>Cross-session learning is workspace-scoped — one workspace's harness failures do not leak to another.</p>
-<h4 id="blk-76735">14.3 Pipeline Enforcement × Delegatic Conflict Resolution</h4>
+<h4 id="blk-77563">14.3 Pipeline Enforcement × Delegatic Conflict Resolution</h4>
 <p>When OS-008 pipeline says &quot;proceed&quot; but Delegatic policy says &quot;block&quot;, <strong>Delegatic wins</strong>. Rationale:</p>
 <ul><li><p>OS-008 enforces <strong>operational correctness</strong> (did you retrieve before acting?)</p></li><li><p>Delegatic enforces <strong>organizational policy</strong> (are you allowed to act at all?)</p></li><li><p>Policy is a superset of pipeline: an action that passes pipeline checks may still violate policy</p></li><li><p>An action that violates pipeline checks is blocked before Delegatic is consulted</p></li></ul>
 <p><strong>Enforcement order (unchanged from section 6, clarified):</strong></p>
@@ -707,7 +708,7 @@ cloud_frontier fails → escalate to human</code></pre>
 3. Delegatic (via OS-006): Org policy OK? NO → Block (organizational)
 4. All pass → Execute</code></pre>
 <p>Delegatic blocks are logged as <code>policy_violation</code> audit events (not <code>pipeline_violation</code>), enabling distinct operational vs. policy failure analysis.</p>
-<h4 id="blk-76749">14.4 Dark Factory Session Lifecycle</h4>
+<h4 id="blk-77577">14.4 Dark Factory Session Lifecycle</h4>
 <p>In dark factory mode, harness sessions are triggered by Agentelic pipeline events (not human invocation):</p>
 <pre><code>SpecPrompt ConsolidationEvent
   → Agentelic retrieve_spec
@@ -720,7 +721,7 @@ cloud_frontier fails → escalate to human</code></pre>
   → On all sprints pass: Agentelic.Build.status = :succeeded
   → Agentelic emits ConsolidationEvent to FleetPrompt</code></pre>
 <p>The harness does NOT make LLM model choices — it defers to Agentelic's model tier configuration. The harness enforces the pipeline regardless of which model runs the generation.</p>
-<h3 id="blk-76753">15. Open Research Questions</h3>
+<h3 id="blk-77581">15. Open Research Questions</h3>
 <p>OS-008 raises several research questions that extend OpenSentience's existing agenda:</p>
 <ol><li><p><strong>Harness overhead calibration:</strong> At what point does harness overhead (separate evaluator contexts, prerequisite checks, sprint decomposition) cost more than the quality it provides? Anthropic showed they could remove sprint decomposition when models improved. How do we detect when harness components become unnecessary overhead?</p></li></ol>
 <ol start="2"><li><p><strong>Evaluator adversarial tuning:</strong> How adversarial should the evaluator be? Too lenient produces the over-praising problem. Too strict produces infinite iteration loops. Can evaluator calibration be learned from historical sprint pass rates?</p></li></ol>
@@ -729,25 +730,25 @@ cloud_frontier fails → escalate to human</code></pre>
 <ol start="5"><li><p>~~<strong>Cross-session harness learning:</strong>~~ Resolved in section 14.2 above.</p></li></ol>
 <ol start="6"><li><p><strong>Context degradation as cognitive fatigue:</strong> The 60% rule mirrors human cognitive fatigue — sustained focus degrades performance before physical limits are reached. Can the harness detect quality degradation before the 60% threshold by monitoring evaluation pass rates over time?</p></li></ol>
 <ol start="7"><li><p><strong>Autonomy trust calibration (extension of OS open question #6):</strong> OS-008 provides concrete data for trust calibration — sprint pass rates, evaluation scores, escalation frequency. Can these metrics drive automatic autonomy level promotion?</p></li></ol>
-<h3 id="blk-76776">16. Relationship to Industry Harness Patterns</h3>
+<h3 id="blk-77604">16. Relationship to Industry Harness Patterns</h3>
 <p>OS-008 is positioned relative to the emerging harness engineering discipline:</p>
 <table><thead><tr><th>Pattern</th><th>Industry Standard</th><th>OS-008 Approach</th><th>Differentiation</th></tr></thead><tbody><tr><td>Generator-Evaluator separation</td><td>Anthropic three-agent harness</td><td><code>&amp;reason.generate</code> + <code>&amp;reason.evaluate</code> as [&amp;] capability contracts</td><td>Contracts are composable and validated at composition time</td></tr><tr><td>Sprint decomposition</td><td>Anthropic sprint contracts</td><td>SprintController with acceptance criteria from SpecPrompt</td><td>Criteria are machine-parseable, not ad-hoc</td></tr><tr><td>Context management</td><td>LangChain Deep Agents offload + summarize</td><td>ContextManager with Graphonomous as persistent substrate</td><td>Knowledge survives context resets via graph, not filesystem</td></tr><tr><td>Prerequisite enforcement</td><td>OpenAI CI invariants</td><td>PipelineEnforcer with prerequisite rules</td><td>Runtime enforcement, not just CI-time</td></tr><tr><td>Filesystem memory</td><td>All major harnesses</td><td>Graphonomous knowledge graph</td><td>Topology-aware, confidence-weighted, consolidating</td></tr><tr><td>Subagent delegation</td><td>Claude Code, LangGraph</td><td>OS-006 supervised subagents with shared Graphonomous</td><td>Subagents share knowledge graph, not just filesystem</td></tr><tr><td>Autonomy levels</td><td>None (binary human/agent)</td><td>Three-level graduated autonomy (observe/advise/act)</td><td>Policy-driven, auditable, per-agent</td></tr><tr><td>Governance contracts</td><td>None (ad-hoc constraints)</td><td>[&amp;] Protocol governance blocks</td><td>Formal, composable, validated</td></tr><tr><td>κ-routed deliberation</td><td>None</td><td>Topology-gated reasoning depth</td><td>Circular dependencies get deliberation; DAGs get fast-path</td></tr><tr><td>Coverage-driven routing</td><td>None</td><td>Coverage.recommend → act/learn/escalate</td><td>Epistemic self-modeling before action</td></tr></tbody></table>
 <p><strong>Unique to OS-008 (not found in any current harness framework):</strong></p>
 <ol><li><p>Knowledge graph as shared memory substrate (vs. filesystem)</p></li><li><p>Topology-aware deliberation gating (κ-routing)</p></li><li><p>Coverage-driven dispatch (epistemic self-modeling)</p></li><li><p>Governance contracts as first-class protocol primitives</p></li><li><p>Graduated autonomy with policy-driven transitions</p></li><li><p>Cognitive science grounding (Norman &amp; Shallice SAS)</p></li></ol>
-<h3 id="blk-76837">17. Implementation Phases</h3>
-<h4 id="blk-76838">Phase 1: Pipeline Enforcement (Weeks 1–4)</h4>
+<h3 id="blk-77665">17. Implementation Phases</h3>
+<h4 id="blk-77666">Phase 1: Pipeline Enforcement (Weeks 1–4)</h4>
 <ul><li><p>PipelineEnforcer with prerequisite rules</p></li><li><p>Retrieve-before-act enforcement</p></li><li><p>Mandatory outcome storage</p></li><li><p>Integration with existing OS-006 permission checks</p></li><li><p>Audit trail extensions</p></li></ul>
-<h4 id="blk-76850">Phase 2: Quality Gate + Sprint Controller (Weeks 5–8)</h4>
+<h4 id="blk-77678">Phase 2: Quality Gate + Sprint Controller (Weeks 5–8)</h4>
 <ul><li><p>QualityGate with separate evaluator context</p></li><li><p>SprintController state machine</p></li><li><p>Sprint contract schema</p></li><li><p>Generator iteration loop</p></li><li><p>Planner role implementation</p></li></ul>
-<h4 id="blk-76862">Phase 3: Contract Validation + Context Management (Weeks 9–12)</h4>
+<h4 id="blk-77690">Phase 3: Contract Validation + Context Management (Weeks 9–12)</h4>
 <ul><li><p>ContractValidator for [&amp;] governance blocks</p></li><li><p>Confidence-gated execution</p></li><li><p>ContextManager with compaction + offload</p></li><li><p>Subagent delegation via OS-006</p></li><li><p>Graphonomous integration for cross-context knowledge sharing</p></li></ul>
-<h4 id="blk-76874">Phase 4: Model Tier Adaptation + MCP (Weeks 13–16)</h4>
+<h4 id="blk-77702">Phase 4: Model Tier Adaptation + MCP (Weeks 13–16)</h4>
 <ul><li><p>Tier-specific harness behavior</p></li><li><p>Graceful degradation (tier escalation)</p></li><li><p>MCP tools for external orchestration</p></li><li><p>Telemetry integration</p></li><li><p>Production hardening</p></li></ul>
-<h3 id="blk-76886">18. Cognitive Science References</h3>
+<h3 id="blk-77714">18. Cognitive Science References</h3>
 <table><thead><tr><th>Concept</th><th>Reference</th><th>Application in OS-008</th></tr></thead><tbody><tr><td>Supervisory Attentional System</td><td>Norman &amp; Shallice 1986</td><td>The harness IS the SAS — it overrides automatic routines when novel/dangerous situations arise</td></tr><tr><td>Metacognitive monitoring</td><td>Flavell 1979</td><td>Evaluator role — separating cognitive process from its assessment</td></tr><tr><td>Resource rationality</td><td>Lieder &amp; Griffiths 2020</td><td>Model tier adaptation — harness overhead proportional to expected utility</td></tr><tr><td>Cognitive fatigue</td><td>Baumeister et al. 1998 (ego depletion)</td><td>Context degradation — quality drops before hard limits</td></tr><tr><td>Dual-process theory</td><td>Kahneman 2011</td><td>Sprint controller — fast path (κ=0, single sprint) vs. slow path (κ&gt;0, deliberation loop)</td></tr><tr><td>Executive function</td><td>Miyake et al. 2000</td><td>Pipeline enforcement — inhibitory control (blocking premature action), task switching (sprint transitions)</td></tr></tbody></table>
 <p><em>OS-008 is the skeleton that gives the [&amp;] ecosystem's organs a body. The tools (Graphonomous, AgenTroMatic, Delegatic) are powerful. The harness ensures they're used together, correctly, every time.</em></p></div>
 <p class="src"><a href="/#/opensentience.org/docs/spec/OS-008-HARNESS.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-76287" class="lvl2">0. The One-Sentence Idea</a><a href="#blk-76289" class="lvl2">1. Why This Exists (The Enforcement Gap)</a><a href="#blk-76326" class="lvl3">1.1 What a Harness Is (and Is Not)</a><a href="#blk-76346" class="lvl3">1.2 Cognitive Science Grounding</a><a href="#blk-76355" class="lvl2">2. Architecture</a><a href="#blk-76357" class="lvl3">2.1 OTP Supervision Tree</a><a href="#blk-76360" class="lvl3">2.2 Component Summary</a><a href="#blk-76380" class="lvl2">3. The Two Enforced Pipelines</a><a href="#blk-76382" class="lvl3">3.1 Reactive Pipeline (Query-Triggered)</a><a href="#blk-76401" class="lvl3">3.2 Proactive Pipeline (Heartbeat-Triggered)</a><a href="#blk-76420" class="lvl3">3.3 The Coverage → Dispatch Routing Matrix</a><a href="#blk-76423" class="lvl2">4. The Three Agent Roles</a><a href="#blk-76425" class="lvl3">4.1 Planner Role</a><a href="#blk-76442" class="lvl3">4.2 Generator Role</a><a href="#blk-76461" class="lvl3">4.3 Evaluator Role</a><a href="#blk-76480" class="lvl3">4.4 Why Separate Contexts Matter</a><a href="#blk-76491" class="lvl2">5. Pipeline Enforcement (Prerequisites)</a><a href="#blk-76493" class="lvl3">5.1 Prerequisite Rules</a><a href="#blk-76495" class="lvl3">5.2 Enforcement Mechanism</a><a href="#blk-76498" class="lvl3">5.3 Integration with OS-006</a><a href="#blk-76501" class="lvl2">6. Quality Gate Engine</a><a href="#blk-76503" class="lvl3">6.1 Grading Process</a><a href="#blk-76505" class="lvl3">6.2 Evaluator Tuning</a><a href="#blk-76526" class="lvl3">6.3 Iteration Loop</a><a href="#blk-76528" class="lvl2">7. Contract Validation</a><a href="#blk-76530" class="lvl3">7.1 Hard Constraint Enforcement</a><a href="#blk-76532" class="lvl3">7.2 Governance Block Runtime Semantics</a><a href="#blk-76555" class="lvl3">7.3 Confidence-Gated Execution</a><a href="#blk-76558" class="lvl2">8. Context Management</a><a href="#blk-76560" class="lvl3">8.1 The 60% Rule</a><a href="#blk-76562" class="lvl3">8.2 Context Management Strategy</a><a href="#blk-76564" class="lvl3">8.3 Subagent Delegation</a><a href="#blk-76568" class="lvl2">9. Sprint Controller</a><a href="#blk-76570" class="lvl3">9.1 Sprint Lifecycle States</a><a href="#blk-76572" class="lvl3">9.2 Sprint Contract</a><a href="#blk-76575" class="lvl2">10. Unified Audit Trail</a><a href="#blk-76577" class="lvl3">10.1 Extended Event Types</a><a href="#blk-76579" class="lvl3">10.2 Provenance Fields</a><a href="#blk-76583" class="lvl2">11. Model Tier Adaptation</a><a href="#blk-76585" class="lvl3">11.1 Tier-Specific Harness Behavior</a><a href="#blk-76624" class="lvl3">11.2 Graceful Degradation</a><a href="#blk-76628" class="lvl2">12. Integration Points</a><a href="#blk-76629" class="lvl3">12.1 Graphonomous</a><a href="#blk-76643" class="lvl3">12.2 Delegatic</a><a href="#blk-76654" class="lvl3">12.3 [&amp;] Protocol</a><a href="#blk-76665" class="lvl3">12.4 SpecPrompt</a><a href="#blk-76674" class="lvl3">12.5 Agentelic</a><a href="#blk-76683" class="lvl3">12.6 OS-006 (Governance Shim)</a><a href="#blk-76694" class="lvl2">13. MCP Tools (Harness Operations)</a><a href="#blk-76696" class="lvl3">13.1 harness_start_session</a><a href="#blk-76698" class="lvl3">13.2 harness_sprint_status</a><a href="#blk-76700" class="lvl3">13.3 harness_approve_action</a><a href="#blk-76702" class="lvl3">13.4 harness_escalation_response</a><a href="#blk-76704" class="lvl2">14. Multi-Tenant Dark Factory Integration</a><a href="#blk-76705" class="lvl3">14.1 Workspace-Scoped Sessions</a><a href="#blk-76720" class="lvl3">14.2 Cross-Session Learning (Resolved)</a><a href="#blk-76735" class="lvl3">14.3 Pipeline Enforcement × Delegatic Conflict Resolution</a><a href="#blk-76749" class="lvl3">14.4 Dark Factory Session Lifecycle</a><a href="#blk-76753" class="lvl2">15. Open Research Questions</a><a href="#blk-76776" class="lvl2">16. Relationship to Industry Harness Patterns</a><a href="#blk-76837" class="lvl2">17. Implementation Phases</a><a href="#blk-76838" class="lvl3">Phase 1: Pipeline Enforcement (Weeks 1–4)</a><a href="#blk-76850" class="lvl3">Phase 2: Quality Gate + Sprint Controller (Weeks 5–8)</a><a href="#blk-76862" class="lvl3">Phase 3: Contract Validation + Context Management (Weeks 9–12)</a><a href="#blk-76874" class="lvl3">Phase 4: Model Tier Adaptation + MCP (Weeks 13–16)</a><a href="#blk-76886" class="lvl2">18. Cognitive Science References</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/opensentience.org/docs/faq.md/">Frequently Asked Questions</a><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md/">PRISM — Protocol for Rating Iterative System Memory</a><a href="/opensentience.org/docs/spec/OS-010-PULSE-SPECIFICATION.md/">PULSE — Protocol for Uniform Loop State Exchange</a><a href="/opensentience.org/docs/spec/OS-011-EMBODIMENT.md/">OS-011 — Embodiment Protocol</a><a href="/opensentience.org/docs/spec/OS-E001-EMPIRICAL-EVALUATION.md/">OS-E001: Empirical Evaluation of Topology-Aware Continual Learning</a><a href="/opensentience.org/docs/spec/README.md/">OpenSentience — Open Research into Machine Cognition</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierapqksoistk2tq5nhan57g54v76c27xslfzwzsc6xykvh4fx4wwo2q</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-77115" class="lvl2">0. The One-Sentence Idea</a><a href="#blk-77117" class="lvl2">1. Why This Exists (The Enforcement Gap)</a><a href="#blk-77154" class="lvl3">1.1 What a Harness Is (and Is Not)</a><a href="#blk-77174" class="lvl3">1.2 Cognitive Science Grounding</a><a href="#blk-77183" class="lvl2">2. Architecture</a><a href="#blk-77185" class="lvl3">2.1 OTP Supervision Tree</a><a href="#blk-77188" class="lvl3">2.2 Component Summary</a><a href="#blk-77208" class="lvl2">3. The Two Enforced Pipelines</a><a href="#blk-77210" class="lvl3">3.1 Reactive Pipeline (Query-Triggered)</a><a href="#blk-77229" class="lvl3">3.2 Proactive Pipeline (Heartbeat-Triggered)</a><a href="#blk-77248" class="lvl3">3.3 The Coverage → Dispatch Routing Matrix</a><a href="#blk-77251" class="lvl2">4. The Three Agent Roles</a><a href="#blk-77253" class="lvl3">4.1 Planner Role</a><a href="#blk-77270" class="lvl3">4.2 Generator Role</a><a href="#blk-77289" class="lvl3">4.3 Evaluator Role</a><a href="#blk-77308" class="lvl3">4.4 Why Separate Contexts Matter</a><a href="#blk-77319" class="lvl2">5. Pipeline Enforcement (Prerequisites)</a><a href="#blk-77321" class="lvl3">5.1 Prerequisite Rules</a><a href="#blk-77323" class="lvl3">5.2 Enforcement Mechanism</a><a href="#blk-77326" class="lvl3">5.3 Integration with OS-006</a><a href="#blk-77329" class="lvl2">6. Quality Gate Engine</a><a href="#blk-77331" class="lvl3">6.1 Grading Process</a><a href="#blk-77333" class="lvl3">6.2 Evaluator Tuning</a><a href="#blk-77354" class="lvl3">6.3 Iteration Loop</a><a href="#blk-77356" class="lvl2">7. Contract Validation</a><a href="#blk-77358" class="lvl3">7.1 Hard Constraint Enforcement</a><a href="#blk-77360" class="lvl3">7.2 Governance Block Runtime Semantics</a><a href="#blk-77383" class="lvl3">7.3 Confidence-Gated Execution</a><a href="#blk-77386" class="lvl2">8. Context Management</a><a href="#blk-77388" class="lvl3">8.1 The 60% Rule</a><a href="#blk-77390" class="lvl3">8.2 Context Management Strategy</a><a href="#blk-77392" class="lvl3">8.3 Subagent Delegation</a><a href="#blk-77396" class="lvl2">9. Sprint Controller</a><a href="#blk-77398" class="lvl3">9.1 Sprint Lifecycle States</a><a href="#blk-77400" class="lvl3">9.2 Sprint Contract</a><a href="#blk-77403" class="lvl2">10. Unified Audit Trail</a><a href="#blk-77405" class="lvl3">10.1 Extended Event Types</a><a href="#blk-77407" class="lvl3">10.2 Provenance Fields</a><a href="#blk-77411" class="lvl2">11. Model Tier Adaptation</a><a href="#blk-77413" class="lvl3">11.1 Tier-Specific Harness Behavior</a><a href="#blk-77452" class="lvl3">11.2 Graceful Degradation</a><a href="#blk-77456" class="lvl2">12. Integration Points</a><a href="#blk-77457" class="lvl3">12.1 Graphonomous</a><a href="#blk-77471" class="lvl3">12.2 Delegatic</a><a href="#blk-77482" class="lvl3">12.3 [&amp;] Protocol</a><a href="#blk-77493" class="lvl3">12.4 SpecPrompt</a><a href="#blk-77502" class="lvl3">12.5 Agentelic</a><a href="#blk-77511" class="lvl3">12.6 OS-006 (Governance Shim)</a><a href="#blk-77522" class="lvl2">13. MCP Tools (Harness Operations)</a><a href="#blk-77524" class="lvl3">13.1 harness_start_session</a><a href="#blk-77526" class="lvl3">13.2 harness_sprint_status</a><a href="#blk-77528" class="lvl3">13.3 harness_approve_action</a><a href="#blk-77530" class="lvl3">13.4 harness_escalation_response</a><a href="#blk-77532" class="lvl2">14. Multi-Tenant Dark Factory Integration</a><a href="#blk-77533" class="lvl3">14.1 Workspace-Scoped Sessions</a><a href="#blk-77548" class="lvl3">14.2 Cross-Session Learning (Resolved)</a><a href="#blk-77563" class="lvl3">14.3 Pipeline Enforcement × Delegatic Conflict Resolution</a><a href="#blk-77577" class="lvl3">14.4 Dark Factory Session Lifecycle</a><a href="#blk-77581" class="lvl2">15. Open Research Questions</a><a href="#blk-77604" class="lvl2">16. Relationship to Industry Harness Patterns</a><a href="#blk-77665" class="lvl2">17. Implementation Phases</a><a href="#blk-77666" class="lvl3">Phase 1: Pipeline Enforcement (Weeks 1–4)</a><a href="#blk-77678" class="lvl3">Phase 2: Quality Gate + Sprint Controller (Weeks 5–8)</a><a href="#blk-77690" class="lvl3">Phase 3: Contract Validation + Context Management (Weeks 9–12)</a><a href="#blk-77702" class="lvl3">Phase 4: Model Tier Adaptation + MCP (Weeks 13–16)</a><a href="#blk-77714" class="lvl2">18. Cognitive Science References</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/opensentience.org/docs/faq.md/">Frequently Asked Questions</a><a href="/opensentience.org/docs/index.md/">OpenSentience Documentation</a></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/docs/spec/OS-009-PRISM-SPECIFICATION.md/">PRISM — Protocol for Rating Iterative System Memory</a><a href="/opensentience.org/docs/spec/OS-010-PULSE-SPECIFICATION.md/">PULSE — Protocol for Uniform Loop State Exchange</a><a href="/opensentience.org/docs/spec/OS-011-EMBODIMENT.md/">OS-011 — Embodiment Protocol</a><a href="/opensentience.org/docs/spec/OS-E001-EMPIRICAL-EVALUATION.md/">OS-E001: Empirical Evaluation of Topology-Aware Continual Learning</a><a href="/opensentience.org/docs/spec/README.md/">OpenSentience — Open Research into Machine Cognition</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraciltey6l3bx62ftxgqsf62elwb2knhxsvsop4jz4n73lci6ipe4a</div></div></div>
 </div></div>
 </body></html>

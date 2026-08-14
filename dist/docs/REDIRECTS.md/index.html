@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
+<title>Collapsing the docs atlas onto one canonical host · docs · Ampersand Box</title>
+<meta name="description" content="Status: written 2026-08-13, not applied and not planned. Supersedes: nothing. Superseded by: the measurement above.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/docs/REDIRECTS.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Collapsing the docs atlas onto one canonical host">
+<meta property="og:description" content="Status: written 2026-08-13, not applied and not planned. Supersedes: nothing. Superseded by: the measurement above.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/docs/REDIRECTS.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Collapsing the docs atlas onto one canonical host","name":"Collapsing the docs atlas onto one canonical host","description":"Status: written 2026-08-13, not applied and not planned. Supersedes: nothing. Superseded by: the measurement above.","url":"https://docs.ampersandboxdesign.com/docs/REDIRECTS.md/","identifier":"bagaaierau65kjhi7hw2xzklwcu4thws34y7sugkdbdqwo7pc7vt3x37lt45a","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"docs","url":"https://docs.ampersandboxdesign.com/docs/"},"articleSection":"docs","hasPart":[{"@type":"WebPageElement","name":"Option A — one Bulk Redirect list (recommended)"},{"@type":"WebPageElement","name":"Option B — twelve Redirect Rules, one per zone"},{"@type":"WebPageElement","name":"Verify"},{"@type":"WebPageElement","name":"Why 301 and not just the canonical tag"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"docs","item":"https://docs.ampersandboxdesign.com/docs/"},{"@type":"ListItem","position":3,"name":"REDIRECTS.md","item":"https://docs.ampersandboxdesign.com/docs/REDIRECTS.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">docs</span>
+<span class="path">docs/REDIRECTS.md</span>
+
+</div></div>
+<div class="lead">Status: written 2026-08-13, not applied and not planned. Supersedes: nothing. Superseded by: the measurement above.</div>
+<div class="prose"><h1 id="blk-60805">Collapsing the docs atlas onto one canonical host</h1>
+<blockquote><p>## ⚠ NOT ADOPTED — decided against 2026-08-13, the same day this was written.  This document was written to execute <code>ACADEMY.md</code> step A1b as that step was worded. Measuring the premise afterwards showed the step was asserting a <strong>mechanism</strong> (301s exist) rather than the <strong>outcome</strong> it wanted (one host accumulates the citations) — and the outcome already holds without any redirect:  - every page on all twelve non-canonical hosts declares <code>canonical → docs.ampersandboxdesign.com</code> - the sitemap they serve lists <strong>only</strong> canonical-host URLs — they do not advertise themselves - their <code>robots.txt</code> points its <code>Sitemap:</code> line at the canonical host - <strong>nothing links to them.</strong> The shared nav links the canonical host 34×; across every marketing   site it is the only docs link  Unlinked, unsitemapped and self-declaring as copies, the twelve are effectively undiscoverable, and an engine that does reach one consolidates it. Buying that with twelve permanent edge rules — whose failure mode is a loop that takes the atlas down on all thirteen hostnames at once — is a bad trade.  <strong>Everything below is retained deliberately, not by neglect.</strong> If the decision is revisited, the configuration is here and the reasoning does not have to be re-derived. <code>verify-canonical.sh</code> still works and still exits 1, which is now the <em>expected</em> result rather than a pending task.  The live question A1b leaves behind is not a redirect: <strong>why are twelve unused custom domains attached to the Pages project?</strong> Detaching them dissolves the question entirely.</p></blockquote>
+<p><strong>Status:</strong> written 2026-08-13, <strong>not applied and not planned</strong>. <strong>Supersedes:</strong> nothing. <strong>Superseded by:</strong> the measurement above.</p>
+<p>The <code>docs</code> Cloudflare Pages project has thirteen custom domains attached. All thirteen serve byte-identical content at HTTP 200, so 434 documents are published at roughly 5,600 URLs. Every page already declares <code>&lt;link rel=&quot;canonical&quot; href=&quot;https://docs.ampersandboxdesign.com/…&quot;&gt;</code>; what is missing is enforcement.</p>
+<p>This cannot be done from the repository. Cloudflare Pages' <code>_redirects</code> matches paths, not hostnames, and all thirteen domains are served by one deployment — so a <code>_redirects</code> entry would fire on the canonical host too. It has to be done at the edge.</p>
+<h3 id="blk-60811">Option A — one Bulk Redirect list (recommended)</h3>
+<p>Account-level, so twelve hostnames are configured in one place rather than twelve.</p>
+<p><strong>Dashboard →</strong> Account Home → Bulk Redirects → Create a redirect list → name it <code>docs-canonical</code>.</p>
+<p>For each row below: <strong>Status `301`</strong>, and enable <strong>Preserve query string</strong>, <strong>Subpath matching</strong> and <strong>Preserve path suffix</strong>. Leave <em>Include subdomains</em> off.</p>
+<table><thead><tr><th>Source URL</th><th>Target URL</th></tr></thead><tbody><tr><td><code>docs.agentelic.com/</code></td><td><code>https://docs.ampersandboxdesign.com/</code></td></tr><tr><td><code>docs.agentromatic.com/</code></td><td><code>https://docs.ampersandboxdesign.com/</code></td></tr><tr><td><code>docs.bendscript.com/</code></td><td><code>https://docs.ampersandboxdesign.com/</code></td></tr><tr><td><code>docs.delegatic.com/</code></td><td><code>https://docs.ampersandboxdesign.com/</code></td></tr><tr><td><code>docs.deliberatic.com/</code></td><td><code>https://docs.ampersandboxdesign.com/</code></td></tr><tr><td><code>docs.fleetprompt.com/</code></td><td><code>https://docs.ampersandboxdesign.com/</code></td></tr><tr><td><code>docs.geofleetic.com/</code></td><td><code>https://docs.ampersandboxdesign.com/</code></td></tr><tr><td><code>docs.graphonomous.com/</code></td><td><code>https://docs.ampersandboxdesign.com/</code></td></tr><tr><td><code>docs.opensentience.org/</code></td><td><code>https://docs.ampersandboxdesign.com/</code></td></tr><tr><td><code>docs.specprompt.com/</code></td><td><code>https://docs.ampersandboxdesign.com/</code></td></tr><tr><td><code>docs.ticktickclock.com/</code></td><td><code>https://docs.ampersandboxdesign.com/</code></td></tr><tr><td><code>docs.webhost.systems/</code></td><td><code>https://docs.ampersandboxdesign.com/</code></td></tr></tbody></table>
+<p>Then Bulk Redirects → Create rule → attach the <code>docs-canonical</code> list → Deploy.</p>
+<p><strong>`docs.ampersandboxdesign.com` must NOT appear in that list.</strong> Adding it produces a redirect loop that takes the atlas down on every host at once.</p>
+<h3 id="blk-60844">Option B — twelve Redirect Rules, one per zone</h3>
+<p>Use this if Bulk Redirects is unavailable. In each of the twelve zones: <strong>Rules → Redirect Rules → Create rule</strong>, named <code>docs → canonical</code>.</p>
+<ul><li><p><strong>When incoming requests match</strong> — Custom filter expression:</p></li></ul>
+<p>``<code> (http.host eq &quot;docs.&lt;ZONE&gt;&quot;) </code>``</p>
+<ul><li><p><strong>Then</strong> — Type <strong>Dynamic</strong>, Expression:</p></li></ul>
+<p>``<code> concat(&quot;https://docs.ampersandboxdesign.com&quot;, http.request.uri.path) </code>``</p>
+<ul><li><p><strong>Status code</strong> <code>301</code>, <strong>Preserve query string</strong> on.</p></li></ul>
+<p>Substitute <code>&lt;ZONE&gt;</code> per zone: <code>agentelic.com</code>, <code>agentromatic.com</code>, <code>bendscript.com</code>, <code>delegatic.com</code>, <code>deliberatic.com</code>, <code>fleetprompt.com</code>, <code>geofleetic.com</code>, <code>graphonomous.com</code>, <code>opensentience.org</code>, <code>specprompt.com</code>, <code>ticktickclock.com</code>, <code>webhost.systems</code>.</p>
+<h3 id="blk-60858">Verify</h3>
+<p>Run this after applying. It asserts that all twelve redirect and that the canonical host does <strong>not</strong> — a loop is the one failure mode that matters here, and it is the one a spot-check of a single host will miss.</p>
+<pre data-lang="bash"><code>bash verify-canonical.sh          <span class="t-comment"># from this repo</span>
+<span class="t-comment"># bash docs/verify-canonical.sh   # from the ProjectAmp2 working tree</span></code></pre>
+<h3 id="blk-60861">Why 301 and not just the canonical tag</h3>
+<p>The canonical tag is a hint an engine may weigh; a 301 is a directive it must follow. Alkeyword's own G10 vocabulary rates this duplicate group as <strong>agree</strong> — every URL naming the same original — which is the mildest form of the problem and the reason this sat unnoticed. It is still twelve copies of the corpus competing for the same citations, and Academy's Layer 1 thesis is that grounded, canonical, extractable pages get cited. Publishing that corpus thirteen times is the opposite of the argument the corpus is making.</p></div>
+<p class="src"><a href="/#/docs/REDIRECTS.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-60811" class="lvl2">Option A — one Bulk Redirect list (recommended)</a><a href="#blk-60844" class="lvl2">Option B — twelve Redirect Rules, one per zone</a><a href="#blk-60858" class="lvl2">Verify</a><a href="#blk-60861" class="lvl2">Why 301 and not just the canonical tag</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/docs/README.md/">stackdocs — the whole [&amp;] stack, as a filesystem you can walk</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierau65kjhi7hw2xzklwcu4thws34y7sugkdbdqwo7pc7vt3x37lt45a</div></div></div>
+</div></div>
+</body></html>

@@ -183,6 +183,7 @@ function pageHTML(p, ctx) {
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
 <script type="application/ld+json">${jsonld(ld)}</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
@@ -230,6 +231,7 @@ function hubHTML(dir, children, subdirs, model) {
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
 <script type="application/ld+json">${jsonld(ld)}</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
@@ -302,6 +304,13 @@ export function prerender(pages, model, tree, unlisted = new Set()) {
   // inlining 21KB of CSS into 371 files would add ~7MB to dist/ for no benefit.
   copyFileSync('shell-atlas.css', 'dist/atlas.css');
 
+  // The chrome these pages were missing. A prerendered page ships the document and nothing
+  // else, which next to the SPA reads as half-loaded — and the obvious fix, putting `#/` back
+  // into the links, would return every crawler to the 6-word shell this file exists to escape.
+  // reader.js adds the bar, the tree and the palette on the client, from atlas.json, without
+  // touching the prerendered document. See shell-reader.js.
+  copyFileSync('shell-reader.js', 'dist/reader.js');
+
   const urls = [
     CANONICAL_HOST + '/',
     ...[...allDirs].filter(d => !routeSet.has(d)).sort().map(d => `${CANONICAL_HOST}/${d}/`),
@@ -315,6 +324,40 @@ export function prerender(pages, model, tree, unlisted = new Set()) {
   writeFileSync('dist/robots.txt',
     `# The atlas mirrors the [&] stack's real documentation. Crawling is welcome.\nUser-agent: *\nAllow: /\n\nSitemap: ${CANONICAL_HOST}/sitemap.xml\n`);
 
-  files.push('dist/atlas.css', 'dist/sitemap.xml', 'dist/robots.txt');
+  // A real 404. Without this file every unmatched path fell through to the SPA shell and
+  // returned HTTP 200 with the 10.3 MB inline model — measured 2026-08-13 on the live host.
+  // That is a soft 404: an engine sees an unbounded number of URLs each serving a full copy
+  // of the homepage, which is the duplicate-content shape this build exists to avoid, at
+  // 10 MB a request. Cloudflare Pages serves /404.html with a 404 status for unmatched paths.
+  // Deliberately standalone — no atlas.css, no reader.js, no atlas.json fetch: the one page
+  // that must render when the thing you asked for is not here should not need anything else
+  // to be here either.
+  writeFileSync('dist/404.html', `<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found · ${esc(model.brand)}</title>
+<meta name="robots" content="noindex">
+<style>
+:root{color-scheme:dark}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0b0e13;color:#dfe6ef;
+     font:16px/1.6 ui-sans-serif,system-ui,sans-serif;padding:24px}
+.b{max-width:34rem;text-align:center}
+h1{font:600 1.5rem/1.3 ui-sans-serif,system-ui,sans-serif;margin:0 0 10px}
+p{color:#93a0b1;margin:0 0 22px}
+code{font:.86em ui-monospace,monospace;color:#5cc8e8;word-break:break-all}
+a{display:inline-block;padding:9px 18px;border:1px solid #223047;border-radius:8px;
+  color:#dfe6ef;text-decoration:none}
+a:hover{border-color:#5cc8e8}
+</style></head><body><div class="b">
+<h1>No document at this path</h1>
+<p>The atlas mirrors the stack's real files, so a URL is a source path.
+<code id="p"></code> is not one of them — it may have been renamed, or withheld by the
+publication policy.</p>
+<a href="/">Browse the atlas</a>
+</div>
+<script>document.getElementById('p').textContent=location.pathname;</script>
+</body></html>\n`);
+
+  files.push('dist/atlas.css', 'dist/reader.js', 'dist/sitemap.xml', 'dist/robots.txt',
+             'dist/404.html');
   return { written, hubs, sitemap: urls.length, unlisted: unlisted.size, files };
 }

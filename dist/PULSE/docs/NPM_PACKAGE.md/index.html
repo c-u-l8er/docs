@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>os-pulse — NPM Package Specification · PULSE · Ampersand Box</title>
 <meta name="description" content="Package: os-pulse Version: 0.1.0 (initial) Language: TypeScript (pure JS, no native Elixir backend) License: Apache-2.0 Registry:…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/PULSE/docs/NPM_PACKAGE.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"os-pulse — NPM Package Specification","name":"os-pulse — NPM Package Specification","description":"Package: os-pulse Version: 0.1.0 (initial) Language: TypeScript (pure JS, no native Elixir backend) License: Apache-2.0 Registry:…","url":"https://docs.ampersandboxdesign.com/PULSE/docs/NPM_PACKAGE.md/","identifier":"bagaaierab6eu4gve5xn7f6ykk55i47nfcfsubn4yrq5md4inazunizwjatxa","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"PULSE","url":"https://docs.ampersandboxdesign.com/PULSE/"},"articleSection":"PULSE","hasPart":[{"@type":"WebPageElement","name":"Purpose"},{"@type":"WebPageElement","name":"Install"},{"@type":"WebPageElement","name":"CLI Flags"},{"@type":"WebPageElement","name":"Dependencies"},{"@type":"WebPageElement","name":"SQLite Schema"},{"@type":"WebPageElement","name":"MCP Tools Exposed"},{"@type":"WebPageElement","name":"MCP Resources Exposed"},{"@type":"WebPageElement","name":"Project Layout"},{"@type":"WebPageElement","name":"Build and Publish"},{"@type":"WebPageElement","name":"Why os-pulse ships first"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"PULSE","item":"https://docs.ampersandboxdesign.com/PULSE/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/PULSE/docs/"},{"@type":"ListItem","position":4,"name":"NPM_PACKAGE.md","item":"https://docs.ampersandboxdesign.com/PULSE/docs/NPM_PACKAGE.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"os-pulse — NPM Package Specification","name":"os-pulse — NPM Package Specification","description":"Package: os-pulse Version: 0.1.0 (initial) Language: TypeScript (pure JS, no native Elixir backend) License: Apache-2.0 Registry:…","url":"https://docs.ampersandboxdesign.com/PULSE/docs/NPM_PACKAGE.md/","identifier":"bagaaiera3eulh4outpxbc2wihqsrylnro2w4vcji44jcq3hg4q2wz2z7odwa","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"PULSE","url":"https://docs.ampersandboxdesign.com/PULSE/"},"articleSection":"PULSE","hasPart":[{"@type":"WebPageElement","name":"Purpose"},{"@type":"WebPageElement","name":"Install"},{"@type":"WebPageElement","name":"CLI Flags"},{"@type":"WebPageElement","name":"Dependencies"},{"@type":"WebPageElement","name":"SQLite Schema"},{"@type":"WebPageElement","name":"MCP Tools Exposed"},{"@type":"WebPageElement","name":"MCP Resources Exposed"},{"@type":"WebPageElement","name":"Project Layout"},{"@type":"WebPageElement","name":"Build and Publish"},{"@type":"WebPageElement","name":"Why os-pulse ships first"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"PULSE","item":"https://docs.ampersandboxdesign.com/PULSE/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/PULSE/docs/"},{"@type":"ListItem","position":4,"name":"NPM_PACKAGE.md","item":"https://docs.ampersandboxdesign.com/PULSE/docs/NPM_PACKAGE.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,12 +23,12 @@
 
 </div></div>
 <div class="lead">Package: os-pulse Version: 0.1.0 (initial) Language: TypeScript (pure JS, no native Elixir backend) License: Apache-2.0 Registry: https://www.npmjs.com/package/os-pulse Reposito…</div>
-<div class="prose"><h1 id="blk-23005">os-pulse — NPM Package Specification</h1>
+<div class="prose"><h1 id="blk-23038">os-pulse — NPM Package Specification</h1>
 <p><strong>Package</strong>: <code>os-pulse</code> <strong>Version</strong>: <code>0.1.0</code> (initial) <strong>Language</strong>: TypeScript (pure JS, no native Elixir backend) <strong>License</strong>: Apache-2.0 <strong>Registry</strong>: https://www.npmjs.com/package/os-pulse <strong>Repository</strong>: <code>AmpersandBoxDesign/PULSE</code> (monorepo subdir)</p>
-<h3 id="blk-23007">Purpose</h3>
+<h3 id="blk-23040">Purpose</h3>
 <p><code>os-pulse</code> is the reference MCP server for OS-010 PULSE. It registers and validates PULSE loop manifests, resolves cross-loop connections, emits and receives CloudEvents v1 envelopes for the five canonical tokens, and runs the 12-test conformance suite against any <code>*.pulse.json</code> document.</p>
 <p>Unlike <code>graphonomous</code> and <code>os-prism</code>, which wrap Elixir engines via postinstall escripts, <code>os-pulse</code> is <strong>pure TypeScript</strong>. PULSE is a manifest standard, not a compute engine — everything the reference server needs (schema validation, SQLite storage, CloudEvents envelopes) is available as pure JS.</p>
-<h3 id="blk-23010">Install</h3>
+<h3 id="blk-23043">Install</h3>
 <pre data-lang="bash"><code>npx<span class="t-flag"> -y</span> os-pulse<span class="t-flag"> --db</span> ~/.os-pulse/manifests.db</code></pre>
 <p>Or in <code>.mcp.json</code>:</p>
 <pre data-lang="jsonc"><code>{
@@ -38,11 +39,11 @@
     }
   }
 }</code></pre>
-<h3 id="blk-23014">CLI Flags</h3>
+<h3 id="blk-23047">CLI Flags</h3>
 <table><thead><tr><th>Flag</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>--db &lt;path&gt;</code></td><td><code>~/.os-pulse/manifests.db</code></td><td>SQLite database path (auto-created).</td></tr><tr><td><code>--transport</code></td><td><code>stdio</code></td><td><code>stdio</code> or <code>http</code> (Streamable HTTP per MCP 2025-11).</td></tr><tr><td><code>--port &lt;n&gt;</code></td><td><code>4710</code></td><td>HTTP port (ignored for stdio).</td></tr><tr><td><code>--log-level</code></td><td><code>info</code></td><td><code>debug</code>, <code>info</code>, <code>warn</code>, <code>error</code>.</td></tr><tr><td><code>--schema-path</code></td><td>bundled <code>pulse-loop-manifest.v0.1.json</code></td><td>Override bundled schema (for testing).</td></tr><tr><td><code>--version</code></td><td>—</td><td>Print version and exit.</td></tr><tr><td><code>--help</code></td><td>—</td><td>Print help and exit.</td></tr></tbody></table>
-<h3 id="blk-23040">Dependencies</h3>
+<h3 id="blk-23073">Dependencies</h3>
 <table><thead><tr><th>Dependency</th><th>Version</th><th>Why</th></tr></thead><tbody><tr><td><code>@modelcontextprotocol/sdk</code></td><td><code>^1.29.0</code></td><td>Stable v1.x MCP server surface with stdio.</td></tr><tr><td><code>better-sqlite3</code></td><td><code>^12.8.0</code></td><td>Fast synchronous SQLite bindings.</td></tr><tr><td><code>sqlite-vec</code></td><td><code>^0.1.10</code></td><td>Vector index for manifest similarity search.</td></tr><tr><td><code>ajv</code></td><td><code>^8.17.0</code></td><td>JSON Schema draft 2020-12 validation.</td></tr><tr><td><code>ajv-formats</code></td><td><code>^3.0.1</code></td><td><code>uri</code>, <code>date-time</code>, and other standard formats.</td></tr><tr><td><code>cloudevents</code></td><td><code>^8.0.0</code></td><td>Official CloudEvents v1.0 TS SDK for envelopes.</td></tr><tr><td><code>zod</code></td><td><code>^3.23.0</code></td><td>Tool input schemas for MCP registration.</td></tr><tr><td><code>yargs</code></td><td><code>^17.7.0</code></td><td>CLI argument parsing.</td></tr></tbody></table>
-<h3 id="blk-23069">SQLite Schema</h3>
+<h3 id="blk-23102">SQLite Schema</h3>
 <pre data-lang="sql"><code>-- Registered PULSE manifests (one row per loop_id@version).
 CREATE TABLE IF NOT EXISTS manifests (
   loop_id               TEXT NOT NULL,
@@ -105,12 +106,12 @@ CREATE VIRTUAL TABLE IF NOT EXISTS manifest_embeddings USING vec0(
   rowid INTEGER PRIMARY KEY,
   embedding FLOAT[384]
 );</code></pre>
-<h3 id="blk-23071">MCP Tools Exposed</h3>
+<h3 id="blk-23104">MCP Tools Exposed</h3>
 <p>All tools are registered against the <code>@modelcontextprotocol/sdk</code> v1.x server with zod input schemas and structured output schemas (per MCP 2025-11-25).</p>
 <table><thead><tr><th>Tool</th><th>Purpose</th></tr></thead><tbody><tr><td><code>register_manifest</code></td><td>Validate and persist a <code>*.pulse.json</code> manifest.</td></tr><tr><td><code>validate_manifest</code></td><td>Validate (dry-run) without persistence. Returns schema errors.</td></tr><tr><td><code>list_loops</code></td><td>List registered loops with filters (owner, kind, parent).</td></tr><tr><td><code>get_manifest</code></td><td>Return full manifest JSON for a <code>loop_id[@version]</code>.</td></tr><tr><td><code>resolve_phase</code></td><td>Given a loop + phase id, return the phase definition, substrate URIs, invariants in scope.</td></tr><tr><td><code>emit_signal</code></td><td>Package a token payload into a CloudEvents v1 envelope and persist it in <code>signals</code>. Optional <code>to_loop_id</code> routes to a registered target.</td></tr><tr><td><code>receive_signal</code></td><td>Deliver pending signals for a given loop_id (polling API).</td></tr><tr><td><code>trace_connection</code></td><td>Walk outbound <code>connections</code> from a loop to discover reachable downstream loops + tokens.</td></tr><tr><td><code>run_conformance</code></td><td>Execute the 12-test PULSE v0.1 conformance suite against a manifest. Returns per-test pass/fail + rationale.</td></tr><tr><td><code>export_topology</code></td><td>Emit a DOT / JSON graph of registered loops + nesting + connections for visualization.</td></tr></tbody></table>
-<h3 id="blk-23096">MCP Resources Exposed</h3>
+<h3 id="blk-23129">MCP Resources Exposed</h3>
 <table><thead><tr><th>URI</th><th>Returns</th></tr></thead><tbody><tr><td><code>pulse://runtime/health</code></td><td>Server health, manifest counts, signal counts.</td></tr><tr><td><code>pulse://manifests/recent</code></td><td>Recently registered manifests.</td></tr><tr><td><code>pulse://signals/recent</code></td><td>Recently received CloudEvents envelopes.</td></tr><tr><td><code>pulse://conformance/{loop_id}</code></td><td>Last conformance report for a loop.</td></tr></tbody></table>
-<h3 id="blk-23108">Project Layout</h3>
+<h3 id="blk-23141">Project Layout</h3>
 <pre><code>PULSE/
 ├── package.json
 ├── tsconfig.json
@@ -149,20 +150,20 @@ CREATE VIRTUAL TABLE IF NOT EXISTS manifest_embeddings USING vec0(
 ├── manifests/                      # bundled reference manifests (optional)
 └── test/
     └── conformance.test.ts</code></pre>
-<h3 id="blk-23110">Build and Publish</h3>
+<h3 id="blk-23143">Build and Publish</h3>
 <pre data-lang="bash"><code><span class="t-kw">cd</span> PULSE
 npm install
 npm run build              <span class="t-comment"># tsc → dist/</span>
 npm run test               <span class="t-comment"># vitest</span>
 npm pack<span class="t-flag"> --dry-run</span>         <span class="t-comment"># sanity check</span>
 npm publish<span class="t-flag"> --access</span> public</code></pre>
-<h3 id="blk-23112">Why os-pulse ships first</h3>
+<h3 id="blk-23145">Why os-pulse ships first</h3>
 <ol><li><p><strong>Smallest scope</strong> — pure JS, no escript wrapper, no native Elixir binary.</p></li><li><p><strong>Unblocks the others</strong> — <code>graphonomous</code> and <code>os-prism</code></p></li></ol>
 <p>all ship their own PULSE manifests; once <code>os-pulse</code> is live they can register against a hosted or local instance and prove end-to-end flow.</p>
 <ol start="3"><li><p><strong>Cleanest conformance story</strong> — the 12 tests are specified in the PULSE</p></li></ol>
 <p>spec and can be black-box tested against the reference implementation before any other package ships.</p></div>
 <p class="src"><a href="/#/PULSE/docs/NPM_PACKAGE.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-23007" class="lvl2">Purpose</a><a href="#blk-23010" class="lvl2">Install</a><a href="#blk-23014" class="lvl2">CLI Flags</a><a href="#blk-23040" class="lvl2">Dependencies</a><a href="#blk-23069" class="lvl2">SQLite Schema</a><a href="#blk-23071" class="lvl2">MCP Tools Exposed</a><a href="#blk-23096" class="lvl2">MCP Resources Exposed</a><a href="#blk-23108" class="lvl2">Project Layout</a><a href="#blk-23110" class="lvl2">Build and Publish</a><a href="#blk-23112" class="lvl2">Why os-pulse ships first</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/PULSE/README.md/">os-pulse</a><a href="/PULSE/docs/THREE_PROTOCOL_STACK.md/">The Three-Protocol Stack: [&amp;], PULSE, PRISM</a></div><div class="card"><div class="lab">in this folder</div><a href="/PULSE/docs/ARITHMETIC_INTEGRATION.md/">PULSE × box-and-box — Arithmetic Integration Review</a><a href="/PULSE/docs/THREE_PROTOCOL_STACK.md/">The Three-Protocol Stack: [&amp;], PULSE, PRISM</a><a href="/PULSE/docs/V0.2-BEHAVIORAL-TYPES.md/">PULSE v0.2 — Behavioral Loop Types</a><a href="/PULSE/docs/V0.2-IMPLEMENTATION-PLAN.md/">PULSE v0.2 — Implementation Plan</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierab6eu4gve5xn7f6ykk55i47nfcfsubn4yrq5md4inazunizwjatxa</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-23040" class="lvl2">Purpose</a><a href="#blk-23043" class="lvl2">Install</a><a href="#blk-23047" class="lvl2">CLI Flags</a><a href="#blk-23073" class="lvl2">Dependencies</a><a href="#blk-23102" class="lvl2">SQLite Schema</a><a href="#blk-23104" class="lvl2">MCP Tools Exposed</a><a href="#blk-23129" class="lvl2">MCP Resources Exposed</a><a href="#blk-23141" class="lvl2">Project Layout</a><a href="#blk-23143" class="lvl2">Build and Publish</a><a href="#blk-23145" class="lvl2">Why os-pulse ships first</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/PULSE/README.md/">os-pulse</a><a href="/PULSE/docs/THREE_PROTOCOL_STACK.md/">The Three-Protocol Stack: [&amp;], PULSE, PRISM</a></div><div class="card"><div class="lab">in this folder</div><a href="/PULSE/docs/ARITHMETIC_INTEGRATION.md/">PULSE × box-and-box — Arithmetic Integration Review</a><a href="/PULSE/docs/THREE_PROTOCOL_STACK.md/">The Three-Protocol Stack: [&amp;], PULSE, PRISM</a><a href="/PULSE/docs/V0.2-BEHAVIORAL-TYPES.md/">PULSE v0.2 — Behavioral Loop Types</a><a href="/PULSE/docs/V0.2-IMPLEMENTATION-PLAN.md/">PULSE v0.2 — Implementation Plan</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera3eulh4outpxbc2wihqsrylnro2w4vcji44jcq3hg4q2wz2z7odwa</div></div></div>
 </div></div>
 </body></html>

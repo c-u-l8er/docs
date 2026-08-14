@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>01 — Agent Management · WebHost.Systems · Ampersand Box</title>
 <meta name="description" content="An agent is a logical AI service owned by a single user. It has a selected runtime provider, configuration, and an optional active deployment. Agents are…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"01 — Agent Management","name":"01 — Agent Management","description":"An agent is a logical AI service owned by a single user. It has a selected runtime provider, configuration, and an optional active deployment. Agents are…","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/","identifier":"bagaaieranrejvbq6a3kzc3x77tq3gplopvwrvzyzk7bcijeqocefb2a7xboq","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"What Is an Agent?"},{"@type":"WebPageElement","name":"Agent Fields"},{"@type":"WebPageElement","name":"Status State Machine"},{"@type":"WebPageElement","name":"CRUD Operations"},{"@type":"WebPageElement","name":"Create Agent"},{"@type":"WebPageElement","name":"Update Agent"},{"@type":"WebPageElement","name":"List Agents"},{"@type":"WebPageElement","name":"Disable Agent"},{"@type":"WebPageElement","name":"Delete Agent (Soft)"},{"@type":"WebPageElement","name":"Provider Config"},{"@type":"WebPageElement","name":"RLS Isolation"},{"@type":"WebPageElement","name":"Checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/"},{"@type":"ListItem","position":5,"name":"01_AGENT_MANAGEMENT.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"01 — Agent Management","name":"01 — Agent Management","description":"An agent is a logical AI service owned by a single user. It has a selected runtime provider, configuration, and an optional active deployment. Agents are…","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/","identifier":"bagaaiera5ooreg5hwnycf7kd72hhlncptto4m3gf2ngrykb5rwwqcwiutgoq","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"What Is an Agent?"},{"@type":"WebPageElement","name":"Agent Fields"},{"@type":"WebPageElement","name":"Status State Machine"},{"@type":"WebPageElement","name":"CRUD Operations"},{"@type":"WebPageElement","name":"Create Agent"},{"@type":"WebPageElement","name":"Update Agent"},{"@type":"WebPageElement","name":"List Agents"},{"@type":"WebPageElement","name":"Disable Agent"},{"@type":"WebPageElement","name":"Delete Agent (Soft)"},{"@type":"WebPageElement","name":"Provider Config"},{"@type":"WebPageElement","name":"RLS Isolation"},{"@type":"WebPageElement","name":"Checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/"},{"@type":"ListItem","position":5,"name":"01_AGENT_MANAGEMENT.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,13 +23,13 @@
 
 </div></div>
 <div class="lead">An agent is a logical AI service owned by a single user. It has a selected runtime provider, configuration, and an optional active deployment. Agents are the top-level organizat…</div>
-<div class="prose"><h1 id="blk-43014">01 — Agent Management</h1>
+<div class="prose"><h1 id="blk-43730">01 — Agent Management</h1>
 <blockquote><p><strong>Purpose:</strong> How to create, configure, update, disable, and delete agents. Covers the agent status state machine, provider configuration, and RLS isolation rules.</p></blockquote>
-<h3 id="blk-43017">What Is an Agent?</h3>
+<h3 id="blk-43733">What Is an Agent?</h3>
 <p>An <strong>agent</strong> is a logical AI service owned by a single user. It has a selected runtime provider, configuration, and an optional active deployment. Agents are the top-level organizational unit in WebHost.Systems.</p>
-<h3 id="blk-43019">Agent Fields</h3>
+<h3 id="blk-43735">Agent Fields</h3>
 <table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>name</code></td><td>string</td><td>Yes</td><td>Unique per user</td></tr><tr><td><code>description</code></td><td>string</td><td>No</td><td>Human-readable description</td></tr><tr><td><code>framework</code></td><td>string</td><td>Yes</td><td>Informational (e.g., &quot;langchain&quot;, &quot;custom&quot;)</td></tr><tr><td><code>runtime_provider</code></td><td>enum</td><td>Yes</td><td><code>cloudflare</code> or <code>agentcore</code></td></tr><tr><td><code>env_var_keys</code></td><td>string[]</td><td>No</td><td>Secret key names (values in Vault)</td></tr><tr><td><code>provider_config</code></td><td>JSONB</td><td>No</td><td>Runtime-specific configuration</td></tr><tr><td><code>status</code></td><td>enum</td><td>Auto</td><td>Managed by the platform</td></tr></tbody></table>
-<h3 id="blk-43053">Status State Machine</h3>
+<h3 id="blk-43769">Status State Machine</h3>
 <pre><code>                    deploy success
   created -----&gt; deploying ---------&gt; active
      |               |                  |
@@ -40,8 +41,8 @@
      +---------------+--- re-deploy ---+</code></pre>
 <table><thead><tr><th>Status</th><th>Meaning</th><th>Invocations Allowed</th></tr></thead><tbody><tr><td><code>created</code></td><td>Agent exists but never deployed</td><td>No</td></tr><tr><td><code>deploying</code></td><td>Deployment in progress</td><td>No</td></tr><tr><td><code>active</code></td><td>Active deployment ready</td><td>Yes</td></tr><tr><td><code>error</code></td><td>Last deployment failed</td><td>No</td></tr><tr><td><code>disabled</code></td><td>Manually disabled by user</td><td>No</td></tr></tbody></table>
 <p><strong>Invariant:</strong> Only <code>active</code> agents accept invocations.</p>
-<h3 id="blk-43075">CRUD Operations</h3>
-<h4 id="blk-43076">Create Agent</h4>
+<h3 id="blk-43791">CRUD Operations</h3>
+<h4 id="blk-43792">Create Agent</h4>
 <pre data-lang="bash"><code>curl<span class="t-flag"> -X</span> POST <span class="t-string">&quot;$SUPABASE_URL/rest/v1/rpc/create_agent&quot;</span> \
  <span class="t-flag"> -H</span> <span class="t-string">&quot;Authorization: Bearer $TOKEN&quot;</span> \
  <span class="t-flag"> -H</span> <span class="t-string">&quot;Content-Type: application/json&quot;</span> \
@@ -51,25 +52,25 @@
     &quot;runtime_provider&quot;: &quot;cloudflare&quot;,
     &quot;env_var_keys&quot;: [&quot;OPENAI_API_KEY&quot;]
   }'</span></code></pre>
-<h4 id="blk-43078">Update Agent</h4>
+<h4 id="blk-43794">Update Agent</h4>
 <pre data-lang="bash"><code>curl<span class="t-flag"> -X</span> POST <span class="t-string">&quot;$SUPABASE_URL/rest/v1/rpc/update_agent&quot;</span> \
  <span class="t-flag"> -H</span> <span class="t-string">&quot;Authorization: Bearer $TOKEN&quot;</span> \
  <span class="t-flag"> -d</span> <span class="t-string">'{ &quot;agent_id&quot;: &quot;&lt;uuid&gt;&quot;, &quot;description&quot;: &quot;Updated description&quot; }'</span></code></pre>
-<h4 id="blk-43080">List Agents</h4>
+<h4 id="blk-43796">List Agents</h4>
 <pre data-lang="bash"><code>curl <span class="t-string">&quot;$SUPABASE_URL/rest/v1/agents?select=*&quot;</span> \
  <span class="t-flag"> -H</span> <span class="t-string">&quot;Authorization: Bearer $TOKEN&quot;</span></code></pre>
 <p>RLS ensures only the authenticated user's agents are returned.</p>
-<h4 id="blk-43083">Disable Agent</h4>
+<h4 id="blk-43799">Disable Agent</h4>
 <pre data-lang="bash"><code>curl<span class="t-flag"> -X</span> POST <span class="t-string">&quot;$SUPABASE_URL/rest/v1/rpc/disable_agent&quot;</span> \
  <span class="t-flag"> -H</span> <span class="t-string">&quot;Authorization: Bearer $TOKEN&quot;</span> \
  <span class="t-flag"> -d</span> <span class="t-string">'{ &quot;agent_id&quot;: &quot;&lt;uuid&gt;&quot; }'</span></code></pre>
 <p>Sets status to <code>disabled</code>. All invocations will be rejected until re-enabled.</p>
-<h4 id="blk-43086">Delete Agent (Soft)</h4>
+<h4 id="blk-43802">Delete Agent (Soft)</h4>
 <pre data-lang="bash"><code>curl<span class="t-flag"> -X</span> POST <span class="t-string">&quot;$SUPABASE_URL/rest/v1/rpc/delete_agent&quot;</span> \
  <span class="t-flag"> -H</span> <span class="t-string">&quot;Authorization: Bearer $TOKEN&quot;</span> \
  <span class="t-flag"> -d</span> <span class="t-string">'{ &quot;agent_id&quot;: &quot;&lt;uuid&gt;&quot; }'</span></code></pre>
 <p>Soft-deletes the agent. Provider resources should be revoked where possible.</p>
-<h3 id="blk-43089">Provider Config</h3>
+<h3 id="blk-43805">Provider Config</h3>
 <p>The <code>provider_config</code> JSONB field holds runtime-specific settings:</p>
 <p><strong>Cloudflare:</strong></p>
 <pre data-lang="json"><code>{
@@ -84,14 +85,14 @@
   <span class="t-key">&quot;idle_timeout_seconds&quot;</span>: <span class="t-num">300</span>,
   <span class="t-key">&quot;network_mode&quot;</span>: <span class="t-string">&quot;egress_only&quot;</span>
 }</code></pre>
-<h3 id="blk-43095">RLS Isolation</h3>
+<h3 id="blk-43811">RLS Isolation</h3>
 <p>Every query against the <code>agents</code> table is filtered by:</p>
 <pre data-lang="sql"><code>auth.uid() = user_id</code></pre>
 <ul><li><p>Users can only see, update, and delete their own agents.</p></li><li><p>The <code>user_id</code> field is set automatically from <code>auth.uid()</code> on creation.</p></li><li><p>No admin bypass exists in MVP.</p></li></ul>
-<h3 id="blk-43105">Checklist</h3>
+<h3 id="blk-43821">Checklist</h3>
 <ul><li><p>[ ] Agent name is unique within the user's namespace</p></li><li><p>[ ] <code>runtime_provider</code> matches the user's tier (AgentCore requires paid tier)</p></li><li><p>[ ] Secret key names in <code>env_var_keys</code> have corresponding Vault entries</p></li><li><p>[ ] Status transitions follow the state machine (no skipping states)</p></li><li><p>[ ] RLS policy is active on the <code>agents</code> table</p></li><li><p>[ ] Soft-delete revokes provider resources where feasible</p></li></ul></div>
 <p class="src"><a href="/#/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-43017" class="lvl2">What Is an Agent?</a><a href="#blk-43019" class="lvl2">Agent Fields</a><a href="#blk-43053" class="lvl2">Status State Machine</a><a href="#blk-43075" class="lvl2">CRUD Operations</a><a href="#blk-43076" class="lvl3">Create Agent</a><a href="#blk-43078" class="lvl3">Update Agent</a><a href="#blk-43080" class="lvl3">List Agents</a><a href="#blk-43083" class="lvl3">Disable Agent</a><a href="#blk-43086" class="lvl3">Delete Agent (Soft)</a><a href="#blk-43089" class="lvl2">Provider Config</a><a href="#blk-43095" class="lvl2">RLS Isolation</a><a href="#blk-43105" class="lvl2">Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/">02 — Deployment Pipeline</a><a href="/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/">03 — Invocation Gateway</a><a href="/WebHost.Systems/docs/skills/04_RUNTIME_PROVIDERS.md/">04 — Runtime Providers</a><a href="/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/">05 — Telemetry and Metrics</a><a href="/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/">06 — Billing and Limits</a><a href="/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/">07 — Security and Secrets</a><a href="/WebHost.Systems/docs/skills/08_AMPERSAND_INTEGRATION.md/">08 — [&amp;] Protocol Integration</a><a href="/WebHost.Systems/docs/skills/09_ANTI_PATTERNS.md/">09 — Anti-Patterns</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieranrejvbq6a3kzc3x77tq3gplopvwrvzyzk7bcijeqocefb2a7xboq</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-43733" class="lvl2">What Is an Agent?</a><a href="#blk-43735" class="lvl2">Agent Fields</a><a href="#blk-43769" class="lvl2">Status State Machine</a><a href="#blk-43791" class="lvl2">CRUD Operations</a><a href="#blk-43792" class="lvl3">Create Agent</a><a href="#blk-43794" class="lvl3">Update Agent</a><a href="#blk-43796" class="lvl3">List Agents</a><a href="#blk-43799" class="lvl3">Disable Agent</a><a href="#blk-43802" class="lvl3">Delete Agent (Soft)</a><a href="#blk-43805" class="lvl2">Provider Config</a><a href="#blk-43811" class="lvl2">RLS Isolation</a><a href="#blk-43821" class="lvl2">Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/">02 — Deployment Pipeline</a><a href="/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/">03 — Invocation Gateway</a><a href="/WebHost.Systems/docs/skills/04_RUNTIME_PROVIDERS.md/">04 — Runtime Providers</a><a href="/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/">05 — Telemetry and Metrics</a><a href="/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/">06 — Billing and Limits</a><a href="/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/">07 — Security and Secrets</a><a href="/WebHost.Systems/docs/skills/08_AMPERSAND_INTEGRATION.md/">08 — [&amp;] Protocol Integration</a><a href="/WebHost.Systems/docs/skills/09_ANTI_PATTERNS.md/">09 — Anti-Patterns</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera5ooreg5hwnycf7kd72hhlncptto4m3gf2ngrykb5rwwqcwiutgoq</div></div></div>
 </div></div>
 </body></html>

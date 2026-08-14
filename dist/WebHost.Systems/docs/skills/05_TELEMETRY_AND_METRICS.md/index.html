@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>05 — Telemetry and Metrics · WebHost.Systems · Ampersand Box</title>
 <meta name="description" content="Unauthenticated telemetry events are rejected. Two authentication methods are supported:">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"05 — Telemetry and Metrics","name":"05 — Telemetry and Metrics","description":"Unauthenticated telemetry events are rejected. Two authentication methods are supported:","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/","identifier":"bagaaierasodock4xfi6aymedebldka7ltkrkubpipki3rgswd2tswd4syhxa","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Telemetry Flow"},{"@type":"WebPageElement","name":"Metrics Event Schema"},{"@type":"WebPageElement","name":"Telemetry Authentication"},{"@type":"WebPageElement","name":"Option A: HMAC Signature"},{"@type":"WebPageElement","name":"Option B: Signed JWT"},{"@type":"WebPageElement","name":"Ingestion Endpoint"},{"@type":"WebPageElement","name":"Aggregation via pg_cron"},{"@type":"WebPageElement","name":"Time-Series Queries"},{"@type":"WebPageElement","name":"Checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/"},{"@type":"ListItem","position":5,"name":"05_TELEMETRY_AND_METRICS.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"05 — Telemetry and Metrics","name":"05 — Telemetry and Metrics","description":"Unauthenticated telemetry events are rejected. Two authentication methods are supported:","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/","identifier":"bagaaieramctu42maiy5zlbhfwz6om6w24dg6ovje2ix3bffo2nvmsaupiw6a","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Telemetry Flow"},{"@type":"WebPageElement","name":"Metrics Event Schema"},{"@type":"WebPageElement","name":"Telemetry Authentication"},{"@type":"WebPageElement","name":"Option A: HMAC Signature"},{"@type":"WebPageElement","name":"Option B: Signed JWT"},{"@type":"WebPageElement","name":"Ingestion Endpoint"},{"@type":"WebPageElement","name":"Aggregation via pg_cron"},{"@type":"WebPageElement","name":"Time-Series Queries"},{"@type":"WebPageElement","name":"Checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/"},{"@type":"ListItem","position":5,"name":"05_TELEMETRY_AND_METRICS.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,9 +23,9 @@
 
 </div></div>
 <div class="lead">Unauthenticated telemetry events are rejected. Two authentication methods are supported:</div>
-<div class="prose"><h1 id="blk-43456">05 — Telemetry and Metrics</h1>
+<div class="prose"><h1 id="blk-44172">05 — Telemetry and Metrics</h1>
 <blockquote><p><strong>Purpose:</strong> How telemetry events flow from the data plane to the control plane, the metrics schema, authentication (HMAC/signed JWT), ingestion, aggregation into billing_usage, and time-series queries.</p></blockquote>
-<h3 id="blk-43459">Telemetry Flow</h3>
+<h3 id="blk-44175">Telemetry Flow</h3>
 <pre><code>Data Plane (Worker/DO or AgentCore)
   |
   | POST /functions/v1/metrics/report (HMAC-signed)
@@ -44,19 +45,19 @@ billing_usage table
   |
   v
 Dashboard / Limit Checks</code></pre>
-<h3 id="blk-43461">Metrics Event Schema</h3>
+<h3 id="blk-44177">Metrics Event Schema</h3>
 <table><thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>id</code></td><td>UUID</td><td>Auto-generated</td></tr><tr><td><code>user_id</code></td><td>UUID</td><td>Event owner</td></tr><tr><td><code>agent_id</code></td><td>UUID</td><td>Agent that was invoked</td></tr><tr><td><code>deployment_id</code></td><td>UUID</td><td>Specific deployment version</td></tr><tr><td><code>runtime_provider</code></td><td>enum</td><td><code>cloudflare</code> or <code>agentcore</code></td></tr><tr><td><code>timestamp_ms</code></td><td>bigint</td><td>Unix ms when invocation occurred</td></tr><tr><td><code>requests</code></td><td>int</td><td>Always 1 per event</td></tr><tr><td><code>llm_tokens</code></td><td>int</td><td>Token count (actual or estimated)</td></tr><tr><td><code>compute_ms</code></td><td>int</td><td>Wall-clock execution time</td></tr><tr><td><code>errors</code></td><td>int</td><td>0 or 1</td></tr><tr><td><code>error_class</code></td><td>string?</td><td>Error category if errors &gt; 0</td></tr><tr><td><code>provider_details</code></td><td>JSONB</td><td>Provider-specific metadata</td></tr><tr><td><code>cost_usd_estimated</code></td><td>numeric</td><td>Estimated cost in USD</td></tr><tr><td><code>trace_id</code></td><td>string</td><td>Correlation ID for tracing</td></tr></tbody></table>
-<h3 id="blk-43508">Telemetry Authentication</h3>
+<h3 id="blk-44224">Telemetry Authentication</h3>
 <p>Unauthenticated telemetry events are <strong>rejected</strong>. Two authentication methods are supported:</p>
-<h4 id="blk-43510">Option A: HMAC Signature</h4>
+<h4 id="blk-44226">Option A: HMAC Signature</h4>
 <p>A per-deployment HMAC key is generated at deploy time, stored in Supabase Vault, and injected into the runtime as an environment variable.</p>
 <pre><code>X-Telemetry-Signature: sha256=&lt;hmac-hex&gt;
 X-Telemetry-Timestamp: &lt;unix-ms&gt;</code></pre>
 <p>The ingestion endpoint verifies:</p>
 <ol><li><p>Timestamp is within 5-minute window (anti-replay)</p></li><li><p>HMAC matches <code>HMAC-SHA256(key, timestamp + body)</code></p></li></ol>
-<h4 id="blk-43519">Option B: Signed JWT</h4>
+<h4 id="blk-44235">Option B: Signed JWT</h4>
 <p>The control plane mints a short-lived JWT at deploy time, embedded in the runtime config. The ingestion endpoint validates the JWT signature and claims.</p>
-<h3 id="blk-43521">Ingestion Endpoint</h3>
+<h3 id="blk-44237">Ingestion Endpoint</h3>
 <pre><code>POST /functions/v1/metrics/report
 Content-Type: application/json
 X-Telemetry-Signature: sha256=&lt;hmac&gt;
@@ -76,7 +77,7 @@ X-Telemetry-Timestamp: 1706832000000
   &quot;trace_id&quot;: &quot;tr_abc123&quot;
 }</code></pre>
 <p>The Edge Function validates the signature, then inserts into <code>metrics_events</code>. Attribution fields (<code>agent_id</code>, <code>deployment_id</code>, <code>user_id</code>) are verified against the deployment record to prevent spoofing.</p>
-<h3 id="blk-43524">Aggregation via pg_cron</h3>
+<h3 id="blk-44240">Aggregation via pg_cron</h3>
 <p>A scheduled PostgreSQL job runs periodically (e.g., every 5 minutes) to aggregate raw events into <code>billing_usage</code>:</p>
 <pre data-lang="sql"><code>INSERT INTO billing_usage (user_id, period_key,
   total_requests, total_tokens, total_compute_ms, total_cost_usd_estimated)
@@ -96,7 +97,7 @@ ON CONFLICT (user_id, period_key) DO UPDATE SET
   total_compute_ms = billing_usage.total_compute_ms + EXCLUDED.total_compute_ms,
   total_cost_usd_estimated = billing_usage.total_cost_usd_estimated + EXCLUDED.total_cost_usd_estimated,
   updated_at = now();</code></pre>
-<h3 id="blk-43527">Time-Series Queries</h3>
+<h3 id="blk-44243">Time-Series Queries</h3>
 <p>The dashboard queries <code>metrics_events</code> for time-series visualization:</p>
 <pre data-lang="sql"><code>SELECT
   date_trunc('hour', to_timestamp(timestamp_ms / 1000)) AS bucket,
@@ -110,10 +111,10 @@ WHERE agent_id = $1
 GROUP BY bucket
 ORDER BY bucket;</code></pre>
 <p>Supported windows: 1h, 6h, 24h, 7d, 30d.</p>
-<h3 id="blk-43531">Checklist</h3>
+<h3 id="blk-44247">Checklist</h3>
 <ul><li><p>[ ] Every invocation emits exactly one telemetry event</p></li><li><p>[ ] Telemetry endpoint rejects unauthenticated events</p></li><li><p>[ ] HMAC key is generated per deployment and stored in Vault</p></li><li><p>[ ] Timestamp anti-replay window is enforced (5 minutes)</p></li><li><p>[ ] Attribution fields are verified against deployment records</p></li><li><p>[ ] pg_cron aggregation runs on schedule</p></li><li><p>[ ] billing_usage is updated incrementally (not full recompute)</p></li><li><p>[ ] Time-series queries use indexed columns (<code>agent_id</code>, <code>timestamp_ms</code>)</p></li><li><p>[ ] <code>cost_usd_estimated</code> uses provider-specific calculators</p></li></ul></div>
 <p class="src"><a href="/#/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-43459" class="lvl2">Telemetry Flow</a><a href="#blk-43461" class="lvl2">Metrics Event Schema</a><a href="#blk-43508" class="lvl2">Telemetry Authentication</a><a href="#blk-43510" class="lvl3">Option A: HMAC Signature</a><a href="#blk-43519" class="lvl3">Option B: Signed JWT</a><a href="#blk-43521" class="lvl2">Ingestion Endpoint</a><a href="#blk-43524" class="lvl2">Aggregation via pg_cron</a><a href="#blk-43527" class="lvl2">Time-Series Queries</a><a href="#blk-43531" class="lvl2">Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/">01 — Agent Management</a><a href="/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/">02 — Deployment Pipeline</a><a href="/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/">03 — Invocation Gateway</a><a href="/WebHost.Systems/docs/skills/04_RUNTIME_PROVIDERS.md/">04 — Runtime Providers</a><a href="/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/">06 — Billing and Limits</a><a href="/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/">07 — Security and Secrets</a><a href="/WebHost.Systems/docs/skills/08_AMPERSAND_INTEGRATION.md/">08 — [&amp;] Protocol Integration</a><a href="/WebHost.Systems/docs/skills/09_ANTI_PATTERNS.md/">09 — Anti-Patterns</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierasodock4xfi6aymedebldka7ltkrkubpipki3rgswd2tswd4syhxa</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-44175" class="lvl2">Telemetry Flow</a><a href="#blk-44177" class="lvl2">Metrics Event Schema</a><a href="#blk-44224" class="lvl2">Telemetry Authentication</a><a href="#blk-44226" class="lvl3">Option A: HMAC Signature</a><a href="#blk-44235" class="lvl3">Option B: Signed JWT</a><a href="#blk-44237" class="lvl2">Ingestion Endpoint</a><a href="#blk-44240" class="lvl2">Aggregation via pg_cron</a><a href="#blk-44243" class="lvl2">Time-Series Queries</a><a href="#blk-44247" class="lvl2">Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/">01 — Agent Management</a><a href="/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/">02 — Deployment Pipeline</a><a href="/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/">03 — Invocation Gateway</a><a href="/WebHost.Systems/docs/skills/04_RUNTIME_PROVIDERS.md/">04 — Runtime Providers</a><a href="/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/">06 — Billing and Limits</a><a href="/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/">07 — Security and Secrets</a><a href="/WebHost.Systems/docs/skills/08_AMPERSAND_INTEGRATION.md/">08 — [&amp;] Protocol Integration</a><a href="/WebHost.Systems/docs/skills/09_ANTI_PATTERNS.md/">09 — Anti-Patterns</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieramctu42maiy5zlbhfwz6om6w24dg6ovje2ix3bffo2nvmsaupiw6a</div></div></div>
 </div></div>
 </body></html>

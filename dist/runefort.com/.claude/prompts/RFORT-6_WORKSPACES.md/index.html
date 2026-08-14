@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>RFort-6: Workspace Switcher + Supabase Persistence · runefort.com · Ampersand Box</title>
 <meta name="description" content="Connect RuneFort to the shared Supabase workspace system (amp.workspaces). Each workspace has its own district of forts. Switching workspace reloads the…">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-6_WORKSPACES.md/">
@@ -13,7 +13,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"RFort-6: Workspace Switcher + Supabase Persistence","name":"RFort-6: Workspace Switcher + Supabase Persistence","description":"Connect RuneFort to the shared Supabase workspace system (amp.workspaces). Each workspace has its own district of forts. Switching workspace reloads the…","url":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-6_WORKSPACES.md/","identifier":"bagaaierae5zv4jf32xho6bllxeytgyadj3nedwmjucc4zuvqikqvcgo6xqiq","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"runefort.com","url":"https://docs.ampersandboxdesign.com/runefort.com/"},"articleSection":"runefort.com","hasPart":[{"@type":"WebPageElement","name":"Goal"},{"@type":"WebPageElement","name":"Prerequisites"},{"@type":"WebPageElement","name":"Files to Create"},{"@type":"WebPageElement","name":"src/lib/play/workspaces.js"},{"@type":"WebPageElement","name":"src/lib/stores/workspace.svelte.js"},{"@type":"WebPageElement","name":"src/components/app/WorkspaceSwitcher.svelte"},{"@type":"WebPageElement","name":"Supabase RPC (migration)"},{"@type":"WebPageElement","name":"Integration Points"},{"@type":"WebPageElement","name":"Constraints"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"runefort.com","item":"https://docs.ampersandboxdesign.com/runefort.com/"},{"@type":"ListItem","position":3,"name":".claude","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/"},{"@type":"ListItem","position":4,"name":"prompts","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/"},{"@type":"ListItem","position":5,"name":"RFORT-6_WORKSPACES.md","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-6_WORKSPACES.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"RFort-6: Workspace Switcher + Supabase Persistence","name":"RFort-6: Workspace Switcher + Supabase Persistence","description":"Connect RuneFort to the shared Supabase workspace system (amp.workspaces). Each workspace has its own district of forts. Switching workspace reloads the…","url":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-6_WORKSPACES.md/","identifier":"bagaaierapkecqhkhtu3thkna2fd73aq26h2kkmc6hblrljiwwih6uoyurlqq","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"runefort.com","url":"https://docs.ampersandboxdesign.com/runefort.com/"},"articleSection":"runefort.com","hasPart":[{"@type":"WebPageElement","name":"Goal"},{"@type":"WebPageElement","name":"Prerequisites"},{"@type":"WebPageElement","name":"Files to Create"},{"@type":"WebPageElement","name":"src/lib/play/workspaces.js"},{"@type":"WebPageElement","name":"src/lib/stores/workspace.svelte.js"},{"@type":"WebPageElement","name":"src/components/app/WorkspaceSwitcher.svelte"},{"@type":"WebPageElement","name":"Supabase RPC (migration)"},{"@type":"WebPageElement","name":"Integration Points"},{"@type":"WebPageElement","name":"Constraints"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"runefort.com","item":"https://docs.ampersandboxdesign.com/runefort.com/"},{"@type":"ListItem","position":3,"name":".claude","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/"},{"@type":"ListItem","position":4,"name":"prompts","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/"},{"@type":"ListItem","position":5,"name":"RFORT-6_WORKSPACES.md","item":"https://docs.ampersandboxdesign.com/runefort.com/.claude/prompts/RFORT-6_WORKSPACES.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -23,13 +24,13 @@
 
 </div></div>
 <div class="lead">Connect RuneFort to the shared Supabase workspace system (amp.workspaces). Each workspace has its own district of forts. Switching workspace reloads the fort view from Supabase.</div>
-<div class="prose"><h1 id="blk-83216">RFort-6: Workspace Switcher + Supabase Persistence</h1>
-<h3 id="blk-83217">Goal</h3>
+<div class="prose"><h1 id="blk-84044">RFort-6: Workspace Switcher + Supabase Persistence</h1>
+<h3 id="blk-84045">Goal</h3>
 <p>Connect RuneFort to the shared Supabase workspace system (<code>amp.workspaces</code>). Each workspace has its own district of forts. Switching workspace reloads the fort view from Supabase.</p>
-<h3 id="blk-83219">Prerequisites</h3>
+<h3 id="blk-84047">Prerequisites</h3>
 <ul><li><p>RFort-1 (BYOK) — not required</p></li><li><p>Auth system already exists (<code>src/lib/stores/auth.svelte.js</code>, <code>src/components/app/AuthModal.svelte</code>)</p></li><li><p>Supabase client exists (<code>src/lib/supabase.js</code>) targeting <code>rune</code> schema</p></li><li><p>Persistence layer exists (<code>src/lib/persistence.js</code>) with CRUD for <code>rune.forts</code> and <code>rune.views</code></p></li><li><p>Migrations exist: <code>ampersand-supabase/migrations/090_rune_schema.sql</code> (forts, views, bridges, districts tables), <code>091_rune_rls.sql</code> (RLS policies using <code>amp.is_workspace_member()</code>)</p></li></ul>
-<h3 id="blk-83231">Files to Create</h3>
-<h4 id="blk-83232"><code>src/lib/play/workspaces.js</code></h4>
+<h3 id="blk-84059">Files to Create</h3>
+<h4 id="blk-84060"><code>src/lib/play/workspaces.js</code></h4>
 <p>Workspace loader using Supabase:</p>
 <pre data-lang="js"><code><span class="t-kw">import</span> { getSupabase } <span class="t-kw">from</span> <span class="t-string">'$lib/supabase.js'</span>;
 
@@ -65,7 +66,7 @@
     .<span class="t-fn">eq</span>(<span class="t-string">'workspace_id'</span>, workspaceId);
   <span class="t-kw">return</span> data || [];
 }</code></pre>
-<h4 id="blk-83235"><code>src/lib/stores/workspace.svelte.js</code></h4>
+<h4 id="blk-84063"><code>src/lib/stores/workspace.svelte.js</code></h4>
 <p>Svelte 5 rune store:</p>
 <pre data-lang="js"><code><span class="t-kw">let</span> _workspaces = <span class="t-fn">$state</span>([]);
 <span class="t-kw">let</span> _activeWorkspace = <span class="t-fn">$state</span>(<span class="t-kw">null</span>);
@@ -87,10 +88,10 @@
   _forts = <span class="t-kw">await</span> <span class="t-fn">loadWorkspaceForts</span>(workspaceId);
   <span class="t-comment">// Trigger fort store to rebuild district from workspace forts</span>
 }</code></pre>
-<h4 id="blk-83238"><code>src/components/app/WorkspaceSwitcher.svelte</code></h4>
+<h4 id="blk-84066"><code>src/components/app/WorkspaceSwitcher.svelte</code></h4>
 <p>Dropdown in the toolbar:</p>
 <ul><li><p>Shows current workspace name</p></li><li><p>Dropdown lists all workspaces with fort counts</p></li><li><p>&quot;Demo&quot; option always available (loads demo manifests, no auth required)</p></li><li><p>Switching workspace triggers <code>switchWorkspace()</code> which reloads forts</p></li></ul>
-<h4 id="blk-83249">Supabase RPC (migration)</h4>
+<h4 id="blk-84077">Supabase RPC (migration)</h4>
 <p>If <code>amp.list_my_workspaces()</code> doesn't exist yet, create: <code>ampersand-supabase/migrations/092_rune_workspace_rpc.sql</code>:</p>
 <pre data-lang="sql"><code>-- RPC to list workspaces the current user is a member of
 -- This may already exist in amp schema; check first
@@ -108,12 +109,12 @@ AS $$
 $$;
 
 GRANT EXECUTE ON FUNCTION rune.list_my_workspaces() TO authenticated;</code></pre>
-<h3 id="blk-83252">Integration Points</h3>
+<h3 id="blk-84080">Integration Points</h3>
 <ol><li><p><strong>Toolbar</strong>: Replace static &quot;RuneFort&quot; brand text with <code>WorkspaceSwitcher</code> dropdown when authenticated</p></li><li><p><strong>Auth flow</strong>: After sign-in, call <code>initWorkspaces()</code> to load the user's workspaces</p></li><li><p><strong>Fort store</strong>: Add <code>loadWorkspaceDistrict(forts)</code> that converts saved forts into an L0 district view</p></li><li><p><strong>Save flow</strong>: When saving a fort, include <code>workspace_id</code> from active workspace</p></li><li><p><strong>BlueprintList</strong>: Filter by active workspace</p></li></ol>
-<h3 id="blk-83264">Constraints</h3>
+<h3 id="blk-84092">Constraints</h3>
 <ul><li><p>Unauthenticated users see demo forts only (the existing DEMO_MANIFESTS)</p></li><li><p>Workspace data comes from <code>amp.workspaces</code> + <code>amp.members</code> (shared schema)</p></li><li><p>Fort data comes from <code>rune.forts</code> (product schema)</p></li><li><p>RLS already handles access control — no client-side filtering needed</p></li><li><p>Check if <code>amp.list_my_workspaces()</code> or equivalent already exists before creating migration</p></li></ul></div>
 <p class="src"><a href="/#/runefort.com/.claude/prompts/RFORT-6_WORKSPACES.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-83217" class="lvl2">Goal</a><a href="#blk-83219" class="lvl2">Prerequisites</a><a href="#blk-83231" class="lvl2">Files to Create</a><a href="#blk-83232" class="lvl3">src/lib/play/workspaces.js</a><a href="#blk-83235" class="lvl3">src/lib/stores/workspace.svelte.js</a><a href="#blk-83238" class="lvl3">src/components/app/WorkspaceSwitcher.svelte</a><a href="#blk-83249" class="lvl3">Supabase RPC (migration)</a><a href="#blk-83252" class="lvl2">Integration Points</a><a href="#blk-83264" class="lvl2">Constraints</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a></div><div class="card"><div class="lab">in this folder</div><a href="/runefort.com/.claude/prompts/RFORT-1_BYOK.md/">RFort-1: BYOK Modal + OpenRouter Key Storage</a><a href="/runefort.com/.claude/prompts/RFORT-2_MCP.md/">RFort-2: MCP Proxy + Client + Connection Panel</a><a href="/runefort.com/.claude/prompts/RFORT-3_CHAT.md/">RFort-3: Chat Panel with Fort-Aware Navigation</a><a href="/runefort.com/.claude/prompts/RFORT-4_TOKENFLOWS.md/">RFort-4: Token Flow Animations on Edges</a><a href="/runefort.com/.claude/prompts/RFORT-5_REPO_IMPORT.md/">RFort-5: Repo Import → Fort Generator</a><a href="/runefort.com/.claude/prompts/RFORT-BUILD-ORDER.md/">RuneFort Interactive Layer — Build Order</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierae5zv4jf32xho6bllxeytgyadj3nedwmjucc4zuvqikqvcgo6xqiq</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-84045" class="lvl2">Goal</a><a href="#blk-84047" class="lvl2">Prerequisites</a><a href="#blk-84059" class="lvl2">Files to Create</a><a href="#blk-84060" class="lvl3">src/lib/play/workspaces.js</a><a href="#blk-84063" class="lvl3">src/lib/stores/workspace.svelte.js</a><a href="#blk-84066" class="lvl3">src/components/app/WorkspaceSwitcher.svelte</a><a href="#blk-84077" class="lvl3">Supabase RPC (migration)</a><a href="#blk-84080" class="lvl2">Integration Points</a><a href="#blk-84092" class="lvl2">Constraints</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a></div><div class="card"><div class="lab">in this folder</div><a href="/runefort.com/.claude/prompts/RFORT-1_BYOK.md/">RFort-1: BYOK Modal + OpenRouter Key Storage</a><a href="/runefort.com/.claude/prompts/RFORT-2_MCP.md/">RFort-2: MCP Proxy + Client + Connection Panel</a><a href="/runefort.com/.claude/prompts/RFORT-3_CHAT.md/">RFort-3: Chat Panel with Fort-Aware Navigation</a><a href="/runefort.com/.claude/prompts/RFORT-4_TOKENFLOWS.md/">RFort-4: Token Flow Animations on Edges</a><a href="/runefort.com/.claude/prompts/RFORT-5_REPO_IMPORT.md/">RFort-5: Repo Import → Fort Generator</a><a href="/runefort.com/.claude/prompts/RFORT-BUILD-ORDER.md/">RuneFort Interactive Layer — Build Order</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierapkecqhkhtu3thkna2fd73aq26h2kkmc6hblrljiwwih6uoyurlqq</div></div></div>
 </div></div>
 </body></html>

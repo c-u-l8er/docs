@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>SpecPrompt — Implementation Build Prompt · specprompt.com · Ampersand Box</title>
 <meta name="description" content="Version: 1.0 | Date: April 2026 | Type: Full Implementation (CLI + MCP + Supabase)">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/specprompt.com/prompts/BUILD.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"SpecPrompt — Implementation Build Prompt","name":"SpecPrompt — Implementation Build Prompt","description":"Version: 1.0 | Date: April 2026 | Type: Full Implementation (CLI + MCP + Supabase)","url":"https://docs.ampersandboxdesign.com/specprompt.com/prompts/BUILD.md/","identifier":"bagaaieracyuxco4bheo2ktmrcvdggqcd3nqbc4cpmcnnwupg5vzusbuvwjja","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"specprompt.com","url":"https://docs.ampersandboxdesign.com/specprompt.com/"},"articleSection":"specprompt.com","hasPart":[{"@type":"WebPageElement","name":"Your Mission"},{"@type":"WebPageElement","name":"Target Stack"},{"@type":"WebPageElement","name":"Dual-Mode Architecture"},{"@type":"WebPageElement","name":"Filesystem Mode (default, zero-cost)"},{"@type":"WebPageElement","name":"Registry Mode (multi-tenant dark factory)"},{"@type":"WebPageElement","name":"Repository Structure"},{"@type":"WebPageElement","name":"Implementation Order"},{"@type":"WebPageElement","name":"Phase 1: Parser + Validator (week 1)"},{"@type":"WebPageElement","name":"Phase 2: Test Compilation (week 2)"},{"@type":"WebPageElement","name":"Phase 3: MCP Server (week 3)"},{"@type":"WebPageElement","name":"Phase 4: Supabase Migration (week 3)"},{"@type":"WebPageElement","name":"Phase 5: Pipeline Triggers (week 4)"},{"@type":"WebPageElement","name":"Phase 6: TypeScript Parser (week 4)"},{"@type":"WebPageElement","name":"Key Constraints"},{"@type":"WebPageElement","name":"Integration Points"},{"@type":"WebPageElement","name":"Success Criteria"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"specprompt.com","item":"https://docs.ampersandboxdesign.com/specprompt.com/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/specprompt.com/prompts/"},{"@type":"ListItem","position":4,"name":"BUILD.md","item":"https://docs.ampersandboxdesign.com/specprompt.com/prompts/BUILD.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"SpecPrompt — Implementation Build Prompt","name":"SpecPrompt — Implementation Build Prompt","description":"Version: 1.0 | Date: April 2026 | Type: Full Implementation (CLI + MCP + Supabase)","url":"https://docs.ampersandboxdesign.com/specprompt.com/prompts/BUILD.md/","identifier":"bagaaieran52d5q6hgjpfz7jzen4rh4uhlxfah6e274gpblzvbi6pxzq3rl4q","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"specprompt.com","url":"https://docs.ampersandboxdesign.com/specprompt.com/"},"articleSection":"specprompt.com","hasPart":[{"@type":"WebPageElement","name":"Your Mission"},{"@type":"WebPageElement","name":"Target Stack"},{"@type":"WebPageElement","name":"Dual-Mode Architecture"},{"@type":"WebPageElement","name":"Filesystem Mode (default, zero-cost)"},{"@type":"WebPageElement","name":"Registry Mode (multi-tenant dark factory)"},{"@type":"WebPageElement","name":"Repository Structure"},{"@type":"WebPageElement","name":"Implementation Order"},{"@type":"WebPageElement","name":"Phase 1: Parser + Validator (week 1)"},{"@type":"WebPageElement","name":"Phase 2: Test Compilation (week 2)"},{"@type":"WebPageElement","name":"Phase 3: MCP Server (week 3)"},{"@type":"WebPageElement","name":"Phase 4: Supabase Migration (week 3)"},{"@type":"WebPageElement","name":"Phase 5: Pipeline Triggers (week 4)"},{"@type":"WebPageElement","name":"Phase 6: TypeScript Parser (week 4)"},{"@type":"WebPageElement","name":"Key Constraints"},{"@type":"WebPageElement","name":"Integration Points"},{"@type":"WebPageElement","name":"Success Criteria"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"specprompt.com","item":"https://docs.ampersandboxdesign.com/specprompt.com/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/specprompt.com/prompts/"},{"@type":"ListItem","position":4,"name":"BUILD.md","item":"https://docs.ampersandboxdesign.com/specprompt.com/prompts/BUILD.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,14 +23,14 @@
 
 </div></div>
 <div class="lead">Version: 1.0 | Date: April 2026 | Type: Full Implementation (CLI + MCP + Supabase)</div>
-<div class="prose"><h1 id="blk-84888">SpecPrompt — Implementation Build Prompt</h1>
+<div class="prose"><h1 id="blk-85716">SpecPrompt — Implementation Build Prompt</h1>
 <p><strong>Version:</strong> 1.0 | <strong>Date:</strong> April 2026 | <strong>Type:</strong> Full Implementation (CLI + MCP + Supabase)</p>
-<h3 id="blk-84890">Your Mission</h3>
+<h3 id="blk-85718">Your Mission</h3>
 <p>You are building <strong>SpecPrompt</strong> — the standards layer of the [&amp;] Protocol dark factory pipeline. SpecPrompt defines the SPEC.md format (machine-parseable agent specifications) and provides the CLI toolchain, MCP server, and Supabase registry that make specs the entry point for autonomous code generation.</p>
 <p><strong>Read `docs/spec/README.md` fully before writing a single line.</strong> It is the authoritative spec.</p>
 <p>SpecPrompt is the <strong>first stage</strong> of the dark factory pipeline:</p>
 <pre><code>SpecPrompt (spec in) → Agentelic (build) → OS-008 (enforce) → FleetPrompt (distribute) → RuneFort (observe)</code></pre>
-<h3 id="blk-84895">Target Stack</h3>
+<h3 id="blk-85723">Target Stack</h3>
 <pre><code>Language:   Elixir 1.17+ / OTP 27
 CLI:        Mix escript (specprompt validate, lint, test-gen, test-compile, diff, publish)
 MCP:        JSON-RPC over HTTP (spec_validate, spec_lint, spec_generate, spec_test_gen,
@@ -39,13 +40,13 @@ Auth:       Supabase Auth (shared [&amp;] ecosystem — amp.profiles, amp.worksp
 Parser:     PEG grammar (see spec section 4.4) — implement in both Elixir and TypeScript
 Testing:    ExUnit (Elixir), Vitest (TypeScript parser)
 Deploy:     Fly.io (MCP server) + npm (TypeScript parser)</code></pre>
-<h3 id="blk-84897">Dual-Mode Architecture</h3>
+<h3 id="blk-85725">Dual-Mode Architecture</h3>
 <p>SpecPrompt operates in two modes. Both must work from day one:</p>
-<h4 id="blk-84899">Filesystem Mode (default, zero-cost)</h4>
+<h4 id="blk-85727">Filesystem Mode (default, zero-cost)</h4>
 <ul><li><p>CLI reads <code>.md</code> files from local git repos</p></li><li><p>No auth, no database, no network</p></li><li><p>All tools work offline: validate, lint, test-gen, test-compile, diff</p></li><li><p>Audit via git history</p></li><li><p>This is the &quot;PULSE scales down&quot; demonstration</p></li></ul>
-<h4 id="blk-84911">Registry Mode (multi-tenant dark factory)</h4>
+<h4 id="blk-85739">Registry Mode (multi-tenant dark factory)</h4>
 <ul><li><p>Specs stored in Supabase <code>spec.specs</code> table</p></li><li><p>Workspace-scoped via <code>amp.workspaces</code></p></li><li><p>Auth via Supabase Auth (same identity as all [&amp;] products)</p></li><li><p>Visibility: private | workspace | public</p></li><li><p>Pipeline triggers via Supabase Realtime or CloudEvents webhooks</p></li><li><p>Required for dark factory automation</p></li></ul>
-<h3 id="blk-84925">Repository Structure</h3>
+<h3 id="blk-85753">Repository Structure</h3>
 <p>Create this structure inside <code>specprompt.com/</code>:</p>
 <pre><code>specprompt.com/
 ├── lib/
@@ -95,8 +96,8 @@ Deploy:     Fly.io (MCP server) + npm (TypeScript parser)</code></pre>
 ├── mix.exs
 ├── Dockerfile
 └── fly.toml</code></pre>
-<h3 id="blk-84928">Implementation Order</h3>
-<h4 id="blk-84929">Phase 1: Parser + Validator (week 1)</h4>
+<h3 id="blk-85756">Implementation Order</h3>
+<h4 id="blk-85757">Phase 1: Parser + Validator (week 1)</h4>
 <ol><li><p><strong>Implement PEG parser</strong> (<code>lib/specprompt/parser.ex</code>)</p></li></ol>
 <ul><li><p>Parse YAML frontmatter (all fields from spec section 4.5, including new <code>workspace_id</code>, <code>visibility</code>, <code>source_hash</code>)</p></li><li><p>Parse H2 sections: Purpose, Capabilities, Constraints, Acceptance Tests, Architecture, Dependencies, Changelog</p></li><li><p>Extract structured data into <code>SpecPrompt.Spec</code> schema</p></li><li><p>Compute <code>source_hash</code> (SHA-256 of raw SPEC.md content)</p></li><li><p>Return <code>{:ok, %SpecPrompt.Spec{}}</code> or <code>{:error, [errors]}</code></p></li></ul>
 <ol start="2"><li><p><strong>Implement validator</strong> (<code>lib/specprompt/validator.ex</code>)</p></li></ol>
@@ -104,37 +105,37 @@ Deploy:     Fly.io (MCP server) + npm (TypeScript parser)</code></pre>
 <ol start="3"><li><p><strong>Implement CLI</strong> (<code>lib/cli.ex</code>)</p></li></ol>
 <ul><li><p><code>specprompt validate SPEC.md</code> — parse + validate, exit 0/1</p></li><li><p><code>specprompt lint SPEC.md</code> — validate + SHOULD warnings</p></li></ul>
 <ol start="4"><li><p><strong>Write tests</strong> against the customer-support example from spec section 3.3</p></li></ol>
-<h4 id="blk-84965">Phase 2: Test Compilation (week 2)</h4>
+<h4 id="blk-85793">Phase 2: Test Compilation (week 2)</h4>
 <p>This is the critical dark factory bridge — turning natural language acceptance tests into executable assertions.</p>
 <ol><li><p><strong>Implement test compiler</strong> (<code>lib/specprompt/test_compiler.ex</code>)</p></li></ol>
 <ul><li><p>Input: <code>%SpecPrompt.Spec{}</code> with <code>acceptance_tests</code></p></li><li><p>For each acceptance test, generate a <code>%SpecPrompt.CompiledTest{}</code>:</p></li><li><p><code>setup</code>: mocked tool states derived from the <code>given</code> clause</p></li><li><p><code>input</code>: agent input derived from the <code>given</code> clause</p></li><li><p><code>assertions</code>: list of Agentelic DSL assertions:</p></li><li><p><code>%{type: :contains, value: &quot;...&quot;}</code> — expected text in output</p></li><li><p><code>%{type: :tool_called, tool: &quot;...&quot;, args: %{}}</code> — expected tool invocation</p></li><li><p><code>%{type: :tool_not_called, tool: &quot;...&quot;}</code> — forbidden tool invocation</p></li><li><p><code>%{type: :escalated, value: true/false}</code> — escalation check</p></li><li><p><code>%{type: :constraint_respected, constraint_index: N}</code> — constraint enforcement</p></li><li><p>Compilation is <strong>LLM-assisted on first pass</strong>: send the spec + acceptance test to an LLM, ask it to generate the assertion mapping</p></li><li><p>Cache compiled tests by <code>{source_hash, test_index}</code> — unchanged tests reuse prior compilations</p></li><li><p>Mark all compiled tests as <code>approved: false</code> initially</p></li></ul>
 <ol start="2"><li><p><strong>Implement approval workflow</strong></p></li></ol>
 <ul><li><p><code>specprompt test-compile SPEC.md --output tests/compiled.json</code> — compile all tests</p></li><li><p><code>specprompt test-compile SPEC.md --approve</code> — mark all compiled tests as approved</p></li><li><p><code>specprompt test-compile SPEC.md --status</code> — show compilation + approval status</p></li><li><p>Only approved tests are used by Agentelic in the dark factory pipeline</p></li></ul>
 <ol start="3"><li><p><strong>Important constraint</strong>: The test compiler itself does NOT call LLMs. It generates a structured prompt that an external LLM (via Agentelic or the user's own API key) processes. SpecPrompt is a tool, not an agent. The MCP server version (<code>spec_test_compile</code>) returns the prompt for the agent to execute.</p></li></ol>
-<h4 id="blk-85012">Phase 3: MCP Server (week 3)</h4>
+<h4 id="blk-85840">Phase 3: MCP Server (week 3)</h4>
 <ol><li><p><strong>Implement MCP server</strong> (<code>lib/specprompt/mcp/server.ex</code>)</p></li></ol>
 <ul><li><p>JSON-RPC over HTTP, MCP protocol v2025-03-26</p></li><li><p>Tools: <code>spec_validate</code>, <code>spec_lint</code>, <code>spec_generate</code>, <code>spec_test_gen</code>, <code>spec_test_compile</code>, <code>spec_test_approve</code>, <code>spec_diff</code>, <code>spec_search</code></p></li><li><p><code>spec_test_compile</code> returns the compilation prompt (not the result) — the agent does the LLM call</p></li><li><p><code>spec_search</code> queries the Supabase registry</p></li></ul>
 <ol start="2"><li><p><strong>Implement Supabase registry</strong> (<code>lib/specprompt/registry.ex</code>)</p></li></ol>
 <ul><li><p>CRUD on <code>spec.specs</code> table</p></li><li><p>Workspace-scoped queries</p></li><li><p>Visibility filtering (private → only owner, workspace → workspace members, public → everyone)</p></li></ul>
-<h4 id="blk-85035">Phase 4: Supabase Migration (week 3)</h4>
+<h4 id="blk-85863">Phase 4: Supabase Migration (week 3)</h4>
 <ol><li><p><strong>Create migration</strong> in <code>ampersand-supabase/migrations/</code>:</p></li></ol>
 <ul><li><p>Allocate range (suggest 100-109 for spec.*)</p></li><li><p>Create <code>spec.specs</code> table per spec section 5.2</p></li><li><p>Enable RLS with workspace-based policies (same pattern as <code>kag.*</code>, <code>rune.*</code>)</p></li></ul>
-<h4 id="blk-85046">Phase 5: Pipeline Triggers (week 4)</h4>
+<h4 id="blk-85874">Phase 5: Pipeline Triggers (week 4)</h4>
 <ol><li><p><strong>Implement CloudEvents emitter</strong> (<code>lib/specprompt/publisher.ex</code>)</p></li></ol>
 <ul><li><p>On <code>specprompt publish</code>, emit <code>ConsolidationEvent</code> to Agentelic</p></li><li><p>CloudEvents v1 envelope format per spec section 5.3</p></li><li><p>Transport: Supabase Realtime (insert into <code>spec.specs</code> triggers) or HTTP POST</p></li></ul>
 <ol start="2"><li><p><strong>Implement GitHub Actions template</strong> (<code>.github/workflows/dark-factory.yml</code>)</p></li></ol>
 <ul><li><p>On push to <code>**/SPEC.md</code>: validate, compile tests (require approved), trigger Agentelic webhook</p></li></ul>
-<h4 id="blk-85063">Phase 6: TypeScript Parser (week 4)</h4>
+<h4 id="blk-85891">Phase 6: TypeScript Parser (week 4)</h4>
 <ol><li><p><strong>Port parser to TypeScript</strong> (<code>npm/src/parser.ts</code>)</p></li></ol>
 <ul><li><p>Same PEG grammar, same validation rules</p></li><li><p>Publish as <code>@specprompt/parser</code> on npm</p></li><li><p>Used by Agentelic's TypeScript agents and RuneFort's client-side spec display</p></li></ul>
-<h3 id="blk-85074">Key Constraints</h3>
+<h3 id="blk-85902">Key Constraints</h3>
 <ul><li><p><strong>SpecPrompt does NOT make LLM calls.</strong> The test compiler generates prompts; the agent executes them.</p></li><li><p><strong>Filesystem mode must work without any network.</strong> No Supabase, no auth, no MCP server required for basic validate/lint/diff.</p></li><li><p><strong>Registry mode requires Supabase Auth.</strong> All queries scoped to workspace_id via RLS.</p></li><li><p><strong>Compiled tests require human approval</strong> before use in the dark factory pipeline. This is the trust boundary.</p></li><li><p><strong>Parser must be deterministic.</strong> Same input → same parse tree. No LLM in the parser.</p></li><li><p><strong>Use the customer-support SPEC.md example</strong> (spec section 3.3) as the canonical test fixture.</p></li></ul>
-<h3 id="blk-85088">Integration Points</h3>
+<h3 id="blk-85916">Integration Points</h3>
 <table><thead><tr><th>System</th><th>Direction</th><th>Protocol</th><th>What</th></tr></thead><tbody><tr><td><strong>Agentelic</strong></td><td>SpecPrompt → Agentelic</td><td>CloudEvents / Supabase Realtime</td><td>ConsolidationEvent on spec publish</td></tr><tr><td><strong>FleetPrompt</strong></td><td>SpecPrompt → FleetPrompt</td><td>spec_search MCP tool</td><td>Search published specs in registry</td></tr><tr><td><strong>Graphonomous</strong></td><td>SpecPrompt → Graphonomous</td><td>MCP retrieve/act</td><td>Store lint heuristics, retrieve prior compilations</td></tr><tr><td><strong>Delegatic</strong></td><td>SpecPrompt → Delegatic</td><td>Policy substrate</td><td>Spec visibility, publish permissions</td></tr><tr><td><strong>ampersand.json</strong></td><td>Bidirectional</td><td>File I/O</td><td>Export/import capability mappings</td></tr><tr><td><strong>ADL</strong></td><td>Bidirectional</td><td>File I/O</td><td>Export/import Next Moca agent definitions</td></tr></tbody></table>
-<h3 id="blk-85118">Success Criteria</h3>
+<h3 id="blk-85946">Success Criteria</h3>
 <ul><li><p>[x] <code>specprompt validate</code> correctly validates the customer-support example (pass) and an invalid spec (fail with line numbers)</p></li><li><p>[x] <code>specprompt test-compile</code> generates compilable assertions for all 8 acceptance tests in the example</p></li><li><p>[x] <code>specprompt test-compile --approve</code> marks tests as approved</p></li><li><p>[x] MCP server discovers tools via <code>tools/list</code> and executes all 8 tools</p></li><li><p>[x] Supabase migration applies cleanly alongside existing <code>amp.*</code>, <code>kag.*</code>, <code>rune.*</code> schemas</p></li><li><p>[x] TypeScript parser produces identical parse results to Elixir parser on all test fixtures</p></li><li><p>[x] Pipeline trigger emits CloudEvents on spec publish</p></li></ul></div>
 <p class="src"><a href="/#/specprompt.com/prompts/BUILD.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-84890" class="lvl2">Your Mission</a><a href="#blk-84895" class="lvl2">Target Stack</a><a href="#blk-84897" class="lvl2">Dual-Mode Architecture</a><a href="#blk-84899" class="lvl3">Filesystem Mode (default, zero-cost)</a><a href="#blk-84911" class="lvl3">Registry Mode (multi-tenant dark factory)</a><a href="#blk-84925" class="lvl2">Repository Structure</a><a href="#blk-84928" class="lvl2">Implementation Order</a><a href="#blk-84929" class="lvl3">Phase 1: Parser + Validator (week 1)</a><a href="#blk-84965" class="lvl3">Phase 2: Test Compilation (week 2)</a><a href="#blk-85012" class="lvl3">Phase 3: MCP Server (week 3)</a><a href="#blk-85035" class="lvl3">Phase 4: Supabase Migration (week 3)</a><a href="#blk-85046" class="lvl3">Phase 5: Pipeline Triggers (week 4)</a><a href="#blk-85063" class="lvl3">Phase 6: TypeScript Parser (week 4)</a><a href="#blk-85074" class="lvl2">Key Constraints</a><a href="#blk-85088" class="lvl2">Integration Points</a><a href="#blk-85118" class="lvl2">Success Criteria</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/specprompt.com/docs/index.md/">SpecPrompt Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieracyuxco4bheo2ktmrcvdggqcd3nqbc4cpmcnnwupg5vzusbuvwjja</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-85718" class="lvl2">Your Mission</a><a href="#blk-85723" class="lvl2">Target Stack</a><a href="#blk-85725" class="lvl2">Dual-Mode Architecture</a><a href="#blk-85727" class="lvl3">Filesystem Mode (default, zero-cost)</a><a href="#blk-85739" class="lvl3">Registry Mode (multi-tenant dark factory)</a><a href="#blk-85753" class="lvl2">Repository Structure</a><a href="#blk-85756" class="lvl2">Implementation Order</a><a href="#blk-85757" class="lvl3">Phase 1: Parser + Validator (week 1)</a><a href="#blk-85793" class="lvl3">Phase 2: Test Compilation (week 2)</a><a href="#blk-85840" class="lvl3">Phase 3: MCP Server (week 3)</a><a href="#blk-85863" class="lvl3">Phase 4: Supabase Migration (week 3)</a><a href="#blk-85874" class="lvl3">Phase 5: Pipeline Triggers (week 4)</a><a href="#blk-85891" class="lvl3">Phase 6: TypeScript Parser (week 4)</a><a href="#blk-85902" class="lvl2">Key Constraints</a><a href="#blk-85916" class="lvl2">Integration Points</a><a href="#blk-85946" class="lvl2">Success Criteria</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/specprompt.com/docs/index.md/">SpecPrompt Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieran52d5q6hgjpfz7jzen4rh4uhlxfah6e274gpblzvbi6pxzq3rl4q</div></div></div>
 </div></div>
 </body></html>

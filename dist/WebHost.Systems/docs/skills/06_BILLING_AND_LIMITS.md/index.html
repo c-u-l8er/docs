@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>06 — Billing and Limits · WebHost.Systems · Ampersand Box</title>
 <meta name="description" content="The invocation gateway checks billing_usage for the current period before routing to the provider:">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"06 — Billing and Limits","name":"06 — Billing and Limits","description":"The invocation gateway checks billing_usage for the current period before routing to the provider:","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/","identifier":"bagaaiera27l6iqthjy7wby7tggqgw35ug26k2tncgckzluswxkvg2yqc5w6a","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Subscription Tiers"},{"@type":"WebPageElement","name":"Enforcement Points"},{"@type":"WebPageElement","name":"At Invoke Time"},{"@type":"WebPageElement","name":"At Deploy Time"},{"@type":"WebPageElement","name":"Checkout Flow"},{"@type":"WebPageElement","name":"Webhook Events"},{"@type":"WebPageElement","name":"Usage Aggregation"},{"@type":"WebPageElement","name":"Retention Policies"},{"@type":"WebPageElement","name":"Overage Handling (Post-MVP)"},{"@type":"WebPageElement","name":"Checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/"},{"@type":"ListItem","position":5,"name":"06_BILLING_AND_LIMITS.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"06 — Billing and Limits","name":"06 — Billing and Limits","description":"The invocation gateway checks billing_usage for the current period before routing to the provider:","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/","identifier":"bagaaierayl4i4iublsrvvta7heudvtrqgkrnoimdntpmzeqydlqlfeq7d2vq","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"WebHost.Systems","url":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},"articleSection":"WebHost.Systems","hasPart":[{"@type":"WebPageElement","name":"Subscription Tiers"},{"@type":"WebPageElement","name":"Enforcement Points"},{"@type":"WebPageElement","name":"At Invoke Time"},{"@type":"WebPageElement","name":"At Deploy Time"},{"@type":"WebPageElement","name":"Checkout Flow"},{"@type":"WebPageElement","name":"Webhook Events"},{"@type":"WebPageElement","name":"Usage Aggregation"},{"@type":"WebPageElement","name":"Retention Policies"},{"@type":"WebPageElement","name":"Overage Handling (Post-MVP)"},{"@type":"WebPageElement","name":"Checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"WebHost.Systems","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/"},{"@type":"ListItem","position":5,"name":"06_BILLING_AND_LIMITS.md","item":"https://docs.ampersandboxdesign.com/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,12 +23,12 @@
 
 </div></div>
 <div class="lead">The invocation gateway checks billing_usage for the current period before routing to the provider:</div>
-<div class="prose"><h1 id="blk-43551">06 — Billing and Limits</h1>
+<div class="prose"><h1 id="blk-44267">06 — Billing and Limits</h1>
 <blockquote><p><strong>Purpose:</strong> Subscription tiers, plan enforcement at invoke and deploy time, checkout and webhook flow, usage aggregation, retention policies, and overage handling.</p></blockquote>
-<h3 id="blk-43554">Subscription Tiers</h3>
+<h3 id="blk-44270">Subscription Tiers</h3>
 <table><thead><tr><th>Feature</th><th>Free</th><th>Starter</th><th>Pro</th><th>Enterprise</th></tr></thead><tbody><tr><td>Requests / month</td><td>1,000</td><td>10,000</td><td>100,000</td><td>Custom</td></tr><tr><td>Token budget / month</td><td>100K</td><td>1M</td><td>10M</td><td>Custom</td></tr><tr><td>Compute budget (ms) / month</td><td>60,000</td><td>600,000</td><td>6,000,000</td><td>Custom</td></tr><tr><td>Log retention (days)</td><td>3</td><td>14</td><td>30</td><td>90+</td></tr><tr><td>Runtime: Cloudflare</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr><tr><td>Runtime: AgentCore</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr><tr><td>Max agents</td><td>3</td><td>10</td><td>50</td><td>Unlimited</td></tr></tbody></table>
-<h3 id="blk-43596">Enforcement Points</h3>
-<h4 id="blk-43597">At Invoke Time</h4>
+<h3 id="blk-44312">Enforcement Points</h3>
+<h4 id="blk-44313">At Invoke Time</h4>
 <p>The invocation gateway checks <code>billing_usage</code> for the current period before routing to the provider:</p>
 <pre data-lang="typescript"><code><span class="t-kw">const</span> usage = <span class="t-kw">await</span> <span class="t-fn">getBillingUsage</span>(userId, <span class="t-fn">currentPeriod</span>());
 <span class="t-kw">const</span> limits = <span class="t-type">TIER_LIMITS</span>[user.subscriptionTier];
@@ -39,14 +40,14 @@
   <span class="t-kw">throw</span> <span class="t-kw">new</span> <span class="t-type">LimitExceededError</span>(<span class="t-string">&quot;Monthly token limit reached.&quot;</span>);
 }</code></pre>
 <p>If any limit is exceeded, the gateway returns <code>LIMIT_EXCEEDED</code> (HTTP 429).</p>
-<h4 id="blk-43601">At Deploy Time</h4>
+<h4 id="blk-44317">At Deploy Time</h4>
 <p>The deploy Edge Function enforces:</p>
 <ul><li><p><strong>Runtime gating:</strong> Free and Starter tiers cannot deploy to AgentCore.</p></li><li><p><strong>Agent count:</strong> Deployment is rejected if the user has reached their tier's</p></li></ul>
 <p>max agent count.</p>
 <pre data-lang="typescript"><code><span class="t-kw">if</span> (agent.runtimeProvider === <span class="t-string">&quot;agentcore&quot;</span> &amp;&amp; !<span class="t-type">AGENTCORE_TIERS</span>.<span class="t-fn">includes</span>(user.tier)) {
   <span class="t-kw">throw</span> <span class="t-kw">new</span> <span class="t-type">UnauthorizedError</span>(<span class="t-string">&quot;AgentCore requires Pro or Enterprise tier.&quot;</span>);
 }</code></pre>
-<h3 id="blk-43610">Checkout Flow</h3>
+<h3 id="blk-44326">Checkout Flow</h3>
 <p>WebHost.Systems uses LemonSqueezy (or equivalent) for subscription billing:</p>
 <pre><code>1. User clicks &quot;Upgrade&quot; in dashboard
 2. POST /functions/v1/billing/checkout { tier: &quot;pro&quot; }
@@ -55,11 +56,11 @@
 5. LemonSqueezy sends webhook to /functions/v1/billing/webhook
 6. Edge Function verifies webhook signature
 7. UPDATE users SET subscription_tier = 'pro' WHERE id = user_id</code></pre>
-<h3 id="blk-43613">Webhook Events</h3>
+<h3 id="blk-44329">Webhook Events</h3>
 <table><thead><tr><th>Event</th><th>Action</th></tr></thead><tbody><tr><td><code>subscription_created</code></td><td>Set <code>subscription_tier</code> to new tier</td></tr><tr><td><code>subscription_updated</code></td><td>Update tier (upgrade/downgrade)</td></tr><tr><td><code>subscription_cancelled</code></td><td>Downgrade to <code>free</code> at period end</td></tr><tr><td><code>subscription_payment_failed</code></td><td>Flag account; optionally restrict after grace</td></tr></tbody></table>
 <p>The webhook Edge Function:</p>
 <ol><li><p>Verifies the <code>X-Signature</code> header against the webhook secret</p></li><li><p>Extracts user identity from webhook payload metadata</p></li><li><p>Updates <code>users.subscription_tier</code> accordingly</p></li></ol>
-<h3 id="blk-43633">Usage Aggregation</h3>
+<h3 id="blk-44349">Usage Aggregation</h3>
 <p>Raw <code>metrics_events</code> are aggregated into <code>billing_usage</code> by <code>pg_cron</code>:</p>
 <pre data-lang="sql"><code>-- billing_usage row per user per month
 {
@@ -70,21 +71,21 @@
   paid, invoice_id
 }</code></pre>
 <p>The <code>period_key</code> format is <code>YYYY-MM</code>. Aggregation is incremental -- new events are summed into the existing row, not recomputed from scratch.</p>
-<h3 id="blk-43637">Retention Policies</h3>
+<h3 id="blk-44353">Retention Policies</h3>
 <p>Log and metrics retention is tier-dependent:</p>
 <table><thead><tr><th>Tier</th><th><code>metrics_events</code> retention</th></tr></thead><tbody><tr><td>Free</td><td>3 days</td></tr><tr><td>Starter</td><td>14 days</td></tr><tr><td>Pro</td><td>30 days</td></tr><tr><td>Enterprise</td><td>90+ days</td></tr></tbody></table>
 <p>A <code>pg_cron</code> job periodically deletes old <code>metrics_events</code> rows:</p>
 <pre data-lang="sql"><code>DELETE FROM metrics_events
 WHERE timestamp_ms &lt; extract(epoch from (now() - retention_interval(user_id))) * 1000;</code></pre>
 <p><code>billing_usage</code> aggregated rows are retained indefinitely.</p>
-<h3 id="blk-43653">Overage Handling (Post-MVP)</h3>
+<h3 id="blk-44369">Overage Handling (Post-MVP)</h3>
 <p>MVP uses <strong>hard stop</strong> -- invocations are rejected when limits are exceeded.</p>
 <p>Post-MVP options:</p>
 <ol><li><p><strong>Pay-as-you-go:</strong> Allow overages at a per-unit rate, billed at period end.</p></li><li><p><strong>Soft limits:</strong> Warn users at 80% and 100%, hard stop at 120%.</p></li><li><p><strong>Reconciled billing:</strong> Reconcile estimated costs with provider billing exports.</p></li></ol>
-<h3 id="blk-43663">Checklist</h3>
+<h3 id="blk-44379">Checklist</h3>
 <ul><li><p>[ ] Tier limits are defined and stored in a configuration table or constants</p></li><li><p>[ ] Invocation gateway checks all three limit types (requests, tokens, compute)</p></li><li><p>[ ] Deploy enforces runtime gating and agent count limits</p></li><li><p>[ ] Checkout creates a valid billing provider session</p></li><li><p>[ ] Webhook verifies signature before processing</p></li><li><p>[ ] <code>subscription_tier</code> is updated transactionally on webhook events</p></li><li><p>[ ] Aggregation job runs on schedule and handles partial failures</p></li><li><p>[ ] Retention cleanup job respects per-tier retention windows</p></li><li><p>[ ] Downgrade on cancellation is deferred to period end</p></li></ul></div>
 <p class="src"><a href="/#/WebHost.Systems/docs/skills/06_BILLING_AND_LIMITS.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-43554" class="lvl2">Subscription Tiers</a><a href="#blk-43596" class="lvl2">Enforcement Points</a><a href="#blk-43597" class="lvl3">At Invoke Time</a><a href="#blk-43601" class="lvl3">At Deploy Time</a><a href="#blk-43610" class="lvl2">Checkout Flow</a><a href="#blk-43613" class="lvl2">Webhook Events</a><a href="#blk-43633" class="lvl2">Usage Aggregation</a><a href="#blk-43637" class="lvl2">Retention Policies</a><a href="#blk-43653" class="lvl2">Overage Handling (Post-MVP)</a><a href="#blk-43663" class="lvl2">Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/">01 — Agent Management</a><a href="/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/">02 — Deployment Pipeline</a><a href="/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/">03 — Invocation Gateway</a><a href="/WebHost.Systems/docs/skills/04_RUNTIME_PROVIDERS.md/">04 — Runtime Providers</a><a href="/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/">05 — Telemetry and Metrics</a><a href="/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/">07 — Security and Secrets</a><a href="/WebHost.Systems/docs/skills/08_AMPERSAND_INTEGRATION.md/">08 — [&amp;] Protocol Integration</a><a href="/WebHost.Systems/docs/skills/09_ANTI_PATTERNS.md/">09 — Anti-Patterns</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera27l6iqthjy7wby7tggqgw35ug26k2tncgckzluswxkvg2yqc5w6a</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-44270" class="lvl2">Subscription Tiers</a><a href="#blk-44312" class="lvl2">Enforcement Points</a><a href="#blk-44313" class="lvl3">At Invoke Time</a><a href="#blk-44317" class="lvl3">At Deploy Time</a><a href="#blk-44326" class="lvl2">Checkout Flow</a><a href="#blk-44329" class="lvl2">Webhook Events</a><a href="#blk-44349" class="lvl2">Usage Aggregation</a><a href="#blk-44353" class="lvl2">Retention Policies</a><a href="#blk-44369" class="lvl2">Overage Handling (Post-MVP)</a><a href="#blk-44379" class="lvl2">Checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/WebHost.Systems/docs/index.md/">WebHost.Systems Documentation</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/WebHost.Systems/docs/skills/01_AGENT_MANAGEMENT.md/">01 — Agent Management</a><a href="/WebHost.Systems/docs/skills/02_DEPLOYMENT_PIPELINE.md/">02 — Deployment Pipeline</a><a href="/WebHost.Systems/docs/skills/03_INVOCATION_GATEWAY.md/">03 — Invocation Gateway</a><a href="/WebHost.Systems/docs/skills/04_RUNTIME_PROVIDERS.md/">04 — Runtime Providers</a><a href="/WebHost.Systems/docs/skills/05_TELEMETRY_AND_METRICS.md/">05 — Telemetry and Metrics</a><a href="/WebHost.Systems/docs/skills/07_SECURITY_AND_SECRETS.md/">07 — Security and Secrets</a><a href="/WebHost.Systems/docs/skills/08_AMPERSAND_INTEGRATION.md/">08 — [&amp;] Protocol Integration</a><a href="/WebHost.Systems/docs/skills/09_ANTI_PATTERNS.md/">09 — Anti-Patterns</a><a href="/WebHost.Systems/docs/skills/SKILLS.md/">WebHost.Systems — Operational Skills</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierayl4i4iublsrvvta7heudvtrqgkrnoimdntpmzeqydlqlfeq7d2vq</div></div></div>
 </div></div>
 </body></html>

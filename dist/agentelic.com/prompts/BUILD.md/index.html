@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>Agentelic — Implementation Build Prompt · agentelic.com · Ampersand Box</title>
 <meta name="description" content="Version: 1.0 | Date: April 2026 | Type: Full Implementation (Build Pipeline + MCP + Supabase)">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/agentelic.com/prompts/BUILD.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Agentelic — Implementation Build Prompt","name":"Agentelic — Implementation Build Prompt","description":"Version: 1.0 | Date: April 2026 | Type: Full Implementation (Build Pipeline + MCP + Supabase)","url":"https://docs.ampersandboxdesign.com/agentelic.com/prompts/BUILD.md/","identifier":"bagaaieraw4tv4szbkvujfv3vdiakf3qiykok254hg7pp5wwhfmhlrr77sjaq","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"agentelic.com","url":"https://docs.ampersandboxdesign.com/agentelic.com/"},"articleSection":"agentelic.com","hasPart":[{"@type":"WebPageElement","name":"Your Mission"},{"@type":"WebPageElement","name":"Target Stack"},{"@type":"WebPageElement","name":"Repository Structure"},{"@type":"WebPageElement","name":"Implementation Order"},{"@type":"WebPageElement","name":"Phase 0: Foundation (weeks 1-6)"},{"@type":"WebPageElement","name":"Phase 0.5: Templates (weeks 6-8)"},{"@type":"WebPageElement","name":"Phase 1: Testing Framework (weeks 9-14)"},{"@type":"WebPageElement","name":"Phase 2: Pipeline Orchestrator (weeks 9-14, parallel with testing)"},{"@type":"WebPageElement","name":"Phase 3: MCP Server (weeks 15-18)"},{"@type":"WebPageElement","name":"Phase 4: Supabase Migration (weeks 15-18, parallel)"},{"@type":"WebPageElement","name":"Phase 5: Deploy Engine (weeks 19-24)"},{"@type":"WebPageElement","name":"Key Constraints"},{"@type":"WebPageElement","name":"Integration Points"},{"@type":"WebPageElement","name":"Success Criteria"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"agentelic.com","item":"https://docs.ampersandboxdesign.com/agentelic.com/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/agentelic.com/prompts/"},{"@type":"ListItem","position":4,"name":"BUILD.md","item":"https://docs.ampersandboxdesign.com/agentelic.com/prompts/BUILD.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Agentelic — Implementation Build Prompt","name":"Agentelic — Implementation Build Prompt","description":"Version: 1.0 | Date: April 2026 | Type: Full Implementation (Build Pipeline + MCP + Supabase)","url":"https://docs.ampersandboxdesign.com/agentelic.com/prompts/BUILD.md/","identifier":"bagaaieradr3xzmk4v4zgm5owjvaxivn42wbecj2evuy53dvhovkscanlcata","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"agentelic.com","url":"https://docs.ampersandboxdesign.com/agentelic.com/"},"articleSection":"agentelic.com","hasPart":[{"@type":"WebPageElement","name":"Your Mission"},{"@type":"WebPageElement","name":"Target Stack"},{"@type":"WebPageElement","name":"Repository Structure"},{"@type":"WebPageElement","name":"Implementation Order"},{"@type":"WebPageElement","name":"Phase 0: Foundation (weeks 1-6)"},{"@type":"WebPageElement","name":"Phase 0.5: Templates (weeks 6-8)"},{"@type":"WebPageElement","name":"Phase 1: Testing Framework (weeks 9-14)"},{"@type":"WebPageElement","name":"Phase 2: Pipeline Orchestrator (weeks 9-14, parallel with testing)"},{"@type":"WebPageElement","name":"Phase 3: MCP Server (weeks 15-18)"},{"@type":"WebPageElement","name":"Phase 4: Supabase Migration (weeks 15-18, parallel)"},{"@type":"WebPageElement","name":"Phase 5: Deploy Engine (weeks 19-24)"},{"@type":"WebPageElement","name":"Key Constraints"},{"@type":"WebPageElement","name":"Integration Points"},{"@type":"WebPageElement","name":"Success Criteria"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"agentelic.com","item":"https://docs.ampersandboxdesign.com/agentelic.com/"},{"@type":"ListItem","position":3,"name":"prompts","item":"https://docs.ampersandboxdesign.com/agentelic.com/prompts/"},{"@type":"ListItem","position":4,"name":"BUILD.md","item":"https://docs.ampersandboxdesign.com/agentelic.com/prompts/BUILD.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,14 +23,14 @@
 
 </div></div>
 <div class="lead">Version: 1.0 | Date: April 2026 | Type: Full Implementation (Build Pipeline + MCP + Supabase)</div>
-<div class="prose"><h1 id="blk-55218">Agentelic — Implementation Build Prompt</h1>
+<div class="prose"><h1 id="blk-55973">Agentelic — Implementation Build Prompt</h1>
 <p><strong>Version:</strong> 1.0 | <strong>Date:</strong> April 2026 | <strong>Type:</strong> Full Implementation (Build Pipeline + MCP + Supabase)</p>
-<h3 id="blk-55220">Your Mission</h3>
+<h3 id="blk-55975">Your Mission</h3>
 <p>You are building <strong>Agentelic</strong> — the engineering layer of the [&amp;] Protocol dark factory pipeline. Agentelic takes SpecPrompt specifications as input and produces tested, deployable agent artifacts through a deterministic 4-stage pipeline with template-based code generation.</p>
 <p><strong>Read `docs/spec/README.md` fully before writing a single line.</strong> It is the authoritative spec.</p>
 <p>Agentelic is the <strong>build stage</strong> of the dark factory pipeline:</p>
 <pre><code>SpecPrompt (spec in) → Agentelic (build) → OS-008 (enforce) → FleetPrompt (distribute) → RuneFort (observe)</code></pre>
-<h3 id="blk-55225">Target Stack</h3>
+<h3 id="blk-55980">Target Stack</h3>
 <pre><code>Language:   Elixir 1.17+ / OTP 27
 Pipeline:   4-stage build (PARSE → TEST INTAKE → GENERATE → COMPILE/TEST)
 MCP:        JSON-RPC over HTTP (agent_create, agent_build, agent_test, agent_deploy,
@@ -38,7 +39,7 @@ Database:   PostgreSQL via shared Supabase (agentelic.* schema, migration range 
 Auth:       Supabase Auth (shared [&amp;] ecosystem — amp.profiles, amp.workspaces)
 Testing:    ExUnit + deterministic test DSL from spec acceptance criteria
 Deploy:     Fly.io (MCP server + build pipeline worker)</code></pre>
-<h3 id="blk-55227">Repository Structure</h3>
+<h3 id="blk-55982">Repository Structure</h3>
 <p>Create this structure inside <code>agentelic.com/</code>:</p>
 <pre><code>agentelic.com/
 ├── lib/
@@ -108,20 +109,20 @@ Deploy:     Fly.io (MCP server + build pipeline worker)</code></pre>
 ├── mix.exs
 ├── Dockerfile
 └── fly.toml</code></pre>
-<h3 id="blk-55230">Implementation Order</h3>
-<h4 id="blk-55231">Phase 0: Foundation (weeks 1-6)</h4>
+<h3 id="blk-55985">Implementation Order</h3>
+<h4 id="blk-55986">Phase 0: Foundation (weeks 1-6)</h4>
 <ol><li><p><strong>Set up Phoenix project</strong> with Ecto, Supabase config</p></li><li><p><strong>Implement Ecto schemas</strong> (sections 4.4.1-4.4.4)</p></li></ol>
 <ul><li><p><code>Agentelic.Agents.Agent</code> with workspace_id, user_id, product_type, status state machine</p></li><li><p><code>Agentelic.Builds.Build</code> with template_version, template_hash, compiled_tests_hash</p></li><li><p><code>Agentelic.Testing.TestRun</code> with workspace_id, compiled_tests_hash</p></li><li><p><code>Agentelic.Deploy.Deployment</code> with workspace_id, governance_policy_hash, approved_by</p></li></ul>
 <ol start="3"><li><p><strong>Implement spec parser</strong> (<code>pipeline/parser.ex</code>)</p></li></ol>
 <ul><li><p>Consume SpecPrompt SPEC.md files → <code>SpecPrompt.Spec</code> struct</p></li><li><p>Compute spec_hash (SHA-256)</p></li><li><p>Validate required sections</p></li></ul>
 <ol start="4"><li><p><strong>Implement CLI</strong> — <code>agent_create</code>, <code>agent_build</code>, <code>agent_status</code> commands</p></li></ol>
-<h4 id="blk-55259">Phase 0.5: Templates (weeks 6-8)</h4>
+<h4 id="blk-56014">Phase 0.5: Templates (weeks 6-8)</h4>
 <ol><li><p><strong>Implement template registry</strong> (<code>templates/registry.ex</code>)</p></li></ol>
 <ul><li><p>List templates by <code>{framework, product_type}</code></p></li><li><p>Version pinning: agent-level &gt; workspace-level &gt; global default</p></li><li><p>Template immutability enforcement</p></li></ul>
 <ol start="2"><li><p><strong>Implement template manifest</strong> schema and validation</p></li><li><p><strong>Implement template renderer</strong> (<code>templates/renderer.ex</code>)</p></li></ol>
 <ul><li><p>EEx-based template expansion</p></li><li><p>Input: <code>SpecPrompt.Spec</code> + <code>ampersand.json</code> + template files</p></li><li><p>Output: generated source files</p></li></ul>
 <ol start="4"><li><p><strong>Bundle starter templates</strong> in <code>priv/templates/</code></p></li></ol>
-<h4 id="blk-55285">Phase 1: Testing Framework (weeks 9-14)</h4>
+<h4 id="blk-56040">Phase 1: Testing Framework (weeks 9-14)</h4>
 <ol><li><p><strong>Implement Test DSL</strong> (<code>testing/dsl.ex</code>)</p></li></ol>
 <ul><li><p><code>from_spec/1</code> — generate test cases from SpecPrompt acceptance tests</p></li><li><p>Assertion types: <code>:contains</code>, <code>:not_contains</code>, <code>:tool_called</code>, <code>:tool_not_called</code>, <code>:escalated</code>, <code>:constraint_respected</code></p></li><li><p>Mock specs: <code>{tool_name, match_args, return}</code></p></li></ul>
 <ol start="2"><li><p><strong>Implement compiled test intake</strong> (<code>testing/compiled_intake.ex</code>)</p></li></ol>
@@ -129,30 +130,30 @@ Deploy:     Fly.io (MCP server + build pipeline worker)</code></pre>
 <ol start="3"><li><p><strong>Implement test runner</strong> (<code>testing/runner.ex</code>)</p></li></ol>
 <ul><li><p>Mock MCP tool calls based on test case mocks</p></li><li><p>Capture agent output + tool calls</p></li><li><p>Validate against assertions</p></li><li><p>Produce TestRun with individual TestResults</p></li></ul>
 <ol start="4"><li><p><strong>Write tests</strong> using customer-support fixture</p></li></ol>
-<h4 id="blk-55323">Phase 2: Pipeline Orchestrator (weeks 9-14, parallel with testing)</h4>
+<h4 id="blk-56078">Phase 2: Pipeline Orchestrator (weeks 9-14, parallel with testing)</h4>
 <ol><li><p><strong>Implement 4-stage pipeline</strong> (<code>pipeline/orchestrator.ex</code>)</p></li></ol>
 <ul><li><p>Stage 1: PARSE — call parser, produce SpecPrompt.Spec</p></li><li><p>Stage 1.5: TEST INTAKE — load compiled tests, record compiled_tests_hash on Build</p></li><li><p>Stage 2: GENERATE — call template renderer with pinned template version</p></li><li><p>Stage 3: COMPILE — shell out to <code>mix compile</code> / <code>npm run build</code> / etc.</p></li><li><p>Stage 4: TEST — call test runner, evaluate pass/fail</p></li><li><p>Record timing for each stage on Build</p></li><li><p>Deterministic: same <code>{spec_hash, template_hash}</code> → same <code>artifact_hash</code></p></li></ul>
-<h4 id="blk-55342">Phase 3: MCP Server (weeks 15-18)</h4>
+<h4 id="blk-56097">Phase 3: MCP Server (weeks 15-18)</h4>
 <ol><li><p><strong>Implement MCP server</strong> (<code>mcp/server.ex</code>)</p></li></ol>
 <ul><li><p>JSON-RPC over HTTP, MCP protocol v2025-03-26</p></li><li><p>9 tools: <code>agent_create</code>, <code>agent_build</code>, <code>agent_test</code>, <code>agent_deploy</code>, <code>agent_status</code>, <code>template_list</code>, <code>template_pin</code>, <code>spec_validate</code>, <code>test_explain</code></p></li></ul>
 <ol start="2"><li><p><strong>Implement pipeline triggers</strong> (<code>triggers/</code>)</p></li></ol>
 <ul><li><p>Supabase Realtime listener on <code>spec.specs</code> inserts/updates</p></li><li><p>CloudEvents webhook at <code>POST /api/pipeline/trigger</code></p></li><li><p>GitHub webhook at <code>POST /api/pipeline/github</code></p></li></ul>
 <ol start="3"><li><p><strong>Implement publisher</strong> (<code>publisher.ex</code>)</p></li></ol>
 <ul><li><p>On build success, emit <code>ConsolidationEvent</code> to FleetPrompt</p></li><li><p>CloudEvents v1 envelope format</p></li></ul>
-<h4 id="blk-55369">Phase 4: Supabase Migration (weeks 15-18, parallel)</h4>
+<h4 id="blk-56124">Phase 4: Supabase Migration (weeks 15-18, parallel)</h4>
 <ol><li><p><strong>Create migration</strong> in <code>ampersand-supabase/migrations/</code> (range 080-089):</p></li></ol>
 <ul><li><p><code>080_agentelic_schema.sql</code> — create <code>agentelic.agents</code>, <code>agentelic.builds</code>, <code>agentelic.test_runs</code>, <code>agentelic.deployments</code></p></li><li><p><code>081_agentelic_rls.sql</code> — RLS policies scoped to <code>workspace_id</code></p></li></ul>
 <ol start="2"><li><p><strong>All tables use workspace-based RLS</strong> matching <code>kag.*</code>, <code>rune.*</code> pattern</p></li></ol>
-<h4 id="blk-55381">Phase 5: Deploy Engine (weeks 19-24)</h4>
+<h4 id="blk-56136">Phase 5: Deploy Engine (weeks 19-24)</h4>
 <ol><li><p><strong>Implement deployment stages</strong> — staging → canary → production</p></li><li><p><strong>Production approval gate</strong> — <code>approved_by</code> must be workspace admin</p></li><li><p><strong>Rollback support</strong> — new deployment pointing to previous build</p></li><li><p><strong>OpenSentience integration</strong> — manifest packaging for OpenSentience runtime</p></li></ol>
-<h3 id="blk-55391">Key Constraints</h3>
+<h3 id="blk-56146">Key Constraints</h3>
 <ul><li><p><strong>Builds are deterministic.</strong> Same <code>{spec_hash, template_hash}</code> → same <code>artifact_hash</code>. No floating &quot;latest&quot; template references.</p></li><li><p><strong>Templates are immutable.</strong> Once published, a template version never changes. New versions require new records.</p></li><li><p><strong>Only approved compiled tests are used.</strong> Unapproved tests are skipped. This is the trust boundary.</p></li><li><p><strong>Production deployments require human approval.</strong> <code>approved_by</code> must be a workspace admin.</p></li><li><p><strong>Agentelic does NOT make LLM calls for test compilation.</strong> The compiled test intake generates a prompt; the agent or user executes it. Agentelic is a tool, not an agent.</p></li><li><p><strong>Pipeline triggers validate source_hash.</strong> A stale spec hash rejects the trigger.</p></li><li><p><strong>workspace_id is required on all tables.</strong> RLS enforces multi-tenant isolation.</p></li><li><p><strong>user_id on agents is audit-only.</strong> Created_by at agent creation; RLS uses workspace_id.</p></li></ul>
-<h3 id="blk-55409">Integration Points</h3>
+<h3 id="blk-56164">Integration Points</h3>
 <table><thead><tr><th>System</th><th>Direction</th><th>Protocol</th><th>What</th></tr></thead><tbody><tr><td><strong>SpecPrompt</strong></td><td>SpecPrompt → Agentelic</td><td>CloudEvents / Supabase Realtime / GitHub</td><td>ConsolidationEvent triggers build pipeline</td></tr><tr><td><strong>FleetPrompt</strong></td><td>Agentelic → FleetPrompt</td><td>CloudEvents / Supabase Realtime</td><td>ConsolidationEvent on build success (artifact shipped)</td></tr><tr><td><strong>OS-008 Harness</strong></td><td>Agentelic ↔ OS-008</td><td>MCP</td><td>Harness orchestrates build agent sessions</td></tr><tr><td><strong>OpenSentience</strong></td><td>Agentelic → OpenSentience</td><td>Manifest packaging</td><td>Deploy agents to OpenSentience runtime</td></tr><tr><td><strong>Graphonomous</strong></td><td>Agentelic → Graphonomous</td><td>MCP</td><td>Store build history, learned heuristics</td></tr><tr><td><strong>Delegatic</strong></td><td>Agentelic → Delegatic</td><td>MCP</td><td>Deploy gates, compliance checks</td></tr><tr><td><strong>PRISM</strong></td><td>Agentelic → PRISM</td><td>OutcomeSignal</td><td>Deploy success/regression feedback</td></tr></tbody></table>
-<h3 id="blk-55443">Success Criteria</h3>
+<h3 id="blk-56198">Success Criteria</h3>
 <ul><li><p>[x] <code>agent_create</code> creates agent from customer-support SPEC.md</p></li><li><p>[x] <code>agent_build</code> runs the 4-stage pipeline and produces a build artifact</p></li><li><p>[x] Same <code>{spec_hash, template_hash}</code> always produces same <code>artifact_hash</code> (deterministic)</p></li><li><p>[x] <code>agent_test</code> runs deterministic tests with mocked tool calls and produces pass/fail results</p></li><li><p>[x] Compiled test intake loads approved SpecPrompt.CompiledTest[] and converts to Test.DSL format</p></li><li><p>[x] Template pinning works at agent-level, workspace-level, and global default</p></li><li><p>[x] MCP server discovers tools via <code>tools/list</code> and executes all 9 tools</p></li><li><p>[x] Pipeline triggers fire on SpecPrompt ConsolidationEvent (all 3 transports)</p></li><li><p>[x] Build success emits ConsolidationEvent to FleetPrompt</p></li><li><p>[x] Production deployment requires <code>approved_by</code> validation against workspace admin</p></li><li><p>[x] Supabase migration applies cleanly alongside existing <code>amp.*</code>, <code>kag.*</code>, <code>rune.*</code> schemas</p></li></ul></div>
 <p class="src"><a href="/#/agentelic.com/prompts/BUILD.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-55220" class="lvl2">Your Mission</a><a href="#blk-55225" class="lvl2">Target Stack</a><a href="#blk-55227" class="lvl2">Repository Structure</a><a href="#blk-55230" class="lvl2">Implementation Order</a><a href="#blk-55231" class="lvl3">Phase 0: Foundation (weeks 1-6)</a><a href="#blk-55259" class="lvl3">Phase 0.5: Templates (weeks 6-8)</a><a href="#blk-55285" class="lvl3">Phase 1: Testing Framework (weeks 9-14)</a><a href="#blk-55323" class="lvl3">Phase 2: Pipeline Orchestrator (weeks 9-14, parallel with testing)</a><a href="#blk-55342" class="lvl3">Phase 3: MCP Server (weeks 15-18)</a><a href="#blk-55369" class="lvl3">Phase 4: Supabase Migration (weeks 15-18, parallel)</a><a href="#blk-55381" class="lvl3">Phase 5: Deploy Engine (weeks 19-24)</a><a href="#blk-55391" class="lvl2">Key Constraints</a><a href="#blk-55409" class="lvl2">Integration Points</a><a href="#blk-55443" class="lvl2">Success Criteria</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/agentelic.com/docs/index.md/">Agentelic Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraw4tv4szbkvujfv3vdiakf3qiykok254hg7pp5wwhfmhlrr77sjaq</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-55975" class="lvl2">Your Mission</a><a href="#blk-55980" class="lvl2">Target Stack</a><a href="#blk-55982" class="lvl2">Repository Structure</a><a href="#blk-55985" class="lvl2">Implementation Order</a><a href="#blk-55986" class="lvl3">Phase 0: Foundation (weeks 1-6)</a><a href="#blk-56014" class="lvl3">Phase 0.5: Templates (weeks 6-8)</a><a href="#blk-56040" class="lvl3">Phase 1: Testing Framework (weeks 9-14)</a><a href="#blk-56078" class="lvl3">Phase 2: Pipeline Orchestrator (weeks 9-14, parallel with testing)</a><a href="#blk-56097" class="lvl3">Phase 3: MCP Server (weeks 15-18)</a><a href="#blk-56124" class="lvl3">Phase 4: Supabase Migration (weeks 15-18, parallel)</a><a href="#blk-56136" class="lvl3">Phase 5: Deploy Engine (weeks 19-24)</a><a href="#blk-56146" class="lvl2">Key Constraints</a><a href="#blk-56164" class="lvl2">Integration Points</a><a href="#blk-56198" class="lvl2">Success Criteria</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/agentelic.com/docs/index.md/">Agentelic Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieradr3xzmk4v4zgm5owjvaxivn42wbecj2evuy53dvhovkscanlcata</div></div></div>
 </div></div>
 </body></html>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>Learning Loop · graphonomous · Ampersand Box</title>
 <meta name="description" content="Close the feedback loop so the graph learns what works and what doesn&#39;t.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/graphonomous/docs/skills/learn.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Learning Loop","name":"Learning Loop","description":"Close the feedback loop so the graph learns what works and what doesn't.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/learn.md/","identifier":"bagaaieraqncwzzz3qkecczjg6ebtn56vrgczawzos4cnkz3c4uej7vc7g64a","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Arguments"},{"@type":"WebPageElement","name":"Report an Outcome"},{"@type":"WebPageElement","name":"Response structure"},{"@type":"WebPageElement","name":"Full provenance example"},{"@type":"WebPageElement","name":"Pattern"},{"@type":"WebPageElement","name":"Learn from Feedback"},{"@type":"WebPageElement","name":"Detect Novelty"},{"@type":"WebPageElement","name":"Learn from Interaction"},{"@type":"WebPageElement","name":"Anti-patterns to avoid"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/"},{"@type":"ListItem","position":5,"name":"learn.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/learn.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Learning Loop","name":"Learning Loop","description":"Close the feedback loop so the graph learns what works and what doesn't.","url":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/learn.md/","identifier":"bagaaierahvfu76owjredpzirdae36i7tckvdwwkqrtzczoudcjc543a2v3vq","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"graphonomous","url":"https://docs.ampersandboxdesign.com/graphonomous/"},"articleSection":"graphonomous","hasPart":[{"@type":"WebPageElement","name":"Arguments"},{"@type":"WebPageElement","name":"Report an Outcome"},{"@type":"WebPageElement","name":"Response structure"},{"@type":"WebPageElement","name":"Full provenance example"},{"@type":"WebPageElement","name":"Pattern"},{"@type":"WebPageElement","name":"Learn from Feedback"},{"@type":"WebPageElement","name":"Detect Novelty"},{"@type":"WebPageElement","name":"Learn from Interaction"},{"@type":"WebPageElement","name":"Anti-patterns to avoid"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"graphonomous","item":"https://docs.ampersandboxdesign.com/graphonomous/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/"},{"@type":"ListItem","position":4,"name":"skills","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/"},{"@type":"ListItem","position":5,"name":"learn.md","item":"https://docs.ampersandboxdesign.com/graphonomous/docs/skills/learn.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,11 +23,11 @@
 
 </div></div>
 <div class="lead">Close the feedback loop so the graph learns what works and what doesn&#39;t.</div>
-<div class="prose"><h1 id="blk-67779">Learning Loop</h1>
+<div class="prose"><h1 id="blk-68607">Learning Loop</h1>
 <p>Close the feedback loop so the graph learns what works and what doesn't.</p>
-<h3 id="blk-67781">Arguments</h3>
+<h3 id="blk-68609">Arguments</h3>
 <p>Action and status: $ARGUMENTS</p>
-<h3 id="blk-67783">Report an Outcome</h3>
+<h3 id="blk-68611">Report an Outcome</h3>
 <pre><code>learn(
   action: &quot;from_outcome&quot;,
   action_id: &quot;descriptive-slug-of-what-you-did&quot;,
@@ -40,7 +41,7 @@
 <ul><li><p><code>evidence</code> — structured evidence object (test results, metrics, user feedback)</p></li><li><p><code>retrieval_trace_id</code> — audit trail linking back to the retrieval call</p></li><li><p><code>decision_trace_id</code> — for multi-agent setups tracking decision provenance</p></li><li><p><code>action_linkage</code> — metadata about what action was taken</p></li><li><p><code>grounding</code> — outcome provenance (where the feedback signal came from)</p></li></ul>
 <p><strong>Status meanings and confidence effects:</strong></p>
 <ul><li><p><code>success</code> → boosts confidence of causal nodes</p></li><li><p><code>failure</code> → reduces confidence of causal nodes (the knowledge was wrong/misleading)</p></li><li><p><code>partial_success</code> → small boost</p></li><li><p><code>timeout</code> → minimal change — <strong>NOT the same as failure!</strong> Use when outcome is unknown.</p></li></ul>
-<h4 id="blk-67817">Response structure</h4>
+<h4 id="blk-68645">Response structure</h4>
 <p>The response contains per-node confidence updates:</p>
 <pre data-lang="json"><code>{
   <span class="t-key">&quot;processed&quot;</span>: <span class="t-num">3</span>,
@@ -51,7 +52,7 @@
   ]
 }</code></pre>
 <p><code>processed</code> = causal nodes examined; <code>skipped</code> = nodes not found. Confidence adjustments are bounded — outcome confidence scales the delta (high-confidence feedback produces larger changes).</p>
-<h3 id="blk-67821">Full provenance example</h3>
+<h3 id="blk-68649">Full provenance example</h3>
 <pre><code>learn(
   action: &quot;from_outcome&quot;,
   action_id: &quot;fix-auth-middleware&quot;,
@@ -62,19 +63,19 @@
   retrieval_trace_id: &quot;ret-12345&quot;,
   grounding: &quot;test suite output confirmed fix&quot;
 )</code></pre>
-<h3 id="blk-67823">Pattern</h3>
+<h3 id="blk-68651">Pattern</h3>
 <ol><li><p><code>retrieve(action: &quot;context&quot;, query: &quot;...&quot;)</code> → save <code>causal_context</code></p></li><li><p>Act on retrieved knowledge</p></li><li><p><code>learn(action: &quot;from_outcome&quot;, ...)</code> with real causal IDs and honest status</p></li></ol>
-<h3 id="blk-67831">Learn from Feedback</h3>
+<h3 id="blk-68659">Learn from Feedback</h3>
 <p>Process explicit feedback on a specific node:</p>
 <pre><code>learn(action: &quot;from_feedback&quot;, node_id: &quot;&lt;id&gt;&quot;, feedback_type: &quot;positive&quot;)
 learn(action: &quot;from_feedback&quot;, node_id: &quot;&lt;id&gt;&quot;, feedback_type: &quot;negative&quot;)
 learn(action: &quot;from_feedback&quot;, node_id: &quot;&lt;id&gt;&quot;, feedback_type: &quot;correction&quot;, correction: &quot;The correct fact is...&quot;)</code></pre>
 <ul><li><p><code>positive</code> → routes through <code>learn_from_outcome</code> with status <code>success</code></p></li><li><p><code>negative</code> → routes through <code>learn_from_outcome</code> with status <code>failure</code></p></li><li><p><code>correction</code> → directly updates the node content</p></li></ul>
-<h3 id="blk-67841">Detect Novelty</h3>
+<h3 id="blk-68669">Detect Novelty</h3>
 <p>Check if a query represents knowledge not yet in the graph:</p>
 <pre><code>learn(action: &quot;detect_novelty&quot;, query: &quot;some new concept&quot;, threshold: 0.35)</code></pre>
 <p>Returns <code>is_novel</code> (bool), <code>novelty_score</code> (0.0–1.0), and <code>nearest_nodes</code> with similarity scores. Higher novelty = less existing coverage.</p>
-<h3 id="blk-67845">Learn from Interaction</h3>
+<h3 id="blk-68673">Learn from Interaction</h3>
 <p>Full learning pipeline for a user-model exchange:</p>
 <pre><code>learn(
   action: &quot;from_interaction&quot;,
@@ -83,10 +84,10 @@ learn(action: &quot;from_feedback&quot;, node_id: &quot;&lt;id&gt;&quot;, feedba
   novelty_threshold: 0.35
 )</code></pre>
 <p>Pipeline: novelty check → store episodic node → extract semantic claims from response → create <code>derived_from</code> edges → link to nearest existing nodes.</p>
-<h3 id="blk-67849">Anti-patterns to avoid</h3>
+<h3 id="blk-68677">Anti-patterns to avoid</h3>
 <ul><li><p>Fire and forget — never reporting outcomes after using retrieved knowledge</p></li><li><p>Using <code>failure</code> when you mean <code>timeout</code> — timeout means unknown, not wrong</p></li><li><p>Fabricating causal node IDs — only use IDs from actual <code>causal_context</code></p></li><li><p>Setting confidence to 1.0 on every outcome — calibrate by signal reliability</p></li><li><p>Discarding <code>causal_context</code> between retrieval and outcome — hold it in working memory</p></li></ul></div>
 <p class="src"><a href="/#/graphonomous/docs/skills/learn.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-67781" class="lvl2">Arguments</a><a href="#blk-67783" class="lvl2">Report an Outcome</a><a href="#blk-67817" class="lvl3">Response structure</a><a href="#blk-67821" class="lvl2">Full provenance example</a><a href="#blk-67823" class="lvl2">Pattern</a><a href="#blk-67831" class="lvl2">Learn from Feedback</a><a href="#blk-67841" class="lvl2">Detect Novelty</a><a href="#blk-67845" class="lvl2">Learn from Interaction</a><a href="#blk-67849" class="lvl2">Anti-patterns to avoid</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a><a href="/graphonomous/docs/skills/attention.md/">Attention Engine</a><a href="/graphonomous/docs/skills/belief.md/">Belief Revision</a><a href="/graphonomous/docs/skills/bootstrap.md/">Graphonomous Bootstrap</a><a href="/graphonomous/docs/skills/consolidate.md/">Consolidation</a><a href="/graphonomous/docs/skills/deliberate.md/">Topology and Deliberation</a><a href="/graphonomous/docs/skills/epistemic-frontier.md/">Epistemic Frontier — Uncertainty-Guided Investigation</a><a href="/graphonomous/docs/skills/forgetting.md/">Intentional Forgetting — Structured Knowledge Removal</a><a href="/graphonomous/docs/skills/goals.md/">Goal Management</a><a href="/graphonomous/docs/skills/graph-health.md/">Graph Health Check</a><a href="/graphonomous/docs/skills/inspect.md/">Graph Inspection</a><a href="/graphonomous/docs/skills/retrieve.md/">Retrieve and Remember</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraqncwzzz3qkecczjg6ebtn56vrgczawzos4cnkz3c4uej7vc7g64a</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-68609" class="lvl2">Arguments</a><a href="#blk-68611" class="lvl2">Report an Outcome</a><a href="#blk-68645" class="lvl3">Response structure</a><a href="#blk-68649" class="lvl2">Full provenance example</a><a href="#blk-68651" class="lvl2">Pattern</a><a href="#blk-68659" class="lvl2">Learn from Feedback</a><a href="#blk-68669" class="lvl2">Detect Novelty</a><a href="#blk-68673" class="lvl2">Learn from Interaction</a><a href="#blk-68677" class="lvl2">Anti-patterns to avoid</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/graphonomous/docs/index.md/">Graphonomous Documentation</a><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/graphonomous/docs/skills/SKILLS.md/">Graphonomous MCP — Agent Skills</a><a href="/graphonomous/docs/skills/attention.md/">Attention Engine</a><a href="/graphonomous/docs/skills/belief.md/">Belief Revision</a><a href="/graphonomous/docs/skills/bootstrap.md/">Graphonomous Bootstrap</a><a href="/graphonomous/docs/skills/consolidate.md/">Consolidation</a><a href="/graphonomous/docs/skills/deliberate.md/">Topology and Deliberation</a><a href="/graphonomous/docs/skills/epistemic-frontier.md/">Epistemic Frontier — Uncertainty-Guided Investigation</a><a href="/graphonomous/docs/skills/forgetting.md/">Intentional Forgetting — Structured Knowledge Removal</a><a href="/graphonomous/docs/skills/goals.md/">Goal Management</a><a href="/graphonomous/docs/skills/graph-health.md/">Graph Health Check</a><a href="/graphonomous/docs/skills/inspect.md/">Graph Inspection</a><a href="/graphonomous/docs/skills/retrieve.md/">Retrieve and Remember</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierahvfu76owjredpzirdae36i7tckvdwwkqrtzczoudcjc543a2v3vq</div></div></div>
 </div></div>
 </body></html>

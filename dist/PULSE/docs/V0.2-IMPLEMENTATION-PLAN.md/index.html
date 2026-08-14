@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>PULSE v0.2 — Implementation Plan · PULSE · Ampersand Box</title>
 <meta name="description" content="Companion to: V0.2-BEHAVIORAL-TYPES.md Status: Engineering plan (2026-05-27). Reviewable; not yet started.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/PULSE/docs/V0.2-IMPLEMENTATION-PLAN.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"PULSE v0.2 — Implementation Plan","name":"PULSE v0.2 — Implementation Plan","description":"Companion to: V0.2-BEHAVIORAL-TYPES.md Status: Engineering plan (2026-05-27). Reviewable; not yet started.","url":"https://docs.ampersandboxdesign.com/PULSE/docs/V0.2-IMPLEMENTATION-PLAN.md/","identifier":"bagaaierauhm35ljaqia52fbgnyt6zjvyrw6hnp56kczl66o5xbug4fde53lq","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"PULSE","url":"https://docs.ampersandboxdesign.com/PULSE/"},"articleSection":"PULSE","hasPart":[{"@type":"WebPageElement","name":"Repo touch map"},{"@type":"WebPageElement","name":"Task order (cheap → expensive)"},{"@type":"WebPageElement","name":"Task 1 — Typed token registry (≈1–2 days)"},{"@type":"WebPageElement","name":"Task 2 — Phase signatures + effect rows (≈1 day)"},{"@type":"WebPageElement","name":"Task 3 — Session-type derivation + offline checker (≈3–5 days)"},{"@type":"WebPageElement","name":"Task 4 — Linear-token runtime enforcement (≈1–2 days)"},{"@type":"WebPageElement","name":"Task 5 — Behavioral subtyping (≈2 days)"},{"@type":"WebPageElement","name":"Task 6 — Choreography + projection (≈1–2 weeks)"},{"@type":"WebPageElement","name":"Task 7 — Documentation + migration guide (≈2 days)"},{"@type":"WebPageElement","name":"Total effort"},{"@type":"WebPageElement","name":"Acceptance criteria for v0.2 release"},{"@type":"WebPageElement","name":"Risk register"},{"@type":"WebPageElement","name":"What v0.2 explicitly does NOT add"},{"@type":"WebPageElement","name":"Ready-to-start checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"PULSE","item":"https://docs.ampersandboxdesign.com/PULSE/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/PULSE/docs/"},{"@type":"ListItem","position":4,"name":"V0.2-IMPLEMENTATION-PLAN.md","item":"https://docs.ampersandboxdesign.com/PULSE/docs/V0.2-IMPLEMENTATION-PLAN.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"PULSE v0.2 — Implementation Plan","name":"PULSE v0.2 — Implementation Plan","description":"Companion to: V0.2-BEHAVIORAL-TYPES.md Status: Engineering plan (2026-05-27). Reviewable; not yet started.","url":"https://docs.ampersandboxdesign.com/PULSE/docs/V0.2-IMPLEMENTATION-PLAN.md/","identifier":"bagaaieramzzjmaj5uynoah2g5v56w65lxqmljqyp3szz72okaqnfalyvqsya","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"PULSE","url":"https://docs.ampersandboxdesign.com/PULSE/"},"articleSection":"PULSE","hasPart":[{"@type":"WebPageElement","name":"Repo touch map"},{"@type":"WebPageElement","name":"Task order (cheap → expensive)"},{"@type":"WebPageElement","name":"Task 1 — Typed token registry (≈1–2 days)"},{"@type":"WebPageElement","name":"Task 2 — Phase signatures + effect rows (≈1 day)"},{"@type":"WebPageElement","name":"Task 3 — Session-type derivation + offline checker (≈3–5 days)"},{"@type":"WebPageElement","name":"Task 4 — Linear-token runtime enforcement (≈1–2 days)"},{"@type":"WebPageElement","name":"Task 5 — Behavioral subtyping (≈2 days)"},{"@type":"WebPageElement","name":"Task 6 — Choreography + projection (≈1–2 weeks)"},{"@type":"WebPageElement","name":"Task 7 — Documentation + migration guide (≈2 days)"},{"@type":"WebPageElement","name":"Total effort"},{"@type":"WebPageElement","name":"Acceptance criteria for v0.2 release"},{"@type":"WebPageElement","name":"Risk register"},{"@type":"WebPageElement","name":"What v0.2 explicitly does NOT add"},{"@type":"WebPageElement","name":"Ready-to-start checklist"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"PULSE","item":"https://docs.ampersandboxdesign.com/PULSE/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/PULSE/docs/"},{"@type":"ListItem","position":4,"name":"V0.2-IMPLEMENTATION-PLAN.md","item":"https://docs.ampersandboxdesign.com/PULSE/docs/V0.2-IMPLEMENTATION-PLAN.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,9 +23,9 @@
 
 </div></div>
 <div class="lead">Companion to: V0.2-BEHAVIORAL-TYPES.md Status: Engineering plan (2026-05-27). Reviewable; not yet started.</div>
-<div class="prose"><h1 id="blk-23495">PULSE v0.2 — Implementation Plan</h1>
+<div class="prose"><h1 id="blk-23528">PULSE v0.2 — Implementation Plan</h1>
 <p><strong>Companion to:</strong> <code>V0.2-BEHAVIORAL-TYPES.md</code> <strong>Status:</strong> Engineering plan (2026-05-27). Reviewable; not yet started.</p>
-<h3 id="blk-23497">Repo touch map</h3>
+<h3 id="blk-23530">Repo touch map</h3>
 <pre><code>PULSE/
 ├── schemas/
 │   ├── pulse-loop-manifest.v0.1.json        (frozen — keep as-is)
@@ -69,9 +70,9 @@
 └── docs/
     ├── V0.2-BEHAVIORAL-TYPES.md             (design — written)
     └── V0.2-IMPLEMENTATION-PLAN.md          (this file)</code></pre>
-<h3 id="blk-23499">Task order (cheap → expensive)</h3>
+<h3 id="blk-23532">Task order (cheap → expensive)</h3>
 <p>Each task is independently shippable. Pause for review at any checkpoint.</p>
-<h4 id="blk-23501">Task 1 — Typed token registry (≈1–2 days)</h4>
+<h4 id="blk-23534">Task 1 — Typed token registry (≈1–2 days)</h4>
 <p><strong>Deliverables</strong></p>
 <ul><li><p><code>schemas/pulse-tokens.v0.2.json</code> with 8 canonical tokens, each declaring</p></li></ul>
 <p><code>linearity</code>, <code>variance</code>, <code>ttl_ms</code>, and a path to a payload schema.</p>
@@ -87,7 +88,7 @@
 <p>and are accepted by the registry alongside canonical names.</p>
 <p><strong>Acceptance</strong></p>
 <ul><li><p><code>npm test</code> green.</p></li><li><p>Existing 12 conformance tests still pass on all 5 reference manifests.</p></li></ul>
-<h4 id="blk-23566">Task 2 — Phase signatures + effect rows (≈1 day)</h4>
+<h4 id="blk-23599">Task 2 — Phase signatures + effect rows (≈1 day)</h4>
 <p><strong>Deliverables</strong></p>
 <ul><li><p><code>schemas/pulse-loop-manifest.v0.2.json</code> extends v0.1.1 with optional</p></li></ul>
 <p><code>inputs</code>, <code>outputs</code>, <code>effects</code>, <code>refinements</code>, <code>successors</code> fields.</p>
@@ -98,7 +99,7 @@
 <p>error path.</p>
 <p><strong>Acceptance</strong></p>
 <ul><li><p>5 reference manifests validate under v0.2 without modification.</p></li></ul>
-<h4 id="blk-23591">Task 3 — Session-type derivation + offline checker (≈3–5 days)</h4>
+<h4 id="blk-23624">Task 3 — Session-type derivation + offline checker (≈3–5 days)</h4>
 <p><strong>Deliverables</strong></p>
 <ul><li><p><code>src/session_type.ts</code> builds an automaton from phase <code>successors</code>:</p></li><li><p>Nodes = phase IDs</p></li><li><p>Edges = declared successors</p></li><li><p>Initial state(s) = phases with no predecessor or kind=<code>retrieve</code></p></li><li><p>Accepting state(s) = phases with empty successors or kind=<code>consolidate</code></p></li><li><p>Functions: <code>reachable_set(automaton)</code>, <code>has_progress(automaton)</code>,</p></li></ul>
 <p><code>derive_regex(automaton)</code>.</p>
@@ -113,7 +114,7 @@
 <p><strong>Acceptance</strong></p>
 <ul><li><p>All 5 reference manifests pass <code>pulse check</code> after Task 2 enrichment OR</p></li></ul>
 <p>pass with <code>degraded_checks: true</code> if left as v0.1.1 shapes.</p>
-<h4 id="blk-23636">Task 4 — Linear-token runtime enforcement (≈1–2 days)</h4>
+<h4 id="blk-23669">Task 4 — Linear-token runtime enforcement (≈1–2 days)</h4>
 <p><strong>Deliverables</strong></p>
 <ul><li><p><code>src/runtime_fidelity.ts</code> initial cut: given an in-memory trace</p></li></ul>
 <p>(array of <code>{phase_id, emitted: Token[], consumed: Token[]}</code>), verify linear/affine/relevant constraints.</p>
@@ -126,7 +127,7 @@
 <p><strong>Acceptance</strong></p>
 <ul><li><p><code>SessionFidelityViolation</code> token emitted via existing CloudEvents</p></li></ul>
 <p>envelope plumbing on detected violations.</p>
-<h4 id="blk-23665">Task 5 — Behavioral subtyping (≈2 days)</h4>
+<h4 id="blk-23698">Task 5 — Behavioral subtyping (≈2 days)</h4>
 <p><strong>Deliverables</strong></p>
 <ul><li><p><code>src/subtype.ts</code> implements the <code>A &lt;: B</code> relation per the</p></li></ul>
 <p>V0.2-BEHAVIORAL-TYPES spec section 5.</p>
@@ -137,7 +138,7 @@
 <p><strong>Acceptance</strong></p>
 <ul><li><p><code>pulse compat graphonomous@0.4.3 graphonomous@0.4.4</code> produces a</p></li></ul>
 <p>meaningful verdict against the actual deployed versions.</p>
-<h4 id="blk-23694">Task 6 — Choreography + projection (≈1–2 weeks)</h4>
+<h4 id="blk-23727">Task 6 — Choreography + projection (≈1–2 weeks)</h4>
 <p><strong>Deliverables</strong></p>
 <ul><li><p><code>schemas/pulse-choreography.v0.2.json</code>.</p></li><li><p><code>manifests/continual_learning_with_prism.choreography.json</code> (co-located</p></li></ul>
 <p>with loop manifests per resolved Q2) — the first real choreography spanning graphonomous + prism + agentromatic.</p>
@@ -154,7 +155,7 @@
 <p><strong>Acceptance</strong></p>
 <ul><li><p><code>pulse check</code> over all 3 participants of the reference choreography</p></li></ul>
 <p>reports projection-consistency green.</p>
-<h4 id="blk-23731">Task 7 — Documentation + migration guide (≈2 days)</h4>
+<h4 id="blk-23764">Task 7 — Documentation + migration guide (≈2 days)</h4>
 <p><strong>Deliverables</strong></p>
 <ul><li><p>Update <code>README.md</code> PULSE conformance section: 23 tests (was 12).</p></li><li><p>Update <code>docs/NPM_PACKAGE.md</code>: new MCP tools + resources.</p></li><li><p>New <code>docs/V0.2-MIGRATION.md</code>: a 1-page &quot;upgrade your v0.1.1 manifest&quot;</p></li></ul>
 <p>walkthrough using graphonomous as the worked example.</p>
@@ -163,10 +164,10 @@
 <p><strong>Acceptance</strong></p>
 <ul><li><p>A reader unfamiliar with v0.2 can take a v0.1.1 manifest and produce a</p></li></ul>
 <p>fully-typed v0.2 manifest by following V0.2-MIGRATION.md alone.</p>
-<h3 id="blk-23750">Total effort</h3>
+<h3 id="blk-23783">Total effort</h3>
 <table><thead><tr><th>Phase</th><th>Days</th></tr></thead><tbody><tr><td>Task 1 — Token registry</td><td>1–2</td></tr><tr><td>Task 2 — Phase signatures + effects</td><td>1</td></tr><tr><td>Task 3 — Session-type derivation</td><td>3–5</td></tr><tr><td>Task 4 — Linear-token runtime</td><td>1–2</td></tr><tr><td>Task 5 — Subtyping</td><td>2</td></tr><tr><td>Task 6 — Choreography + projection</td><td>7–10</td></tr><tr><td>Task 7 — Docs + migration</td><td>2</td></tr><tr><td><strong>Total</strong></td><td><strong>~3–4 weeks focused</strong></td></tr></tbody></table>
 <p>Tasks 1–5 alone (~1.5 weeks) get PULSE to ~36/40, already past Agent Behavioral Contracts (33/40). Task 6 is the difference between &quot;great&quot; and &quot;top of ranking&quot; (39/40).</p>
-<h3 id="blk-23771">Acceptance criteria for v0.2 release</h3>
+<h3 id="blk-23804">Acceptance criteria for v0.2 release</h3>
 <ol><li><p>All 5 reference manifests upgraded to v0.2 shapes (Task 2 + Task 3).</p></li><li><p>The 12 existing conformance tests still pass on all 5 manifests.</p></li><li><p>The 11 new conformance tests (T13–T23) pass on all 5 manifests after</p></li></ol>
 <p>upgrade.</p>
 <ol start="4"><li><p>The <code>continual_learning_with_prism.choreography.json</code> round-trips through</p></li></ol>
@@ -175,14 +176,14 @@
 <p><code>--help</code> and <code>README.md</code>.</p>
 <ol start="6"><li><p><code>npm test</code> green; no decrease in coverage.</p></li><li><p>Backwards compat verified: a v0.1.1 manifest still validates and runs</p></li></ol>
 <p>under v0.2 with <code>degraded_checks: true</code>.</p>
-<h3 id="blk-23794">Risk register</h3>
+<h3 id="blk-23827">Risk register</h3>
 <table><thead><tr><th>Risk</th><th>Likelihood</th><th>Mitigation</th></tr></thead><tbody><tr><td>Manifest size doubles (annotation overhead drives users away)</td><td>Med</td><td>Enforce 30–50% growth budget on reference manifests; if exceeded, default more fields</td></tr><tr><td>Vendored refinement evaluator too weak for some constraints</td><td>Med</td><td>Document supported subset; unsupported predicates pass through as documentation; runtime fidelity (T21–T23) catches violations not provable offline</td></tr><tr><td>Session-type derivation chokes on cyclic-but-valid phase graphs</td><td>Med</td><td>Accept loops if a <code>consolidate</code> or <code>route</code>-to-<code>retrieve</code> arc exists (cycle = continual loop, not deadlock)</td></tr><tr><td>Choreography projection blows up combinatorially with parallel branches</td><td>Med</td><td>Cap parallel depth at 4 for v0.2; document the limit</td></tr><tr><td>Existing PRISM benchmarks regress because they read v0.1.1 manifests</td><td>Low</td><td>v0.2 schema is additive; PRISM reads only fields it knows</td></tr></tbody></table>
-<h3 id="blk-23814">What v0.2 explicitly does NOT add</h3>
+<h3 id="blk-23847">What v0.2 explicitly does NOT add</h3>
 <ul><li><p>No new transport (still CloudEvents over stdio MCP).</p></li><li><p>No new persistence backend (still SQLite + sqlite-vec).</p></li><li><p>No formal verification of <em>substrate-level</em> behavior (the manifest is</p></li></ul>
 <p>typed; the underlying Elixir/TS code is not).</p>
 <ul><li><p>No automated v0.1 → v0.2 migration tool (migration is documented but</p></li></ul>
 <p>manual; reference manifests serve as worked examples).</p>
-<h3 id="blk-23827">Ready-to-start checklist</h3>
+<h3 id="blk-23860">Ready-to-start checklist</h3>
 <ul><li><p>[x] <strong>Q1 — Linearity default:</strong> <code>linear</code> for new canonical tokens; <code>affine</code></p></li></ul>
 <p>only for observational/idempotent (resolved 2026-05-27 per OS-010 §7.3).</p>
 <ul><li><p>[x] <strong>Q2 — Choreography location:</strong> co-located in <code>manifests/</code> (resolved</p></li></ul>
@@ -197,6 +198,6 @@
 <p>Rationale evidence for each resolution is in <code>docs/V0.2-RATIONALE.md</code> (planned, optional — quotes are also folded into the spec body and into the &quot;Resolved design questions&quot; section of V0.2-BEHAVIORAL-TYPES.md).</p></div>
 <p class="src"><a href="/#/PULSE/docs/V0.2-IMPLEMENTATION-PLAN.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-23497" class="lvl2">Repo touch map</a><a href="#blk-23499" class="lvl2">Task order (cheap → expensive)</a><a href="#blk-23501" class="lvl3">Task 1 — Typed token registry (≈1–2 days)</a><a href="#blk-23566" class="lvl3">Task 2 — Phase signatures + effect rows (≈1 day)</a><a href="#blk-23591" class="lvl3">Task 3 — Session-type derivation + offline checker (≈3–5 days)</a><a href="#blk-23636" class="lvl3">Task 4 — Linear-token runtime enforcement (≈1–2 days)</a><a href="#blk-23665" class="lvl3">Task 5 — Behavioral subtyping (≈2 days)</a><a href="#blk-23694" class="lvl3">Task 6 — Choreography + projection (≈1–2 weeks)</a><a href="#blk-23731" class="lvl3">Task 7 — Documentation + migration guide (≈2 days)</a><a href="#blk-23750" class="lvl2">Total effort</a><a href="#blk-23771" class="lvl2">Acceptance criteria for v0.2 release</a><a href="#blk-23794" class="lvl2">Risk register</a><a href="#blk-23814" class="lvl2">What v0.2 explicitly does NOT add</a><a href="#blk-23827" class="lvl2">Ready-to-start checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/PULSE/docs/THREE_PROTOCOL_STACK.md/">The Three-Protocol Stack: [&amp;], PULSE, PRISM</a></div><div class="card"><div class="lab">in this folder</div><a href="/PULSE/docs/ARITHMETIC_INTEGRATION.md/">PULSE × box-and-box — Arithmetic Integration Review</a><a href="/PULSE/docs/NPM_PACKAGE.md/">os-pulse — NPM Package Specification</a><a href="/PULSE/docs/THREE_PROTOCOL_STACK.md/">The Three-Protocol Stack: [&amp;], PULSE, PRISM</a><a href="/PULSE/docs/V0.2-BEHAVIORAL-TYPES.md/">PULSE v0.2 — Behavioral Loop Types</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierauhm35ljaqia52fbgnyt6zjvyrw6hnp56kczl66o5xbug4fde53lq</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-23530" class="lvl2">Repo touch map</a><a href="#blk-23532" class="lvl2">Task order (cheap → expensive)</a><a href="#blk-23534" class="lvl3">Task 1 — Typed token registry (≈1–2 days)</a><a href="#blk-23599" class="lvl3">Task 2 — Phase signatures + effect rows (≈1 day)</a><a href="#blk-23624" class="lvl3">Task 3 — Session-type derivation + offline checker (≈3–5 days)</a><a href="#blk-23669" class="lvl3">Task 4 — Linear-token runtime enforcement (≈1–2 days)</a><a href="#blk-23698" class="lvl3">Task 5 — Behavioral subtyping (≈2 days)</a><a href="#blk-23727" class="lvl3">Task 6 — Choreography + projection (≈1–2 weeks)</a><a href="#blk-23764" class="lvl3">Task 7 — Documentation + migration guide (≈2 days)</a><a href="#blk-23783" class="lvl2">Total effort</a><a href="#blk-23804" class="lvl2">Acceptance criteria for v0.2 release</a><a href="#blk-23827" class="lvl2">Risk register</a><a href="#blk-23847" class="lvl2">What v0.2 explicitly does NOT add</a><a href="#blk-23860" class="lvl2">Ready-to-start checklist</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/PULSE/docs/THREE_PROTOCOL_STACK.md/">The Three-Protocol Stack: [&amp;], PULSE, PRISM</a></div><div class="card"><div class="lab">in this folder</div><a href="/PULSE/docs/ARITHMETIC_INTEGRATION.md/">PULSE × box-and-box — Arithmetic Integration Review</a><a href="/PULSE/docs/NPM_PACKAGE.md/">os-pulse — NPM Package Specification</a><a href="/PULSE/docs/THREE_PROTOCOL_STACK.md/">The Three-Protocol Stack: [&amp;], PULSE, PRISM</a><a href="/PULSE/docs/V0.2-BEHAVIORAL-TYPES.md/">PULSE v0.2 — Behavioral Loop Types</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieramzzjmaj5uynoah2g5v56w65lxqmljqyp3szz72okaqnfalyvqsya</div></div></div>
 </div></div>
 </body></html>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>Delegatic — Governance for AI Agent Teams · delegatic.com · Ampersand Box</title>
 <meta name="description" content="Date: February 21, 2026 Status: Draft Author: [&amp;] Ampersand Box Design License: MIT (open core) Stack: Elixir · OTP · Phoenix · Ecto · PostgreSQL">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/delegatic.com/docs/spec/README.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Delegatic — Governance for AI Agent Teams","name":"Delegatic — Governance for AI Agent Teams","description":"Date: February 21, 2026 Status: Draft Author: [&] Ampersand Box Design License: MIT (open core) Stack: Elixir · OTP · Phoenix · Ecto · PostgreSQL","url":"https://docs.ampersandboxdesign.com/delegatic.com/docs/spec/README.md/","identifier":"bagaaieramjesw5qn6nzkt4natwg7qy5ggldenefccnutxnn3kwgvrmjsci7a","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"delegatic.com","url":"https://docs.ampersandboxdesign.com/delegatic.com/"},"articleSection":"delegatic.com","hasPart":[{"@type":"WebPageElement","name":"Technical Specification v0.2 (Elixir/OTP)"},{"@type":"WebPageElement","name":"1. Overview"},{"@type":"WebPageElement","name":"1.1 The Problem"},{"@type":"WebPageElement","name":"1.2 Design Principles"},{"@type":"WebPageElement","name":"1.3 Why Elixir"},{"@type":"WebPageElement","name":"1.4 One-Liner"},{"@type":"WebPageElement","name":"2. Architecture"},{"@type":"WebPageElement","name":"2.1 GoalGraph Integration (Graphonomous)"},{"@type":"WebPageElement","name":"2.2 OTP Supervision Tree"},{"@type":"WebPageElement","name":"2.3 Component Summary"},{"@type":"WebPageElement","name":"3. Data Model (Ecto Schemas)"},{"@type":"WebPageElement","name":"3.1 Organizations"},{"@type":"WebPageElement","name":"3.2 Goal Attachments (GoalGraph References)"},{"@type":"WebPageElement","name":"OrgGoal Attachment Schema (Ecto)"},{"@type":"WebPageElement","name":"3.3 Memberships"},{"@type":"WebPageElement","name":"3.4 Policies"},{"@type":"WebPageElement","name":"3.5 Effective Policy Computation"},{"@type":"WebPageElement","name":"3.6 Audit Events (Append-Only)"},{"@type":"WebPageElement","name":"4. Cycle Detection (ETS Tree Cache)"},{"@type":"WebPageElement","name":"5. Phoenix LiveView Dashboard"},{"@type":"WebPageElement","name":"5.1 PULSE Loop Manifest"},{"@type":"WebPageElement","name":"6. Tech Stack"},{"@type":"WebPageElement","name":"7. Roadmap"},{"@type":"WebPageElement","name":"Phase 1: Core Governance (Weeks 1–6)"},{"@type":"WebPageElement","name":"Phase 2: Integration (Weeks 7–10)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"delegatic.com","item":"https://docs.ampersandboxdesign.com/delegatic.com/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/delegatic.com/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/delegatic.com/docs/spec/"},{"@type":"ListItem","position":5,"name":"README.md","item":"https://docs.ampersandboxdesign.com/delegatic.com/docs/spec/README.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Delegatic — Governance for AI Agent Teams","name":"Delegatic — Governance for AI Agent Teams","description":"Date: February 21, 2026 Status: Draft Author: [&] Ampersand Box Design License: MIT (open core) Stack: Elixir · OTP · Phoenix · Ecto · PostgreSQL","url":"https://docs.ampersandboxdesign.com/delegatic.com/docs/spec/README.md/","identifier":"bagaaierajkovyeg3yss5zarqtzrba3vnkmtoqqh6ryfit2uk7ghjsn3qqqkq","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"delegatic.com","url":"https://docs.ampersandboxdesign.com/delegatic.com/"},"articleSection":"delegatic.com","hasPart":[{"@type":"WebPageElement","name":"Technical Specification v0.2 (Elixir/OTP)"},{"@type":"WebPageElement","name":"1. Overview"},{"@type":"WebPageElement","name":"1.1 The Problem"},{"@type":"WebPageElement","name":"1.2 Design Principles"},{"@type":"WebPageElement","name":"1.3 Why Elixir"},{"@type":"WebPageElement","name":"1.4 One-Liner"},{"@type":"WebPageElement","name":"2. Architecture"},{"@type":"WebPageElement","name":"2.1 GoalGraph Integration (Graphonomous)"},{"@type":"WebPageElement","name":"2.2 OTP Supervision Tree"},{"@type":"WebPageElement","name":"2.3 Component Summary"},{"@type":"WebPageElement","name":"3. Data Model (Ecto Schemas)"},{"@type":"WebPageElement","name":"3.1 Organizations"},{"@type":"WebPageElement","name":"3.2 Goal Attachments (GoalGraph References)"},{"@type":"WebPageElement","name":"OrgGoal Attachment Schema (Ecto)"},{"@type":"WebPageElement","name":"3.3 Memberships"},{"@type":"WebPageElement","name":"3.4 Policies"},{"@type":"WebPageElement","name":"3.5 Effective Policy Computation"},{"@type":"WebPageElement","name":"3.6 Audit Events (Append-Only)"},{"@type":"WebPageElement","name":"4. Cycle Detection (ETS Tree Cache)"},{"@type":"WebPageElement","name":"5. Phoenix LiveView Dashboard"},{"@type":"WebPageElement","name":"5.1 PULSE Loop Manifest"},{"@type":"WebPageElement","name":"6. Tech Stack"},{"@type":"WebPageElement","name":"7. Roadmap"},{"@type":"WebPageElement","name":"Phase 1: Core Governance (Weeks 1–6)"},{"@type":"WebPageElement","name":"Phase 2: Integration (Weeks 7–10)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"delegatic.com","item":"https://docs.ampersandboxdesign.com/delegatic.com/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/delegatic.com/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/delegatic.com/docs/spec/"},{"@type":"ListItem","position":5,"name":"README.md","item":"https://docs.ampersandboxdesign.com/delegatic.com/docs/spec/README.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,21 +23,21 @@
 
 </div></div>
 <div class="lead">Date: February 21, 2026 Status: Draft Author: [&amp;] Ampersand Box Design License: MIT (open core) Stack: Elixir · OTP · Phoenix · Ecto · PostgreSQL</div>
-<div class="prose"><h1 id="blk-58898">Delegatic — Governance for AI Agent Teams</h1>
-<h3 id="blk-58899">Technical Specification v0.2 (Elixir/OTP)</h3>
+<div class="prose"><h1 id="blk-59668">Delegatic — Governance for AI Agent Teams</h1>
+<h3 id="blk-59669">Technical Specification v0.2 (Elixir/OTP)</h3>
 <p><strong>Date:</strong> February 21, 2026 <strong>Status:</strong> Draft <strong>Author:</strong> [&amp;] Ampersand Box Design <strong>License:</strong> MIT (open core) <strong>Stack:</strong> Elixir · OTP · Phoenix · Ecto · PostgreSQL</p>
-<h3 id="blk-58901">1. Overview</h3>
+<h3 id="blk-59671">1. Overview</h3>
 <p>Delegatic is the <strong>governance and orchestration layer</strong> for multi-agent AI systems. It defines who can do what, enforces policy boundaries, manages organizational hierarchy, and provides immutable audit trails for every decision. It does not execute tasks, host agents, or run workflows — it defines the structure within which all other [&amp;] products operate.</p>
 <p>As the stack becomes more autonomous over time, Delegatic also becomes the place where <strong>durable intent is referenced and governed</strong>: it stores <strong>references</strong> to Graphonomous GoalGraph <code>goal_id</code>s (never the goal content itself) so that task requests, workflow runs, and sensitive mutations can be authorized and audited <em>in the context of an explicit goal</em>.</p>
-<h4 id="blk-58904">1.1 The Problem</h4>
+<h4 id="blk-59674">1.1 The Problem</h4>
 <p>As AI agent teams scale beyond a handful of agents, organizations face a governance crisis: who authorized this agent to access customer data? Why did this workflow run without approval? Which team's budget was charged? Current agent frameworks (CrewAI, LangGraph, AutoGen) have zero governance primitives. They assume a single developer controls everything. That breaks at enterprise scale.</p>
-<h4 id="blk-58906">1.2 Design Principles</h4>
+<h4 id="blk-59676">1.2 Design Principles</h4>
 <ol><li><p><strong>Containment trees</strong> — Organizations nest in a strict tree. No cycles. No DAGs. Structure IS the authorization model.</p></li><li><p><strong>Monotonic policy inheritance</strong> — Children can tighten but never widen parent restrictions. Privilege escalation is impossible by design.</p></li><li><p><strong>Deny by default</strong> — No implicit permissions. Every capability must be explicitly granted at some level.</p></li><li><p><strong>Append-only audit</strong> — Every mutation is logged immutably with actor, timestamp, and provenance.</p></li><li><p><strong>References, not copies</strong> — Delegatic stores IDs to telespaces, agents, workflows, and goals. It never copies their data. Zero duplication.</p></li><li><p><strong>Goal-aware governance</strong> — Delegatic can require that actions and workflows declare a <code>goal_id</code>, enforce policies against the goal’s context (org, horizon, status), and ensure audits remain interpretable over long horizons.</p></li><li><p><strong>Governance, not execution</strong> — Delegatic defines boundaries. AgenTroMatic automates within them. Distinct layers.</p></li></ol>
-<h4 id="blk-58922">1.3 Why Elixir</h4>
+<h4 id="blk-59692">1.3 Why Elixir</h4>
 <p>The containment tree maps directly to OTP supervision trees. Each organization is a GenServer process supervised by its parent org's supervisor. Policy changes propagate via message passing. The BEAM's concurrency model means effective policy lookups happen in microseconds via ETS, and real-time dashboard updates flow through Phoenix PubSub with zero additional infrastructure.</p>
-<h4 id="blk-58924">1.4 One-Liner</h4>
+<h4 id="blk-59694">1.4 One-Liner</h4>
 <blockquote><p>&quot;The platform that delegates. Organization hierarchy, policy inheritance, and audit trails for AI agent teams.&quot;</p></blockquote>
-<h3 id="blk-58927">2. Architecture</h3>
+<h3 id="blk-59697">2. Architecture</h3>
 <pre><code>┌──────────────────────────────────────────────────────────────┐
 │                         DELEGATIC                             │
 │                    Governance Layer (Elixir/OTP)               │
@@ -86,13 +87,13 @@
 │   ├── AgenTroMatic workflow IDs (optional)                     │
 │   └── WHS agent IDs (optional)                                 │
 └──────────────────────────────────────────────────────────────┘</code></pre>
-<h4 id="blk-58929">2.1 GoalGraph Integration (Graphonomous)</h4>
+<h4 id="blk-59699">2.1 GoalGraph Integration (Graphonomous)</h4>
 <p>Delegatic does <strong>not</strong> implement goals; Graphonomous does. Delegatic integrates by <strong>referencing</strong> GoalGraph nodes and using them as durable routing / auditing anchors.</p>
 <p><strong>Key ideas:</strong></p>
 <ul><li><p><strong>Reference-only</strong>: Delegatic stores <code>goal_id</code> (Graphonomous) and optional local tags, but never copies goal content, decomposition, or completion criteria.</p></li><li><p><strong>Goal-aware routing boundary</strong>: when a task/workflow request arrives with a <code>goal_id</code>, Delegatic can:</p></li><li><p>verify the caller/org is authorized to act under that goal reference,</p></li><li><p>enforce policy constraints (e.g. “long-horizon goals require admin role”, “agent deploy actions must be goal-scoped”),</p></li><li><p>write audit events with <code>goal_id</code> so later reviews can reconstruct intent.</p></li></ul>
 <p><strong>Contract expectations (cross-product):</strong></p>
 <ul><li><p>Orchestrators/executors (e.g. AgenTroMatic / OpenSentience wrappers) should include <code>goal_id</code> on task requests whenever the work is part of a persistent objective.</p></li><li><p>If <code>goal_id</code> is omitted, Delegatic treats the action as <em>unscoped</em> (stricter defaults and/or additional approvals are expected at higher layers).</p></li></ul>
-<h4 id="blk-58949">2.2 OTP Supervision Tree</h4>
+<h4 id="blk-59719">2.2 OTP Supervision Tree</h4>
 <pre><code>Delegatic.Application
 ├── Delegatic.Repo (Ecto/Postgres)
 ├── DelegaticWeb.Endpoint (Phoenix)
@@ -109,10 +110,10 @@
 └── Phoenix.PubSub (policy change broadcasts)</code></pre>
 <p>Each <code>Delegatic.OrgNode</code> GenServer holds:</p>
 <ul><li><p>Org metadata (name, slug, status)</p></li><li><p>Local policy rules (this org's overrides only)</p></li><li><p>Cached effective policy (computed on startup, invalidated on parent change)</p></li><li><p>List of child org PIDs</p></li></ul>
-<h4 id="blk-58961">2.3 Component Summary</h4>
+<h4 id="blk-59731">2.3 Component Summary</h4>
 <table><thead><tr><th>Component</th><th>Responsibility</th><th>OTP Pattern</th></tr></thead><tbody><tr><td><code>Delegatic.OrgNode</code></td><td>One organization. Holds local policy, caches effective policy, enforces tree invariants.</td><td>GenServer, supervised by parent OrgNode or RootOrgSupervisor</td></tr><tr><td><code>Delegatic.PolicyEngine</code></td><td>Computes effective policies, enforces monotonic inheritance, manages ETS cache.</td><td>GenServer + ETS table owner</td></tr><tr><td><code>Delegatic.AuditWriter</code></td><td>Batches audit events and writes to Postgres. Guarantees append-only.</td><td>Broadway pipeline</td></tr><tr><td><code>Delegatic.OrgTreeCache</code></td><td>In-memory tree topology for fast cycle detection and path lookups.</td><td>GenServer + ETS table owner</td></tr><tr><td><code>DelegaticWeb.*</code></td><td>Phoenix router, controllers, LiveView dashboards.</td><td>Phoenix conventions</td></tr></tbody></table>
-<h3 id="blk-58981">3. Data Model (Ecto Schemas)</h3>
-<h4 id="blk-58982">3.1 Organizations</h4>
+<h3 id="blk-59751">3. Data Model (Ecto Schemas)</h3>
+<h4 id="blk-59752">3.1 Organizations</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Delegatic.Orgs.Org</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
   <span class="t-kw">import</span> <span class="t-type">Ecto.Changeset</span>
@@ -144,13 +145,13 @@
 <span class="t-kw">end</span></code></pre>
 <p><strong>Invariants (enforced in context + OrgNode GenServer):</strong></p>
 <ul><li><p><code>parent_org_id</code> must reference an existing active org or be nil (root)</p></li><li><p>Cycle detection: on every parent change, traverse ETS tree cache — reject if current org appears in ancestor path</p></li><li><p>Max depth: 50 levels. Max total orgs per root: 10,000</p></li><li><p>Slug globally unique, lowercase alphanumeric + hyphens</p></li></ul>
-<h4 id="blk-58994">3.2 Goal Attachments (GoalGraph References)</h4>
+<h4 id="blk-59764">3.2 Goal Attachments (GoalGraph References)</h4>
 <p>Delegatic stores goal references as attachments so orgs can:</p>
 <ul><li><p>scope automation to explicit durable intent,</p></li><li><p>audit actions against a goal over long time horizons,</p></li><li><p>revoke/disable goal-linked automation without deleting goal data.</p></li></ul>
 <p><strong>Attachment model (reference-only):</strong></p>
 <ul><li><p><code>org_id</code> — owning org in Delegatic</p></li><li><p><code>goal_id</code> — Graphonomous GoalGraph node ID (opaque string)</p></li><li><p><code>tags</code> — optional local labels (e.g. <code>&quot;customer:acme&quot;</code>, <code>&quot;initiative:q1&quot;</code>)</p></li><li><p><code>created_by</code> — actor who attached the goal reference</p></li><li><p><code>created_at</code></p></li></ul>
 <p><strong>Important:</strong> goal status (<code>active/completed/failed/suspended</code>), decomposition, and completion criteria live in Graphonomous, not Delegatic.</p>
-<h5 id="blk-59016">OrgGoal Attachment Schema (Ecto)</h5>
+<h5 id="blk-59786">OrgGoal Attachment Schema (Ecto)</h5>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Delegatic.Attachments.OrgGoal</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
   <span class="t-kw">import</span> <span class="t-type">Ecto.Changeset</span>
@@ -187,7 +188,7 @@
 <span class="t-kw">end</span></code></pre>
 <p><strong>Invariants:</strong></p>
 <ul><li><p><code>goal_id</code> is treated as an opaque string (no parsing/semantics in Delegatic).</p></li><li><p>Uniqueness per org: <code>{org_id, goal_id}</code> is unique.</p></li><li><p>Revocation is soft (<code>status: :revoked</code>) so audits remain interpretable; no deletes are required.</p></li></ul>
-<h4 id="blk-59026">3.3 Memberships</h4>
+<h4 id="blk-59796">3.3 Memberships</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Delegatic.Memberships.Membership</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
 
@@ -203,7 +204,7 @@
 <span class="t-kw">end</span></code></pre>
 <p><strong>Invariants:</strong></p>
 <ul><li><p>Each org must have at least one <code>owner</code> (last-owner protection)</p></li><li><p>Role hierarchy: owner &gt; admin &gt; member &gt; viewer</p></li><li><p>Only owners can grant owner. Only owners/admins can grant admin.</p></li></ul>
-<h4 id="blk-59036">3.4 Policies</h4>
+<h4 id="blk-59806">3.4 Policies</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Delegatic.Policies.Policy</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
 
@@ -239,7 +240,7 @@
     timestamps()
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-59038">3.5 Effective Policy Computation</h4>
+<h4 id="blk-59808">3.5 Effective Policy Computation</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Delegatic.PolicyEngine</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">GenServer</span>
 
@@ -330,7 +331,7 @@
     <span class="t-type">Phoenix.PubSub</span>.broadcast(<span class="t-type">Delegatic.PubSub</span>, <span class="t-string">&quot;policy:#{org_id}&quot;</span>, {<span class="t-atom">:policy_invalidated</span>, org_id})
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h4 id="blk-59040">3.6 Audit Events (Append-Only)</h4>
+<h4 id="blk-59810">3.6 Audit Events (Append-Only)</h4>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Delegatic.Audit.Event</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">Ecto.Schema</span>
   <span class="t-attr">@primary_key</span> {<span class="t-atom">:id</span>, <span class="t-atom">:binary_id</span>, autogenerate: <span class="t-lit">true</span>}
@@ -356,7 +357,7 @@
 <span class="t-kw">end</span>
 
 <span class="t-comment"># AuditWriter: Broadway pipeline, batch inserts, no updates/deletes ever.</span></code></pre>
-<h3 id="blk-59042">4. Cycle Detection (ETS Tree Cache)</h3>
+<h3 id="blk-59812">4. Cycle Detection (ETS Tree Cache)</h3>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">Delegatic.OrgTreeCache</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">GenServer</span>
 
@@ -402,7 +403,7 @@
     <span class="t-kw">end</span>
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h3 id="blk-59044">5. Phoenix LiveView Dashboard</h3>
+<h3 id="blk-59814">5. Phoenix LiveView Dashboard</h3>
 <pre data-lang="elixir"><code><span class="t-kw">defmodule</span> <span class="t-type">DelegaticWeb.OrgTreeLive</span> <span class="t-kw">do</span>
   <span class="t-kw">use</span> <span class="t-type">DelegaticWeb</span>, <span class="t-atom">:live_view</span>
 
@@ -424,7 +425,7 @@
        <span class="t-type">Delegatic.PolicyEngine</span>.compute_effective(org_id))}
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h3 id="blk-59046">5.1 PULSE Loop Manifest</h3>
+<h3 id="blk-59816">5.1 PULSE Loop Manifest</h3>
 <p>Delegatic is a <strong>PULSE-conforming loop</strong> under OS-010, and is the <strong>canonical PULSE substrate for `policy` and `audit`</strong> — every other [&amp;] loop in the ecosystem references <code>delegatic://workspace/{ws_id}</code> and <code>delegatic://workspace/{ws_id}/audit</code> in their substrates blocks.</p>
 <p><strong>Loop ID:</strong> <code>delegatic.governance</code> <strong>Loop name:</strong> Delegatic Governance Loop <strong>Version:</strong> 0.1.0 <strong>Owner:</strong> delegatic.com <strong>Workspace scope:</strong> required</p>
 <p><strong>Phases (5 canonical kinds):</strong></p>
@@ -437,29 +438,29 @@
 <p><strong>Cross-loop connections:</strong></p>
 <ul><li><p><code>policy_invalidated</code> — emits <code>ConsolidationEvent</code> from <code>consolidate_audit</code> whenever effective policy changes; subscribed to by every loop that caches policy in ETS (so all caches flush together)</p></li><li><p><code>goal_violation_to_prism</code> — emits <code>OutcomeSignal</code> (governance violation) from <code>learn_drift</code> to <code>prism.benchmark.observe</code></p></li></ul>
 <p><strong>Why this matters:</strong> because Delegatic is the canonical policy/audit substrate, every other loop's <code>trace_id_propagation</code> invariant terminates in Delegatic's append-only audit log. This is what makes the [&amp;] ecosystem <strong>end-to-end auditable</strong>: a single <code>trace_id</code> can be followed from the originating <code>retrieve</code> phase, through every intermediate loop, to the final commit — across product boundaries.</p>
-<h3 id="blk-59093">6. Tech Stack</h3>
+<h3 id="blk-59863">6. Tech Stack</h3>
 <table><thead><tr><th>Layer</th><th>Technology</th><th>Rationale</th></tr></thead><tbody><tr><td>Language</td><td>Elixir 1.17+</td><td>Unified with entire [&amp;] portfolio. OTP supervision mirrors containment trees.</td></tr><tr><td>Framework</td><td>Phoenix 1.8+</td><td>LiveView for real-time dashboard. PubSub for policy propagation.</td></tr><tr><td>Database</td><td>PostgreSQL 16+</td><td>Ecto schemas, migrations, strong consistency for governance data.</td></tr><tr><td>Hot Cache</td><td>ETS</td><td>Effective policy lookups in microseconds. Read concurrency enabled.</td></tr><tr><td>Audit Pipeline</td><td>Broadway</td><td>Batched audit event writes. Back-pressure. Guaranteed delivery.</td></tr><tr><td>Background Jobs</td><td>Oban</td><td>Webhook notifications, compliance exports, scheduled cleanup.</td></tr><tr><td>Auth</td><td>Clerk → custom Plug</td><td>External ID mapped to internal user records.</td></tr><tr><td>Telemetry</td><td>:telemetry + Prometheus</td><td>Policy resolution latency, cycle detection timing, audit throughput.</td></tr><tr><td>Deployment</td><td>Mix release + Docker</td><td>Single BEAM node or clustered via libcluster.</td></tr></tbody></table>
-<h3 id="blk-59125">7. Roadmap</h3>
-<h4 id="blk-59126">Phase 1: Core Governance (Weeks 1–6)</h4>
+<h3 id="blk-59895">7. Roadmap</h3>
+<h4 id="blk-59896">Phase 1: Core Governance (Weeks 1–6)</h4>
 <ul><li><p>[ ] Ecto schemas + migrations</p></li><li><p>[ ] OrgTreeCache GenServer with cycle detection</p></li><li><p>[ ] PolicyEngine GenServer with monotonic validation + ETS cache</p></li><li><p>[ ] AuditWriter Broadway pipeline</p></li><li><p>[ ] Phoenix REST API</p></li><li><p>[ ] Phoenix LiveView: org tree + policy editor</p></li></ul>
-<h4 id="blk-59140">Phase 2: Integration (Weeks 7–10)</h4>
+<h4 id="blk-59910">Phase 2: Integration (Weeks 7–10)</h4>
 <ul><li><p>[ ] Telespace attachment flow (Delegatic ↔ Agentelic PubSub)</p></li><li><p>[ ] Policy check API for AgenTroMatic</p></li><li><p>[ ] WHS deployment gate</p></li><li><p>[ ] FleetPrompt install authorization</p></li></ul>
-<h4 id="blk-59150">Phase 3: Enterprise (Weeks 11–16)</h4>
+<h4 id="blk-59920">Phase 3: Enterprise (Weeks 11–16)</h4>
 <ul><li><p>[ ] SSO/SAML · Policy templates · Compliance exports</p></li><li><p>[ ] Oban jobs for webhook notifications</p></li><li><p>[ ] Bulk org import/export</p></li></ul>
-<h4 id="blk-59158">Phase 4: Federation (2027)</h4>
+<h4 id="blk-59928">Phase 4: Federation (2027)</h4>
 <ul><li><p>[ ] Distributed Erlang clustering via libcluster</p></li><li><p>[ ] Cross-node policy resolution</p></li><li><p>[ ] Property-based testing with StreamData</p></li></ul>
-<h3 id="blk-59166">8. Success Metrics</h3>
+<h3 id="blk-59936">8. Success Metrics</h3>
 <table><thead><tr><th>Metric</th><th>Target</th></tr></thead><tbody><tr><td>Effective policy lookup (ETS hot)</td><td>&lt; 5μs p99</td></tr><tr><td>Effective policy computation (cold)</td><td>&lt; 20ms p99</td></tr><tr><td>Cycle detection (depth-50 tree)</td><td>&lt; 1ms</td></tr><tr><td>Audit write throughput (Broadway)</td><td>&gt; 10K events/sec</td></tr></tbody></table>
-<h3 id="blk-59178">9. ADR Summary</h3>
-<h4 id="blk-59179">ADR-0001: Containment Tree &amp; No Cycles</h4>
+<h3 id="blk-59948">9. ADR Summary</h3>
+<h4 id="blk-59949">ADR-0001: Containment Tree &amp; No Cycles</h4>
 <p>Strict tree. Cycles rejected via ETS traversal. Max depth 50, max nodes 10K.</p>
-<h4 id="blk-59181">ADR-0002: Policy Inheritance is Monotonic</h4>
+<h4 id="blk-59951">ADR-0002: Policy Inheritance is Monotonic</h4>
 <p>Boolean = AND. Numeric = MIN. Allow-lists = INTERSECTION. Deny-lists = UNION. Widening returns <code>{:error, {:widening, key, parent_val, proposed_val}}</code>.</p>
-<h4 id="blk-59183">ADR-0003: OTP Topology Mirrors Data Topology</h4>
+<h4 id="blk-59953">ADR-0003: OTP Topology Mirrors Data Topology</h4>
 <p>Each org is a GenServer. Parents supervise children via DynamicSupervisor. Runtime process tree mirrors containment data tree. Policy propagation, health monitoring, and lifecycle management use native OTP.</p>
 <p><em>Delegatic: Structure first. Then delegate.</em></p></div>
 <p class="src"><a href="/#/delegatic.com/docs/spec/README.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-58899" class="lvl2">Technical Specification v0.2 (Elixir/OTP)</a><a href="#blk-58901" class="lvl2">1. Overview</a><a href="#blk-58904" class="lvl3">1.1 The Problem</a><a href="#blk-58906" class="lvl3">1.2 Design Principles</a><a href="#blk-58922" class="lvl3">1.3 Why Elixir</a><a href="#blk-58924" class="lvl3">1.4 One-Liner</a><a href="#blk-58927" class="lvl2">2. Architecture</a><a href="#blk-58929" class="lvl3">2.1 GoalGraph Integration (Graphonomous)</a><a href="#blk-58949" class="lvl3">2.2 OTP Supervision Tree</a><a href="#blk-58961" class="lvl3">2.3 Component Summary</a><a href="#blk-58981" class="lvl2">3. Data Model (Ecto Schemas)</a><a href="#blk-58982" class="lvl3">3.1 Organizations</a><a href="#blk-58994" class="lvl3">3.2 Goal Attachments (GoalGraph References)</a><a href="#blk-59016" class="lvl4">OrgGoal Attachment Schema (Ecto)</a><a href="#blk-59026" class="lvl3">3.3 Memberships</a><a href="#blk-59036" class="lvl3">3.4 Policies</a><a href="#blk-59038" class="lvl3">3.5 Effective Policy Computation</a><a href="#blk-59040" class="lvl3">3.6 Audit Events (Append-Only)</a><a href="#blk-59042" class="lvl2">4. Cycle Detection (ETS Tree Cache)</a><a href="#blk-59044" class="lvl2">5. Phoenix LiveView Dashboard</a><a href="#blk-59046" class="lvl2">5.1 PULSE Loop Manifest</a><a href="#blk-59093" class="lvl2">6. Tech Stack</a><a href="#blk-59125" class="lvl2">7. Roadmap</a><a href="#blk-59126" class="lvl3">Phase 1: Core Governance (Weeks 1–6)</a><a href="#blk-59140" class="lvl3">Phase 2: Integration (Weeks 7–10)</a><a href="#blk-59150" class="lvl3">Phase 3: Enterprise (Weeks 11–16)</a><a href="#blk-59158" class="lvl3">Phase 4: Federation (2027)</a><a href="#blk-59166" class="lvl2">8. Success Metrics</a><a href="#blk-59178" class="lvl2">9. ADR Summary</a><a href="#blk-59179" class="lvl3">ADR-0001: Containment Tree &amp; No Cycles</a><a href="#blk-59181" class="lvl3">ADR-0002: Policy Inheritance is Monotonic</a><a href="#blk-59183" class="lvl3">ADR-0003: OTP Topology Mirrors Data Topology</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/delegatic.com/docs/index.md/">Delegatic Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieramjesw5qn6nzkt4natwg7qy5ggldenefccnutxnn3kwgvrmjsci7a</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-59669" class="lvl2">Technical Specification v0.2 (Elixir/OTP)</a><a href="#blk-59671" class="lvl2">1. Overview</a><a href="#blk-59674" class="lvl3">1.1 The Problem</a><a href="#blk-59676" class="lvl3">1.2 Design Principles</a><a href="#blk-59692" class="lvl3">1.3 Why Elixir</a><a href="#blk-59694" class="lvl3">1.4 One-Liner</a><a href="#blk-59697" class="lvl2">2. Architecture</a><a href="#blk-59699" class="lvl3">2.1 GoalGraph Integration (Graphonomous)</a><a href="#blk-59719" class="lvl3">2.2 OTP Supervision Tree</a><a href="#blk-59731" class="lvl3">2.3 Component Summary</a><a href="#blk-59751" class="lvl2">3. Data Model (Ecto Schemas)</a><a href="#blk-59752" class="lvl3">3.1 Organizations</a><a href="#blk-59764" class="lvl3">3.2 Goal Attachments (GoalGraph References)</a><a href="#blk-59786" class="lvl4">OrgGoal Attachment Schema (Ecto)</a><a href="#blk-59796" class="lvl3">3.3 Memberships</a><a href="#blk-59806" class="lvl3">3.4 Policies</a><a href="#blk-59808" class="lvl3">3.5 Effective Policy Computation</a><a href="#blk-59810" class="lvl3">3.6 Audit Events (Append-Only)</a><a href="#blk-59812" class="lvl2">4. Cycle Detection (ETS Tree Cache)</a><a href="#blk-59814" class="lvl2">5. Phoenix LiveView Dashboard</a><a href="#blk-59816" class="lvl2">5.1 PULSE Loop Manifest</a><a href="#blk-59863" class="lvl2">6. Tech Stack</a><a href="#blk-59895" class="lvl2">7. Roadmap</a><a href="#blk-59896" class="lvl3">Phase 1: Core Governance (Weeks 1–6)</a><a href="#blk-59910" class="lvl3">Phase 2: Integration (Weeks 7–10)</a><a href="#blk-59920" class="lvl3">Phase 3: Enterprise (Weeks 11–16)</a><a href="#blk-59928" class="lvl3">Phase 4: Federation (2027)</a><a href="#blk-59936" class="lvl2">8. Success Metrics</a><a href="#blk-59948" class="lvl2">9. ADR Summary</a><a href="#blk-59949" class="lvl3">ADR-0001: Containment Tree &amp; No Cycles</a><a href="#blk-59951" class="lvl3">ADR-0002: Policy Inheritance is Monotonic</a><a href="#blk-59953" class="lvl3">ADR-0003: OTP Topology Mirrors Data Topology</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/delegatic.com/docs/index.md/">Delegatic Documentation</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajkovyeg3yss5zarqtzrba3vnkmtoqqh6ryfit2uk7ghjsn3qqqkq</div></div></div>
 </div></div>
 </body></html>

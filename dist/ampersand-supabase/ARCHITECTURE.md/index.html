@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="ce144fa7b41537147d8b05947763bf710b293ada">
+<meta name="build-commit" content="6448aceae0b0c33099f9fccb674523e3b5308d43">
 <title>[&amp;] Ecosystem — Shared Supabase Architecture · ampersand-supabase · Ampersand Box</title>
 <meta name="description" content="Version: 1.0 Status: Implementation-ready Last updated: 2026-03-28">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/ampersand-supabase/ARCHITECTURE.md/">
@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/atlas.css">
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] Ecosystem — Shared Supabase Architecture","name":"[&] Ecosystem — Shared Supabase Architecture","description":"Version: 1.0 Status: Implementation-ready Last updated: 2026-03-28","url":"https://docs.ampersandboxdesign.com/ampersand-supabase/ARCHITECTURE.md/","identifier":"bagaaieraigokajwrzmqbe7q3abeeio6ipa7vzicc2rb4xu52gk6spkpd5h6a","inLanguage":"en","dateModified":"2026-08-11","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"ampersand-supabase","url":"https://docs.ampersandboxdesign.com/ampersand-supabase/"},"articleSection":"ampersand-supabase","hasPart":[{"@type":"WebPageElement","name":"1) Design philosophy"},{"@type":"WebPageElement","name":"1.1 Goals"},{"@type":"WebPageElement","name":"1.2 Non-goals"},{"@type":"WebPageElement","name":"2) Schema map"},{"@type":"WebPageElement","name":"2.1 Why amp.* for shared core (not public)"},{"@type":"WebPageElement","name":"3) Shared core: amp schema"},{"@type":"WebPageElement","name":"3.1 Tables"},{"@type":"WebPageElement","name":"3.2 Workspace-based tenancy"},{"@type":"WebPageElement","name":"3.3 Product entitlements"},{"@type":"WebPageElement","name":"3.4 Auth flow"},{"@type":"WebPageElement","name":"3.5 Cross-app identity"},{"@type":"WebPageElement","name":"4) Per-product schemas"},{"@type":"WebPageElement","name":"4.1 Schema ownership rules"},{"@type":"WebPageElement","name":"4.2 RLS pattern"},{"@type":"WebPageElement","name":"4.3 Product schema summaries"},{"@type":"WebPageElement","name":"5) Extensions"},{"@type":"WebPageElement","name":"6) Migration structure"},{"@type":"WebPageElement","name":"7) Authentication across apps"},{"@type":"WebPageElement","name":"7.1 Shared auth, independent sessions (default)"},{"@type":"WebPageElement","name":"7.2 SSO across subdomains (operator choice)"},{"@type":"WebPageElement","name":"7.3 Redirect URLs"},{"@type":"WebPageElement","name":"7.4 Email templates"},{"@type":"WebPageElement","name":"7.5 Elixir apps (JWT validation)"},{"@type":"WebPageElement","name":"7.6 OAuth providers"},{"@type":"WebPageElement","name":"8) config.toml"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"ampersand-supabase","item":"https://docs.ampersandboxdesign.com/ampersand-supabase/"},{"@type":"ListItem","position":3,"name":"ARCHITECTURE.md","item":"https://docs.ampersandboxdesign.com/ampersand-supabase/ARCHITECTURE.md/"}]}]</script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"[&] Ecosystem — Shared Supabase Architecture","name":"[&] Ecosystem — Shared Supabase Architecture","description":"Version: 1.0 Status: Implementation-ready Last updated: 2026-03-28","url":"https://docs.ampersandboxdesign.com/ampersand-supabase/ARCHITECTURE.md/","identifier":"bagaaieratvec4xva2daocyiun74xv57ohqoxlki4nnhjmlescxkwig2sy4zq","inLanguage":"en","dateModified":"2026-08-13","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"ampersand-supabase","url":"https://docs.ampersandboxdesign.com/ampersand-supabase/"},"articleSection":"ampersand-supabase","hasPart":[{"@type":"WebPageElement","name":"1) Design philosophy"},{"@type":"WebPageElement","name":"1.1 Goals"},{"@type":"WebPageElement","name":"1.2 Non-goals"},{"@type":"WebPageElement","name":"2) Schema map"},{"@type":"WebPageElement","name":"2.1 Why amp.* for shared core (not public)"},{"@type":"WebPageElement","name":"3) Shared core: amp schema"},{"@type":"WebPageElement","name":"3.1 Tables"},{"@type":"WebPageElement","name":"3.2 Workspace-based tenancy"},{"@type":"WebPageElement","name":"3.3 Product entitlements"},{"@type":"WebPageElement","name":"3.4 Auth flow"},{"@type":"WebPageElement","name":"3.5 Cross-app identity"},{"@type":"WebPageElement","name":"4) Per-product schemas"},{"@type":"WebPageElement","name":"4.1 Schema ownership rules"},{"@type":"WebPageElement","name":"4.2 RLS pattern"},{"@type":"WebPageElement","name":"4.3 Product schema summaries"},{"@type":"WebPageElement","name":"5) Extensions"},{"@type":"WebPageElement","name":"6) Migration structure"},{"@type":"WebPageElement","name":"7) Authentication across apps"},{"@type":"WebPageElement","name":"7.1 Shared auth, independent sessions (default)"},{"@type":"WebPageElement","name":"7.2 SSO across subdomains (operator choice)"},{"@type":"WebPageElement","name":"7.3 Redirect URLs"},{"@type":"WebPageElement","name":"7.4 Email templates"},{"@type":"WebPageElement","name":"7.5 Elixir apps (JWT validation)"},{"@type":"WebPageElement","name":"7.6 OAuth providers"},{"@type":"WebPageElement","name":"8) config.toml"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"ampersand-supabase","item":"https://docs.ampersandboxdesign.com/ampersand-supabase/"},{"@type":"ListItem","position":3,"name":"ARCHITECTURE.md","item":"https://docs.ampersandboxdesign.com/ampersand-supabase/ARCHITECTURE.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -22,15 +23,15 @@
 
 </div></div>
 <div class="lead">Version: 1.0 Status: Implementation-ready Last updated: 2026-03-28</div>
-<div class="prose"><h1 id="blk-56693">[&amp;] Ecosystem — Shared Supabase Architecture</h1>
+<div class="prose"><h1 id="blk-57463">[&amp;] Ecosystem — Shared Supabase Architecture</h1>
 <p>Version: 1.0 Status: Implementation-ready Last updated: 2026-03-28</p>
-<h3 id="blk-56695">1) Design philosophy</h3>
+<h3 id="blk-57465">1) Design philosophy</h3>
 <p>One Supabase instance serves the entire [&amp;] Protocol ecosystem. Each product gets its own PostgreSQL schema within a single database. This gives operators — whether running locally via <code>supabase start</code> or self-hosting on their own infrastructure — a single setup step for the full stack.</p>
-<h4 id="blk-56697">1.1 Goals</h4>
+<h4 id="blk-57467">1.1 Goals</h4>
 <ul><li><p><strong>One command setup</strong>: <code>supabase start</code> spins up every product's data layer</p></li><li><p><strong>One account everywhere</strong>: shared <code>auth.users</code>, one login across all ecosystem apps</p></li><li><p><strong>Schema isolation</strong>: each product's tables live in a dedicated schema, no naming collisions</p></li><li><p><strong>Independent RLS</strong>: each schema has its own Row-Level Security policies</p></li><li><p><strong>Self-hosting friendly</strong>: an operator on their own domain routes subdomains to apps, all hitting one Supabase</p></li><li><p><strong>Cost efficient</strong>: one Supabase Pro plan ($25/mo) instead of $200+/mo for separate projects</p></li></ul>
-<h4 id="blk-56711">1.2 Non-goals</h4>
+<h4 id="blk-57481">1.2 Non-goals</h4>
 <ul><li><p>Cross-product-schema foreign keys (e.g., <code>fleet.*</code> must not FK to <code>kag.*</code>). Products MAY reference <code>amp.workspaces</code> and <code>auth.users</code> — those are the shared core, not cross-product coupling.</p></li><li><p>Forcing Supabase on products that don't need it (Graphonomous keeps SQLite, SpecPrompt/Deliberatic/OpenSentience have no storage)</p></li></ul>
-<h3 id="blk-56717">2) Schema map</h3>
+<h3 id="blk-57487">2) Schema map</h3>
 <pre><code>supabase (single instance)
 │
 ├── auth.*              ← Supabase Auth (managed, do not modify)
@@ -46,17 +47,17 @@
 ├── orchestrate.*       ← AgenTroMatic — deliberation &amp; reputation
 ├── govern.*            ← Delegatic — org governance
 └── agentelic.*         ← Agentelic — agent lifecycle</code></pre>
-<h4 id="blk-56719">2.1 Why <code>amp.*</code> for shared core (not <code>public</code>)</h4>
+<h4 id="blk-57489">2.1 Why <code>amp.*</code> for shared core (not <code>public</code>)</h4>
 <p>The <code>public</code> schema is Supabase's default and comes with implicit grants. Putting shared tables in <code>amp.*</code> makes the boundary explicit: ecosystem-shared tables live in <code>amp</code>, product-specific tables live in their own schema. This prevents accidental coupling and makes it clear what's shared infrastructure vs. product-specific.</p>
 <p>BendScript's existing tables (currently in <code>public</code>) will migrate to <code>kag.*</code>. WebHost.Systems tables will go into <code>webhost.*</code>.</p>
-<h3 id="blk-56722">3) Shared core: <code>amp</code> schema</h3>
+<h3 id="blk-57492">3) Shared core: <code>amp</code> schema</h3>
 <p>The <code>amp</code> schema holds identity, tenancy, and cross-product structures. Every product reads from <code>amp</code> for user/workspace context but writes only to its own schema for product data.</p>
-<h4 id="blk-56724">3.1 Tables</h4>
+<h4 id="blk-57494">3.1 Tables</h4>
 <table><thead><tr><th>Table</th><th>Purpose</th></tr></thead><tbody><tr><td><code>amp.profiles</code></td><td>User profile (mirrors <code>auth.users</code>, auto-created on signup)</td></tr><tr><td><code>amp.workspaces</code></td><td>Multi-tenant workspace container</td></tr><tr><td><code>amp.workspace_members</code></td><td>User-workspace membership with roles</td></tr><tr><td><code>amp.product_entitlements</code></td><td>Which products a workspace has access to</td></tr></tbody></table>
-<h4 id="blk-56736">3.2 Workspace-based tenancy</h4>
+<h4 id="blk-57506">3.2 Workspace-based tenancy</h4>
 <p>All products use workspace-based multi-tenancy (not single-owner <code>user_id</code>). This is the pattern BendScript already uses and is more flexible than WebHost.Systems' current <code>user_id</code>-only model.</p>
 <p>A user can belong to multiple workspaces. A workspace can use multiple products. RLS checks workspace membership via <code>amp.workspace_members</code>.</p>
-<h4 id="blk-56739">3.3 Product entitlements</h4>
+<h4 id="blk-57509">3.3 Product entitlements</h4>
 <pre data-lang="sql"><code>-- Which products a workspace can access
 amp.product_entitlements (
   workspace_id  uuid REFERENCES amp.workspaces(id),
@@ -66,22 +67,22 @@ amp.product_entitlements (
   PRIMARY KEY (workspace_id, product)
 )</code></pre>
 <p>This lets an operator enable/disable products per workspace without touching product schemas.</p>
-<h4 id="blk-56742">3.4 Auth flow</h4>
+<h4 id="blk-57512">3.4 Auth flow</h4>
 <pre><code>User signs up (any app) ──→ auth.users row created
                           ──→ trigger creates amp.profiles row
                           ──→ trigger creates default amp.workspaces row
                           ──→ trigger creates amp.workspace_members (owner)
                           ──→ product entitlements added by application layer on first product access</code></pre>
-<h4 id="blk-56744">3.5 Cross-app identity</h4>
+<h4 id="blk-57514">3.5 Cross-app identity</h4>
 <p>Every product schema references <code>auth.users(id)</code> for user identity and <code>amp.workspaces(id)</code> for workspace context. The <code>auth.uid()</code> function works in RLS policies across all schemas.</p>
-<h3 id="blk-56746">4) Per-product schemas</h3>
+<h3 id="blk-57516">4) Per-product schemas</h3>
 <p>Each product schema follows this pattern:</p>
 <pre data-lang="sql"><code>CREATE SCHEMA IF NOT EXISTS &lt;product&gt;;
 GRANT USAGE ON SCHEMA &lt;product&gt; TO anon, authenticated, service_role;
 -- Grant table-level permissions as tables are created</code></pre>
-<h4 id="blk-56749">4.1 Schema ownership rules</h4>
+<h4 id="blk-57519">4.1 Schema ownership rules</h4>
 <ul><li><p>Each product schema is <strong>self-contained</strong> — no foreign keys to other product schemas</p></li><li><p>Products MAY reference <code>amp.workspaces(id)</code> and <code>auth.users(id)</code> only</p></li><li><p>Products MUST NOT reference tables in other product schemas</p></li><li><p>Cross-product data sharing happens via application-level API calls, not SQL joins</p></li></ul>
-<h4 id="blk-56759">4.2 RLS pattern</h4>
+<h4 id="blk-57529">4.2 RLS pattern</h4>
 <p>Every product uses the same workspace membership check from <code>amp</code>:</p>
 <pre data-lang="sql"><code>-- Reusable helper (defined once in amp schema)
 CREATE FUNCTION amp.is_workspace_member(target_workspace_id uuid)
@@ -97,7 +98,7 @@ $$ LANGUAGE sql STABLE SECURITY DEFINER SET search_path = amp;
 CREATE POLICY &quot;fleet_agents_select&quot;
 ON fleet.agents FOR SELECT
 USING (amp.is_workspace_member(workspace_id));</code></pre>
-<h4 id="blk-56762">4.3 Product schema summaries</h4>
+<h4 id="blk-57532">4.3 Product schema summaries</h4>
 <p>Migrations exist for schemas marked with <strong>[live]</strong>. Others are planned.</p>
 <p><strong>kag.</strong>* (BendScript) <strong>[live]</strong> — knowledge graphs, planes, nodes, edges, AI generations, API keys. Migrated from current <code>public.*</code> tables.</p>
 <p><strong>webhost.</strong>* (WebHost.Systems) <strong>[live]</strong> — agents, deployments, metrics_events, billing_usage, subscriptions, audit_log. Migrated from current Convex schema + spec.</p>
@@ -107,7 +108,7 @@ USING (amp.is_workspace_member(workspace_id));</code></pre>
 <p><strong>orchestrate.</strong>* (AgenTroMatic) <strong>[live]</strong> — agents, deliberations, bids, reputation_scores, traces.</p>
 <p><strong>govern.</strong>* (Delegatic) <strong>[live]</strong> — orgs (tree hierarchy), memberships, policies (monotonic inheritance), goal_refs, audit_events.</p>
 <p><strong>agentelic.</strong>* (Agentelic) <strong>[live]</strong> — agents, builds, test_runs, deployments (staged: staging → canary → production).</p>
-<h3 id="blk-56772">5) Extensions</h3>
+<h3 id="blk-57542">5) Extensions</h3>
 <p>All extensions are created once in migration <code>000_extensions.sql</code>:</p>
 <pre data-lang="sql"><code>CREATE EXTENSION IF NOT EXISTS pgcrypto;      -- UUIDs, hashing
 CREATE EXTENSION IF NOT EXISTS citext;        -- case-insensitive text
@@ -116,7 +117,7 @@ CREATE EXTENSION IF NOT EXISTS postgis;       -- spatial (geo)
 CREATE EXTENSION IF NOT EXISTS pg_trgm;       -- trigram search (fleet)
 CREATE EXTENSION IF NOT EXISTS pg_cron;       -- scheduled jobs (webhost, temporal)
 CREATE EXTENSION IF NOT EXISTS pg_partman;    -- range partitioning (temporal)</code></pre>
-<h3 id="blk-56775">6) Migration structure</h3>
+<h3 id="blk-57545">6) Migration structure</h3>
 <p>All migrations live in one flat <code>supabase/migrations/</code> directory, namespaced by number range:</p>
 <pre><code>supabase/migrations/
 ├── 000_extensions.sql              ← shared extensions
@@ -149,12 +150,12 @@ CREATE EXTENSION IF NOT EXISTS pg_partman;    -- range partitioning (temporal)</
 ├── 080_agentelic_schema.sql        ← agentelic.* tables
 └── 081_agentelic_rls.sql           ← agentelic.* RLS</code></pre>
 <p>Number ranges are reserved per product (000-009 shared, 010-019 kag, 020-029 webhost, etc.). Future migrations within a product increment within their range (e.g., <code>012_kag_add_templates.sql</code>).</p>
-<h3 id="blk-56779">7) Authentication across apps</h3>
-<h4 id="blk-56780">7.1 Shared auth, independent sessions (default)</h4>
+<h3 id="blk-57549">7) Authentication across apps</h3>
+<h4 id="blk-57550">7.1 Shared auth, independent sessions (default)</h4>
 <p>One <code>auth.users</code> table. Each app initializes its own Supabase client with the same project URL/anon key. Sessions are browser-origin-scoped by default — logging into <code>fleet.example.com</code> does not log you into <code>webhost.example.com</code>.</p>
-<h4 id="blk-56782">7.2 SSO across subdomains (operator choice)</h4>
+<h4 id="blk-57552">7.2 SSO across subdomains (operator choice)</h4>
 <p>If all apps are on subdomains of one domain, the operator can enable shared sessions by setting <code>cookieOptions.domain = &quot;.example.com&quot;</code> in each app's Supabase client config. This is a deployment-time choice, not a schema concern.</p>
-<h4 id="blk-56784">7.3 Redirect URLs</h4>
+<h4 id="blk-57554">7.3 Redirect URLs</h4>
 <p>Each app registers its auth callback in <code>config.toml</code> (local) or Supabase dashboard (hosted):</p>
 <pre data-lang="toml"><code>additional_redirect_urls = [
   &quot;http://localhost:5173&quot;,          # BendScript dev
@@ -164,17 +165,17 @@ CREATE EXTENSION IF NOT EXISTS pg_partman;    -- range partitioning (temporal)</
   &quot;https://webhost.example.com/**&quot;,
   &quot;https://fleet.example.com/**&quot;,
 ]</code></pre>
-<h4 id="blk-56787">7.4 Email templates</h4>
+<h4 id="blk-57557">7.4 Email templates</h4>
 <p>Email templates MUST use <code>{{ .RedirectTo }}</code> instead of <code>{{ .SiteURL }}</code> so magic links and password resets route back to the originating app.</p>
-<h4 id="blk-56789">7.5 Elixir apps (JWT validation)</h4>
+<h4 id="blk-57559">7.5 Elixir apps (JWT validation)</h4>
 <p>Elixir apps (FleetPrompt, GeoFleetic, etc.) validate Supabase JWTs using the JWKS endpoint:</p>
 <pre><code>GET https://&lt;project&gt;.supabase.co/auth/v1/.well-known/jwks.json</code></pre>
 <p>Verify with <code>:jose</code> or <code>:joken</code>. Extract <code>sub</code> (user UUID) for Ecto queries. Same UUID works across all schemas.</p>
-<h4 id="blk-56793">7.6 OAuth providers</h4>
+<h4 id="blk-57563">7.6 OAuth providers</h4>
 <p>Only one redirect URI needed per OAuth provider (Google, GitHub, etc.):</p>
 <pre><code>https://&lt;project&gt;.supabase.co/auth/v1/callback</code></pre>
 <p>Per-app routing happens via the <code>redirectTo</code> parameter on the Supabase→App leg.</p>
-<h3 id="blk-56797">8) config.toml</h3>
+<h3 id="blk-57567">8) config.toml</h3>
 <p>The shared <code>config.toml</code> exposes all product schemas via PostgREST:</p>
 <pre data-lang="toml"><code>[api]
 schemas = [&quot;amp&quot;, &quot;kag&quot;, &quot;webhost&quot;, &quot;fleet&quot;, &quot;geo&quot;, &quot;temporal&quot;, &quot;orchestrate&quot;, &quot;govern&quot;, &quot;agentelic&quot;]</code></pre>
@@ -194,15 +195,15 @@ schemas = [&quot;amp&quot;, &quot;kag&quot;, &quot;webhost&quot;, &quot;fleet&qu
     belongs_to <span class="t-atom">:workspace</span>, <span class="t-type">Amp.Workspace</span>, type: <span class="t-atom">:binary_id</span>
   <span class="t-kw">end</span>
 <span class="t-kw">end</span></code></pre>
-<h3 id="blk-56804">9) Deployment topologies</h3>
-<h4 id="blk-56805">9.1 Local AIOS</h4>
+<h3 id="blk-57574">9) Deployment topologies</h3>
+<h4 id="blk-57575">9.1 Local AIOS</h4>
 <pre><code>supabase start
   → PostgreSQL with all schemas
   → Auth, Storage, Realtime, Edge Functions
   → Studio at localhost:54323 (browse all schemas)
 
 Each app connects to localhost:54321 with local anon key</code></pre>
-<h4 id="blk-56807">9.2 Self-hosted (operator's domain)</h4>
+<h4 id="blk-57577">9.2 Self-hosted (operator's domain)</h4>
 <pre><code>operator.example.com
 ├── supabase self-hosted (or Supabase cloud project)
 ├── bend.operator.example.com    → BendScript app    → kag.* schema
@@ -210,25 +211,25 @@ Each app connects to localhost:54321 with local anon key</code></pre>
 ├── fleet.operator.example.com   → FleetPrompt app    → fleet.* schema
 └── ...</code></pre>
 <p>All apps share one Supabase URL. Cloudflare/nginx routes subdomains to app containers.</p>
-<h4 id="blk-56810">9.3 Official hosted ([&amp;] cloud)</h4>
+<h4 id="blk-57580">9.3 Official hosted ([&amp;] cloud)</h4>
 <p>Same as self-hosted but on <code>*.ampersand.box</code> or similar. Products that aren't ready yet simply don't expose a subdomain — their schema exists but no app routes to it.</p>
-<h3 id="blk-56812">10) Migration path from current state</h3>
-<h4 id="blk-56813">10.1 BendScript (public.* → kag.*)</h4>
+<h3 id="blk-57582">10) Migration path from current state</h3>
+<h4 id="blk-57583">10.1 BendScript (public.* → kag.*)</h4>
 <p>BendScript's existing <code>public.*</code> tables move to <code>kag.*</code>:</p>
 <ul><li><p><code>public.graphs</code> → <code>kag.graphs</code></p></li><li><p><code>public.nodes</code> → <code>kag.nodes</code></p></li><li><p><code>public.edges</code> → <code>kag.edges</code></p></li><li><p>etc.</p></li></ul>
 <p>The <code>public.profiles</code>, <code>public.workspaces</code>, <code>public.workspace_members</code> tables become <code>amp.*</code> (shared core). BendScript's existing workspace model is the template for the shared layer.</p>
 <p>Migration strategy: <code>ALTER TABLE public.foo SET SCHEMA kag;</code> for each table, then update the app's Supabase client to use <code>.schema('kag')</code>.</p>
-<h4 id="blk-56826">10.2 WebHost.Systems (Convex → webhost.*)</h4>
+<h4 id="blk-57596">10.2 WebHost.Systems (Convex → webhost.*)</h4>
 <p>WebHost.Systems is converting from Convex to Supabase. Its tables go into <code>webhost.*</code> following the spec in <code>WebHost.Systems/project_spec/spec_v1/30_DATA_MODEL_SUPABASE.md</code>. The main change is replacing <code>user_id</code>-based ownership with workspace-based tenancy from <code>amp.*</code>.</p>
-<h4 id="blk-56828">10.3 Other products</h4>
+<h4 id="blk-57598">10.3 Other products</h4>
 <p>FleetPrompt, GeoFleetic, TickTickClock, AgenTroMatic, Delegatic, and Agentelic are new — they get fresh schemas with no migration burden.</p>
-<h3 id="blk-56830">11) Products that do NOT use Supabase</h3>
+<h3 id="blk-57600">11) Products that do NOT use Supabase</h3>
 <table><thead><tr><th>Product</th><th>Storage</th><th>Reason</th></tr></thead><tbody><tr><td><strong>Graphonomous</strong></td><td>Embedded SQLite + sqlite-vec</td><td>Local-first MCP server; network latency would defeat the purpose</td></tr><tr><td><strong>SpecPrompt</strong></td><td>Git-based specs</td><td>CLI/format standard, no persistent service</td></tr><tr><td><strong>Deliberatic</strong></td><td>In-memory + Merkle chains</td><td>Protocol specification, not a data service</td></tr><tr><td><strong>OpenSentience</strong></td><td>ETS (governance shim)</td><td>Research protocols wrapping OTP supervision</td></tr></tbody></table>
 <p>These products can still authenticate users via Supabase JWT validation if they need identity context, but they do not store data in Supabase.</p>
-<h3 id="blk-56848">12) Security checklist</h3>
+<h3 id="blk-57618">12) Security checklist</h3>
 <ul><li><p>[ ] RLS enabled on every table in every exposed schema</p></li><li><p>[ ] No plaintext secrets in any table (use Supabase Vault)</p></li><li><p>[ ] <code>workspace_id</code> present on all tenant-owned tables for RLS</p></li><li><p>[ ] Shared RLS helpers in <code>amp</code> schema (SECURITY DEFINER, locked <code>search_path</code>)</p></li><li><p>[ ] Edge Functions use <code>service_role</code> for server-only mutations</p></li><li><p>[ ] Email templates use <code>{{ .RedirectTo }}</code> not <code>{{ .SiteURL }}</code></p></li><li><p>[ ] CORS handled explicitly in Edge Functions</p></li><li><p>[ ] <code>pg_cron</code> jobs scoped to their product schema</p></li><li><p>[ ] No cross-schema foreign keys between products</p></li></ul></div>
 <p class="src"><a href="/#/ampersand-supabase/ARCHITECTURE.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-56695" class="lvl2">1) Design philosophy</a><a href="#blk-56697" class="lvl3">1.1 Goals</a><a href="#blk-56711" class="lvl3">1.2 Non-goals</a><a href="#blk-56717" class="lvl2">2) Schema map</a><a href="#blk-56719" class="lvl3">2.1 Why amp.* for shared core (not public)</a><a href="#blk-56722" class="lvl2">3) Shared core: amp schema</a><a href="#blk-56724" class="lvl3">3.1 Tables</a><a href="#blk-56736" class="lvl3">3.2 Workspace-based tenancy</a><a href="#blk-56739" class="lvl3">3.3 Product entitlements</a><a href="#blk-56742" class="lvl3">3.4 Auth flow</a><a href="#blk-56744" class="lvl3">3.5 Cross-app identity</a><a href="#blk-56746" class="lvl2">4) Per-product schemas</a><a href="#blk-56749" class="lvl3">4.1 Schema ownership rules</a><a href="#blk-56759" class="lvl3">4.2 RLS pattern</a><a href="#blk-56762" class="lvl3">4.3 Product schema summaries</a><a href="#blk-56772" class="lvl2">5) Extensions</a><a href="#blk-56775" class="lvl2">6) Migration structure</a><a href="#blk-56779" class="lvl2">7) Authentication across apps</a><a href="#blk-56780" class="lvl3">7.1 Shared auth, independent sessions (default)</a><a href="#blk-56782" class="lvl3">7.2 SSO across subdomains (operator choice)</a><a href="#blk-56784" class="lvl3">7.3 Redirect URLs</a><a href="#blk-56787" class="lvl3">7.4 Email templates</a><a href="#blk-56789" class="lvl3">7.5 Elixir apps (JWT validation)</a><a href="#blk-56793" class="lvl3">7.6 OAuth providers</a><a href="#blk-56797" class="lvl2">8) config.toml</a><a href="#blk-56804" class="lvl2">9) Deployment topologies</a><a href="#blk-56805" class="lvl3">9.1 Local AIOS</a><a href="#blk-56807" class="lvl3">9.2 Self-hosted (operator&#39;s domain)</a><a href="#blk-56810" class="lvl3">9.3 Official hosted ([&amp;] cloud)</a><a href="#blk-56812" class="lvl2">10) Migration path from current state</a><a href="#blk-56813" class="lvl3">10.1 BendScript (public.* → kag.*)</a><a href="#blk-56826" class="lvl3">10.2 WebHost.Systems (Convex → webhost.*)</a><a href="#blk-56828" class="lvl3">10.3 Other products</a><a href="#blk-56830" class="lvl2">11) Products that do NOT use Supabase</a><a href="#blk-56848" class="lvl2">12) Security checklist</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraigokajwrzmqbe7q3abeeio6ipa7vzicc2rb4xu52gk6spkpd5h6a</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-57465" class="lvl2">1) Design philosophy</a><a href="#blk-57467" class="lvl3">1.1 Goals</a><a href="#blk-57481" class="lvl3">1.2 Non-goals</a><a href="#blk-57487" class="lvl2">2) Schema map</a><a href="#blk-57489" class="lvl3">2.1 Why amp.* for shared core (not public)</a><a href="#blk-57492" class="lvl2">3) Shared core: amp schema</a><a href="#blk-57494" class="lvl3">3.1 Tables</a><a href="#blk-57506" class="lvl3">3.2 Workspace-based tenancy</a><a href="#blk-57509" class="lvl3">3.3 Product entitlements</a><a href="#blk-57512" class="lvl3">3.4 Auth flow</a><a href="#blk-57514" class="lvl3">3.5 Cross-app identity</a><a href="#blk-57516" class="lvl2">4) Per-product schemas</a><a href="#blk-57519" class="lvl3">4.1 Schema ownership rules</a><a href="#blk-57529" class="lvl3">4.2 RLS pattern</a><a href="#blk-57532" class="lvl3">4.3 Product schema summaries</a><a href="#blk-57542" class="lvl2">5) Extensions</a><a href="#blk-57545" class="lvl2">6) Migration structure</a><a href="#blk-57549" class="lvl2">7) Authentication across apps</a><a href="#blk-57550" class="lvl3">7.1 Shared auth, independent sessions (default)</a><a href="#blk-57552" class="lvl3">7.2 SSO across subdomains (operator choice)</a><a href="#blk-57554" class="lvl3">7.3 Redirect URLs</a><a href="#blk-57557" class="lvl3">7.4 Email templates</a><a href="#blk-57559" class="lvl3">7.5 Elixir apps (JWT validation)</a><a href="#blk-57563" class="lvl3">7.6 OAuth providers</a><a href="#blk-57567" class="lvl2">8) config.toml</a><a href="#blk-57574" class="lvl2">9) Deployment topologies</a><a href="#blk-57575" class="lvl3">9.1 Local AIOS</a><a href="#blk-57577" class="lvl3">9.2 Self-hosted (operator&#39;s domain)</a><a href="#blk-57580" class="lvl3">9.3 Official hosted ([&amp;] cloud)</a><a href="#blk-57582" class="lvl2">10) Migration path from current state</a><a href="#blk-57583" class="lvl3">10.1 BendScript (public.* → kag.*)</a><a href="#blk-57596" class="lvl3">10.2 WebHost.Systems (Convex → webhost.*)</a><a href="#blk-57598" class="lvl3">10.3 Other products</a><a href="#blk-57600" class="lvl2">11) Products that do NOT use Supabase</a><a href="#blk-57618" class="lvl2">12) Security checklist</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieratvec4xva2daocyiun74xv57ohqoxlki4nnhjmlescxkwig2sy4zq</div></div></div>
 </div></div>
 </body></html>
