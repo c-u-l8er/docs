@@ -147,7 +147,7 @@ export const DOCS = [
       '&reason — argue, vote, credit, seal; routed to on a known-unknown.   provider · Deliberatic',
       '&time — anomaly detection, forecasting, horizon obligations.   provider · TickTickClock',
       '&space — location, geo-routing, delta-CRDT state sync.   provider · GeoFleetic',
-      '&body — perception, typed action, affordance enumeration.   spec · Embodiment (OS-011)',
+      '&body — perception, typed action, affordance enumeration.   spec · GRASP',
       '&govern — the kernel itself, as a primitive.   provider · box-and-box'),
     H(2, 'Two operators'),
     P(TT('&'), ' combines capabilities into a coalition (associative, commutative, idempotent). ',

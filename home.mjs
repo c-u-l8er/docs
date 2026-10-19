@@ -36,7 +36,7 @@ export const REGISTRY = {
   'SCOPE': { band: 'protocol', status: SHIP_SPEC, virtual: true, href: 'https://opensentience.org/scope.html', mark: '⬚', os: 'OS-012 · spatial',
     tagline: 'Spatial algebra: N-D regions + spatial claims as first-class governed objects — the structural bridge between GeoFleetic and RuneFort. v0.1 draft.' },
   'body-os': { band: 'protocol', status: 'draft', mark: '◈', os: 'OS-011 · embodiment',
-    tagline: '`&body.os` reference implementation: the embodiment protocol’s forward model, grounded in the host machine.' },
+    tagline: '`&body.os` reference implementation: GRASP’s forward model, grounded in the host machine.' },
   'body-browser': { band: 'protocol', status: 'draft', mark: '◇', os: 'OS-011 · embodiment',
     tagline: '`&body.browser` reference implementation: the same embodiment surface, with the browser as the body.' },
 
