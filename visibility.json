@@ -13,6 +13,31 @@
       "match": "**/{secrets,credentials,private}/**",
       "max": "private",
       "why": "Defence in depth: a document filed under a secrets/credentials/private directory does not publish, whatever it declares. Scoped to directories on purpose. A first attempt matched `**/*SECRET*` and immediately capped WebHost.Systems/docs/spec/40_SECURITY_SECRETS_COMPLIANCE.md and docs/skills/07_SECURITY_AND_SECRETS.md — both legitimate specs *about* secret handling. A ceiling cannot be escaped by declaration, so a false-positive ceiling is unfixable by the author; that makes over-broad ceilings worse than none. Filename-keyword judgement belongs in `review`, not here."
+    },
+    {
+      "match": "superlane/**",
+      "max": "private",
+      "why": "Working logs and notes of the lanes that build Super, not documentation of the stack. On 2026-10-19, 32 of its 54 docs named addresses on the home network (192.168.x). Travis held it back on 2026-10-20."
+    },
+    {
+      "match": "lab/**",
+      "max": "private",
+      "why": "Scripts and notes for the home lab's machines, timers and backups. On 2026-10-19, 4 of its 5 docs named addresses on the home network. Travis held it back on 2026-10-20."
+    },
+    {
+      "match": "{e.computedriven.com/E_REVIEW_BUNDLE.md,worker/CLOUD_V1_REVIEW_BUNDLE.md}",
+      "max": "private",
+      "why": "Generated outside-review bundles: whole code dumps (1.4 MB and 1.8 MB), not documentation. Their test fixtures (the AWS docs example key, a token fed to a redaction test) trip the secret scan that gates every commit. Travis held them back on 2026-10-20."
+    },
+    {
+      "match": "{y-notation,y-notation-proposals}/**",
+      "max": "private",
+      "why": "Local working docs on the PX13 that are in no git repository, so nothing has decided to publish them. Travis held them back on 2026-10-20."
+    },
+    {
+      "match": "{super/docs/plans/FLEET_MVP.md,books/README.md}",
+      "max": "private",
+      "why": "Both name real machines on the home lab network: FLEET_MVP.md gives the addresses of cd-floor-01, locuchest's Proxmox web interface and Locuvault, and the books README gives the address of the AFFiNE server. Travis held them back on 2026-10-20."
     }
   ],
 

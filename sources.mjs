@@ -39,10 +39,13 @@ function lawCount(rel) {
   return n;
 }
 
-// the trials-per-law constant the harness runs (  const N = 2000;  )
+// the trials-per-law the harness runs by default. Since AmpersandBoxDesign 7c69288 the line is
+//   const N = Number(process.env.BB_TRIALS) > 0 ? Number(process.env.BB_TRIALS) : 2000;
+// BB_TRIALS only shortens a local run, so the number read here is the default after the ':'.
+// The older bare form (  const N = 2000;  ) still matches; any other shape is a hard failure.
 function trials(rel) {
-  const m = read(rel).match(/const\s+N\s*=\s*(\d+)\s*;/);
-  if (!m) FAIL(`no 'const N = <int>' trial constant in ${rel}`);
+  const m = read(rel).match(/const\s+N\s*=\s*(?:Number\(process\.env\.BB_TRIALS\)\s*>\s*0\s*\?\s*Number\(process\.env\.BB_TRIALS\)\s*:\s*)?(\d+)\s*;/);
+  if (!m) FAIL(`no 'const N = <int>' (or BB_TRIALS default) trial constant in ${rel}`);
   return m[1];
 }
 
@@ -74,7 +77,7 @@ export const FACT_SOURCES = {
   'laws.count':   `${LAWS_CORE} + ${LAWS_COMPOSE} (counted)`,
   'laws.core':    `${LAWS_CORE} (counted)`,
   'laws.compose': `${LAWS_COMPOSE} (counted)`,
-  'laws.trials':  `${LAWS_CORE} (const N)`,
+  'laws.trials':  `${LAWS_CORE} (const N default)`,
   'primitives.count': 'design constant',
   'rungs.count':      'design constant',
   'kernel.version':       'AmpersandBoxDesign/box-and-box/package.json',
