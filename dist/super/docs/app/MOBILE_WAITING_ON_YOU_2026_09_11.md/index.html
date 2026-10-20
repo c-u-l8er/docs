@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>The companion carries what is waiting on you — 2026-09-11 · super · Ampersand Box</title>
+<meta name="description" content="The mobile companion could see seven projection collections and none of them was the one a companion exists for. Every screen was built from…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/app/MOBILE_WAITING_ON_YOU_2026_09_11.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The companion carries what is waiting on you — 2026-09-11">
+<meta property="og:description" content="The mobile companion could see seven projection collections and none of them was the one a companion exists for. Every screen was built from…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/app/MOBILE_WAITING_ON_YOU_2026_09_11.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"The companion carries what is waiting on you — 2026-09-11","name":"The companion carries what is waiting on you — 2026-09-11","description":"The mobile companion could see seven projection collections and none of them was the one a companion exists for. Every screen was built from…","url":"https://docs.ampersandboxdesign.com/super/docs/app/MOBILE_WAITING_ON_YOU_2026_09_11.md/","identifier":"bagaaieracue2sn6tzho7fimkq7qyq563br4wwzqhzixnwlqnyvnxavyytfva","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"What the phone now receives, and what it does not"},{"@type":"WebPageElement","name":"The distinction the screen is built on"},{"@type":"WebPageElement","name":"Evidence"},{"@type":"WebPageElement","name":"Not done here"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"app","item":"https://docs.ampersandboxdesign.com/super/docs/app/"},{"@type":"ListItem","position":5,"name":"MOBILE_WAITING_ON_YOU_2026_09_11.md","item":"https://docs.ampersandboxdesign.com/super/docs/app/MOBILE_WAITING_ON_YOU_2026_09_11.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/app/MOBILE_WAITING_ON_YOU_2026_09_11.md</span>
+
+</div></div>
+<div class="lead">The mobile companion could see seven projection collections and none of them was the one a companion exists for. Every screen was built from development_tasks and development_at…</div>
+<div class="prose"><h1 id="blk-110535">The companion carries what is waiting on you — 2026-09-11</h1>
+<p>The mobile companion could see seven projection collections and none of them was the one a companion exists for. Every screen was built from <code>development_tasks</code> and <code>development_attempts</code>, so &quot;Needs me&quot; meant <em>a plan needs review</em>. Meanwhile the operator projection has carried, since long before the phone existed:</p>
+<pre data-lang="elixir"><code><span class="t-string">&quot;grant_requests&quot;</span>    =&gt; <span class="t-type">Enum</span>.filter(<span class="t-type">GrantRegistry</span>.requests(),  &amp;(&amp;<span class="t-num">1</span>[<span class="t-string">&quot;status&quot;</span>] == <span class="t-string">&quot;pending&quot;</span>))
+<span class="t-string">&quot;pending_approvals&quot;</span> =&gt; <span class="t-type">Enum</span>.filter(<span class="t-type">Approvals</span>.all(),           &amp;(&amp;<span class="t-num">1</span>[<span class="t-string">&quot;status&quot;</span>] == <span class="t-string">&quot;pending&quot;</span>))</code></pre>
+<p>Those two are the runtime <em>stopped</em>, waiting on a person — the desktop's own first two sections are &quot;Waiting on you · Consent for one effect&quot;. They were the two collections not on the wire.</p>
+<p>The visible symptom: with nothing to review, the Needs me screen printed <strong>&quot;Nothing is waiting on a decision.&quot;</strong> It had no basis for that sentence. On Travis's own host, which has zero development tasks, it was the only sentence the screen could produce — while a held effect there would have been invisible.</p>
+<h3 id="blk-110540">What the phone now receives, and what it does not</h3>
+<p>Both queues are published, <strong>narrowed to a named set of fields</strong> in <code>cockpit/src/mobile_gateway.rs</code>:</p>
+<table><thead><tr><th></th><th>published</th></tr></thead><tbody><tr><td><code>pending_approvals</code></td><td><code>id · status · capability · actor · resource · placement</code></td></tr><tr><td><code>grant_requests</code></td><td><code>id · status · capability · actor · resource · requested_duration · created_at · reason</code></td></tr></tbody></table>
+<p>Every other collection in the snapshot goes out as the runtime wrote it, because a workspace or a lane is an inventory record. These two are not. A pending approval carries <code>envelope</code> — the arguments of the effect nobody has consented to yet — and <code>held_ctx</code>, the caller's whole context; a grant request merges its caller's fields into the stored record wholesale. So this is the one place in the gateway where the allowlist is over <strong>fields</strong> rather than collections, and a field the runtime adds later does not reach a phone until someone names it.</p>
+<p><code>cargo test mobile_gateway</code> puts a credential in <code>held_ctx</code> and a command line in <code>envelope</code> and asserts neither appears anywhere in the serialised snapshot.</p>
+<p><strong>The phone still cannot answer.</strong> The gateway answers 405 to everything but snapshot, pair and logout, and the cards say so: <em>&quot;answered in desktop Super, not here.&quot;</em> Whether a phone may ever consent is an authority question — gateway, connector, cockpit and ampd — and is not opened here. Telling a person they are being asked is worth doing on its own.</p>
+<h3 id="blk-110552">The distinction the screen is built on</h3>
+<p>An empty list means <strong>nobody is asking you</strong>. A withheld list means <strong>this app does not know</strong>. They are one character apart in JSON and opposite in meaning, and a screen about being asked that prints the first when it means the second has told the person the one thing they cannot check from the phone.</p>
+<p>So:</p>
+<ul><li><p>a collection that is not a list is published as <code>null</code>, never as <code>[]</code>;</p></li><li><p>the app reads <code>null</code> as unavailable and draws <code>--</code> for the count, not <code>00</code>;</p></li><li><p>the unavailable case gets its own card naming which queue was not published;</p></li><li><p>a single unreadable record is counted and reported, not fatal — one bad row</p></li></ul>
+<p>must not cost the person the rest of the queue.</p>
+<p>A record without a <code>capability</code> is counted as unreadable rather than drawn: a card saying somebody wants something without saying what sends the person to the desktop to find out what they were told. An <em>empty</em> <code>actor</code> is a real value in this runtime and draws as &quot;No actor is named&quot;.</p>
+<h3 id="blk-110566">Evidence</h3>
+<ul><li><p><code>cargo test mobile_gateway</code> — <strong>6 passed, 0 failed</strong> (4 new: the field</p></li></ul>
+<p>allowlist, the grant-request narrowing, a non-list withheld rather than emptied, an empty list not confused with a withheld one).</p>
+<ul><li><p><code>node --test mobile/test/gateway.test.mjs</code> — <strong>11 passed, 0 failed</strong>.</p></li><li><p><code>tools/gates.sh</code> — <strong>8 held · 0 failed · 0 could not run</strong>; webview ACL 35 held</p></li></ul>
+<p>(no command changed), intent surface 6 held covering 25/25 mutations.</p>
+<ul><li><p><code>cargo build --release --offline</code> — clean. **The running desktop was not</p></li></ul>
+<p>restarted**: a restart revokes every paired session, and Travis's phone has held one since 16:19. The new binary is on disk for the next launch.</p>
+<ul><li><p>App side, <code>work/super-native</code>: <code>npx tsc --noEmit</code> clean, <code>npm test</code> **39</p></li></ul>
+<p>passed, 0 failed** (6 new).</p>
+<ul><li><p>Rendered on the Android emulator against <code>work/fixture-host.mjs</code>, which runs</p></li></ul>
+<p>Super's real connector in front of its real gateway:</p>
+<ul><li><p>populated — <strong>02 waiting on you</strong>, a HELD ON CONSENT card</p></li></ul>
+<p>(<code>github.repo.write</code>, asked by kestrel, over traaviis/trvm, placement local) and a GRANT REQUESTED card (<code>fs.read</code>, for the workspace, with its reason and its age), above the plan cards, with &quot;1 request the host published could not be read on this phone&quot; beneath them;</p>
+<ul><li><p><code>--damaged</code> — <strong>`--` waiting on you</strong>, the readable request still drawn, and</p></li></ul>
+<p><em>&quot;This app cannot see what is waiting on you.&quot;</em> naming held effects as the queue that was not published.</p>
+<h3 id="blk-110597">Not done here</h3>
+<ul><li><p><strong>No push.</strong> The app polls every 5 s while it is frontmost and nothing at all</p></li></ul>
+<p>while it is backgrounded, so a held effect arriving while the phone is in a pocket is not noticed until the person opens the app. Every comparable product notifies on an approval gate. That needs a push transport and is a separate decision — a private tailnet has no relay to push through.</p>
+<ul><li><p><strong>No &quot;how long has this been held&quot;.</strong> <code>Approvals.new_pending/1</code> writes no</p></li></ul>
+<p>timestamp, so the phone has none and invents none. Grant requests carry <code>created_at</code> and it is shown.</p>
+<ul><li><p><strong>No answer path.</strong> See above; it is an authority question, not a UI one.</p></li></ul></div>
+<p class="src"><a href="/#/super/docs/app/MOBILE_WAITING_ON_YOU_2026_09_11.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-110540" class="lvl2">What the phone now receives, and what it does not</a><a href="#blk-110552" class="lvl2">The distinction the screen is built on</a><a href="#blk-110566" class="lvl2">Evidence</a><a href="#blk-110597" class="lvl2">Not done here</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/app/ACCEPTED_BUILD_2026_09_10.md/">Super: build accepted app</a><a href="/super/docs/app/ACCEPTED_RESULT_CHECK_2026_09_10.md/">Super: checking accepted source before integration</a><a href="/super/docs/app/AUTHORITY_LOG_RETENTION_2026_09_24.md/">Authority log retention — candidate 3 (2026-09-24)</a><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/BOT_LIVE_ACTIVITY_2026_09_13.md/">Bot activity and Claude reconnect</a><a href="/super/docs/app/BOT_WORK_PAGES_2026_09_07.md/">Super progress — bot work pages</a><a href="/super/docs/app/BUILD_PREVIEW_2026_09_10.md/">Try an accepted Super build</a><a href="/super/docs/app/CANCELLED_PLAN_STEPS_2026_09_19.md/">A cancelled plan&#39;s stepper claims no step — 2026-09-19</a><a href="/super/docs/app/COMBINED_FILE_REVIEW_2026_09_10.md/">Combined file review — 2026-09-10</a><a href="/super/docs/app/COMBINED_TESTING_2026_09_10.md/">Combined testing and acceptance — 2026-09-10</a><a href="/super/docs/app/CONTINUE_WORK_2026_09_14.md/">Continue work and guided review</a><a href="/super/docs/app/DESKTOP_LAUNCH_2026_09_10.md/">Daily desktop launch — September 10, 2026</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieracue2sn6tzho7fimkq7qyq563br4wwzqhzixnwlqnyvnxavyytfva</div></div></div>
+</div></div>
+</body></html>

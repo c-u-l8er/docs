@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Combined testing and acceptance — 2026-09-10 · super · Ampersand Box</title>
+<meta name="description" content="Supersedes the testing/acceptance limitation in DURABLE_CHANGE_SETS_2026_09_10.md.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/app/COMBINED_TESTING_2026_09_10.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Combined testing and acceptance — 2026-09-10">
+<meta property="og:description" content="Supersedes the testing/acceptance limitation in DURABLE_CHANGE_SETS_2026_09_10.md.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/app/COMBINED_TESTING_2026_09_10.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Combined testing and acceptance — 2026-09-10","name":"Combined testing and acceptance — 2026-09-10","description":"Supersedes the testing/acceptance limitation in DURABLE_CHANGE_SETS_2026_09_10.md.","url":"https://docs.ampersandboxdesign.com/super/docs/app/COMBINED_TESTING_2026_09_10.md/","identifier":"bagaaieralzxhwxhagymbg5vfnizhqiqbmhpu2xxx2vyxajiu3whi56apewka","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super"},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"app","item":"https://docs.ampersandboxdesign.com/super/docs/app/"},{"@type":"ListItem","position":5,"name":"COMBINED_TESTING_2026_09_10.md","item":"https://docs.ampersandboxdesign.com/super/docs/app/COMBINED_TESTING_2026_09_10.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/app/COMBINED_TESTING_2026_09_10.md</span>
+
+</div></div>
+<div class="lead">Supersedes the testing/acceptance limitation in DURABLE_CHANGE_SETS_2026_09_10.md.</div>
+<div class="prose"><h1 id="blk-110094">Combined testing and acceptance — 2026-09-10</h1>
+<p>Supersedes the testing/acceptance limitation in DURABLE_CHANGE_SETS_2026_09_10.md.</p>
+<p>The existing runner now recognizes development-review-set@1 and validates selected-file-set-basis@1 against all 2–4 members. It validates each member's content and source identity, common context, distinct non-conflicting paths and aggregate identities. Capture checks every original source, then overlays every proposed replacement before calculating one test snapshot. The result retains aggregate source/result identities and applied paths. Single-file review compatibility is preserved.</p>
+<p>Acceptance preflight overlays nothing: every saved replacement must match its retained result bytes, and the complete captured repository must match the passing snapshot. The runtime uses its existing test admission, outcome, profile-coverage and human acceptance controls against aggregate identities. A member-only outcome is refused. No new commands or permission grants were added. Standalone text checks remain unavailable for sets.</p>
+<p>The plan now exposes the existing test/acceptance panel for combined reviews, with labels describing all reviewed files and the shared snapshot. Save remains per-file. Changes after review can require a fresh review; this is not an atomic disk transaction or an integration/rebuild workflow.</p>
+<p>Validation: full runtime suite 751 tests/0 failures; 17 sandboxed runner tests including joint source/test replacements that fail separately and pass together, partial-save rejection and unrelated-file rejection; 20 focused UI tests; 28 native workflow checks including actual process restart with preserved acceptance. Release build, runtime compile, intent gate 6 held covering 25/25 human-control mutations, ACL 35 held and whitespace checks passed. Five selected native screenshots inspected. Native fixture uses a deterministic local provider, not real-provider dogfooding. An initial fixture attempted to click a hidden list item for an already-open plan; corrected to respect the visible view.</p>
+<p>Tests: tools/proposal-test-runner-spec.mjs (set SUPER_RUNNER_TEST_ROOT to a disposable directory), tools/combined-testing-smoke.mjs (via tools/native-ui-test.sh), ampd/test/development_attempt_test.exs and tools/task-progress-test.mjs. Existing fixed JS/Elixir/Rust profiles remain bounded; this does not select a required profile policy per task.</p>
+<p>Next: required-check policy, integration/rebuild within Super, repeated real-provider development cycles, and release/recovery readiness.</p></div>
+<p class="src"><a href="/#/super/docs/app/COMBINED_TESTING_2026_09_10.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card"><div class="lab">in this folder</div><a href="/super/docs/app/ACCEPTED_BUILD_2026_09_10.md/">Super: build accepted app</a><a href="/super/docs/app/ACCEPTED_RESULT_CHECK_2026_09_10.md/">Super: checking accepted source before integration</a><a href="/super/docs/app/AUTHORITY_LOG_RETENTION_2026_09_24.md/">Authority log retention — candidate 3 (2026-09-24)</a><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/BOT_LIVE_ACTIVITY_2026_09_13.md/">Bot activity and Claude reconnect</a><a href="/super/docs/app/BOT_WORK_PAGES_2026_09_07.md/">Super progress — bot work pages</a><a href="/super/docs/app/BUILD_PREVIEW_2026_09_10.md/">Try an accepted Super build</a><a href="/super/docs/app/CANCELLED_PLAN_STEPS_2026_09_19.md/">A cancelled plan&#39;s stepper claims no step — 2026-09-19</a><a href="/super/docs/app/COMBINED_FILE_REVIEW_2026_09_10.md/">Combined file review — 2026-09-10</a><a href="/super/docs/app/CONTINUE_WORK_2026_09_14.md/">Continue work and guided review</a><a href="/super/docs/app/DESKTOP_LAUNCH_2026_09_10.md/">Daily desktop launch — September 10, 2026</a><a href="/super/docs/app/DESKTOP_SHELL.md/">Desktop shell</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieralzxhwxhagymbg5vfnizhqiqbmhpu2xxx2vyxajiu3whi56apewka</div></div></div>
+</div></div>
+</body></html>

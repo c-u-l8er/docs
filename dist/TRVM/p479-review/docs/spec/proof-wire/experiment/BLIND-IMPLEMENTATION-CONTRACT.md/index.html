@@ -1,0 +1,160 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>The blind implementation contract · TRVM · Ampersand Box</title>
+<meta name="description" content="Status: PROCEDURAL, not normative. This document does not define the protocol. It defines the experiment the protocol is about to be subjected to, and…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/experiment/BLIND-IMPLEMENTATION-CONTRACT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The blind implementation contract">
+<meta property="og:description" content="Status: PROCEDURAL, not normative. This document does not define the protocol. It defines the experiment the protocol is about to be subjected to, and…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/experiment/BLIND-IMPLEMENTATION-CONTRACT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"The blind implementation contract","name":"The blind implementation contract","description":"Status: PROCEDURAL, not normative. This document does not define the protocol. It defines the experiment the protocol is about to be subjected to, and…","url":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/experiment/BLIND-IMPLEMENTATION-CONTRACT.md/","identifier":"bagaaieraw2mmxu2obi7l5wd4gsx4mbyn2k6opy5m3hzxqfxi4cnltj7so35q","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"1. The question"},{"@type":"WebPageElement","name":"2. What the implementer receives"},{"@type":"WebPageElement","name":"2.0 What the mount is, exactly"},{"@type":"WebPageElement","name":"2.0.1 And the mount is a private object, not a set of digests"},{"@type":"WebPageElement","name":"2.1 What is frozen, and when"},{"@type":"WebPageElement","name":"3. What the implementer does NOT receive"},{"@type":"WebPageElement","name":"3a. Blindness is a property of the AGENT, not only of the directory"},{"@type":"WebPageElement","name":"4. Deliverables"},{"@type":"WebPageElement","name":"4.1 The observation document is read at a byte boundary that is stricter than JSON"},{"@type":"WebPageElement","name":"5. Blindness has three halves"},{"@type":"WebPageElement","name":"6. When the implementer has to ask"},{"@type":"WebPageElement","name":"7. A disagreement is a finding before it is a fault"},{"@type":"WebPageElement","name":"8. Why Go"},{"@type":"WebPageElement","name":"9. What would make the result worthless"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"p479-review","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/"},{"@type":"ListItem","position":4,"name":"docs","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/"},{"@type":"ListItem","position":5,"name":"spec","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/"},{"@type":"ListItem","position":6,"name":"proof-wire","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/"},{"@type":"ListItem","position":7,"name":"experiment","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/experiment/"},{"@type":"ListItem","position":8,"name":"BLIND-IMPLEMENTATION-CONTRACT.md","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/experiment/BLIND-IMPLEMENTATION-CONTRACT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/p479-review/docs/spec/proof-wire/experiment/BLIND-IMPLEMENTATION-CONTRACT.md</span>
+
+</div></div>
+<div class="lead">Status: PROCEDURAL, not normative. This document does not define the protocol. It defines the experiment the protocol is about to be subjected to, and what would make its result…</div>
+<div class="prose"><h1 id="blk-49177">The blind implementation contract</h1>
+<p><strong>Status: PROCEDURAL, not normative.</strong> This document does not define the protocol. It defines the experiment the protocol is about to be subjected to, and what would make its result meaningless.</p>
+<h3 id="blk-49179">1. The question</h3>
+<blockquote><p>Can a second implementation, written from the specification rather than from the source, construct the same proof objects and predict the same failures?</p></blockquote>
+<p>Not <em>can somebody port the JavaScript</em>. If the second implementer learns the protocol by reading the checker, the result is a port, and a port agreeing with its original measures nothing.</p>
+<h3 id="blk-49183">2. What the implementer receives</h3>
+<p>A run is against <strong>one immutable release, named by its identity</strong>, not against &quot;the spec tree as it stands&quot;. The release package is:</p>
+<pre><code>docs/spec/proof-wire/SPEC-RELEASE.json         the CURRENT pointer
+docs/spec/proof-wire/releases/&lt;srel&gt;.json      the immutable archived record
+docs/spec/proof-wire/TRVM-PROOF-WIRE-v1.md
+docs/spec/proof-wire/TRVM-VERIFIED-CLAIM-v1.md
+docs/spec/proof-wire/TRVM-NESTED-COMPOSITION-v2.md
+docs/spec/proof-wire/schema/
+docs/spec/proof-wire/vectors/                  public corpus + pinned JCS import
+docs/spec/proof-wire/requirements/open/        what is DECLARED-OPEN and why
+docs/spec/proof-wire/experiment/               this contract, the recipe grammar,
+                                               the observation grammar and schema,
+                                               and the synthetic adapter fixture
+RFC 8785, RFC 8259, and any public JCS implementation</code></pre>
+<p>and the implementer is told, in writing, <strong>which `spec_release_id` and which `blind_package_id` the run selects</strong>. <code>srel</code> is recomputable from the package — it is <code>srel-SHA256(&quot;TRVM-PROOF-WIRE-SPEC-RELEASE-v1|&quot; + canonicalWire(release_core))</code> — and computing it is a fair first conformance exercise, because it uses the same canonical encoder as everything else.</p>
+<p><strong>Two identities, because they answer two questions.</strong> <code>srel</code> says what the specification <em>means</em>; <code>bpkg</code> says which <em>bytes</em> were delivered. They are the same split as <code>verified_claim_sem_id</code> versus <code>artifact_root</code>, and both are needed: <code>requirements/open/</code> is deliberately outside <code>spec_digest</code> so that a declared-open register may grow without implying a protocol change, and it is deliberately inside <code>bpkg</code>, because the implementer reads it. Editing it moves <code>bpkg</code> and not <code>srel</code>, and that is the correct behaviour of both.</p>
+<p>The selection lives in a <strong>run record</strong> (<code>TRVM-BLIND-IMPLEMENTATION-RUN-v3</code>) that points at the release. The release does not point back at the run: <code>spec_release_id</code> already binds <code>experiment_digest</code>, so putting the run inside the experiment surface would make the identity depend on a record that names it.</p>
+<p>If a later release is issued while a run is in progress, <strong>the run does not silently move.</strong> It remains pinned to the <code>srel</code> it selected. A substantive change aborts that run and starts a new run record against the new release; that is a human act and no gate performs it.</p>
+<h4 id="blk-49190">2.0 What the mount is, exactly</h4>
+<p>The implementer's project is a <strong>closed artifact</strong>: the mount contains <strong>exactly</strong> the regular files that contribute to <code>bpkg</code>, and nothing else.</p>
+<ul><li><p><strong>No symlinks and no special files.</strong> The package walk uses <code>lstat</code> and refuses a symbolic link, a</p></li></ul>
+<p>FIFO, a socket or a device outright — including a link whose target is inside the package, because a special case is a place to hide. Independently, every packaged file's <code>realpath</code> must lie inside the package root. Until P4.7.8 the walk followed links, so <code>innocent.md -&gt; ../../../governance/round-11-ledger.md</code> was manifested as an ordinary file with a digest and delivered a round ledger into the clean room.</p>
+<ul><li><p><strong>No manifest inside the workspace.</strong> <code>BLIND-PACKAGE.json</code> used to be written into the mount and</p></li></ul>
+<p>then exempted from the equality check — 59 files manifested, 60 delivered, and the sixtieth was outside <code>bpkg</code> by construction. It is written <em>beside</em> the mount now, on request, and never inside it. <strong>Which `srel` and which `bpkg` were selected is told to the implementer in writing</strong>, here and in the run record; the workspace needs no self-description.</p>
+<ul><li><p><strong>The mount is written from the manifest</strong>, file by file, rather than copied as a directory.</p></li></ul>
+<p>Copying a directory delivers whatever is in it; copying a manifest delivers what was measured.</p>
+<ul><li><p><strong>`--emit` refuses a package the run never pinned</strong>, so the delivered bytes are the selected bytes.</p></li><li><p><strong>Exactly the directories the manifest implies, and no others.</strong> The permitted directories are</p></li></ul>
+<p>derived from the parent paths of the manifested files, so nothing is added to <code>bpkg</code> and the check is arithmetic. An empty directory carries no bytes for a digest to notice and its <strong>name</strong> is still something the implementer can read.</p>
+<ul><li><p><strong>One filesystem link per file, and an ordinary directory at the root.</strong> A hard link is a regular</p></li></ul>
+<p>file that <code>lstat</code> cannot distinguish, and a symlink standing in for the root is a name that can be re-pointed after it has been checked.</p>
+<ul><li><p><strong>Portable path segments only</strong> — <code>[A-Za-z0-9._+-]</code>, NFC, and no two paths equal after ASCII</p></li></ul>
+<p>case-folding. Two names differing only by case are <strong>one object</strong> on a case-insensitive filesystem, which is the hard-link defect one layer up.</p>
+<h4 id="blk-49218">2.0.1 And the mount is a private object, not a set of digests</h4>
+<p><strong>A digest is a statement about bytes at an instant, and an object with a second name has no single instant.</strong> Until P4.7.9 this section told a harness to verify the mount immediately before the first model request and then mount it read-only. <strong>That sequence is not sufficient, and the demonstration needs no package byte to be wrong</strong>: replace a file with a hard link to identical bytes outside the mount and verification passes — every digest is correct, because at that instant the bytes <em>are</em> correct — then write to the outside name, and the verified package changes with it. A read-only bind makes <em>that mount point</em> read-only and leaves the object underneath writable through every other name it has.</p>
+<p>So the clean-room artifact is <strong>an exact filesystem namespace of privately owned immutable objects</strong>, and the harness <em>establishes</em> that rather than checking for it:</p>
+<pre><code>unshare a mount namespace           the view has no name outside it
+    ↓
+mount a fresh tmpfs                 new inodes · one link each · no older descriptor
+    ↓
+emit the package into it            from the manifest, refused unless it is the pinned bpkg
+    ↓
+remount read-only                   in the SUPERBLOCK sense, asserted against the kernel
+    ↓
+verify THE FINAL VIEW               in the process that will serve it, as its first act
+    ↓
+serve the bytes that were verified  never the path — the package is not read from disk again</code></pre>
+<p>The verification happens <strong>after</strong> the isolation exists, not before it, and the program that verifies is the program that serves. Verifying one pathname and later resolving another is the same defect one layer up.</p>
+<p><strong>The implementer reads the package through two functions</strong> — <code>list_files()</code> and <code>read_file(path)</code> — over a dictionary whose keys are the manifested paths. That is not a filesystem, so <code>..</code>, an absolute path, a symlink, a case-folded name and a race are not defended against; they are unrepresentable. Source goes back through <code>write_source(path, content)</code> into a <strong>separate, writable workspace</strong>, which is never part of the package.</p>
+<p><strong>What is not claimed.</strong> None of this defends against an operator with write access to the repository — the declared threat ceiling of the whole experiment — and it cannot make a model provider honest about which weights answered. It removes ordinary aliasing and every window between verification and use.</p>
+<h4 id="blk-49225">2.1 What is frozen, and when</h4>
+<pre><code>PINNED             srel + bpkg + the measuring instrument + the reference implementation
+CANDIDATE_FROZEN   + the candidate's source digest, binary digest and recorded environment
+REVEALED           the challenge set is opened — REFUSED before CANDIDATE_FROZEN
+COMPLETE           scored, with no unclassified interop finding outstanding
+ABORTED            terminal</code></pre>
+<p><strong>The reveal is refused before `CANDIDATE_FROZEN`, and that is the transition the record exists to guard.</strong> Opening the challenge set first is how an implementation comes to be adjusted in the light of the thing it is about to be measured on. A status word that names an implementation without digesting it does not freeze anything.</p>
+<p>Every transition writes an <strong>immutable receipt</strong>, rather than overwriting the only record of what the experiment was.</p>
+<p>The <strong>measuring instrument</strong> — the scorer, the runner, both schemas and the synthetic fixtures — is inside the package you receive and inside <code>experiment_digest</code>. That is not a convenience: it means a change to how you are scored moves <code>srel</code> and reddens the run. You may read the scorer. You cannot read the challenges.</p>
+<h3 id="blk-49230">3. What the implementer does NOT receive</h3>
+<pre><code>any file under governance/                — checkers, producers, schema helpers,
+                                            grammar constants, canonicaliser
+the holdout challenge set                 — see §5. Its GRAMMAR is public
+                                            (experiment/HOLDOUT-RECIPE-v1.md);
+                                            its CONTENTS are not</code></pre>
+<p>A translated or transliterated <code>canonicalBytes</code> is disqualifying. An independent RFC 8785 implementation is not: <strong>independence from TRVM's implementation is the point; independence from RFC 8785 is not a virtue.</strong></p>
+<h3 id="blk-49233">3a. Blindness is a property of the AGENT, not only of the directory</h3>
+<p>For every other round in this project, letting a session read the other sessions' work is an advantage and is deliberately encouraged. <strong>For this one experiment it is contamination</strong>, and hiding <code>governance/</code> on disk does not remove it: a model that has already discussed <code>nested_claim_sem_id</code> in another conversation is not implementing from the specification, it is recalling an implementation, and the run would measure nothing while looking like it measured something.</p>
+<p>So the implementing agent or session MUST NOT have access to:</p>
+<pre><code>previous TRVM conversations or their summaries
+user memory, project memory, or personal-context retrieval
+connected project sources, or repository search outside the released package
+reviewer briefs, review packs, or round ledgers
+the holdout challenge set</code></pre>
+<p><strong>The P4 reviewer sessions and the session that authored this release are DISQUALIFIED as blind implementers.</strong> They have read the JavaScript, the checker architecture, the holdout construction and the scoring design. So is a fresh session on the same account if its harness can retrieve any of the above — a new chat window is not by itself isolation.</p>
+<p>Use an isolated coding workspace whose mounted project is the frozen release package and allowed public dependencies, and nothing else. <strong>Record the implementation environment, model and tool version in the findings</strong>, because &quot;which agent, with what access&quot; is part of what the result means.</p>
+<p>This section is the reason the experiment can produce a measurement at all, and it is the easiest one to violate accidentally.</p>
+<h3 id="blk-49240">4. Deliverables</h3>
+<ol><li><p>Parse and emit canonical wire octets; reproduce every <code>wire_positive</code> vector and every</p></li></ol>
+<p><code>jcs-upstream/</code> pair.</p>
+<ol start="2"><li><p>Produce every <code>wire_negative</code> outcome from <code>TRVM-PROOF-WIRE-v1.md</code> §3.3, including the</p></li></ol>
+<p>normalisation in §3.6 — the internal stage at which a strict parser notices a duplicate member name or invalid UTF-8 is <strong>not</strong> the observable outcome.</p>
+<ol start="3"><li><p>Compute <code>artifact_root</code>, <code>verified_claim_sem_id</code>, <code>nested_claim_sem_id</code>, <code>aggregate_id</code>,</p></li></ol>
+<p><code>structure_sem_id</code> and <code>verifier_policy_id</code> from the specifications, and reproduce the frozen positive fixture's values.</p>
+<ol start="4"><li><p><strong>Construct a FAMILY of artifacts the implementation asserts are VALID</strong> — not one golden example.</p></li></ol>
+<p>At minimum: an annotation-only variation; a permutation of the reference set (a SET, per <code>TRVM-NESTED-COMPOSITION-v2.md</code> §6.3); an operand-order variation (ordered, per §4.1, and therefore a <em>different claim</em>); a variation with a different but valid child combination; and a shared-child diamond variant.</p>
+<ol start="5"><li><p>Construct known-invalid artifacts with <strong>predicted refusal sets</strong>, compared for exact set equality.</p></li><li><p><strong>Ship a holdout ADAPTER</strong>: a program that reads a challenge in the frozen recipe grammar</p></li></ol>
+<p>(<code>HOLDOUT-RECIPE-v1.md</code>), applies it to the named frozen fixture, and writes a <code>TRVM-HOLDOUT-OBSERVATION-v1</code> document (<code>HOLDOUT-OBSERVATION-v1.md</code>, <code>holdout-observation-v1.schema.json</code>). The adapter is written <strong>before</strong> the challenges are revealed, against the published grammar and the synthetic fixture in <code>experiment/fixtures/</code>.</p>
+<p>This is deliverable 6 rather than a footnote because it is the interface the measurement runs over. If the shape of a Go observation were decided after the challenge set was revealed, the measuring instrument would have been modified in the light of what it was about to measure, and the preregistration in §5 would be worth nothing.</p>
+<h4 id="blk-49264">4.1 The observation document is read at a byte boundary that is stricter than JSON</h4>
+<p>The measuring instrument reads every evidence artifact — including the adapter's observation document — through its own strict reader (<code>experiment/evidence.mjs</code>), <strong>before</strong> any of it is scored. A document that does not cross that boundary is <strong>REFUSED</strong>, and a refused observation is not a failing measurement: it is an absent one.</p>
+<p>Beyond RFC 8259 the reader refuses four things, and each is a case where the same bytes have two readings in two conforming implementations:</p>
+<table><thead><tr><th>refused</th><th>why it is not merely pedantry</th></tr></thead><tbody><tr><td>a <strong>duplicate object member name</strong>, at any depth</td><td><code>JSON.parse</code> keeps the last; a first-occurrence reader keeps the first. An observation whose bytes read <code>&quot;implementation&quot;:&quot;evil&quot;,&quot;implementation&quot;:&quot;honest&quot;</code> attributes the measurement two ways</td></tr><tr><td>an <strong>unpaired surrogate</strong> (<code>&quot;\uD800&quot;</code>)</td><td>Node keeps it; Go's <code>encoding/json</code> substitutes U+FFFD. This one would otherwise surface as an interoperability <em>finding</em> against a correct implementation</td></tr><tr><td><strong>invalid UTF-8</strong>, or a byte-order mark</td><td>a replacement character supplied by a lenient decoder is a character the producer never wrote</td></tr><tr><td><strong>anything after the document</strong></td><td>a file holding two documents has two readings</td></tr></tbody></table>
+<p>This is a property of the INSTRUMENT, not of the protocol under test. <code>TRVM-PROOF-WIRE-v1.md</code> §3.6 still pins what a conforming implementation must do with each of these classes <em>on the wire</em>, and deliverable 2 still requires exactly those observable outcomes. The boundary described here governs the document the implementation writes ABOUT that work, and its purpose is that parser permissiveness stops being an accidental property of whichever implementation happens to be doing the measuring.</p>
+<p>The reference adapter's own output satisfies it, and <code>node experiment/evidence.mjs --selftest</code> states the reader's two claims: every input it accepts is read exactly as <code>JSON.parse</code> reads it, and the inputs it refuses beyond JSON are the ambiguous ones.</p>
+<h3 id="blk-49280">5. Blindness has three halves</h3>
+<p><strong>Source-blind</strong> — §3. <strong>Agent-blind</strong> — §3a.</p>
+<p><strong>Answer-key-blind</strong> — a <strong>holdout</strong> challenge set is frozen at the same time as the public corpus, committed by digest in the release, and not given to the implementer. Public vectors are for development; the holdout is the measurement. An implementation tuned until the public vectors pass has been fitted, not written.</p>
+<p>The holdout records <strong>no SHA-256 value that any implementation produced</strong>. It records constructions, recipe steps, and machine-evaluable predicates — because recording this implementation's answers and hiding them would make it the oracle by virtue of having gone first. Where the specification fixes an exact structural quantity, the holdout may commit that quantity, since it is derivable from the specification by hand and is not a hash.</p>
+<h3 id="blk-49284">6. When the implementer has to ask</h3>
+<p><strong>Do not silently patch the specification and continue.</strong> That turns the experiment into co-authoring and destroys the only measurement it produces.</p>
+<p>Record, against the frozen revision:</p>
+<pre><code>frozen_spec_revision
+the question, verbatim
+why the specification was insufficient
+the ruling
+classification (§7)
+the superseding spec revision, if any</code></pre>
+<p>Then publish a <strong>numbered</strong> revision. <strong>After a substantive revision, restart the implementation from a fresh session against the revised specification</strong> if the result is still to be called blind — the implementer who asked now holds knowledge the document does not contain.</p>
+<h3 id="blk-49289">7. A disagreement is a finding before it is a fault</h3>
+<pre><code>SPEC_GAP                     the document does not say
+SPEC_IMPLEMENTATION_CONFLICT the document says something the JS does not do
+JS_CHECKER_DEFECT            the JS is wrong
+GO_PRODUCER_DEFECT           the second implementation is wrong
+VECTOR_ORACLE_DEFECT         the frozen corpus is wrong
+JCS_DEPENDENCY_DIVERGENCE    two RFC 8785 implementations disagree</code></pre>
+<p><strong>The highest-value event available in this round is:</strong></p>
+<pre><code>the second implementation says VALID   →   the JavaScript checker REFUSES it</code></pre>
+<p>because it cannot be predicted, and because at least one of the six classes above must apply. It is investigated before it is assigned.</p>
+<h3 id="blk-49294">8. Why Go</h3>
+<p>Not because its default behaviour differs by magic. Because it forces a genuinely different runtime and type system, produces a standalone binary that shares nothing with Node, and — with <code>encoding/json/v2</code> — offers a <strong>strict byte-oriented JSON boundary that rejects duplicate member names and invalid UTF-8 by default</strong>, where the legacy library and Node both accept duplicates and substitute U+FFFD.</p>
+<p>That difference is the reason §3.6 of the wire specification exists. A strict reader will notice these inputs at a different stage than the JavaScript does, and the protocol must already have decided what both are required to <em>report</em>. Settling that while debugging an interop failure would be settling it with a thumb on the scale.</p>
+<h3 id="blk-49297">9. What would make the result worthless</h3>
+<ul><li><p>The implementer reads <code>governance/</code>.</p></li><li><p>The specification is edited during the run without a numbered revision.</p></li><li><p>The holdout set is consulted before the implementation is frozen.</p></li><li><p>The conformance corpus is regenerated by anything other than a deliberate human update</p></li></ul>
+<p>(<code>law:proof.conformance-oracle-frozen@1</code> — the corpus was, until P4.3, rewritten by the very run that checked it).</p>
+<ul><li><p>A Go/JS disagreement is closed by changing Go without first classifying it under §7.</p></li></ul></div>
+<p class="src"><a href="/#/TRVM/p479-review/docs/spec/proof-wire/experiment/BLIND-IMPLEMENTATION-CONTRACT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-49179" class="lvl2">1. The question</a><a href="#blk-49183" class="lvl2">2. What the implementer receives</a><a href="#blk-49190" class="lvl3">2.0 What the mount is, exactly</a><a href="#blk-49218" class="lvl3">2.0.1 And the mount is a private object, not a set of digests</a><a href="#blk-49225" class="lvl3">2.1 What is frozen, and when</a><a href="#blk-49230" class="lvl2">3. What the implementer does NOT receive</a><a href="#blk-49233" class="lvl2">3a. Blindness is a property of the AGENT, not only of the directory</a><a href="#blk-49240" class="lvl2">4. Deliverables</a><a href="#blk-49264" class="lvl3">4.1 The observation document is read at a byte boundary that is stricter than JSON</a><a href="#blk-49280" class="lvl2">5. Blindness has three halves</a><a href="#blk-49284" class="lvl2">6. When the implementer has to ask</a><a href="#blk-49289" class="lvl2">7. A disagreement is a finding before it is a fault</a><a href="#blk-49294" class="lvl2">8. Why Go</a><a href="#blk-49297" class="lvl2">9. What would make the result worthless</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/p479-review/docs/spec/proof-wire/experiment/CLEAN-ROOM-PROMPT-v1.md/">The clean-room prompt</a><a href="/TRVM/p479-review/docs/spec/proof-wire/experiment/HOLDOUT-OBSERVATION-v1.md/">TRVM-HOLDOUT-OBSERVATION-v1 — the neutral observation grammar</a><a href="/TRVM/p479-review/docs/spec/proof-wire/experiment/HOLDOUT-RECIPE-v1.md/">TRVM-PROOF-WIRE-HOLDOUT-v2 — the recipe grammar</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraw2mmxu2obi7l5wd4gsx4mbyn2k6opy5m3hzxqfxi4cnltj7so35q</div></div></div>
+</div></div>
+</body></html>

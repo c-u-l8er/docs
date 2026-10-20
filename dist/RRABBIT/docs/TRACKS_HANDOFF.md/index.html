@@ -1,0 +1,131 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Tracks · Reel · Replay — session handoff · RRABBIT · Ampersand Box</title>
+<meta name="description" content="Written 2026-08-15. Continue development from this file.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/RRABBIT/docs/TRACKS_HANDOFF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tracks · Reel · Replay — session handoff">
+<meta property="og:description" content="Written 2026-08-15. Continue development from this file.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/RRABBIT/docs/TRACKS_HANDOFF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Tracks · Reel · Replay — session handoff","name":"Tracks · Reel · Replay — session handoff","description":"Written 2026-08-15. Continue development from this file.","url":"https://docs.ampersandboxdesign.com/RRABBIT/docs/TRACKS_HANDOFF.md/","identifier":"bagaaiera6nqqajmn44cu554goxiwwdcgizfg4uvu734ysw7uxyz45mrea3uq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"RRABBIT","url":"https://docs.ampersandboxdesign.com/RRABBIT/"},"articleSection":"RRABBIT","hasPart":[{"@type":"WebPageElement","name":"1. The deploy loop — read this before anything else"},{"@type":"WebPageElement","name":"Getting a build into the guest"},{"@type":"WebPageElement","name":"Why it goes to $HOME/rrabbit and not /usr/local/share/rrabbit"},{"@type":"WebPageElement","name":"Guest access"},{"@type":"WebPageElement","name":"Two host traps"},{"@type":"WebPageElement","name":"2. What is built"},{"@type":"WebPageElement","name":"Tracks — m2/tracks.js"},{"@type":"WebPageElement","name":"The recording — the trail is not the log"},{"@type":"WebPageElement","name":"The reel — m2/reel.js, gear R"},{"@type":"WebPageElement","name":"Replay — precheck / perform / transport"},{"@type":"WebPageElement","name":"3. Bugs found, and the two lessons worth carrying"},{"@type":"WebPageElement","name":"4. Where this sits on the ladder"},{"@type":"WebPageElement","name":"5. What is next, and what is blocked on a ruling"},{"@type":"WebPageElement","name":"Known gaps in what shipped"},{"@type":"WebPageElement","name":"6. Uncommitted, and the other open work"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"RRABBIT","item":"https://docs.ampersandboxdesign.com/RRABBIT/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/RRABBIT/docs/"},{"@type":"ListItem","position":4,"name":"TRACKS_HANDOFF.md","item":"https://docs.ampersandboxdesign.com/RRABBIT/docs/TRACKS_HANDOFF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">RRABBIT</span>
+<span class="path">RRABBIT/docs/TRACKS_HANDOFF.md</span>
+
+</div></div>
+<div class="lead">Written 2026-08-15. Continue development from this file.</div>
+<div class="prose"><h1 id="blk-28799">Tracks · Reel · Replay — session handoff</h1>
+<p><strong>Written 2026-08-15. Continue development from this file.</strong></p>
+<p>Read <code>docs/RUNBOOK.md</code> first for the shell in general; this covers only the tracks/reel/replay work and the deploy loop that made it testable.</p>
+<h3 id="blk-28802">1. The deploy loop — read this before anything else</h3>
+<p>The dev host <strong>cannot run the 3D shell</strong>: two other sessions hold the WebGL context pool, so <code>buildWorld</code> throws and <code>createDash</code> never runs. That means no dash, no gate, no driving, and no screenshots worth taking. <strong>The FreeBSD guest is the test environment.</strong> Everything below exists because of that.</p>
+<h4 id="blk-28804">Getting a build into the guest</h4>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> /home/travis/ProjectAmp2/RRABBIT &amp;&amp; npm run build
+tar czf /tmp/rrabbit-dist.tgz dist
+scp<span class="t-flag"> -P</span> <span class="t-undefined">2224</span> /tmp/rrabbit-dist.tgz driver@<span class="t-undefined">127</span>.<span class="t-undefined">0</span>.<span class="t-undefined">0</span>.<span class="t-undefined">1</span>:/tmp/
+ssh<span class="t-flag"> -p</span> <span class="t-undefined">2224</span> driver@<span class="t-undefined">127</span>.<span class="t-undefined">0</span>.<span class="t-undefined">0</span>.<span class="t-undefined">1</span> <span class="t-string">'rm -rf $HOME/rrabbit/dist.new &amp;&amp; mkdir -p $HOME/rrabbit/dist.new &amp;&amp; tar xzf /tmp/rrabbit-dist.tgz -C $HOME/rrabbit/dist.new --strip-components=1 &amp;&amp; rm -rf $HOME/rrabbit/dist.prev &amp;&amp; mv $HOME/rrabbit/dist $HOME/rrabbit/dist.prev &amp;&amp; mv $HOME/rrabbit/dist.new $HOME/rrabbit/dist &amp;&amp; sha256 -q $HOME/rrabbit/dist/assets/shell-*.js'</span></code></pre>
+<p>Then <strong>Ctrl+R in the shell</strong>. No reboot, no logout — it is a page in a Firefox kiosk.</p>
+<p>Compare the printed hash against <code>sha256sum dist/assets/shell-*.js</code> on the host. They must match.</p>
+<h4 id="blk-28808">Why it goes to <code>$HOME/rrabbit</code> and not <code>/usr/local/share/rrabbit</code></h4>
+<p><code>driver</code> <strong>is not in the sudoers file</strong> (<code>sudo</code> fails regardless of password) and the shipped directory is <code>root:wheel 0755</code>. <code>driver</code> is in <code>wheel</code> but the group has no write bit.</p>
+<p><code>rrabbit-session</code> was written with the escape hatch — <em>&quot;Overridable so the session logic can be exercised off-target&quot;</em>:</p>
+<pre data-lang="sh"><code>RRABBIT_DIR=<span class="t-var">${RRABBIT_DIR:-/usr/local/share/rrabbit}</span>
+BRIDGE=<span class="t-var">$RRABBIT_DIR</span>/bridge.py</code></pre>
+<p>and <code>bridge.py</code> serves the <code>dist</code> <strong>beside itself</strong> (<code>DIST = dirname(abspath(__file__)) + &quot;/dist&quot;</code>). So a user-owned copy is a complete install. <code>~/.xprofile</code> sets it, and SDDM's <code>Xsession</code> sources <code>$HOME/.profile</code> and <code>$HOME/.xprofile</code>.</p>
+<p><strong>To revert to the shipped shell:</strong> delete <code>~/.xprofile</code> and log in again. Nothing under <code>/usr/local</code> was touched.</p>
+<h4 id="blk-28814">Guest access</h4>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>VM</td><td><code>tandr-preview</code>, libvirt <strong>user session</strong> (<code>virsh -c qemu:///session</code>)</td></tr><tr><td>Network</td><td>usermode, <code>hostfwd=tcp:127.0.0.1:2224-:22</code> — <strong>there is no guest IP</strong></td></tr><tr><td>ssh</td><td><code>ssh -p 2224 driver@127.0.0.1</code>, key auth is installed</td></tr><tr><td>sudo</td><td><strong>unavailable</strong> — <code>driver is not in the sudoers file</code></td></tr><tr><td>Screenshot without any credentials</td><td><code>virsh -c qemu:///session screenshot tandr-preview out.ppm</code></td></tr></tbody></table>
+<p><code>virsh screenshot</code> is the highest-value probe here — it reaches the greeter, a failed session, and anything ssh cannot see. It caught a deploy that had never happened when the AHEAD mirror still read old text.</p>
+<h4 id="blk-28829">Two host traps</h4>
+<ul><li><p><strong>`cd` does not persist between tool calls.</strong> Every build/deploy command must start with</p></li></ul>
+<p><code>cd /home/travis/ProjectAmp2/RRABBIT</code>. A build &quot;failing&quot; with <code>npm error</code> is usually this.</p>
+<ul><li><p><strong>Vite's dev server versions module URLs.</strong> <code>await import('/m2/tracks.js')</code> in a console gets a</p></li></ul>
+<p><strong>different instance</strong> than <code>travel.js</code> holds, so any cross-module probe on <code>localhost:8914</code> measures two parallel copies and proves nothing. The built bundle has one instance (verified). Test through the <code>window.__*</code> globals, which close over the real graph.</p>
+<h3 id="blk-28838">2. What is built</h3>
+<h4 id="blk-28839">Tracks — <code>m2/tracks.js</code></h4>
+<p>Was ten fixed slots; now <strong>sparse 1–999, created on demand</strong>.</p>
+<ul><li><p><code>Map</code> keyed by id, not a dense array. <code>ensure(300)</code> costs one entry, not three hundred.</p></li><li><p>Fresh shell starts with <strong>one</strong> track, not zero.</p></li><li><p><code>remove()</code> refuses the last track — the gantry reads a label and the map draws a marker; there is</p></li></ul>
+<p>no state for &quot;no track&quot;.</p>
+<ul><li><p>Store key <code>rrabbit.tracks.v2</code>. <code>load()</code> treats a saved set as untrusted input from an older build,</p></li></ul>
+<p>which is why v1 needed no migration.</p>
+<p><strong>The digit grammar is bounded by the population, not the ceiling.</strong> <code>canGrow(prefix)</code> asks whether any track that <em>exists</em> has this as a proper prefix. With nine or fewer tracks nothing can grow, so every switch commits on the keystroke and the 600 ms timer never runs. <strong>1–999 is faster than the fixed 10 was.</strong> Reading <code>MAX</code> here instead would make every single-digit press wait.</p>
+<h4 id="blk-28854">The recording — the trail is not the log</h4>
+<p><code>history</code> and <code>rec</code> are separate and must stay separate:</p>
+<table><thead><tr><th></th><th><code>history</code></th><th><code>rec</code></th></tr></thead><tbody><tr><td>job</td><td>what <code>back</code> can walk</td><td>what happened</td></tr><tr><td><code>back</code></td><td><strong>truncates it</strong></td><td>never touches it</td></tr><tr><td>cap</td><td>32, silently shifted</td><td><code>REC_MAX</code> 4096, loss counted in <code>recCut</code></td></tr><tr><td>contents</td><td>road ids only</td><td><code>go</code> · <code>land</code> · <code>in</code> · <code>out</code>, with relative <code>t</code></td></tr></tbody></table>
+<p>A short trail beside a long recording means you reversed out of somewhere. That gap is the honest picture and both columns are shown in the reel because of it.</p>
+<p><code>arrive(id, {record:false})</code> still records — as <code>land</code>. A restore is not on the trail but it <em>did happen</em>, and a log that omitted it could not be replayed: the next step would start from a road the replayer was never told it was on.</p>
+<p><code>prune()</code> deliberately does <strong>not</strong> touch <code>rec</code>. <code>at</code>/<code>roads</code>/<code>history</code> are claims about where you can go now; <code>rec</code> is a claim about what happened and stays true after a road is gone.</p>
+<h4 id="blk-28875">The reel — <code>m2/reel.js</code>, gear <strong>R</strong></h4>
+<p>Not a key. <code>dash.js</code> has had <code>{ id: 'R', name: 'REEL' }</code> all along and <code>setGear</code> refuses anything in <code>unbuilt</code>; the scene existing is all R was waiting for. <code>unbuilt</code> is now <code>['P','C']</code>.</p>
+<p>Per row: <code>drive</code> · <code>replay</code> · <code>walk</code> · <code>clear rec</code> · <code>delete</code>, plus live rename and a make-box. <code>walk</code> is the same replay started paused.</p>
+<p>Mutual exclusion with the map is enforced <strong>by the callers</strong> (<code>0</code> in travel.js, <code>onGear</code> in shell.js) so <code>map.js</code> and <code>reel.js</code> never import each other.</p>
+<h4 id="blk-28879">Replay — <code>precheck</code> / <code>perform</code> / transport</h4>
+<p><strong>A macro repeats; a track checks.</strong> Two phases, and the split is forced not chosen:</p>
+<ul><li><p><strong>precheck</strong> — roads, before anything moves. A route whose third step names a deleted road never</p></li></ul>
+<p>takes the first.</p>
+<ul><li><p><strong>at arrival</strong> — windows, which are not answerable in advance because surfaces arrive after the</p></li></ul>
+<p>module loads. <code>load()</code> already made this split for <code>in</code>.</p>
+<p>Refusals are typed <code>TRACK_*</code> (not <code>WRL_*</code> — studbook §7.5: a caller should be able to tell which layer refused): <code>TRACK_EMPTY</code>, <code>TRACK_ROAD_GONE</code>, <code>TRACK_ROAD_CLOSED</code>, <code>TRACK_WINDOW_GONE</code>, <code>TRACK_BUSY</code>.</p>
+<p><strong>No silent repair.</strong> A step whose road is gone is refused by name, never remapped.</p>
+<p>The transport bar (<code>#transport</code>, z-44) reads an ordered list of discrete steps and never asks what a step <em>means</em> — one <code>phrase()</code> function is its only contact with the kinds. <strong>It survives the op vocabulary change intact.</strong></p>
+<p>Two rules that came out of use:</p>
+<ul><li><p><strong>The end is a place to stand, not an exit.</strong> Reaching the last step holds paused, so <code>back</code> stays</p></li></ul>
+<p>live and you leave with <code>[X]</code> or Esc.</p>
+<ul><li><p><strong>A replay is a round trip.</strong> Exiting returns you to the road <em>and window</em> you were in when you</p></li></ul>
+<p>pressed it, via <code>driveToTrack</code> (which releases, sets <code>goingBack</code> so the drive home is not recorded, and re-enters the window). If the road you started from is gone it stays put rather than guessing.</p>
+<p><strong>Step back works only because ops record arrivals, not deltas</strong> — state after step k is fully described by step k, so going back is re-performing k−1, not reversing k. Forty wheel deltas cannot be rewound; <code>park(road, z)</code> can. That is the granularity rule paying off as a capability.</p>
+<h3 id="blk-28902">3. Bugs found, and the two lessons worth carrying</h3>
+<p><strong>The one that cost four rounds:</strong></p>
+<pre data-lang="css"><code>#transport { display: flex; }      /* id-selector author rule */
+#transport[hidden] { display: none; }   /* ← required, was missing */</code></pre>
+<p><code>display</code> from an id selector outranks the UA's <code>[hidden] { display: none }</code>, so <code>el.hidden = true</code> set the attribute and changed nothing. The bar was correctly told to hide <strong>55 times</strong> and stayed up — so a replay that <em>had</em> ended looked like one that would not stop.</p>
+<blockquote><p><strong>When a control &quot;does not respond&quot;, measure whether its EFFECT is reaching the screen before measuring whether its INPUT is reaching the code.</strong></p></blockquote>
+<p>And the instrument that misled me: once the replay stopped, the poll was cleared, so the counters froze. <code>esc 4/0</code> was a <strong>stopped clock</strong> read as evidence about handlers.</p>
+<blockquote><p><strong>An instrument that stops updating reads as a measurement, not as silence.</strong> Put a heartbeat on any counter you intend to trust.</p></blockquote>
+<p>Two real bugs found while chasing it, both worth keeping fixed:</p>
+<ul><li><p>Esc for replay was on a <strong>bubble</strong> listener; three capture-phase branches in <code>travel.js</code> can stop</p></li></ul>
+<p>propagation first. It lives in the capture listener now.</p>
+<ul><li><p>The flat-mode pointer <code>swallow</code> exempted only <code>#map</code>. A replay step that <em>enters a window</em> puts the</p></li></ul>
+<p>shell in flat mode, which killed every button on the bar. Now exempts <code>#transport, #reel, #map</code>.</p>
+<p><strong>Stale text removed</strong> (both were teaching the dead ten-track model): the <code>#status</code> hint panel and <code>map.js</code>'s key hint. <code>#status</code> is now <code>hidden</code> when empty — clearing the text left a bordered empty box — and both writers (<code>say</code>, <code>offerReload</code>) un-hide it, because a crash report in a hidden panel is a failure reported nowhere.</p>
+<p><strong>Glyphs:</strong> <code>⏮⏸▶⏭⏹</code> are U+23Ex and the image's font has no such block — every button wore tofu. All controls are ASCII now: <code>|&lt; back</code>, <code>&gt; play</code>, <code>|| pause</code>, <code>&gt;| step</code>, <code>[X]</code>.</p>
+<h3 id="blk-28922">4. Where this sits on the ladder</h3>
+<p><code>DRIVE → TRACK → REPLAY → GENERALIZE → AUTONOMOUS</code></p>
+<table><thead><tr><th>rung</th><th>status</th></tr></thead><tbody><tr><td>DRIVE</td><td><code>live_local</code></td></tr><tr><td>TRACK</td><td><code>live_local</code> — sparse 1–999, reel, recording</td></tr><tr><td>REPLAY</td><td><code>live_local</code> — preconditions, refusals, transport, round trip</td></tr><tr><td>GENERALIZE</td><td><code>spec</code> — blocked on the op vocabulary</td></tr><tr><td>AUTONOMOUS</td><td><code>spec</code> — WRLM D′ is step 4, unauthorized</td></tr></tbody></table>
+<h3 id="blk-28937">5. What is next, and what is blocked on a ruling</h3>
+<p><strong>The op vocabulary is the next phase</strong> and it is a <strong>[TRAVIS] decision</strong>, not a task. Draft is at <a href="#/RRABBIT/docs/OP_VOCABULARY_DRAFT.md" data-link>`docs/OP_VOCABULARY_DRAFT.md`</a>, beside this file.</p>
+<p>Its argument in one line: the recording is an ad-hoc <code>{t,k,…}</code> shape, and adding the eleven missing verbs by accretion makes WRL permanently harder. A <strong>closed vocabulary of ~16 typed ops through one seam</strong> gives recording, replay, transport, WRL, and the code editor one code path — <em>the vocabulary is the desktop API</em>, so there is no separate &quot;expose the API to WRL&quot; project.</p>
+<p>Granularity rule: <strong>record the arrival, not the input.</strong> Forty wheel notches is a macro; <code>park(road, z)</code> is a track.</p>
+<p>Five rulings in §8 of that draft. <strong>§7 has a deadline</strong>: existing recordings get discarded, which is cheap now and expensive once tracks have been published.</p>
+<h4 id="blk-28942">Known gaps in what shipped</h4>
+<ul><li><p><strong>Recording covers 4 of ~15 verbs.</strong> No lane scrolling (<code>parkRoad</code>), no window clicks, no resize,</p></li></ul>
+<p>no program launch. Deliberately not fixed by adding kinds — see above.</p>
+<ul><li><p>The check/use race is <strong>narrowed, not closed</strong>. A road can still go away between <code>checkStep</code> and</p></li></ul>
+<p>the drive. Stated in the code, not claimed away.</p>
+<ul><li><p>Preconditions are hand-written JS, not data. They should become <code>GoalSpecV1</code>'s <em>shape</em> — closed</p></li></ul>
+<p>AST, bounded, total, <strong>sealed into the track's identity</strong> so a track cannot be edited to weaken its own guard.</p>
+<h3 id="blk-28955">6. Uncommitted, and the other open work</h3>
+<p>Seven files modified and <strong>not committed</strong> as of writing:</p>
+<pre><code>m2/index.html  m2/map.js  m2/reel.js  m2/shell.js  m2/tracks.js  m2/travel.js  m2/world.js</code></pre>
+<p>Last commit on the branch is <code>643ced8</code>, which is another session's.</p>
+<p>Elsewhere in the portfolio, from the same session:</p>
+<ul><li><p><code>../../RECONCILIATION_LEDGER.md</code> (repo root) — 9 defects, law count derived at <strong>118</strong></p></li></ul>
+<p>(<code>STACK_SITEMAP.md</code> says 116, wrong in two places), 24 of 25 domains serve 200 (<code>container.app</code> does not resolve), WRLM 4/4 batteries green, and <strong>D9: the generator prints 297 inhabited cells where the brief says 298</strong> — unresolved, one <code>build_pool.py</code> run settles it.</p>
+<ul><li><p><code>../../COMPUTEDRIVEN_POSITIONING_PLAN.md</code> (repo root) — portfolio tiering, T&amp;R Cloud on</p></li></ul>
+<p>Cloudflare R2, the WRLM/D′ section, risks R9–R13.</p>
+<p>Both live at the repo root rather than under <code>docs/</code>, which is the stackdocs aggregation site and would have swept them into the atlas build.</p>
+<p><code>/usr/local/share/rrabbit</code> in the guest has <strong>seven</strong> stale <code>dist.*</code> directories (<code>dist.o3 dist.o4 dist.old dist.old2 dist.prev dist.prev2</code>). Cleaning needs root.</p></div>
+<p class="src"><a href="/#/RRABBIT/docs/TRACKS_HANDOFF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-28802" class="lvl2">1. The deploy loop — read this before anything else</a><a href="#blk-28804" class="lvl3">Getting a build into the guest</a><a href="#blk-28808" class="lvl3">Why it goes to $HOME/rrabbit and not /usr/local/share/rrabbit</a><a href="#blk-28814" class="lvl3">Guest access</a><a href="#blk-28829" class="lvl3">Two host traps</a><a href="#blk-28838" class="lvl2">2. What is built</a><a href="#blk-28839" class="lvl3">Tracks — m2/tracks.js</a><a href="#blk-28854" class="lvl3">The recording — the trail is not the log</a><a href="#blk-28875" class="lvl3">The reel — m2/reel.js, gear R</a><a href="#blk-28879" class="lvl3">Replay — precheck / perform / transport</a><a href="#blk-28902" class="lvl2">3. Bugs found, and the two lessons worth carrying</a><a href="#blk-28922" class="lvl2">4. Where this sits on the ladder</a><a href="#blk-28937" class="lvl2">5. What is next, and what is blocked on a ruling</a><a href="#blk-28942" class="lvl3">Known gaps in what shipped</a><a href="#blk-28955" class="lvl2">6. Uncommitted, and the other open work</a></nav></div><div class="card"><div class="lab">links to</div><a href="/RRABBIT/docs/OP_VOCABULARY_DRAFT.md/">The Op Vocabulary — a draft for ruling</a></div><div class="card"><div class="lab">in this folder</div><a href="/RRABBIT/docs/OP_VOCABULARY_DRAFT.md/">The Op Vocabulary — a draft for ruling</a><a href="/RRABBIT/docs/PAPER_ROADS.md/">Paper Roads — documents as a second window kind</a><a href="/RRABBIT/docs/ROAD_SHELL.md/">The road as a window manager — Tier 1</a><a href="/RRABBIT/docs/RUNBOOK.md/">RRABBIT runbook — bringing the stack up, and proving it</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera6nqqajmn44cu554goxiwwdcgizfg4uvu734ysw7uxyz45mrea3uq</div></div></div>
+</div></div>
+</body></html>

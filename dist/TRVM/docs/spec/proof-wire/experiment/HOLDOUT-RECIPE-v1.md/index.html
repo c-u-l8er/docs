@@ -1,0 +1,100 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>TRVM-PROOF-WIRE-HOLDOUT-v2 — the recipe grammar · TRVM · Ampersand Box</title>
+<meta name="description" content="Status: PROCEDURAL, not normative. This document does not define the wire protocol. It defines the language a hidden challenge is written in, so that an…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/experiment/HOLDOUT-RECIPE-v1.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TRVM-PROOF-WIRE-HOLDOUT-v2 — the recipe grammar">
+<meta property="og:description" content="Status: PROCEDURAL, not normative. This document does not define the wire protocol. It defines the language a hidden challenge is written in, so that an…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/experiment/HOLDOUT-RECIPE-v1.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"TRVM-PROOF-WIRE-HOLDOUT-v2 — the recipe grammar","name":"TRVM-PROOF-WIRE-HOLDOUT-v2 — the recipe grammar","description":"Status: PROCEDURAL, not normative. This document does not define the wire protocol. It defines the language a hidden challenge is written in, so that an…","url":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/experiment/HOLDOUT-RECIPE-v1.md/","identifier":"bagaaierajw6tw5tgtqhi4gf6wyslzwurx5gqyfhcwlkv43myulgcwig6yqpa","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"1. Why this is published before the reveal"},{"@type":"WebPageElement","name":"2. A challenge"},{"@type":"WebPageElement","name":"3. The recipe operators"},{"@type":"WebPageElement","name":"IDENTITY"},{"@type":"WebPageElement","name":"SET"},{"@type":"WebPageElement","name":"REVERSE"},{"@type":"WebPageElement","name":"RESEAL"},{"@type":"WebPageElement","name":"CHECK_WITH_OPTIONS"},{"@type":"WebPageElement","name":"WIRE_PREPEND_DUPLICATE_MEMBER"},{"@type":"WebPageElement","name":"RECOMPOSE_DAG"},{"@type":"WebPageElement","name":"4. What an implementation must do with a challenge"},{"@type":"WebPageElement","name":"5. The predicate language, for reference"},{"@type":"WebPageElement","name":"6. What this document deliberately does not fix"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/TRVM/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/"},{"@type":"ListItem","position":5,"name":"proof-wire","item":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/"},{"@type":"ListItem","position":6,"name":"experiment","item":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/experiment/"},{"@type":"ListItem","position":7,"name":"HOLDOUT-RECIPE-v1.md","item":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/experiment/HOLDOUT-RECIPE-v1.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/docs/spec/proof-wire/experiment/HOLDOUT-RECIPE-v1.md</span>
+
+</div></div>
+<div class="lead">Status: PROCEDURAL, not normative. This document does not define the wire protocol. It defines the language a hidden challenge is written in, so that an implementation can be wr…</div>
+<div class="prose"><h1 id="blk-48822"><code>TRVM-PROOF-WIRE-HOLDOUT-v2</code> — the recipe grammar</h1>
+<p><strong>Status: PROCEDURAL, not normative.</strong> This document does not define the wire protocol. It defines the language a hidden challenge is written in, so that an implementation can be written against the language <strong>before the challenges are revealed</strong>.</p>
+<p>Everything here is public. The challenges written in it are not.</p>
+<h3 id="blk-48825">1. Why this is published before the reveal</h3>
+<p>A hidden challenge set that could only be applied by an implementation which had already seen it would not be a measurement. Worse, if the shape of the input and the shape of the answer were settled <em>after</em> the challenge set was opened, the instrument would have been adjusted in the light of the thing it was about to measure, and every predicate frozen in the holdout would be worth nothing.</p>
+<p>So the split is:</p>
+<pre><code>PUBLIC   BEFORE the reveal     the recipe operators and their exact semantics
+                               the observation grammar (HOLDOUT-OBSERVATION-v1.md)
+                               the observation schema
+                               a synthetic fixture exercising the whole path
+
+HIDDEN   UNTIL the reveal      which fixtures, which recipes, which predicates,
+                               and which values those predicates assert</code></pre>
+<p>A challenge set is committed by digest in <code>SPEC-RELEASE.json</code> (<code>holdout_commitment</code>). Scoring is <strong>refused</strong> if the revealed tree does not match that commitment: a challenge set altered after it was committed is not a challenge set.</p>
+<h3 id="blk-48830">2. A challenge</h3>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;id&quot;</span>:         <span class="t-string">&quot;H0&quot;</span>,
+  <span class="t-key">&quot;name&quot;</span>:       <span class="t-string">&quot;short-kebab-case-name&quot;</span>,
+  <span class="t-key">&quot;fixture&quot;</span>:    { <span class="t-key">&quot;artifact&quot;</span>: <span class="t-string">&quot;C2&quot;</span>, <span class="t-key">&quot;root&quot;</span>: <span class="t-string">&quot;root-&lt;64 hex&gt;&quot;</span> },
+  <span class="t-key">&quot;recipe&quot;</span>:     [ { <span class="t-key">&quot;op&quot;</span>: <span class="t-string">&quot;…&quot;</span> } ],
+  <span class="t-key">&quot;predicates&quot;</span>: [ { <span class="t-key">&quot;op&quot;</span>: <span class="t-string">&quot;…&quot;</span> } ],
+  <span class="t-key">&quot;note&quot;</span>:       <span class="t-string">&quot;free text, not evaluated&quot;</span>
+}</code></pre>
+<p><code>fixture</code> names ONE starting point, by its content address in the public corpus, and takes exactly one of two forms:</p>
+<table><thead><tr><th>form</th><th>meaning</th></tr></thead><tbody><tr><td><code>{&quot;artifact&quot;: &quot;&lt;node&gt;&quot;, &quot;root&quot;: &quot;&lt;address&gt;&quot;}</code></td><td>start from that node of the frozen DAG</td></tr><tr><td><code>{&quot;leaf&quot;: &quot;&lt;protocol&gt;&quot;, &quot;root&quot;: &quot;&lt;address&gt;&quot;}</code></td><td>start from that frozen leaf artifact</td></tr></tbody></table>
+<p>The node names <code>A</code>, <code>B</code>, <code>C1</code>, <code>C2</code>, <code>D</code> are the frozen public DAG of <code>TRVM-NESTED-COMPOSITION-v2.md</code> §9: <code>C1 = A ∧ B</code>, <code>C2 = C1 ∧ A</code>, <code>D = C2 ∧ C1</code>. The <code>root</code> is authoritative; the name is a convenience, and an implementation that resolves the address and gets a different object has found a disagreement worth reporting, not a typo to work around.</p>
+<h3 id="blk-48841">3. The recipe operators</h3>
+<p>There are <strong>seven</strong>, and there is no eighth. An unknown operator is a <strong>refusal to score</strong>, never a skipped step — an adapter that silently ignores what it does not understand reports an observation of something other than the challenge.</p>
+<p>Steps apply <strong>in order</strong>. Unless stated, a step mutates the working artifact in place.</p>
+<h4 id="blk-48844"><code>IDENTITY</code></h4>
+<pre data-lang="json"><code>{ <span class="t-key">&quot;op&quot;</span>: <span class="t-string">&quot;IDENTITY&quot;</span> }</code></pre>
+<p>Do nothing. The challenge is about the fixture as it stands.</p>
+<h4 id="blk-48847"><code>SET</code></h4>
+<pre data-lang="json"><code>{ <span class="t-key">&quot;op&quot;</span>: <span class="t-string">&quot;SET&quot;</span>, <span class="t-key">&quot;path&quot;</span>: <span class="t-string">&quot;artifact.claim.smuggled&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-lit">true</span> }</code></pre>
+<p>Set one member to a literal JSON value, creating it if it is absent. The path is dot-separated; <code>artifact.</code> addresses the working artifact and <code>leaf.</code> addresses the working leaf. A numeric segment indexes an array (<code>references.operands.0.artifact_root</code>).</p>
+<p><strong>`SET` does not reseal.</strong> Any identity that the specification derives from a member this step touched is now stale, and whether the checker notices is precisely what some challenges ask.</p>
+<h4 id="blk-48851"><code>REVERSE</code></h4>
+<pre data-lang="json"><code>{ <span class="t-key">&quot;op&quot;</span>: <span class="t-string">&quot;REVERSE&quot;</span>, <span class="t-key">&quot;path&quot;</span>: <span class="t-string">&quot;artifact.references.operands&quot;</span> }</code></pre>
+<p>Reverse the array at that path, in place. Used to separate members the specification declares to be a <strong>set</strong> (§6.3, order not observable) from members it declares to be <strong>ordered</strong> (§4.1, order is part of the claim).</p>
+<h4 id="blk-48854"><code>RESEAL</code></h4>
+<pre data-lang="json"><code>{ <span class="t-key">&quot;op&quot;</span>: <span class="t-string">&quot;RESEAL&quot;</span> }</code></pre>
+<p>Recompute, over the working artifact as it now stands, exactly these three derived identities:</p>
+<pre><code>claim.nested_claim_sem_id
+aggregate.aggregate_id
+structure.structure_sem_id</code></pre>
+<p>and nothing else. In particular <code>RESEAL</code> does <strong>not</strong> recompute <code>artifact_root</code>, because a root is an address of bytes rather than a field of a record.</p>
+<p>An identity that cannot be recomputed — because the step before it removed a member the formula needs — is left as it stands and the step continues. A forger cannot always reseal, and that is a fact about the artifact rather than an error in the adapter.</p>
+<h4 id="blk-48860"><code>CHECK_WITH_OPTIONS</code></h4>
+<pre data-lang="json"><code>{ <span class="t-key">&quot;op&quot;</span>: <span class="t-string">&quot;CHECK_WITH_OPTIONS&quot;</span>, <span class="t-key">&quot;options&quot;</span>: { <span class="t-key">&quot;max_depth&quot;</span>: <span class="t-num">1000</span> } }</code></pre>
+<p>Present these options to the checker for this challenge's verification. This carries no promise that they are honoured: a caller asking for a <strong>looser</strong> bound than the checker's own is the subject of <code>nest-policy-weakened</code>, so the expected observation may well be a refusal.</p>
+<h4 id="blk-48863"><code>WIRE_PREPEND_DUPLICATE_MEMBER</code></h4>
+<pre data-lang="json"><code>{ <span class="t-key">&quot;op&quot;</span>: <span class="t-string">&quot;WIRE_PREPEND_DUPLICATE_MEMBER&quot;</span>, <span class="t-key">&quot;name&quot;</span>: <span class="t-string">&quot;protocol&quot;</span>, <span class="t-key">&quot;value&quot;</span>: <span class="t-string">&quot;EVIL&quot;</span> }</code></pre>
+<p>Operate on <strong>octets</strong>, not on a parsed object. Take the canonical wire bytes of the fixture, prepend <code>{&quot;&lt;name&gt;&quot;:&quot;&lt;value&gt;&quot;,</code> in place of the opening brace, and serve the result <strong>under the fixture's own unmodified root</strong>. The observation is the resolution outcome (§4 of the observation grammar).</p>
+<p>This is the one operator that cannot be expressed as a mutation of a parsed value, which is the reason it exists.</p>
+<h4 id="blk-48867"><code>RECOMPOSE_DAG</code></h4>
+<pre data-lang="json"><code>{ <span class="t-key">&quot;op&quot;</span>: <span class="t-string">&quot;RECOMPOSE_DAG&quot;</span> }</code></pre>
+<p>Rebuild the whole public DAG bottom-up from the working leaf — <code>C1 = A ∧ B</code>, then <code>C2 = C1 ∧ A</code>, then <code>D = C2 ∧ C1</code> — and record the result as the <strong>candidate</strong>, then verify <code>D</code>. Used for challenges about what a change to a leaf does to every name above it.</p>
+<h3 id="blk-48870">4. What an implementation must do with a challenge</h3>
+<pre><code>read the challenge
+resolve the fixture by its root in the public corpus
+apply every recipe step, in order
+emit ONE TRVM-HOLDOUT-OBSERVATION-v1 document</code></pre>
+<p>and <strong>stop</strong>. The implementation does not evaluate the predicates and does not score itself. The predicates are evaluated by a scorer that loads no protocol code at all — see <code>HOLDOUT-OBSERVATION-v1.md</code> §6.</p>
+<h3 id="blk-48873">5. The predicate language, for reference</h3>
+<p>An implementation does <strong>not</strong> need to evaluate these. They are published so that the shape of the observation is legible: an observation exists to be the left-hand side of one of these.</p>
+<table><thead><tr><th>op</th><th>reads</th></tr></thead><tbody><tr><td><code>HOLDS</code></td><td><code>path</code> under <code>baseline</code> and under <code>candidate</code>; asserts equal</td></tr><tr><td><code>MOVES</code></td><td>the same two; asserts different</td></tr><tr><td><code>EQ</code> / <code>NEQ</code></td><td><code>path</code> under the observation root, against <code>value</code> or <code>right</code></td></tr><tr><td><code>VERDICT_EQ</code></td><td><code>path</code> under <code>candidate</code></td></tr><tr><td><code>OUTCOME_EQ</code></td><td><code>path</code> under the observation root</td></tr><tr><td><code>REFUSAL_SET_EQ</code></td><td><code>refusal_set</code>, as <strong>exact set equality</strong> — never &quot;includes&quot;</td></tr><tr><td><code>LT</code></td><td><code>left</code> and <code>right</code> under the observation root</td></tr></tbody></table>
+<p><code>REFUSAL_SET_EQ</code> is exact by rule. A challenge that expected <code>includes</code> would let five unrelated refusal codes pass unnoticed, and one did until P4.5.</p>
+<h3 id="blk-48893">6. What this document deliberately does not fix</h3>
+<ul><li><p><strong>The order of a refusal set.</strong> Sets are compared sorted; ordering is not part of the protocol.</p></li><li><p><strong>How an adapter is invoked.</strong> A process writing JSON to a file, or to stdout, is equally fine.</p></li><li><p><strong>What a disagreement means.</strong> A predicate that fails for Go and passes for JavaScript is an</p></li></ul>
+<p><code>UNCLASSIFIED_FINDING</code> until a human puts it in one of the six categories in <code>BLIND-IMPLEMENTATION-CONTRACT.md</code> §7. Nothing here assigns blame, and no automatic verdict does.</p></div>
+<p class="src"><a href="/#/TRVM/docs/spec/proof-wire/experiment/HOLDOUT-RECIPE-v1.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-48825" class="lvl2">1. Why this is published before the reveal</a><a href="#blk-48830" class="lvl2">2. A challenge</a><a href="#blk-48841" class="lvl2">3. The recipe operators</a><a href="#blk-48844" class="lvl3">IDENTITY</a><a href="#blk-48847" class="lvl3">SET</a><a href="#blk-48851" class="lvl3">REVERSE</a><a href="#blk-48854" class="lvl3">RESEAL</a><a href="#blk-48860" class="lvl3">CHECK_WITH_OPTIONS</a><a href="#blk-48863" class="lvl3">WIRE_PREPEND_DUPLICATE_MEMBER</a><a href="#blk-48867" class="lvl3">RECOMPOSE_DAG</a><a href="#blk-48870" class="lvl2">4. What an implementation must do with a challenge</a><a href="#blk-48873" class="lvl2">5. The predicate language, for reference</a><a href="#blk-48893" class="lvl2">6. What this document deliberately does not fix</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/docs/spec/proof-wire/experiment/BLIND-IMPLEMENTATION-CONTRACT.md/">The blind implementation contract</a><a href="/TRVM/docs/spec/proof-wire/experiment/CLEAN-ROOM-PROMPT-v1.md/">The clean-room prompt</a><a href="/TRVM/docs/spec/proof-wire/experiment/HOLDOUT-OBSERVATION-v1.md/">TRVM-HOLDOUT-OBSERVATION-v1 — the neutral observation grammar</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajw6tw5tgtqhi4gf6wyslzwurx5gqyfhcwlkv43myulgcwig6yqpa</div></div></div>
+</div></div>
+</body></html>

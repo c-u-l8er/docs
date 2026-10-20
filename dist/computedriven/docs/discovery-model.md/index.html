@@ -1,0 +1,136 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>The discovery model · computedriven · Ampersand Box</title>
+<meta name="description" content="Status: R0.9 contract, stated before any mechanism exists. Nothing in this file is implemented. It is written first on purpose: the review pattern this…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/discovery-model.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The discovery model">
+<meta property="og:description" content="Status: R0.9 contract, stated before any mechanism exists. Nothing in this file is implemented. It is written first on purpose: the review pattern this…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/discovery-model.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"The discovery model","name":"The discovery model","description":"Status: R0.9 contract, stated before any mechanism exists. Nothing in this file is implemented. It is written first on purpose: the review pattern this…","url":"https://docs.ampersandboxdesign.com/computedriven/docs/discovery-model.md/","identifier":"bagaaiera7qwx73alajahr4qqoafoackxrpyiy5w7t2z6rizob6bwjn57ppnq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"1. What discovery is"},{"@type":"WebPageElement","name":"The rule"},{"@type":"WebPageElement","name":"2. The trust model"},{"@type":"WebPageElement","name":"3. The claim R0.9 must earn — three envelopes, not one"},{"@type":"WebPageElement","name":"4. DENY is a positive requirement, not an absence"},{"@type":"WebPageElement","name":"5. What discovery may be asked, and may say"},{"@type":"WebPageElement","name":"5a. Endpoint provenance is erased before authentication"},{"@type":"WebPageElement","name":"6. Layer separation, restated as a rule about derivation"},{"@type":"WebPageElement","name":"7. Relays and rendezvous — DEFERRED, stated so it is not forgotten"},{"@type":"WebPageElement","name":"8. Mobility — DEFERRED, same reason"},{"@type":"WebPageElement","name":"9. First contact"},{"@type":"WebPageElement","name":"9a. Where the forbidden-name rule applies"},{"@type":"WebPageElement","name":"10. What this file does not do"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"discovery-model.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/discovery-model.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/discovery-model.md</span>
+
+</div></div>
+<div class="lead">Status: R0.9 contract, stated before any mechanism exists. Nothing in this file is implemented. It is written first on purpose: the review pattern this project has settled into…</div>
+<div class="prose"><h1 id="blk-58832">The discovery model</h1>
+<p><strong>Status: R0.9 contract, stated before any mechanism exists.</strong> Nothing in this file is implemented. It is written first on purpose: the review pattern this project has settled into is <em>state the contract, then let a control decide it</em> — never mint a finding from a reading. Every clause below is paired with what would refute it, because a contract clause with no falsifier is a preference.</p>
+<p>This file is canonical for what discovery may be asked and what it may say. It sits beside <code>docs/identity-layers.md</code>, which is canonical for the four things routinely confused with &quot;the address of that node&quot;, and does not restate it.</p>
+<h3 id="blk-58835">1. What discovery is</h3>
+<blockquote><p><strong>A discovery answer is a HINT ABOUT WHERE TO SEND BYTES. It is not a statement about who anyone is, what they hold, or what they may do.</strong></p></blockquote>
+<p>The hint has exactly one legitimate consumer: the code that chooses a destination address for a packet. Every other consumer is a defect.</p>
+<p>A hint is not evidence. It does not become evidence by being fresh, by being signed, by being repeated, or by being agreed with.</p>
+<h4 id="blk-58840">The rule</h4>
+<p>WireGuard has no discovery at all, deliberately, and states its whole position in one sentence: a peer's endpoint is updated <em>only</em> from the outer source address of a packet that already authenticated — <strong>authentication produces the address; the address never produces authentication.</strong></p>
+<p>This system needs one more clause than WireGuard does, because it has a lifecycle layer WireGuard does not:</p>
+<blockquote><p><strong>DISCOVERY CHOOSES WHERE WE TRY. AUTHENTICATION DECIDES WHOM WE REACHED. ONLY THE LINEAGE DECIDES WHAT THEY MAY DO.</strong></p></blockquote>
+<p>Three clauses, three planes, and the arrows only ever point rightward. That sentence is what R0.9 must earn, and every clause below is an attempt to say precisely what would falsify one of its three parts.</p>
+<h3 id="blk-58846">2. The trust model</h3>
+<p>The discovery plane is an <strong>untrusted hint source, assumed adversary- controlled.</strong> This is not pessimism; it is the honest reading of a third party whose whole job is to speak on behalf of others. Concretely it may:</p>
+<ul><li><p>answer with any endpoint, for any identity, including ones that do not exist;</p></li><li><p>omit answers, permanently or selectively;</p></li><li><p>answer staleness forever;</p></li><li><p>return many answers, or different answers to different askers;</p></li><li><p>replay, reorder and correlate;</p></li><li><p>lie about its own freshness, its own age, and its own sources;</p></li><li><p>be <em>all</em> of a caller's answers at once (eclipse).</p></li></ul>
+<p><strong>Falsifier.</strong> If any of the above changes any authority state, the model is wrong and the round has found its defect.</p>
+<h3 id="blk-58864">3. The claim R0.9 must earn — three envelopes, not one</h3>
+<p>An earlier draft of this file said the adversary's <strong>total power</strong> is three verbs. That was false on its own terms: §2 grants the plane the ability to observe, correlate, replay and reorder, and none of those is delay, misdirect or deny. Overstating a claim in the direction of strength is the same defect as understating it, and it would have been quoted.</p>
+<p>So the claim is split into three envelopes, and only the third is the theorem.</p>
+<p><strong>1 — REACHABILITY EFFECTS.</strong> This is the <em>complete</em> envelope of what an adversarial discovery plane can do to a connection attempt:</p>
+<pre><code>DELAY      make reaching the current embodiment slower
+MISDIRECT  make a caller send bytes somewhere useless
+DENY       make the current embodiment unfindable</code></pre>
+<p><strong>2 — PRIVACY / METADATA RESIDUAL.</strong> Real, unclaimed, and stated rather than argued away:</p>
+<pre><code>OBSERVE     who asks after whom, and when
+CORRELATE   link askers, targets and timing across queries
+REPLAY / REORDER metadata, to the extent the plane carries any</code></pre>
+<p>Syncthing is the honest precedent: its global discovery operator can map device IDs to addresses and infer which devices connect, while the connection itself still authenticates the configured device identity. The metadata is genuinely exposed; the identity is genuinely not. Say both.</p>
+<p><strong>3 — AUTHORITY EFFECTS. This is the theorem.</strong> A purely discovery-plane action produces <strong>none</strong> of:</p>
+<pre><code>mint · bind · widen · restore · transfer · close</code></pre>
+<p><strong>Falsifier.</strong> A run in which a purely discovery-plane action produces any of the six. Each of the six gets its own control; a single &quot;nothing bad happened&quot; assertion is not acceptable, because it can pass by measuring nothing.</p>
+<p>Do not paraphrase envelope 1 as &quot;the adversary can only do three things&quot;. It can only do three things <em>to reachability</em>. What it cannot do is envelope 3.</p>
+<h3 id="blk-58876">4. DENY is a positive requirement, not an absence</h3>
+<blockquote><p><strong>A discovery miss is a reachability fact. Reachability facts close nothing.</strong></p></blockquote>
+<p>A caller that cannot find anybody must <strong>fail-stop</strong>. It must not conclude vacancy, loss, succession, or that a generation may be closed. It must not downgrade to a weaker path that happens to be reachable.</p>
+<p>This is not new doctrine; it is <code>docs/failure-model.md</code> reached by a longer road. <code>LossBasis</code> has no reachability variant, so partitions close nothing, and cd-core has no sensor and must not be given one — <em>a liveness signal accepted as a lifecycle input is a reachability fact promoted to authority.</em> A directory answer is a liveness signal wearing better clothes: it arrives structured, punctual and plural, and it is still a reachability fact.</p>
+<p><strong>Falsifier.</strong> A run in which total discovery failure produces a finalization, a succession, a vacancy, or a fallback to a lower-assurance path. Also its inverse, which is the one that is usually forgotten: a run in which discovery <em>succeeds</em> for a carrier that is already finalized, and something treats the answer as evidence the finalization did not happen.</p>
+<h3 id="blk-58882">5. What discovery may be asked, and may say</h3>
+<p>The first mechanism is <strong>KNOWN-IDENTITY RENDEZVOUS / LOCATION RESOLUTION</strong>, and calling it that rather than &quot;discovery&quot; is load-bearing. The caller already knows whom it intends to reach; it does not know where. So the question is not <em>who is out there</em> but:</p>
+<pre><code>    I already know WHO I intend to reach.
+    Give me addresses I may TRY.</code></pre>
+<p>The caller holds a <code>PeerExpectation</code> — an expected NodeId and an expected transport credential — established <strong>outside</strong> this plane and before it. R0.9 does not establish either, and <strong>may not mint a NodeId, a transport credential, or the binding between them</strong>.</p>
+<p><strong>MAY be asked about:</strong> an already-expected layer-1 semantic identity (a NodeId), used as a lookup key and nothing more. <strong>MAY answer with:</strong> layer-4 locations (underlay endpoints) to <strong>try</strong>.</p>
+<p>Unknown-peer sampling, DHT bootstrapping and any path by which a caller learns of an identity it did not already expect are a <strong>different trust contract</strong> and are out of scope until this one is frozen. A plane that can introduce you to a stranger is not the plane described here.</p>
+<p><strong>MAY NOT name, in a question or an answer:</strong> a Locus, a Worker, a Carrier, a generation, a fencing epoch, an admission, a custody, a revision, a canonical head, or any anchor state.</p>
+<p>The reason is written in <code>docs/identity-layers.md</code> and is the specific hazard of this round. That file deliberately leaves open which of Locus / Worker / Carrier a persistent NodeId belongs to, &quot;rather than being settled silently by a convenient equality&quot;. A discovery plane that can be asked <em>where is Locus L?</em> settles it silently, by convenience, in the direction of</p>
+<pre><code>answered for L  ⟶  is L's current Carrier  ⟶  may act for L</code></pre>
+<p>which is the entire defect this round exists to prevent.</p>
+<p><strong>Falsifier.</strong> A message type, wire field, log line, metric label or receipt key in the discovery plane that carries any of the forbidden names. This one is checkable statically and should be a guard, not an experiment.</p>
+<h3 id="blk-58893">5a. Endpoint provenance is erased before authentication</h3>
+<p>Every clause so far says <em>refuse X</em>. This one says <em>treat every road the same</em>, and it is the clause a system is most likely to satisfy on paper and violate in code.</p>
+<p>An earlier draft stated it as <strong>validation parity</strong>: an identity learned from the directory must traverse byte-identical validation to one learned from a handshake. That is true but concedes too much, because under §5 <strong>the directory never teaches you an identity at all.</strong> The stronger and cleaner rule:</p>
+<blockquote><p><strong>ENDPOINT PROVENANCE IS ERASED BEFORE AUTHENTICATION. A connection attempted through static configuration, through a cache, through discovery, or through a rendezvous must enter the SAME peer-validation path, which cannot see which of those it came from.</strong></p></blockquote>
+<p>The shape:</p>
+<pre><code>        Lookup(expected NodeId)  ──────────►  EndpointHint[]
+                                                    │
+                    static config ──┐                │
+                    cache ──────────┼────────────────┤
+                    rendezvous ─────┘                │
+                                                     ▼
+                                    ┌────────────────────────────────┐
+                                    │   ONE strict connector         │
+                                    │     exact-datagram parsing     │
+                                    │     transport credential auth  │
+                                    │     expected NodeId comparison │
+                                    └────────────────────────────────┘
+                                                     │
+                                                     ▼
+                                          a validated session
+                                                     │
+                                        and STILL no authority
+                                                     │
+                                                     ▼
+                              R0.8 lineage decides what may be done</code></pre>
+<p>Only the connector may produce a validated peer. <strong>A discovery result cannot produce a validated identity, and a validated transport identity cannot produce lifecycle authority.</strong> Those are the second and third clauses of the rule in §1.</p>
+<p>ZeroTier's root-server hijack is the defect shape this prevents: the path that validated identities on <code>HELLO</code> was not the path that accepted them from a directory lookup, and any packet could force a victim into that lookup. Nothing was <em>permitted</em> that should have been refused — a check was <em>skipped</em> on one of two roads to the same state.</p>
+<p><strong>Falsifier.</strong> Reach the same peer by a statically configured endpoint and by a discovered one, and compare the validation performed. A difference is the finding. Equality of <em>outcome</em> on honest input is not evidence of equality of <em>validation</em> — the control must compare the path, not the result.</p>
+<h3 id="blk-58903">6. Layer separation, restated as a rule about derivation</h3>
+<pre><code>1  NodeId                semantic identity
+2  ObservedRoute         application-visible route
+3  transport credential  authentication material
+4  underlay endpoint     current network location
+5  lifecycle authority   who may currently mutate a Locus</code></pre>
+<p>Discovery operates <strong>between 1 and 4 only</strong>. It does not read 5 and cannot write it. Nothing derives any layer from any other; in particular:</p>
+<ul><li><p>holding 3 does not establish 1 — <em>falsifier:</em> a legitimate credential holder</p></li></ul>
+<p>presenting a different NodeId must be refused;</p>
+<ul><li><p>holding 1 does not establish 3 — <em>falsifier:</em> the correct NodeId with the</p></li></ul>
+<p>wrong credential must be refused;</p>
+<ul><li><p>being at 4 establishes nothing about 1, 3 or 5;</p></li><li><p><strong>any equality gate between layers is written over decoded bytes.</strong> R0.6's</p></li></ul>
+<p>version compared 64 hex characters to 44 base64 characters and could therefore never fire. An equality falsifier over encoded forms is worth nothing.</p>
+<h3 id="blk-58920">7. Relays and rendezvous — DEFERRED, stated so it is not forgotten</h3>
+<p><strong>Not in the first mechanism.</strong> Known-identity location resolution introduces no relay, so a relay control would be measuring a surface that does not exist — and the round has been burned before by controls whose subject was absent. The clause is kept here because the surface will arrive, and it should arrive to a contract rather than the reverse.</p>
+<p>A relay is a wire. Its powers are exactly: delay, drop, reorder, observe.</p>
+<p><strong>Falsifier.</strong> A run in which a relay's own position, credential, or reachability counts as the relayed party's — the confused-deputy shape that made TURN servers into request-forgery pivots. And: a response larger than its request before the path has been validated, which makes the plane an amplifier; measure the ratio and refuse an unbounded one.</p>
+<h3 id="blk-58924">8. Mobility — DEFERRED, same reason</h3>
+<p>An address change is a location fact. It grants nothing the old address did not have, and bytes do not flow to a claimed new address until that address has answered a challenge sent to it.</p>
+<p><strong>Falsifier.</strong> An off-path party claiming a peer's move and being believed without a round trip to the claimed address.</p>
+<h3 id="blk-58927">9. First contact</h3>
+<p>Trust on first use is a real residual and is stated rather than argued away. The round must say precisely what a caller loses when its first answer is the adversary's — and prove the loss is confined to reachability, by showing that the same caller still refuses to accept an identity or an authority it did not already have grounds for.</p>
+<p><strong>Falsifier.</strong> Any first-contact path in which the <em>first</em> answer establishes more than <em>later</em> answers do.</p>
+<h3 id="blk-58930">9a. Where the forbidden-name rule applies</h3>
+<p>§5's list — Locus, Worker, Carrier, generation, epoch, admission, custody, revision, head, anchor — is a rule about <strong>discovery-owned surfaces</strong>: its protocol types, its state types, its logs and its metrics. It is a structural firewall around a plane while a narrow theorem is being proved, not a ban on two words appearing in one system.</p>
+<p>A higher layer may perfectly well say <em>&quot;Locus X could not reach its configured peer&quot;</em>, because that sentence is a correlation made <strong>above</strong> discovery by something that can already see both. What must never happen is the reverse arrow: discovery <strong>consuming or emitting</strong> one of those names as a semantic input of its own.</p>
+<p><strong>Falsifier.</strong> Any discovery-owned type, field, log line or metric label carrying one of the names; and separately, any path by which such a name flows back down into a discovery decision.</p>
+<h3 id="blk-58934">10. What this file does not do</h3>
+<p>It does not specify a protocol, a message format, a directory, a DHT, a rendezvous service, or a relay. Choosing any of those is mechanism, and mechanism comes after the controls in <code>receipts/R0.9-OPEN.md</code> §5 exist and have been shown to fail against a tree that lacks the property they test.</p></div>
+<p class="src"><a href="/#/computedriven/docs/discovery-model.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-58835" class="lvl2">1. What discovery is</a><a href="#blk-58840" class="lvl3">The rule</a><a href="#blk-58846" class="lvl2">2. The trust model</a><a href="#blk-58864" class="lvl2">3. The claim R0.9 must earn — three envelopes, not one</a><a href="#blk-58876" class="lvl2">4. DENY is a positive requirement, not an absence</a><a href="#blk-58882" class="lvl2">5. What discovery may be asked, and may say</a><a href="#blk-58893" class="lvl2">5a. Endpoint provenance is erased before authentication</a><a href="#blk-58903" class="lvl2">6. Layer separation, restated as a rule about derivation</a><a href="#blk-58920" class="lvl2">7. Relays and rendezvous — DEFERRED, stated so it is not forgotten</a><a href="#blk-58924" class="lvl2">8. Mobility — DEFERRED, same reason</a><a href="#blk-58927" class="lvl2">9. First contact</a><a href="#blk-58930" class="lvl2">9a. Where the forbidden-name rule applies</a><a href="#blk-58934" class="lvl2">10. What this file does not do</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a><a href="/computedriven/docs/fcb-stage0-review-2026-09-16.md/">ComputeDriven competitive benchmark — Codex stage-0 review and Fable stage-0.1 assignment</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera7qwx73alajahr4qqoafoackxrpyiy5w7t2z6rizob6bwjn57ppnq</div></div></div>
+</div></div>
+</body></html>

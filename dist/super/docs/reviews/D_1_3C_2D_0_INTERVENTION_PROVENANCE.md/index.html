@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>D.1.3c·2d·0 — Terminal SHAPE and DRIVE, and where the effects go · super · Ampersand Box</title>
+<meta name="description" content="A proposal for ruling. Nothing here is implemented, and nothing in D.1.3c·2c has an entry point for either power.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2D_0_INTERVENTION_PROVENANCE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D.1.3c·2d·0 — Terminal SHAPE and DRIVE, and where the effects go">
+<meta property="og:description" content="A proposal for ruling. Nothing here is implemented, and nothing in D.1.3c·2c has an entry point for either power.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2D_0_INTERVENTION_PROVENANCE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"D.1.3c·2d·0 — Terminal SHAPE and DRIVE, and where the effects go","name":"D.1.3c·2d·0 — Terminal SHAPE and DRIVE, and where the effects go","description":"A proposal for ruling. Nothing here is implemented, and nothing in D.1.3c·2c has an entry point for either power.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2D_0_INTERVENTION_PROVENANCE.md/","identifier":"bagaaieraw2a4ufjakcjb6u3vgssuqzbt4tlkjvaz3kmnslffmbq5qtushp5q","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Why this is a separate slice and not a parameter"},{"@type":"WebPageElement","name":"1 · The hole, stated precisely"},{"@type":"WebPageElement","name":"2 · What must be ruled, in order"},{"@type":"WebPageElement","name":"2.1 Is an operator intervention an effect?"},{"@type":"WebPageElement","name":"2.2 What actor does the operator act as?"},{"@type":"WebPageElement","name":"2.3 Does the agent learn it was driven?"},{"@type":"WebPageElement","name":"2.4 Is SHAPE ruled with DRIVE or before it?"},{"@type":"WebPageElement","name":"3 · What the implementation must not do"},{"@type":"WebPageElement","name":"4 · What it would cost, measured against what exists"},{"@type":"WebPageElement","name":"5 · Falsifiers such a slice would owe"},{"@type":"WebPageElement","name":"6 · The recommendation, in one line"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"D_1_3C_2D_0_INTERVENTION_PROVENANCE.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2D_0_INTERVENTION_PROVENANCE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/D_1_3C_2D_0_INTERVENTION_PROVENANCE.md</span>
+
+</div></div>
+<div class="lead">A proposal for ruling. Nothing here is implemented, and nothing in D.1.3c·2c has an entry point for either power.</div>
+<div class="prose"><h1 id="blk-114661">D.1.3c·2d·0 — Terminal SHAPE and DRIVE, and where the effects go</h1>
+<p><strong>A proposal for ruling. Nothing here is implemented, and nothing in D.1.3c·2c has an entry point for either power.</strong></p>
+<p>The question this must answer, and it is not a plumbing question:</p>
+<blockquote><p>A human with no actor causes a keystroke to reach a shell running at an agent's position. <strong>Whose effect is that?</strong></p></blockquote>
+<h3 id="blk-114666">0 · Why this is a separate slice and not a parameter</h3>
+<p>D.1.3c·2c·1a resolves one power — OBSERVE — and the two neighbouring ones look like they should be the same mechanism with a different argument. They are not, and the distance between them is not effort:</p>
+<table><thead><tr><th>power</th><th>direction</th><th>what it changes</th><th>ruled</th></tr></thead><tbody><tr><td><strong>OBSERVE</strong></td><td>terminal → human</td><td>nothing in the agent's world</td><td><strong>2c·1a, GO</strong></td></tr><tr><td><strong>SHAPE</strong></td><td>rows/cols → PTY</td><td>raises <code>SIGWINCH</code>; programs relayout, some redraw, some re-read state</td><td><strong>deferred</strong></td></tr><tr><td><strong>DRIVE</strong></td><td>keystrokes → terminal</td><td>runs commands at the agent's position</td><td><strong>deferred</strong></td></tr></tbody></table>
+<p>OBSERVE adds no cause to the agent's execution. The other two do, and the runtime currently has nowhere to record who caused them.</p>
+<p><code>Ampd.Terminal.Presentation</code> has no <code>resize/3</code> and no <code>write/2</code>, so neither can be reached by supplying a different argument to something that exists. That is deliberate: a dormant page API is a decision nobody made.</p>
+<h3 id="blk-114687">1 · The hole, stated precisely</h3>
+<p>Every effect in this tree is attributed. <code>Ampd.Effects</code> records a proposal, an authorization, an approval and a claim, each carrying the <strong>actor</strong> that asked for it; <code>Ampd.Receipts</code> emits against that actor; <code>Ampd.GrantRegistry</code> scopes authority by actor. The whole apparatus is actor-keyed.</p>
+<p><strong>The human-control Peer has `actor: nil`</strong>, and that is not an oversight — <code>Ampd.Peer</code> states it: <em>the person is not an actor: they hold no grants and exercise no capabilities. They are the only source of consent.</em></p>
+<p>So a keystroke the operator sends into an agent's terminal has:</p>
+<ul><li><p><strong>no actor to attribute it to</strong> — the operator has none;</p></li><li><p><strong>an actor it would be attributed to anyway</strong> — because whatever the shell</p></li></ul>
+<p>does next happens inside the Carrier, under the agent's confinement, with the agent's grants, and every receipt it produces will say the agent's name.</p>
+<p>That second line is the defect, and it has a name in this tree already: <strong>laundering</strong>. <code>Ampd.Authority.approve_grant_request/2</code> exists because <em>an agent asked</em> and <em>the person chose</em> must stay distinguishable; sharing the grant draft destroyed that and it had to be rebuilt. DRIVE without provenance recreates exactly that failure one layer down — the person acts and the record says the agent did.</p>
+<p><strong>SHAPE is the same shape, smaller.</strong> A resize is not passive: it writes <code>TIOCSWINSZ</code> and raises <code>SIGWINCH</code> in the foreground process group. A full-screen program relayouts; some re-read terminal state; a program that mis-handles it can corrupt its own display or exit. The operator has caused a change in the agent's execution, and no receipt says so.</p>
+<h3 id="blk-114699">2 · What must be ruled, in order</h3>
+<h4 id="blk-114700">2.1 Is an operator intervention an <em>effect</em>?</h4>
+<p>If yes, it belongs in the existing apparatus — proposed, claimed, committed, receipted — and the whole question becomes &quot;which actor&quot;. If no, it needs a parallel record, and the tree gains a second way for things to have happened, which is the outcome to avoid.</p>
+<p><strong>Recommendation: yes, with a new actor kind.</strong> The alternative — a private intervention log — makes the agent's own history incomplete, and an incomplete history is worse than an attributed intervention.</p>
+<h4 id="blk-114703">2.2 What actor does the operator act as?</h4>
+<p>Four candidates, and only the fourth survives:</p>
+<table><thead><tr><th>candidate</th><th>why it fails</th></tr></thead><tbody><tr><td>the agent's actor</td><td>laundering, exactly §1</td></tr><tr><td>no actor at all</td><td>the effect is unattributable; every receipt lies by omission</td></tr><tr><td>a fixed <code>&quot;operator&quot;</code> actor</td><td>works only while there is one human, which is the same assumption <code>T.10</code> is written to expire</td></tr><tr><td><strong>an actor minted for the human-control incarnation</strong></td><td>the person is not an actor and this does not make them one — it names <em>the intervention</em>, not the human</td></tr></tbody></table>
+<p>The fourth needs care in the wording. It must not become &quot;the person has an identity in the world&quot;, because the whole consent model rests on them not having one. What it names is a <strong>channel incarnation acting at a position</strong>: ephemeral, minted when the presentation is bound, dead when it closes.</p>
+<h4 id="blk-114717">2.3 Does the agent learn it was driven?</h4>
+<p><strong>Recommendation: yes, and this may be the sharpest sub-ruling.</strong> An agent whose terminal was typed into and cannot tell is an agent whose account of its own execution is wrong — and this tree's agents are asked to report outcomes. <code>Ampd.Projection.agent/1</code> would carry the intervention the way it carries approvals.</p>
+<p>The argument against is real: a human debugging a stuck agent may want to intervene without perturbing it. That is a preference; the agent reasoning from a false history is a correctness problem.</p>
+<h4 id="blk-114720">2.4 Is SHAPE ruled with DRIVE or before it?</h4>
+<p>They differ by two orders of magnitude in what they can cause, and by almost nothing in mechanism. Ruling SHAPE first buys a usable terminal (<code>SIGWINCH</code> is what makes a full-screen program render correctly at all) at a fraction of the authority.</p>
+<p><strong>Recommendation: rule SHAPE first, as a narrow effect with the same provenance record, and leave DRIVE until an application forces it.</strong></p>
+<h3 id="blk-114723">3 · What the implementation must not do</h3>
+<p>Stated as refusals because each is the cheap path:</p>
+<ul><li><p><strong>Not reuse `Carrier.Terminal.resize_record/3` as a page-facing deputy.</strong></p></li></ul>
+<p>It takes a caller-supplied <code>peer_ref</code> and operates on that peer's record with no entitlement check — safe today only because nothing on any wire reaches it. SHAPE must start from the authorized Worker presentation and resolve the terminal internally, exactly as 2c·1a resolves it.</p>
+<ul><li><p><strong>Not add a `rows`/`cols` argument to anything in `2c·1a`.</strong> The</p></li></ul>
+<p>presentation resolves an observation; a power that changes the agent's world is a different relation and gets its own resolution and its own refusal names.</p>
+<ul><li><p><strong>Not let the pane hold both.</strong> A pane that can observe and drive under</p></li></ul>
+<p>one capability makes the distinction a UI convention.</p>
+<ul><li><p><strong>Not attribute by omission.</strong> An effect with no actor field is not</p></li></ul>
+<p>&quot;unattributed&quot;, it is attributed to whoever reads it last.</p>
+<h3 id="blk-114741">4 · What it would cost, measured against what exists</h3>
+<table><thead><tr><th>dimension</th><th>OBSERVE (2c·1a, shipped)</th><th>SHAPE + DRIVE (proposed)</th></tr></thead><tbody><tr><td>new semantic relation</td><td>1</td><td>1 or 2</td></tr><tr><td>new actor kind</td><td>0</td><td><strong>1</strong></td></tr><tr><td>new effect kind</td><td>0</td><td><strong>1</strong></td></tr><tr><td>new durable record</td><td>0</td><td><strong>1</strong> (the intervention, receipted)</td></tr><tr><td>new authority store</td><td>0</td><td>0</td></tr><tr><td>agent-visible change</td><td>none</td><td><strong>the agent learns it was driven</strong></td></tr></tbody></table>
+<p>The row that makes this a separate ruling is the third. OBSERVE was implementable without touching the effect apparatus at all; neither of these is.</p>
+<h3 id="blk-114765">5 · Falsifiers such a slice would owe</h3>
+<ol><li><p>An intervention produces a receipt naming the intervening incarnation and</p></li></ol>
+<p><strong>not</strong> the agent's actor.</p>
+<ol start="2"><li><p>The agent's own projection shows the intervention.</p></li><li><p>A resize that changes nothing still records that it was attempted, because</p></li></ol>
+<p><em>the operator acted</em> is the fact, not <em>the geometry differed</em>.</p>
+<ol start="4"><li><p>An intervention after the Worker generation moved is refused, not</p></li></ol>
+<p>re-targeted — the 2c·1a property, restated for a power that writes.</p>
+<ol start="5"><li><p>The pane's SHAPE capability does not confer DRIVE, asserted against the</p></li></ol>
+<p>effective ACL rather than the capability source.</p>
+<ol start="6"><li><p>Removing the actor from the intervention record makes a receipt</p></li></ol>
+<p>indistinguishable from one the agent produced — the laundering falsifier, and the one that must fail loudly.</p>
+<h3 id="blk-114788">6 · The recommendation, in one line</h3>
+<blockquote><p>Rule <strong>SHAPE</strong> as a narrow attributed effect with an ephemeral intervention actor minted per presentation, decide <strong>2.3</strong> explicitly because it is the one with a real argument on both sides, and leave <strong>DRIVE</strong> until an application asks for it.</p></blockquote>
+<p>Until then, the terminal a person can see is a terminal they cannot touch, and that is a coherent product rather than a half-finished one.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/D_1_3C_2D_0_INTERVENTION_PROVENANCE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-114666" class="lvl2">0 · Why this is a separate slice and not a parameter</a><a href="#blk-114687" class="lvl2">1 · The hole, stated precisely</a><a href="#blk-114699" class="lvl2">2 · What must be ruled, in order</a><a href="#blk-114700" class="lvl3">2.1 Is an operator intervention an effect?</a><a href="#blk-114703" class="lvl3">2.2 What actor does the operator act as?</a><a href="#blk-114717" class="lvl3">2.3 Does the agent learn it was driven?</a><a href="#blk-114720" class="lvl3">2.4 Is SHAPE ruled with DRIVE or before it?</a><a href="#blk-114723" class="lvl2">3 · What the implementation must not do</a><a href="#blk-114741" class="lvl2">4 · What it would cost, measured against what exists</a><a href="#blk-114765" class="lvl2">5 · Falsifiers such a slice would owe</a><a href="#blk-114788" class="lvl2">6 · The recommendation, in one line</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraw2a4ufjakcjb6u3vgssuqzbt4tlkjvaz3kmnslffmbq5qtushp5q</div></div></div>
+</div></div>
+</body></html>

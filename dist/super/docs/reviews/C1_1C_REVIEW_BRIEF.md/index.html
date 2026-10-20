@@ -1,0 +1,112 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless · super · Ampersand Box</title>
+<meta name="description" content="Artifact: `and-super-rev-f8.zip`. Every gate green.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless">
+<meta property="og:description" content="Artifact: `and-super-rev-f8.zip`. Every gate green.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless","name":"C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless","description":"Artifact: `and-super-rev-f8.zip`. Every gate green.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/","identifier":"bagaaieraxl4an7uxwzjoywmky2rjil3vwqa6vcdopltpiwqweb4ns5dsbgrq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Measured"},{"@type":"WebPageElement","name":"1 · The descriptor leak — reproduced, then falsified"},{"@type":"WebPageElement","name":"2 · Concurrent writes — worse than the theory"},{"@type":"WebPageElement","name":"3 · The cursor now applies the rule the runtime sends"},{"@type":"WebPageElement","name":"4 · The one-record pagination hole"},{"@type":"WebPageElement","name":"5 · The agent projection is bounded now too"},{"@type":"WebPageElement","name":"6 · Two things running it found that you did not name"},{"@type":"WebPageElement","name":"7 · Your table"},{"@type":"WebPageElement","name":"8 · Open"},{"@type":"WebPageElement","name":"9 · Ladder"},{"@type":"WebPageElement","name":"Verify"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"C1_1C_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/C1_1C_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Artifact: `and-super-rev-f8.zip`. Every gate green.</div>
+<div class="prose"><h1 id="blk-112843">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</h1>
+<p><strong>Artifact: `and-super-rev-f8.zip`. Every gate green.</strong></p>
+<p>You found a critical defect and were right about all five. The <code>CLOEXEC</code> one is the most important finding anyone has made on this project, because it broke a claim I had just finished making — and the comment that let it through was mine:</p>
+<blockquote><p>Rust sets <code>CLOEXEC</code> on everything it creates.</p></blockquote>
+<p>True of Rust's APIs. <code>fdpass.rs</code> does not use one; it calls <code>libc::socketpair</code> directly.</p>
+<h3 id="blk-112849">0 · Measured</h3>
+<table><thead><tr><th></th><th>F.7</th><th>F.8</th></tr></thead><tbody><tr><td>conformance vectors</td><td>42</td><td><strong>42</strong></td></tr><tr><td>BEAM tests</td><td>167</td><td><strong>170</strong>, 0 failures at seed 0 and across 6 random seeds</td></tr><tr><td>browser assertions</td><td>64</td><td><strong>64</strong></td></tr><tr><td>sabotage falsifiers</td><td>36 · 0 not</td><td><strong>39 · 0 not</strong></td></tr><tr><td>host acceptance checks</td><td>22 held</td><td><strong>31 held · 0 failed</strong></td></tr></tbody></table>
+<h3 id="blk-112869">1 · The descriptor leak — reproduced, then falsified</h3>
+<p>Your reasoning was exact, so I went straight to a real child process rather than a <code>fcntl</code> probe. The host holds the bridge, the human control channel, and one descriptor per engine; it spawns a child the way it spawns an engine, one <code>dup2</code> onto fd 3, and the child prints <code>readlink</code> of everything in <code>/proc/self/fd</code>.</p>
+<p>With <code>SOCK_CLOEXEC</code> removed — which is what F.7 shipped:</p>
+<pre><code>inherited 4 sockets:
+  3 socket:[62766496]     ← its own channel
+  4 socket:[62766494]     ← NOT ITS OWN
+  5 socket:[62777404]     ← NOT ITS OWN
+  6 socket:[62766496]     ← the pre-dup2 copy of its own</code></pre>
+<p>Four sockets where there should be one. The two it had no business holding are the other live channels — <strong>the bridge that mints identities, and the person's socket.</strong> At that point &quot;an agent cannot issue human commands&quot; was not enforced by possession, because the agent possessed it.</p>
+<p>Fixed as you specified, and stated as the invariant rather than a checklist:</p>
+<blockquote><p><strong>Every descriptor is close-on-exec by default. Explicit inheritance is a capability transfer.</strong></p></blockquote>
+<ul><li><p><code>socketpair(AF_UNIX, ty | SOCK_CLOEXEC, 0, sv)</code> — both ends, with a <code>debug_assert</code>.</p></li><li><p><code>MSG_CMSG_CLOEXEC</code> on every <code>recvmsg</code>, so a descriptor that <em>arrives</em> is close-on-exec</p></li></ul>
+<p>too. Erlang's <code>:socket</code> supports <code>cmsg_cloexec</code>, so the same rule holds inside the runtime and not only in the host.</p>
+<ul><li><p><code>dup_onto</code> is the only place inheritance is granted, after <code>fork</code> and before <code>exec</code>.</p></li></ul>
+<p>The falsifier is the one you asked for and it is now among the most important in the tree. With the fix in: <strong>exactly one inherited socket, on fd 3.</strong> With it out: four.</p>
+<p>I also had to fix my first attempt at the confinement check. <code>is_cloexec</code> returned false for a <em>closed</em> descriptor and for an <em>inheritable</em> one, which are opposite facts — <code>fcntl</code> fails the same way for both. It reported a leak on descriptors the host had already released. There is an <code>FdState</code> with three values now: <code>Closed</code>, <code>Cloexec</code>, <code>Inheritable</code>, and the check counts live descriptors so a vacuous pass is visible.</p>
+<h3 id="blk-112888">2 · Concurrent writes — worse than the theory</h3>
+<p>You called this &quot;likely to appear as soon as Tauri issues multiple commands concurrently.&quot; It appears immediately and catastrophically.</p>
+<p>Eight threads, twelve commands each, on one channel. With the writer lock:</p>
+<pre><code>96 concurrent commands on one socket all get their own reply     held
+the channel is still coherent after concurrent writes            held</code></pre>
+<p>With the lock removed:</p>
+<pre><code>2/96 returned — the stream interleaved
+the channel is still coherent after concurrent writes — null</code></pre>
+<p><strong>Two of ninety-six</strong>, and the channel never recovered. A header and a body are two writes; interleaving them produces a stream the runtime cannot resynchronise from, and it does not fail loudly — it fails as a hang.</p>
+<p>Now: <strong>one reader, one writer, many logical callers</strong>, on every channel. The bridge is serialized too — it carries send/recv transactions with no correlation ids, so two concurrent channel creations would read each other's replies. Channel creation is rare; a lock is the right size of answer.</p>
+<h3 id="blk-112896">3 · The cursor now applies the rule the runtime sends</h3>
+<p>You were right that the epoch existed in the protocol and not in the client. <code>projection_after(after: u64)</code> compared revisions, so after a coordinator restart the host would have ignored every projection of the live world until the new epoch's revision climbed past the old one's.</p>
+<p><code>ProjectionCursor { world_generation, projection_epoch, revision }</code>, with your rule in <code>superseded_by</code>:</p>
+<pre><code>different generation          → accept, and reset
+same generation, new epoch    → accept, and reset
+same generation and epoch     → accept only a higher revision</code></pre>
+<p>Four falsifiers, one per branch — including the one that matters: <em>a new epoch supersedes, however low its revision.</em> It lives in the dispatcher, so the WebView never reinvents continuity semantics.</p>
+<h3 id="blk-112901">4 · The one-record pagination hole</h3>
+<p>Reproduced over 120 synthetic records before fixing:</p>
+<pre><code>page 1  rcpt-0120 … rcpt-0071   next_cursor rcpt-0070
+page 2  rcpt-0069 … rcpt-0020   next_cursor rcpt-0019
+page 3  rcpt-0018 … rcpt-0001
+
+total 120 · returned 118 · skipped [&quot;rcpt-0070&quot;, &quot;rcpt-0019&quot;]</code></pre>
+<p>Your diagnosis was exact and I took your preferred fix: <strong>cursor is the last item already seen; a page returns entries strictly older.</strong> The projection <em>window</em> had the same off-by-one and now uses the same rule — the two disagreeing was the actual defect, and fixing only the page would have left the window's cursor dropping a record on the first follow-up.</p>
+<p>The part I want to flag, because it is the more useful lesson: <strong>my test asserted the pages did not overlap and did not repeat, and both were true while records were being dropped.</strong> Not-overlapping and not-repeating are the easy half. The falsifier now walks <code>next_cursor</code> to exhaustion at three page sizes, including one that divides the total exactly, and asserts:</p>
+<blockquote><p>concatenating every page equals the history exactly once</p></blockquote>
+<p>Evidence paging is lossless or it is not evidence.</p>
+<h3 id="blk-112909">5 · The agent projection is bounded now too</h3>
+<p>You caught that <code>agent-projection@2</code> still carried resolved requests, so an agent could grow its own projection past the frame by request/resolve cycles — the healthy-world failure the windows exist to remove, left in <strong>the one projection an untrusted party controls the size of.</strong></p>
+<p>Symmetric now: <code>grant_requests</code> pending only, <code>grant_requests_history</code> windowed. And because every window hands out a cursor, <code>list_grant_requests</code> exists to follow it — a cursor with no command to give it to is a promise the protocol does not keep. The operator had that dangling too.</p>
+<p>And yes: <strong>resolved grant requests are history, not live queue state.</strong> Applied to both.</p>
+<h3 id="blk-112913">6 · Two things running it found that you did not name</h3>
+<p><strong>My test client had the F.6 host's bug.</strong> After <code>subscribe</code>, every <code>call</code> could read a push instead of its reply — the same &quot;the next frame is my answer&quot; assumption, in the harness this time. It showed up as intermittent failures across random seeds rather than as a wrong answer, which is how a test that reads the wrong frame usually presents. The test client correlates on <code>client_request_id</code> and stashes pushes now, exactly as the Rust dispatcher does.</p>
+<p>I am recording it because it is the second time this assumption has cost something, and the first time it produced a check that passed for the wrong reason. <strong>A full-duplex channel needs demultiplexing in every client, including the ones that are only tests.</strong></p>
+<p><strong>Subscriptions did not drain between tests.</strong> <code>Bridge.reset/0</code> sends <code>:stop</code> and each connection tears down in its own process, concurrently with the next test starting — so a test asserting &quot;one subscriber&quot; could see the previous test's still draining. The setup waits for quiet rather than assuming it.</p>
+<h3 id="blk-112917">7 · Your table</h3>
+<table><thead><tr><th>Finding</th><th>State</th></tr></thead><tbody><tr><td>raw socketpairs lack <code>FD_CLOEXEC</code>; capabilities leak across <code>exec</code></td><td>✅ closed · <strong>falsified with a real child process</strong></td></tr><tr><td>concurrent Rust writes can interleave frames</td><td>✅ closed · falsified at 2/96</td></tr><tr><td>Rust projection consumer ignores epoch/generation</td><td>✅ closed · four branch falsifiers</td></tr><tr><td>agent grant-request history unbounded</td><td>✅ closed · symmetric with the operator</td></tr><tr><td>history cursor skips one record per page</td><td>✅ closed · losslessness falsified</td></tr></tbody></table>
+<p>Plus the confinement family you asked for:</p>
+<pre><code>DESCRIPTOR CONFINEMENT
+  a spawned engine inherits exactly one channel, and no other      held
+  the inherited descriptor is the one it was given, on fd 3        held
+  every descriptor the host still holds is close-on-exec           held</code></pre>
+<h3 id="blk-112933">8 · Open</h3>
+<ol><li><p><strong>`BridgeTransport` as a named interface.</strong> I have not extracted it. The law you stated</p></li></ol>
+<p>— <em>actor label and descriptor belong to one authenticated bridge message</em> — is now written where the Linux realization lives, and <code>SEQPACKET</code> is described as a clean realization of it rather than as the law. I would rather extract the trait when there is a second implementation to shape it, than guess its edges from one.</p>
+<ol start="2"><li><p><strong>The badge.</strong> I accept your ruling and I think you have the better argument: the badge</p></li></ol>
+<p>is a product claim, and until the WebView is rendering real projections the thing on screen is a simulated UI. <code>LIVE LOCAL</code> waits for the shell.</p>
+<ol start="3"><li><p><strong>Anything else before the shell?</strong> Two rounds running, review has found real defects</p></li></ol>
+<p>in code I had just declared finished — the descriptor leak especially. If there is another pass you want on this transport before I build a UI against it, now is cheaper than after. Otherwise my next round is the Tauri integration against exactly this host.</p>
+<h3 id="blk-112946">9 · Ladder</h3>
+<p>C1.1     Tauri Rust host + private transport ├─ F.6  CommandSpec · exact-set linearized · frame and │       per-field limits · duration at creation · pack │       digest · push projections ├─ F.7  inherited descriptors · identity lifetime · │       projection epoch · demultiplexer · bounded projection └─ F.8  CLOEXEC confinement · serialized writer · continuity cursor · lossless paging · symmetric agent bounds                        ✓ ── remaining: the WebView C1.1b    SQLite transactional persistence · durable revision C1.2     FabricProvider.Tailscale</p>
+<h3 id="blk-112948">Verify</h3>
+<pre><code>cd ampd &amp;&amp; mix test                    # 170 tests
+bash tools/sabotage.sh                 # 39 falsified · 0 not
+cd .. &amp;&amp; bash tools/release.sh         # full gate chain → and-super-rev-f8.zip
+cargo build --release --manifest-path host/Cargo.toml
+./host/target/release/super-host verify    # 31 held · 0 failed</code></pre>
+<p>The last one spawns a child and reads <code>/proc/self/fd</code> to prove descriptor confinement, runs 96 concurrent commands down one socket, and drives the acceptance battery from a separate OS process. It is the only gate that can prove any of those three.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/C1_1C_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-112849" class="lvl2">0 · Measured</a><a href="#blk-112869" class="lvl2">1 · The descriptor leak — reproduced, then falsified</a><a href="#blk-112888" class="lvl2">2 · Concurrent writes — worse than the theory</a><a href="#blk-112896" class="lvl2">3 · The cursor now applies the rule the runtime sends</a><a href="#blk-112901" class="lvl2">4 · The one-record pagination hole</a><a href="#blk-112909" class="lvl2">5 · The agent projection is bounded now too</a><a href="#blk-112913" class="lvl2">6 · Two things running it found that you did not name</a><a href="#blk-112917" class="lvl2">7 · Your table</a><a href="#blk-112933" class="lvl2">8 · Open</a><a href="#blk-112946" class="lvl2">9 · Ladder</a><a href="#blk-112948" class="lvl2">Verify</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a><a href="/super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md/">F.8.2.5 — generation is a fence, and the narrowing was never a product decision</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraxl4an7uxwzjoywmky2rjil3vwqa6vcdopltpiwqweb4ns5dsbgrq</div></div></div>
+</div></div>
+</body></html>

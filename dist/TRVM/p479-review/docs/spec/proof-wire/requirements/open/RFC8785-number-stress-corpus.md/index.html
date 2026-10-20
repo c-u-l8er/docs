@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>OPEN REQUIREMENT — the ECMAScript number stress corpus · TRVM · Ampersand Box</title>
+<meta name="description" content="STATUS: DECLARED-OPEN. Not green, not counted as conformance, and not silently absent.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/requirements/open/RFC8785-number-stress-corpus.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OPEN REQUIREMENT — the ECMAScript number stress corpus">
+<meta property="og:description" content="STATUS: DECLARED-OPEN. Not green, not counted as conformance, and not silently absent.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/requirements/open/RFC8785-number-stress-corpus.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"OPEN REQUIREMENT — the ECMAScript number stress corpus","name":"OPEN REQUIREMENT — the ECMAScript number stress corpus","description":"STATUS: DECLARED-OPEN. Not green, not counted as conformance, and not silently absent.","url":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/requirements/open/RFC8785-number-stress-corpus.md/","identifier":"bagaaieraf34yxqietyxeyktsii3wwmyzkuzafgbg5oc5hst4obuuedrvcp6q","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"What IS green"},{"@type":"WebPageElement","name":"What is still open"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"p479-review","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/"},{"@type":"ListItem","position":4,"name":"docs","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/"},{"@type":"ListItem","position":5,"name":"spec","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/"},{"@type":"ListItem","position":6,"name":"proof-wire","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/"},{"@type":"ListItem","position":7,"name":"requirements","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/requirements/"},{"@type":"ListItem","position":8,"name":"open","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/requirements/open/"},{"@type":"ListItem","position":9,"name":"RFC8785-number-stress-corpus.md","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/requirements/open/RFC8785-number-stress-corpus.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/p479-review/docs/spec/proof-wire/requirements/open/RFC8785-number-stress-corpus.md</span>
+
+</div></div>
+<div class="lead">STATUS: DECLARED-OPEN. Not green, not counted as conformance, and not silently absent.</div>
+<div class="prose"><h1 id="blk-49493">OPEN REQUIREMENT — the ECMAScript number stress corpus</h1>
+<p><strong>STATUS: DECLARED-OPEN. Not green, not counted as conformance, and not silently absent.</strong></p>
+<h3 id="blk-49495">What IS green</h3>
+<p>The complete upstream <code>testdata/input/</code> set — <code>arrays</code>, <code>french</code>, <code>structures</code>, <code>unicode</code>, <code>values</code>, <code>weird</code> — is imported and every one is compared <strong>as octets</strong> against upstream <code>outhex</code>. See <code>../../vectors/jcs-upstream/PROVENANCE.md</code> for the pinned commit. That includes the two vectors P4.3 and P4.4 had to declare open: <code>weird</code> (unescaped U+0080 and U+007F) and <code>unicode</code> (a combining mark preserved without normalisation).</p>
+<h3 id="blk-49497">What is still open</h3>
+<p>The reference project also publishes a generated corpus of on the order of 10^8 ECMAScript number-serialisation cases. It is not vendored here and is not run.</p>
+<p><strong>What that means for a conformance claim.</strong> Number serialisation is exercised by <code>values</code>, by the RFC's own worked example, and by the <code>es6-number-boundaries</code> vector (1e21, 1e20, 1e-7, 5e-324, the largest double, and negative zero) — the boundaries where a naive formatter, a shortest-round-trip printer and a fixed-precision printer diverge. It is <strong>not</strong> exercised exhaustively, so an implementation passing this corpus has agreed with RFC 8785 on every published fixture and on the stated boundaries, and has <strong>not</strong> been shown to agree on all 2^64 doubles.</p>
+<p><strong>How this closes.</strong> Vendor or stream the number corpus and run it, or state a defensible sample size and a published hash target for that sample. Until then this row is OPEN, and no document in this tree claims exhaustive number conformance.</p></div>
+<p class="src"><a href="/#/TRVM/p479-review/docs/spec/proof-wire/requirements/open/RFC8785-number-stress-corpus.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-49495" class="lvl2">What IS green</a><a href="#blk-49497" class="lvl2">What is still open</a></nav></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraf34yxqietyxeyktsii3wwmyzkuzafgbg5oc5hst4obuuedrvcp6q</div></div></div>
+</div></div>
+</body></html>

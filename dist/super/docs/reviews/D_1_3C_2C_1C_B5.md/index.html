@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>B5 · the joined terminal is open, and nothing in Super can put a byte on it · super · Ampersand Box</title>
+<meta name="description" content="Measured, not argued. tools/terminal-join-probe.mjs runs the whole product surface — the production chain to a confined Carrier, a real WebDriver click on…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2C_1C_B5.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="B5 · the joined terminal is open, and nothing in Super can put a byte on it">
+<meta property="og:description" content="Measured, not argued. tools/terminal-join-probe.mjs runs the whole product surface — the production chain to a confined Carrier, a real WebDriver click on…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2C_1C_B5.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"B5 · the joined terminal is open, and nothing in Super can put a byte on it","name":"B5 · the joined terminal is open, and nothing in Super can put a byte on it","description":"Measured, not argued. tools/terminal-join-probe.mjs runs the whole product surface — the production chain to a confined Carrier, a real WebDriver click on…","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2C_1C_B5.md/","identifier":"bagaaieratgrepfz3igwyhreq2fob5zovzynvaywe7q573gcnzbwmeveuvthq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"Why, in six counts"},{"@type":"WebPageElement","name":"So B5 is not blocked by a defect"},{"@type":"WebPageElement","name":"What this says about the round"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"D_1_3C_2C_1C_B5.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2C_1C_B5.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/D_1_3C_2C_1C_B5.md</span>
+
+</div></div>
+<div class="lead">Measured, not argued. tools/terminal-join-probe.mjs runs the whole product surface — the production chain to a confined Carrier, a real WebDriver click on Watch terminal, the te…</div>
+<div class="prose"><h1 id="blk-114507">B5 · the joined terminal is open, and nothing in Super can put a byte on it</h1>
+<blockquote><p><strong>CLOSED by R0a on 2026-09-04.</strong> <code>super-dogfood</code> is now an installed payload that writes <code>SUPER-DOGFOOD-R0-READY</code> to its own terminal at startup, and <code>tools/terminal-join-probe.mjs</code> is green and mandatory. This document is kept as it was written, because the finding it records — that a healthy, beating, zero-byte presentation was the shape of a system that had finished the pipe and not built the thing that speaks into it — is the reason Lane B started when it did. See <code>docs/reviews/R0A_I_SPEAK.md</code>.</p></blockquote>
+<p><strong>Measured, not argued.</strong> <code>tools/terminal-join-probe.mjs</code> runs the whole product surface — the production chain to a confined Carrier, a real WebDriver click on <em>Watch terminal</em>, the terminal webview Tauri creates for it, the Plane the runtime opens, and the xterm the person is looking at — and then waits.</p>
+<pre><code>held         the cockpit webview came up
+held         a Worker reaches the page with terminal PRESENT
+             worker wk_0004 · occupancy OCCUPIED · carrier RUNNING · terminal PRESENT
+held         the *Watch terminal* action is offered on that Worker
+held         the bind resolved, and not as a refusal        receipt outcome accepted
+held         a real terminal webview exists after the click
+held         the terminal page is live and has bound its sink
+
+waiting 8000 ms for bytes on the joined path…
+
+             plane frames 0 · bytes 0 · applied 0 · consumed 0 · acked 0 · beats 33 · gaps 0
+             fault null · closed null · rendered characters 0
+
+FAILED       MEASUREMENT — the marker SUPER-DOGFOOD-R0-READY reached xterm</code></pre>
+<p><strong>Nothing is broken.</strong> <code>fault null</code>, <code>closed null</code>, <code>gaps 0</code>, the sink is bound, and the page sent <strong>33 liveness beats</strong> in eight seconds — the credit machinery is running, the presentation is live, the plane is open. Zero bytes have crossed it because there is no product path that produces one.</p>
+<h3 id="blk-114513">Why, in six counts</h3>
+<p>Each is a <code>grep</code>, not a claim.</p>
+<table><thead><tr><th></th><th>fact</th><th>count</th></tr></thead><tbody><tr><td>1</td><td><code>serve_carrier</code>'s op vocabulary</td><td><code>drain · start · stop · pty-attach · pty-detach · pty-resize</code> — <strong>no op that makes a Carrier write</strong></td></tr><tr><td>2</td><td><code>super-carrier-fixture</code> writes to fd 1</td><td>in <strong>one</strong> arm: <code>SAY</code>, reached only from the control channel</td></tr><tr><td>3</td><td>who may send <code>SAY</code></td><td>the host, in <code>verify</code> only — the runtime holds no control channel by design</td></tr><tr><td>4</td><td><code>terminal_input</code> / <code>terminal_resize</code> in <code>command_spec.ex</code></td><td><strong>0</strong></td></tr><tr><td>5</td><td><code>onData</code> / <code>onKey</code> in <code>cockpit/ui/terminal.js</code></td><td><strong>0</strong> (the one grep hit is the header sentence saying so)</td></tr><tr><td>6</td><td>production callers of <code>Ampd.TerminalAttachment.write/2</code></td><td><strong>0</strong> in <code>lib/</code>, <strong>5</strong> in <code>test/</code></td></tr></tbody></table>
+<p>Fact 6 is the one worth stopping on. <strong>The inbound leg is built and falsified and unreachable</strong> — <code>write/2</code> exists, is phase-guarded, has five tests, and the host's pump on the far side writes those bytes to the master (<code>host/src/attach.rs:549</code>) and counts them (<code>stats.to_master</code>). It is the same shape as <code>acquire_terminal</code> one slice ago: <em>a capability reachable only from a test is not a capability.</em> The difference is that <code>acquire_terminal</code> was missing its caller, and this is missing a <strong>command</strong> and a <strong>page event</strong> — the Plane's wire has exactly three frame kinds (<code>@out</code>, <code>@ack</code>, <code>@close</code>) and none of them carries input.</p>
+<p>And the outbound leg has no source: the payload is chosen by the host from what it has installed — correctly, D.1.2's rule, <em>no field names an executable</em> — and what it has installed is a fixture that says nothing unless the host tells it to.</p>
+<h3 id="blk-114539">So B5 is not blocked by a defect</h3>
+<pre><code>the plane           built · falsified · OPEN · measured carrying 0 bytes
+the outbound source absent — the only payload speaks only when the host asks
+the inbound source  absent — no command carries a keystroke, no page produces one</code></pre>
+<p><code>SUPER-DOGFOOD-R0-READY</code> cannot appear in xterm on this tree, in either direction, and no repair inside D.1.3c makes it appear. Two scope decisions would, and both belong to a reviewer rather than to this slice:</p>
+<ol><li><p><strong>A Carrier payload that says something.</strong> The Motor — Lane B, *Super</p></li></ol>
+<p>Self-Hosting R0 · Build Me*. This is the answer that makes the terminal worth watching, and it is the one the roadmap already points at.</p>
+<ol start="2"><li><p><strong>An input path.</strong> <code>terminal_input</code> as a command, a fourth frame kind on</p></li></ol>
+<p>the Plane's wire, <code>onData</code> in the page, and a decision about what OBSERVE becomes when a renderer can type. <code>cockpit/ui/terminal.js</code> states the current scope in its own header — <em>&quot;`terminal_input` and `terminal_resize` are not commands this process registers, so they are not refused here — they do not exist. That is what makes OBSERVE a scope rather than a stage.&quot;</em> Changing that is a presentation-authority ruling, not a repair.</p>
+<p><strong>The probe is committed and it fails.</strong> It is not marked expected-to-fail and it is not deleted: a red line that names the gap is the honest form of this result, and it turns green the day either decision lands.</p>
+<h3 id="blk-114551">What this says about the round</h3>
+<p>B1 gave <code>acquire_terminal</code> a grammar. B3 proved it cost the ordered census nothing. D.1.3b·2f made a real host able to start a Carrier at all. B4 made a real Super hold its own Carrier's terminal for the first time. B5 opens that terminal on a person's screen and finds it empty — and the emptiness is not a bug in any of the four, it is the shape of a system that has finished building the pipe and has not yet built the thing that speaks into it.</p>
+<p>That is the dogfooding argument, arrived at by running it rather than by predicting it.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/D_1_3C_2C_1C_B5.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-114513" class="lvl2">Why, in six counts</a><a href="#blk-114539" class="lvl2">So B5 is not blocked by a defect</a><a href="#blk-114551" class="lvl2">What this says about the round</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieratgrepfz3igwyhreq2fob5zovzynvaywe7q573gcnzbwmeveuvthq</div></div></div>
+</div></div>
+</body></html>

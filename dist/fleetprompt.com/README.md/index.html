@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>FleetPrompt · fleetprompt.com · Ampersand Box</title>
+<meta name="description" content="Registry for agents — publish one, install one, and check what it claims before you run it. Elixir/OTP with a Phoenix API and an MCP server. Part of the…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/fleetprompt.com/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FleetPrompt">
+<meta property="og:description" content="Registry for agents — publish one, install one, and check what it claims before you run it. Elixir/OTP with a Phoenix API and an MCP server. Part of the…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/fleetprompt.com/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"FleetPrompt","name":"FleetPrompt","description":"Registry for agents — publish one, install one, and check what it claims before you run it. Elixir/OTP with a Phoenix API and an MCP server. Part of the…","url":"https://docs.ampersandboxdesign.com/fleetprompt.com/README.md/","identifier":"bagaaiera5hjjupea5o5barx74s4t6bnuvdorjfzdhy2gi4olar5hjp4igt2q","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"fleetprompt.com","url":"https://docs.ampersandboxdesign.com/fleetprompt.com/"},"articleSection":"fleetprompt.com","hasPart":[{"@type":"WebPageElement","name":"Status, honestly"},{"@type":"WebPageElement","name":"Quick start"},{"@type":"WebPageElement","name":"The specification is authoritative, and superseded in part"},{"@type":"WebPageElement","name":"A standing direction that affects this repository"},{"@type":"WebPageElement","name":"The portfolio nav"},{"@type":"WebPageElement","name":"Conventions"},{"@type":"WebPageElement","name":"Related"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"fleetprompt.com","item":"https://docs.ampersandboxdesign.com/fleetprompt.com/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/fleetprompt.com/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">fleetprompt.com</span>
+<span class="path">fleetprompt.com/README.md</span>
+
+</div></div>
+<div class="lead">Registry for agents — publish one, install one, and check what it claims before you run it. Elixir/OTP with a Phoenix API and an MCP server. Part of the ComputeDriven world.</div>
+<div class="prose"><h1 id="blk-67920">FleetPrompt</h1>
+<p>Registry for agents — publish one, install one, and check what it claims before you run it. Elixir/OTP with a Phoenix API and an MCP server. Part of the <a href="https://computedriven.com" target="_blank" rel="noopener">ComputeDriven</a> world.</p>
+<p><strong>Written 2026-08-16.</strong> This repository had no README before that date. Every figure below was measured that day with the command beside it.</p>
+<h3 id="blk-67923">Status, honestly</h3>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Version</td><td><code>0.1.0</code> (<code>mix.exs</code>, app <code>:fleet_prompt</code>)</td></tr><tr><td>Tests</td><td><strong>112 passing, 0 failures, 2 excluded</strong> — <code>mix test</code></td></tr><tr><td>Marketing page</td><td><strong>live</strong> — <code>https://fleetprompt.com</code> answers 200</td></tr><tr><td>Application</td><td><strong>live on Fly</strong> as app <code>fleetprompt</code> — <code>https://app.fleetprompt.com</code> answers 200, and <code>POST /mcp</code> returns 200</td></tr><tr><td>Evidence rung</td><td><code>live_deployed</code></td></tr></tbody></table>
+<p><strong>The test count is 112, not 121.</strong> <code>COMPUTEDRIVEN_POSITIONING_PLAN.md</code> says 121; the suite says 112 with 2 excluded. The suite counts itself and the plan does not, so the suite wins. Quote <code>mix test</code>; never hand-type this number — that drift has now happened to a law count, a migration count and two test counts in this portfolio.</p>
+<p><strong>What is live is the prior design.</strong> The marketing page describes a replay-gated, content-addressed registry. What is deployed predates that. The portfolio nav carries <code>status: &quot;live · prior design&quot;</code> for exactly this reason: &quot;shipped&quot; is true (it runs) and would be misread as &quot;the replay-gated thing ships&quot;. It does not.</p>
+<h3 id="blk-67939">Quick start</h3>
+<pre data-lang="bash"><code>mix deps.get
+mix compile<span class="t-flag"> --warnings-as-errors</span>
+mix test                       <span class="t-comment"># 112 tests, 2 excluded</span>
+mix format<span class="t-flag"> --check-formatted</span>
+mix phx.server</code></pre>
+<p>Deploy is <code>fly deploy</code> against <code>fly.toml</code> (app <code>fleetprompt</code>).</p>
+<p>Check the deployed MCP endpoint:</p>
+<pre data-lang="bash"><code>curl<span class="t-flag"> -s</span><span class="t-flag"> -o</span> /dev/null<span class="t-flag"> -w</span> <span class="t-string">'%{http_code}\n'</span><span class="t-flag"> -X</span> POST \
+ <span class="t-flag"> -H</span> <span class="t-string">'content-type: application/json'</span> \
+ <span class="t-flag"> -d</span> <span class="t-string">'{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;method&quot;:&quot;tools/list&quot;}'</span> \
+  https://app.fleetprompt.com/mcp        <span class="t-comment"># -&gt; 200</span></code></pre>
+<h3 id="blk-67944">The specification is authoritative, and superseded in part</h3>
+<p><code>docs/spec/README.md</code> is the technical specification and drives implementation. It carries a supersession banner added 2026-08-15:</p>
+<ul><li><p><strong>Superseded:</strong> Supabase Auth as publisher identity, the shared <code>amp.profiles</code></p></li></ul>
+<p>table, and anything else resting on the shared-Supabase data layer, which was abandoned by ruling on <strong>2026-07-30</strong> in favour of <code>studbook</code>. studbook is a spec with no implementation, blocked on an unruled confidentiality question. <strong>Do not build against it yet.</strong></p>
+<ul><li><p><strong>Also corrected in the banner:</strong> the spec describes WebHost.Systems as a</p></li></ul>
+<p><strong>Convex</strong> backend. It is not, and never was in this tree — WebHost depends on <code>@supabase/supabase-js</code> with no Convex dependency anywhere.</p>
+<ul><li><p><strong>Not superseded:</strong> the registry, trust, install and crystallizer design,</p></li></ul>
+<p>which is the bulk of the document.</p>
+<p>The spec was <strong>not rewritten</strong>. It is a dated design record and rewriting it would fabricate a review nobody performed.</p>
+<h3 id="blk-67959">A standing direction that affects this repository</h3>
+<p>Ruled 2026-08-15: <strong>compute moves into the ComputeDriven OS, and the Fly.io apps become storage or nothing.</strong> This app is one of them. Nothing is torn down before its OS-side replacement runs locally, but check <code>STACK_HUB.md</code> in the workspace before planning new Fly-shaped work.</p>
+<p><code>fleet.*</code> in the archived Supabase instance still serves this product <strong>today</strong>, which is precisely why that instance is archived rather than deleted.</p>
+<h3 id="blk-67962">The portfolio nav</h3>
+<p><code>amp-nav.js</code> is a <strong>deployed copy</strong>. The source is <code>ampersand-nav/src/amp-nav.js</code>, fanned out by <code>sync-nav.sh</code>. Edits here are lost on the next sync.</p>
+<h3 id="blk-67964">Conventions</h3>
+<ul><li><p><code>mix format</code>, warnings-as-errors.</p></li><li><p>Never commit secrets.</p></li><li><p><code>old_scrap/</code> is historical and not authoritative.</p></li></ul>
+<h3 id="blk-67972">Related</h3>
+<ul><li><p><a href="https://computedriven.com" target="_blank" rel="noopener">computedriven.com</a> — the discipline this is built under</p></li><li><p><a href="https://specprompt.com" target="_blank" rel="noopener">specprompt.com</a> — the content-addressed spec layer beside it</p></li><li><p><a href="https://ampersandboxdesign.com" target="_blank" rel="noopener">ampersandboxdesign.com</a> — the [&amp;] Protocol</p></li></ul></div>
+<p class="src"><a href="/#/fleetprompt.com/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-67923" class="lvl2">Status, honestly</a><a href="#blk-67939" class="lvl2">Quick start</a><a href="#blk-67944" class="lvl2">The specification is authoritative, and superseded in part</a><a href="#blk-67959" class="lvl2">A standing direction that affects this repository</a><a href="#blk-67962" class="lvl2">The portfolio nav</a><a href="#blk-67964" class="lvl2">Conventions</a><a href="#blk-67972" class="lvl2">Related</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/fleetprompt.com/AGENTS.md/">FleetPrompt — Agent Interface</a><a href="/fleetprompt.com/CLAUDE.md/">FleetPrompt — The Open Agent Marketplace</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera5hjjupea5o5barx74s4t6bnuvdorjfzdhy2gi4olar5hjp4igt2q</div></div></div>
+</div></div>
+</body></html>

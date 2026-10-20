@@ -1,0 +1,124 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Super Self-Hosting R0a · I Speak · super · Ampersand Box</title>
+<meta name="description" content="A Carrier said something, and nothing asked it to.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/R0A_I_SPEAK.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Super Self-Hosting R0a · I Speak">
+<meta property="og:description" content="A Carrier said something, and nothing asked it to.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/R0A_I_SPEAK.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Super Self-Hosting R0a · I Speak","name":"Super Self-Hosting R0a · I Speak","description":"A Carrier said something, and nothing asked it to.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/R0A_I_SPEAK.md/","identifier":"bagaaierab4oo6wpt25isuh6vqvahnrbe2ncjfbptpkojjjd3reciuoc7vb5q","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"A1 · the payload, and how it is selected"},{"@type":"WebPageElement","name":"it is a payload, and deliberately not a Motor"},{"@type":"WebPageElement","name":"A2 · the byte is the payload's own"},{"@type":"WebPageElement","name":"A3 · the chain, and the evidence at the end of it"},{"@type":"WebPageElement","name":"the page evidence, in full"},{"@type":"WebPageElement","name":"A4 · a probe that was red on purpose, promoted"},{"@type":"WebPageElement","name":"A5 · the source of the bytes, falsified"},{"@type":"WebPageElement","name":"and four probes that had quietly died"},{"@type":"WebPageElement","name":"A6 · B9 · the negative acquisition matrix, through the command"},{"@type":"WebPageElement","name":"two rows came back with better answers than expected"},{"@type":"WebPageElement","name":"The PRELUDE · evidence that survives the run that provokes it"},{"@type":"WebPageElement","name":"What R0a did NOT do"},{"@type":"WebPageElement","name":"Verdict"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"R0A_I_SPEAK.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/R0A_I_SPEAK.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/R0A_I_SPEAK.md</span>
+
+</div></div>
+<div class="lead">A Carrier said something, and nothing asked it to.</div>
+<div class="prose"><h1 id="blk-115514">Super Self-Hosting <strong>R0a · I Speak</strong></h1>
+<p><strong>A Carrier said something, and nothing asked it to.</strong></p>
+<pre><code>plane frames 1 · bytes 66 · applied 1 · consumed 1 · acked 1 · gaps 0 · duplicates 0
+fault null · closed null
+screen: &quot;\nSUPER-DOGFOOD-R0-READY\ncarrier e6c52ea4aee66535d03dd052016fe2b7&quot;
+terminal join probe: 16 held · 0 failed</code></pre>
+<p>That string traversed a real PTY, a real <code>TerminalAttachment</code>, the real <code>Terminal.Plane</code>, a real socketpair, the cockpit's Rust decoder, a real Tauri <code>Channel</code>, a real <code>xterm.js</code>, its write callback, <code>terminal_ack</code>, and back as credit — from a person's click on <em>Watch terminal</em> in a normal Super.</p>
+<h3 id="blk-115518">A1 · the payload, and how it is selected</h3>
+<p><strong>No protocol field names an executable, and none was added.</strong> D.1.2's rule is untouched: <code>open_lane</code> still declines to take a path, <code>carrier-start-request@1</code> still has no payload field, and the grammar's own comment — <em>&quot;a grammar in which a caller could name one would be a grammar where naming something runs it&quot;</em> — still holds.</p>
+<p>The selection is the host's, and it is one function:</p>
+<pre data-lang="rust"><code>pub fn payload_path() -&gt; Option&lt;PathBuf&gt; {
+    installed(&quot;dogfood&quot;, &quot;super-dogfood&quot;).or_else(fixture_path)
+}</code></pre>
+<p><code>tools/build-payloads.sh</code> is what &quot;installed&quot; means — a table of <code>crate : binary</code>, and a payload not in it is not installed. It was <code>build-carrier-fixture.sh</code> and built one; splitting it would have duplicated the <code>cd</code> that <em>is</em> the build rule, the private <code>CARGO_TARGET_DIR</code> that makes provenance structural, and the <code>cp</code>-not-<code>mv</code> that stops a write following a <code>deps/</code> hard link.</p>
+<p><strong>Changing the payload is not silent.</strong> <code>bind_carrier_channel</code> already measured <code>fixture_path()</code> and put its digest in the attested <code>execution_basis</code>; it now measures <code>payload_path()</code>, <code>Ampd.Carrier</code> binds that into every ticket, and a mismatch refuses <code>carrier-execution-basis-changed</code>. That mechanism existed and had never governed an actual payload change. It does now.</p>
+<h4 id="blk-115524">it is a payload, and deliberately not a Motor</h4>
+<p><code>Ampd.Carrier</code>'s chain is <code>Actor → Peer → Locus → Worker → Carrier → Motor</code>, and <code>MOTOR_MACHINE_RESEARCH_BRIEF_FOR_OPUS.md</code> scopes a Motor as <em>a bounded policy artifact that proposes actions against a typed Machine contract</em>. <code>super-dogfood</code> proposes nothing and decides nothing. It occupies the <strong>payload</strong> slot — the source's own word, and the word the basis uses (<code>payload_digest</code>) — in the position a Motor will eventually occupy. Naming it a Motor now would name a seam that has not been designed.</p>
+<h3 id="blk-115526">A2 · the byte is the payload's own</h3>
+<p><code>super-carrier-fixture</code> has a <code>SAY &lt;text&gt;</code> verb. It is how <code>super-host verify</code> makes a Carrier speak, and it is exactly why the fixture could never close B5: bytes that arrive because the host asked for them prove the pipe, not the producer.</p>
+<p><strong>`super-dogfood` has no verb that makes it write to its terminal.</strong> No <code>SAY</code>, and no <code>HEAR</code> either — reading the terminal is the input half and D.1.3c's scope is OBSERVE. <code>IDENT</code> and <code>ECHO</code> remain so the host can still prove this is <em>this</em> Carrier and that the control descriptor is live in both directions. There is nothing a host, a test, a page or a runtime can send that produces the marker.</p>
+<p>It writes after the handshake, because the handshake is where the process learns which incarnation it is — the identity line quotes what the host said in <code>HELLO</code>, not <code>SUPER_CARRIER_INCARNATION</code>, which anyone who could set its environment could have supplied.</p>
+<h3 id="blk-115530">A3 · the chain, and the evidence at the end of it</h3>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><code>super-host verify</code></td><td><strong>299 held · 0 failed</strong> (was 290)</td></tr><tr><td><code>tools/terminal-join-probe.mjs</code></td><td><strong>16 held · 0 failed</strong> (was 6 held · 1 failed)</td></tr><tr><td>ExUnit</td><td><strong>596 tests · 0 failures</strong> (was 586)</td></tr></tbody></table>
+<p>The nine new host rows measure the same byte a second before the browser does, and make two claims the probe cannot:</p>
+<ul><li><p><strong>nothing asked for it.</strong> The battery sends <code>HELLO</code> and reads. There is no</p></li></ul>
+<p>verb it could have sent, so the marker's arrival is attributable to the payload alone.</p>
+<ul><li><p><strong>the line discipline is doing its job.</strong> The payload writes <code>\n</code>; the</p></li></ul>
+<p>master delivers <code>\r\n</code>. A pipe would not.</p>
+<p>Plus: the production payload is <code>super-dogfood</code> and not the fixture; it is statically linked, so the execute grant names one inode; the fixture is <strong>still installed and is a different file</strong>, because <code>carrier_confinement</code>'s thirty-odd direct spawns are a census of what a deliberately stupid process can reach and running them against a payload that does things would measure the payload instead of the floor; and speaking cost the Carrier no descriptor — the set is still exactly <code>{0,1,2,3}</code>.</p>
+<h4 id="blk-115550">the page evidence, in full</h4>
+<pre><code>bound        true
+frames       1        at least one OUT frame delivered
+bytes        66       &gt;= the marker's own length
+applied      1        contiguous
+consumed     1        &gt;= applied
+acked        1        credit returned for what was consumed
+gaps         0
+duplicates   0
+fault        null
+closed       null
+xterm        contains SUPER-DOGFOOD-R0-READY exactly</code></pre>
+<p><strong>And one row that is a property, not a formality:</strong> the payload writes at startup and the person clicks afterwards. <code>terminalPane</code> at bind time already carried <code>frames: 1</code> — the bytes waited in the kernel's tty buffer, held by the line discipline. Super stored nothing and must not start; B7's rule that a reopened presentation gets no server scrollback is untouched. Those two facts are compatible and this is where the difference is visible.</p>
+<h3 id="blk-115553">A4 · a probe that was red on purpose, promoted</h3>
+<p><code>tools/terminal-join-probe.mjs</code> shipped <strong>red</strong>, deliberately, at <code>b470a1b</code>: 6 held, 1 failed, because the joined path was open and no product path could put a byte on it. It was a milestone acceptance probe and said so.</p>
+<p>The marker assertion was not weakened. It is now green because the marker genuinely traversed the path, so the probe moves into <code>tools/release.sh</code>'s mandatory list. The historical finding is preserved verbatim in <code>docs/reviews/D_1_3C_2C_1C_B5.md</code> with a closure note on top.</p>
+<h3 id="blk-115556">A5 · the source of the bytes, falsified</h3>
+<p><code>tools/sabotage-cockpit.sh</code> probe 30 removes the payload's marker write and rebuilds — including the payload, which needed a <code>rebuild</code> that runs <code>tools/build-payloads.sh</code>, because a probe that sabotages a separate artifact and rebuilds only the cockpit is a probe that never runs its own sabotage.</p>
+<p>Measured:</p>
+<pre><code>plane frames 1 · bytes 42 · applied 1 · consumed 1 · acked 1 · gaps 0 · duplicates 0
+fault null · closed null
+screen: &quot;\ncarrier 3ec6cf471cb6874e016b59c5509b7162&quot;
+
+FAILED   R0a — the marker SUPER-DOGFOOD-R0-READY reached a real xterm
+held     ×15   everything else</code></pre>
+<p><strong>One row red, fifteen green, and the fifteen are the other half of the evidence.</strong> The Carrier still ran, the terminal was still PRESENT, the presentation still opened, the sink still bound, the page still beat thirty-three times, and the identity line still flowed — so the plane still carried a frame with contiguity, credit and no fault. A sabotage that turned the whole probe red would be consistent with having broken the Carrier. This one is only consistent with having removed the marker.</p>
+<p><strong>No positive control was added, on purpose.</strong> Injecting the marker from the host or the page to prove the assertion can pass would build the exact bypass this probe exists to rule out, and it would then live in the tree.</p>
+<h4 id="blk-115562">and four probes that had quietly died</h4>
+<p><code>SABOTAGE_DRYRUN=1</code> reported <strong>4 missed</strong> before this round's probe was added — measured against a stashed tree, so they were already dead at <code>b470a1b</code>. <code>cockpit/ui/cockpit.js</code> split <code>const grants = (p.grants ?? []).map</code> into two statements and <code>cockpit/capabilities/default.json</code> reformatted <code>&quot;webviews&quot;: [&quot;main&quot;],</code> onto three lines. Neither changed behaviour; both retired a falsifier — one for the frame-rebuild property, three for the webview ACL. Repaired: <strong>34 patterns matched · 0 missed.</strong></p>
+<h3 id="blk-115564">A6 · B9 · the negative acquisition matrix, through the command</h3>
+<p><code>ampd/test/terminal_acquire_test.exs</code> — 10 tests. Aimed at <code>acquire_terminal</code>, the <strong>command</strong>, not at <code>admit_attach/1</code>, the function <code>terminal_possession_test</code> already falsifies. The distinction is the one this round keeps paying for: a refusal only reachable by calling an internal function is not a refusal a caller can meet.</p>
+<table><thead><tr><th></th><th>case</th><th>refused</th></tr></thead><tbody><tr><td>Z0</td><td>fully occupied, live Carrier, no terminal</td><td><strong>admitted</strong> — fails only in the machine</td></tr><tr><td>Z1</td><td>occupies nothing (same actor, second channel)</td><td><code>carrier-not-attached</code></td></tr><tr><td>Z2</td><td>another actor's Peer</td><td><code>carrier-not-attached</code></td></tr><tr><td>Z3</td><td>the human control channel</td><td>the grammar, before the chain</td></tr><tr><td>Z4</td><td>no Carrier</td><td><code>terminal-no-live-carrier</code></td></tr><tr><td>Z5</td><td>already possessed</td><td><code>terminal-already-attached</code></td></tr><tr><td>Z6</td><td>the Carrier stopped</td><td><code>terminal-no-live-carrier</code></td></tr><tr><td>Z7</td><td>the Worker closed</td><td><code>worker-not-open</code></td></tr><tr><td>Z8</td><td>the Peer is gone</td><td><code>unknown-peer</code></td></tr><tr><td>Z9</td><td>the World incarnation moved</td><td><code>world-incarnation-changed</code></td></tr></tbody></table>
+<p><strong>Z0 is the discriminator and every other row depends on it.</strong> Without a case that gets <em>past</em> admission, the whole matrix would also pass against an <code>acquire_terminal</code> that refused unconditionally. Z0 is admitted and then fails in the machine phase, because this test runtime possesses no host carrier channel — a different answer from every refusal above it.</p>
+<p>Every row also asserts it is <strong>not</strong> a post-admission code (<code>terminal-machine-refused</code>, <code>terminal-acquire-indeterminate</code>): the unbounded host round trip never starts for a caller the World should have stopped. Same property <code>carrier_test</code>'s E1 states for starts.</p>
+<p><strong>No test passes an identity in.</strong> The command declares <code>fields: []</code>; Z5 installs a terminal record as world state, and the command it then sends is still empty.</p>
+<h4 id="blk-115603">two rows came back with better answers than expected</h4>
+<p>Z8 was written expecting <code>terminal-peer-gone</code> and got <code>unknown-peer</code>; Z9 expected <code>terminal-carrier-not-current</code> and got <code>world-incarnation-changed</code>. Both are <strong>outer gates</strong> the command meets before the terminal chain runs — <code>Ampd.Control</code> will not dispatch for a Peer it cannot resolve, or under a superseded world incarnation. Asserting the inner refusals would have been asserting that the outer gates do not exist. Two independent reasons each case cannot succeed, and the command path meets the first.</p>
+<h3 id="blk-115605">The PRELUDE · evidence that survives the run that provokes it</h3>
+<p>D.1.3b·2f recorded one unexplained run — seed <code>909090</code>, 586 tests, 4 failures — whose output was discarded by a <code>grep</code> for the summary line, then five clean runs at the same seed. <code>tools/suite-evidence.sh</code> is the repair. One directory per execution, created with <code>mkdir</code> so a collision <strong>refuses</strong> rather than clobbers:</p>
+<pre><code>.suite-runs/&lt;stamp&gt;-&lt;sha&gt;-seed&lt;seed&gt;/
+    meta.json    commit · tree · dirty paths · seed · started_at ·
+                 finished_at · duration · exit status · timed_out ·
+                 summary · orphan runtimes before/after · byte counts
+    stdout.log   in full          (10.9 MB per run, retained)
+    stderr.log   in full</code></pre>
+<p>and one appended line in <code>.suite-runs/INDEX</code>. Output goes to <strong>files, never a command substitution</strong> — <code>out=$(mix test)</code> waits for an EOF an orphaned BEAM holds open, which cost the host battery 1h46m once already.</p>
+<p>The orphan census is in there because that was my hypothesis and it does not hold: the runs were clean with orphans at zero, and clean earlier <em>with</em> orphans present. It is recorded as evidence, not as an explanation.</p>
+<p><strong>The prior 4 failures are recorded as `unexplained prior run · details unavailable · not reproduced`, and no explanation was manufactured.</strong></p>
+<p>Re-run at this tree:</p>
+<pre><code>green  seed 0        586 tests, 0 failures   (164s, orphans 0→0)
+green  seed 424242   586 tests, 0 failures   (164s, orphans 0→0)
+green  seed 909090   586 tests, 0 failures   (164s, orphans 0→0)</code></pre>
+<h3 id="blk-115613">What R0a did NOT do</h3>
+<p>No <code>terminal_input</code>. No <code>onData</code>, no <code>onKey</code>. No fourth inbound Plane frame. No <code>TerminalAttachment.write/2</code> caller. The terminal's authority class is exactly what it was: <strong>OBSERVE</strong>. The first real bytes originate from the Carrier's own payload, which is what makes that possible.</p>
+<p>No confinement was widened. <code>super-dogfood</code> runs under the same <code>Policy::minimal</code> the fixture does, holds exactly <code>{0,1,2,3}</code>, and speaking cost it nothing.</p>
+<h3 id="blk-115616">Verdict</h3>
+<pre><code>payload selection      GREEN   host-side, digest-attested, no protocol field
+byte source            GREEN   the payload's own, falsified by removing it
+joined path            GREEN   16 held · 0 failed, credit returned, no gaps
+host measurement       GREEN   299 held · 0 failed
+possession matrix      GREEN   10 tests · 0 failures, Z0 discriminates
+ExUnit                 GREEN   596 tests · 0 failures, evidence retained
+ordered census         380 functions · 26 crossings · CLOSED — unchanged</code></pre>
+<p><strong>GO.</strong></p>
+<p>R0b is the next slice and is not started here: one real Super build/test/verification operation, streamed through the terminal R0a just proved, with every missing authority filed as a named decision rather than granted to make the job pass.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/R0A_I_SPEAK.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-115518" class="lvl2">A1 · the payload, and how it is selected</a><a href="#blk-115524" class="lvl3">it is a payload, and deliberately not a Motor</a><a href="#blk-115526" class="lvl2">A2 · the byte is the payload&#39;s own</a><a href="#blk-115530" class="lvl2">A3 · the chain, and the evidence at the end of it</a><a href="#blk-115550" class="lvl3">the page evidence, in full</a><a href="#blk-115553" class="lvl2">A4 · a probe that was red on purpose, promoted</a><a href="#blk-115556" class="lvl2">A5 · the source of the bytes, falsified</a><a href="#blk-115562" class="lvl3">and four probes that had quietly died</a><a href="#blk-115564" class="lvl2">A6 · B9 · the negative acquisition matrix, through the command</a><a href="#blk-115603" class="lvl3">two rows came back with better answers than expected</a><a href="#blk-115605" class="lvl2">The PRELUDE · evidence that survives the run that provokes it</a><a href="#blk-115613" class="lvl2">What R0a did NOT do</a><a href="#blk-115616" class="lvl2">Verdict</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierab4oo6wpt25isuh6vqvahnrbe2ncjfbptpkojjjd3reciuoc7vb5q</div></div></div>
+</div></div>
+</body></html>

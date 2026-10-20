@@ -1,0 +1,123 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>D.1.3b·2f — Host-Independent Carrier Descriptor Inheritance · super · Ampersand Box</title>
+<meta name="description" content="The claim that made the defect invisible, replaced by a mechanism.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3B_2F.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D.1.3b·2f — Host-Independent Carrier Descriptor Inheritance">
+<meta property="og:description" content="The claim that made the defect invisible, replaced by a mechanism.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3B_2F.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"D.1.3b·2f — Host-Independent Carrier Descriptor Inheritance","name":"D.1.3b·2f — Host-Independent Carrier Descriptor Inheritance","description":"The claim that made the defect invisible, replaced by a mechanism.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3B_2F.md/","identifier":"bagaaierarb6xssoc6qcdvypcjn653n26pkqm4yuvjrpvo3ibonyrwhfixeca","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"The claim that was false"},{"@type":"WebPageElement","name":"What changed"},{"@type":"WebPageElement","name":"The flag, not a close — three reasons, each load-bearing"},{"@type":"WebPageElement","name":"Failure is a refusal"},{"@type":"WebPageElement","name":"The ruleset is now unnameable by the allowlist vocabulary"},{"@type":"WebPageElement","name":"The six new checks (super-host verify, 284 → 290)"},{"@type":"WebPageElement","name":"One check was wrong first, and its wrongness is recorded in the source"},{"@type":"WebPageElement","name":"The four new sabotage probes (45 → 49)"},{"@type":"WebPageElement","name":"H · The product witness — the cockpit is the host"},{"@type":"WebPageElement","name":"K · The drain-churn observation does NOT reproduce"},{"@type":"WebPageElement","name":"Verdict"},{"@type":"WebPageElement","name":"One ExUnit anomaly, unexplained, recorded rather than smoothed over"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"D_1_3B_2F.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3B_2F.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/D_1_3B_2F.md</span>
+
+</div></div>
+<div class="lead">The claim that made the defect invisible, replaced by a mechanism.</div>
+<div class="prose"><h1 id="blk-114124">D.1.3b·2f — Host-Independent Carrier Descriptor Inheritance</h1>
+<p><strong>The claim that made the defect invisible, replaced by a mechanism.</strong></p>
+<p>Written on top of <code>7961233</code> (D.1.3c·2c·1c Phase B partial) and <code>bc21b16</code> (C1.0b·2·2, FINAL-FROZEN, not reopened here).</p>
+<h3 id="blk-114127">The claim that was false</h3>
+<p><code>host/src/carrier.rs</code>'s module header said, of the Carrier's four-descriptor table:</p>
+<blockquote><p>Everything the host holds is <code>SOCK_CLOEXEC</code> or <code>O_CLOEXEC</code> by construction, so the allowlist is enforced by the kernel at <code>exec</code> rather than by a loop that must remember to run.</p></blockquote>
+<p>That is true of <code>super-host</code>, which opens almost nothing. It is a claim about a binary wearing the clothes of a claim about the <strong>host role</strong>, and it is false for any process that links <code>super_host</code> alongside anything else. The first one that did — the cockpit, a Tauri/GTK/WebKit process — could not start a Carrier at all: the floor refused <code>observed:descriptor_set_exact</code>, correctly, and 284 host checks and 45 sabotage probes had never been able to see it, because there had only ever been one host and it was the small one.</p>
+<p>The new claim is about the spawn path:</p>
+<blockquote><p>A Carrier's inherited descriptor set is established by the Carrier spawn path itself and does not depend on unrelated descriptor hygiene in the parent executable. Everything above the base is marked for death before anything is placed; the Carrier's possessions are then rescued, one <code>dup_onto</code> at a time; <code>exec</code> closes the rest.</p></blockquote>
+<h3 id="blk-114135">What changed</h3>
+<p><code>host/src/fdpass.rs</code> — <strong>`seal_inheritance(first)`</strong>, one raw syscall:</p>
+<pre><code>close_range(4, UINT_MAX, CLOSE_RANGE_CLOEXEC)     436 / flag 1&lt;&lt;2</code></pre>
+<p><code>host/src/carrier.rs</code> — called from <code>pre_exec</code>, after <code>ensure_std_fds()</code> and <strong>before</strong> any descriptor placement:</p>
+<pre><code>ensure_std_fds()          0/1/2 exist
+seal_inheritance(4)       every fd &gt;= 4 marked close-on-exec
+setsid / TIOCSCTTY        the terminal relationship, if there is one
+dup_onto(slave, 0/1/2)   ─┐
+dup_onto(control, 3)      ├ the Carrier's possessions, rescued by name
+dup_onto(extra…)         ─┘  (`dup_onto` clears CLOEXEC on its target)
+prepared.install()        Landlock + seccomp, the ruleset still live
+execve                    the kernel closes everything unrescued</code></pre>
+<h4 id="blk-114140">The flag, not a close — three reasons, each load-bearing</h4>
+<ol><li><p><code>Prepared</code>'s Landlock ruleset lives at or above fd 64 and must still be a</p></li></ol>
+<p><strong>live</strong> descriptor when <code>install</code> runs, after the seal. A blind <code>close_range(4, ~0, 0)</code> closes it; <code>landlock_restrict_self</code> gets <code>EBADF</code>; <code>install</code> fails inside <code>pre_exec</code>. <strong>Measured</strong> under sabotage: the spawn does not happen at all, so the failure is loud rather than an unconfined Carrier — but only because <code>install</code> checks. Nothing about a blind sweep is safe.</p>
+<ol start="2"><li><p>The PTY slave, the control channel and every <code>extra_fds</code> <strong>source</strong> are</p></li></ol>
+<p>read by <code>dup_onto</code> after the seal. Closing them makes the Carrier's own possessions unreachable.</p>
+<ol start="3"><li><p><code>std::process::Command</code> keeps a <code>CLOEXEC</code> pipe open across the fork and</p></li></ol>
+<p>detects successful <code>exec</code> by that pipe closing. A blind sweep closes it, and a <code>pre_exec</code> that then fails reports <strong>nothing</strong> to the parent — the sweep would break the reporting of its own breakage.</p>
+<h4 id="blk-114153">Failure is a refusal</h4>
+<p><code>seal_inheritance</code> propagates its error out of <code>pre_exec</code> and the spawn fails. There is no &quot;sealing unavailable, continue anyway&quot; branch. A Carrier whose descriptor table cannot be bounded does not start.</p>
+<h4 id="blk-114155">The ruleset is now unnameable by the allowlist vocabulary</h4>
+<p><code>confine::RULESET_FD_FLOOR</code> (64) is <code>pub</code>, and <code>spawn_with</code> refuses any <code>extra_fds</code> target <code>&lt; 0</code> or <code>&gt;= RULESET_FD_FLOOR</code> <strong>before any placement happens</strong>. That constant's own docs already said the ruleset &quot;sits above every number the Carrier's descriptor allowlist can name&quot;; nothing enforced it, and <code>extra_fds</code> names its own target. Every falsifier that exists uses fd 9 or fd 0 and all of them stay legal.</p>
+<h3 id="blk-114157">The six new checks (<code>super-host verify</code>, 284 → 290)</h3>
+<table><thead><tr><th>check</th><th>what it refuses</th></tr></thead><tbody><tr><td>the ambient-descriptor probe really is ambient — open, above 3, and NOT close-on-exec</td><td>a green result for not having set up the condition</td></tr><tr><td>an ambient inheritable descriptor the host never named does NOT reach the Carrier</td><td>the defect itself</td></tr><tr><td>an explicitly placed descriptor survives, at its target and nowhere else</td><td>a repair that sanitises indiscriminately and destroys the pre-open falsifier</td></tr><tr><td>a possession placed on its OWN number survives — <code>dup2(n, n)</code> is a no-op</td><td>simplifying <code>dup_onto</code> to a bare <code>dup2</code></td></tr><tr><td>the ruleset survives the seal — still REFUSED a path the bare control reached</td><td>closing the thing that enforces the policy</td></tr><tr><td>an extra descriptor target at the reserved ruleset floor is refused before placement</td><td>overwriting the live ruleset from the vocabulary</td></tr></tbody></table>
+<p><strong>They run after the harness's own leak, deliberately.</strong> The comment they sit under recorded this exact defect and called it a harness bug:</p>
+<blockquote><p>Measured while writing this: the first version of this check ran AFTER the leak was set up and went red, because the harness's own leaked descriptor reached the Carrier. The check was correct; the thing it caught was the test.</p></blockquote>
+<p>It was not the test. The control was moved earlier and the floor kept its false claim for a revision. The whole property now is that the order does not matter.</p>
+<h4 id="blk-114177">One check was wrong first, and its wrongness is recorded in the source</h4>
+<p>The ruleset-survival check first asked <code>/proc/&lt;pid&gt;/status</code> for a <code>Landlock:</code> line and went <strong>red on a correctly confined Carrier</strong>. This kernel does not publish that field — 7.2.2, <code>CONFIG_SECURITY_LANDLOCK=y</code>, ABI 10, and no such line in <code>/proc/self/status</code> — so <code>observe</code>'s <code>landlock_domain</code> is <code>false</code> for every process on this host and always has been. That is why nothing else in <code>verify.rs</code> reads it, and <code>carrier.rs</code> says why beside where the field is computed: Landlock is <strong>host-attested</strong>, and the differential battery is the out-of-band proof. The check is now a differential.</p>
+<h3 id="blk-114179">The four new sabotage probes (45 → 49)</h3>
+<table><thead><tr><th>probe</th><th>expected RED</th></tr></thead><tbody><tr><td>a Carrier spawned without the inheritance seal is noticed</td><td><code>does NOT reach the Carrier</code></td></tr><tr><td>a seal that CLOSES instead of marking is noticed</td><td><code>still REFUSED a path the bare control reached</code></td></tr><tr><td>a <code>dup_onto</code> that trusts <code>dup2</code> to clear CLOEXEC is noticed</td><td><code>placed on its OWN number survives</code></td></tr><tr><td>an extra descriptor target that can overwrite the ruleset is noticed</td><td><code>refused before placement</code></td></tr></tbody></table>
+<p>All four falsified. Probe 46 reproduces the original finding exactly: without the seal, the Carrier observed <code>[0, 1, 2, 3, 8]</code> — fd 8 being the harness's own ambient descriptor.</p>
+<h3 id="blk-114192">H · The product witness — the cockpit is the host</h3>
+<p><code>SUPER_COCKPIT_CARRIER=1</code> runs the full production chain inside the real cockpit: <code>install_pack</code> and <code>register_repository</code> on the bridge, <code>open_workspace → open_goal → open_lane → open_worker</code> on the human control channel, <code>attach_worker</code> and <code>start_carrier</code> on the agent channel. <strong>It makes no measurement</strong>; the census is taken from outside, by <code>/proc</code>, as <code>carrier.rs</code> requires of every Carrier observation.</p>
+<p><strong>The chain that found the original defect was not committed, so the finding could not be re-run.</strong> This one is.</p>
+<p>Measured, on the restored tree:</p>
+<pre><code>parent — super-cockpit (Tauri/GTK/WebKit)
+  total open descriptors        49
+  without O_CLOEXEC              5
+    fd  0  /dev/null                  expected
+    fd  1  the log file               expected
+    fd  2  the log file               expected
+    fd 10  /dev/urandom               ← would have been inherited
+    fd 28  /dev/urandom               ←
+
+child — the Carrier it started
+  fd 0  /dev/pts/9
+  fd 1  /dev/pts/9
+  fd 2  /dev/pts/9
+  fd 3  socket:[39513999]
+  Seccomp 2 · Seccomp_filters 1 · NoNewPrivs 1</code></pre>
+<p>Two ambient descriptors above fd 3 on this run, not the eight the finding recorded — the finding's cockpit had WebKit's memory-pressure monitor open on <code>/proc/meminfo</code>, <code>/proc/zoneinfo</code> and three cgroup files as well. One is enough; the count is whatever GTK and WebKit happen to be doing.</p>
+<p><strong>And it is a falsifier, not a green line.</strong> With <code>seal_inheritance</code> stubbed out and the cockpit rebuilt, the same chain reproduces the original finding verbatim:</p>
+<pre><code>ampd: carrier floor refused [&quot;observed:descriptor_set_exact&quot;]
+start_carrier refused: carrier-confinement-unacceptable</code></pre>
+<h3 id="blk-114200">K · The drain-churn observation does NOT reproduce</h3>
+<p>The prior round observed that a refused Carrier start &quot;left a drain retrying and churned the projection&quot;. Measured here on the production path, with the seal stubbed out to produce a real floor refusal, over 45 seconds after the refusal:</p>
+<pre><code>t   log lines   &quot;staying fenced and retrying&quot;   &quot;physical carrier set is empty&quot;
+0   3           0                               0
+…   3           0                               0
+45  3           0                               0</code></pre>
+<p>One <code>carrier floor refused</code> line, one refusal reply, and nothing else. The refused process is reaped — the cockpit's child count drops by one within 30 s — and the Gate never re-fences. A <strong>control</strong> run with the seal restored, so the Carrier is accepted, burns <em>more</em> BEAM CPU over the same window (≈55 ticks/5 s vs ≈40), which is the live Carrier and its terminal pump: the refusal is the quieter case, not the churning one.</p>
+<p>I cannot test the fixture that produced the original observation, because it was not committed. That is the finding about that finding. What is testable now says a single refusal converges.</p>
+<p><strong>Not closed by assertion</strong>: this is one refusal on one path. If a Phase-B run produces churn again, it is a separate lifecycle finding and must not be folded into a confinement slice.</p>
+<h3 id="blk-114206">Verdict</h3>
+<pre><code>descriptor exactness      GREEN   the seal establishes it, from any host
+Landlock                  GREEN   differential, through the seal
+seccomp                   GREEN   mode 2, 1 filter, no_new_privs
+explicit-extra            GREEN   survives, at its target and nowhere else
+ruleset collision         GREEN   refused before placement
+host verify               290 held · 0 failed        (was 284)
+host sabotage             49 falsified · 0 did not   (was 45)
+cockpit battery           89 held · 0 failed
+ExUnit                    586 tests · 0 failures  (see the anomaly below)
+dispatch partition        11 held · 0 failed
+ordered closure           53 roots · 380 functions · 26 crossings · CLOSED
+webview acl               32 held · 0 failed</code></pre>
+<p><strong>GO.</strong></p>
+<p>The ordered census is byte-identical to <code>7961233</code>'s — 380 functions, 26 crossings, CLOSED — which is what a confinement-only change should do to it.</p>
+<h4 id="blk-114210">One ExUnit anomaly, unexplained, recorded rather than smoothed over</h4>
+<p>Seeds <code>default</code> and <code>424242</code> each ran 586/0. Seed <code>909090</code> ran <strong>586 tests, 4 failures</strong> once, and 586/0 on the five runs that followed it — four at the same seed with the same tree, then one more after clearing three orphaned <code>mix run --no-halt</code> runtimes my own cockpit measurements had left on the machine.</p>
+<p><strong>I do not know which four tests failed.</strong> That run's output went through a <code>grep</code> for the summary line and the rest was discarded, which is the same mistake <code>tools/sabotage-host.sh</code>'s evidence header was written about — a run that found something, overwritten by the runs it triggered. It is recorded here as an unexplained single anomaly rather than as a flake I have a story for: the orphaned runtimes are a plausible cause and were still present for four of the clean runs, so they do not explain it.</p>
+<p>Nothing in this slice touches the BEAM. It is the same 586 tests that were green at <code>7961233</code>, and the confinement change is entirely on the host side of the boundary. That is a reason to expect it is unrelated, not evidence that it is.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/D_1_3B_2F.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-114127" class="lvl2">The claim that was false</a><a href="#blk-114135" class="lvl2">What changed</a><a href="#blk-114140" class="lvl3">The flag, not a close — three reasons, each load-bearing</a><a href="#blk-114153" class="lvl3">Failure is a refusal</a><a href="#blk-114155" class="lvl3">The ruleset is now unnameable by the allowlist vocabulary</a><a href="#blk-114157" class="lvl2">The six new checks (super-host verify, 284 → 290)</a><a href="#blk-114177" class="lvl3">One check was wrong first, and its wrongness is recorded in the source</a><a href="#blk-114179" class="lvl2">The four new sabotage probes (45 → 49)</a><a href="#blk-114192" class="lvl2">H · The product witness — the cockpit is the host</a><a href="#blk-114200" class="lvl2">K · The drain-churn observation does NOT reproduce</a><a href="#blk-114206" class="lvl2">Verdict</a><a href="#blk-114210" class="lvl3">One ExUnit anomaly, unexplained, recorded rather than smoothed over</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierarb6xssoc6qcdvypcjn653n26pkqm4yuvjrpvo3ibonyrwhfixeca</div></div></div>
+</div></div>
+</body></html>

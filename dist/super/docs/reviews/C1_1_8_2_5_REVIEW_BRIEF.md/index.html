@@ -1,0 +1,133 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>F.8.2.5 — generation is a fence, and the narrowing was never a product decision · super · Ampersand Box</title>
+<meta name="description" content="Artifact: `and-super-rev-f825.zip`. Every gate green.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="F.8.2.5 — generation is a fence, and the narrowing was never a product decision">
+<meta property="og:description" content="Artifact: `and-super-rev-f825.zip`. Every gate green.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"F.8.2.5 — generation is a fence, and the narrowing was never a product decision","name":"F.8.2.5 — generation is a fence, and the narrowing was never a product decision","description":"Artifact: `and-super-rev-f825.zip`. Every gate green.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md/","identifier":"bagaaierakkmzhecyvj5nnbdhcbpeha4q4hmhao4n2ak4zbksythfjms4ayxa","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Measured"},{"@type":"WebPageElement","name":"1 · The narrowing was six lines of test, not a product decision"},{"@type":"WebPageElement","name":"2 · Both halves, and why the order is the one you drew inverted"},{"@type":"WebPageElement","name":"3 · Your test-claim objection was right, and here is the measurement"},{"@type":"WebPageElement","name":"4 · What widening the fence found — a dual-disclosure leak in F.8.2.4"},{"@type":"WebPageElement","name":"5 · The sabotage trap, proven rather than reasoned about"},{"@type":"WebPageElement","name":"6 · Your battery, and the two rows I cannot close yet"},{"@type":"WebPageElement","name":"7 · One primitive, and now it is true"},{"@type":"WebPageElement","name":"8 · Ladder"},{"@type":"WebPageElement","name":"Verify"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"C1_1_8_2_5_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Artifact: `and-super-rev-f825.zip`. Every gate green.</div>
+<div class="prose"><h1 id="blk-113702">F.8.2.5 — generation is a fence, and the narrowing was never a product decision</h1>
+<p><strong>Artifact: `and-super-rev-f825.zip`. Every gate green.</strong></p>
+<p>Accepted in full. You were right about the semantic, right that the test suite is what produced the wrong one, and right that the bind-vs-submit claim was not falsified. All three are now measured rather than argued — including the last one, which turns out to falsify exactly one of the four fence witnesses and leave the other three green, which is precisely the reason your objection was correct.</p>
+<p>Widening the fence also surfaced a defect F.8.2.4 shipped: a fenced <code>request_effect</code> handed the <strong>agent</strong> a bare <code>refusal@1</code> with <code>operator_detail</code> still on it. §4.</p>
+<pre><code>before                                    after
+─────────────────────────────────────     ─────────────────────────────────────
+installation X · gen 1                    installation X · gen 1
+  kestrel channel bound                     kestrel channel bound
+advance_lineage(&quot;restore&quot;)                advance_lineage(&quot;restore&quot;)
+  → installation X · gen 2                  → gen 2 · every channel closed
+  → channels untouched                    OLD request_grant
+OLD request_grant                           expected gen 1 · current gen 2
+  installation fence PASSES                 → world-incarnation-changed
+  → executes in gen 2                       → GrantRegistry.requests() == []
+  → LEAKED: a request in a world
+    that never named a kestrel</code></pre>
+<h3 id="blk-113707">0 · Measured</h3>
+<table><thead><tr><th></th><th>F.8.2.4</th><th>F.8.2.5</th></tr></thead><tbody><tr><td>conformance vectors</td><td>42</td><td><strong>42</strong></td></tr><tr><td>BEAM tests</td><td>184</td><td><strong>194</strong>, 0 failures at seed 0</td></tr><tr><td>browser assertions</td><td>64</td><td><strong>64</strong></td></tr><tr><td>BEAM sabotage falsifiers</td><td>51 · 0 not</td><td><strong>56 · 0 not</strong></td></tr><tr><td>host acceptance checks</td><td>48 held · 0 failed</td><td><strong>48 held · 0 failed</strong></td></tr><tr><td>host sabotage falsifiers</td><td>6 · 0 not</td><td><strong>6 · 0 not</strong></td></tr></tbody></table>
+<h3 id="blk-113730">1 · The narrowing was six lines of test, not a product decision</h3>
+<p>I want to be precise about what F.8.2.4 actually did, because I described it as a deliberate deviation and that description flattered it.</p>
+<p>Implementing the strict fence turns <code>test/lineage_test.exs</code> red <strong>twice</strong>, both for the same reason: the test reaches for a channel bound in generation 1 and uses it in generation 2. Making it reacquire — <code>{human2, agent2} = Ampd.attach_pair()</code> — is six lines. F.8.2.4 read those two failures as the suite reporting a semantic constraint. They were the suite asserting, incidentally and without meaning to, that a generation-1 control channel still speaks in generation 2.</p>
+<p>And the codebase already disagreed, in four places:</p>
+<ul><li><p><code>Ampd.World</code>'s own moduledoc — generation moves only when durable truth is *&quot;wholesale</p></li></ul>
+<p>replaced or its lineage discontinuously changes&quot;*.</p>
+<ul><li><p><code>Ampd.Peer.reset/0</code>'s doc — *&quot;resetting or re-initializing a world invalidates every</p></li></ul>
+<p>open channel, and a channel bound to a world that no longer exists is exactly the stale consent problem one layer down.&quot;*</p>
+<ul><li><p><code>Ampd.Bridge.reset/0</code>'s doc — the same sentence.</p></li><li><p><code>CLOUD_V1.md</code> §1, which is a <strong>ruled</strong> product sentence, not a direction: *&quot;State moves.</p></li></ul>
+<p>Authority does not. A restored world on a second machine is not the first machine wearing its clothes.&quot;*</p>
+<p>Three of those are in this runtime's own source. The belief was already held everywhere except in the one function that advances a generation. F.8.2.4 did not weigh a product trade-off; it took the path where the diff was smaller and wrote a justification for it.</p>
+<p>Your decomposition is the one that holds, and it is now the module's:</p>
+<pre><code>old consent cannot survive a restore
+  does not imply
+old work may safely cross one</code></pre>
+<h3 id="blk-113751">2 · Both halves, and why the order is the one you drew inverted</h3>
+<p>The fence is <code>installation_id AND generation</code>. <code>advance_lineage/2</code> closes every channel bound to the ending incarnation — <code>Ampd.Bridge.reset/0</code> then <code>Ampd.Peer.reset/0</code>, the latter minting a fresh peer epoch so no old handle <em>resolves</em> rather than merely being absent from a map.</p>
+<p>You drew the barrier before the bump. I ended up with the bump first, and there is a measurement reason rather than a taste reason.</p>
+<pre><code>1. World.bump_generation!    the discontinuity, made durable
+2. Bridge.reset → Peer.reset the channel barrier
+3. stale prior consent       the explanation; the digest is the enforcement</code></pre>
+<p>Everything above runs inside one coordinator transaction, so for <em>safety</em> the two orders are equivalent: nothing else linearizes in between, and a command that resolves a still-live handle during step 2 cannot execute until after step 3, at which point the fence refuses it. What differs:</p>
+<ul><li><p><strong>Failure atomicity.</strong> <code>bump_generation!</code> raises on an unwritable or absent manifest.</p></li></ul>
+<p>Tearing down every channel and <em>then</em> failing is a denial of service in exchange for a discontinuity that did not happen. Bumping first means a failed advance changes nothing.</p>
+<ul><li><p>**It is the only ordering under which your bind-vs-submit falsifier is reachable</p></li></ul>
+<p>through the supported path.** §3.</p>
+<p>Which is a nicer result than it looked: <strong>the fence is what makes bump-first safe, and bump-first is what makes the fence testable.</strong> The interval between (1) and (2) is not a hole the fence tolerates — it is the interval the fence exists for, and it is now the place we can stand to observe it.</p>
+<p><code>Ampd.Bootstrap.reset_world!/0</code> keeps the opposite order and the asymmetry is deliberate: a factory reset <em>deletes</em> the manifest, so there is a real interval with no world at all (<code>stale_incarnation?(expected, nil)</code> is <code>true</code>, which is the correct answer), and the bridge can only detach each identity while the table that minted them is still live.</p>
+<p>The step you drew as &quot;stores restored&quot; has no implementation to sequence against. There is still no restore: <code>Ampd.Control</code> deliberately keeps <code>advance_lineage/2</code> off every channel until one exists, and <code>recovery_status</code> reports without recovering. That is unchanged and §6 says what it costs.</p>
+<h3 id="blk-113767">3 · Your test-claim objection was right, and here is the measurement</h3>
+<p>You said the <code>world_lineage =&gt; nil</code> probe proves the expectation must <em>exist</em>, not that it is sampled at bind time, because in a witness whose coordinator is suspended the queued restore has not run when the command is submitted, so both sample points read the same world.</p>
+<p>That is exactly what happens. I built the interposition you asked for and then ran the submission-time sabotage — <code>in_world(peer[&quot;world_lineage&quot;], …)</code> → <code>in_world(Ampd.World.lineage(), …)</code> — against each fence witness individually:</p>
+<table><thead><tr><th>witness</th><th>generation removed from fence</th><th>sampled at submission</th></tr></thead><tbody><tr><td><code>request_grant</code> queued behind a restore</td><td><strong>RED</strong></td><td>green</td></tr><tr><td><code>request_effect</code> queued behind a restore</td><td><strong>RED</strong></td><td>green</td></tr><tr><td>human <code>revoke_grant</code> queued behind a restore</td><td><strong>RED</strong></td><td>green</td></tr><tr><td>bridge-interposition witness</td><td><strong>RED</strong></td><td><strong>RED</strong></td></tr></tbody></table>
+<p>Three of the four would have certified a submission-time implementation. Your objection was not a technicality about wording; the probe genuinely could not see the property.</p>
+<p>The interposition suspends <strong>`Ampd.Bridge`</strong>, which stops the restore <em>inside</em> its transaction at exactly the state that distinguishes the two sample points:</p>
+<pre><code>manifest      generation 2      already written, durable
+channels      still bound to generation 1
+coordinator   blocked inside the advance</code></pre>
+<p>A command issued there resolves a generation-1 peer while <code>Ampd.World.lineage()</code> already answers generation 2. The test waits on the <strong>manifest file</strong> rather than on a sleep or on any process that might be blocked, so it is deterministic. <code>test/incarnation_test.exs:345</code>, and it is the fourth row above.</p>
+<p>This is the ordering payoff from §2: with the barrier before the bump, the manifest is still at generation 1 while the bridge is blocked, both samples agree again, and the falsifier evaporates.</p>
+<h3 id="blk-113791">4 · What widening the fence found — a dual-disclosure leak in F.8.2.4</h3>
+<p><code>request_effect</code> is the one command that does not pass through <code>Ampd.Control.settled/2</code>. It returns whatever <code>Ampd.Gateway.perform/5</code> gives it, and <code>perform</code> receives the coordinator's refusal through the same <code>{:refused, _}</code> tuple it uses for its own authorization verdicts:</p>
+<pre data-lang="elixir"><code><span class="t-kw">case</span> <span class="t-type">Ampd.Authority</span>.claim_and_consume(...) <span class="t-kw">do</span>
+  {<span class="t-atom">:refused</span>, auth} -&gt; auth        <span class="t-comment"># authorization@1 — a verdict, safe to hand to an agent</span>
+  ...                             <span class="t-comment"># refusal@1 also arrives here</span></code></pre>
+<p><code>Ampd.Refusal.project_result/2</code> only projects a map that carries a <code>&quot;refusal&quot;</code> key, so a bare <code>refusal@1</code> sails past the dual-disclosure boundary untouched. Measured, as the agent received it:</p>
+<pre><code>%{&quot;schema&quot; =&gt; &quot;refusal@1&quot;, &quot;code&quot; =&gt; &quot;world-incarnation-changed&quot;,
+  &quot;operator_detail&quot; =&gt; %{&quot;current_generation&quot; =&gt; 2, &quot;expected_generation&quot; =&gt; 1,
+                         &quot;discontinuity&quot; =&gt; &quot;generation&quot;, &quot;installation_changed&quot; =&gt; false,
+                         &quot;hint&quot; =&gt; &quot;…&quot;}}</code></pre>
+<p>No <code>allow</code> key at all, and the topology an agent is never supposed to learn. This shipped in <strong>F.8.2.4</strong> — the fence was already reachable from <code>request_effect</code> through a factory reset — and its battery could not have seen it, because the only fence witness it had used <code>request_grant</code>, which <code>settled/2</code> normalizes.</p>
+<p>Fixed at the collision, matching <code>settled/2</code> exactly, and falsified. Same round, one smaller sibling: <code>approve_effect</code> announced <code>surfaced_stale</code> whether or not the stale mark landed, so a refused mutation was reported to the person as an expired approval.</p>
+<h3 id="blk-113798">5 · The sabotage trap, proven rather than reasoned about</h3>
+<p>You were right that <code>trap restore_all EXIT INT TERM</code> does not terminate the script — the handler returns, and with no <code>set -e</code> execution continues with every <code>.orig</code> just restored out from under the running probe. Now:</p>
+<pre data-lang="bash"><code>trap restore_all EXIT
+trap <span class="t-string">'exit 130'</span> INT
+trap <span class="t-string">'exit 143'</span> TERM</code></pre>
+<p>Interrupted a live run to check rather than assert it: <strong>exit code 130, `restored lib/ampd/core.ex` printed, zero `.orig` files left, tree identical.</strong> Isolated worktree-per-sabotage is still the better answer and is still not this round's.</p>
+<h3 id="blk-113802">6 · Your battery, and the two rows I cannot close yet</h3>
+<table><thead><tr><th>Witness</th><th>Result</th></tr></thead><tbody><tr><td>gen-1 <code>request_grant</code> queued behind restore</td><td>✅ <code>world-incarnation-changed</code> · <code>requests() == []</code></td></tr><tr><td>gen-1 <code>request_effect</code> queued behind restore</td><td>✅ refused · no receipt, no approval opened</td></tr><tr><td>gen-1 human revoke queued behind restore</td><td>✅ refused · the grant is still active</td></tr><tr><td>normal command, same generation</td><td>✅ served — the control case, and it is not decoration</td></tr><tr><td>remove the generation comparison</td><td>✅ <strong>RED</strong> on all three queued witnesses</td></tr><tr><td>restore closes the old human channel</td><td>✅ socket, process and claim all gone</td></tr><tr><td>restore closes the old agent channels</td><td>✅ same, for every bound engine</td></tr><tr><td>old peer handles unresolved after restore</td><td>✅ and by a <strong>new epoch</strong>, not an emptied map</td></tr><tr><td>fresh human-control channel after restore</td><td>✅ — the F.8.2.3 failure one level up</td></tr><tr><td>engine must reacquire its binding</td><td>✅ old handle <code>unknown-peer</code>; reattached handle served</td></tr><tr><td>new <code>world_incarnation</code>, same installation</td><td>✅ <code>continuity/0</code>, installation unchanged</td></tr><tr><td>coordinator restart only</td><td>✅ incarnation unchanged, <code>projection_epoch</code> moves</td></tr><tr><td>bind-time vs submission-time</td><td>✅ §3 — a real falsifier now, not a claim</td></tr><tr><td><strong>restore, from the host</strong></td><td>❌ <strong>not constructible</strong> — below</td></tr><tr><td><strong>the host reacquires control</strong></td><td>❌ <strong>not implemented</strong> — below</td></tr></tbody></table>
+<p>The last two, plainly. <code>advance_lineage/2</code> is not on any channel, so <code>super-host verify</code> has no way to trigger a restore against a live runtime — a host-side witness needs the restore <em>command</em> first, which needs the restore. And the host's <code>call</code> returns <code>UnexpectedEof</code> when its channel closes; there is no reconnect, because there is no event loop until the WebView. So the barrier's host-visible effect today is &quot;the socket closes and the next call errors&quot;, and <em>&quot;host reacquires human control&quot;</em> is a WebView-round obligation, not something F.8.2.5 delivered. I would rather hand you that than let the green table imply otherwise — a measurement boundary that stops at the language boundary is how F.8.1 certified a leak for a whole revision.</p>
+<h3 id="blk-113837">7 · One primitive, and now it is true</h3>
+<p>F.8.2.4 claimed <code>world_incarnation</code> binds channels, fences authority and identifies continuity. You correctly said the shipped code did not do that. It does now:</p>
+<pre><code>WORLD INCARNATION = installation_id + generation
+        │
+        ├── channel binding      Ampd.Peer records it at attach
+        ├── authority fence      compared at the linearization point
+        └── projection continuity H(installation ‖ generation), leads the cursor</code></pre>
+<p>and the hierarchy underneath it:</p>
+<pre><code>installation_id changes   → a different world installation
+generation changes        → a discontinuous incarnation · old channels invalid
+projection_epoch changes  → same incarnation, new runtime · resnapshot
+revision changes          → ordinary mutation</code></pre>
+<p>The refusal now carries <code>&quot;discontinuity&quot; =&gt; &quot;installation&quot; | &quot;generation&quot;</code> in <code>operator_detail</code>, because the remediations differ: a generation advance is this world's next incarnation and the host reattaches to it; a different installation has nothing to reattach to.</p>
+<h3 id="blk-113843">8 · Ladder</h3>
+<p>C1.1     Tauri Rust host + private transport ├─ F.6      CommandSpec · exact-set linearized · limits · pack digest ├─ F.7      inherited descriptors · identity lifetime · epoch · │           demultiplexer · bounded projection ├─ F.8      CLOEXEC confinement · serialized writer · │           continuity cursor · lossless paging ├─ F.8.1    durable host world · one owner per world              ✓ ├─ F.8.2    the receiver owns what it receives · zero residue     ✓ ├─ F.8.2.1  adopt_channel consumes its argument exactly once      ✓ ├─ F.8.2.2  a channel handoff is a transaction                    ✓ ├─ F.8.2.3  refusal is terminal · no channel outlives its world   ✓ ├─ F.8.2.4  world incarnation · authority fenced at the │           linearization point · continuity that is an identity  ✓ └─ F.8.2.5  generation is a fence · authority reacquired after a discontinuity · bind-time sampling falsified        ✓ ── remaining: the WebView C1.1b    SQLite transactional persistence · durable revision C1.2     FabricProvider.Tailscale</p>
+<p>Carried and unchanged: <code>app-prototype.html</code>'s remote fonts, engine confinement, and the Rust child-process falsifier for <code>ensure_std_fds</code>.</p>
+<p>I agree this is the last transport-adjacent round, and I agree the restore ladder is the right truth model for the WebView to render. Starting it.</p>
+<h3 id="blk-113847">Verify</h3>
+<pre><code>cd ampd &amp;&amp; mix test --seed 0          # 194 tests
+bash tools/sabotage.sh                # 56 falsified · 0 not   (~5m)
+cd .. &amp;&amp; bash tools/release.sh        # required gates, including both host gates
+./host/target/release/super-host verify        # 48 held · 0 failed
+bash tools/sabotage-host.sh                    # 6 falsified · 0 not</code></pre>
+<p>New this round: <code>ampd/test/incarnation_test.exs</code> (10 witnesses).</p></div>
+<p class="src"><a href="/#/super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-113707" class="lvl2">0 · Measured</a><a href="#blk-113730" class="lvl2">1 · The narrowing was six lines of test, not a product decision</a><a href="#blk-113751" class="lvl2">2 · Both halves, and why the order is the one you drew inverted</a><a href="#blk-113767" class="lvl2">3 · Your test-claim objection was right, and here is the measurement</a><a href="#blk-113791" class="lvl2">4 · What widening the fence found — a dual-disclosure leak in F.8.2.4</a><a href="#blk-113798" class="lvl2">5 · The sabotage trap, proven rather than reasoned about</a><a href="#blk-113802" class="lvl2">6 · Your battery, and the two rows I cannot close yet</a><a href="#blk-113837" class="lvl2">7 · One primitive, and now it is true</a><a href="#blk-113843" class="lvl2">8 · Ladder</a><a href="#blk-113847" class="lvl2">Verify</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierakkmzhecyvj5nnbdhcbpeha4q4hmhao4n2ak4zbksythfjms4ayxa</div></div></div>
+</div></div>
+</body></html>

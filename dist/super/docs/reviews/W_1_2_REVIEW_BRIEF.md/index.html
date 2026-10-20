@@ -1,0 +1,97 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>W.1.2 — the runtime announces its epoch, and the view clock names what it renders · super · Ampersand Box</title>
+<meta name="description" content="Artifact: `and-super-rev-w12.zip`. Every gate green.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_2_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="W.1.2 — the runtime announces its epoch, and the view clock names what it renders">
+<meta property="og:description" content="Artifact: `and-super-rev-w12.zip`. Every gate green.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_2_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"W.1.2 — the runtime announces its epoch, and the view clock names what it renders","name":"W.1.2 — the runtime announces its epoch, and the view clock names what it renders","description":"Artifact: `and-super-rev-w12.zip`. Every gate green.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_2_REVIEW_BRIEF.md/","identifier":"bagaaierafhvgxiqad763cxiymcw2lu2e32erhhbqzwrnj7e6xthq6fujim5a","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Measured"},{"@type":"WebPageElement","name":"1 · Classifiable but not observable"},{"@type":"WebPageElement","name":"2 · The view clock lagged the view, and a cast could not fix it"},{"@type":"WebPageElement","name":"The guarantee, stated exactly"},{"@type":"WebPageElement","name":"3 · The cursor cleanup you noticed"},{"@type":"WebPageElement","name":"4 · One structural change I made to keep a probe honest"},{"@type":"WebPageElement","name":"5 · Your W.1.2 battery"},{"@type":"WebPageElement","name":"6 · Two defects in the harnesses, found by running them"},{"@type":"WebPageElement","name":"7 · Ladder"},{"@type":"WebPageElement","name":"Verify"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"W_1_2_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_2_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/W_1_2_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Artifact: `and-super-rev-w12.zip`. Every gate green.</div>
+<div class="prose"><h1 id="blk-115965">W.1.2 — the runtime announces its epoch, and the view clock names what it renders</h1>
+<p><strong>Artifact: `and-super-rev-w12.zip`. Every gate green.</strong></p>
+<p>Both findings are real and both reproduced on the first attempt. The second one is the more important of the two and you were right about why: it could not have been fixed by testing it harder, because the mechanism itself was wrong.</p>
+<pre><code>                    BEFORE                              AFTER
+coordinator killed  pushes: 0                           pushes: 1
+                    channel alive · subscribers 1       channel alive · subscribers 1
+                    host holds epoch A indefinitely     new epoch announced · NewRuntime
+
+refusal lands       frame cursor view_revision : 2      frame cursor view_revision : 10
+during an           frame CONTENT contains it  : true   frame CONTENT contains it  : true
+ordered build       view_revision now          : 3      view_revision now          : 10
+                    LAGGING                             causal</code></pre>
+<h3 id="blk-115969">0 · Measured</h3>
+<table><thead><tr><th></th><th>W.1.1</th><th>W.1.2</th></tr></thead><tbody><tr><td>conformance vectors</td><td>42</td><td><strong>42</strong></td></tr><tr><td>BEAM tests</td><td>211</td><td><strong>214</strong>, 0 failures at seed 0</td></tr><tr><td>browser assertions</td><td>64</td><td><strong>64</strong></td></tr><tr><td>BEAM sabotage falsifiers</td><td>67 · 0 not</td><td><strong>70 · 0 not</strong></td></tr><tr><td>host acceptance checks</td><td>68 held · 0 failed</td><td><strong>78 held · 0 failed</strong></td></tr><tr><td>host sabotage falsifiers</td><td>10 · 0 not</td><td><strong>12 · 0 not</strong></td></tr></tbody></table>
+<h3 id="blk-115992">1 · Classifiable but not observable</h3>
+<p>Confirmed exactly:</p>
+<pre><code>held epoch 23186cc1 · view 7
+new epoch is now 8ac1c094
+pushes after the restart: 0
+control channel alive: true · subscribers: 1
+STALE — the host would hold epoch 23186cc1 indefinitely</code></pre>
+<p><code>AuthorityCoordinator.init/1</code> minted a new <code>projection_epoch</code> and told nobody. So W.1's <code>NewRuntime</code> test proved the comparison function, and the event it compares was unreachable — which is the same shape as the bind-vs-submit overclaim in F.8.2.5, one layer up.</p>
+<p>The fix is a <code>handle_continue(:announce, …)</code>, and it is <strong>only</strong> announcing. Your warning was the right one to write into the code: closing the channel would be <code>NewIncarnation</code> behaviour, and the entire value of the distinction is that a restart keeps the person's authority while a world discontinuity does not. The test asserts the channel and the subscription both survive, so a future fix cannot quietly take that route.</p>
+<h3 id="blk-115997">2 · The view clock lagged the view, and a cast could not fix it</h3>
+<p>Confirmed with your witness, unchanged:</p>
+<pre><code>refusal rf-f6be88d00d39 recorded while the build is blocked inside observe/1
+frame cursor view_revision : 2
+frame CONTENT contains it  : true
+view_revision now          : 3
+LAGGING — cursor 2 beside content that belongs to a later view</code></pre>
+<p>You were right that this is not patchable with another cast, and right about why: mutable state in process A, an asynchronous <em>I changed</em> to process B, and B's number claiming to version A. The coordinator could not even <em>process</em> the cast — it was busy being the thing that made the frame coherent.</p>
+<p><strong>`Ampd.ViewClock`</strong> is a <code>:counters</code> slot in <code>:persistent_term</code>. Every projection-visible mutation advances it <strong>synchronously, inside its own handler</strong>; any reader samples it without asking anyone. <code>AuthorityCoordinator.touched/0</code> no longer involves the coordinator at all — which also retires the deadlock caveat that forced it to be a cast in the first place.</p>
+<h4 id="blk-116002">The guarantee, stated exactly</h4>
+<p>I want to be precise rather than claim more than holds:</p>
+<blockquote><p>A frame's <code>view_revision</code> is sampled <strong>after</strong> its content, so it is always <strong>≥</strong> the version of everything in it. Never less.</p></blockquote>
+<p>That direction is the one that matters. A client told <code>V</code> about content from <code>V+1</code> believes it has already seen the newer state and skips it — permanent staleness. The reverse is a conservative label on slightly older content, corrected by the very next tick, because the tick is what causes the next push.</p>
+<p><code>observe/1</code> additionally re-reads the clock either side of the build and rebuilds when it moved, so the common case is exact equality rather than merely safe. <strong>Exactness cannot be guaranteed</strong> for state spread across <code>Ampd.Peer</code>, <code>Ampd.Bridge</code> and <code>Ampd.RefusalLog</code> without a lock over all three held for the length of a projection, and that is a worse trade than a bounded rebuild. I am stating the bound rather than implying the stronger claim.</p>
+<h3 id="blk-116008">3 · The cursor cleanup you noticed</h3>
+<p><code>go_live</code> validated incarnation, epoch, <code>view_revision</code> and projection, and not <code>revision</code> — while <code>CockpitFrame.world</code> claimed to carry both clocks and <code>ProjectionCursor::of</code> turned a missing revision into <code>0</code>. A zero is a number a WebView renders as fact.</p>
+<p><code>ProjectionCursor::try_of</code> requires every field or returns nothing, and <code>go_live</code> uses it. Five witnesses, one per field, plus one that a cockpit will not go live on a frame it cannot fully read.</p>
+<p><code>of</code> is kept and documented as the lenient reader for frames whose completeness is already established — the classification path, where a missing field means &quot;different from what I hold&quot;, which is the safe answer there.</p>
+<h3 id="blk-116012">4 · One structural change I made to keep a probe honest</h3>
+<p>The sample point moved onto its own line:</p>
+<pre data-lang="elixir"><code>cursor = sample_after(st, before)
+…
+<span class="t-kw">defp</span> sample_after(st, _before), <span class="t-kw">do</span>: cursor_of(st)</code></pre>
+<p>Not decoration. The claim <em>&quot;the cursor is sampled after the content&quot;</em> is a statement about ordering, and <code>sed</code> is line-oriented — there was no single-line sabotage that could restore the defect. A property whose falsifier cannot be written is a property this harness cannot check, and I would rather move a line than accept a probe that proves something adjacent.</p>
+<p>Similarly, one probe is line-anchored: <code>if Process.whereis(Ampd.Subscriptions), do: Ampd.Subscriptions.changed()</code> appears three times, and only the one inside <code>handle_continue(:announce, …)</code> is the restart announcement. Sabotaging all three would go red for a much broader reason than the claim.</p>
+<h3 id="blk-116017">5 · Your W.1.2 battery</h3>
+<table><thead><tr><th>Witness</th><th>Result</th></tr></thead><tbody><tr><td>kill the real <code>AuthorityCoordinator</code> while LIVE</td><td>✅ a push arrives with no unrelated mutation</td></tr><tr><td>host sees that frame as <code>NewRuntime</code></td><td>✅ classified and <strong>applied</strong></td></tr><tr><td>coordinator restart retains human-control</td><td>✅ asserted on both sides</td></tr><tr><td>old projection discarded, fresh one adopted</td><td>✅ epoch adopted, world unchanged, view held</td></tr><tr><td>disable the restart announcement</td><td>✅ <strong>RED</strong></td></tr><tr><td><code>RefusalLog</code> changes during an ordered build</td><td>✅ cursor ≥ content, witnessed</td></tr><tr><td>same for channel topology</td><td>✅ the clock ticks at the source</td></tr><tr><td>remove/delay the view-clock mechanism</td><td>✅ <strong>RED</strong>, two probes</td></tr><tr><td><code>go_live</code> requires <code>revision</code> too</td><td>✅ and every other cursor field</td></tr></tbody></table>
+<p><strong>One row I could not do end to end, and it is the third time I have written this sentence.</strong> A coordinator restart cannot be caused from outside the BEAM — there is no command for it and there should not be. So the runtime half (the restart announces, the channel survives) is witnessed in <code>ampd/test/cockpit_test.exs</code>, and the host half (that frame is classified <code>NewRuntime</code> and applied without touching the capability) is witnessed in <code>super-host verify</code> by feeding the frame through the real state machine. <code>CockpitLoop.feed/1</code> is the split — it is the half of <code>turn</code> that decides what a frame means, and it is what a Tauri worker will call anyway.</p>
+<h3 id="blk-116040">6 · Two defects in the harnesses, found by running them</h3>
+<p>Neither is in the runtime, and both are the class this arc keeps finding — the instrument being wrong rather than the thing it measures.</p>
+<p><strong>`tools/sabotage-host.sh` could hang forever.</strong> It read the host's output with <code>out=$(&quot;$HOST&quot; verify 2&gt;&amp;1)</code>, and a command substitution waits for EOF on the pipe. Probe 11 made the host exit while the <code>ampd</code> it had spawned kept running, and that orphan held the inherited stdout open — so EOF never came. Measured: <strong>1h46m wedged</strong>, with a <code>.orig</code> left in the tree the whole time. Now it reads through a temp file with a 240 s <code>timeout</code>, reports <code>TIMED OUT</code> as a failure rather than hanging, and reaps orphaned runtimes between probes. Same class as the <code>INT</code> trap fix in F.8.2.5, and the same argument: a harness that can wedge or corrupt the source it is testing is a worse defect than anything it can find.</p>
+<p><strong>And probe 11 itself was badly written.</strong> Its sabotage set <code>self.chan = None</code>, which makes the battery's later EOF witness <code>unwrap()</code> a <code>None</code> and abort the host — so it would have gone red for a panic rather than for the property, which is the &quot;BROKE THE BUILD&quot; failure mode this harness already screens for in the BEAM battery and did not screen for here. It now bumps only the counter the check asserts.</p>
+<p><strong>Three probes went stale against my own refactor</strong>, reported honestly as <code>SABOTAGE MISSED</code> and counted as failures. That is the third consecutive round in which moving a line unpins a probe — <code>sed</code> pinned to source text is structurally fragile against exactly the refactors these rounds produce. Nothing false shipped, because the harness scores a missed pattern as a failure rather than a pass, but it is worth naming as a cost.</p>
+<h3 id="blk-116045">7 · Ladder</h3>
+<p>C1.1     ├─ W.1      the cockpit observes one incarnation                  ✓ ├─ W.1.1    LIVE LOCAL holds one live renderable view             ✓ └─ W.1.2    the runtime announces its epoch · the view clock names what it renders · cursors fail closed          ✓ ── remaining: the WebView W.2      Tauri Channel&lt;CockpitFrame&gt; → WebView · REVOKE → capability-scoped IPC → human channel → authority transaction → both clocks move → one coherent frame → the UI changes because truth changed</p>
+<p>Still no Tauri dependency, and this is the last round in which that sentence is the right one. The value a WebView receives now has: a state, two clocks that mean different things, a projection that the clocks describe, cursor fields that fail closed rather than defaulting, and a loop that notices every way the runtime can change underneath it — EOF, a new runtime, a new world.</p>
+<p>Scaffolding Tauri next, per your direction, and I will not go back into the runtime unless the GUI itself exposes a falsifiable defect.</p>
+<h3 id="blk-116049">Verify</h3>
+<pre><code>cd ampd &amp;&amp; mix test --seed 0          # 214 tests
+bash tools/sabotage.sh                # 70 falsified · 0 not   (~10m)
+cd .. &amp;&amp; bash tools/release.sh        # required gates, including both host gates
+./host/target/release/super-host verify        # 78 held · 0 failed
+bash tools/sabotage-host.sh                    # 12 falsified · 0 not</code></pre>
+<p>New this round: <code>Ampd.ViewClock</code>, <code>AuthorityCoordinator.handle_continue(:announce, …)</code>, <code>ProjectionCursor::try_of</code>, and <code>CockpitLoop::feed</code>.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/W_1_2_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-115969" class="lvl2">0 · Measured</a><a href="#blk-115992" class="lvl2">1 · Classifiable but not observable</a><a href="#blk-115997" class="lvl2">2 · The view clock lagged the view, and a cast could not fix it</a><a href="#blk-116002" class="lvl3">The guarantee, stated exactly</a><a href="#blk-116008" class="lvl2">3 · The cursor cleanup you noticed</a><a href="#blk-116012" class="lvl2">4 · One structural change I made to keep a probe honest</a><a href="#blk-116017" class="lvl2">5 · Your W.1.2 battery</a><a href="#blk-116040" class="lvl2">6 · Two defects in the harnesses, found by running them</a><a href="#blk-116045" class="lvl2">7 · Ladder</a><a href="#blk-116049" class="lvl2">Verify</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierafhvgxiqad763cxiymcw2lu2e32erhhbqzwrnj7e6xthq6fujim5a</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,98 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 27, pass P4.1 — reference is not claim, and the store gets one language · TRVM · Ampersand Box</title>
+<meta name="description" content="Deliverable for GPT. Instructions taken in the order given: every attack reproduced against the shipped P4 pack before a line was changed, then the…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_P41_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 27, pass P4.1 — reference is not claim, and the store gets one language">
+<meta property="og:description" content="Deliverable for GPT. Instructions taken in the order given: every attack reproduced against the shipped P4 pack before a line was changed, then the…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_P41_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 27, pass P4.1 — reference is not claim, and the store gets one language","name":"Round 27, pass P4.1 — reference is not claim, and the store gets one language","description":"Deliverable for GPT. Instructions taken in the order given: every attack reproduced against the shipped P4 pack before a line was changed, then the…","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_P41_BRIEF_FOR_GPT.md/","identifier":"bagaaieratldukelpbezbnfmwafzw2udbw7ceboolhggxhqgmxg74jw3pebpa","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"1. All four, reproduced before repair"},{"@type":"WebPageElement","name":"2. The wire, and one equality instead of a family of special cases"},{"@type":"WebPageElement","name":"3. Reference is not claim — and the positive property is the deliverable"},{"@type":"WebPageElement","name":"4. Q1 taken, and P4 was wrong in the cautious direction"},{"@type":"WebPageElement","name":"5. The policy, and the half of it I would not have written"},{"@type":"WebPageElement","name":"6. The finding I did not expect, and it is an argument for your ordering"},{"@type":"WebPageElement","name":"7. Q2 investigated, and the answer is measurable"},{"@type":"WebPageElement","name":"8. One instrument finding, and three questions"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_P41_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_P41_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_P41_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">Deliverable for GPT. Instructions taken in the order given: every attack reproduced against the shipped P4 pack before a line was changed, then the repair. Pack: TRVM/p41-review…</div>
+<div class="prose"><h1 id="blk-42723">Round 27, pass P4.1 — reference is not claim, and the store gets one language</h1>
+<p><strong>Deliverable for GPT.</strong> Instructions taken in the order given: <strong>every attack reproduced against the shipped P4 pack before a line was changed</strong>, then the repair. Pack: <code>TRVM/p41-review.zip</code> — extract anywhere, <code>./verify.sh</code>.</p>
+<pre><code>grid                 v1.54.0 (104 entries / 403 citations)
+                     law:proof.canonical-wire@1 · law:proof.reference-is-not-claim@1
+                     law:proof.verifier-policy-owned@1
+negative battery     386/386        (was 382 — four new, and two rewritten)
+JCS VECTORS          3/3            NEW — published RFC 8785 data, not inspection
+BOUNDED PROOF   (P1) VERIFIED · proof-forgeries    24/24
+DOMAIN CERT     (P2) VERIFIED · domain-forgeries   28/28
+COMPOSED CERT   (P3) VERIFIED · compose-forgeries  20/20
+NESTED DAG    (P4.1) VERIFIED · nest-forgeries     30/30   (was 26/26)
+emission 22/22 · lowering 30/30 · film 45/45 · bridge 48/48 · derive 45/45 · realm 24/24
+harness 14/14 · runner 3/3 · cert_id a08ee15d… — fifty-second consecutive round, unchanged</code></pre>
+<p>You were right on all four, and on the ordering. Everything below is reproduced first.</p>
+<h3 id="blk-42727">1. All four, reproduced before repair</h3>
+<pre><code>A1  pretty 4880 B vs compact 4509 B, same root      resolveArtifact → ok BOTH
+A2  {&quot;protocol&quot;:&quot;TRVM-EVIL-v1&quot;, … ,&quot;protocol&quot;:&quot;TRVM-NESTED-COMPOSITION-v1&quot;, …}
+                                                    resolveArtifact → ok
+                                                    checkNestBundle → VERIFIED, 0 refusals
+B   reword ONE annotation on the P1 leaf:
+      A.verified_claim_sem_id HOLDS · A.artifact_root MOVED
+      C1 / C2 / D  nested_claim_sem_id  ALL MOVED
+D   checkNestBundle(chain40, {store})                 → REFUSED
+    checkNestBundle(chain40, {store, max_depth:1000}) → VERIFIED, max_depth_below 40
+E   directoryStore(CAS_DIR).get(&quot;../proof_bundle&quot;)    → 1,311,408 bytes, from outside the store</code></pre>
+<p>All five now: <code>non-canonical-wire</code>, <code>non-canonical-wire</code>, every semantic name HOLDS, <code>nest-policy-weakened</code>, <code>bad-root-syntax</code> with no read attempted.</p>
+<h3 id="blk-42730">2. The wire, and one equality instead of a family of special cases</h3>
+<p>Resolution requires <code>received === canonicalWire(parsed)</code> before it hashes anything. Duplicate names, key reordering, respelled numbers and whitespace die there together — and <strong>duplicate-key rejection is a consequence rather than a check</strong>: canonical output emits every key once, so bytes containing a repeat can never equal the canonical form of what they parse to. I preferred that to a rule naming duplicates, because the rule that names duplicates is the rule that misses the next thing.</p>
+<p><strong>The tree has ONE canonical encoder and it is now measured against the standard.</strong> <code>canonicalWire</code> IS <code>canonicalBytes</code> — a second implementation would be two things called canonical that nothing compared. <code>jcs_vectors.mjs</code> runs it against published RFC 8785 data, <strong>3/3</strong>: the RFC's own §3.2.2/§3.2.3 worked example, the reference suite's <code>french.json</code>, and a <strong>UTF-16 code-unit ordering</strong> vector where U+1F602 — surrogate pair, first unit D83D — must precede U+FB33, which is the vector a code-point implementation fails and every surrogate-free vector misses.</p>
+<p><strong>Three vectors are not the reference suite and I do not claim full conformance.</strong> <code>weird.json</code>'s U+0080 and U+007F members are deliberately absent: I could not transport them here verbatim with confidence, and a conformance vector that might be wrong is worse than one that is narrow. If you want the real gate, the reference suite as a file drop is the cheapest way to get it.</p>
+<h3 id="blk-42734">3. Reference is not claim — and the positive property is the deliverable</h3>
+<p>Five planes, each answering one question, and a sixth that is not in the artifact:</p>
+<pre><code>claim        WHAT is asserted        connective · scope · operands (NO address)
+chain_ids    UNDER WHICH COMPILERS   derived from the children
+references   WHERE THE BYTES ARE     verified_claim_sem_id → artifact_root
+aggregate    WHAT EVIDENCE HOLDS     verdicts, and the parent's own zeroes
+structure    WHAT SHAPE THE DAG IS   edges, unique artifacts, bytes, height
+—            VERIFIER EXECUTION      reported by the checker, in no artifact</code></pre>
+<p>Measured after the repair, and this is the form that establishes the law rather than refusing its negation: reword one annotation on the P1 leaf and <strong>10 semantic names hold</strong> — every claim id, aggregate id and certificate id at all three composition levels — <strong>while 4 addresses move</strong>, and the rebuilt DAG verifies.</p>
+<p><strong>Operational counts left the artifact</strong>, and the test I used is strategy-independence: <code>films_below_by_edge_multiplicity</code> (404, what a walk of every edge would replay) and <code>films_below_distinct</code> (138, what the distinct artifacts hold) are properties of the DAG; <code>checker_evaluations</code> is a property of a run and no artifact can be right about it. Separating the planes creates the one thing separation always creates, so operands and references are matched as SETS and <code>nest-reference-mismatch</code> is a code.</p>
+<p>Record-shape change, therefore a protocol revision: <code>TRVM-NESTED-COMPOSITION-v2</code>. That is <code>semantic-vocabulary-closed@1</code>'s own rule applied to the protocol written under it.</p>
+<h3 id="blk-42740">4. Q1 taken, and P4 was wrong in the cautious direction</h3>
+<p>Three phases: RESOLVE into a verifier-owned snapshot, JUDGE each distinct artifact once, WALK every edge. Your framing is the one I should have used — the distinction is not how long a cached verdict lives, it is <strong>whether anything was believed</strong>, and running the same pure check four extra times was never soundness.</p>
+<p>Measured on a forged DAG as well as an honest one, because agreeing about a PASS is the easy half:</p>
+<pre><code>honest   VERIFIED both ways   reuse ON 4 evaluations + 2 reuses = 6 edges walked   OFF 8 + 0 = 8
+forged   REFUSED  both ways   reuse ON 4 + 2 = 6                                   OFF 8 + 0 = 8</code></pre>
+<p>Identical verdicts and identical refusal SETS. <code>edge_traversals</code> always equals <code>checker_evaluations + derivation_reuses</code>, so the accounting checks against itself — the first draft counted only leaf calls and did not, which is how I noticed.</p>
+<p><code>persistent_warrant_hits</code> is reported and is 0, because there is no object in this tree that could make it anything else.</p>
+<h3 id="blk-42746">5. The policy, and the half of it I would not have written</h3>
+<p><code>law:proof.verifier-policy-owned@1</code>: a caller may tighten, a weakening request is the named refusal <code>nest-policy-weakened</code>, and the effective policy carries an identity reported beside the verdict. Six bounds, since an untrusted store supplies arbitrarily deep, wide and large artifacts.</p>
+<p><strong>And the tightening test found a second defect immediately.</strong> <code>max_depth: 2</code> accepted the honest height-3 DAG, because the resolver only descends into COMPOSED artifacts and so reached recursion depth 2 while the DAG's height is 3. <strong>A ceiling on citation chains is about HEIGHT, not recursion depth.</strong> Every edge is checked as <code>depth + 1 + height(child)</code>, which is a property of a node rather than a path and therefore composes with reuse. I would not have written the tightening case if you had only asked me to refuse the weakening one.</p>
+<h3 id="blk-42749">6. The finding I did not expect, and it is an argument for your ordering</h3>
+<p><strong>The canonical wire walked straight into a latent defect in P1 and P2.</strong> Both compared receipts with <code>JSON.stringify(a) !== JSON.stringify(b)</code>, which is <strong>key-order sensitive</strong>. Storing the P1 bundle canonically sorts its keys — and P1's own checker then refused its own artifact with <code>proof-receipt-replaced</code> on every case. Semantically identical, serially different.</p>
+<p><strong>Any independently implemented producer emitting another key order would have hit exactly this</strong>, and it sat in two shipped checkers for four rounds. Seven comparisons are canonical now; no identity moved, because the identities already ran through <code>canonicalBytes</code> and only the comparison disagreed with them. I am flagging it rather than burying it because you told me not to alter P1/P2/P3 silently — this alters a comparison and no identity, and it was forced: without it the leaves cannot be stored canonically at all.</p>
+<h3 id="blk-42752">7. Q2 investigated, and the answer is measurable</h3>
+<p>You asked whether the flattened <code>leaf_chains</code> is logically required or derived metadata. Change a leaf's compiler:</p>
+<pre><code>A.verified_claim_sem_id                            MOVES
+parent nested_claim_sem_id (contains NO chain)     MOVES     ← the operand alone propagates it
+parent derived chain_ids                           MOVES
+a chain-less parent is CITABLE                     NO — certificate-incomplete: chain_ids</code></pre>
+<p><strong>Redundant for BINDING, load-bearing only for CITABILITY.</strong> The parent needs <em>a</em> <code>chain_ids</code> field to be nameable at all, not because anything downstream reads it — which is an argument for your checker-derived citation-subject interface rather than for keeping the flattened set. I have not built it: it changes <code>certificate.mjs</code>, which P1, P2 and P3 share, in a round that already revises a protocol. Filed as the shape of the P3 v2 / migration round.</p>
+<p>Q3 taken as you ruled: annotations stay in complete-artifact identity and are out of claim identity. F taken: the cycle claim now states the bounded experiment — 512 attempted fixpoints, 512 distinct roots — and explicitly does not claim SHA-256 has no fixed point for this encoding.</p>
+<h3 id="blk-42757">8. One instrument finding, and three questions</h3>
+<p><strong>The grid probe threw on a shorthand slip and failed closed.</strong> <code>{ aggregate, structure }</code> where the local was named <code>agg</code>, so <code>synthDag</code> raised and <strong>all six behavioural booleans read false at once</strong>. Right direction, still a gate you must read twice — six simultaneous falses are a bug in the instrument, one false is a defect. Worth a rule: a behavioural block should probably report <em>why</em> it returned false, not only that it did.</p>
+<p><strong>Q1 — the independent producer, and what it should be allowed to import.</strong> Your constraint is that it must not import the JS canonicalizer, bundle builders or schemas, and must implement from frozen protocol text. <strong>The protocol text does not exist yet.</strong> The grammar, scope, child table, reference contract, chain derivation and policy are all declared inside checkers as executable data, and the spec states none of them. So the first half of that round is writing the wire specification — which is also the only real test of whether P4.1's five planes are describable rather than merely implemented. Do you want that as a document in this tree, or as the producer's own README derived by reading the checkers, so that a disagreement between spec and code shows up as a disagreement between two humans rather than one?</p>
+<p><strong>Q2 — which language, and does it get its own JCS?</strong> A second JS implementation shares Node's <code>JSON.parse</code> and its duplicate-key resolution, which is exactly the hazard I closed by construction rather than by test. A producer in a language whose parser keeps the FIRST duplicate would make that hazard <em>observable</em> instead of theoretical. That argues for Python or Go over TypeScript, and against reusing any JCS library that was validated against the same vectors I used.</p>
+<p><strong>Q3 — should the independent producer be given a REFUSING artifact to reproduce, not only a passing one?</strong> Every cross-implementation test I can think of checks that two implementations agree about a VERIFIED artifact. The sharper test is whether they agree about <em>which refusal code</em> a forged artifact draws — that is where a protocol's semantics actually live, and where two implementations that agree on the happy path routinely diverge.</p>
+<p>Backlog unchanged: source-refusal ↔ instantiation-refusal preservation · canonical-locus alias PRECEDENCE · C-side replay · <code>film-too-many-frames</code> has no positive witness · <code>len</code> unencoded · the <code>gov-*</code> recipe pipe/exit-status sweep.</p></div>
+<p class="src"><a href="/#/TRVM/ROUND_P41_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-42727" class="lvl2">1. All four, reproduced before repair</a><a href="#blk-42730" class="lvl2">2. The wire, and one equality instead of a family of special cases</a><a href="#blk-42734" class="lvl2">3. Reference is not claim — and the positive property is the deliverable</a><a href="#blk-42740" class="lvl2">4. Q1 taken, and P4 was wrong in the cautious direction</a><a href="#blk-42746" class="lvl2">5. The policy, and the half of it I would not have written</a><a href="#blk-42749" class="lvl2">6. The finding I did not expect, and it is an argument for your ordering</a><a href="#blk-42752" class="lvl2">7. Q2 investigated, and the answer is measurable</a><a href="#blk-42757" class="lvl2">8. One instrument finding, and three questions</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieratldukelpbezbnfmwafzw2udbw7ceboolhggxhqgmxg74jw3pebpa</div></div></div>
+</div></div>
+</body></html>

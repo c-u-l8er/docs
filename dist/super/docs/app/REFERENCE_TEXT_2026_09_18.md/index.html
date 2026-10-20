@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Every record id on screen is a reference · super · Ampersand Box</title>
+<meta name="description" content="September 18, 2026. Travis, that evening: &quot;there are many areas of plain text where the id of a record is being displayed without the hyperlink or tooltip…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/app/REFERENCE_TEXT_2026_09_18.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Every record id on screen is a reference">
+<meta property="og:description" content="September 18, 2026. Travis, that evening: &quot;there are many areas of plain text where the id of a record is being displayed without the hyperlink or tooltip…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/app/REFERENCE_TEXT_2026_09_18.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Every record id on screen is a reference","name":"Every record id on screen is a reference","description":"September 18, 2026. Travis, that evening: \"there are many areas of plain text where the id of a record is being displayed without the hyperlink or tooltip…","url":"https://docs.ampersandboxdesign.com/super/docs/app/REFERENCE_TEXT_2026_09_18.md/","identifier":"bagaaiera7qsjlyuhphqmpxberfvdub73smwc5uwgd63banwkj7bqlvmtnf6q","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"What was wrong, measured at 2190d36"},{"@type":"WebPageElement","name":"The rule"},{"@type":"WebPageElement","name":"What holds it"},{"@type":"WebPageElement","name":"Not seen on a screen"},{"@type":"WebPageElement","name":"Done outside Super, and why"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"app","item":"https://docs.ampersandboxdesign.com/super/docs/app/"},{"@type":"ListItem","position":5,"name":"REFERENCE_TEXT_2026_09_18.md","item":"https://docs.ampersandboxdesign.com/super/docs/app/REFERENCE_TEXT_2026_09_18.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/app/REFERENCE_TEXT_2026_09_18.md</span>
+
+</div></div>
+<div class="lead">September 18, 2026. Travis, that evening: &quot;there are many areas of plain text where the id of a record is being displayed without the hyperlink or tooltip thing we built earlier…</div>
+<div class="prose"><h1 id="blk-111012">Every record id on screen is a reference</h1>
+<p>September 18, 2026. Travis, that evening: <em>&quot;there are many areas of plain text where the id of a record is being displayed without the hyperlink or tooltip thing we built earlier … if this could somehow be standardized so this bug doesn't happen again during dev that would be good … thorough checks to make sure this is working in every place text is displayed.&quot;</em></p>
+<h3 id="blk-111014">What was wrong, measured at <code>2190d36</code></h3>
+<p><code>cockpit/ui/references.js</code> already rendered ids in text as links with a tooltip (<code>a[data-record-ref]</code>, title <code>Kind: id — open current record</code>), and <code>openRecord</code> answered the click. It was bypassed in two ways:</p>
+<ol><li><p><strong>The id pattern was typed by hand beside the kinds table</strong>, and knew six prefixes</p></li></ol>
+<p>(<code>ws gl ln wk rp bt</code>). Development plans (<code>dt_</code>) and review attempts (<code>da_</code>) were minted by the runtime, projected on every frame and searched by the palette — and never linked, even inside a paragraph.</p>
+<ol start="2"><li><p><strong>`node()` in `app-shell.js` linked `&lt;p&gt;` only.</strong> Every span, summary, heading,</p></li></ol>
+<p>list item, <code>small</code> and button carrying an id printed it plain: the record page header (<code>span.record-id</code>), the plan rows on record pages (<code>dt_… · rev … · status</code>), the palette results (<code>kind · id · title</code>), the attempt card summaries (<code>… · da_…</code>), the plan meta line, the related-work rows built by <code>detail()</code>. <code>development.js</code> (the Editor screen) and both phone modules had their own element helpers with the same omission.</p>
+<h3 id="blk-111024">The rule</h3>
+<ul><li><p><strong>A record id in any text is a reference, by construction.</strong> <code>node()</code> routes every</p></li></ul>
+<p>tag through <code>referenceText</code> except raw-data and form tags (<code>pre code textarea input select script style</code>) and <code>option</code>, which keeps its own labelling. <code>development.js</code>'s <code>el()</code> and the phone's <code>node()</code> / <code>el()</code> follow the same rule.</p>
+<ul><li><p><strong>The pattern is derived from the kinds table.</strong> <code>references.js</code> holds one table —</p></li></ul>
+<p>kind, prefix, projection collection, record route — and builds the regexp from it. Adding a kind is the whole change; a hand-typed list cannot drift from it again.</p>
+<ul><li><p><strong>Two display forms.</strong> <code>display:'label'</code> (default) shows the record's name with the</p></li></ul>
+<p>id in the tooltip — prose. <code>display:'id'</code> shows the id with the name in the tooltip — for lines whose job is the identity: record headers, plan rows, palette results, attempt summaries, the plan meta line, related-work subtitles.</p>
+<ul><li><p><strong>Inside a control there is no link.</strong> A reference inside a <code>button</code>, <code>summary</code>,</p></li></ul>
+<p><code>label</code> or another <code>a</code> renders as <code>span.record-ref</code> with the same identity and tooltip; the control owns the click. A nested anchor is invalid HTML and steals the click. References built before their control existed are demoted after each frame (<code>demoteNestedReferences</code>, on <code>runtime-view-rendered</code>).</p>
+<ul><li><p><strong>Plans and attempts route to the wizard, not a record page.</strong> A plan or attempt</p></li></ul>
+<p>link dispatches <code>open-development-task</code>; <code>development-tasks.js</code> answers with one <code>reveal(taskId, attemptId)</code> shared with <code>[data-development-task]</code> controls (record pages, the palette). An attempt id opens its card and switches the wizard to every section when the step hides it.</p>
+<ul><li><p><strong>The phone</strong> (<code>mobile/ui</code>) uses the same renderer through the gateway</p></li></ul>
+<p>(<code>/references.js</code>), in id form; it can open a plan or an attempt's plan, so only those kinds are links there — the rest are tooltip spans (<code>setReferenceRouting</code>).</p>
+<h3 id="blk-111049">What holds it</h3>
+<ul><li><p><strong>Static gate</strong> <code>tools/check-reference-text.mjs</code>, in <code>tools/gates.sh</code>: no text sink</p></li></ul>
+<p>(<code>textContent=</code>, <code>innerText=</code>, <code>createTextNode(</code>) under <code>cockpit/ui</code> or <code>mobile/ui</code> writes an id-bearing value; every generic element factory imports and calls <code>referenceText</code>; every collection the palette finder searches is a kind in the table; the derived pattern matches every kind; the runtime names every collection the table does. 31 checks. A new call site that bypasses the renderer fails it.</p>
+<ul><li><p><strong>Unit tests</strong> <code>tools/references-test.mjs</code> (9 tests, a ten-line fake DOM): pattern</p></li></ul>
+<p>coverage, plan/attempt indexing and labels, both display forms, the control rule, demotion, routing per surface, the fast path, world isolation.</p>
+<ul><li><p><strong>Driven smoke</strong> <code>tools/reference-text-smoke.mjs</code>: real cockpit, throwaway world with</p></li></ul>
+<p>a bot, lane and plan. Visits the rails, all 26 navigable screens, six record page kinds, the plan detail in every reachable wizard step and with every section shown, and the palette results; on each asserts no text node matches the pattern outside <code>[data-record-ref]</code> and no link sits inside a control. Then clicks a plan reference (opens the plan in the wizard), a repository reference and a workspace reference (open their record pages), and checks a lane id inside a related-work button is a tooltip span. <strong>55 held · 0 failed.</strong></p>
+<p>Also run on the rebuilt binary: <code>palette-records-smoke</code> 12/12, <code>plan-steps-smoke</code> 9/9, <code>registered-repository-smoke</code> 19/19, <code>mobile-conversation-smoke</code> all PASS; <code>node --test tools/*-test.mjs</code> 284/284; <code>bash tools/gates.sh</code> 7 held · 2 failed (ordered boundary, ordered closure — pre-existing, <code>ampd/lib</code> only).</p>
+<h3 id="blk-111063">Not seen on a screen</h3>
+<ul><li><p><strong>A review attempt reference.</strong> Recording an attempt needs the Editor's file-proposal</p></li></ul>
+<p>flow, which the smoke world does not run; the route is unit-tested and shares the plan route. <code>mobile-task-discussion-smoke</code> could not run here (its native folder chooser did not confirm — environment, not this change).</p>
+<ul><li><p><strong>The phone on a phone.</strong> The gateway serves the renderer and the conversation smoke</p></li></ul>
+<p>loads the page; no Android device is on the tailnet.</p>
+<h3 id="blk-111072">Done outside Super, and why</h3>
+<p>Written directly. Six UI files change together (the rule is one rule), two of them above the 24 KB share cap (<code>development.js</code> 54 KB, <code>development-tasks.js</code> 34 KB), and the review-attempt directory is full (<code>attempt-directory-full</code> since the afternoon), so no round could be recorded, tested or accepted through Super regardless. Recorded as a plan with this note.</p></div>
+<p class="src"><a href="/#/super/docs/app/REFERENCE_TEXT_2026_09_18.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-111014" class="lvl2">What was wrong, measured at 2190d36</a><a href="#blk-111024" class="lvl2">The rule</a><a href="#blk-111049" class="lvl2">What holds it</a><a href="#blk-111063" class="lvl2">Not seen on a screen</a><a href="#blk-111072" class="lvl2">Done outside Super, and why</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/app/ACCEPTED_BUILD_2026_09_10.md/">Super: build accepted app</a><a href="/super/docs/app/ACCEPTED_RESULT_CHECK_2026_09_10.md/">Super: checking accepted source before integration</a><a href="/super/docs/app/AUTHORITY_LOG_RETENTION_2026_09_24.md/">Authority log retention — candidate 3 (2026-09-24)</a><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/BOT_LIVE_ACTIVITY_2026_09_13.md/">Bot activity and Claude reconnect</a><a href="/super/docs/app/BOT_WORK_PAGES_2026_09_07.md/">Super progress — bot work pages</a><a href="/super/docs/app/BUILD_PREVIEW_2026_09_10.md/">Try an accepted Super build</a><a href="/super/docs/app/CANCELLED_PLAN_STEPS_2026_09_19.md/">A cancelled plan&#39;s stepper claims no step — 2026-09-19</a><a href="/super/docs/app/COMBINED_FILE_REVIEW_2026_09_10.md/">Combined file review — 2026-09-10</a><a href="/super/docs/app/COMBINED_TESTING_2026_09_10.md/">Combined testing and acceptance — 2026-09-10</a><a href="/super/docs/app/CONTINUE_WORK_2026_09_14.md/">Continue work and guided review</a><a href="/super/docs/app/DESKTOP_LAUNCH_2026_09_10.md/">Daily desktop launch — September 10, 2026</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera7qsjlyuhphqmpxberfvdub73smwc5uwgd63banwkj7bqlvmtnf6q</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,72 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Lane C — stand up the cloud · agents · Ampersand Box</title>
+<meta name="description" content="Owns: no repository files. Cloud accounts, and PARKVPS/ for local VM work. Must not touch: application code in any lane.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/agents/C-infrastructure.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lane C — stand up the cloud">
+<meta property="og:description" content="Owns: no repository files. Cloud accounts, and PARKVPS/ for local VM work. Must not touch: application code in any lane.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/agents/C-infrastructure.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Lane C — stand up the cloud","name":"Lane C — stand up the cloud","description":"Owns: no repository files. Cloud accounts, and PARKVPS/ for local VM work. Must not touch: application code in any lane.","url":"https://docs.ampersandboxdesign.com/agents/C-infrastructure.md/","identifier":"bagaaiera4g5vv7w6i3daig62g22kll3hhu3osmfb5fztudwli6volbze4gaa","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"agents","url":"https://docs.ampersandboxdesign.com/agents/"},"articleSection":"agents","hasPart":[{"@type":"WebPageElement","name":"Read first"},{"@type":"WebPageElement","name":"What is ruled"},{"@type":"WebPageElement","name":"The four jobs"},{"@type":"WebPageElement","name":"1. The Hetzner VM"},{"@type":"WebPageElement","name":"2. Pigsty"},{"@type":"WebPageElement","name":"3. Keycloak on Fly + PlanetScale"},{"@type":"WebPageElement","name":"4. R2"},{"@type":"WebPageElement","name":"Done means"},{"@type":"WebPageElement","name":"Do not tear anything down yet"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"agents","item":"https://docs.ampersandboxdesign.com/agents/"},{"@type":"ListItem","position":3,"name":"C-infrastructure.md","item":"https://docs.ampersandboxdesign.com/agents/C-infrastructure.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">agents</span>
+<span class="path">agents/C-infrastructure.md</span>
+
+</div></div>
+<div class="lead">Owns: no repository files. Cloud accounts, and PARKVPS/ for local VM work. Must not touch: application code in any lane.</div>
+<div class="prose"><h1 id="blk-52908">Lane C — stand up the cloud</h1>
+<p><strong>Owns:</strong> no repository files. Cloud accounts, and <code>PARKVPS/</code> for local VM work. <strong>Must not touch:</strong> application code in any lane.</p>
+<blockquote><p>## ❌ NEEDS TRAVIS IN THE ROOM  Every task here spends money or creates an account. <strong>An agent must not provision paid infrastructure, enter payment details, or accept terms.</strong> Prepare the commands, explain what each will cost, and let Travis run the ones that spend.  Standing constraint: <strong>this stack is built on a zero-budget assumption.</strong> Do not casually add a line item.</p></blockquote>
+<h3 id="blk-52912">Read first</h3>
+<p><code>STACK_HUB.md</code> §0.7 and §0.9–0.11 — the provider rulings and what each costs.</p>
+<h3 id="blk-52914">What is ruled</h3>
+<table><thead><tr><th>Piece</th><th>Where</th><th>Why that vendor</th></tr></thead><tbody><tr><td>Keycloak</td><td><strong>Fly `iad`</strong></td><td>Workers are V8 isolates and cannot run Java</td></tr><tr><td>Keycloak's database</td><td><strong>PlanetScale PS-5 HA, $15/mo</strong></td><td><strong>Rationale replaced 2026-08-21 (R9) — see §3.</strong> Failure isolation, not price</td></tr><tr><td>Control-plane API, portal BFF, credential minting</td><td><strong>Cloudflare Workers</strong></td><td><strong>R7</strong> — §0.6's ruling holds. No server-hosted BEAM in Cloud v1</td></tr><tr><td>Worker → Pigsty transport</td><td><strong>Hyperdrive → Workers VPC → Cloudflare Tunnel</strong></td><td><strong>R7</strong> — Pigsty stays private on Hetzner with no Postgres port facing the internet</td></tr><tr><td>Pigsty Postgres — studbook index <strong>and the Cloud control plane</strong></td><td><strong>Hetzner VM</strong></td><td>Pigsty needs systemd/sudo/sshd; Fly gives Firecracker containers</td></tr><tr><td>Bulk objects</td><td><strong>Cloudflare R2</strong></td><td>zero egress at any volume</td></tr></tbody></table>
+<blockquote><p><strong>2026-08-21 — this table gained a row and lost an assumption.</strong> A proposed Cloud brief put a Phoenix/Elixir API at the centre of the architecture, which silently reversed <code>STACK_HUB.md</code> §0.6 (<em>&quot;Workers cannot run Elixir, Phoenix, or the BEAM … that decision has to be revisited rather than patched&quot;</em>). <strong>R7 declines to reopen it.</strong> The control plane is Workers; Pigsty is reached over Hyperdrive rather than by moving the application to the database. Super stays BEAM/OTP <strong>on the user's machine</strong> — Cloud does not mirror Super's implementation just because Super is Elixir.</p></blockquote>
+<h3 id="blk-52939">The four jobs</h3>
+<h4 id="blk-52940">1. The Hetzner VM</h4>
+<p><strong>T&amp;R is FreeBSD and Hetzner Cloud's API has no image upload.</strong> The documented path is to boot the <strong>rescue system</strong> and write the raw image straight to <code>/dev/sda</code> (<code>qemu-img convert</code>, or <code>hcloud-upload-image</code> which automates it). FreeBSD-on-hcloud is independently documented, including a 2026 Packer write-up.</p>
+<p><strong>Snapshot after the first install</strong> — that is the distribution path, and the workaround is not repeated per machine.</p>
+<p><strong>Budget a session, not an afternoon.</strong> It is documented, not supported. Nothing is blocked meanwhile: PARKVPS runs T&amp;R locally today.</p>
+<p><strong>Sizing: do not trust any euro figure you find.</strong> Hetzner adjusted prices in June 2026 and CX32 is deprecated, so published comparisons are stale. <strong>Price it on Hetzner's own calculator.</strong></p>
+<blockquote><p><strong>CORRECTED 2026-08-21.</strong> This read <em>&quot;Pigsty wants 1C2G, Keycloak wants 2 GB, so ~4 vCPU / 8 GB is the plausible floor for the shared box&quot;</em> — which budgeted Keycloak's RAM onto Hetzner while the table two sections up ruled Keycloak onto <strong>Fly</strong>. The table is right and the sizing line was wrong. <strong>Keycloak is not on this box.</strong>  What actually runs here under R7: <strong>Pigsty</strong> (Patroni, etcd, HAProxy, PgBouncer, pgBackRest, MinIO, Grafana, Nginx) and <strong>`cloudflared`</strong> for the Tunnel. No application server — R7 keeps the control plane on Workers, so nothing here serves HTTP to the public. Shape only, still to be priced first-party: Pigsty's own floor is 1C1G, 1C2G recommended, and the Tunnel daemon is small.</p></blockquote>
+<h4 id="blk-52947">2. Pigsty</h4>
+<p>Ansible-driven, needs <strong>systemd, sudo and sshd</strong>, installs Patroni, etcd, HAProxy, PgBouncer, pgBackRest, MinIO, Grafana and Nginx. Minimum 1C1G, 1C2G recommended. This is why it goes on the Hetzner VM and not on Fly.</p>
+<p>Serves <strong>studbook's index</strong> (lane B) — and <em>not</em> user bytes. Bytes in Postgres is 18.7× R2 and would lose ~$2,867/month on a single 10 TB customer.</p>
+<h4 id="blk-52950">3. Keycloak on Fly + PlanetScale</h4>
+<ul><li><p><strong>Deploy Keycloak to Fly `iad`.</strong> PlanetScale's pricing is AWS <code>us-east-1</code>, the same metro —</p></li></ul>
+<p>single-digit milliseconds. Put it in a European region and every token issuance crosses the Atlantic. <strong>The rule is co-locate, and co-location is about distance, not matching logos.</strong></p>
+<ul><li><p><strong>Do not point it at the Hetzner Postgres.</strong> It will look tidy. It puts the auth path — the one</p></li></ul>
+<p>thing that must be up for anyone to do anything — on the longest wire in the architecture, and re-couples exactly what the split decoupled.</p>
+<blockquote><p><strong>R9, 2026-08-21 — this bullet is now the whole reason, and the recorded price argument is retired.</strong> The $15/mo was justified by beating <strong>Fly Managed Postgres at $38</strong>. That comparison was correct when nothing else in the stack ran Postgres. It is not the live alternative any more: Pigsty <em>is</em> Patroni plus streaming replicas, so the honest comparison became &quot;$15/mo versus another database on a cluster you are already paying for&quot;, and on price alone PlanetScale loses that.  <strong>The ruling does not change, because price was never the load-bearing reason</strong> — this bullet was. What $15/mo buys is stated plainly so it can be re-decided later on its merits:  ``<code> Pigsty trouble  ≠  Keycloak database trouble </code>``  Reconsider when product economics matter. Do not reconsider mid-implementation.</p></blockquote>
+<ul><li><p><strong>PS-5 is 1/16 vCPU and 512 MiB.</strong> &quot;HA&quot; means redundant, not fast. If auth feels slow the answer</p></li></ul>
+<p>is <strong>PS-10 HA at $30</strong>, still under Fly's $38.</p>
+<ul><li><p><strong>PlanetScale Postgres is real Postgres, not Vitess</strong> — the well-known no-foreign-keys caveat is</p></li></ul>
+<p>about their MySQL product and does not apply. Keycloak's JPA schema is fine.</p>
+<ul><li><p><strong>Connect directly, not through their optional PgBouncer.</strong> Keycloak brings Agroal;</p></li></ul>
+<p>transaction-mode pooling against JDBC prepared statements is a known trouble source.</p>
+<ul><li><p><strong>SQLite is not an option.</strong> Keycloak supports Postgres/MariaDB/MySQL/MSSQL/Oracle/Aurora/Azure</p></li></ul>
+<p>SQL. H2 (<code>dev-file</code>) is explicitly <em>&quot;not suitable for production use-cases.&quot;</em></p>
+<h4 id="blk-52977">4. R2</h4>
+<p>A bucket for published track bundles. <strong>Class A ops are $4.50/M</strong> — the discipline is content-addressed chunks, never re-PUT an unchanged chunk, ≥8 MB minimum, incremental by default. Measured: naïve weekly fulls on 1 TB are $30.67/yr against <strong>$4.30/yr</strong> incremental.</p>
+<p><strong>Public tracks need no credential</strong> — class A data, world-readable, no Worker in front of them. That is why this rung ships before lane D.</p>
+<h3 id="blk-52980">Done means</h3>
+<ul><li><p><code>trvs doctor</code> printing <code>status ready</code> on a Hetzner instance, and <code>trvs id</code> deriving the <strong>same</strong></p></li></ul>
+<p><code>sem-</code> identity as the workstation. A <strong>different</strong> id is the more interesting result and should be reported loudly, not debugged into agreement.</p>
+<ul><li><p>A Keycloak realm issuing a JWT, fetched from Fly <code>iad</code>, verifiable against its JWKS.</p></li><li><p>A track bundle PUT to R2 and GET back <strong>on a different machine</strong>, verified by re-derived hash.</p></li><li><p><strong>Every figure recorded with the date it was measured.</strong> This tree has quoted stale storage prices</p></li></ul>
+<p>three times; the rule now is quote first-party at the point of use, never from prose.</p>
+<h3 id="blk-52993">Do not tear anything down yet</h3>
+<p>Ten Fly apps are <code>live_deployed</code> and are being wound down — but <strong>nothing is torn down before its OS-side replacement is `live_local`.</strong> Deleting a working deployment to honour a plan is how a portfolio loses a capability it had. <code>box-and-box-mcp</code> is first in the queue and even that can wait.</p></div>
+<p class="src"><a href="/#/agents/C-infrastructure.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-52912" class="lvl2">Read first</a><a href="#blk-52914" class="lvl2">What is ruled</a><a href="#blk-52939" class="lvl2">The four jobs</a><a href="#blk-52940" class="lvl3">1. The Hetzner VM</a><a href="#blk-52947" class="lvl3">2. Pigsty</a><a href="#blk-52950" class="lvl3">3. Keycloak on Fly + PlanetScale</a><a href="#blk-52977" class="lvl3">4. R2</a><a href="#blk-52980" class="lvl2">Done means</a><a href="#blk-52993" class="lvl2">Do not tear anything down yet</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/agents/A-shell-wiring.md/">Lane A — wire publishing into the shell</a><a href="/agents/B-studbook.md/">Lane B — build studbook</a><a href="/agents/D-worker-auth.md/">Lane D — the credential surface, and now the control plane</a><a href="/agents/E-site.md/">Lane E — the site and the nav</a><a href="/agents/F-docs.md/">Lane F — finish the reconciliation</a><a href="/agents/README.md/">Agent lanes — what can be worked on in parallel, and what will collide</a><a href="/agents/SHELL.md/">The portfolio shell</a><a href="/agents/SITES.md/">Site lanes — updating the domain index.htmls in parallel</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera4g5vv7w6i3daig62g22kll3hhu3osmfb5fztudwli6volbze4gaa</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Workbench recovery and patch conversations — 2026-09-07 · super · Ampersand Box</title>
+<meta name="description" content="This continuation addresses the manual workbench&#39;s restart gap and connects saved-change review to bot conversations. It does not implement Swarm…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/app/WORKBENCH_RECOVERY_2026_09_07.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Workbench recovery and patch conversations — 2026-09-07">
+<meta property="og:description" content="This continuation addresses the manual workbench&#39;s restart gap and connects saved-change review to bot conversations. It does not implement Swarm…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/app/WORKBENCH_RECOVERY_2026_09_07.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Workbench recovery and patch conversations — 2026-09-07","name":"Workbench recovery and patch conversations — 2026-09-07","description":"This continuation addresses the manual workbench's restart gap and connects saved-change review to bot conversations. It does not implement Swarm…","url":"https://docs.ampersandboxdesign.com/super/docs/app/WORKBENCH_RECOVERY_2026_09_07.md/","identifier":"bagaaiera3bcmkdwdpzr7x4p7v6ojgxzz3wv3vy2t3jdz7545yqn5gym4n4ma","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"Recovery behavior"},{"@type":"WebPageElement","name":"Discussing a patch"},{"@type":"WebPageElement","name":"Remaining dogfood milestone"},{"@type":"WebPageElement","name":"Verification"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"app","item":"https://docs.ampersandboxdesign.com/super/docs/app/"},{"@type":"ListItem","position":5,"name":"WORKBENCH_RECOVERY_2026_09_07.md","item":"https://docs.ampersandboxdesign.com/super/docs/app/WORKBENCH_RECOVERY_2026_09_07.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/app/WORKBENCH_RECOVERY_2026_09_07.md</span>
+
+</div></div>
+<div class="lead">This continuation addresses the manual workbench&#39;s restart gap and connects saved-change review to bot conversations. It does not implement Swarm delegation or autonomous coding.</div>
+<div class="prose"><h1 id="blk-112340">Workbench recovery and patch conversations — 2026-09-07</h1>
+<p>This continuation addresses the manual workbench's restart gap and connects saved-change review to bot conversations. It does not implement Swarm delegation or autonomous coding.</p>
+<p><strong>Later pass (2026-09-18):</strong> a repository that is already registered can be reopened in the Editor by its reference, without the native chooser — see <code>REGISTERED_REPOSITORY_EDITOR_2026_09_18.md</code>. The rule below that recovery never uses a saved path as permission is unchanged; the reference route asks the runtime, not the page.</p>
+<h3 id="blk-112343">Recovery behavior</h3>
+<ul><li><p>Editor saves recovery copies of file tabs, the selected file and unsaved drafts</p></li></ul>
+<p>on this device. Saving to the repository remains a separate explicit operation.</p>
+<ul><li><p>After restart, choose the same repository through the native chooser. The app</p></li></ul>
+<p>restores its own file tabs and drafts; it does not use a saved path as permission to open a repository automatically. Other repositories' drafts stay separate.</p>
+<ul><li><p>Clean tabs read the current disk file. Dirty drafts retain their original bytes,</p></li></ul>
+<p>so Save still detects outside edits. A draft already identical to disk becomes clean. Missing clean files are reported; missing dirty files retain their draft.</p>
+<ul><li><p>Browser addresses can be restored with Restore browser tabs. Pages reload when</p></li></ul>
+<p>opened; previous page DOM state, form input and navigation history are not saved.</p>
+<ul><li><p>Previous shell tabs are reported as ended. Shell commands, process handles and</p></li></ul>
+<p>scrollback are not stored or automatically restarted. Live sessions still use the native inventory when only the main page reloads.</p>
+<ul><li><p>Editor → Recovery lists saved repository copies and supports explicit deletion.</p></li></ul>
+<p>Forgetting a copy does not delete disk files or currently open drafts; subsequent changes to open files can create a fresh recovery copy.</p>
+<ul><li><p>The native chooser now has an explicit Enter/default action and a bounded</p></li></ul>
+<p>initial size. Desktop verification activates it through the window manager.</p>
+<p>Recovery is debounced by 500 ms and flushed on normal page close. An abrupt crash can lose edits made since the latest successful write. Local storage is limited: up to five repositories, sixteen files per repository and eight browser addresses; the aggregate serialized recovery record is capped at 3,000,000 characters. Browser storage can refuse earlier if shared storage is full. Errors remain visible and the previous successful copy stays intact. Corrupt data is never silently replaced; Clear recovery data is an explicit destructive action.</p>
+<p>Recovery copies contain source text and browser addresses in this device's app storage. They are not encrypted backups or synchronized project records.</p>
+<h3 id="blk-112374">Discussing a patch</h3>
+<p>Open Editor → Changes, select a file and choose Discuss changes with bot. The selected bot receives an attachment containing the inspected working-tree, staged and/or untracked text, with a capture time and disk-snapshot label. Long patches are clearly marked as excerpts. It does not send a provider request until the user writes a message and selects Send.</p>
+<p>The conversation link returns to the current Changes view for that file. The attachment remains the captured snapshot; reopening the view can show newer disk changes. This is not validation evidence or acceptance of changed bytes. Surface links carry a per-app-session identity as well as their existing repository/tab identity so restarted sessions cannot accidentally reuse a numeric identifier.</p>
+<h3 id="blk-112377">Remaining dogfood milestone</h3>
+<p>A durable agent-owned session registry, parent/child delegation, admitted coding in isolated worktrees, cancellation, revision-bound validation/acceptance and agent-run recovery remain the next P0 work. This pass improves continuity and human-directed code review without inventing those runtime capabilities.</p>
+<h3 id="blk-112379">Verification</h3>
+<ul><li><p>Native workbench: <strong>38 held</strong>, including full process restart, recovered draft</p></li></ul>
+<p>conflict refusal, browser address recovery, real keyboard input, actual window edge dragging, and patch-to-bot navigation.</p>
+<ul><li><p>Native app regression: <strong>94 held</strong>, including conversation restart recovery.</p></li><li><p>JavaScript: <strong>33 passed</strong>; WebView ACL: <strong>35 held / 0 failed</strong>.</p></li><li><p>Release build and whitespace checks passed. Existing host compiler warnings</p></li></ul>
+<p>remain; no backend execution or authority contract was changed.</p>
+<ul><li><p>Native screenshots inspected; recovery dialog action width adjusted afterward.</p></li></ul>
+<p>Changes are local and uncommitted. Graphonomous tools were unavailable; the saved audit and source supplied continuity. Rich landing-page scrolling remains an open issue from the prior pass and is not claimed fixed here.</p>
+<p>The updated app is running in the existing saved world. Confirmed 4 workspaces, 2 goals and 2 lanes retained; restored the two local terminal tabs and port-8080 preview. The new Recovery control is present in the actual app.</p></div>
+<p class="src"><a href="/#/super/docs/app/WORKBENCH_RECOVERY_2026_09_07.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-112343" class="lvl2">Recovery behavior</a><a href="#blk-112374" class="lvl2">Discussing a patch</a><a href="#blk-112377" class="lvl2">Remaining dogfood milestone</a><a href="#blk-112379" class="lvl2">Verification</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/super/docs/app/MVP_PASS_2026_09_07.md/">Super prototype → usable development MVP</a></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/app/ACCEPTED_BUILD_2026_09_10.md/">Super: build accepted app</a><a href="/super/docs/app/ACCEPTED_RESULT_CHECK_2026_09_10.md/">Super: checking accepted source before integration</a><a href="/super/docs/app/AUTHORITY_LOG_RETENTION_2026_09_24.md/">Authority log retention — candidate 3 (2026-09-24)</a><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/BOT_LIVE_ACTIVITY_2026_09_13.md/">Bot activity and Claude reconnect</a><a href="/super/docs/app/BOT_WORK_PAGES_2026_09_07.md/">Super progress — bot work pages</a><a href="/super/docs/app/BUILD_PREVIEW_2026_09_10.md/">Try an accepted Super build</a><a href="/super/docs/app/CANCELLED_PLAN_STEPS_2026_09_19.md/">A cancelled plan&#39;s stepper claims no step — 2026-09-19</a><a href="/super/docs/app/COMBINED_FILE_REVIEW_2026_09_10.md/">Combined file review — 2026-09-10</a><a href="/super/docs/app/COMBINED_TESTING_2026_09_10.md/">Combined testing and acceptance — 2026-09-10</a><a href="/super/docs/app/CONTINUE_WORK_2026_09_14.md/">Continue work and guided review</a><a href="/super/docs/app/DESKTOP_LAUNCH_2026_09_10.md/">Daily desktop launch — September 10, 2026</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera3bcmkdwdpzr7x4p7v6ojgxzz3wv3vy2t3jdz7545yqn5gym4n4ma</div></div></div>
+</div></div>
+</body></html>

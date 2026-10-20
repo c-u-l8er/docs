@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Super: required plan checks · super · Ampersand Box</title>
+<meta name="description" content="September 10, 2026">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/app/REQUIRED_CHECKS_2026_09_10.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Super: required plan checks">
+<meta property="og:description" content="September 10, 2026">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/app/REQUIRED_CHECKS_2026_09_10.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Super: required plan checks","name":"Super: required plan checks","description":"September 10, 2026","url":"https://docs.ampersandboxdesign.com/super/docs/app/REQUIRED_CHECKS_2026_09_10.md/","identifier":"bagaaierajehicpqjnkyk3gszfvwakagooamt732y5bcp3wwgsl5ur42hyywq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"Verification"},{"@type":"WebPageElement","name":"MVP impact and remaining work"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"app","item":"https://docs.ampersandboxdesign.com/super/docs/app/"},{"@type":"ListItem","position":5,"name":"REQUIRED_CHECKS_2026_09_10.md","item":"https://docs.ampersandboxdesign.com/super/docs/app/REQUIRED_CHECKS_2026_09_10.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/app/REQUIRED_CHECKS_2026_09_10.md</span>
+
+</div></div>
+<div class="lead">September 10, 2026</div>
+<div class="prose"><h1 id="blk-111193">Super: required plan checks</h1>
+<p>September 10, 2026</p>
+<p>Super now saves required test profiles with a development plan. The plan form defaults to JavaScript and allows Elixir and Rust to be selected. At least one is required in the app. Reviews show missing or failed required checks and only offer acceptance when every required profile, plus every other profile actually run, has its latest passing result on the same captured source snapshot. The runtime independently enforces that rule during acceptance preparation and acceptance.</p>
+<p>Required checks persist through planning status updates and restart. They cannot be edited on an existing plan in this increment; create a new plan for a different policy. Existing plans and older clients that omit the new optional field retain the legacy rule: all profiles actually run must pass on the same snapshot. No existing records are silently migrated.</p>
+<h3 id="blk-111197">Verification</h3>
+<ul><li><p>752 runtime tests passed, including required-profile omission, failed required results, eventual passing coverage, invalid/duplicate/empty policies, retry conflicts and legacy compatibility.</p></li><li><p>21 focused UI behavior tests passed, including required profiles absent from run history and existing snapshot/failure rules.</p></li><li><p>32 native workflow assertions passed on the rebuilt app: empty selection refusal, durable policy, missing and failed checks, successful rerun, combined testing, partial-save refusal, unrelated-edit refusal, acceptance and actual process restart.</p></li><li><p>Release build, warnings-as-errors runtime compilation, six human-control boundary checks (25/25 mutations), 35 webview access checks and whitespace checks passed.</p></li><li><p>Native screenshots were captured and visually inspected. The first inspection found checkbox spacing that was corrected before the final build and screenshot pass.</p></li></ul>
+<p>The native test uses a disposable Git repository, saved runtime world and deterministic local provider fixture. It deliberately makes the JavaScript test fail, restores the fixture test, and reruns against a newly captured snapshot. Missing additional required profiles are separately exercised by runtime and UI tests. This is not another real-provider dogfooding cycle.</p>
+<h3 id="blk-111210">MVP impact and remaining work</h3>
+<p>This closes the basic required-check policy gap for newly created app plans, including combined-file reviews. It does not yet provide custom test commands or editing a plan's policy. Existing language profiles remain focused checks, not whole-project certification.</p>
+<p>Integration and rebuilding from inside Super, recovery edge cases, installation checks and repeated ordinary Super development tasks through a real provider remain. The broader MVP is still unfinished.</p>
+<p>Evidence: current Codex task outputs/Super_Required_Checks_Gallery.html.</p></div>
+<p class="src"><a href="/#/super/docs/app/REQUIRED_CHECKS_2026_09_10.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-111197" class="lvl2">Verification</a><a href="#blk-111210" class="lvl2">MVP impact and remaining work</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/app/ACCEPTED_BUILD_2026_09_10.md/">Super: build accepted app</a><a href="/super/docs/app/ACCEPTED_RESULT_CHECK_2026_09_10.md/">Super: checking accepted source before integration</a><a href="/super/docs/app/AUTHORITY_LOG_RETENTION_2026_09_24.md/">Authority log retention — candidate 3 (2026-09-24)</a><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/BOT_LIVE_ACTIVITY_2026_09_13.md/">Bot activity and Claude reconnect</a><a href="/super/docs/app/BOT_WORK_PAGES_2026_09_07.md/">Super progress — bot work pages</a><a href="/super/docs/app/BUILD_PREVIEW_2026_09_10.md/">Try an accepted Super build</a><a href="/super/docs/app/CANCELLED_PLAN_STEPS_2026_09_19.md/">A cancelled plan&#39;s stepper claims no step — 2026-09-19</a><a href="/super/docs/app/COMBINED_FILE_REVIEW_2026_09_10.md/">Combined file review — 2026-09-10</a><a href="/super/docs/app/COMBINED_TESTING_2026_09_10.md/">Combined testing and acceptance — 2026-09-10</a><a href="/super/docs/app/CONTINUE_WORK_2026_09_14.md/">Continue work and guided review</a><a href="/super/docs/app/DESKTOP_LAUNCH_2026_09_10.md/">Daily desktop launch — September 10, 2026</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajehicpqjnkyk3gszfvwakagooamt732y5bcp3wwgsl5ur42hyywq</div></div></div>
+</div></div>
+</body></html>

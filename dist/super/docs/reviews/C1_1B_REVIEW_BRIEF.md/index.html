@@ -1,0 +1,155 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>C1.1 · the three corrections — the channel is a descriptor now · super · Ampersand Box</title>
+<meta name="description" content="Artifact: `and-super-rev-f7.zip`. Every gate green.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C1.1 · the three corrections — the channel is a descriptor now">
+<meta property="og:description" content="Artifact: `and-super-rev-f7.zip`. Every gate green.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"C1.1 · the three corrections — the channel is a descriptor now","name":"C1.1 · the three corrections — the channel is a descriptor now","description":"Artifact: `and-super-rev-f7.zip`. Every gate green.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/","identifier":"bagaaierafrxbrcmewcnyn3tyxyykcbaczhnoqtp3o6ccymiftdvf7tq23ndq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Measured"},{"@type":"WebPageElement","name":"1 · The private channel is now actually private"},{"@type":"WebPageElement","name":"It cost one more real bug"},{"@type":"WebPageElement","name":"2 · A dead Peer no longer leaks projections"},{"@type":"WebPageElement","name":"3 · projection_epoch"},{"@type":"WebPageElement","name":"4 · One socket, and the demultiplexer you specified"},{"@type":"WebPageElement","name":"5 · The bounded projection"},{"@type":"WebPageElement","name":"6 · The naming correction"},{"@type":"WebPageElement","name":"7 · Your falsifier table"},{"@type":"WebPageElement","name":"8 · The harness caught itself twice more"},{"@type":"WebPageElement","name":"9 · Where I think this leaves the badge"},{"@type":"WebPageElement","name":"10 · Open"},{"@type":"WebPageElement","name":"11 · Ladder"},{"@type":"WebPageElement","name":"Verify"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"C1_1B_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/C1_1B_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Artifact: `and-super-rev-f7.zip`. Every gate green.</div>
+<div class="prose"><h1 id="blk-112691">C1.1 · the three corrections — the channel is a descriptor now</h1>
+<p><strong>Artifact: `and-super-rev-f7.zip`. Every gate green.</strong></p>
+<p>You ruled <strong>C1.1 transport core ✓</strong>, <code>LIVE LOCAL</code> not yet, and named three things to close first: the filesystem race, the Peer→subscription asymmetry, and the projection revision that rewinds. All three are closed. You also called one more shot — one socket, not two — and specified the demultiplexer and the bounded projection. Those are in too.</p>
+<p>Your central finding was right and I had it written in my own source as an admission rather than a defect: <em>every process here runs as the same OS user and can `readdir` the runtime directory.</em> That sentence should have been a bug report.</p>
+<h3 id="blk-112695">0 · Measured</h3>
+<table><thead><tr><th></th><th>F.6</th><th>F.7</th></tr></thead><tbody><tr><td>conformance vectors</td><td>42</td><td><strong>42</strong></td></tr><tr><td>BEAM tests</td><td>160</td><td><strong>167</strong>, 0 failures at seed 0</td></tr><tr><td>browser assertions</td><td>64</td><td><strong>64</strong></td></tr><tr><td>sabotage falsifiers</td><td>31 · 0 not</td><td><strong>36 · 0 not</strong></td></tr><tr><td>host acceptance checks</td><td>16 held</td><td><strong>22 held · 0 failed</strong></td></tr><tr><td>socket files created by the runtime</td><td>2 per channel</td><td><strong>zero</strong></td></tr></tbody></table>
+<h3 id="blk-112718">1 · The private channel is now actually private</h3>
+<p>You said the architecture we intended was inherited descriptors, not discoverable paths. It is:</p>
+<pre><code>super-host
+  ├─ socketpair(AF_UNIX, SOCK_SEQPACKET)
+  │     keeps A · spawns ampd with B dup2'd onto fd 3
+  │     ampd adopts fd 3 → THE BRIDGE          no path, nothing to race
+  │
+  └─ per engine:
+       socketpair(AF_UNIX, SOCK_STREAM)
+         D → ampd over the bridge in an SCM_RIGHTS message labelled &quot;kestrel&quot;
+         C → inherited by the engine at spawn; the host closes its copy</code></pre>
+<p><strong>There is no socket file anywhere.</strong> <code>Ampd.Bridge</code> no longer creates, publishes, or listens for anything — it <em>adopts</em> descriptors. <code>bridge.sock</code> is gone, and with it the root-capability race you identified: whoever won that one could have asked for the human control channel and for an agent channel named anything.</p>
+<p>Two design notes worth your ruling:</p>
+<ul><li><p><strong>`SOCK_SEQPACKET` for the bridge</strong>, not <code>SOCK_STREAM</code>. It carries descriptors, and a</p></li></ul>
+<p>descriptor belongs to exactly one message. Sequenced packets keep that true without a framing layer that could ever associate a descriptor with the wrong command.</p>
+<ul><li><p><strong>A bind with no descriptor attached is refused.</strong> There is no shape of</p></li></ul>
+<p><code>bridge-command@1</code> that names an identity without handing over the channel it names, so &quot;possession is the capability&quot; holds on the host's side too. Falsified by the battery: <code>naming an identity without handing over its channel is refused</code>, and <code>a descriptor number in the payload is not a descriptor</code>.</p>
+<p><code>fdpass.rs</code> declares the four syscalls by hand rather than pulling a crate — the whole trust model rests on them and they should be readable in full.</p>
+<p>The Elixir side gained one honest exception: <code>Ampd.Transport.socketpair/1</code>, which binds, connects, accepts and unlinks so tests can build the same shape without a Rust process. It is the only place left in the tree that touches a socket path, it is not how the runtime obtains channels, and there is a probe that leaks it deliberately to prove the search that looks for leaks actually finds them.</p>
+<h4 id="blk-112733">It cost one more real bug</h4>
+<p>Dropping the control channel and immediately asking for a new one was refused <code>control-channel-already-claimed</code> against a descriptor whose only reader had gone.</p>
+<p><code>close(2)</code> is not enough. With another thread blocked in <code>read(2)</code> on that descriptor, closing it removes this process's table entry but leaves the underlying open file description alive until the syscall returns — so <strong>the peer never sees EOF</strong>. It needs <code>shutdown(2)</code> first, which ends the connection itself rather than this process's reference to it. <code>fdpass::release_fd</code> does both, in that order, and says why.</p>
+<h3 id="blk-112736">2 · A dead Peer no longer leaks projections</h3>
+<p>Reproduced exactly as you described, before fixing:</p>
+<pre><code>a COMMAND on the old socket → unknown-peer
+an unrelated mutation       → the same socket received
+                              agent-projection@1 for actor &quot;kestrel&quot;</code></pre>
+<p>Invalid for commands and still valid for information flow. Both halves you asked for:</p>
+<ul><li><p><strong>`Ampd.Subscriptions` stores `peer_id`, not the record</strong>, and re-resolves before every</p></li></ul>
+<p>push. If it cannot resolve, the subscriber is <em>dropped</em>, not served from a cached name. Subscribing on a binding that has already gone is refused <code>unknown-peer</code> rather than quietly registered.</p>
+<ul><li><p><strong>The connection monitors `Ampd.Peer`</strong> and closes when it dies. Fail-closed: there is</p></li></ul>
+<p>nothing to reattach to, and the host must ask for a new channel.</p>
+<p>Those two are redundant for the crash case, which is why they get separate falsifiers. The subscription half is isolated by detaching a binding while <code>Ampd.Peer</code> is <em>healthy</em> — nothing tears the connection down, so re-resolution is the only thing that can catch it.</p>
+<p>One more ordering bug came out of this: <code>shutdown</code> did its bookkeeping before closing the socket, and the bookkeeping calls into <code>Ampd.Peer</code> — the very process that had just died. The <code>GenServer.call</code> exited the caller and left the socket open, held by a dead connection process. The close is unconditional and first now, and everything after it is best-effort.</p>
+<h3 id="blk-112750">3 · <code>projection_epoch</code></h3>
+<p>Reproduced:</p>
+<pre><code>world_generation 1 · revision 7
+AuthorityCoordinator killed and restarted
+world_generation 1 · revision 0</code></pre>
+<p>Your tuple, implemented, with the client rule stated in <code>Ampd.Projection.continuity/0</code>:</p>
+<pre><code>same generation, same epoch   → revisions are comparable
+same generation, new epoch    → discard the projection and resnapshot
+different generation          → discard everything</code></pre>
+<p>All three fields travel together on <strong>every</strong> frame that carries any of them — <code>hello@1</code>, <code>reply@1</code>, <code>projection-snapshot@1</code>, and every history page — because none of them means anything alone. There is a test asserting exactly that, per frame kind.</p>
+<p><code>ops/0</code>'s docstring said &quot;this world&quot;; it counts <em>this incarnation</em>. Fixed, because the wrong word there is what made the bug invisible.</p>
+<p>Durable revision stays C1.1b's, as you said.</p>
+<h3 id="blk-112758">4 · One socket, and the demultiplexer you specified</h3>
+<p>Built to your shape:</p>
+<pre><code>              ONE SOCKET
+                  │
+             reader thread
+                  │
+       ┌──────────┼──────────┐
+   replies     projections   hello
+ by request ID  latest wins  once</code></pre>
+<p>Three routes, not two — <code>hello@1</code> is unprompted, arrives exactly once, and is neither a reply nor a projection. Pretending it was one of the other two is how you get a client that treats its own greeting as an answer.</p>
+<p><strong>Projections supersede rather than queue</strong>, as you said: a newer snapshot makes an older one worthless, so the 256-entry FIFO is gone. It was worse than wasteful — under load it dropped the <em>newest</em>. <code>projection_after(revision, timeout)</code> is the wait primitive, which maps onto a Tauri event or a <code>watch</code> channel without changing shape.</p>
+<p>One thing I added: <strong>replies that correlate to no waiter are kept</strong>, not dropped. A frame-level refusal cannot echo a <code>client_request_id</code> — the frame it refused was never decoded — and &quot;the runtime said nothing&quot; and &quot;the runtime refused&quot; are not the same fact.</p>
+<h3 id="blk-112764">5 · The bounded projection</h3>
+<p>You were right that this is not about corrupt data. Receipts and terminal effects grow without limit in a perfectly healthy world, so <code>operator-projection@1</code> was on a path to exceeding one frame by ordinary use.</p>
+<p><code>operator-projection@2</code> / <code>agent-projection@2</code>:</p>
+<pre><code>live, in full     grants · pending grant requests · pending approvals
+                  in-flight effects · reconcile queue · peers · channels
+                  seals · recent refusals · world · runtime
+
+windowed          receipts:              %{recent: [...50], total: 18_421,
+                  effects_history:         next_cursor: &quot;rcpt-18191&quot;, more: true}
+                  grant_requests_history:</code></pre>
+<p>Plus <code>list_receipts(cursor, limit)</code> and <code>list_effect_history(cursor, limit)</code>, newest first, each page carrying the continuity triple so pages from either side of a restore cannot be stitched into a history that never happened. An agent pages only its own — the same filter the projections apply, reused rather than restated.</p>
+<p><code>grant_requests_history</code> is mine rather than yours, and I want to flag it. Resolved requests are <em>provenance</em> — &quot;Kestrel asked, the person said no&quot; is the distinction this whole system exists to keep — but they also grow without a human ever acting, because an agent can ask as often as it likes. So they leave the live queue and stay in a window.</p>
+<p>The falsifier builds a healthy world with 140 receipts × 4 KB — over half a megabyte, comfortably past the 256 KB frame — and asserts the projection is still usable, the window says what it is a window onto, and two pages neither overlap nor repeat.</p>
+<h3 id="blk-112771">6 · The naming correction</h3>
+<p><code>open_control_channel</code> said &quot;succeeds once per world&quot;. You are right that this reads as though reopening should be forbidden while the product requires it. The invariant is about concurrency, not lifetime:</p>
+<blockquote><p><strong>At most one human control channel is active at a time.</strong></p></blockquote>
+<p>Changed in <code>Ampd.Peer</code>, <code>Ampd.Bridge</code>, the refusal's own <code>operator_detail</code>, and the battery's wording. The refusal is <code>retryable: true</code> now, which it always should have been.</p>
+<h3 id="blk-112776">7 · Your falsifier table</h3>
+<table><thead><tr><th>Falsifier</th><th>State</th></tr></thead><tbody><tr><td>Same-UID process discovers runtime directory</td><td>✅ <strong>nothing to discover</strong> — no socket file exists; the search that looks for one is itself falsified</td></tr><tr><td>Same-UID process races an agent startup</td><td>✅ <strong>unraceable</strong> — a descriptor cannot be opened by name</td></tr><tr><td>Peer dies while subscribed</td><td>✅ falsified — no further private projection</td></tr><tr><td>Peer dies</td><td>✅ falsified — identity-bearing connection closes</td></tr><tr><td>AuthorityCoordinator dies</td><td>✅ falsified — epoch changes</td></tr><tr><td>Revision resets within new epoch</td><td>✅ falsified — same generation, new epoch, revision lower</td></tr><tr><td>Many legitimate receipts exceed one frame</td><td>✅ falsified — 140 × 4 KB, projection usable, history paged</td></tr><tr><td>Reply and push interleave</td><td>✅ falsified — correlation, in the host</td></tr><tr><td>Burst of projections</td><td>✅ falsified — newest survives</td></tr><tr><td>Close/reopen control UI</td><td>✅ falsified — one active at a time, same durable world</td></tr></tbody></table>
+<p>Ten of ten.</p>
+<h3 id="blk-112801">8 · The harness caught itself twice more</h3>
+<p>The compile check I added last round earned its keep again, and so did the <code>SABOTAGE MISSED</code> path:</p>
+<ul><li><p><strong>`a channel accepts once and its socket is retired`</strong> — the listener it probed no</p></li></ul>
+<p>longer exists. Reported as proving nothing rather than passing.</p>
+<ul><li><p><strong>`a leaked socket path is detected`</strong> — I wrote this probe, it reported</p></li></ul>
+<p><code>NOT A FALSIFIER</code>, and it was right twice over. First because my Elixir scan only looked at top-level entries and never descended into a directory; then, after I fixed that, because I had added <code>File.rm_rf(dir)</code> and the probe was only disabling <code>File.rm(path)</code>. A stale probe against improved code.</p>
+<p>The first of those found a genuine hole in a <strong>test</strong>: the scan was not looking where a leak would actually be. It also matched any <code>.sock</code> on the box, including an unrelated <code>claude-cowork-vm.sock</code>, which is how you get a test somebody disables.</p>
+<p>And then running the four gates <em>in order</em> found a third thing, which is the kind I like least because it only appears in sequence. The leak probe disables <code>socketpair/1</code>'s cleanup and runs the whole transport suite, so it leaves thirty leaked pairs on disk — and the <strong>next</strong> gate, the host battery's search for a path into a channel, correctly found them and failed. Gate 3 was reporting gate 2's litter as a defect in the runtime.</p>
+<p>A harness that leaves behind exactly what the next harness looks for is worse than no harness, because the failure is real, reproducible, and about nothing. <code>probe()</code> cleans up after itself now, and the four gates pass in sequence rather than only in isolation.</p>
+<h3 id="blk-112814">9 · Where I think this leaves the badge</h3>
+<p>I agree with your framing and not quite your sequence. You put <code>LIVE LOCAL</code> after the Tauri shell; I would put the <em>transport</em> claim here and the <em>product</em> claim there:</p>
+<pre><code>real ampd authority                             ✓
+real OS transport                               ✓
+runtime-bound agent identity                    ✓
+human control is actually private               ✓  descriptors, not paths
+stale identity cannot keep receiving anything   ✓
+projection continuity has restart semantics     ✓
+a healthy world's projection stays usable       ✓
+────────────────────────────────────────────────
+something renders it                            ✗  ← the whole remainder</code></pre>
+<p>Every line you named is closed. What is left is not a security or correctness question any more; it is a window. So my read is:</p>
+<blockquote><p><strong>C1.1 complete. `LIVE LOCAL` is one UI away, and the UI is integration work.</strong></p></blockquote>
+<p>If you still want the badge to wait for the shell, I have no objection — it is your call and the difference is one word. But I do not think there is another correctness round between here and there, and I would rather be told I am wrong about that now than find out by shipping.</p>
+<h3 id="blk-112821">10 · Open</h3>
+<ol><li><p><strong>Is the descriptor model the endpoint?</strong> You said <code>Ampd.Bridge</code> is the right semantic</p></li></ol>
+<p>boundary and the path-based realization was not the right physical one. It is now <code>socketpair</code> + <code>SCM_RIGHTS</code>. Inside the BEAM, code can still call <code>adopt_channel/3</code> and bind a descriptor to any actor — I believe that is irreducible, because the runtime <em>is</em> the thing trusted to name identities. Confirm and I will stop here.</p>
+<ol start="2"><li><p><strong>`SOCK_SEQPACKET` availability.</strong> It is Linux and the BSDs. macOS <code>socketpair</code> does not</p></li></ol>
+<p>support it. When Super ships to macOS the bridge needs <code>SOCK_STREAM</code> plus explicit framing, and a descriptor would then need to be pinned to a frame rather than to a packet. I would rather solve that when there is a macOS target than guess now.</p>
+<ol start="3"><li><p><strong>`grant_requests_history`</strong> — my call, §5. If resolved requests should stay live</p></li></ol>
+<p>because an operator reads them as a queue rather than as history, say so and I will move them back and bound them some other way.</p>
+<ol start="4"><li><p><strong>Tauri.</strong> Still not built, and for the same reason: everything C1.1 claims is provable</p></li></ol>
+<p>by running one command, and none of it needs a window. The host is a plain binary that drives the whole protocol; the WebView is a shell over exactly this.</p>
+<h3 id="blk-112838">11 · Ladder</h3>
+<p>C1.1.0   projection boundary correctness                   ✓ C1.1.1   identity + projection                             ✓ C1.1.2   the transport's acceptance battery                ✓ C1.1     Tauri Rust host + private transport               ✓ ├─ F.6  CommandSpec · exact-set linearized · │       frame and per-field limits · duration at │       creation · pack digest · push projections └─ F.7  inherited descriptors, no filesystem · identity lifetime · projection epoch · demultiplexer · bounded projection ── remaining: the WebView itself C1.1b    SQLite transactional persistence · durable revision C1.2     FabricProvider.Tailscale</p>
+<h3 id="blk-112840">Verify</h3>
+<pre><code>cd ampd &amp;&amp; mix test                    # 167 tests
+bash tools/sabotage.sh                 # 36 falsified · 0 not
+cd .. &amp;&amp; bash tools/release.sh         # full gate chain → and-super-rev-f7.zip
+cargo build --release --manifest-path host/Cargo.toml
+./host/target/release/super-host verify    # 22 held · 0 failed</code></pre>
+<p>The last one creates a socketpair, spawns the runtime holding one end, passes agent channels by descriptor, and drives the battery from a separate OS process. It is the only gate that does not run inside the BEAM it is testing — and the only one that can prove there is nothing on the filesystem to open.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/C1_1B_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-112695" class="lvl2">0 · Measured</a><a href="#blk-112718" class="lvl2">1 · The private channel is now actually private</a><a href="#blk-112733" class="lvl3">It cost one more real bug</a><a href="#blk-112736" class="lvl2">2 · A dead Peer no longer leaks projections</a><a href="#blk-112750" class="lvl2">3 · projection_epoch</a><a href="#blk-112758" class="lvl2">4 · One socket, and the demultiplexer you specified</a><a href="#blk-112764" class="lvl2">5 · The bounded projection</a><a href="#blk-112771" class="lvl2">6 · The naming correction</a><a href="#blk-112776" class="lvl2">7 · Your falsifier table</a><a href="#blk-112801" class="lvl2">8 · The harness caught itself twice more</a><a href="#blk-112814" class="lvl2">9 · Where I think this leaves the badge</a><a href="#blk-112821" class="lvl2">10 · Open</a><a href="#blk-112838" class="lvl2">11 · Ladder</a><a href="#blk-112840" class="lvl2">Verify</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a><a href="/super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md/">F.8.2.5 — generation is a fence, and the narrowing was never a product decision</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierafrxbrcmewcnyn3tyxyykcbaczhnoqtp3o6ccymiftdvf7tq23ndq</div></div></div>
+</div></div>
+</body></html>

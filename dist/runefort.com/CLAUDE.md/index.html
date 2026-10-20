@@ -1,0 +1,57 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>RuneFort · runefort.com · Ampersand Box</title>
+<meta name="description" content="A layout protocol for tiled, file-backed UIs. Four primitives — room, claim, neighbor, binding — declared as JSON that lives in a repository.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/runefort.com/CLAUDE.md/">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RuneFort">
+<meta property="og:description" content="A layout protocol for tiled, file-backed UIs. Four primitives — room, claim, neighbor, binding — declared as JSON that lives in a repository.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/runefort.com/CLAUDE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"RuneFort","name":"RuneFort","description":"A layout protocol for tiled, file-backed UIs. Four primitives — room, claim, neighbor, binding — declared as JSON that lives in a repository.","url":"https://docs.ampersandboxdesign.com/runefort.com/CLAUDE.md/","identifier":"bagaaieraje7f62momlopvga4nlqxgxoqjdmycuidjfcrajkohe6d32hl6lvq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"runefort.com","url":"https://docs.ampersandboxdesign.com/runefort.com/"},"articleSection":"runefort.com","hasPart":[{"@type":"WebPageElement","name":"The landing page is GENERATED. Do not hand-edit index.html."},{"@type":"WebPageElement","name":"Spec — there is NO docs/spec/README.md here"},{"@type":"WebPageElement","name":"What is built, and what only reads as built"},{"@type":"WebPageElement","name":"Weight — do not quote a number from memory"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"runefort.com","item":"https://docs.ampersandboxdesign.com/runefort.com/"},{"@type":"ListItem","position":3,"name":"CLAUDE.md","item":"https://docs.ampersandboxdesign.com/runefort.com/CLAUDE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">runefort.com</span>
+<span class="path">runefort.com/CLAUDE.md</span>
+
+</div></div>
+<div class="lead">A layout protocol for tiled, file-backed UIs. Four primitives — room, claim, neighbor, binding — declared as JSON that lives in a repository.</div>
+<div class="prose"><h1 id="blk-106635">RuneFort</h1>
+<p>A layout protocol for tiled, file-backed UIs. Four primitives — room, claim, neighbor, binding — declared as JSON that lives in a repository.</p>
+<h3 id="blk-106637">The landing page is GENERATED. Do not hand-edit <code>index.html</code>.</h3>
+<p><code>/index.html</code> and <code>/tiles.js</code> are emitted by <code>build-site.mjs</code> from <code>records/surface.json</code>, <code>records/weights.json</code>, <code>src/landing.html</code>, <code>src/shell.css</code> and <code>src/tiles.js</code>. <strong>An edit to the served HTML is silently reverted by the next build.</strong> Change the record or the template.</p>
+<pre><code>npm run test:launch    # emit the site, then run the publication gate</code></pre>
+<p><code>build-site.mjs</code> walks the ES module import graph from each entry point and gzips what it reaches, so <strong>every byte figure on the page is measured, never typed</strong>, and the build refuses when a figure moves without its record. <code>launch-gate.mjs</code> reads the emitted artifact and refuses on the other ways a page lies — a retracted claim reinstated, a rung invented, a CTA the rung has not earned, a <code>mailto:</code>, a text token below 4.5:1, a documented path that resolves to nothing, an artifact that is not what its source compiles to, an identifying-animation constant leaking into the copy. <strong>129 checks.</strong> The shell is documented in <code>ProjectAmp2/agents/SHELL.md</code>; this surface is built against revision <strong>`shell-r9`</strong>, recorded as <code>shell_revision</code> in <code>records/surface.json</code>.</p>
+<p><strong>Do not hand-type a check count anywhere.</strong> The gate prints its own total; the number above is what it printed on 2026-08-17, and it went 93 → 129 in a single session.</p>
+<p>Two checks are newer than the rest and are the ones to understand first:</p>
+<ul><li><p><strong>The computed-colour resolver.</strong> Travis reported the header CTA unreadable and he was</p></li></ul>
+<p>right: <code>.top nav a</code> is specificity 0,2,1 and <code>.btn</code> is 0,1,0, so the nav rule won and &quot;Walk a fort&quot; painted <code>rgba(233,234,228,.66)</code> on <code>#9ee04f</code> — <strong>1.19:1</strong> — while the identical button in the hero painted <code>#0b1403</code> correctly. <strong>Every contrast check here passed the whole time</strong>, because they read <em>declared tokens</em> and never the colour the cascade gives a real element. The gate now resolves the cascade over the emitted artifact (specificity, source order, <code>!important</code>, <code>@media</code> at 1600/1280/800/390, <code>var()</code>, inheritance) against each <code>.btn</code>'s real ancestor chain. Verdicts were cross-checked against the browser's computed styles and agreed on all four buttons. A selector it cannot parse is a REFUSAL, not a skip; finding zero buttons is a REFUSAL.</p>
+<ul><li><p><strong>The correction form's shape</strong> (SHELL.md r9): the <code>action</code> must equal the endpoint the</p></li></ul>
+<p>record declares, and <code>_gotcha</code> must be present — a honeypot dropped in a refactor fails silently.</p>
+<p><code>/app/</code> (the editor) is hand-authored, predates this shell, and is NOT generated. It is the surface's <code>live_deployed</code> artifact.</p>
+<p><strong>The band says &quot;a specification in the ComputeDriven world&quot;, not &quot;the interface layer of ComputeDriven&quot;, and that is deliberate.</strong> <code>ampersand-nav</code> records runefort as <code>place: 3</code>, and its own <code>renderPlacement()</code> gives the layer sentence to <code>place: 2</code> only.</p>
+<h3 id="blk-106653">Spec — there is NO <code>docs/spec/README.md</code> here</h3>
+<p>RuneFort is the one Tier-3 domain in the portfolio without one, and the root <code>CLAUDE.md</code> pointed at that filename until 2026-08-15. The real files:</p>
+<ul><li><p><code>docs/spec/runefort.protocol.md</code> — the protocol (start here)</p></li><li><p><code>docs/spec/runefort.core.md</code> — the Web Component API</p></li><li><p><code>docs/spec/runefort.dsl.md</code> — the <code>.rune</code> syntax. <strong>No parser exists for it.</strong></p></li></ul>
+<h3 id="blk-106662">What is built, and what only reads as built</h3>
+<ul><li><p><strong>Built and measured on the deployed domain:</strong> <code>&lt;rune-floor&gt;</code>, <code>&lt;rune-room&gt;</code>,</p></li></ul>
+<p><code>&lt;rune-claim&gt;</code>, <code>&lt;rune-link&gt;</code> — a declaration compiles to real CSS grid tracks.</p>
+<ul><li><p><strong>Built, unmeasured:</strong> the other ten custom elements, the templates, the generation</p></li></ul>
+<p>runtime.</p>
+<ul><li><p><strong>Not built:</strong> the <code>.rune</code> parser, any conformance suite, any second renderer.</p></li><li><p><strong>Built with no backend:</strong> <code>packages/core/src/supabase.js</code>. This portfolio ruled the</p></li></ul>
+<p>shared-Supabase route abandoned on 2026-07-30; the adapter is still inside the documented entry point and still costs its bytes.</p>
+<h3 id="blk-106677">Weight — do not quote a number from memory</h3>
+<p><code>records/weights.json</code> is regenerated on every build. As of 2026-08-16: the four layout primitives with their dependencies are <strong>24,443 bytes raw / 6,794 gzipped</strong>; the documented entry point <code>src/index.js</code> reaches 19 modules at <strong>163,749 / 42,065</strong>. The old <code>~5KB</code> figure is retracted on the landing page and is in the gate's blocklist.</p></div>
+<p class="src"><a href="/#/runefort.com/CLAUDE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-106637" class="lvl2">The landing page is GENERATED. Do not hand-edit index.html.</a><a href="#blk-106653" class="lvl2">Spec — there is NO docs/spec/README.md here</a><a href="#blk-106662" class="lvl2">What is built, and what only reads as built</a><a href="#blk-106677" class="lvl2">Weight — do not quote a number from memory</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/runefort.com/README.md/">Runefort</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraje7f62momlopvga4nlqxgxoqjdmycuidjfcrajkohe6d32hl6lvq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Opening a registered repository in the Editor without the native chooser · super · Ampersand Box</title>
+<meta name="description" content="September 18, 2026. This pass closes the gap that stopped two rounds of Super&#39;s own development loop on 2026-09-16 and 2026-09-17: the Editor&#39;s repository…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/app/REGISTERED_REPOSITORY_EDITOR_2026_09_18.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Opening a registered repository in the Editor without the native chooser">
+<meta property="og:description" content="September 18, 2026. This pass closes the gap that stopped two rounds of Super&#39;s own development loop on 2026-09-16 and 2026-09-17: the Editor&#39;s repository…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/app/REGISTERED_REPOSITORY_EDITOR_2026_09_18.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Opening a registered repository in the Editor without the native chooser","name":"Opening a registered repository in the Editor without the native chooser","description":"September 18, 2026. This pass closes the gap that stopped two rounds of Super's own development loop on 2026-09-16 and 2026-09-17: the Editor's repository…","url":"https://docs.ampersandboxdesign.com/super/docs/app/REGISTERED_REPOSITORY_EDITOR_2026_09_18.md/","identifier":"bagaaiera253oymta6cvofnii6vqk7zpwhhsntuypss7g5uchpbtk5nm5derq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"The ruling"},{"@type":"WebPageElement","name":"What changed"},{"@type":"WebPageElement","name":"Verification"},{"@type":"WebPageElement","name":"What this does not do"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"app","item":"https://docs.ampersandboxdesign.com/super/docs/app/"},{"@type":"ListItem","position":5,"name":"REGISTERED_REPOSITORY_EDITOR_2026_09_18.md","item":"https://docs.ampersandboxdesign.com/super/docs/app/REGISTERED_REPOSITORY_EDITOR_2026_09_18.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/app/REGISTERED_REPOSITORY_EDITOR_2026_09_18.md</span>
+
+</div></div>
+<div class="lead">September 18, 2026. This pass closes the gap that stopped two rounds of Super&#39;s own development loop on 2026-09-16 and 2026-09-17: the Editor&#39;s repository root could be set only…</div>
+<div class="prose"><h1 id="blk-111074">Opening a registered repository in the Editor without the native chooser</h1>
+<p>September 18, 2026. This pass closes the gap that stopped two rounds of Super's own development loop on 2026-09-16 and 2026-09-17: the Editor's repository root could be set only through <code>choose_workbench</code>, a GTK folder dialog on the cockpit's main thread. No script can answer that dialog reliably; while it waits, every other command stalls, including a harness's own teardown; and the root was held in memory only, so every restart re-required a person at the display before one proposal could be applied.</p>
+<h3 id="blk-111076">The ruling</h3>
+<p>A registered repository may be reopened in the Editor <strong>by its reference</strong>, with no dialog. The reasoning:</p>
+<ul><li><p>Registration already is the person's decision. <code>register_repository</code> stores exactly</p></li></ul>
+<p>the folder they picked in the native chooser, as an ordered write in the world. Reopening that folder asks nothing of them that they have not already decided.</p>
+<ul><li><p>The reference is what every other surface already uses. The projection publishes</p></li></ul>
+<p>repositories as <code>{ref, name}</code>; <code>open_lane</code> takes a <code>repository_ref</code>, never a path; plan matching compares the Editor's root with the plan's registered repository.</p>
+<ul><li><p>The alternatives were weaker. A path remembered by the page was ruled out on</p></li></ul>
+<p>2026-09-07 (<code>WORKBENCH_RECOVERY_2026_09_07.md</code>: recovery &quot;does not use a saved path as permission to open a repository automatically&quot;) and is not reinstated here. An environment variable at launch binds one root to one process and cannot be changed without a restart, which is the restart problem restated. Widening <code>choose_workbench</code> to accept a path from the page was refused outright: the page must not be able to name an executable folder.</p>
+<p>The boundary is unchanged: the webview never supplies a path and never receives one from the runtime. It sends <code>rp_XXXX</code>; the host asks the runtime over the bridge; the runtime answers the stored path to the host process only; the host re-checks that the folder is a Git top-level and holds it exactly as the chooser's result was held.</p>
+<h3 id="blk-111091">What changed</h3>
+<ul><li><p><code>Ampd.Transport.HostBridge</code> gained <code>registered_repository</code>. It takes a reference of</p></li></ul>
+<p>the form <code>rp_</code> plus digits, at most 100 bytes, and answers <code>{ref, path}</code> from <code>Ampd.Worktree.repo/1</code>. Anything else, including a path or an unknown reference, is refused as <code>repository-unknown</code> with <code>requires_human: true</code>. The projection still carries no path.</p>
+<ul><li><p>The cockpit gained the <code>open_workbench_repository</code> command (registered, declared</p></li></ul>
+<p>in the ACL manifest, granted to the trusted <code>main</code> webview only). It validates the reference before the runtime is asked, resolves it through the bridge, and calls <code>Workbench::choose</code>, so the generation increments and running shells refuse the switch exactly as before.</p>
+<ul><li><p>The Editor, Terminal and Browser toolbars gained a <strong>Registered repositories</strong></p></li></ul>
+<p>picker and an <strong>Open registered</strong> control, painted from the held projection on the existing two-second inventory poll. The native chooser remains, relabelled <strong>Other folder…</strong>, for a folder that is not yet registered. Its identifier <code>development-choose-&lt;page&gt;</code> is unchanged so existing smokes still find it.</p>
+<ul><li><p><code>tools/lib/cockpit-control.mjs</code> gained <code>openRepository(ref)</code>.</p></li></ul>
+<h3 id="blk-111107">Verification</h3>
+<ul><li><p><code>tools/registered-repository-smoke.mjs</code>: <strong>19 checks held, 0 failed</strong> in a throwaway</p></li></ul>
+<p>world, driven through the real cockpit with <code>SUPER_COCKPIT_CARRIER=1</code> supplying the registered repository. The Editor adopted the folder in 303 ms with no window titled like the chooser on the display; a repeated open moved the generation from 1 to 2; <code>rp_9999</code>, <code>/tmp</code>, an empty string and <code>rp_0001/..</code> were refused and changed nothing.</p>
+<ul><li><p><code>ampd/test/registered_repository_bridge_test.exs</code>: 4 tests over a socketpair, as the</p></li></ul>
+<p>Rust host speaks. Together with the other affected suites (development attempts, downgrade, development tasks, transport, repository display): <strong>102 tests, 0 failures</strong>.</p>
+<ul><li><p><code>cargo test --release repository::</code>: 5 tests, 0 failures, two new.</p></li><li><p>Static gates: webview ACL 41 held (47 registered commands, three lists agree),</p></li></ul>
+<p>source hygiene clean. The ordered-boundary and ordered-closure gates were RED before this change (recorded at <code>f2e5fda</code>) and read only <code>ampd/lib</code>; see the gate log for their state after it.</p>
+<h3 id="blk-111122">What this does not do</h3>
+<ul><li><p>It does not persist the workbench root across restarts. After a restart the person,</p></li></ul>
+<p>or a script, chooses a registered repository again; that is one click or one call and no dialog, which is the property that was missing.</p>
+<ul><li><p>It does not register a repository. Registration still goes through the native</p></li></ul>
+<p>chooser, on purpose: it is the one act that decides which folder on this machine the runtime may ever create worktrees from.</p>
+<ul><li><p>The person-facing picker was verified through the driven cockpit, not observed by a</p></li></ul>
+<p>person at the screen.</p></div>
+<p class="src"><a href="/#/super/docs/app/REGISTERED_REPOSITORY_EDITOR_2026_09_18.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-111076" class="lvl2">The ruling</a><a href="#blk-111091" class="lvl2">What changed</a><a href="#blk-111107" class="lvl2">Verification</a><a href="#blk-111122" class="lvl2">What this does not do</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/app/ACCEPTED_BUILD_2026_09_10.md/">Super: build accepted app</a><a href="/super/docs/app/ACCEPTED_RESULT_CHECK_2026_09_10.md/">Super: checking accepted source before integration</a><a href="/super/docs/app/AUTHORITY_LOG_RETENTION_2026_09_24.md/">Authority log retention — candidate 3 (2026-09-24)</a><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/BOT_LIVE_ACTIVITY_2026_09_13.md/">Bot activity and Claude reconnect</a><a href="/super/docs/app/BOT_WORK_PAGES_2026_09_07.md/">Super progress — bot work pages</a><a href="/super/docs/app/BUILD_PREVIEW_2026_09_10.md/">Try an accepted Super build</a><a href="/super/docs/app/CANCELLED_PLAN_STEPS_2026_09_19.md/">A cancelled plan&#39;s stepper claims no step — 2026-09-19</a><a href="/super/docs/app/COMBINED_FILE_REVIEW_2026_09_10.md/">Combined file review — 2026-09-10</a><a href="/super/docs/app/COMBINED_TESTING_2026_09_10.md/">Combined testing and acceptance — 2026-09-10</a><a href="/super/docs/app/CONTINUE_WORK_2026_09_14.md/">Continue work and guided review</a><a href="/super/docs/app/DESKTOP_LAUNCH_2026_09_10.md/">Daily desktop launch — September 10, 2026</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera253oymta6cvofnii6vqk7zpwhhsntuypss7g5uchpbtk5nm5derq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,60 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>TRVM-VERIFIED-CLAIM-v1 — the citable identity of a verified claim · TRVM · Ampersand Box</title>
+<meta name="description" content="Status: NORMATIVE. Depends on TRVM-PROOF-WIRE-v1.md §1 for the canonical encoding.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/TRVM-VERIFIED-CLAIM-v1.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TRVM-VERIFIED-CLAIM-v1 — the citable identity of a verified claim">
+<meta property="og:description" content="Status: NORMATIVE. Depends on TRVM-PROOF-WIRE-v1.md §1 for the canonical encoding.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/TRVM-VERIFIED-CLAIM-v1.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"TRVM-VERIFIED-CLAIM-v1 — the citable identity of a verified claim","name":"TRVM-VERIFIED-CLAIM-v1 — the citable identity of a verified claim","description":"Status: NORMATIVE. Depends on TRVM-PROOF-WIRE-v1.md §1 for the canonical encoding.","url":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/TRVM-VERIFIED-CLAIM-v1.md/","identifier":"bagaaierajp3aywnfil54zhjfmno6l5myzxyrjgluqw6pn247xtz7vtrsd4yq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"1. What a citation names"},{"@type":"WebPageElement","name":"2. The formula"},{"@type":"WebPageElement","name":"3. The properties this identity has, and the ones it does not"},{"@type":"WebPageElement","name":"4. Known-awkward, and deliberately not repaired"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/TRVM/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/"},{"@type":"ListItem","position":5,"name":"proof-wire","item":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/"},{"@type":"ListItem","position":6,"name":"TRVM-VERIFIED-CLAIM-v1.md","item":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/TRVM-VERIFIED-CLAIM-v1.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/docs/spec/proof-wire/TRVM-VERIFIED-CLAIM-v1.md</span>
+
+</div></div>
+<div class="lead">Status: NORMATIVE. Depends on TRVM-PROOF-WIRE-v1.md §1 for the canonical encoding.</div>
+<div class="prose"><h1 id="blk-48552">TRVM-VERIFIED-CLAIM-v1 — the citable identity of a verified claim</h1>
+<p><strong>Status: NORMATIVE.</strong> Depends on <code>TRVM-PROOF-WIRE-v1.md</code> §1 for the canonical encoding.</p>
+<p>This document exists because a blind implementation could not be written without it. <code>TRVM-NESTED-COMPOSITION-v2.md</code> §4.2 says an operand names a child by its <code>verified_claim_sem_id</code> and that an artifact which cannot produce all four bound values <em>cannot be cited at all</em> — and then did not say how the value is computed. That is a specification gap, recorded as one, and this is its repair.</p>
+<h3 id="blk-48555">1. What a citation names</h3>
+<p>An operand of a composing protocol does <strong>not</strong> name an artifact. It names a <strong>verified claim</strong>: a claim, the evidence aggregate that established it, and the compiler chain both were produced under, bound together.</p>
+<p>This is not a stylistic choice and it was measured. A bare <code>aggregate_id</code> is <strong>not</strong> a certificate: replacing a bounded proof's proposition with a completely different one moves its claim identity and leaves its <code>aggregate_id</code> <strong>byte-identical</strong>, because an aggregate commits to what was <em>measured</em> and not to what was <em>claimed</em>. A composition over bare aggregate ids would be citing &quot;sixty-four cases went like this&quot; and calling it a theorem.</p>
+<h3 id="blk-48558">2. The formula</h3>
+<pre><code>verified_claim_sem_id =
+  &quot;vclaim-&quot; ++ lowercase-hex( SHA-256(
+      &quot;TRVM-VERIFIED-CLAIM-v1|&quot; ++ canonical_bytes({
+          certificate_protocol: &quot;TRVM-VERIFIED-CLAIM-v1&quot;,
+          protocol:      &lt;the child artifact's own protocol string&gt;,
+          claim_sem_id:  &lt;the child's claim identity&gt;,
+          aggregate_id:  &lt;the child's evidence aggregate identity&gt;,
+          chain_ids:     &lt;the child's compiler chain record&gt;
+      }) ) )</code></pre>
+<p><code>canonical_bytes</code> is <code>TRVM-PROOF-WIRE-v1.md</code> §1 — RFC 8785 over the object, UTF-8. The domain-separation prefix <code>&quot;TRVM-VERIFIED-CLAIM-v1|&quot;</code> is part of the preimage. Note that <code>certificate_protocol</code> appears <strong>both</strong> as the prefix and as a member of the hashed object; that is the shipped preimage and an implementation MUST reproduce it exactly.</p>
+<p><strong>2.1. All four inputs are required.</strong> An absent one MUST be a refusal and MUST NOT be hashed as a missing member. <code>SHA-256</code> of an object with a member omitted is a perfectly good hex string that composes fine and names nothing — that is what made a composed certificate silently uncitable before it made it loudly uncitable.</p>
+<p><strong>2.2. `claim_sem_id` is protocol-specific and the CITER decides where to find it.</strong> Which member of a child artifact holds its claim identity is <strong>protocol semantics belonging to the composing checker</strong>, not to the child. A composer that let an artifact tell it which member to read would let the artifact choose which of its own hashes to be judged on.</p>
+<p>The mapping for the protocols currently defined:</p>
+<table><thead><tr><th>child protocol</th><th>claim member</th><th>composed</th></tr></thead><tbody><tr><td><code>TRVM-BOUNDED-PROOF-v1</code></td><td><code>claim.bounded_claim_sem_id</code></td><td>no</td></tr><tr><td><code>TRVM-BOUNDED-DOMAIN-PROOF-v1</code></td><td><code>claim.domain_claim_sem_id</code></td><td>no</td></tr><tr><td><code>TRVM-NESTED-COMPOSITION-v2</code></td><td><code>claim.nested_claim_sem_id</code></td><td>yes</td></tr></tbody></table>
+<p><code>aggregate_id</code> is read from <code>aggregate.aggregate_id</code> and <code>chain_ids</code> from the artifact's top-level <code>chain_ids</code> for every protocol above.</p>
+<h3 id="blk-48578">3. The properties this identity has, and the ones it does not</h3>
+<p><strong>3.1. It MOVES when the claim moves, when the evidence aggregate moves, and when the compiler chain moves.</strong></p>
+<p><strong>3.2. It HOLDS when anything non-authoritative is reworded.</strong> Annotations, scope prose and generator notes are outside all four bound values. Editing them changes the artifact's <strong>address</strong> (<code>TRVM-PROOF-WIRE-v1.md</code> §2) and not its <strong>name</strong>. An operand therefore carries one stable name and one brittle one, and they answer different questions.</p>
+<p><strong>3.3. IT IS NOT A WARRANT.</strong> Nothing in this identity records that any checker ever accepted anything: there is no registry, no signature and no verdict in the preimage. It NAMES a claim-plus-evidence pair; it does not assert that the pair checks out. A composer receiving one and trusting it would have invented a certificate authority out of a hash. Whoever cites it MUST still run the child's own checker.</p>
+<h3 id="blk-48582">4. Known-awkward, and deliberately not repaired</h3>
+<p><code>chain_ids</code> is required by §2.1, so a composed artifact must carry one to be citable. Its content is defined by <code>TRVM-NESTED-COMPOSITION-v2.md</code> §5 as the flat set of its direct children's chain records.</p>
+<p><strong>That set is measured to be redundant for binding.</strong> A child's own <code>verified_claim_sem_id</code> already binds its chain, and an operand binds that certificate, so a leaf compiler change propagates into every ancestor's claim identity <strong>without</strong> the parent carrying a chain set at all. Its only surviving role is satisfying §2.1.</p>
+<p>This is almost certainly telling us the abstraction is wrong — a successful checker should derive a <em>citation subject</em> rather than every composer knowing where four values live in every child protocol. <strong>It is documented rather than redesigned on purpose</strong>: an independent implementation reading this document is the cheapest available evidence that the current interface is describable, and that evidence is worth more before the redesign than after it. The awkwardness is data.</p></div>
+<p class="src"><a href="/#/TRVM/docs/spec/proof-wire/TRVM-VERIFIED-CLAIM-v1.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-48555" class="lvl2">1. What a citation names</a><a href="#blk-48558" class="lvl2">2. The formula</a><a href="#blk-48578" class="lvl2">3. The properties this identity has, and the ones it does not</a><a href="#blk-48582" class="lvl2">4. Known-awkward, and deliberately not repaired</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/docs/spec/proof-wire/TRVM-NESTED-COMPOSITION-v2.md/">TRVM-NESTED-COMPOSITION-v2 — a proof DAG over a content-addressed store</a><a href="/TRVM/docs/spec/proof-wire/TRVM-PROOF-WIRE-v1.md/">TRVM-PROOF-WIRE-v1 — the canonical wire and the content address</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajp3aywnfil54zhjfmno6l5myzxyrjgluqw6pn247xtz7vtrsd4yq</div></div></div>
+</div></div>
+</body></html>

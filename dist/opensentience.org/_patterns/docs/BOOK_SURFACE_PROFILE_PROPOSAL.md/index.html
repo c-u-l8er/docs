@@ -1,0 +1,208 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>book.surface.v1 — a static WRL profile for the book&#39;s scenes, proposed (read-only inventory) · opensentience.org · Ampersand Box</title>
+<meta name="description" content="Status: PROPOSAL. Nothing here is added to `WRL/relation-v2.js`, no identity is minted, no runtime is claimed. Written 2026-09-12 for the WRL lane, in the…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/opensentience.org/_patterns/docs/BOOK_SURFACE_PROFILE_PROPOSAL.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="book.surface.v1 — a static WRL profile for the book&#39;s scenes, proposed (read-only inventory)">
+<meta property="og:description" content="Status: PROPOSAL. Nothing here is added to `WRL/relation-v2.js`, no identity is minted, no runtime is claimed. Written 2026-09-12 for the WRL lane, in the…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/opensentience.org/_patterns/docs/BOOK_SURFACE_PROFILE_PROPOSAL.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"book.surface.v1 — a static WRL profile for the book's scenes, proposed (read-only inventory)","name":"book.surface.v1 — a static WRL profile for the book's scenes, proposed (read-only inventory)","description":"Status: PROPOSAL. Nothing here is added to `WRL/relation-v2.js`, no identity is minted, no runtime is claimed. Written 2026-09-12 for the WRL lane, in the…","url":"https://docs.ampersandboxdesign.com/opensentience.org/_patterns/docs/BOOK_SURFACE_PROFILE_PROPOSAL.md/","identifier":"bagaaiera6j3ybq3otqagqldod6pfv453nthvag7adosdwvag6ccaqbwe4fxq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"opensentience.org","url":"https://docs.ampersandboxdesign.com/opensentience.org/"},"articleSection":"opensentience.org","hasPart":[{"@type":"WebPageElement","name":"0. What a scene is, in its own words, and why that bounds the inventory"},{"@type":"WebPageElement","name":"1. The registries, with their enumeration points"},{"@type":"WebPageElement","name":"2. Not authority (excluded from identity)"},{"@type":"WebPageElement","name":"3. What forge.world.core.v1 can and cannot represent of this family"},{"@type":"WebPageElement","name":"4. The minimal book.surface.v1 obligation, measured"},{"@type":"WebPageElement","name":"5. What the book does if the row is accepted, and if it is refused"},{"@type":"WebPageElement","name":"6. Not done here"},{"@type":"WebPageElement","name":"Questions for adjudication"},{"@type":"WebPageElement","name":"Appendix — the census script (run it; the table above is its output)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"opensentience.org","item":"https://docs.ampersandboxdesign.com/opensentience.org/"},{"@type":"ListItem","position":3,"name":"_patterns","item":"https://docs.ampersandboxdesign.com/opensentience.org/_patterns/"},{"@type":"ListItem","position":4,"name":"docs","item":"https://docs.ampersandboxdesign.com/opensentience.org/_patterns/docs/"},{"@type":"ListItem","position":5,"name":"BOOK_SURFACE_PROFILE_PROPOSAL.md","item":"https://docs.ampersandboxdesign.com/opensentience.org/_patterns/docs/BOOK_SURFACE_PROFILE_PROPOSAL.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">opensentience.org</span>
+<span class="path">opensentience.org/_patterns/docs/BOOK_SURFACE_PROFILE_PROPOSAL.md</span>
+
+</div></div>
+<div class="lead">Status: PROPOSAL. Nothing here is added to `WRL/relation-v2.js`, no identity is minted, no runtime is claimed. Written 2026-09-12 for the WRL lane, in the form of graphonomous/v…</div>
+<div class="prose"><h1 id="blk-95302"><code>book.surface.v1</code> — a static WRL profile for the book's scenes, proposed (read-only inventory)</h1>
+<p><strong>Status: PROPOSAL. Nothing here is added to `WRL/relation-v2.js`, no identity is minted, no runtime is claimed.</strong> Written 2026-09-12 for the WRL lane, in the form of <code>graphonomous/v2/handoff/research/R17_WRL_SOURCE_INVENTORY.md</code>, to be adjudicated beside the pending <code>graphonomous.semantic.v3</code> obligation. Measured at WRL <code>32160fec77a1</code> and opensentience.org <code>0a7717c76f44</code>. Every count below is derived by the script in the appendix from <code>opensentience.org/_patterns/scenes/*.json</code>; none is typed.</p>
+<p><strong>The question.</strong> Travis asked (2026-09-12) whether the book's <em>Structure — on the surface</em> animations — 32 scenes over six stencils — can be &quot;coded in WRL&quot;. This document answers it the way the tree answers vocabulary questions: by measuring what the scenes state, checking what an existing profile can carry, and stating the minimal obligation for a new one, so the WRL lane can judge the row against what it would have to hold.</p>
+<h3 id="blk-95305">0. What a scene is, in its own words, and why that bounds the inventory</h3>
+<p>A scene is data: a <strong>stencil</strong> that lays out a compute surface (carriers, slots, stations, wires, meters, rings) and a list of <strong>steps</strong>, each with a caption, an optional takeaway, and generic actions that mutate object attributes or move loci between named positions (<code>_patterns/surface/surface.mjs</code>; plan §6). The engine executes it. It is labelled an illustration on every page; the witness beside it is the evidence.</p>
+<p>Two facts bound what WRL can do with it. <strong>(1)</strong> A static V2 profile &quot;implies no runtime and derives exactly <code>{ rulepack_id }</code>&quot; and is &quot;refused by the text surface&quot; (WRL README, the profile table). So a scene under a static profile gets <strong>identity</strong> — a <code>sem-</code> id for its topology — and nothing executes it but the engine. <strong>(2)</strong> The only lowered profile is <code>forge.world.core.v1</code> (five roles, two edge kinds). Ten of the 32 scenes already have an honest world in it and a Film the forge reduced (plan §7 P10); the other 22 do not, for reasons each page states. Making the forge <em>execute</em> a locus-on-carrier scene would need a lowered profile with runtime semantics in TRVM — a new runtime, not a row — and is out of scope here.</p>
+<h3 id="blk-95308">1. The registries, with their enumeration points</h3>
+<p>Enumerated by the appendix script over <code>scenes/*.json</code> (the only authority for what a scene contains):</p>
+<table><thead><tr><th>Registry</th><th>Count</th><th>Values</th></tr></thead><tbody><tr><td>scenes</td><td>32</td><td>one per record with a <code>scene</code> field</td></tr><tr><td>stencils</td><td>6</td><td>join (11), wire (8), migrate (6), nest (3), multiplex (2), progress (2)</td></tr><tr><td>object kinds (roles)</td><td>8</td><td>LOCUS (79 instances), STATION (35 instances), CARRIER (20 instances), SLOT (12 instances), RING (12 instances), WIRE (8 instances), METER (8 instances), MAILBOX (1 instances)</td></tr><tr><td>action ops</td><td>12</td><td>state (146), move (115), note (60), join (22), spawn (18), tag (15), meter (14), wirenote (7), place (6), count (3), remove (3), label (1)</td></tr><tr><td>object states</td><td>11</td><td>held (37), idle (35), admitted (22), refused (18), live (13), indeterminate (8), gone (4), dormant (4), tampered (2), busy (2), record (1)</td></tr><tr><td>steps / takeaways</td><td>156 / 94</td><td>a step is a frame; a takeaway is prose bound to a frame</td></tr><tr><td>named positions (anchors)</td><td>36 distinct</td><td>layout, see §2</td></tr></tbody></table>
+<p>Per stencil, the ops it uses: <strong>migrate</strong> state 34, move 10, tag 6, count 3, label 1, spawn 1; <strong>join</strong> move 30, state 27, join 22, note 17, spawn 12, tag 4; <strong>multiplex</strong> move 44, state 16, tag 4; <strong>wire</strong> state 39, note 38, move 26, wirenote 7, spawn 5, remove 3, tag 1; <strong>progress</strong> meter 14, place 6, state 5, move 1; <strong>nest</strong> state 25, note 5, move 4.</p>
+<h3 id="blk-95336">2. Not authority (excluded from identity)</h3>
+<ul><li><p><strong>Anchors and coordinates.</strong> The 36 anchor names are layout — where a stencil draws a slot — exactly as</p></li></ul>
+<p>layout is not meaning in WRL. They would not enter a world.</p>
+<ul><li><p><strong>Captions, takeaways, intervals, colours.</strong> Prose bound to frames and presentation. A scenario document may carry</p></li></ul>
+<p>them; the world's id must not.</p>
+<ul><li><p><strong>The engine.</strong> <code>surface.mjs</code> is the executor and is versioned by its bytes in <code>artifact.json</code>; it is not part of</p></li></ul>
+<p>any scene's identity.</p>
+<h3 id="blk-95349">3. What <code>forge.world.core.v1</code> can and cannot represent of this family</h3>
+<p><strong>Can:</strong> any scene whose semantics are signals over wires into gates, rotors and poses — the ten records that carry a <code>wrl.world</code> today (join → Door with one input port; observable → Spinner rotor; projection → Spinner→Orb; identity/meaning/replay/sizes → the starter world). Their Films are on the pages, reduced by the forge.</p>
+<p><strong>Cannot:</strong> a locus that moves between carriers (there is no carrier role — the runtime is the carrier); a mailbox in source (Mailbox has no surface spelling, Core 0.1.2 §14b); meters (progress is a property of a Film, not a topology); rings (boundaries are not routes); a join whose refusal names a <em>field</em> (a Door refuses at a port). That is 22 of 32 scenes, each page carrying its one-line reason.</p>
+<h3 id="blk-95352">4. The minimal <code>book.surface.v1</code> obligation, measured</h3>
+<p>Exactly what the registries in §1 state as <em>topology</em>, and nothing more. Attributes that steps mutate (<code>state</code>, <code>note</code>, <code>tag</code>, <code>count</code>, <code>value</code>) are <strong>role attributes</strong>, as v0's roles carry <code>[&quot;node&quot;]</code>; they are not relations. Movement (<code>move</code>, <code>place</code>, <code>spawn</code>) is a change of one relation, <code>PLACED_AT</code>. The row, in the shape of <code>GRAPHONOMOUS_V0_ROW</code>:</p>
+<pre data-lang="json"><code>{
+ <span class="t-key">&quot;book.surface.v1&quot;</span>: {
+  <span class="t-key">&quot;derivation&quot;</span>: <span class="t-string">&quot;static&quot;</span>,
+  <span class="t-key">&quot;rulepack_id&quot;</span>: <span class="t-string">&quot;book.surface.rules.v1&quot;</span>,
+  <span class="t-key">&quot;policies&quot;</span>: [
+   <span class="t-string">&quot;book.surface.rules.v1&quot;</span>
+  ],
+  <span class="t-key">&quot;domain&quot;</span>: <span class="t-string">&quot;surface&quot;</span>,
+  <span class="t-key">&quot;signature&quot;</span>: {
+   <span class="t-key">&quot;orientation&quot;</span>: <span class="t-string">&quot;directed&quot;</span>,
+   <span class="t-key">&quot;texture&quot;</span>: <span class="t-string">&quot;solid&quot;</span>,
+   <span class="t-key">&quot;arity&quot;</span>: <span class="t-num">2</span>,
+   <span class="t-key">&quot;endpoint_roles&quot;</span>: [
+    <span class="t-string">&quot;source&quot;</span>,
+    <span class="t-string">&quot;target&quot;</span>
+   ]
+  },
+  <span class="t-key">&quot;roles&quot;</span>: {
+   <span class="t-key">&quot;LOCUS&quot;</span>: [
+    <span class="t-string">&quot;node&quot;</span>,
+    <span class="t-string">&quot;state&quot;</span>,
+    <span class="t-string">&quot;tag&quot;</span>
+   ],
+   <span class="t-key">&quot;CARRIER&quot;</span>: [
+    <span class="t-string">&quot;node&quot;</span>,
+    <span class="t-string">&quot;state&quot;</span>,
+    <span class="t-string">&quot;label&quot;</span>
+   ],
+   <span class="t-key">&quot;SLOT&quot;</span>: [
+    <span class="t-string">&quot;node&quot;</span>,
+    <span class="t-string">&quot;state&quot;</span>
+   ],
+   <span class="t-key">&quot;STATION&quot;</span>: [
+    <span class="t-string">&quot;node&quot;</span>,
+    <span class="t-string">&quot;state&quot;</span>,
+    <span class="t-string">&quot;note&quot;</span>
+   ],
+   <span class="t-key">&quot;WIRE&quot;</span>: [
+    <span class="t-string">&quot;node&quot;</span>,
+    <span class="t-string">&quot;state&quot;</span>,
+    <span class="t-string">&quot;note&quot;</span>
+   ],
+   <span class="t-key">&quot;METER&quot;</span>: [
+    <span class="t-string">&quot;node&quot;</span>,
+    <span class="t-string">&quot;value&quot;</span>,
+    <span class="t-string">&quot;max&quot;</span>
+   ],
+   <span class="t-key">&quot;RING&quot;</span>: [
+    <span class="t-string">&quot;node&quot;</span>,
+    <span class="t-string">&quot;state&quot;</span>,
+    <span class="t-string">&quot;note&quot;</span>
+   ],
+   <span class="t-key">&quot;MAILBOX&quot;</span>: [
+    <span class="t-string">&quot;node&quot;</span>,
+    <span class="t-string">&quot;state&quot;</span>,
+    <span class="t-string">&quot;count&quot;</span>
+   ]
+  },
+  <span class="t-key">&quot;endpoints&quot;</span>: {
+   <span class="t-key">&quot;PLACED_AT&quot;</span>: [
+    [
+     <span class="t-string">&quot;LOCUS&quot;</span>,
+     <span class="t-string">&quot;CARRIER&quot;</span>
+    ],
+    [
+     <span class="t-string">&quot;LOCUS&quot;</span>,
+     <span class="t-string">&quot;SLOT&quot;</span>
+    ],
+    [
+     <span class="t-string">&quot;LOCUS&quot;</span>,
+     <span class="t-string">&quot;STATION&quot;</span>
+    ],
+    [
+     <span class="t-string">&quot;LOCUS&quot;</span>,
+     <span class="t-string">&quot;RING&quot;</span>
+    ],
+    [
+     <span class="t-string">&quot;LOCUS&quot;</span>,
+     <span class="t-string">&quot;WIRE&quot;</span>
+    ]
+   ],
+   <span class="t-key">&quot;JOINS&quot;</span>: [
+    [
+     <span class="t-string">&quot;LOCUS&quot;</span>,
+     <span class="t-string">&quot;STATION&quot;</span>
+    ]
+   ],
+   <span class="t-key">&quot;COMPOSES_WITH&quot;</span>: [
+    [
+     <span class="t-string">&quot;LOCUS&quot;</span>,
+     <span class="t-string">&quot;LOCUS&quot;</span>
+    ]
+   ],
+   <span class="t-key">&quot;VERIFIED_BY&quot;</span>: [
+    [
+     <span class="t-string">&quot;WIRE&quot;</span>,
+     <span class="t-string">&quot;STATION&quot;</span>
+    ]
+   ],
+   <span class="t-key">&quot;MEASURES&quot;</span>: [
+    [
+     <span class="t-string">&quot;METER&quot;</span>,
+     <span class="t-string">&quot;CARRIER&quot;</span>
+    ]
+   ],
+   <span class="t-key">&quot;CONTAINS&quot;</span>: [
+    [
+     <span class="t-string">&quot;RING&quot;</span>,
+     <span class="t-string">&quot;RING&quot;</span>
+    ],
+    [
+     <span class="t-string">&quot;RING&quot;</span>,
+     <span class="t-string">&quot;LOCUS&quot;</span>
+    ]
+   ]
+  }
+ }
+}</code></pre>
+<p>Sizes it would have to hold at <code>0a7717c76f44</code>: <strong>8 roles, 6 kinds, 11 endpoint pairs</strong>; 32 worlds (175 objects across them); a scenario document per world carrying its 156-step film-shaped sequence of relation and attribute changes (94 of them with prose). <strong>None of these numbers is a promise; they are the sizes of the scene registry as measured.</strong></p>
+<p>What the row derives: <code>{ rulepack_id }</code> and nothing else — no runtime, no Film. What it refuses: the text surface; a scene world would be V2 relation IR (JSON), converted from the scene file by a book-side adapter, sealed by <code>relation-v2.js</code>, and its id printed beside the animation. Adding a row &quot;changes no existing identity: selection is a <code>hasOwnProperty</code> on the key&quot; (<code>relation-v2.js</code>).</p>
+<h3 id="blk-95357">5. What the book does if the row is accepted, and if it is refused</h3>
+<p><strong>Accepted:</strong> an adapter <code>scene → V2 world + scenario</code>; the build seals every scene's world through <code>relation-v2.js</code> (P16: a scene whose world does not seal is refused), prints the <code>sem-</code> id and a scenario digest beside the animation, and the edition's <code>artifact.json</code> carries the 32 ids. The engine remains the executor and the page keeps saying so. Cost: one adapter, one build step; identity is cheap at any size.</p>
+<p><strong>Refused:</strong> the scenes stay JSON, hashed into <code>artifact.json</code> as they are today — deferred with their coordinates preserved and no edge, the D-073 pattern — and the deferral is reported on the conclusion page.</p>
+<p><strong>Either way, the strong path for Part III is not WRL.</strong> The Progress scenes are about loci on carriers, and the executor of that is ComputeDriven's floors, whose runs exist as receipts with instruction counts (<code>computedriven/receipts/R7-EXECUTED.md</code>). A stage-B analogue for Carrier Multiplexing is a replay of a ComputeDriven transcript, and it is listed in the plan as such.</p>
+<h3 id="blk-95361">6. Not done here</h3>
+<p>No row added; no <code>sem-</code> id minted under a profile that does not exist; no claim that WRL executes a scene; no change to any existing identity. The <code>graphonomous.semantic.v3</code> obligation is older and pending; this proposal does not jump it.</p>
+<h3 id="blk-95363">Questions for adjudication</h3>
+<ol><li><p>Is a <strong>static</strong> row the right instrument for a vocabulary that has a runtime elsewhere (the book's engine), or</p></li></ol>
+<p>does WRL-P0 intend static rows only for vocabularies with none?</p>
+<ol start="2"><li><p>Are attributes-on-roles (<code>state</code>, <code>note</code>, <code>tag</code>, <code>count</code>, <code>value</code>) admissible in a static row, or must every</p></li></ol>
+<p>mutable thing be a relation?</p>
+<ol start="3"><li><p>Should a scenario (the step sequence) have WRL identity at all, or is it a run input in the D3 sense — not part</p></li></ol>
+<p>of the world's identity — digested by the consumer?</p>
+<ol start="4"><li><p>Naming: <code>book.surface.v1</code> vs <code>opensentience.surface.v1</code>; and whether <code>MAILBOX</code> here may share a name with the</p></li></ol>
+<p>unwritable core role.</p>
+<h3 id="blk-95380">Appendix — the census script (run it; the table above is its output)</h3>
+<pre data-lang="python"><code>import json,glob,collections
+stencils=collections.Counter(); ops=collections.Counter(); states=collections.Counter(); objkinds=collections.Counter(); anchors=collections.Counter(); steps=takeaways=0
+for f in sorted(glob.glob('opensentience.org/_patterns/scenes/*.json')):
+    s=json.load(open(f)); stencils[s['stencil']]+=1; p=s.get('params',{})
+    loci=p.get('loci',[]); objkinds['LOCUS']+= loci if isinstance(loci,int) else len(loci)
+    for k,key in (('RING','rings'),('CARRIER','carriers')):
+        if key in p: objkinds[k]+=len(p[key])
+    if 'slots' in p: objkinds['SLOT']+=p['slots']
+    if s['stencil']=='join': objkinds['STATION']+=1
+    if s['stencil']=='wire': objkinds['STATION']+=3; objkinds['WIRE']+=1
+    if s['stencil']=='progress': objkinds['METER']+=4
+    if s['stencil']=='migrate' and p.get('mailbox'): objkinds['MAILBOX']+=1
+    for st in s['steps']:
+        steps+=1; takeaways+=bool(st.get('takeaway'))
+        for a in st.get('actions',[]):
+            ops[a['op']]+=1
+            if a['op']=='state': states[a['state']]+=1
+            if a['op']=='spawn': objkinds['LOCUS']+=1
+            if a['op'] in ('move','place'): anchors[str(a.get('to',a.get('at')))]+=1
+print(dict(stencils), dict(ops), dict(states), dict(objkinds), len(anchors), steps, takeaways)</code></pre></div>
+<p class="src"><a href="/#/opensentience.org/_patterns/docs/BOOK_SURFACE_PROFILE_PROPOSAL.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-95305" class="lvl2">0. What a scene is, in its own words, and why that bounds the inventory</a><a href="#blk-95308" class="lvl2">1. The registries, with their enumeration points</a><a href="#blk-95336" class="lvl2">2. Not authority (excluded from identity)</a><a href="#blk-95349" class="lvl2">3. What forge.world.core.v1 can and cannot represent of this family</a><a href="#blk-95352" class="lvl2">4. The minimal book.surface.v1 obligation, measured</a><a href="#blk-95357" class="lvl2">5. What the book does if the row is accepted, and if it is refused</a><a href="#blk-95361" class="lvl2">6. Not done here</a><a href="#blk-95363" class="lvl2">Questions for adjudication</a><a href="#blk-95380" class="lvl2">Appendix — the census script (run it; the table above is its output)</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/opensentience.org/_patterns/docs/BOARD_SEMANTICS_PROPOSAL.md/">Board semantics — what the circuitry can and cannot carry, and the minimal obligation for more (proposal)</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera6j3ybq3otqagqldod6pfv453nthvag7adosdwvag6ccaqbwe4fxq</div></div></div>
+</div></div>
+</body></html>

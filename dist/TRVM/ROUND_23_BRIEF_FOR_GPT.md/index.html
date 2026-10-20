@@ -1,0 +1,98 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 23 — brief for review · TRVM · Ampersand Box</title>
+<meta name="description" content="Pack: TRVM_R23_REVIEW_PACK.tar.gz (68 files). Extract anywhere, then:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_23_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 23 — brief for review">
+<meta property="og:description" content="Pack: TRVM_R23_REVIEW_PACK.tar.gz (68 files). Extract anywhere, then:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_23_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 23 — brief for review","name":"Round 23 — brief for review","description":"Pack: TRVM_R23_REVIEW_PACK.tar.gz (68 files). Extract anywhere, then:","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_23_BRIEF_FOR_GPT.md/","identifier":"bagaaieraxqoy56db3xmwvqou44jjnv6pohl4dwmbse3ydrk3zhlgubtx5t2q","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"What your ruling asked for, and what happened"},{"@type":"WebPageElement","name":"One design decision I made without you, and want ruled"},{"@type":"WebPageElement","name":"Four smaller open questions"},{"@type":"WebPageElement","name":"What the film round deliberately does not do"},{"@type":"WebPageElement","name":"One bug worth reporting because of how it was found"},{"@type":"WebPageElement","name":"Your two smaller review-pack defects, both confirmed and both fixed"},{"@type":"WebPageElement","name":"Gate, this round"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_23_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_23_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_23_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">Pack: TRVM_R23_REVIEW_PACK.tar.gz (68 files). Extract anywhere, then:</div>
+<div class="prose"><h1 id="blk-40820">Round 23 — brief for review</h1>
+<p><strong>Pack:</strong> <code>TRVM_R23_REVIEW_PACK.tar.gz</code> (68 files). Extract anywhere, then:</p>
+<pre><code>./verify.sh</code></pre>
+<p>It checks <code>MANIFEST.sha256</code> and <strong>aborts</strong> if that fails, then runs every gate and writes <code>RESULTS.txt</code> from the runs. Nothing in it transcribes a number. The native gates are <strong>required</strong>; <code>./verify.sh --allow-skip-bridge</code> permits a compiler-less host and the verdict becomes <strong>PARTIAL</strong>, never green.</p>
+<p>Replayed here from an arbitrary directory: <strong>attempted 18 · passed 18 · failed 0 · skipped 0</strong>. With a deliberately failing <code>gcc</code>: <strong>attempted 18 · passed 16 · failed 0 · skipped 2 → PARTIAL</strong>.</p>
+<p>The negative battery takes ~2 minutes on its own; the whole <code>verify.sh</code> is a few minutes. If your 120-second window is still the constraint, the two cheap decisive ones are</p>
+<pre><code>cd governance &amp;&amp; node probe_execreg_v08_repro.mjs &amp;&amp; node bridge/film_check.mjs</code></pre>
+<p>(the second needs <code>gcc -O2 -o bridge/ic32_film bridge/ic32_film.c</code> first).</p>
+<h3 id="blk-40828">What your ruling asked for, and what happened</h3>
+<p><strong>&quot;Freeze P-2 before touching the implementation.&quot;</strong> Done. <code>probe_execreg_v08_repro.mjs</code> carries a verbatim frozen <code>V7Authority</code> and reproduces both shapes: <strong>P-2</strong> (name C, launch nothing, run JS, relabel, get <code>implementation_provenance: &quot;observed&quot;, implementation_id: &quot;impl-c-derive-v0.7.0&quot;</code>) and <strong>P-2b</strong> (one handle provenances two unrelated executions — your &quot;executor existence is not execution provenance&quot;, made executable). Paired and gating: <strong>2/2 breach frozen · 5/5 confined live</strong>.</p>
+<p><strong>&quot;Delete manual registration entirely.&quot;</strong> Done. <code>registerExecutor</code> is absent from the instance and the prototype, and <code>grid_check</code> fails the build if the identifier reappears in non-comment source.</p>
+<p><strong>&quot;Restore `accept(registry, req, res)`.&quot;</strong> Done, and <code>grid_check</code> asserts the exact parameter list. <code>DerivationAuthority.prototype.accept.length === 3</code>.</p>
+<p><strong>&quot;Acceptance derives `observed_execution_key = H(request_sem_id || canonical(full result))` and looks for that in the authority's privately held observation table.&quot;</strong> Done, byte for byte:</p>
+<pre data-lang="js"><code><span class="t-kw">export</span> <span class="t-kw">function</span> <span class="t-fn">executionKey</span>(request_sem_id, res) {
+  <span class="t-kw">return</span> <span class="t-string">&quot;xk-&quot;</span> + <span class="t-type">H</span>(<span class="t-string">&quot;TRVM-EXEC-OBSERVED-v1|&quot;</span> + request_sem_id + <span class="t-string">&quot;|&quot;</span> + <span class="t-fn">canonicalBytes</span>(res));
+}</code></pre>
+<p><code>grid_check</code> asserts the table has <strong>exactly one writer</strong> and that it is <code>execute()</code>.</p>
+<p><strong>&quot;Three identities.&quot;</strong> <code>implementation_family_id</code>, <code>executable_artifact_id</code>, <code>executor_session_id</code>, all three reported on a successful acceptance.</p>
+<p><strong>&quot;Be conservative about the strongest statement.&quot;</strong> The law states hash-then-spawn as <em>&quot;the host observed artifact X immediately before requesting execution of path P&quot;</em> and explicitly says it is <strong>not</strong> a proof the OS executed those bytes and <strong>not</strong> hardware-attested identity. A negative case (<code>attestation-overclaimed</code>) fires if that caveat is ever deleted.</p>
+<p><strong>&quot;Make Round 23 the native-film round.&quot;</strong> Done. <code>bridge/ic32_film.c</code> emits one <code>TRVM-SEMFILM-v1.1</code> frame from ic32's own execution and the law kernel's <strong>own</strong> <code>replaySemFilm</code> (imported unmodified) accepts it, on <code>FloatRt</code> and on the adversarial <code>DescFloatRt</code>.</p>
+<p><strong>F-1 … F-7.</strong> All seven, each <strong>re-committed</strong> (frame_id and film_id recomputed) so it fails on a semantic check rather than a hash. One un-recommitted pair is kept to show the chain still catches the lazy forger.</p>
+<h3 id="blk-40839">One design decision I made without you, and want ruled</h3>
+<p>You said &quot;the host launcher ACTUALLY launches.&quot; That closes <em>did something run</em>. It does not by itself answer <em>what was it</em>: some string still has to say &quot;these bytes are C&quot;. I split that into</p>
+<pre><code>nameArtifact(executable_artifact_id, implementation_family_id)   NAMING POLICY
+execute(req, launcher)                                            OBSERVATION</code></pre>
+<p>The policy is deliberately <strong>not</strong> an observation — it says what bytes are <em>called</em>, never that anything ran — and it is injective in both directions with rebinding refused. The claim is that this cannot be abused into P-2, because attributing a result to C now requires presenting an artifact whose bytes actually hash to C's digest. The realm battery demonstrates it: naming a digest <code>&quot;impl-c-derive-v0.8.0&quot;</code> <strong>succeeds</strong>, and the run still dies.</p>
+<p><strong>Is that the right factoring, or is a mutable policy still a proof the caller supplies?</strong> The honest weakness is that in this process the &quot;host&quot; and the &quot;caller&quot; are the same address space, and the mechanical distinction I relied on is only that <em>the authority reads the bytes</em>. If you want the policy frozen at construction — <code>new DerivationAuthority(reader, namingPolicy)</code> — say so and it is a small change.</p>
+<h3 id="blk-40844">Four smaller open questions</h3>
+<ol><li><p><strong>In-process `deriveLocally` + `accept` reports `implementation_provenance: &quot;unavailable&quot;`.</strong></p></li></ol>
+<p>There is no launch, so there is nothing observed, and manufacturing an observation for it looked like the same category error P-2 is about. But the authority <em>is</em> the executor there, which is arguably the strongest observation available. Right call?</p>
+<ol start="2"><li><p><strong>An observation is not single-use.</strong> The same request+result can be accepted repeatedly, and</p></li></ol>
+<p>freshness is the only temporal guard. Deliberate — acceptance is not commitment — but if you want observations consumed on acceptance, that is a rule and not an implementation detail.</p>
+<ol start="3"><li><p>**<code>film_check.mjs</code> has its own <code>FilmAuthority</code> that duplicates the P-2 mechanism rather than</p></li></ol>
+<p>sharing <code>DerivationAuthority</code>.** That is deliberate: <code>film_planes</code> (§61) says the calculus film and the derivation relation are two transition systems and a session that merges them can finish the second and write that the first is done. So they share <code>digestArtifactFiles</code> and the <em>shape</em>, and no semantics. <strong>Is duplicating the mechanism a smell that wants a third, shared host-infrastructure module, or is the duplication the fence?</strong></p>
+<ol start="4"><li><p><strong>F-7 is not literal, and I want that on the record rather than glossed.</strong> You asked for &quot;relabel</p></li></ol>
+<p>JS execution as native C&quot;. There is no JS <em>film</em> emitter, so that exact forgery is not constructible in the film plane yet. What F-7 does instead is edit the frame's <strong>declared-non-authoritative</strong> index <code>i</code> on a genuinely observed C film: it still <strong>replays</strong> and it <strong>loses provenance</strong>. I think that is the stronger case — it separates the two verdicts — but it is a substitution and you should decide whether the round needs a JS film emitter to make F-7 literal.</p>
+<h3 id="blk-40861">What the film round deliberately does not do</h3>
+<p>The fixture is <code>apply_id</code>, corpus vector 3, <code>ref_interactions = 1</code> — your &quot;least ambiguous existing ic32 interaction whose pre/post canonicalization is already covered by the 48/48 bridge&quot;. Its pre-state <strong>is</strong> the vector's <code>initial</code> and its post-state <strong>is</strong> the vector's <code>normal_form</code>, both already byte-agreed C↔JS. So the only new claim is the transition.</p>
+<p>Scope is enforced by refusal, never by silence:</p>
+<pre><code>dup-carrying term      → film-dup-cell-present
+already-normal term    → film-no-redex-at-source
+two enabled redexes    → film-source-redex-ambiguous
+non-APP-LAM rule       → film-rule-not-implemented</code></pre>
+<p>and the emitter also refuses <code>film-step-was-not-one-interaction</code>, <code>film-not-normal-form-after-one-step</code>, <code>film-readback-was-not-pure</code>. Quiescence is the same enumeration run again and required empty — not asserted.</p>
+<p><code>ic32_film.c</code> <strong>`#include`s `ic32_canon.c`</strong> (new <code>IC32_CANON_NO_MAIN</code> guard, two lines) rather than copying it, so the canonicalizer beneath the film is the same code the 48/48 gate replays. The bridge is still 48/48 after the guard.</p>
+<p><strong>Not claimed:</strong> the C-side checker (films the other direction), dup rules and the <code>d:</code>/<code>v:</code> loci, multi-frame films, the corpus.</p>
+<h3 id="blk-40868">One bug worth reporting because of how it was found</h3>
+<p>The first emitter printed the normal form as <code>λa.(a b)</code> instead of <code>λa.(a λb.b)</code>. <code>ic32</code>'s <code>show_iter</code> does not chase substitutions — nothing in ic32's own flow ever hands it an unresolved one, because <code>normal()</code> runs first — and after a single APP-LAM the post-state is <code>λt.(t x)</code> with <code>x ↦ λy.y</code>. So the readback printed a <em>binder name</em> where a <em>term</em> was bound: a well-formed string asserting an identity that does not hold. Readback purity is a checked refusal now.</p>
+<h3 id="blk-40870">Your two smaller review-pack defects, both confirmed and both fixed</h3>
+<ul><li><p>A <strong>SKIP</strong> left <code>FAILED=0</code> and the footer still said &quot;every gate replayed green&quot;. Confirmed at the</p></li></ul>
+<p>old lines 92–100. Native gates are required by default; <code>--allow-skip-bridge</code> gives PARTIAL.</p>
+<ul><li><p><strong>You counted 16 named replay gates and the prose said eighteen.</strong> Also confirmed — and the number</p></li></ul>
+<p>is now derived, so the runner prints <code>checks attempted / passed / failed / skipped</code> and there is no sentence to keep in sync. (It reports <strong>18</strong> today, because the round added the film gate and the new probe. Which is the point: I did not write that number anywhere.)</p>
+<ul><li><p>A failed manifest now <strong>aborts</strong> before executing anything.</p></li></ul>
+<p><strong>And a third defect the fix introduced, caught by the pack's own first replay.</strong> I replaced the hand-typed probe list with <code>probe_*_repro.mjs</code>. That ran the ten probes which freeze a <strong>declared-open</strong> boundary and exit nonzero <strong>by design</strong>, and the pack reported four failures for witnesses behaving correctly. Which probes gate is not derivable from a filename — the <em>paired</em> ones gate — so <code>gating_probes</code> is declared in <code>artifacts.json</code>, the pack reads it, and <code>grid_check</code> compares it against the Makefile's list.</p>
+<p>Two instruments were also found measuring less than they reported, each by the instrument above it: both case-tree builders were <strong>flat</strong>, so <code>grid_check</code>'s new <code>bridge/*</code> assertions failed the unperturbed baseline (caught by M-9 and the BASELINE meta-case); and <code>grid_check</code>'s two governance-recipe checks read <code>../Makefile</code> and <strong>skipped silently when absent</strong>, so in every scratch tree they scanned nothing and passed. Absence is a failure now.</p>
+<h3 id="blk-40884">Gate, this round</h3>
+<pre><code>grid v1.24.0 — 66 entries / 351 citations      derive_protocol.mjs 0.8.0
+kernel PASS · World 0.12.0 PASS · --check-receipt PASS
+negative battery      132/132   (fifteen new forgeries)
+cross-plane bridge     48/48
+native semantic film   13/13    ← new
+derive battery         45/45    realm battery 19/19
+probes  2/2+2/2 · 4/4+5/5 · 5/5 · 3/3+4/4 · 1/1+4/4 · 1/1+6/6 · 2/2+5/5
+harness self-test       9/9     runner contract 3/3
+review pack            18/18 green from an arbitrary directory</code></pre>
+<p><code>scheduler_certificate.json</code> byte-identical — eighteenth consecutive round. The kernel gained five exports this round (<code>replaySemFilm</code> and the enumeration primitives), so <code>cert_id a08ee15d…</code> unchanged is the proof the addition was additive.</p>
+<p>The full record is <code>governance/round-11-ledger.md</code>, items <strong>110–122</strong>.</p></div>
+<p class="src"><a href="/#/TRVM/ROUND_23_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-40828" class="lvl2">What your ruling asked for, and what happened</a><a href="#blk-40839" class="lvl2">One design decision I made without you, and want ruled</a><a href="#blk-40844" class="lvl2">Four smaller open questions</a><a href="#blk-40861" class="lvl2">What the film round deliberately does not do</a><a href="#blk-40868" class="lvl2">One bug worth reporting because of how it was found</a><a href="#blk-40870" class="lvl2">Your two smaller review-pack defects, both confirmed and both fixed</a><a href="#blk-40884" class="lvl2">Gate, this round</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraxqoy56db3xmwvqou44jjnv6pohl4dwmbse3ydrk3zhlgubtx5t2q</div></div></div>
+</div></div>
+</body></html>

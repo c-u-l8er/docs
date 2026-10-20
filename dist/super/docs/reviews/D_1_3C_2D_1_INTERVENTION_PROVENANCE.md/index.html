@@ -1,0 +1,156 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>D.1.3c·2d·1 — Intervention provenance · super · Ampersand Box</title>
+<meta name="description" content="DESIGN ONLY. Nothing here is implemented. This revises D.1.3c·2d·0 on GPT&#39;s ruling: the laundering diagnosis is accepted, the proposed remedy — a new…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2D_1_INTERVENTION_PROVENANCE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D.1.3c·2d·1 — Intervention provenance">
+<meta property="og:description" content="DESIGN ONLY. Nothing here is implemented. This revises D.1.3c·2d·0 on GPT&#39;s ruling: the laundering diagnosis is accepted, the proposed remedy — a new…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2D_1_INTERVENTION_PROVENANCE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"D.1.3c·2d·1 — Intervention provenance","name":"D.1.3c·2d·1 — Intervention provenance","description":"DESIGN ONLY. Nothing here is implemented. This revises D.1.3c·2d·0 on GPT's ruling: the laundering diagnosis is accepted, the proposed remedy — a new…","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2D_1_INTERVENTION_PROVENANCE.md/","identifier":"bagaaieraqrl5y5xnsoj2xloaa34yq4gg62rw7h26ahtmw7oasknohyxsivla","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · The finding that stands"},{"@type":"WebPageElement","name":"1 · Why the remedy was wrong, in this codebase's own terms"},{"@type":"WebPageElement","name":"2 · The shape, and the four systems that converged on it"},{"@type":"WebPageElement","name":"3 · The record"},{"@type":"WebPageElement","name":"4 · C2 · Where the record goes — three designs, audited against the source"},{"@type":"WebPageElement","name":"The audit"},{"@type":"WebPageElement","name":"The comparison"},{"@type":"WebPageElement","name":"Recommendation: design 3, and the reason is idempotency"},{"@type":"WebPageElement","name":"5 · The invariant that is actually shared"},{"@type":"WebPageElement","name":"6 · C3 · Agent visibility — the ruling"},{"@type":"WebPageElement","name":"7 · C4/C5 · SHAPE first, DRIVE deferred"},{"@type":"WebPageElement","name":"SHAPE (next, after D.1.3c·2c·1b)"},{"@type":"WebPageElement","name":"DRIVE (deferred, and this is why)"},{"@type":"WebPageElement","name":"8 · What this slice does not decide"},{"@type":"WebPageElement","name":"Sources for the external claims above"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"D_1_3C_2D_1_INTERVENTION_PROVENANCE.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2D_1_INTERVENTION_PROVENANCE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/D_1_3C_2D_1_INTERVENTION_PROVENANCE.md</span>
+
+</div></div>
+<div class="lead">DESIGN ONLY. Nothing here is implemented. This revises D.1.3c·2d·0 on GPT&#39;s ruling: the laundering diagnosis is accepted, the proposed remedy — a new actor kind for the human-co…</div>
+<div class="prose"><h1 id="blk-114792">D.1.3c·2d·1 — Intervention provenance</h1>
+<p><strong>DESIGN ONLY. Nothing here is implemented.</strong> This revises D.1.3c·2d·0 on GPT's ruling: the laundering diagnosis is accepted, the proposed remedy — a new <em>actor kind</em> for the human-control incarnation — is rejected, and what replaces it is an <strong>intervention activity</strong> whose initiator is not a principal.</p>
+<h3 id="blk-114794">0 · The finding that stands</h3>
+<p>D.1.3c·2d·0 measured this and it has not changed:</p>
+<pre><code>human types into an agent's terminal
+        ↓
+the agent's shell executes it
+        ↓
+every existing receipt says the AGENT did it</code></pre>
+<p>The human-control Peer holds <code>actor: nil</code> (<code>ampd/lib/ampd/peer.ex</code>, <code>claim/3</code> — <em>&quot;The person is not an actor: they hold no grants and exercise no capabilities. They are the only source of consent.&quot;</em>). So a human acting at an agent's position has <strong>no actor to attribute the effect to</strong>, and an actor it would be attributed to anyway. That is provenance laundering, and <code>approve_grant_request/2</code> exists precisely to prevent the inverse — a machine becoming the source of consent.</p>
+<h3 id="blk-114798">1 · Why the remedy was wrong, in this codebase's own terms</h3>
+<p>The 2d·0 proposal was &quot;mint a new actor kind for the human-control incarnation.&quot; In this tree <code>actor</code> is not a label for a cause. It is the <strong>key of the authority namespace</strong>, and it keys, at minimum:</p>
+<table><thead><tr><th>what it keys</th><th>where</th></tr></thead><tbody><tr><td>grants</td><td><code>Ampd.GrantRegistry</code></td></tr><tr><td>capabilities</td><td><code>Ampd.CapabilityRegistry</code></td></tr><tr><td>effect requests</td><td><code>Ampd.Effects</code> <code>effect-request@1</code>, field <code>actor</code></td></tr><tr><td>receipts</td><td><code>Ampd.Receipts</code> <code>capability-effect-receipt@1</code>, field <code>actor</code></td></tr><tr><td>agent projections</td><td><code>Ampd.Projection.agent/1</code>, literally <code>record[&quot;actor&quot;] == actor</code></td></tr><tr><td>Lanes</td><td><code>open_lane</code>'s <code>actor</code> argument</td></tr><tr><td>Workers, occupancy</td><td><code>Ampd.Worker.occupancy_of/3</code></td></tr></tbody></table>
+<p>Putting a provenance-only identity into that namespace means every one of those has to be taught that one member of the namespace is not really a member. That is the <code>X-Remote-Group</code> shape: a field that reads like provenance becomes a credential the moment anything downstream keys off it.</p>
+<p><strong>GPT's ruling is adopted: the human remains `actor: nil`.</strong> That invariant survives this slice unchanged.</p>
+<h3 id="blk-114819">2 · The shape, and the four systems that converged on it</h3>
+<p>Every audited system that has this problem carries <strong>both identities in every record</strong> and never collapses to one:</p>
+<table><thead><tr><th>system</th><th>initiator</th><th>executing authority</th></tr></thead><tbody><tr><td>Linux auditd</td><td><code>auid</code> (loginuid)</td><td><code>uid</code> / <code>euid</code> / <code>fsuid</code></td></tr><tr><td>Kubernetes audit</td><td><code>user</code></td><td><code>impersonatedUser</code></td></tr><tr><td>AWS CloudTrail</td><td><code>sessionContext.sourceIdentity</code></td><td><code>sessionIssuer</code> + session ARN</td></tr><tr><td>sudo</td><td><code>SUDO_USER</code></td><td>the target uid</td></tr></tbody></table>
+<p><code>auid</code> is the closest analogue and the one worth copying deliberately, because of <em>why</em> it works. It is:</p>
+<ul><li><p><strong>write-once</strong> — settable once, then immutable (<code>CONFIG_AUDIT_LOGINUID_IMMUTABLE</code>,</p></li></ul>
+<p><code>auditctl --loginuid-immutable</code>, gated by <code>CAP_AUDIT_CONTROL</code>);</p>
+<ul><li><p><strong>inherited by every descendant process</strong>, so it survives <code>su</code> and setuid;</p></li><li><p><strong>and it authorises nothing.</strong> No kernel access decision ever reads it.</p></li></ul>
+<p>Those three together are the point. Its immutability is what makes it evidence; its powerlessness is what makes granting that immutability safe. An operator identifier that any permission check can read is not <code>auid</code>, it is <code>X-Remote-Group</code> — and that is a documented, repeatedly-exploited class (<code>kubernetes#119631</code>; the <code>X-Forwarded-For</code> CVE family; Google OIDC <code>sub</code> inconsistency pushing SaaS onto <code>email</code>+<code>hd</code> as an identity key).</p>
+<p>W3C PROV supplies the vocabulary, and it is a <strong>three-way</strong> split rather than a two-way one:</p>
+<ul><li><p><code>prov:Activity</code> — <em>the intervention</em>: something that occurs and acts upon entities.</p></li><li><p><code>prov:Agent</code> — bears <strong>responsibility</strong> (PROV-DM §5.3.1).</p></li><li><p><code>prov:wasStartedBy(id; a2, e, a1, t, attrs)</code> — §5.1.6, whose <strong>`trigger`</strong></p></li></ul>
+<p>slot is literally &quot;what started this activity&quot; and is <em>structurally distinct</em> from responsibility.</p>
+<ul><li><p><code>prov:wasAssociatedWith</code> + <code>prov:hadRole</code> (§5.3.3, §5.7.2.3) — the spec's</p></li></ul>
+<p>own example attaches two agents to one activity, discriminated only by role, where the operator has <strong>no `prov:Plan`</strong> and the designer has one.</p>
+<p>That asymmetry is exactly ours: the agent is executing a plan; the operator's keystroke is not part of any plan. <strong>PROV describes; it does not authorise</strong> — nothing in PROV-DM or PROV-O makes <code>actedOnBehalfOf</code> an access-control input, and nothing here should either.</p>
+<h3 id="blk-114862">3 · The record</h3>
+<pre><code>terminal-intervention@1
+
+  intervention_ref            iv_&lt;hex&gt;          runtime-minted
+  kind                        SHAPE | DRIVE
+
+  initiator:
+    kind                      &quot;human-control-incarnation&quot;
+    incarnation_ref           the control-channel incarnation
+    control_peer_ref          the Peer id of that binding
+
+  target:
+    worker_ref
+    worker_generation
+    locus_ref
+    actor                     the AGENT's actor, unchanged
+
+  basis:
+    world_incarnation
+    world_generation
+    presentation basis        attachment_ref / attachment_epoch / carrier_epoch
+
+  request:                    operation-specific; for SHAPE, rows + cols
+  outcome:                    ATTEMPTED | APPLIED | REFUSED | INDETERMINATE
+  at:                         ISO-8601, for a reader, never read back as proof</code></pre>
+<p>The load-bearing invariant, and the falsifier for laundering:</p>
+<pre><code>initiator  ≠  target.actor</code></pre>
+<p>An intervention record where they are equal, or where <code>initiator</code> is absent, is a record that has laundered a human act into an agent's history.</p>
+<p><strong>What `initiator.incarnation_ref` is not</strong>, stated so it cannot be quietly promoted: it grants nothing; it owns no Worker; it cannot occupy a Lane; it cannot bind a channel; it cannot exercise a capability; it is not an actor; it is not a bearer credential; it is never page-supplied. It names the control incarnation that caused an intervention and that is its whole job. It may be durable as history even though the control channel was ephemeral — which is the <code>auid</code> property: the login is over, the number stays.</p>
+<p><strong>Where the four outcomes come from.</strong> They are C1.0b·2's, not new: <code>Ampd.Participant</code>'s measured classes, where <code>INDETERMINATE</code> means <em>the reply was lost and the work may be about to happen</em> — not <em>it did not happen</em>.</p>
+<h3 id="blk-114869">4 · C2 · Where the record goes — three designs, audited against the source</h3>
+<h4 id="blk-114870">The audit</h4>
+<p><strong>`Ampd.Effects` (`effect-request@1`)</strong> is a state machine around an <em>actor-authorized capability effect</em>. Its fields, from <code>handle_ordered({:propose, env})</code>: <code>idempotency_key</code>, <code>approval_digest</code>, <code>capability</code>, <code>pack</code>, <code>actor</code>, <code>resource</code>, <code>request_id</code>, <code>request_revision</code>, <code>request</code>, <code>grant_ref</code>, <code>approval_ref</code>, <code>authority_snapshot_at_entry</code>, <code>placement</code>, <code>attempts</code>, <code>history</code>, <code>state</code>. Around them: <code>claim</code>, in-flight and terminal state sets, and a reconciliation path for <code>UNKNOWN</code> whose comment says the adapter <em>&quot;may already have changed the world; re-claiming it is precisely the double-effect this machine exists to prevent.&quot;</em></p>
+<p>A SHAPE intervention has <strong>no</strong> actor grant, <strong>no</strong> capability grant, <strong>no</strong> pack authority, and <strong>no</strong> approval request from an agent. Six of those sixteen fields would be fabricated.</p>
+<p><strong>`Ampd.Receipts`</strong> is a flat append-only ledger — <code>%{&quot;log&quot; =&gt; [...], &quot;seq&quot; =&gt; n}</code>, ids <code>rcpt-NNNN</code>, one dets table, in <code>Ampd.seals/0</code> and therefore in the world's seal/recovery surface. And the decisive measurement:</p>
+<blockquote><p><code>Receipts.emit/1</code> does <code>Map.merge(%{&quot;kind&quot; =&gt; &quot;capability-effect-receipt@1&quot;, &quot;id&quot; =&gt; id, &quot;committed&quot; =&gt; true}, m)</code> — <strong>merge order means the caller's own `kind` wins</strong>, and <code>Ampd.Locus.emit_receipt/5</code> already uses that, emitting <code>&quot;worktree_created@1&quot;</code> into the same ledger.</p></blockquote>
+<p>So <code>Ampd.Receipts</code> is <strong>already a multi-kind causal journal</strong>. It was not described as one, and that is the only thing the third design changes.</p>
+<h4 id="blk-114877">The comparison</h4>
+<table><thead><tr><th></th><th>1 · generalise <code>Ampd.Effects</code></th><th>2 · a new intervention journal</th><th>3 · a kind in <code>Ampd.Receipts</code></th></tr></thead><tbody><tr><td>pre-effect durability</td><td>yes</td><td>yes</td><td>yes (append before the attempt)</td></tr><tr><td>lost-reply ambiguity</td><td><code>UNKNOWN</code> + reconciliation</td><td>must be rebuilt</td><td><strong>repaired by re-observation</strong> (§5)</td></tr><tr><td>reconciliation</td><td>reuses <code>claim</code>/<code>attempts</code></td><td>new</td><td>not needed for SHAPE</td></tr><tr><td>new stores</td><td>0</td><td><strong>1</strong> (dets, seal, boot, recovery)</td><td>0</td></tr><tr><td>new mechanism classes</td><td>0, but the machine is re-specified</td><td><strong>≥1</strong></td><td>0</td></tr><tr><td>projection filtering</td><td><code>actor</code> filter reused — <strong>and it is wrong here</strong></td><td>new</td><td><code>actor</code> filter reused <strong>correctly</strong> (§6)</td></tr><tr><td>boot recovery</td><td>reuses</td><td>new seal, new recovery path</td><td>reuses</td></tr><tr><td>proof surface</td><td>large: every <code>Ampd.Effects</code> falsifier is now about two unlike things</td><td>large: a whole store to falsify</td><td>small: one new kind, existing ledger laws</td></tr><tr><td>schema honesty</td><td><strong>fabricates six fields</strong></td><td>honest</td><td>honest</td></tr><tr><td>future DRIVE</td><td>inherits a machine built for the wrong thing</td><td>free hand</td><td>free hand (§7)</td></tr></tbody></table>
+<h4 id="blk-114923">Recommendation: <strong>design 3</strong>, and the reason is idempotency</h4>
+<p><code>Ampd.Effects</code>' machinery exists for effects that <strong>cannot be re-observed</strong>. That is why it needs <code>UNKNOWN</code>, <code>attempts</code>, and a reconciliation path: after a lost reply there is no way to ask the world what happened, so the state machine has to carry the ambiguity.</p>
+<p>SHAPE is not that kind of effect, and this is checkable at kernel source rather than assumed. <code>tty_do_resize()</code> in <code>drivers/tty/tty_io.c</code>:</p>
+<pre data-lang="c"><code>if (!memcmp(ws, &amp;tty-&gt;winsize, sizeof(*ws)))
+        return 0;                       /* no signal, no state change */
+kill_pgrp(pgrp, SIGWINCH, 1);
+tty-&gt;winsize = *ws;</code></pre>
+<p>So <code>TIOCSWINSZ</code> with the current dimensions is a <strong>true no-op</strong> — no <code>SIGWINCH</code>, no change, return 0 — and <code>TIOCGWINSZ</code> reads the applied state back. <code>ioctl_tty(2)</code> agrees: the signal is sent &quot;when the window size <em>changes</em>&quot;. SHAPE is therefore idempotent <em>and</em> externally observable, so a lost reply is repaired by <strong>re-reading the geometry and re-applying</strong>, not by an <code>UNKNOWN</code> that must be reconciled.</p>
+<p>Adopting <code>Ampd.Effects</code> would buy a reconciliation machine for a problem that does not exist here and would require lying about six fields to get it. GPT's instruction was to prefer the smallest design that does not lie about existing schemas; that is design 3.</p>
+<p><strong>The residual is stated, not hidden.</strong> Design 3 is right <em>because</em> SHAPE is idempotent. It is therefore <strong>not</strong> automatically right for DRIVE, and §7 says so rather than assuming the extension.</p>
+<h3 id="blk-114930">5 · The invariant that is actually shared</h3>
+<p>GPT is right that &quot;a second way for things to have happened&quot; is a hazard, and right that squeezing unlike things into one schema is not the fix. The common law is at a level above both:</p>
+<blockquote><p><strong>Every causal action that can change execution must have durable provenance sufficient to distinguish initiator, target, basis, attempt and outcome.</strong></p></blockquote>
+<p>Capability effects are one class of that. Operator interventions are another. They may one day share a general causal substrate; nothing requires refactoring <code>Ampd.Effects</code> into one before a terminal can be resized.</p>
+<h3 id="blk-114935">6 · C3 · Agent visibility — the ruling</h3>
+<blockquote><p><strong>An agent MUST be able to learn that human intervention affected its execution.</strong></p></blockquote>
+<p>If a human changes an agent's execution and the agent reasons from a history that omits it, the agent's causal account of its own run is false. That is a correctness property, not a courtesy.</p>
+<p><strong>Semantic history, not attention.</strong> Two different things:</p>
+<pre><code>must appear in the agent's semantic history       YES
+must interrupt or inject into the model's context NO</code></pre>
+<p>The surface is a bounded <code>interventions</code> list on the agent projection, windowed like receipts and effect history (<code>Ampd.Projection.window/1</code>). It is keyed on <strong>`target.actor`</strong>, which is the agent — so <code>Ampd.Projection.agent/1</code>'s existing <code>record[&quot;actor&quot;] == actor</code> filter is reused <em>correctly</em>: the agent sees interventions aimed at it.</p>
+<p><strong>The agent must not be able to query by initiator.</strong> The human-control incarnation is not an actor, has no projection, and asking &quot;what else has this initiator done&quot; is asking the runtime to treat a provenance identifier as a principal — the exact failure §2 is about. Interventions are visible to their target and to the operator projection, and by no other index.</p>
+<p>Whether an intervention <em>deserves</em> immediate attention is a harness scheduling decision, made from a fact that is now available. It was not available before, and that was the defect.</p>
+<h3 id="blk-114944">7 · C4/C5 · SHAPE first, DRIVE deferred</h3>
+<h4 id="blk-114945">SHAPE (next, after D.1.3c·2c·1b)</h4>
+<p>Narrow, and it unlocks correct full-screen rendering. The page supplies:</p>
+<pre><code>worker_ref
+expected_worker_generation
+rows
+cols</code></pre>
+<p>and its bound control/presentation context. <strong>Never a caller-supplied `peer_ref`.</strong> <code>Ampd.Carrier.Terminal.resize_record/3</code> takes one today and operates on that peer's record with no entitlement check — safe only because nothing on any wire reaches it, and a confused deputy the moment a command passes one through. SHAPE must resolve the terminal internally from the already-authorised presentation, exactly as D.1.3c·2c·1a's chain does.</p>
+<p>One record per attempt, <code>kind: SHAPE</code>, appended before the ioctl is requested, settled to <code>APPLIED</code>/<code>REFUSED</code>/<code>INDETERMINATE</code> after — with <code>INDETERMINATE</code> resolvable by re-observation, which is the property §4 rests on.</p>
+<h4 id="blk-114950">DRIVE (deferred, and this is why)</h4>
+<p><strong>Input is not idempotent.</strong> <code>&quot;rm -rf &quot;</code> sent twice is not <code>&quot;rm -rf &quot;</code> sent once. The prior art is mosh (Winstein &amp; Balakrishnan, USENIX ATC '12), and its answer is worth stating precisely because it is not the obvious one:</p>
+<blockquote><p>mosh does <strong>not</strong> make input idempotent. It makes the <em>carriage</em> of input idempotent. The client→server object is <code>UserStream</code>, an append-only <code>deque</code> of <code>UserEvent</code>s, and every datagram is an <strong>absolutely addressed</strong> diff (&quot;state 41 → state 57&quot;). A duplicate re-applies the same absolute transition and is a no-op; a loss is repaired by a later diff from a live reference state. The screen direction may skip intermediate states; the input direction <em>&quot;Nothing is omitted.&quot;</em></p></blockquote>
+<p>Note also that mosh carries <strong>resize inside the same `UserStream`</strong> as keystrokes — consistent with §4: replaying a redundant resize costs nothing.</p>
+<p><strong>And DRIVE has a second problem that is not a transport problem.</strong> Raw terminal input contains secrets. The surveyed products are unanimous, and their agreement is the finding:</p>
+<table><thead><tr><th></th><th>default for stdin</th></tr></thead><tbody><tr><td>Teleport session recording</td><td><strong>not captured</strong> — &quot;recordings typically do not contain passwords entered into a terminal&quot;; desktop recording captures screen, not keystrokes</td></tr><tr><td>RHEL <code>tlog</code> session recording</td><td><strong>disabled by default</strong>, &quot;to avoid intercepting raw passwords&quot;; enabling it captures them in plaintext</td></tr><tr><td><code>script(1)</code></td><td>output only; <code>-I</code>/<code>--log-in</code> is opt-in and warned twice: input is logged <strong>independently of the terminal echo flag</strong></td></tr><tr><td>sudo <code>log_input</code></td><td>captures input &quot;even when not echoed&quot;; 1.9.10 added a <em>heuristic on output text</em> to hide password prompts</td></tr><tr><td>AWS SSM Session Manager</td><td>the outlier — logs entered commands; mitigation is telling the operator to type <code>stty -echo</code></td></tr></tbody></table>
+<p>The argument, in one line: <strong>terminal echo state is a property of the terminal, not of the recorder</strong>, so a recorder on the input path captures the password precisely in the case where the terminal hid it.</p>
+<p>Teleport's response to the resulting blind spot is the architecturally interesting one, and it is the direction to take: it does <strong>not</strong> start recording stdin. It moves the observation point <em>down</em> a layer — Enhanced Session Recording emits <code>session.command</code> / <code>session.exec</code> / <code>session.network</code> from BPF. Commands without password prompts.</p>
+<p>So the DRIVE design must rule, before any implementation, on what is retained:</p>
+<pre><code>raw bytes            ← rejected on the above evidence unless something changes
+digest of the bytes  ← still a password oracle for short/guessable inputs
+byte count
+sequence range
+redacted semantic operation</code></pre>
+<p><strong>A provenance mechanism must not become a durable keystroke logger while trying to solve attribution.</strong> That question is mandatory before DRIVE, and answering it is a slice of its own.</p>
+<h3 id="blk-114974">8 · What this slice does not decide</h3>
+<ul><li><p>The exact field names. They are provisional and must be derived from the</p></li></ul>
+<p>tree at implementation time, as <code>terminal-attachment@1</code> was.</p>
+<ul><li><p>Whether interventions eventually share a substrate with <code>Ampd.Effects</code>.</p></li></ul>
+<p>§5 says they may; nothing here requires it.</p>
+<ul><li><p>Multiple human identities. Today &quot;the human-control role&quot; and &quot;this human&quot;</p></li></ul>
+<p>are the same thing because <code>Ampd.Peer</code> refuses a second control channel — asserted by <code>Ampd.TerminalPresentationTest</code>'s <code>T.10</code>, written to fail loudly if that ever stops being true. When it does, <code>initiator</code> gains a field; it does not become an actor.</p>
+<h4 id="blk-114987">Sources for the external claims above</h4>
+<ul><li><p>W3C PROV-DM §5.1.6 (<code>wasStartedBy</code>), §5.3.1 (Agent), §5.3.3 (Association,</p></li></ul>
+<p><code>prov:role</code>, <code>prov:Plan</code>), §5.3.4 (Delegation) — https://www.w3.org/TR/prov-dm/</p>
+<ul><li><p>PROV-O qualified pattern (<code>prov:qualifiedAssociation</code>, <code>prov:hadRole</code>) — https://www.w3.org/TR/prov-o/</p></li><li><p><code>audit_setloginuid(3)</code>; <code>auditctl(8)</code> <code>--loginuid-immutable</code>; <code>CONFIG_AUDIT_LOGINUID_IMMUTABLE</code></p></li><li><p>Kubernetes <code>audit.k8s.io/v1</code> <code>user</code> / <code>impersonatedUser</code>; user-impersonation docs</p></li><li><p>AWS CloudTrail <code>userIdentity</code> / <code>sessionContext.sourceIdentity</code>; &quot;How to relate IAM role activity to corporate identity&quot;</p></li><li><p><code>tty_do_resize()</code>, <code>drivers/tty/tty_io.c</code>; <code>ioctl_tty(2)</code> / <code>TIOCSWINSZ(2const)</code></p></li><li><p>Winstein &amp; Balakrishnan, <em>Mosh: An Interactive Remote Shell for Mobile Clients</em>, USENIX ATC '12</p></li><li><p>Teleport session recording + Enhanced Session Recording (BPF); RHEL 8 session recording (<code>tlog</code>); <code>script(1)</code>; sudo 1.9.10 password hiding; AWS SSM session logging</p></li><li><p>Provenance-identifier-as-credential: RFC 6749 §2.2; <code>kubernetes#119631</code>; F5 &quot;Security Rule Zero: A Warning about X-Forwarded-For&quot;</p></li></ul></div>
+<p class="src"><a href="/#/super/docs/reviews/D_1_3C_2D_1_INTERVENTION_PROVENANCE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-114794" class="lvl2">0 · The finding that stands</a><a href="#blk-114798" class="lvl2">1 · Why the remedy was wrong, in this codebase&#39;s own terms</a><a href="#blk-114819" class="lvl2">2 · The shape, and the four systems that converged on it</a><a href="#blk-114862" class="lvl2">3 · The record</a><a href="#blk-114869" class="lvl2">4 · C2 · Where the record goes — three designs, audited against the source</a><a href="#blk-114870" class="lvl3">The audit</a><a href="#blk-114877" class="lvl3">The comparison</a><a href="#blk-114923" class="lvl3">Recommendation: design 3, and the reason is idempotency</a><a href="#blk-114930" class="lvl2">5 · The invariant that is actually shared</a><a href="#blk-114935" class="lvl2">6 · C3 · Agent visibility — the ruling</a><a href="#blk-114944" class="lvl2">7 · C4/C5 · SHAPE first, DRIVE deferred</a><a href="#blk-114945" class="lvl3">SHAPE (next, after D.1.3c·2c·1b)</a><a href="#blk-114950" class="lvl3">DRIVE (deferred, and this is why)</a><a href="#blk-114974" class="lvl2">8 · What this slice does not decide</a><a href="#blk-114987" class="lvl3">Sources for the external claims above</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraqrl5y5xnsoj2xloaa34yq4gg62rw7h26ahtmw7oasknohyxsivla</div></div></div>
+</div></div>
+</body></html>

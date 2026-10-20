@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>The R0.9 evidence gate: brief AMENDMENT 3 (R130 option b), after Codex&#39;s review 1 · computedriven · Ampersand Box</title>
+<meta name="description" content="Written by the supervising Mac session, which owns the brief, BEFORE the follow-up turn. It adds to docs/r09-evidence-gate-brief.md (sha256 260038bc…,…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/r09-evidence-gate-brief-amendment-3.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The R0.9 evidence gate: brief AMENDMENT 3 (R130 option b), after Codex&#39;s review 1">
+<meta property="og:description" content="Written by the supervising Mac session, which owns the brief, BEFORE the follow-up turn. It adds to docs/r09-evidence-gate-brief.md (sha256 260038bc…,…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/r09-evidence-gate-brief-amendment-3.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"The R0.9 evidence gate: brief AMENDMENT 3 (R130 option b), after Codex's review 1","name":"The R0.9 evidence gate: brief AMENDMENT 3 (R130 option b), after Codex's review 1","description":"Written by the supervising Mac session, which owns the brief, BEFORE the follow-up turn. It adds to docs/r09-evidence-gate-brief.md (sha256 260038bc…,…","url":"https://docs.ampersandboxdesign.com/computedriven/docs/r09-evidence-gate-brief-amendment-3.md/","identifier":"bagaaiera4o3giijimflcfnyjztmpq7sqr7twtid33wsjkfl76wy6utjxdrba","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"Ruling on containment (Codex review 1, finding 1)"},{"@type":"WebPageElement","name":"Added and clarified laws"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"r09-evidence-gate-brief-amendment-3.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/r09-evidence-gate-brief-amendment-3.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/r09-evidence-gate-brief-amendment-3.md</span>
+
+</div></div>
+<div class="lead">Written by the supervising Mac session, which owns the brief, BEFORE the follow-up turn. It adds to docs/r09-evidence-gate-brief.md (sha256 260038bc…, unchanged) and wins wherev…</div>
+<div class="prose"><h1 id="blk-62447">The R0.9 evidence gate: brief AMENDMENT 3 (R130 option b), after Codex's review 1</h1>
+<p>Written by the supervising Mac session, which owns the brief, BEFORE the follow-up turn. It adds to <code>docs/r09-evidence-gate-brief.md</code> (sha256 <code>260038bc…</code>, unchanged) and wins wherever the two differ.</p>
+<h3 id="blk-62449">Ruling on containment (Codex review 1, finding 1)</h3>
+<p>The static gates stay <strong>in-process</strong> (<code>runpy</code>), and <strong>no subprocess</strong> stays the rule. The gate's subject is Super's review runner, whose sandbox is the containment: a read-only snapshot of tracked files, no network, and a tmpfs home. The runner's timeout is the time bound. The three static gates import only <code>re</code>, <code>sys</code> and <code>pathlib</code>, and they write nothing, start nothing, set no signal handler, change no directory and replace no stream (measured 2026-10-02). The gate's own duty is to leave the interpreter as it found it between gates, and to fail closed when it cannot.</p>
+<h3 id="blk-62451">Added and clarified laws</h3>
+<ul><li><p><strong>G0, the reference is the pinned reference (new).</strong> The SHA-256 of <code>lab/r09close/evidence-gate-reference.json</code> must equal</p></li></ul>
+<p><code>b8c6abb2f9eb1900e5604cf8b9426c9af7da580685c9c3851fd7964737ac4002</code>. The gate holds this value as a constant. A missing, unreadable or different reference is <code>G0 FAIL</code>. G1–G4 are still evaluated after a G0 failure, wherever the reference can be parsed.</p>
+<ul><li><p><strong>The repository root.</strong> If the gate cannot make the repository root (the directory above <code>tools/</code>) its working directory,</p></li></ul>
+<p>EVERY law (G0–G4) FAILs. No input may be read relative to any other directory.</p>
+<ul><li><p><strong>G4, exactly these three.</strong> The reference's <code>static_gates</code> must be exactly <code>tools/rendezvous_boundary_gate.py</code>,</p></li></ul>
+<p><code>tools/nodeid_map_guard.py</code> and <code>tools/r09_accounting_gate.py</code>, in that order. A shorter, longer or different list is <code>G4 FAIL</code>, before anything runs.</p>
+<ul><li><p><strong>G4 restoration.</strong> Around each static gate, the gate restores <code>sys.argv</code>, <code>sys.path</code>, <code>sys.stdout</code>, <code>sys.stderr</code>, the</p></li></ul>
+<p>working directory, and <code>sys.modules</code> (removing every module the static gate added). If any of these cannot be restored, that is <code>G4 FAIL</code>, naming what could not be restored. Nothing is silently passed over.</p>
+<ul><li><p><strong>G3's context (unchanged, stated).</strong> G3 is judged on the runner's snapshot of tracked files. On a working tree that holds</p></li></ul>
+<p>untracked build output inside a frozen crate, G3 fails by design, and it must not be weakened to ignore such files.</p>
+<ul><li><p><strong>G5, exact.</strong></p></li><li><p>Each of G0, G1, G2, G3 and G4 prints exactly one line, <code>G&lt;n&gt; ok …</code> or <code>G&lt;n&gt; FAIL …</code>, in that order.</p></li><li><p>Then exactly one of <code>EVIDENCE GATE HELD</code> (exit status exactly 0) or <code>EVIDENCE GATE BROKEN: </code> followed by the failed laws</p></li></ul>
+<p>in order, separated by single spaces (exit status exactly 1).</p>
+<ul><li><p><strong>Unchanged:</strong> G1–G3's definitions, every constraint in the brief, and the two input files.</p></li></ul></div>
+<p class="src"><a href="/#/computedriven/docs/r09-evidence-gate-brief-amendment-3.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-62449" class="lvl2">Ruling on containment (Codex review 1, finding 1)</a><a href="#blk-62451" class="lvl2">Added and clarified laws</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera4o3giijimflcfnyjztmpq7sqr7twtid33wsjkfl76wy6utjxdrba</div></div></div>
+</div></div>
+</body></html>

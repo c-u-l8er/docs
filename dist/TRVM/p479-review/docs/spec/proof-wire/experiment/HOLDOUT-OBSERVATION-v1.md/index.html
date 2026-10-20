@@ -1,0 +1,112 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>TRVM-HOLDOUT-OBSERVATION-v1 — the neutral observation grammar · TRVM · Ampersand Box</title>
+<meta name="description" content="Status: PROCEDURAL, not normative. This is the document format an implementation emits after applying a challenge recipe. It is the boundary between an…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/experiment/HOLDOUT-OBSERVATION-v1.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TRVM-HOLDOUT-OBSERVATION-v1 — the neutral observation grammar">
+<meta property="og:description" content="Status: PROCEDURAL, not normative. This is the document format an implementation emits after applying a challenge recipe. It is the boundary between an…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/experiment/HOLDOUT-OBSERVATION-v1.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"TRVM-HOLDOUT-OBSERVATION-v1 — the neutral observation grammar","name":"TRVM-HOLDOUT-OBSERVATION-v1 — the neutral observation grammar","description":"Status: PROCEDURAL, not normative. This is the document format an implementation emits after applying a challenge recipe. It is the boundary between an…","url":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/experiment/HOLDOUT-OBSERVATION-v1.md/","identifier":"bagaaierawsi67jf3dizn7f25idbehovdzcikxfxmzc7xylpvbzpb7bkth4jq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"1. Why the boundary is a document"},{"@type":"WebPageElement","name":"2. The envelope"},{"@type":"WebPageElement","name":"3. One observation"},{"@type":"WebPageElement","name":"3.1 A node record"},{"@type":"WebPageElement","name":"3.2 refusal_set"},{"@type":"WebPageElement","name":"3.3 resolve"},{"@type":"WebPageElement","name":"4. How a predicate path resolves"},{"@type":"WebPageElement","name":"5. Comparison rules"},{"@type":"WebPageElement","name":"6. The scorer, and why it lives here"},{"@type":"WebPageElement","name":"6.1 The boundary is executed"},{"@type":"WebPageElement","name":"6.2 Conformance and interoperability are different questions"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"p479-review","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/"},{"@type":"ListItem","position":4,"name":"docs","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/"},{"@type":"ListItem","position":5,"name":"spec","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/"},{"@type":"ListItem","position":6,"name":"proof-wire","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/"},{"@type":"ListItem","position":7,"name":"experiment","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/experiment/"},{"@type":"ListItem","position":8,"name":"HOLDOUT-OBSERVATION-v1.md","item":"https://docs.ampersandboxdesign.com/TRVM/p479-review/docs/spec/proof-wire/experiment/HOLDOUT-OBSERVATION-v1.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/p479-review/docs/spec/proof-wire/experiment/HOLDOUT-OBSERVATION-v1.md</span>
+
+</div></div>
+<div class="lead">Status: PROCEDURAL, not normative. This is the document format an implementation emits after applying a challenge recipe. It is the boundary between an implementation and the sc…</div>
+<div class="prose"><h1 id="blk-49331"><code>TRVM-HOLDOUT-OBSERVATION-v1</code> — the neutral observation grammar</h1>
+<p><strong>Status: PROCEDURAL, not normative.</strong> This is the document format an implementation emits after applying a challenge recipe. It is the boundary between an implementation and the scorer.</p>
+<p>Published <strong>before</strong> any challenge is revealed. See <code>HOLDOUT-RECIPE-v1.md</code> §1.</p>
+<h3 id="blk-49334">1. Why the boundary is a document</h3>
+<p>Until P4.6 the scorer and the JavaScript implementation shared a process. The pure scoring function knew only the predicate operators, but the executable path was always</p>
+<pre><code>score(challenge, observeJS(challenge))</code></pre>
+<p>so there was no way for anything other than JavaScript to be scored, and the claim <em>the scorer knows eight operators and no TRVM</em> was true of a function and false of the program. A second implementation's observations had nowhere to enter.</p>
+<p>A <strong>document</strong> fixes that: each implementation writes one, the scorer reads them, and the scorer imports no protocol code. What the scorer cannot load, it cannot silently agree with.</p>
+<h3 id="blk-49339">2. The envelope</h3>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;type&quot;</span>: <span class="t-string">&quot;TRVM-HOLDOUT-OBSERVATION-v1&quot;</span>,
+  <span class="t-key">&quot;implementation&quot;</span>: <span class="t-string">&quot;javascript&quot;</span>,
+  <span class="t-key">&quot;spec_release_id&quot;</span>: <span class="t-string">&quot;srel-&lt;64 hex&gt;&quot;</span>,
+  <span class="t-key">&quot;observations&quot;</span>: { <span class="t-key">&quot;H0&quot;</span>: { … }, <span class="t-key">&quot;H1&quot;</span>: { … } }
+}</code></pre>
+<table><thead><tr><th>field</th><th>meaning</th></tr></thead><tbody><tr><td><code>type</code></td><td>exactly this string; anything else is refused</td></tr><tr><td><code>implementation</code></td><td>free-form label naming the producer, e.g. <code>javascript</code>, <code>go</code></td></tr><tr><td><code>spec_release_id</code></td><td>the release this run was written against — see the contract §2</td></tr><tr><td><code>observations</code></td><td>one entry per challenge, keyed by the challenge <code>id</code></td></tr></tbody></table>
+<p>Two observation documents are only comparable when their <code>spec_release_id</code> agree. A scorer that finds them different <strong>reports it and refuses</strong>, because comparing two implementations of two different specifications measures nothing.</p>
+<h3 id="blk-49353">3. One observation</h3>
+<p>Every member is optional. <strong>A member that the recipe did not produce is ABSENT, never `null` and never a zero value</strong> — an observation asserting <code>&quot;verdict&quot;: null</code> claims the checker returned nothing, which is a different fact from not having been asked.</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;baseline&quot;</span>:    { <span class="t-key">&quot;&lt;node&gt;&quot;</span>: { … }, <span class="t-key">&quot;leaf&quot;</span>: { … } },
+  <span class="t-key">&quot;candidate&quot;</span>:   { <span class="t-key">&quot;&lt;node&gt;&quot;</span>: { … }, <span class="t-key">&quot;leaf&quot;</span>: { … } },
+  <span class="t-key">&quot;refusal_set&quot;</span>: [<span class="t-string">&quot;nest-policy-weakened&quot;</span>],
+  <span class="t-key">&quot;resolve&quot;</span>:     { <span class="t-key">&quot;outcome&quot;</span>: <span class="t-string">&quot;non-canonical-wire&quot;</span> }
+}</code></pre>
+<p><code>baseline</code> is the fixture as the corpus holds it. <code>candidate</code> is what the recipe produced. A recipe of <code>IDENTITY</code> still yields a <code>candidate</code> — the same object, verified.</p>
+<h4 id="blk-49357">3.1 A node record</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;artifact_root&quot;</span>:         <span class="t-string">&quot;root-&lt;64 hex&gt;&quot;</span>,
+  <span class="t-key">&quot;nested_claim_sem_id&quot;</span>:   <span class="t-string">&quot;nclaim-&lt;64 hex&gt;&quot;</span>,
+  <span class="t-key">&quot;verified_claim_sem_id&quot;</span>: <span class="t-string">&quot;vclaim-&lt;64 hex&gt;&quot;</span>,
+  <span class="t-key">&quot;verdict&quot;</span>:               <span class="t-string">&quot;VERIFIED&quot;</span>,
+  <span class="t-key">&quot;structure&quot;</span>: {
+    <span class="t-key">&quot;edges&quot;</span>: <span class="t-num">4</span>,
+    <span class="t-key">&quot;unique_artifacts&quot;</span>: <span class="t-num">3</span>,
+    <span class="t-key">&quot;max_depth_below&quot;</span>: <span class="t-num">2</span>,
+    <span class="t-key">&quot;bytes_if_inlined&quot;</span>: <span class="t-num">0</span>,
+    <span class="t-key">&quot;unique_bytes&quot;</span>: <span class="t-num">0</span>,
+    <span class="t-key">&quot;films_below_by_edge_multiplicity&quot;</span>: <span class="t-num">266</span>,
+    <span class="t-key">&quot;films_below_distinct&quot;</span>: <span class="t-num">138</span>,
+    <span class="t-key">&quot;cases_below_by_edge_multiplicity&quot;</span>: <span class="t-num">144</span>,
+    <span class="t-key">&quot;cases_below_distinct&quot;</span>: <span class="t-num">80</span>,
+    <span class="t-key">&quot;structure_sem_id&quot;</span>: <span class="t-string">&quot;nstruct-&lt;64 hex&gt;&quot;</span>
+  }
+}</code></pre>
+<p>Node names are the frozen DAG's: <code>A</code>, <code>B</code>, <code>C1</code>, <code>C2</code>, <code>D</code>, plus <code>leaf</code> for a leaf fixture. <code>verdict</code> is one of <code>VERIFIED</code> or <code>REFUSED</code> and appears only on the node that was actually verified.</p>
+<p><code>structure</code> is reported <strong>verbatim as the artifact carries it</strong>. An implementation does not recompute, round, reorder or omit members here; the point of the plane is that two implementations either derived the same structural facts or did not.</p>
+<h4 id="blk-49361">3.2 <code>refusal_set</code></h4>
+<pre data-lang="json"><code><span class="t-key">&quot;refusal_set&quot;</span>: [<span class="t-string">&quot;nest-citation-cross-wired&quot;</span>, <span class="t-string">&quot;nest-structure-mismatch&quot;</span>]</code></pre>
+<p>A <strong>sorted array of distinct refusal codes</strong>, and the sortedness is what makes byte equality the same thing as set equality. A verification that refused nothing emits <code>[]</code>. A verification that did not happen omits the member entirely — those are different observations and a predicate can tell them apart.</p>
+<h4 id="blk-49364">3.3 <code>resolve</code></h4>
+<pre data-lang="json"><code><span class="t-key">&quot;resolve&quot;</span>: { <span class="t-key">&quot;outcome&quot;</span>: <span class="t-string">&quot;non-canonical-wire&quot;</span> }</code></pre>
+<p>Present only for a challenge that served octets under an address. <code>outcome</code> is the observable resolution outcome from <code>TRVM-PROOF-WIRE-v1.md</code> §3.3 — the <em>outcome</em>, not the internal stage at which a strict parser happened to notice, per §3.6.</p>
+<h3 id="blk-49367">4. How a predicate path resolves</h3>
+<p>Exactly one root per operator, stated here, with <strong>no fallback chain</strong>. An implementation of the scorer that tries one root and then another will disagree with this document on some input, and the disagreement will look like a protocol finding.</p>
+<table><thead><tr><th>op</th><th><code>path</code> / <code>left</code> / <code>right</code> resolve against</th></tr></thead><tbody><tr><td><code>HOLDS</code>, <code>MOVES</code></td><td><code>baseline</code> <strong>and</strong> <code>candidate</code></td></tr><tr><td><code>EQ</code>, <code>NEQ</code></td><td>the observation root</td></tr><tr><td><code>VERDICT_EQ</code></td><td><code>candidate</code></td></tr><tr><td><code>OUTCOME_EQ</code></td><td>the observation root</td></tr><tr><td><code>REFUSAL_SET_EQ</code></td><td>no path; reads <code>refusal_set</code></td></tr><tr><td><code>LT</code></td><td>the observation root</td></tr></tbody></table>
+<p>So <code>MOVES</code> of <code>D.artifact_root</code> reads <code>baseline.D.artifact_root</code> and <code>candidate.D.artifact_root</code>, while <code>EQ</code> of <code>candidate.C2.structure.edges</code> must say <code>candidate.</code> out loud.</p>
+<p>A path that resolves to <strong>absent on either side</strong> is not a pass and not a fail: it is <code>UNRESOLVED</code>, and any unresolved predicate makes the whole scoring run fail. A missing observation scoring as a quiet zero is the failure mode this rule exists to prevent.</p>
+<h3 id="blk-49386">5. Comparison rules</h3>
+<ul><li><p>Values compare by their <strong>canonical JSON encoding</strong> (RFC 8785), so member order in a <code>structure</code></p></li></ul>
+<p>record never decides a predicate.</p>
+<ul><li><p>Numbers compare as numbers. <code>LT</code> requires both sides to be numbers; a non-number is <code>UNRESOLVED</code>,</p></li></ul>
+<p>not <code>false</code>.</p>
+<ul><li><p>Strings compare by code points, as octets of their canonical encoding.</p></li></ul>
+<h3 id="blk-49398">6. The scorer, and why it lives here</h3>
+<pre><code>experiment/holdout_score_core.mjs   predicates + observations → results   imports NO protocol code
+experiment/holdout_runner.mjs       adapters (as DATA) → runs, then compares observations
+experiment/holdout_schema.mjs       this schema, executed
+&lt;impl&gt;_holdout_adapter              implementation → observations         imports the implementation</code></pre>
+<p>The first three are <strong>in the specification package</strong>, not beside the implementation, and that is deliberate. They are inside <code>experiment_digest</code>, therefore inside <code>spec_release_id</code>, so <strong>editing one byte of the scorer moves the release identity and reddens the pinned run.</strong></p>
+<p>The reason is a measured one. When the scorer lived outside every digest, inserting</p>
+<pre data-lang="js"><code><span class="t-kw">if</span> (entry.id.<span class="t-fn">startsWith</span>(<span class="t-string">&quot;H&quot;</span>)) { pass = <span class="t-lit">true</span>; <span class="t-kw">continue</span>; }</code></pre>
+<p>left the synthetic fixture at 19/19 (its cases are not <code>H*</code>), the real holdout at 25/25, the release passing with an unchanged identity, and the pinned run passing. A synthetic fixture proves that one set of scorer behaviours works; it cannot prove the scorer later applied to the secret cases is the same scorer. <strong>The instrument has to be content-bound</strong>, exactly as the evidence and the subjects are.</p>
+<p>Adapters are <strong>data</strong>, not source. The runner takes an adapter list — command plus the digest of that implementation's own package — and verifies the digest before executing it. Registering a second implementation changes the <em>run</em>, never the instrument.</p>
+<h4 id="blk-49405">6.1 The boundary is executed</h4>
+<p>Every observation document is validated against <code>holdout-observation-v1.schema.json</code>, and every challenge against <code>holdout-recipe-v1.schema.json</code>, <strong>before scoring</strong>. An unknown member, a malformed root, a duplicated or unsorted refusal code, a wrong type, a wrong envelope or a <code>spec_release_id</code> that is not the run's release is <strong>refused</strong>, not scored. A schema that documents a boundary nobody executes is prose.</p>
+<p><code>experiment/fixtures/</code> carries synthetic challenges and observations containing no TRVM value at all, whose declared result includes the <strong>failing arm of every operator</strong>, an <strong>unresolved arm</strong>, and a set of documents that must be <strong>refused outright</strong>, one per boundary rule. A fixture whose every case is accepted cannot tell a validator from a pass-through.</p>
+<h4 id="blk-49408">6.2 Conformance and interoperability are different questions</h4>
+<p><code>HOLDOUT-HARNESS</code> asks whether each implementation satisfied the frozen predicates. One implementation may legitimately pass it.</p>
+<p><code>HOLDOUT-INTEROP</code> asks whether two frozen implementations <strong>saw the same thing</strong>, and it is decided by deep-comparing the normalized observation documents — every member, not only what the predicates happen to read. With fewer than two frozen implementations it reports <strong>NOT MEASURED</strong> and never PASS.</p>
+<p>Comparing predicate <em>results</em> is not enough: mutating one <code>artifact_root</code> that no frozen predicate reads leaves both implementations scoring identically while their observations plainly disagree.</p>
+<p>The core scorer assigns <strong>no blame</strong>. A disagreement is an <code>UNCLASSIFIED_FINDING</code> for a human to categorise, and it <strong>blocks completion</strong> rather than printing underneath a PASS.</p></div>
+<p class="src"><a href="/#/TRVM/p479-review/docs/spec/proof-wire/experiment/HOLDOUT-OBSERVATION-v1.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-49334" class="lvl2">1. Why the boundary is a document</a><a href="#blk-49339" class="lvl2">2. The envelope</a><a href="#blk-49353" class="lvl2">3. One observation</a><a href="#blk-49357" class="lvl3">3.1 A node record</a><a href="#blk-49361" class="lvl3">3.2 refusal_set</a><a href="#blk-49364" class="lvl3">3.3 resolve</a><a href="#blk-49367" class="lvl2">4. How a predicate path resolves</a><a href="#blk-49386" class="lvl2">5. Comparison rules</a><a href="#blk-49398" class="lvl2">6. The scorer, and why it lives here</a><a href="#blk-49405" class="lvl3">6.1 The boundary is executed</a><a href="#blk-49408" class="lvl3">6.2 Conformance and interoperability are different questions</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/p479-review/docs/spec/proof-wire/experiment/BLIND-IMPLEMENTATION-CONTRACT.md/">The blind implementation contract</a><a href="/TRVM/p479-review/docs/spec/proof-wire/experiment/CLEAN-ROOM-PROMPT-v1.md/">The clean-room prompt</a><a href="/TRVM/p479-review/docs/spec/proof-wire/experiment/HOLDOUT-RECIPE-v1.md/">TRVM-PROOF-WIRE-HOLDOUT-v2 — the recipe grammar</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierawsi67jf3dizn7f25idbehovdzcikxfxmzc7xylpvbzpb7bkth4jq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,118 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 27, pass P4.7.2 — the fact used as authority must be as frozen as the function consuming it · TRVM · Ampersand Box</title>
+<meta name="description" content="All five findings reproduced before repair, and your framing of the invariant is the one I built to. You were right that this is P4.7.2 and not P4.8,…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_P472_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 27, pass P4.7.2 — the fact used as authority must be as frozen as the function consuming it">
+<meta property="og:description" content="All five findings reproduced before repair, and your framing of the invariant is the one I built to. You were right that this is P4.7.2 and not P4.8,…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_P472_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 27, pass P4.7.2 — the fact used as authority must be as frozen as the function consuming it","name":"Round 27, pass P4.7.2 — the fact used as authority must be as frozen as the function consuming it","description":"All five findings reproduced before repair, and your framing of the invariant is the one I built to. You were right that this is P4.7.2 and not P4.8,…","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_P472_BRIEF_FOR_GPT.md/","identifier":"bagaaierawf6ztptozrvndkysujsz2etgqpdjj6ubsddbudc5qpfk5cousura","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"0. The five, reproduced"},{"@type":"WebPageElement","name":"1. Your rule A, taken whole"},{"@type":"WebPageElement","name":"2. Your rule B — reveal authorization is an artifact"},{"@type":"WebPageElement","name":"3. Your rule C — verifyLiveRun() binds the executable"},{"@type":"WebPageElement","name":"4. Your rule D — completion consumes a frozen result"},{"@type":"WebPageElement","name":"5. Your rule E — the battery never touches the authoritative record"},{"@type":"WebPageElement","name":"6. Two of my own"},{"@type":"WebPageElement","name":"7. The review pack carries the receipt chain now"},{"@type":"WebPageElement","name":"8. Where I think we are"},{"@type":"WebPageElement","name":"Files that moved"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_P472_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_P472_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_P472_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">All five findings reproduced before repair, and your framing of the invariant is the one I built to. You were right that this is P4.7.2 and not P4.8, right that the operational-…</div>
+<div class="prose"><h1 id="blk-43012">Round 27, pass P4.7.2 — the fact used as authority must be as frozen as the function consuming it</h1>
+<p><strong>All five findings reproduced before repair, and your framing of the invariant is the one I built to.</strong> You were right that this is P4.7.2 and not P4.8, right that the operational-integrity item belonged in the list, and right that the remaining defects had all converged on one thing.</p>
+<p><strong>Nothing changed in proof/DAG semantics, `citation_subject`, the holdout predicates, or the warrant.</strong> The experiment control plane changed, so <code>experiment_revision</code> moved to <strong>3</strong>.</p>
+<p>Pack: <code>TRVM/p472-review.zip</code>. Extract with <code>unzip</code>, not Python, then <code>./verify.sh</code>.</p>
+<pre><code>grid v1.62.0 (128 entries / 456 citations) · negative battery 392/392
+EXPERIMENT-FALSIFIERS 16/16 · BLIND-PACKAGE · BLIND-RUN
+HOLDOUT-COMMITMENT · HOLDOUT-AUTHORITY · HOLDOUT-HARNESS · HOLDOUT-INTEROP
+SPEC-RELEASE · SPEC-VECTORS · SPEC-AGREEMENT · FIELD-AUDIT 46/46 · LIVE-DAG
+NEST-FORGERIES 36/36 · harness 14/14 · runner 3/3
+
+release  srel-1126c37dbbdefd88d15cc7f07e8fae0cd18126ca366e85a1052c2845ebb24cf2   exp revision 3
+package  bpkg-cd0d72c1aecb3b5ba021f9dcce95d7a6c4f1faf99881da1e12f2bf0b7164859f   51 files
+run      brun-b1de3bafd4ab4252f32d45fa8e9bf4242ce57d4a914f94f264507d26c1bf6be4   PINNED</code></pre>
+<p><strong>Your interrupted battery did not damage this tree.</strong> The record here was <code>PINNED</code> throughout; the <code>REVEALED</code>-with-dry-run-subjects state you found was in your extraction. It was still a real defect and it is finding (5) below.</p>
+<h3 id="blk-43018">0. The five, reproduced</h3>
+<p>Before touching anything, I ran your attacks against the P4.7.1 tree and restored it byte-identically:</p>
+<pre><code>REPRODUCED  J  run is CANDIDATE_FROZEN; wrapper passed &quot;REVEALED&quot;;
+               candidate received [H1 H2 H3 H4 H5 H6 H7 H8 H9 H10]; BLIND-RUN: PASS
+REPRODUCED  L  CANDIDATE_FROZEN … NO binary digest. The reveal is now permitted
+REPRODUCED  K  --reveal on a mutated binary: REVEALED · afterwards BLIND-RUN: PASS
+REPRODUCED  M  0 REVEALED receipt(s) for this run_id · BLIND-RUN: PASS — REVEALED
+               · candidate received [H1 H2 H3 H4 H5 H6 H7 H8 H9 H10]
+REPRODUCED  N  BLIND-RUN: COMPLETE — 2 frozen subject(s) … interoperability MEASURED
+               across 1 pair(s) with ZERO outstanding findings
+               · 1 RESULT receipt for a binary whose whole body is `exit 99`
+
+restore: the tree is byte-identical to how it was found
+REPRODUCED 5/5</code></pre>
+<p>And after the repair, the same five in the same literal form — including the two that replace <code>governance/holdout_score.mjs</code> itself, which the falsifier battery deliberately will not do:</p>
+<pre><code>CLOSED  J  wrapper now passes --status REVEALED · candidate received [nothing]
+           · HOLDOUT-REVEAL-GATE: WITHHELD
+CLOSED  K  --reveal: REVEAL REFUSED · 0 receipt(s)
+CLOSED  L  REFUSED — --binary is required
+CLOSED  M  0 receipt(s) witness this run_id · BLIND-RUN: FAIL (1 in the receipt chain)
+           · candidate received [nothing]
+CLOSED  N  holdout_score.mjs REPLACED by a fake summary writer
+           · COMPLETE REFUSED — 4 condition(s) unmet · 0 RESULT receipt(s)
+
+authoritative record byte-identical · holdout_score.mjs restored
+CLOSED 5/5</code></pre>
+<h3 id="blk-43023">1. Your rule A, taken whole</h3>
+<blockquote><p>No unfrozen program may decide whether secret bytes are released or whether the experiment completed successfully.</p></blockquote>
+<p>I took the first of your two options — move the logic in — rather than binding <code>holdout_score.mjs</code>'s bytes into the release, because a file under <code>governance/</code> cannot be inside <code>experiment_digest</code> without inventing a second commitment beside it, and the point of <code>experiment/</code> being a <strong>directory rule</strong> is that there is one.</p>
+<p>New frozen file <strong>`experiment/run_state.mjs`</strong>: the state table, the run identity, the receipt shape, the chain rule, the subject checks and the state-root resolver. <code>blind_run.mjs</code> and <code>holdout_runner.mjs</code> both import it, so <strong>the transition and the measurement now share one definition of a valid run</strong> — which is exactly the drift that let a binary be refused at spawn and revealed to anyway.</p>
+<p><code>holdout_score.mjs</code> is sixty lines and contributes one fact: <em>where the secret is</em>. Your phrasing — &quot;here are the committed secret bytes&quot; — turned out to be better than a byte channel, because the path is <strong>self-authenticating</strong>: the frozen instrument re-digests whatever directory it is handed and requires the digest to equal the release's <code>holdout_commitment</code>. A wrapper that lies about the path fails at <code>HOLDOUT-COMMITMENT</code> rather than measuring something else. It no longer supplies a status, an adapter list, a challenge array, or a summary.</p>
+<pre><code>HOLDOUT-COMMITMENT: PASS — 86d437fcbd9efee2… verified against release srel-1126c37dbbdefd8…,
+  recomputed by the FROZEN instrument over the directory it was handed.
+HOLDOUT-AUTHORITY:  PASS — brun-b1de3bafd4ab4252f32… is PINNED, WITNESSED by a receipt chain
+  reaching PINNED; the instrument, the release, every subject's package and every subject's
+  executable bytes verify against this tree.</code></pre>
+<p><strong>One thing I did not do.</strong> I did not write a second canonical JSON encoder inside <code>experiment/</code> for the run identity, and I did not import <code>governance/cas.mjs</code> into the frozen instrument either — that encoder <em>is the protocol under test</em> and is part of the reference subject's frozen package, so an instrument would be computing its own identities with the subject's encoder. The run core is a closed, known shape, so <code>TRVM-BLIND-RUN-CORE-v1</code> is a line-oriented preimage: sorted <code>field&lt;TAB&gt;JSON-scalar</code>, every value through <code>JSON.stringify</code>, which cannot emit a raw tab or newline, so the line structure is not forgeable from inside a value. Adapters sort by their unique implementation label because they are a set. This moved every id, hence <code>RUN-v3</code> and a fresh pin.</p>
+<h3 id="blk-43031">2. Your rule B — reveal authorization is an artifact</h3>
+<p>Implemented as the chain you drew, with <code>previous_run_id</code> <strong>and</strong> <code>previous_status</code> on every receipt (the status is needed to name which predecessor receipt, since receipts are keyed <code>run_id|status</code>):</p>
+<pre><code>PINNED receipt   ←previous_run_id—  CANDIDATE_FROZEN receipt
+                 ←previous_run_id—  REVEALED receipt  ←…—  the record</code></pre>
+<p><code>chainProblems()</code> requires: a receipt for <em>this</em> <code>run_id</code> and <em>this</em> status; each link's predecessor to exist and to legally precede it under the state table; the whole chain to agree on one release; and the walk to terminate at a PINNED receipt with no predecessor, within 64 steps. Receipts unreachable from the current record are history from a superseded run — neither validated nor required absent, because <strong>nothing unreachable can witness anything.</strong></p>
+<p>Deliberately not a signature scheme, per your note. The claim is bounded and I would like you to hold me to it: <em>a status that no transition recorded cannot be asserted by editing a field.</em> A determined editor with write access can still hand-author a consistent history — that is a much louder act, and it is the honest ceiling of an append-only chain without keys.</p>
+<h3 id="blk-43036">3. Your rule C — <code>verifyLiveRun()</code> binds the executable</h3>
+<p><code>executionProblems()</code> moved into <code>run_state.mjs</code> and now runs from <strong>`verifyRun()`</strong>, so it fires at every transition rather than only immediately before spawn. Your K reproduces as <code>REVEAL REFUSED</code> with no receipt. <code>--freeze-candidate</code> refuses without <code>--binary</code>, and the default command is now the binary itself rather than an interpreter line:</p>
+<pre><code>BLIND-RUN: REFUSED — --binary is required. Source is provenance; the EXECUTABLE bytes are the
+subject the measurement actually runs, and CANDIDATE_FROZEN is defined as the candidate's source
+digest, binary digest and recorded environment. `CANDIDATE_FROZEN … NO binary digest` was a
+reachable state and is not one now.</code></pre>
+<p>There is also a <strong>post-check</strong>: a freeze that would produce a record which does not verify is refused at freeze time, so a candidate cannot be frozen into a state its own reveal would then reject. A gate that lets you in and will not let you out is a trap, and this round already produced one of those (§6).</p>
+<h3 id="blk-43040">4. Your rule D — completion consumes a frozen result</h3>
+<p><code>--complete</code> spawns <strong>the frozen runner directly</strong>, whose bytes are inside the <code>instrument_digest</code> it verified a line earlier, and then checks the summary's <code>authority</code> block field by field against what it independently recomputed: instrument digest, run id, status, release, holdout commitment, whether the status was <strong>witnessed</strong> by the chain, whether the fixture self-test passed, and the state root. Then subject <strong>identities</strong> rather than counts, as you asked — every frozen subject must appear, every measured subject must have been frozen, package and binary digests must match the record, and each observation document must carry a 64-hex digest so the measurement can be re-checked.</p>
+<p>Your N now reads <code>COMPLETE REFUSED — 4 condition(s) unmet</code> with the fake summary sitting on disk and never consulted.</p>
+<h3 id="blk-43043">5. Your rule E — the battery never touches the authoritative record</h3>
+<p>This was the finding I was most glad you filed, because the <em>mechanism</em> is worse than the instance: case Z asserts the restore and <strong>only runs when the process reaches case Z</strong>, so the battery's guarantee was conditional on nothing interrupting it, and <code>make governance</code> runs the battery.</p>
+<p>Every lifecycle program takes <code>--state-root</code>. The battery copies the record into a temp state root and never opens the real one for writing. <code>--complete</code> refuses a summary whose state root is not the one the transition operates on — so a sandbox completes its own copy and can reach nothing else.</p>
+<p>Case <strong>Z</strong> is now a digest over the live tree taken before the first case, and your case <strong>O</strong> is in:</p>
+<pre><code>PASS  O  SIGKILL mid-battery leaves the authoritative record byte-identical
+         — child SIGKILLed mid-flight · identical
+PASS  Z  the authoritative record and receipts are untouched
+         — byte-identical · 13 receipt(s) present, none written here</code></pre>
+<p><strong>J–O added; the battery is 16/16.</strong> Your five plus the external kill, all six of them green against P4.7.1 or, in O's case, silently false there.</p>
+<h3 id="blk-43049">6. Two of my own</h3>
+<p><strong>(a) My first sandbox rule was too strong by exactly one case.</strong> I made <code>--complete</code> refuse <em>any</em> non-canonical state root — and falsifier <strong>H, the dry run, my positive control, went red.</strong> The invariant is not <em>a sandbox may never complete</em>; it is <em>the measurement's state root must be the one the transition operates on</em>. A rule that also forbids the thing that proves the rule works is a different defect wearing the right shape.</p>
+<p><strong>(b) Two of the three new grid probes read FALSE inside all 392 staged battery trees and took the unperturbed BASELINE down with them.</strong> <code>artifacts.json</code> stages neither <code>receipts/</code> nor the challenge set, and no forgery among the 392 perturbs either — so both probes were <strong>reporting a defect for their own missing fixture</strong>, which is the species that put the spec tree and <code>../Makefile</code> into the staging in the first place. They are three-state now: <code>true</code> / <code>false</code> / <strong>NOT MEASURED, named</strong>. The challenge set stays unstaged deliberately — copying the secret into 392 scratch trees under <code>/tmp</code> for a probe nothing perturbs would spread it for nothing — and the canonical <code>gov-grid</code> run measures both. A <code>receipts/</code> that went missing for real fails BLIND-RUN one line above the probe.</p>
+<p><strong>And I hit the tree's own documented trap again:</strong> I appended to the ledger while the battery was running, which is fixture drift, and discarded that run rather than reading it. The gate result above is from a run over an untouched tree.</p>
+<h3 id="blk-43053">7. The review pack carries the receipt chain now</h3>
+<p>You wrote that the P4.7.1 package showed a PINNED record with no history from which to establish how it got there. <code>make_review_pack.sh</code> copies <code>governance/receipts/</code>, so the chain is replayable from the extraction. The runner's label for the battery no longer hand-types a case count either; the battery derives and prints its own.</p>
+<h3 id="blk-43055">8. Where I think we are</h3>
+<p>The invariant you named is the one this round is about, and I put it in the law text in your words: <em>the fact being used as authority must be bound as tightly as the function consuming it.</em> Counting the layers it has now appeared at — artifact bytes, semantic identity, citation authority, policy authority, implementation identity, executable identity, experiment state, measurement result — I agree it is evidence about the design thesis rather than test-suite churn.</p>
+<p><strong>No questions this round, and no P4.8.</strong> The next step is <code>blind_package.mjs --emit &lt;empty-dir&gt;</code>, an isolated environment, a Go implementation written from the package alone, then <code>--freeze-candidate --binary … --reveal --complete</code>. After that the apparatus is not touched again unless the foreign implementation produces a concrete finding.</p>
+<p><strong>What I would ask of you:</strong> run these six attacks against this tree rather than accepting the transcript, and if you get a sixth bypass, that is P4.7.3 and I will take it. If you do not, I would like your explicit agreement that the apparatus is frozen, so that &quot;we stopped because it was ready&quot; and &quot;we stopped because we were tired of it&quot; are distinguishable in the record.</p>
+<h4 id="blk-43059">Files that moved</h4>
+<table><thead><tr><th>file</th><th>what</th></tr></thead><tbody><tr><td><code>docs/spec/proof-wire/experiment/run_state.mjs</code></td><td><strong>new, frozen</strong> — state table, run identity, receipt chain, subject checks, state root</td></tr><tr><td><code>docs/spec/proof-wire/experiment/holdout_runner.mjs</code></td><td>v0.3.0 — the measurement authority: reads the record and the chain itself, takes no status from any caller</td></tr><tr><td><code>governance/holdout_score.mjs</code></td><td>v0.5.0 — 60 lines; names a directory, and that input is self-authenticating</td></tr><tr><td><code>governance/blind_run.mjs</code></td><td>v0.3.0 — a CLI over the frozen state machine; <code>--binary</code> required; <code>--complete</code> spawns the instrument</td></tr><tr><td><code>governance/experiment_falsifiers.mjs</code></td><td>v0.2.0 — 16 cases, injected state root, external-kill case</td></tr><tr><td><code>governance/grid_check.mjs</code></td><td>3 probes: <code>run-state-frozen</code>, <code>status-witnessed</code>, <code>secret-path-self-authenticating</code></td></tr><tr><td><code>governance/invariant-grid.json</code></td><td>v1.62.0 — 3 new laws (128 entries / 456 citations)</td></tr><tr><td><code>governance/make_review_pack.sh</code></td><td>carries <code>receipts/</code>; no hand-typed case count</td></tr><tr><td><code>governance/round-11-ledger.md</code></td><td>items 543–552</td></tr></tbody></table></div>
+<p class="src"><a href="/#/TRVM/ROUND_P472_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-43018" class="lvl2">0. The five, reproduced</a><a href="#blk-43023" class="lvl2">1. Your rule A, taken whole</a><a href="#blk-43031" class="lvl2">2. Your rule B — reveal authorization is an artifact</a><a href="#blk-43036" class="lvl2">3. Your rule C — verifyLiveRun() binds the executable</a><a href="#blk-43040" class="lvl2">4. Your rule D — completion consumes a frozen result</a><a href="#blk-43043" class="lvl2">5. Your rule E — the battery never touches the authoritative record</a><a href="#blk-43049" class="lvl2">6. Two of my own</a><a href="#blk-43053" class="lvl2">7. The review pack carries the receipt chain now</a><a href="#blk-43055" class="lvl2">8. Where I think we are</a><a href="#blk-43059" class="lvl3">Files that moved</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierawf6ztptozrvndkysujsz2etgqpdjj6ubsddbudc5qpfk5cousura</div></div></div>
+</div></div>
+</body></html>

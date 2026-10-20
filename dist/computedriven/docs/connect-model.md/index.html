@@ -1,0 +1,136 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>The connect model · computedriven · Ampersand Box</title>
+<meta name="description" content="Status: R0.9 contract, written before `cd-connect` exists. Nothing here is implemented. It is written first because the review&#39;s order was explicit —…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/connect-model.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The connect model">
+<meta property="og:description" content="Status: R0.9 contract, written before `cd-connect` exists. Nothing here is implemented. It is written first because the review&#39;s order was explicit —…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/connect-model.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"The connect model","name":"The connect model","description":"Status: R0.9 contract, written before `cd-connect` exists. Nothing here is implemented. It is written first because the review's order was explicit —…","url":"https://docs.ampersandboxdesign.com/computedriven/docs/connect-model.md/","identifier":"bagaaiera3zkryxfsz4a7htc56aev3bhfaum7nuvd5ga3o2rhskeyeu77yxmq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"1. Why this is a separate layer from rendezvous"},{"@type":"WebPageElement","name":"2. What a transport credential is"},{"@type":"WebPageElement","name":"R0.9 does not own key rotation"},{"@type":"WebPageElement","name":"3. The three types"},{"@type":"WebPageElement","name":"PeerExpectation — what the caller already knows"},{"@type":"WebPageElement","name":"EndpointCandidate — an address, and deliberately nothing else"},{"@type":"WebPageElement","name":"ValidatedPeerSession — reached whom, and nothing more"},{"@type":"WebPageElement","name":"4. The validation road, in order"},{"@type":"WebPageElement","name":"5. What the layers may not do to each other"},{"@type":"WebPageElement","name":"6. First contact — the residual, stated"},{"@type":"WebPageElement","name":"7. Scope of the first profile"},{"@type":"WebPageElement","name":"4a. R128: the answer must be THIS attempt's (added 2026-10-02)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"connect-model.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/connect-model.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/connect-model.md</span>
+
+</div></div>
+<div class="lead">Status: R0.9 contract, written before `cd-connect` exists. Nothing here is implemented. It is written first because the review&#39;s order was explicit — contract, then controls tha…</div>
+<div class="prose"><h1 id="blk-58700">The connect model</h1>
+<p><strong>Status: R0.9 contract, written before `cd-connect` exists.</strong> Nothing here is implemented. It is written first because the review's order was explicit — contract, then controls that fail, then mechanism — and because this file has to make one decision the round could otherwise make silently: <strong>what a transport credential is in this system.</strong></p>
+<p><code>docs/discovery-model.md</code> is canonical for the rendezvous plane. This file is canonical for the road every endpoint travels afterwards, and for the boundary between them.</p>
+<h3 id="blk-58703">1. Why this is a separate layer from rendezvous</h3>
+<p>The rule is three clauses, and the crate graph should be able to show them:</p>
+<pre><code>DISCOVERY CHOOSES WHERE WE TRY.        cd-rendezvous
+AUTHENTICATION DECIDES WHOM WE REACHED. cd-connect
+ONLY THE LINEAGE DECIDES WHAT THEY MAY DO.  R0.8, cd-core / cd-durable</code></pre>
+<p>Authentication is <strong>not</strong> a rendezvous responsibility. Saying &quot;endpoint provenance is erased before authentication&quot; is a property one can assert; putting the validation road in a crate the rendezvous plane merely <em>feeds</em> is the same property made structural — the arrows are one-way because the dependency graph is one-way, not because a control checked.</p>
+<p>That is also why <code>decode_exact_datagram</code> does not belong in <code>cd-rendezvous</code>. Exact peer-frame parsing is part of the one validation road that static, cached and rendezvous endpoints all travel. It is not rendezvous. It moves.</p>
+<pre><code>                cd-rendezvous            (untrusted location plane)
+                    NodeId -&gt; EndpointHint[]
+                    no authentication · no sessions · no authority
+                              │
+                              │ normalized, provenance stripped
+                              ▼
+                cd-connect               (the one validation road)
+                    PeerExpectation + EndpointCandidate
+                        transport authentication
+                        exact peer-frame parsing
+                        expected NodeId comparison
+                              │
+                              ▼
+                    ValidatedPeerSession
+                              │
+                        STILL NO AUTHORITY
+                              │
+                              ▼
+                R0.8 lineage decides what that session may do</code></pre>
+<p>No frozen crate depends on either new crate.</p>
+<h3 id="blk-58710">2. What a transport credential is</h3>
+<blockquote><p><strong>The transport credential is the EXPECTED REMOTE TRANSPORT PEER AUTHENTICATOR, established outside rendezvous. In the first concrete profile it is the remote peer's 32-byte WireGuard public key.</strong></p></blockquote>
+<p>R0.6 already separated these experimentally, and R0.9 reuses that separation rather than inventing another credential model:</p>
+<pre><code>NodeId                 semantic identity
+WireGuard public key   transport credential
+underlay endpoint      location</code></pre>
+<p><strong>No new cryptosystem and no crypto dependency.</strong> The local private key stays where it already is — in the kernel's WireGuard implementation. <code>cd-connect</code> never holds it, never receives candidate peer keys from a directory, and never changes which key is expected.</p>
+<p>WireGuard fits the theorem unusually well, because its own roaming rule points the same direction the contract does: a peer's endpoint is updated from the outer source address of a packet that <strong>already authenticated</strong>. Authentication may update location; location never creates authentication.</p>
+<h4 id="blk-58717">R0.9 does not own key rotation</h4>
+<p>R0.6 proved the transport key can rotate while the NodeId does not change. So rotation is somebody else's job. <code>PeerExpectation</code> is the caller's <em>current</em> trusted expectation, supplied by an outside configuration or key-management path.</p>
+<p><strong>If that expectation goes stale, connection fails. That is an availability loss, and it is not permission for the rendezvous service to supply a replacement credential.</strong> This is the Tailnet-Lock lesson in miniature: an untrusted coordination plane must not be able to substitute the keys that decide who participates.</p>
+<h3 id="blk-58720">3. The three types</h3>
+<h4 id="blk-58721"><code>PeerExpectation</code> — what the caller already knows</h4>
+<pre><code>PeerExpectation
+    expected_node_id            NodeId, 32 bytes
+    expected_transport_peer     TransportPeerRef</code></pre>
+<p>Established <strong>outside R0.9</strong> and before any rendezvous query. It is an input, never an output. Nothing in <code>cd-rendezvous</code> may construct, widen or replace one.</p>
+<p><code>TransportPeerRef</code> is an <strong>opaque reference to a peer that already exists</strong> in the transport implementation. It is not a key the connector installs. The distinction is the whole point:</p>
+<blockquote><p><strong>AN ENDPOINT HINT MAY RETARGET AN ALREADY-EXPECTED TRANSPORT PEER. IT MAY NOT CREATE A PEER, AND IT MAY NOT CHANGE WHICH CREDENTIAL IS EXPECTED.</strong></p></blockquote>
+<p>Where the platform offers an update-existing-only primitive, use it, so the property is structural. Where a first lab has to go through a weaker shell interface, the control carries explicit before/after gates proving the peer public-key set is byte-identical and that no peer was added or replaced — and the shell convention is <strong>not</strong> claimed to be the eventual enforcement.</p>
+<h4 id="blk-58728"><code>EndpointCandidate</code> — an address, and deliberately nothing else</h4>
+<pre><code>EndpointCandidate
+    addr    underlay address:port</code></pre>
+<p><strong>It carries no provenance.</strong> No <code>source=static</code>, no <code>source=cache</code>, no <code>source=rendezvous</code>, no confidence score, no vantage count, no age. Static, cached and rendezvous layers each normalize into this type <em>before</em> calling <code>cd-connect</code>.</p>
+<p>This is provenance erasure made structural rather than asserted: a discovered endpoint cannot select a weaker validation path because <strong>the connector has no field to select on.</strong> Test-only instrumentation may expose the validation steps for comparison; production connector state must not need provenance to work.</p>
+<h4 id="blk-58732"><code>ValidatedPeerSession</code> — reached whom, and nothing more</h4>
+<pre><code>ValidatedPeerSession
+    node_id        the expected NodeId, now confirmed
+    peer           the TransportPeerRef that authenticated
+    addr           where it answered</code></pre>
+<p>It is the end of clause two and the beginning of nothing. It confers <strong>no</strong> lifecycle authority. What such a session may do is decided by the R0.8 lineage, independently, and a session that authenticates perfectly still moves none of the six verbs.</p>
+<h3 id="blk-58735">4. The validation road, in order</h3>
+<pre><code>connect(PeerExpectation, EndpointCandidate) -&gt; Result&lt;ValidatedPeerSession&gt;
+
+    1  retarget the ALREADY-EXISTING transport peer at this candidate address
+       (update-existing-only; never create, never re-key)
+    2  transport authentication                      -- fails =&gt; stop
+    3  exact-datagram parse of the peer's frame      -- a tail =&gt; stop
+    4  expected NodeId comparison, over DECODED BYTES -- differs =&gt; stop
+    5  ValidatedPeerSession</code></pre>
+<p>Each step's refusal is distinguishable from the others. A control that cannot tell &quot;the network was down&quot; from &quot;the peer failed to authenticate&quot; is measuring a proxy, and this project has lost rounds to exactly that.</p>
+<p><strong>Every equality in step 4 is over decoded bytes.</strong> R0.6's version compared 64 hexadecimal characters against 44 base64 characters and therefore could never fire.</p>
+<h3 id="blk-58739">5. What the layers may not do to each other</h3>
+<pre><code>endpoint            does not establish  transport credential
+transport credential does not establish semantic identity
+semantic identity   does not establish  transport credential
+a validated session does not establish  lifecycle authority</code></pre>
+<p>Four independent claims, four independent controls. Deriving any one from another is the defect.</p>
+<p>And the negative form, about the rendezvous plane specifically. It may not:</p>
+<pre><code>receive a candidate transport key from the rendezvous service
+replace the expected transport key
+mint a transport peer
+infer the transport key from a NodeId
+infer a NodeId from a transport key</code></pre>
+<p><strong>Falsifier for the whole family:</strong> a field, anywhere in the rendezvous protocol or state, capable of carrying credential material. If no such field exists, a malicious directory cannot substitute a credential <em>because the credential is not an input from that plane</em> — which is a stronger statement than any refusal check.</p>
+<h3 id="blk-58745">6. First contact — the residual, stated</h3>
+<blockquote><p><strong>R0.9 HAS NO PEER TRUST-ON-FIRST-USE.</strong></p></blockquote>
+<p>The caller possesses a <code>PeerExpectation</code> <em>before</em> it queries rendezvous. So a malicious rendezvous server's first answer can cause delay, misdirection, denial, and the metadata residual already declared in <code>docs/discovery-model.md</code> §3 — and it cannot establish a NodeId, a transport peer key, the binding between them, or any lifecycle authority.</p>
+<p><strong>Control:</strong> without a <code>PeerExpectation</code> the validated connector cannot be invoked at all, and nothing anywhere creates one from a rendezvous answer.</p>
+<p>Unknown-peer introduction and DHT bootstrapping are a different trust contract and stay deferred (<code>docs/r09-deferred-threat-backlog.md</code>).</p>
+<h3 id="blk-58751">7. Scope of the first profile</h3>
+<p>One transport profile: <strong>WireGuard</strong>, with a pre-established peer. Do not generalize to a TLS / Noise / QUIC credential enum yet — prove the first profile, then find out what the second one actually needs. A generic credential abstraction written before its second instance is a guess about the second instance.</p>
+<p>Do not open a credential-management round unless the implementation shows the pre-established peer expectation is genuinely insufficient. &quot;Credential&quot; being a word that sounds cryptographic is not a reason for this layer to own cryptography.</p>
+<h3 id="blk-58754">4a. R128: the answer must be THIS attempt's (added 2026-10-02)</h3>
+<p>§4 above was written before <code>cd-connect</code> existed and is kept as it was. GPT's review 2 found that the road it describes, as built, took a NodeId from whichever frame came back — a HELLO or an ACK — and read neither nonce: authentication said whom the transport reached, and nothing said that the datagram answered THIS attempt. Since R128 (<code>docs/r09-review2-fixes-plan.md</code>, E-01) the road is:</p>
+<pre><code>connect(PeerExpectation, EndpointCandidate, transport) -&gt; Result&lt;ValidatedPeerSession&gt;
+
+    1   the handle is the expected peer
+    2   a fresh attempt nonce, made by connect() from the OS  -- none =&gt; stop, nothing retargeted
+    3   retarget the ALREADY-EXISTING peer for this attempt   (the HELLO carries the nonce)
+    4   transport authentication                               -- fails =&gt; stop
+    4a  exact-datagram parse                                   -- a tail =&gt; stop
+    4b  correlation: an ACK echoing THIS attempt's nonce       -- a HELLO, or another echo =&gt; stop
+    5   expected NodeId comparison, over DECODED BYTES         -- only after 4b
+    6   ValidatedPeerSession</code></pre>
+<p>No caller supplies, chooses or reuses a nonce: <code>AttemptNonce</code>'s field is private and <code>fresh()</code> is its only constructor. A transport's <code>retarget</code> begins ONE attempt, and must discard every piece of a previous attempt's state or refuse. Correlation is a property of the answer, not of the peer: it adds nothing to whom we reached and nothing to what they may do.</p></div>
+<p class="src"><a href="/#/computedriven/docs/connect-model.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-58703" class="lvl2">1. Why this is a separate layer from rendezvous</a><a href="#blk-58710" class="lvl2">2. What a transport credential is</a><a href="#blk-58717" class="lvl3">R0.9 does not own key rotation</a><a href="#blk-58720" class="lvl2">3. The three types</a><a href="#blk-58721" class="lvl3">PeerExpectation — what the caller already knows</a><a href="#blk-58728" class="lvl3">EndpointCandidate — an address, and deliberately nothing else</a><a href="#blk-58732" class="lvl3">ValidatedPeerSession — reached whom, and nothing more</a><a href="#blk-58735" class="lvl2">4. The validation road, in order</a><a href="#blk-58739" class="lvl2">5. What the layers may not do to each other</a><a href="#blk-58745" class="lvl2">6. First contact — the residual, stated</a><a href="#blk-58751" class="lvl2">7. Scope of the first profile</a><a href="#blk-58754" class="lvl2">4a. R128: the answer must be THIS attempt&#39;s (added 2026-10-02)</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a><a href="/computedriven/docs/fcb-stage0-review-2026-09-16.md/">ComputeDriven competitive benchmark — Codex stage-0 review and Fable stage-0.1 assignment</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera3zkryxfsz4a7htc56aev3bhfaum7nuvd5ga3o2rhskeyeu77yxmq</div></div></div>
+</div></div>
+</body></html>

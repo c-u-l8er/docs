@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="build-commit" content="7743c609fb6e5fbac08cebd4a334f09b94ea6034">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
 <title>Runefort · runefort.com · Ampersand Box</title>
 <meta name="description" content="A layout protocol for living, file-backed, tile-grid web apps.">
 <link rel="canonical" href="https://docs.ampersandboxdesign.com/runefort.com/README.md/">
@@ -13,7 +13,7 @@
 <script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <script type="module" src="/amp-nav.js"></script>
 <script type="module" src="/reader.js"></script>
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Runefort","name":"Runefort","description":"A layout protocol for living, file-backed, tile-grid web apps.","url":"https://docs.ampersandboxdesign.com/runefort.com/README.md/","identifier":"bagaaieraoa2c6vagqmxlx6hj4rnx2okv2fx5wsurmjkrioouiipaxtp3xvvq","inLanguage":"en","dateModified":"2026-08-14","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"runefort.com","url":"https://docs.ampersandboxdesign.com/runefort.com/"},"articleSection":"runefort.com","hasPart":[{"@type":"WebPageElement","name":"Status"},{"@type":"WebPageElement","name":"Repository layout"},{"@type":"WebPageElement","name":"Quickstart"},{"@type":"WebPageElement","name":"Three authoring surfaces, one protocol"},{"@type":"WebPageElement","name":"Read the specs"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"runefort.com","item":"https://docs.ampersandboxdesign.com/runefort.com/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/runefort.com/README.md/"}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Runefort","name":"Runefort","description":"A layout protocol for living, file-backed, tile-grid web apps.","url":"https://docs.ampersandboxdesign.com/runefort.com/README.md/","identifier":"bagaaiera2kyje6ooyntfpw4owfqu6q7fcul67oy5mcdp5x3oumihkoluju3q","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"runefort.com","url":"https://docs.ampersandboxdesign.com/runefort.com/"},"articleSection":"runefort.com","hasPart":[{"@type":"WebPageElement","name":"Status"},{"@type":"WebPageElement","name":"Repository layout"},{"@type":"WebPageElement","name":"Quickstart"},{"@type":"WebPageElement","name":"Three authoring surfaces, one protocol"},{"@type":"WebPageElement","name":"Read the specs"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"runefort.com","item":"https://docs.ampersandboxdesign.com/runefort.com/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/runefort.com/README.md/"}]}]</script>
 </head><body>
 <amp-nav property="docs"></amp-nav>
 <div id="app"><div class="reader"><div class="col">
@@ -23,28 +23,31 @@
 
 </div></div>
 <div class="lead">A layout protocol for living, file-backed, tile-grid web apps.</div>
-<div class="prose"><h1 id="blk-84136">Runefort</h1>
+<div class="prose"><h1 id="blk-106679">Runefort</h1>
 <p><strong>A layout protocol for living, file-backed, tile-grid web apps.</strong></p>
 <p>Runefort is a small declarative protocol for describing tiled UI layouts. You declare <em>rooms</em> (tiles), <em>claims</em> (file-system regions each room owns), <em>neighbors</em> (adjacency for keyboard navigation), and <em>state bindings</em> (how live state colors a tile). A conformant renderer compiles the declaration to a CSS grid, wires up file-handoff to the user's editor, and overlays live state.</p>
 <p>Independent of [&amp;], PULSE, and PRISM. May be used by them; does not require them.</p>
-<h3 id="blk-84140">Status</h3>
+<h3 id="blk-106683">Status</h3>
 <p>v0.1 — draft. Spec stable, reference framework in active development.</p>
-<h3 id="blk-84142">Repository layout</h3>
+<h3 id="blk-106685">Repository layout</h3>
 <pre><code>runefort.com/
   docs/spec/
     runefort.protocol.md       The protocol itself (4 primitives, JSON shape)
     runefort.core.md           Reference Web Component framework spec
     runefort.dsl.md            .rune authoring DSL spec
   packages/
-    core/                      @runefort/core — the reference framework (~5KB target)
+    core/                      @runefort/core — the reference framework
+                               (measured: 6,794 bytes gzipped for the four layout
+                                primitives, 42,065 for the documented entry point.
+                                Recomputed on every site build; see records/weights.json)
   examples/
     no-framework/              Plain HTML demo, proves &quot;runs anywhere&quot;
   old_scrap/
     v1/                        Original game-pivot landing
     v2/                        SvelteKit spatial-cognition app (dark-factory era)</code></pre>
-<h3 id="blk-84144">Quickstart</h3>
+<h3 id="blk-106687">Quickstart</h3>
 <p>Drop this into any HTML file. No build step.</p>
-<pre data-lang="html"><code>&lt;script type=&quot;module&quot; src=&quot;/packages/core/dist/index.js&quot;&gt;&lt;/script&gt;
+<pre data-lang="html"><code>&lt;script type=&quot;module&quot; src=&quot;/packages/core/src/index.js&quot;&gt;&lt;/script&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;/packages/core/theme.css&quot;&gt;
 
 &lt;rune-floor columns=&quot;6&quot; rows=&quot;2&quot; editor=&quot;vscode&quot;&gt;
@@ -57,13 +60,13 @@
              anchor=&quot;lib/forge/deploy.ex&quot;&gt;&lt;/rune-room&gt;
   &lt;rune-link from=&quot;memory&quot; to=&quot;deploy&quot; bidirectional&gt;&lt;/rune-link&gt;
 &lt;/rune-floor&gt;</code></pre>
-<h3 id="blk-84147">Three authoring surfaces, one protocol</h3>
+<h3 id="blk-106690">Three authoring surfaces, one protocol</h3>
 <table><thead><tr><th>Surface</th><th>Format</th><th>Use case</th></tr></thead><tbody><tr><td><code>runefort.json</code></td><td>JSON</td><td>Programmatic generation, canonical persistence</td></tr><tr><td><code>&lt;rune-*&gt;</code> HTML</td><td>Custom Elements</td><td>Embedding inside existing apps</td></tr><tr><td><code>.rune</code> DSL</td><td>Curly-brace declarative</td><td>Hand-authored layouts</td></tr></tbody></table>
-<p>All three round-trip losslessly via the <code>runefort</code> CLI.</p>
-<h3 id="blk-84162">Read the specs</h3>
+<p><strong>Only the first two exist.</strong> <code>runefort.json</code> and the <code>&lt;rune-*&gt;</code> elements are implemented in <code>packages/core/src</code>. The <code>.rune</code> DSL is specified in <code>docs/spec/runefort.dsl.md</code> and <strong>has no parser</strong>, and there is <strong>no `runefort` CLI</strong> in this repository — this line claimed one, and claimed all three round-trip through it, until 2026-08-16.</p>
+<h3 id="blk-106705">Read the specs</h3>
 <ol><li><p><a href="#/runefort.com/docs/spec/runefort.protocol.md" data-link>`docs/spec/runefort.protocol.md`</a> — start here</p></li><li><p><a href="#/runefort.com/docs/spec/runefort.core.md" data-link>`docs/spec/runefort.core.md`</a> — Web Component API</p></li><li><p><a href="#/runefort.com/docs/spec/runefort.dsl.md" data-link>`docs/spec/runefort.dsl.md`</a> — DSL syntax</p></li></ol></div>
 <p class="src"><a href="/#/runefort.com/README.md">Open in the interactive atlas</a></p>
 </div>
-<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-84140" class="lvl2">Status</a><a href="#blk-84142" class="lvl2">Repository layout</a><a href="#blk-84144" class="lvl2">Quickstart</a><a href="#blk-84147" class="lvl2">Three authoring surfaces, one protocol</a><a href="#blk-84162" class="lvl2">Read the specs</a></nav></div><div class="card"><div class="lab">links to</div><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a><a href="/runefort.com/docs/spec/runefort.core.md/">@runefort/core — Reference Web Component Framework v0.1</a><a href="/runefort.com/docs/spec/runefort.dsl.md/">.rune DSL — v0.1</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraoa2c6vagqmxlx6hj4rnx2okv2fx5wsurmjkrioouiipaxtp3xvvq</div></div></div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-106683" class="lvl2">Status</a><a href="#blk-106685" class="lvl2">Repository layout</a><a href="#blk-106687" class="lvl2">Quickstart</a><a href="#blk-106690" class="lvl2">Three authoring surfaces, one protocol</a><a href="#blk-106705" class="lvl2">Read the specs</a></nav></div><div class="card"><div class="lab">links to</div><a href="/runefort.com/docs/spec/runefort.protocol.md/">Runefort Protocol — v0.1</a><a href="/runefort.com/docs/spec/runefort.core.md/">@runefort/core — Reference Web Component Framework v0.1</a><a href="/runefort.com/docs/spec/runefort.dsl.md/">.rune DSL — v0.1</a></div><div class="card"><div class="lab">in this folder</div><a href="/runefort.com/CLAUDE.md/">RuneFort</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera2kyje6ooyntfpw4owfqu6q7fcul67oy5mcdp5x3oumihkoluju3q</div></div></div>
 </div></div>
 </body></html>

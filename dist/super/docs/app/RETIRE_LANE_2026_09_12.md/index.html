@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Retiring a lane — 2026-09-12 · super · Ampersand Box</title>
+<meta name="description" content="Status: a separate proposal, for a ruling. Nothing here is built, and it is deliberately not bundled with the review-limits work.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/app/RETIRE_LANE_2026_09_12.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Retiring a lane — 2026-09-12">
+<meta property="og:description" content="Status: a separate proposal, for a ruling. Nothing here is built, and it is deliberately not bundled with the review-limits work.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/app/RETIRE_LANE_2026_09_12.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Retiring a lane — 2026-09-12","name":"Retiring a lane — 2026-09-12","description":"Status: a separate proposal, for a ruling. Nothing here is built, and it is deliberately not bundled with the review-limits work.","url":"https://docs.ampersandboxdesign.com/super/docs/app/RETIRE_LANE_2026_09_12.md/","identifier":"bagaaieran5cdvcu74l2lqblloe76whdhpcmnmfspxmxp4mar2sr67esjy6na","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"The gap, from a real lane"},{"@type":"WebPageElement","name":"What is proposed"},{"@type":"WebPageElement","name":"What a retired lane must refuse, each by its own name"},{"@type":"WebPageElement","name":"What must keep working, and this is the point"},{"@type":"WebPageElement","name":"Two things to rule on"},{"@type":"WebPageElement","name":"Not proposed"},{"@type":"WebPageElement","name":"Where this would be verified"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"app","item":"https://docs.ampersandboxdesign.com/super/docs/app/"},{"@type":"ListItem","position":5,"name":"RETIRE_LANE_2026_09_12.md","item":"https://docs.ampersandboxdesign.com/super/docs/app/RETIRE_LANE_2026_09_12.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/app/RETIRE_LANE_2026_09_12.md</span>
+
+</div></div>
+<div class="lead">Status: a separate proposal, for a ruling. Nothing here is built, and it is deliberately not bundled with the review-limits work.</div>
+<div class="prose"><h1 id="blk-111214">Retiring a lane — 2026-09-12</h1>
+<p><strong>Status: a separate proposal, for a ruling. Nothing here is built, and it is deliberately not bundled with the review-limits work.</strong></p>
+<h3 id="blk-111216">The gap, from a real lane</h3>
+<p>On 2026-09-12 <code>tools/dogfood-setup.mjs</code> opened lane <code>ln_0016</code> against <code>ProjectAmp2/computedriven.com</code> when the work was for <code>ProjectAmp2/super</code>. The cause was the setup guessing (<code>?? repos[0]</code>), now fixed. What this proposal is about is what happened next: <strong>nothing in the world could take that lane out of use.</strong></p>
+<ul><li><p>There is no <code>close_lane</code>, <code>retire_lane</code> or <code>delete_lane</code> in <code>CommandSpec</code>.</p></li><li><p><code>delete_workspace</code> refuses a workspace holding a lane —</p></li></ul>
+<p><code>workspace-has-lanes</code>, <em>&quot;Workspace deletion cannot remove established lanes or workers&quot;</em> — and the comment above it says lanes retain their ancestry.</p>
+<p><strong>That refusal is right and this proposal does not touch it.</strong> A lane records that a bot was once permitted to work in a repository under a goal; deleting it would erase an authority decision that was really made. The gap is not that the history is kept. It is that <em>keeping the history</em> and <em>still accepting new work</em> are the same state.</p>
+<p>So <code>ln_0016</code> remains open: it can still be named by a new worker, a new plan, and a new worktree capability, and nothing on it says it was a mistake. The recovery had to re-create five plans on a correct lane and cancel the originals, and then leave the lane sitting there.</p>
+<h3 id="blk-111226">What is proposed</h3>
+<p>One transition on a field the record already has. A lane today:</p>
+<p>%{&quot;id&quot; =&gt; &quot;ln_0016&quot;, &quot;schema&quot; =&gt; &quot;lane@1&quot;, &quot;status&quot; =&gt; &quot;open&quot;, &quot;actor&quot; =&gt; …, &quot;goal_ref&quot; =&gt; …, &quot;repository_ref&quot; =&gt; …, &quot;workspace_ref&quot; =&gt; …}</p>
+<p><code>status</code> becomes <code>open | retired</code>. Two human-control mutations, following the shape <code>close_worker</code> / <code>reopen_worker</code> already set:</p>
+<p>retire_lane   lane_ref, reason      open → retired reopen_lane   lane_ref, reason      retired → open</p>
+<p><code>reason</code> is required and kept in the lane's history, because a retired lane with no reason is the same puzzle for the next reader that <code>ln_0016</code> is now.</p>
+<h3 id="blk-111232">What a retired lane must refuse, each by its own name</h3>
+<p>Not one predicate. A person who is told &quot;that lane is retired&quot; while trying to do four different things should be told which thing they were trying to do.</p>
+<table><thead><tr><th>refused</th><th>because</th></tr></thead><tbody><tr><td><code>open_worker</code> on it</td><td>new work in flight under a binding withdrawn on purpose</td></tr><tr><td><code>create_development_task</code> on it</td><td>a new plan would inherit its <code>repository_ref</code></td></tr><tr><td><code>record_development_attempt</code> / <code>record_development_change_set</code> on a plan of its</td><td>review material would name a repository nobody means any more</td></tr><tr><td><code>accept_development_attempt</code> on such a plan</td><td>acceptance writes to the repository the lane names — the one case where the binding is not merely descriptive</td></tr><tr><td><code>attach_worker</code> / <code>establish_worktree</code> on it</td><td>a retired lane must not admit a <strong>new worktree capability</strong>; this is the authority-bearing one</td></tr></tbody></table>
+<h3 id="blk-111247">What must keep working, and this is the point</h3>
+<ul><li><p>Reading the lane, its goal, its actor, its repository, its plans, its</p></li></ul>
+<p>attempts, its history. Retirement is a state, not a disappearance.</p>
+<ul><li><p><code>close_worker</code> on a worker it already holds. Retiring a lane is a decision</p></li></ul>
+<p>about the lane; closing a worker is a decision about work in flight.</p>
+<ul><li><p><code>update_development_task</code> to <code>cancelled</code> on its plans, so a lane can be tidied</p></li></ul>
+<p>after it is retired as well as before.</p>
+<ul><li><p>Existing active worktree capabilities keep whatever lifetime they already</p></li></ul>
+<p>have. Retirement refuses <strong>new</strong> authority; it is not a revocation, and dressing it up as one would make it a second, quieter <code>revoke_grant</code>.</p>
+<h3 id="blk-111264">Two things to rule on</h3>
+<ol><li><p><strong>May a lane be retired while it still holds an open worker?</strong> Recommended:</p></li></ol>
+<p><strong>no</strong> — refuse <code>lane-has-open-workers</code> and name them, the way <code>Workbench.choose</code> refuses while a command is running. Retiring under a live worker would leave the worker holding a binding the world has withdrawn, and the alternative (retire and close them for you) makes one command do two decisions.</p>
+<ol start="2"><li><p><strong>Does a retired lane still block `delete_workspace`?</strong> Recommended:</p></li></ol>
+<p><strong>yes, unchanged.</strong> Retirement preserves ancestry; a workspace that held a lane still held it. Making retirement a route to deletion would reintroduce exactly what the existing refusal protects.</p>
+<h3 id="blk-111273">Not proposed</h3>
+<ul><li><p>Deleting a lane, or making <code>delete_workspace</code> more permissive.</p></li><li><p>Moving a lane to a different repository. A lane's repository is part of what</p></li></ul>
+<p>the lane <em>is</em>; rebinding it would silently relabel every plan, attempt and capability already recorded against it. Retire it and open another.</p>
+<ul><li><p>Retiring anything automatically. A wrong binding is a judgement, and the</p></li></ul>
+<p>reason field exists because a person has to make it.</p>
+<h3 id="blk-111284">Where this would be verified</h3>
+<p><code>ampd/test/</code> for the transition and each refusal by name, plus a negative case per row of the table above; <code>tools/sabotage-*.sh</code> shape for making each refusal admit in turn, so a clause that stops refusing is caught rather than assumed. The live check is <code>ln_0016</code> in Travis's own world: retired with a reason, still readable, still counted, and refusing a new plan.</p></div>
+<p class="src"><a href="/#/super/docs/app/RETIRE_LANE_2026_09_12.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-111216" class="lvl2">The gap, from a real lane</a><a href="#blk-111226" class="lvl2">What is proposed</a><a href="#blk-111232" class="lvl2">What a retired lane must refuse, each by its own name</a><a href="#blk-111247" class="lvl2">What must keep working, and this is the point</a><a href="#blk-111264" class="lvl2">Two things to rule on</a><a href="#blk-111273" class="lvl2">Not proposed</a><a href="#blk-111284" class="lvl2">Where this would be verified</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/app/ACCEPTED_BUILD_2026_09_10.md/">Super: build accepted app</a><a href="/super/docs/app/ACCEPTED_RESULT_CHECK_2026_09_10.md/">Super: checking accepted source before integration</a><a href="/super/docs/app/AUTHORITY_LOG_RETENTION_2026_09_24.md/">Authority log retention — candidate 3 (2026-09-24)</a><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/BOT_LIVE_ACTIVITY_2026_09_13.md/">Bot activity and Claude reconnect</a><a href="/super/docs/app/BOT_WORK_PAGES_2026_09_07.md/">Super progress — bot work pages</a><a href="/super/docs/app/BUILD_PREVIEW_2026_09_10.md/">Try an accepted Super build</a><a href="/super/docs/app/CANCELLED_PLAN_STEPS_2026_09_19.md/">A cancelled plan&#39;s stepper claims no step — 2026-09-19</a><a href="/super/docs/app/COMBINED_FILE_REVIEW_2026_09_10.md/">Combined file review — 2026-09-10</a><a href="/super/docs/app/COMBINED_TESTING_2026_09_10.md/">Combined testing and acceptance — 2026-09-10</a><a href="/super/docs/app/CONTINUE_WORK_2026_09_14.md/">Continue work and guided review</a><a href="/super/docs/app/DESKTOP_LAUNCH_2026_09_10.md/">Daily desktop launch — September 10, 2026</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieran5cdvcu74l2lqblloe76whdhpcmnmfspxmxp4mar2sr67esjy6na</div></div></div>
+</div></div>
+</body></html>

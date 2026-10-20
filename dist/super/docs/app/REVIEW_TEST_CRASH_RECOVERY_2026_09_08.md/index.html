@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Review test recovery after a runtime restart · super · Ampersand Box</title>
+<meta name="description" content="New native test starts retain their runtime projection epoch. When a saved review is opened, the host asks the runtime to reconcile unfinished starts from…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/app/REVIEW_TEST_CRASH_RECOVERY_2026_09_08.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Review test recovery after a runtime restart">
+<meta property="og:description" content="New native test starts retain their runtime projection epoch. When a saved review is opened, the host asks the runtime to reconcile unfinished starts from…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/app/REVIEW_TEST_CRASH_RECOVERY_2026_09_08.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Review test recovery after a runtime restart","name":"Review test recovery after a runtime restart","description":"New native test starts retain their runtime projection epoch. When a saved review is opened, the host asks the runtime to reconcile unfinished starts from…","url":"https://docs.ampersandboxdesign.com/super/docs/app/REVIEW_TEST_CRASH_RECOVERY_2026_09_08.md/","identifier":"bagaaiera55c3spxk3q2fxmlpnnchnw7qr7ujrlavwg6wmoubcfyhcocnuloa","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super"},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"app","item":"https://docs.ampersandboxdesign.com/super/docs/app/"},{"@type":"ListItem","position":5,"name":"REVIEW_TEST_CRASH_RECOVERY_2026_09_08.md","item":"https://docs.ampersandboxdesign.com/super/docs/app/REVIEW_TEST_CRASH_RECOVERY_2026_09_08.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/app/REVIEW_TEST_CRASH_RECOVERY_2026_09_08.md</span>
+
+</div></div>
+<div class="lead">New native test starts retain their runtime projection epoch. When a saved review is opened, the host asks the runtime to reconcile unfinished starts from earlier epochs. Those…</div>
+<div class="prose"><h1 id="blk-112036">Review test recovery after a runtime restart</h1>
+<p>New native test starts retain their runtime projection epoch. When a saved review is opened, the host asks the runtime to reconcile unfinished starts from earlier epochs. Those runs receive a durable <code>failed</code> outcome with reason <code>interrupted</code>, a null verdict, zero test count, and no inferred snapshot identity. Completed results and current-epoch starts remain unchanged; review notes and plan status are preserved.</p>
+<p>The host bridge checks the current full world tuple before admitting start, finish or recovery requests. Recovery obtains the current epoch outside the ordered receiver; the receiver never calls back into the coordinator. The saved-world host lock prevents two host processes from opening the same world. Recovery uses the existing ordered attempt patch and reserved completion capacity.</p>
+<p>The native panel requests reconciliation once per review/world tuple per host session, retrying on error. Interrupted runtime results take precedence over stale device output in presentation. Recovery never executes tests or accepts a plan. A late conflicting final report refuses.</p>
+<p>Legacy starts created before runtime epochs were recorded remain unconfirmed; their origin is not guessed. Recovery happens when the review is opened, not by a startup-wide background scan. The device runner may exist until its existing timeout if it escapes a crashed process group; its later output is not imported as success. Host-only crashes while the same runtime survives are not separately covered by epoch reconciliation.</p>
+<p>Validation includes runtime tests for current/old epochs, immutable completed outcomes, no passing verdict, note preservation, idempotence, late-report refusal, legacy records and store restart. The native crash fixture uses a disposable saved world under explicit XDG state/data roots, creates real plans and runs, kills only its own process group, and reopens that same world. Provider responses are deterministic fixtures. This is not yet explicit acceptance or a real-model Super-on-Super development cycle.</p></div>
+<p class="src"><a href="/#/super/docs/app/REVIEW_TEST_CRASH_RECOVERY_2026_09_08.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card"><div class="lab">in this folder</div><a href="/super/docs/app/ACCEPTED_BUILD_2026_09_10.md/">Super: build accepted app</a><a href="/super/docs/app/ACCEPTED_RESULT_CHECK_2026_09_10.md/">Super: checking accepted source before integration</a><a href="/super/docs/app/AUTHORITY_LOG_RETENTION_2026_09_24.md/">Authority log retention — candidate 3 (2026-09-24)</a><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/BOT_LIVE_ACTIVITY_2026_09_13.md/">Bot activity and Claude reconnect</a><a href="/super/docs/app/BOT_WORK_PAGES_2026_09_07.md/">Super progress — bot work pages</a><a href="/super/docs/app/BUILD_PREVIEW_2026_09_10.md/">Try an accepted Super build</a><a href="/super/docs/app/CANCELLED_PLAN_STEPS_2026_09_19.md/">A cancelled plan&#39;s stepper claims no step — 2026-09-19</a><a href="/super/docs/app/COMBINED_FILE_REVIEW_2026_09_10.md/">Combined file review — 2026-09-10</a><a href="/super/docs/app/COMBINED_TESTING_2026_09_10.md/">Combined testing and acceptance — 2026-09-10</a><a href="/super/docs/app/CONTINUE_WORK_2026_09_14.md/">Continue work and guided review</a><a href="/super/docs/app/DESKTOP_LAUNCH_2026_09_10.md/">Daily desktop launch — September 10, 2026</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera55c3spxk3q2fxmlpnnchnw7qr7ujrlavwg6wmoubcfyhcocnuloa</div></div></div>
+</div></div>
+</body></html>

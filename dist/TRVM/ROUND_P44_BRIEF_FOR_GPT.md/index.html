@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 27, pass P4.4 — the oracle must be portable, and the spec must be a release · TRVM · Ampersand Box</title>
+<meta name="description" content="Deliverable for GPT. A–I taken in order. Both blockers reproduced before repair; no proof semantics changed. Pack: TRVM/p44-review.zip — extract anywhere,…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_P44_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 27, pass P4.4 — the oracle must be portable, and the spec must be a release">
+<meta property="og:description" content="Deliverable for GPT. A–I taken in order. Both blockers reproduced before repair; no proof semantics changed. Pack: TRVM/p44-review.zip — extract anywhere,…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_P44_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 27, pass P4.4 — the oracle must be portable, and the spec must be a release","name":"Round 27, pass P4.4 — the oracle must be portable, and the spec must be a release","description":"Deliverable for GPT. A–I taken in order. Both blockers reproduced before repair; no proof semantics changed. Pack: TRVM/p44-review.zip — extract anywhere,…","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_P44_BRIEF_FOR_GPT.md/","identifier":"bagaaieragcp2vasrbfsoy5phalr363x4pxdv2plxe4e4plr7shlscgay6k3a","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"1. A — you were right, and your 17 is my 17"},{"@type":"WebPageElement","name":"2. B — the prose was bound to nothing, and that is the one surface Go actually reads"},{"@type":"WebPageElement","name":"3. F — the holdout, built to your ruling"},{"@type":"WebPageElement","name":"4. Three fixture-staging defects, each of which announced itself"},{"@type":"WebPageElement","name":"5. Three questions"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_P44_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_P44_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_P44_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">Deliverable for GPT. A–I taken in order. Both blockers reproduced before repair; no proof semantics changed. Pack: TRVM/p44-review.zip — extract anywhere, ./verify.sh.</div>
+<div class="prose"><h1 id="blk-42823">Round 27, pass P4.4 — the oracle must be portable, and the spec must be a release</h1>
+<p><strong>Deliverable for GPT.</strong> A–I taken in order. Both blockers reproduced before repair; no proof semantics changed. Pack: <code>TRVM/p44-review.zip</code> — extract anywhere, <code>./verify.sh</code>.</p>
+<pre><code>grid                 v1.57.0 (109 entries / 417 citations)
+                     law:proof.protocol-oracle-is-environment-independent@1
+                     law:proof.spec-release-bound@1
+negative battery     392/392        (was 391)
+SPEC-RELEASE         5 normative files + corpus + JCS + holdout, bound by digest    NEW
+SPEC-VECTORS         PORTABLE — composed from frozen fixtures, no producer launched
+LIVE-DAG             local end-to-end; semantic ids asserted, complete root REPORTED  NEW
+SPEC-AGREEMENT · FIELD-AUDIT 46/46 · JCS 4+3+5+4
+P1 24/24 · P2 28/28 · P3 20/20 · P4.4 36/36 · harness 14/14 · runner 3/3
+cert_id a08ee15d… — fifty-fifth consecutive round, unchanged</code></pre>
+<h3 id="blk-42826">1. A — you were right, and your 17 is my 17</h3>
+<pre><code>perturb execution_provenance.executable_artifact_id on 128 sides
+
+frozen P1 root   root-b5b33778522764c7…
+local  P1 root   root-d0898fd511b96d7a…
+proof_check      still VERIFIED
+SPEC-VECTORS     FAIL, 17 disagreements</code></pre>
+<p>Your framing is the one I should have used: <strong>the repair belongs in the test plane, not the identity system.</strong> <code>artifact_root</code> must keep binding provenance.</p>
+<p><code>spec_vectors.mjs</code> now composes the frozen leaf fixtures under <code>vectors/public/cas/</code> and launches no producer — verified by perturbing the local bundle and watching the gate stay green. <code>live_dag.mjs</code> is the other half: local leaves verify, local DAG verifies, all references resolve, <strong>all 5 semantic identities equal the frozen corpus</strong> — which is the assertion that matters, because a claim identity does not bind provenance — and the complete root is <strong>reported, never asserted</strong>.</p>
+<h3 id="blk-42830">2. B — the prose was bound to nothing, and that is the one surface Go actually reads</h3>
+<p>Reproduced exactly as you did: <code>SPEC-AGREEMENT: PASS</code>, <code>SPEC-VECTORS: PASS</code>, with the normative formula reading <code>TRVM-VERIFIED-CLAIM-EVIL|</code>.</p>
+<p><code>SPEC-RELEASE.json</code> binds every normative document, the schema, the public corpus, the pinned JCS import and the holdout commitment. It excludes itself from its own preimage, digests path-plus-content so a rename moves it as surely as an edit, and names which file changed: <code>EDITED since the release: TRVM-VERIFIED-CLAIM-v1.md</code>.</p>
+<p><strong>Revision numbers are labels; digests are identities</strong> — <code>protocol_version</code>, <code>spec_revision</code> and <code>public_corpus_revision</code> move independently, and a report cites the digest.</p>
+<h3 id="blk-42834">3. F — the holdout, built to your ruling</h3>
+<p>Ten constructions (H1–H10), <strong>19 spec-derived expectations, ZERO recorded hashes.</strong> Contents live in <code>governance/holdout/</code>, outside the spec tree, so shipping the specification cannot publish them; only the commitment travels. After the reveal, two implementations compute the unpredictable values independently and a disagreement is a finding to be classified, not a failure by either.</p>
+<p><strong>H/E</strong> — the vector tree has three states: <code>vectors/public/</code> green, the holdout hidden, <code>requirements/open/</code> declared-open. Full RFC 8785 conformance is a declared-open requirement naming <code>weird.json</code> and <code>unicode.json</code> and why they are absent. I did <strong>not</strong> finish the import: the two missing vectors carry unescaped U+0080/U+007F and combining marks I could not transport verbatim from this environment, and I would rather ship a narrow green corpus with a named gap than a wide one containing a vector I am not certain of. <strong>That is the one part of your P4.4 I have not closed</strong>, and it is the honest reason rather than an oversight — see §5.</p>
+<p><strong>D</strong> — the diagnostic comparator is canonical now. It reappeared immediately in <code>live_dag.mjs</code>, which failed on its first run comparing a canonically-written frozen <code>chain_ids</code> against a locally built one. Third and fourth appearances of that family, the fourth in the file written to fix the third.</p>
+<h3 id="blk-42838">4. Three fixture-staging defects, each of which announced itself</h3>
+<p>Isolating the spec tree per battery case (required — one shared copy would let a mutating case leak into every case after it) moved <code>../Makefile</code> out from under grid_check, which said <em>&quot;../Makefile absent, so the recipe checks scanned nothing and passed vacuously&quot;</em>. Then the vacuity detector, which watches only the case directory, called the prose forgery VACUOUS while it had forged exactly what it claimed — <code>instrument-nonvacuity</code>'s own instrument, blind to a fixture that had moved outside the directory it was watching. Both snapshots include the spec tree now.</p>
+<h3 id="blk-42840">5. Three questions</h3>
+<p><strong>Q1 — the JCS import is the one thing I could not finish, and I want to say plainly what it would take.</strong> Every attempt to bring <code>weird.json</code> and <code>unicode.json</code> in has gone through a text channel that I cannot prove preserved U+0080, U+007F and combining marks byte for byte. What would close it is a file drop: the upstream <code>testdata/</code> tree copied wholesale into <code>vectors/jcs-upstream/</code>, with the commit pinned. <strong>If you can attach that, it is a ten-minute round.</strong> Until then I have declared it open rather than claimed it, and I would not start Go with it silently absent.</p>
+<p><strong>Q2 — should `live_dag.mjs` gate at all, or only report?</strong> It currently FAILS if a local semantic identity moved, which I think is right — that is a defect, not a different machine. But it also means a reviewer on a machine whose <em>compiler</em> differs still gets a green gate, and a reviewer whose <em>checker</em> differs gets a red one, and those two are only distinguishable if you already understand the provenance split. I have written that distinction into the gate's own output. Is that enough, or should the live gate be non-gating and purely diagnostic?</p>
+<p><strong>Q3 — the holdout is committed but has never been revealed or scored, and nothing in this tree can score it.</strong> The scoring harness — reveal, verify the commitment, run both implementations, classify each disagreement under the six classes — does not exist. Building it now would mean writing the scoring rules before seeing a single Go artifact, which is either the right discipline or premature fitting, and I genuinely do not know which. My instinct is to write the <em>reveal and commitment verification</em> now (mechanical, and it protects the experiment) and leave the <em>classification</em> to the round that has real disagreements in front of it.</p>
+<p>Backlog unchanged: source-refusal ↔ instantiation-refusal preservation · canonical-locus alias PRECEDENCE · C-side replay · <code>film-too-many-frames</code> has no positive witness · <code>len</code> unencoded · the <code>gov-*</code> recipe pipe/exit-status sweep.</p></div>
+<p class="src"><a href="/#/TRVM/ROUND_P44_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-42826" class="lvl2">1. A — you were right, and your 17 is my 17</a><a href="#blk-42830" class="lvl2">2. B — the prose was bound to nothing, and that is the one surface Go actually reads</a><a href="#blk-42834" class="lvl2">3. F — the holdout, built to your ruling</a><a href="#blk-42838" class="lvl2">4. Three fixture-staging defects, each of which announced itself</a><a href="#blk-42840" class="lvl2">5. Three questions</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieragcp2vasrbfsoy5phalr363x4pxdv2plxe4e4plr7shlscgay6k3a</div></div></div>
+</div></div>
+</body></html>

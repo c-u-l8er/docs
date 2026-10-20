@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted · super · Ampersand Box</title>
+<meta name="description" content="Artifact: `and-super-rev-f81.zip`. Every gate green.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted">
+<meta property="og:description" content="Artifact: `and-super-rev-f81.zip`. Every gate green.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted","name":"F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted","description":"Artifact: `and-super-rev-f81.zip`. Every gate green.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/","identifier":"bagaaierarw64iviobtquashxl47iexzh7r6xkgwzrdqy6gn5cq35ucg5vjgq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Measured"},{"@type":"WebPageElement","name":"1 · The world no longer dies with the program"},{"@type":"WebPageElement","name":"2 · cmsg_cloexec — and an honest narrowing of the claim"},{"@type":"WebPageElement","name":"3 · The descriptor leak, which is mine"},{"@type":"WebPageElement","name":"4 · Your table"},{"@type":"WebPageElement","name":"5 · Open"},{"@type":"WebPageElement","name":"6 · Ladder"},{"@type":"WebPageElement","name":"Verify"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"C1_1_8_1_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Artifact: `and-super-rev-f81.zip`. Every gate green.</div>
+<div class="prose"><h1 id="blk-113294">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</h1>
+<p><strong>Artifact: `and-super-rev-f81.zip`. Every gate green.</strong></p>
+<p>You scoped this exactly right: two closures, no design round, nothing touched that did not need touching. Both are closed, and building your descriptor-ownership measurement found a third thing — a real leak, in my code, that neither of us had.</p>
+<h3 id="blk-113297">0 · Measured</h3>
+<table><thead><tr><th></th><th>F.8</th><th>F.8.1</th></tr></thead><tbody><tr><td>conformance vectors</td><td>42</td><td><strong>42</strong></td></tr><tr><td>BEAM tests</td><td>170</td><td><strong>171</strong>, 0 failures at seed 0</td></tr><tr><td>browser assertions</td><td>64</td><td><strong>64</strong></td></tr><tr><td>sabotage falsifiers</td><td>39 · 0 not</td><td><strong>39 · 0 not</strong></td></tr><tr><td>host acceptance checks</td><td>31 held</td><td><strong>38 held · 0 failed</strong></td></tr></tbody></table>
+<h3 id="blk-113317">1 · The world no longer dies with the program</h3>
+<p>You were right, and it was worse than a configuration mistake — it was a <strong>verification rule being used as a production rule.</strong> <code>Runtime::start</code> made a directory named for the pid and the clock, pointed <code>AMPD_DATA_DIR</code> at it, and <code>shutdown</code> removed it. The isolation was correct for a battery that must not inherit state, and exactly wrong for a product whose whole claim is that the world is durable.</p>
+<p>Split, as you specified:</p>
+<pre><code>WorldDir::Ephemeral    a battery's world · unique · destroyed on shutdown
+WorldDir::Persistent   $XDG_STATE_HOME/super/worlds/&lt;name&gt; · 0700 · never deleted here</code></pre>
+<p>State, not cache and not runtime: a world is neither reconstructible nor ephemeral.</p>
+<p><strong>And the acceptance check is now the one you described</strong>, not the weak one. It starts host A, revokes a grant, exits the way a user quitting the app does, starts a <em>brand-new</em> host, and asserts the same <code>installation_id</code> and that the revocation survived.</p>
+<p>Falsified by restoring F.8's behaviour:</p>
+<pre><code>FAILED  quitting the host does not delete the world
+          /tmp/super-verify-3101143/durable is gone
+FAILED  a new host reaches the same world, not a new one
+          {&quot;generation&quot;:1,&quot;installation_id&quot;:&quot;w-30b160c88a9bcb0d&quot;}
+        → {&quot;generation&quot;:1,&quot;installation_id&quot;:&quot;w-9b2d797de132f4c8&quot;}</code></pre>
+<p>A different world, silently, on every launch.</p>
+<p><strong>One active owner per local world</strong>, as you asked: an advisory <code>flock</code> on <code>world.lock</code>, held on the open file description for the host's lifetime, taken before anything opens a store. A second host is refused <code>world-already-open</code> rather than left to whichever process writes last. Falsified by disabling the lock: <em>two hosts opened the same world.</em></p>
+<h3 id="blk-113327">2 · <code>cmsg_cloexec</code> — and an honest narrowing of the claim</h3>
+<p>You were right that the shipped code did not do what the brief said. <code>recvmsg/1</code> is <code>recvmsg</code> with an empty flag list; it is <code>recvmsg(sock, [:cmsg_cloexec])</code> now.</p>
+<p>But I measured the consequence before claiming one, and it does not reproduce here. A process the BEAM spawns sees <strong>zero</strong> sockets: <code>erl_child_setup</code> closes every descriptor above 2 before <code>exec</code>. So on this OTP the runtime side was never the vulnerability its Rust counterpart was.</p>
+<p>That makes your mirror-image test an <strong>invariant check, not a falsifier</strong>, and it is labelled one — it passes whether or not our measures are in place, so counting it would be claiming evidence this round does not have. It asserts the property holds; it does not assert that our code is what makes it hold. The flag stays because the rule should be enforced where the runtime controls it, rather than resting on a property of the VM's spawn path that nothing here asserts.</p>
+<h3 id="blk-113331">3 · The descriptor leak, which is mine</h3>
+<p>Your <code>dup =&gt; true</code> reasoning was right, and following it produced a measurement that surprised me. Counted against <code>/proc/&lt;ampd&gt;/fd</code> across real <code>SCM_RIGHTS</code> binds:</p>
+<pre><code>dup: true     10 channels → +18 sockets · 10 reclaimed on close · 8 leaked
+dup: false    10 channels → +10 sockets ·  0 reclaimed on close · 10 leaked</code></pre>
+<p>So I isolated it, and the mechanism is this:</p>
+<pre><code>:socket.close/1 on a dup:false adoption returns :ok
+and does NOT close(2) the descriptor.</code></pre>
+<p>Proved directly against an fd whose only reference was the handle under test: still live after <code>close</code> returned <code>:ok</code>; closed only when the <em>owning</em> handle was closed. <strong>OTP will not close a descriptor it did not create</strong>, and there is no Erlang call that will.</p>
+<p>Which means neither setting avoids the leak — both end at one descriptor per closed channel. <code>dup: false</code> is strictly better and stays: half the descriptors while live, the same residue after. Two checks assert what is actually true rather than what I would like to be:</p>
+<ul><li><p>a closed channel <strong>is</strong> torn down — the bridge stops listing it, the peer detaches, the</p></li></ul>
+<p>subscription drops;</p>
+<ul><li><p>the residual cost is <strong>bounded by channels ever opened</strong>, not by traffic.</p></li></ul>
+<p>I did not paper over this and I am not claiming it is fine. It is a bounded leak with an identified cause, and it is open question 1.</p>
+<p>While measuring it I also found and fixed an ordering bug of my own: <code>shutdown</code> closed the socket before killing the reader, and <code>:socket.close/1</code> on a socket another process is blocked reading defers. The reader dies first now.</p>
+<h3 id="blk-113347">4 · Your table</h3>
+<table><thead><tr><th>Finding</th><th>State</th></tr></thead><tbody><tr><td>BEAM receives descriptors without <code>cmsg_cloexec</code></td><td>✅ closed · consequence measured and narrowed</td></tr><tr><td>received raw fd duplicated and left open</td><td>✅ halved · <strong>residual leak measured and named, §3</strong></td></tr><tr><td>BEAM-spawned child inherits authority descriptors</td><td>✅ does not occur · invariant check, not falsifier</td></tr><tr><td>clean exit deletes the world</td><td>✅ closed · falsified</td></tr><tr><td>crash orphans a world the next host ignores</td><td>✅ closed · stable path, same world</td></tr><tr><td>two hosts could open one world</td><td>✅ closed · advisory lock, falsified</td></tr></tbody></table>
+<h3 id="blk-113363">5 · Open</h3>
+<ol><li><p><strong>The residual descriptor.</strong> One per closed channel, in the runtime, unreclaimable from</p></li></ol>
+<p>Erlang. The options I can see: a minimal NIF or port program that calls <code>close(2)</code>; or <code>dup: true</code> plus handing the original back to the host to close, which is baroque and I do not like it. For a desktop app opening a channel per engine per session this is small, and I would rather you ruled whether it blocks the badge than have me guess. It is the only thing I know of in the transport that is measured-and-not-fixed.</p>
+<ol start="2"><li><p><strong>`BridgeTransport`.</strong> Not extracted, per your ruling. The law is written where the</p></li></ol>
+<p>Linux realization lives.</p>
+<ol start="3"><li><p><strong>The badge as a projection.</strong> I like it and have not built it. On your sketch —</p></li></ol>
+<p><code>healthy + control channel + world loaded + projection received = LIVE LOCAL</code>, degrading to <code>RECONNECTING</code> / <code>SEALED</code> / <code>OFFLINE</code> — every one of those facts is already in <code>runtime-status@1</code> and the continuity triple, so the badge would be derived from the projection rather than asserted beside it. That is the Tauri round's first commit.</p>
+<h3 id="blk-113376">6 · Ladder</h3>
+<p>C1.1     Tauri Rust host + private transport ├─ F.6    CommandSpec · exact-set linearized · limits · pack digest ├─ F.7    inherited descriptors · identity lifetime · epoch · │         demultiplexer · bounded projection ├─ F.8    CLOEXEC confinement · serialized writer · │         continuity cursor · lossless paging └─ F.8.1  runtime descriptor ownership · durable host world · one owner per world                            ✓ ── remaining: the WebView C1.1b    SQLite transactional persistence · durable revision C1.2     FabricProvider.Tailscale</p>
+<h3 id="blk-113378">Verify</h3>
+<pre><code>cd ampd &amp;&amp; mix test                    # 171 tests
+bash tools/sabotage.sh                 # 39 falsified · 0 not
+cd .. &amp;&amp; bash tools/release.sh         # full gate chain → and-super-rev-f81.zip
+cargo build --release --manifest-path host/Cargo.toml
+./host/target/release/super-host verify    # 38 held · 0 failed
+./host/target/release/super-host world     # where the durable world lives</code></pre>
+<p>The host battery now starts a second runtime against a world the first one left behind, and counts <code>/proc/&lt;ampd&gt;/fd</code> across real descriptor handoffs. Neither is reachable from inside the BEAM.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-113297" class="lvl2">0 · Measured</a><a href="#blk-113317" class="lvl2">1 · The world no longer dies with the program</a><a href="#blk-113327" class="lvl2">2 · cmsg_cloexec — and an honest narrowing of the claim</a><a href="#blk-113331" class="lvl2">3 · The descriptor leak, which is mine</a><a href="#blk-113347" class="lvl2">4 · Your table</a><a href="#blk-113363" class="lvl2">5 · Open</a><a href="#blk-113376" class="lvl2">6 · Ladder</a><a href="#blk-113378" class="lvl2">Verify</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a><a href="/super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md/">F.8.2.5 — generation is a fence, and the narrowing was never a product decision</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierarw64iviobtquashxl47iexzh7r6xkgwzrdqy6gn5cq35ucg5vjgq</div></div></div>
+</div></div>
+</body></html>

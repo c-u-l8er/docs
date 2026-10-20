@@ -1,0 +1,397 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Paper Roads — documents as a second window kind · RRABBIT · Ampersand Box</title>
+<meta name="description" content="Status: `spec` for §5–§9, `proposed` for §10. §1–§4 are measurements and citations.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/RRABBIT/docs/PAPER_ROADS.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Paper Roads — documents as a second window kind">
+<meta property="og:description" content="Status: `spec` for §5–§9, `proposed` for §10. §1–§4 are measurements and citations.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/RRABBIT/docs/PAPER_ROADS.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Paper Roads — documents as a second window kind","name":"Paper Roads — documents as a second window kind","description":"Status: `spec` for §5–§9, `proposed` for §10. §1–§4 are measurements and citations.","url":"https://docs.ampersandboxdesign.com/RRABBIT/docs/PAPER_ROADS.md/","identifier":"bagaaieraaop4sb2kvp35ucmwwzkfqjpmzy2fkyuz4egurpvl5yo5a4m7dhfq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"RRABBIT","url":"https://docs.ampersandboxdesign.com/RRABBIT/"},"articleSection":"RRABBIT","hasPart":[{"@type":"WebPageElement","name":"0. The one-line version"},{"@type":"WebPageElement","name":"1. The premise that had to be corrected first"},{"@type":"WebPageElement","name":"2. The four layers, and which one is missing"},{"@type":"WebPageElement","name":"3. The cost measurement that decides the scale question"},{"@type":"WebPageElement","name":"4. Why the culling is easier here than on a canvas"},{"@type":"WebPageElement","name":"5. The three fidelity tiers (this is the LOD story)"},{"@type":"WebPageElement","name":"6. What a paper pane is, concretely"},{"@type":"WebPageElement","name":"7. Where the documents come from"},{"@type":"WebPageElement","name":"8. What this is NOT"},{"@type":"WebPageElement","name":"9. Where WRL actually enters"},{"@type":"WebPageElement","name":"10. Build order"},{"@type":"WebPageElement","name":"11. The defect the first render found"},{"@type":"WebPageElement","name":"12. What the second format settled, and two things it exposed"},{"@type":"WebPageElement","name":"12.1 The shipped documents are not the spec's shape"},{"@type":"WebPageElement","name":"12.2 A canvas pane cannot be a conformant Runefort renderer"},{"@type":"WebPageElement","name":"13. Rung 2 in the guest, and what it did NOT establish"},{"@type":"WebPageElement","name":"13.1 The frame cost is NOT measured, and the gauge cannot measure it"},{"@type":"WebPageElement","name":"13.2 Two guest traps, each of which cost a cycle"},{"@type":"WebPageElement","name":"14. Rung 4 — the number, and the estimator that had to be changed to get it"},{"@type":"WebPageElement","name":"14.1 The median is the wrong estimator, and the bench said so itself"},{"@type":"WebPageElement","name":"14.2 What the numbers say"},{"@type":"WebPageElement","name":"14.3 The result that matters more than the frame time"},{"@type":"WebPageElement","name":"14.4 Caveats, stated rather than discovered later"},{"@type":"WebPageElement","name":"15. Rung 5 — ten thousand documents, and three instruments that lied first"},{"@type":"WebPageElement","name":"15.1 A pane is a record until it is on screen"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"RRABBIT","item":"https://docs.ampersandboxdesign.com/RRABBIT/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/RRABBIT/docs/"},{"@type":"ListItem","position":4,"name":"PAPER_ROADS.md","item":"https://docs.ampersandboxdesign.com/RRABBIT/docs/PAPER_ROADS.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">RRABBIT</span>
+<span class="path">RRABBIT/docs/PAPER_ROADS.md</span>
+
+</div></div>
+<div class="lead">Status: `spec` for §5–§9, `proposed` for §10. §1–§4 are measurements and citations.</div>
+<div class="prose"><h1 id="blk-27003">Paper Roads — documents as a second window kind</h1>
+<p><strong>Status: `spec` for §5–§9, `proposed` for §10. §1–§4 are measurements and citations.</strong></p>
+<p>Author: Claude, 2026-08-15. Prompted by Travis: <em>&quot;could we build simple apps that only render bendscript.com and runefort.com protocols? then this app could also use WRL as its sort of JS/CSS replacement?&quot;</em></p>
+<p>Read <a href="#/RRABBIT/docs/RUNBOOK.md" data-link>`RUNBOOK.md`</a> for the shell in general and <a href="#/RRABBIT/docs/OP_VOCABULARY_DRAFT.md" data-link>`OP_VOCABULARY_DRAFT.md`</a> for the ruling this depends on.</p>
+<h3 id="blk-27007">0. The one-line version</h3>
+<p>The road network does not need a browser. It needs <strong>a window that is not a process</strong> — and the shell already builds one of those for ramps. Point that mechanism at <code>.bend</code> and <code>.rune</code> documents and you get a pane that costs ~1 KB instead of ~3 MB, which is the entire reason &quot;thousands&quot; is a different conversation from &quot;dozens&quot;.</p>
+<h3 id="blk-27009">1. The premise that had to be corrected first</h3>
+<p>The prompt proposed <strong>WRL as a JS/CSS replacement</strong>. It cannot be, and the reason is in WRL's own README rather than anywhere in this repo:</p>
+<blockquote><p>WRL Core 0.1.2, the writable surface. Five roles, one texture, <strong>no behaviours</strong>.</p></blockquote>
+<p>Mailboxes, behaviour blocks, capability walls and deterministic supervision are in the <em>authored design</em> — &quot;forty-six sections, written down, tier-marked, <strong>not built</strong>.&quot; A language with no behaviours cannot lay out a paragraph, resolve a threshold, or handle a click. A pane written in WRL Core today would render nothing.</p>
+<p>What WRL <em>is</em> strongest at is the same README's honest claim:</p>
+<blockquote><p>describing a <strong>network of identities</strong> precisely enough that the description is a hash and the run is a film.</p></blockquote>
+<p>That is not a JS replacement. It is a <strong>wiring</strong> layer, and it happens to be the thing tracks and replay already hand-roll (§9).</p>
+<p><strong>DOCTRINE — corrected.</strong> WRL is not the scripting layer of this stack. The op vocabulary is. Any plan that has WRL computing layout is a plan that has not read <code>reference.html#tiers</code>.</p>
+<h3 id="blk-27019">2. The four layers, and which one is missing</h3>
+<table><thead><tr><th>Web layer</th><th>This stack</th><th>State (measured)</th></tr></thead><tbody><tr><td>HTML — document semantics</td><td><strong>BendScript</strong> <code>.bend.json</code></td><td><code>@bendscript/core</code>, 96 tests green, 20-doc corpus</td></tr><tr><td>CSS — layout</td><td><strong>RuneFort</strong> <code>.rune.json</code></td><td><code>@runefort/core</code> web components exist in <code>packages/core/src/</code></td></tr><tr><td>JS — interaction</td><td><strong>the op vocabulary</strong> — 16 closed ops through one seam</td><td>drafted, <strong>unruled</strong></td></tr><tr><td>—</td><td><strong>WRL</strong> — which pane feeds which, sealed to a <code>sem-</code> id</td><td>Core 0.1.2 frozen; no behaviours</td></tr></tbody></table>
+<p>Three of four exist as artifacts. The missing one is the interaction layer, which is exactly the ruling already pending in <code>OP_VOCABULARY_DRAFT.md</code> §8.</p>
+<p><strong>This raises the stakes on that ruling.</strong> It was a tracks feature. It is now the scripting layer of a document runtime as well. A second consumer is the strongest evidence the seam is real — §9 of the draft asked for exactly this test and it now has a candidate.</p>
+<h3 id="blk-27038">3. The cost measurement that decides the scale question</h3>
+<p>Two window kinds already exist in <code>m2/</code>, and they are not the same order of magnitude.</p>
+<p><strong>A live window</strong> (<code>rrabbit.js</code> <code>makeSign</code> ← <code>adoptSurfaceTexture</code>):</p>
+<pre data-lang="js"><code><span class="t-kw">const</span> rt = <span class="t-kw">new</span> <span class="t-type">THREE</span>.<span class="t-type">WebGLRenderTarget</span>(width, height)
+rt.depthTexture = <span class="t-kw">new</span> <span class="t-type">THREE</span>.<span class="t-type">DepthTexture</span>(width, height)</code></pre>
+<p>Per window: one Wayland client <strong>process</strong>, one EGL image, one video decode path, one colour render target and one depth texture. At 1024×768 RGBA that is ~3 MB of VRAM for the colour target alone, before the depth texture and before the client's own memory.</p>
+<p><strong>A canvas object</strong> (<code>ramps.js</code> <code>makeRamp</code>, <a href="../m2/ramps.js:487" target="_blank" rel="noopener">ramps.js:487</a>):</p>
+<pre data-lang="js"><code><span class="t-kw">const</span> canvas = document.<span class="t-fn">createElement</span>(<span class="t-string">'canvas'</span>)
+canvas.width = <span class="t-num">512</span>; canvas.height = <span class="t-num">320</span>
+<span class="t-kw">const</span> tex = <span class="t-fn">canvasTexture</span>(<span class="t-type">THREE</span>, canvas)</code></pre>
+<p>No process, no proxy, no encoder. The shell paints it.</p>
+<p><strong>The documents themselves</strong>, measured on <code>bendscript.com/test-corpus/v0.1/</code> (2026-08-15):</p>
+<pre><code>n=20  min=300 B  max=4224 B  mean=1067 B   (21,350 B total)</code></pre>
+<p>So the arithmetic that answers &quot;thousands or millions&quot;:</p>
+<table><thead><tr><th></th><th>1,000 panes</th><th>1,000,000 panes</th></tr></thead><tbody><tr><td>as <code>.bend</code> documents</td><td>~1 MB</td><td>~1 GB</td></tr><tr><td>as live windows (VRAM only)</td><td>~3 GB</td><td>~3 TB</td></tr><tr><td>as live windows (processes)</td><td>1,000</td><td>1,000,000</td></tr></tbody></table>
+<p><strong>A million documents is a storage problem. A million windows is not a problem, it is a category error.</strong> The whole idea rests on those being different kinds of object, and in this shell they already are.</p>
+<p>Note the second-order limit: ~1 GB exceeds <code>localStorage</code> (5–10 MB) by two orders of magnitude, so the store is IndexedDB or a server — never the mechanism <code>tracks.js</code> uses today.</p>
+<h3 id="blk-27064">4. Why the culling is easier here than on a canvas</h3>
+<p>The infinite-canvas literature reaches for quadtrees, R-trees and spatial hashes because a canvas is 2-D and unbounded in both axes. <strong>A road is not.</strong></p>
+<ul><li><p>A road is a <strong>sorted 1-D axis</strong> of mileposts. <code>roadOrder(district)</code> already returns it in order.</p></li></ul>
+<p>Culling on a road is a binary search and a slice, not a tree query.</p>
+<ul><li><p><strong>Districts are the chunks.</strong> The workspace graph is already the streaming unit — you are in</p></li></ul>
+<p>exactly one district, and its neighbours are its exits.</p>
+<ul><li><p>The slot algebra already exists and already refuses: <code>slotAt</code> / <code>slotFree</code> / <code>nextFreeSlot</code> /</p></li></ul>
+<p><code>nearestFreeSlot</code>, with <code>SLOT_GAP = 4</code> and <code>DASH_MAX = 96</code>.</p>
+<p>At current constants a road holds roughly 46 slots (two sides, every 4th dash, first slot at <code>SLOT_FIRST</code>). One million panes is therefore ~22,000 roads — which the district graph permits, because it is a graph and not an array.</p>
+<p><strong>DOCTRINE — proposed.</strong> The load-nearest algorithm for paper roads is <em>ordinary chunk streaming</em> with the 1-D case already solved by <code>roadOrder</code>. What would test it: place N panes, drive the road, and measure frame time against N. If frame time is flat in N and rises only with the <em>visible</em> count, the road shape is carrying the culling. If it rises with N, something is touching every pane per frame and the shape is not being used.</p>
+<h3 id="blk-27080">5. The three fidelity tiers (this is the LOD story)</h3>
+<p>A pane is not one thing at all distances. Three tiers, matching what the shell can afford:</p>
+<table><thead><tr><th>Tier</th><th>When</th><th>What it is</th><th>Cost</th></tr></thead><tbody><tr><td><strong>read</strong></td><td>you are standing in it</td><td>real DOM via <code>CSS3DRenderer</code>, real text selection, real <code>@runefort/core</code> web components</td><td>~1 pane</td></tr><tr><td><strong>paint</strong></td><td>on the road ahead, legible</td><td>shell-painted canvas → <code>canvasTexture</code>, same path as <code>makeRamp</code></td><td>tens</td></tr><tr><td><strong>card</strong></td><td>far, or off the current road</td><td>one quad from a shared atlas: title + block count + edge count</td><td>thousands</td></tr></tbody></table>
+<p>The <strong>read</strong> tier is the interesting one, because it means <code>@runefort/core</code> does not have to be reimplemented. It is already Custom Elements; <code>CSS3DRenderer</code> positions real DOM in 3-D. The cost is that CSS3D does not composite with WebGL depth — so it is correct exactly when one pane is in front of everything else, which is what &quot;standing in a window&quot; already means in this shell.</p>
+<p><strong>The refusal that goes with it:</strong> a pane MUST NOT be promoted to <strong>read</strong> tier while another is already there. The shell has one <code>flatMilepost</code>; two DOM overlays would occlude each other with no depth test to arbitrate. This is a hard refusal, not a budget.</p>
+<h3 id="blk-27101">6. What a paper pane is, concretely</h3>
+<pre><code>  .bend.json  ──▶ parse ──▶ layout ──▶ draw commands ──▶ canvas ──▶ canvasTexture ──▶ road slot
+  .rune.json  ──▶ parse ──▶ grid   ──▶ draw commands ──┘</code></pre>
+<p>Four modules, and the split is chosen so that <strong>the part with arithmetic in it has no THREE and no DOM</strong>, and is therefore testable on a host that cannot open a WebGL context:</p>
+<table><thead><tr><th>Module</th><th>Depends on</th><th>Testable headless</th></tr></thead><tbody><tr><td><code>m2/paper/bend-layout.js</code></td><td>nothing</td><td><strong>yes</strong> — pure functions over JSON</td></tr><tr><td><code>m2/paper/rune-layout.js</code></td><td>nothing</td><td><strong>yes</strong></td></tr><tr><td><code>m2/paper/paint.js</code></td><td>a 2-D context</td><td>partly</td></tr><tr><td><code>m2/paper.js</code></td><td>THREE, <code>world.js</code></td><td>no — needs the guest</td></tr></tbody></table>
+<p>This is not decoration. Per <code>TRACKS_HANDOFF.md</code> §1 the dev host <strong>cannot open the 3D shell</strong>, so any design that puts the layout arithmetic behind a WebGL context is a design that can only be tested through a <code>scp</code>-to-FreeBSD loop. Keeping layout pure is what makes this work testable at all.</p>
+<h3 id="blk-27121">7. Where the documents come from</h3>
+<p>The Gemini protocol is the cautionary case: a well-designed small document format with, after five years, roughly 3,900 capsules. <strong>A document runtime with no corpus is an empty world.</strong></p>
+<p>This one is not starting empty, and the corpus is already committed rather than hoped for:</p>
+<ul><li><p><code>bendscript.com/test-corpus/v0.1/</code> — 20 documents, checked in, spanning every core primitive.</p></li><li><p><strong>Graphonomous is BendScript's gating adopter</strong> (spec §14.3.1): every memory node with textual</p></li></ul>
+<p>content is exportable as a single-block <code>.bend</code> document under <code>bendscript.memory.v1</code>. That is a corpus that grows on its own, from a loop that already runs.</p>
+<ul><li><p><code>runefort.com/forts/</code> and <code>examples/</code> — existing <code>.rune</code> layouts.</p></li></ul>
+<p><strong>The honest statement:</strong> the first useful pane in this shell renders a Graphonomous node, not a web page. That is a smaller claim than &quot;a browser&quot; and it is the one that is actually true.</p>
+<h3 id="blk-27134">8. What this is NOT</h3>
+<p>Naming these now, because each will be argued for later.</p>
+<ul><li><p><strong>Not a web browser.</strong> No HTML parser, no CSS cascade, no JS engine, no TLS stack. Ladybird is the</p></li></ul>
+<p>measure of what a real independent engine costs — a nonprofit, a full-time team, and 2026 for a first alpha, after starting inside SerenityOS in 2019. Nothing in this document is on that scale and nothing in it should be described as if it were.</p>
+<ul><li><p><strong>Not a replacement for the live windows.</strong> <code>foot</code>, <code>firefox</code> and every real application stay</p></li></ul>
+<p>Wayland surfaces. Paper panes are additive. A shell that could only show documents would be a worse shell.</p>
+<ul><li><p><strong>Not a general renderer for arbitrary `.bend`.</strong> v0.1 renders the <code>core</code> vocabulary. Unknown block</p></li></ul>
+<p>kinds render a fallback and are preserved — which is what BendScript §2.2 already requires.</p>
+<ul><li><p><strong>Not authoring.</strong> BendScript §0 states <code>.bend</code> files are not hand-authored. A viewer that cannot</p></li></ul>
+<p>write is honest; an editor is a separate decision and needs the op vocabulary ruled first.</p>
+<h3 id="blk-27152">9. Where WRL actually enters</h3>
+<p>Not as script. As <strong>wiring</strong>, and only once there is more than one pane.</p>
+<p>A road with N panes on it has a question no single pane can answer: which pane's output feeds which pane's input, and does that arrangement mean the same thing tomorrow? That is precisely a network of durable identities connected by textured routes — the thing WRL Core 0.1.2 <em>can already express</em>, and can already seal to a <code>sem-</code> id.</p>
+<p>The payoff is not syntax, it is <strong>identity</strong>: a road's arrangement of panes becomes one content address. Two roads that seal to the same id are the same road. That is the property tracks wants (<code>OP_VOCABULARY_DRAFT.md</code> §4: <em>sealed into the track's identity</em>) and currently approximates by hand.</p>
+<p><strong>This is deferred.</strong> It requires panes with inputs and outputs, and v0.1 panes have neither. Stated here so the layering is on record before anyone proposes WRL as a template language.</p>
+<h3 id="blk-27157">10. Build order</h3>
+<p>Smallest first, each rung falsifiable on its own.</p>
+<table><thead><tr><th>#</th><th>Rung</th><th>Proof it worked</th></tr></thead><tbody><tr><td>1</td><td><code>bend-layout.js</code> — <code>.bend</code> → draw commands, pure</td><td><strong>done</strong> — <code>node test/paper-layout.mjs</code>, 145 assertions over the real 20-doc corpus</td></tr><tr><td>1b</td><td><code>paint.js</code> + <code>dev.html</code> — commands → 2-D canvas</td><td><strong>done</strong> — all 20 painted, 479 commands, 0 blank</td></tr><tr><td>2</td><td><code>paper.js</code> — panes on a road slot</td><td><strong>done</strong> — 5 panes on the road in the FreeBSD guest, both tiers visible (§13)</td></tr><tr><td>3</td><td><code>.rune</code> panes via the same seam</td><td><strong>done</strong> — <code>node test/rune-layout.mjs</code>, 59 assertions; 4 real floors, 15 rooms, <strong>no fourth command kind</strong></td></tr><tr><td>4</td><td>the <strong>card</strong> tier + a shared atlas</td><td><strong>done</strong> — 400 panes, best-case frame flat, 56 canvases not 400 (§14)</td></tr><tr><td>5</td><td>IndexedDB store + district-chunk streaming</td><td><strong>done</strong> — 10,000 documents, 500 on the road, 24 canvases (§15)</td></tr><tr><td>6</td><td><code>CSS3DRenderer</code> <strong>read</strong> tier</td><td><strong>done</strong> — real DOM, real focus, §5.4/§5.5 conformance, driven through the seam (§16)</td></tr><tr><td>7</td><td>WRL wiring (§9)</td><td><strong>done</strong> — same arrangement → same <code>sem-</code> id, 35 assertions (§18)</td></tr></tbody></table>
+<p>Rungs 1–3 do not need the op vocabulary. <strong>Rung 6 does</strong> — the moment a pane accepts a click, that click has to pass the same seam a recorded op does, or the recorder acquires a second vocabulary and <code>OP_VOCABULARY_DRAFT.md</code> §0's whole argument is lost.</p>
+<h3 id="blk-27188">11. The defect the first render found</h3>
+<p>Rung 1 passed 133 assertions and was wrong in a way no assertion asked about.</p>
+<p>Every block kind drew correctly. Corpus doc 12 — <strong>one paragraph and nine edges</strong> — drew the paragraph and stopped. So did doc 17 (six cross-document edges) and doc 05. The <code>stats.edges</code> count was right the whole time; nothing rendered it.</p>
+<p>BendScript §6 opens with <em>&quot;Edges are the protocol's reason to exist.&quot;</em> A renderer that draws blocks and hides edges is not a partial BendScript renderer — <strong>it is a renderer of the part BendScript shares with markdown</strong>, which is the part that needed no new format. The pane looked finished because prose is the part you notice.</p>
+<p>Fixed with an <strong>edge rail</strong> (§2.4 keeps edges document-level on purpose, so they render as a document-level band rather than inline anchors — inlining them would re-couple what the format deliberately separated). The rail is what makes the vocabulary-namespaced predicates visible: <code>bendscript.argument.v1:rebuts</code>, <code>bendscript.spec.v1:satisfies</code>, <code>bendscript.memory.v1:consolidated-from</code>. Those strings are the entire difference between this and a markdown viewer, and until the rail existed not one of them reached a pixel.</p>
+<blockquote><p><strong>A renderer is not tested by whether it drew something. It is tested by whether the thing the format exists for reached the screen.</strong></p></blockquote>
+<h3 id="blk-27195">12. What the second format settled, and two things it exposed</h3>
+<p>Rung 3 existed to falsify one claim: that <code>rect</code> / <code>line</code> / <code>text</code> is a <strong>closed</strong> set rather than &quot;the three things the first format happened to need&quot;. A second, unrelated format — grids, not prose — was the test.</p>
+<p><strong>It needed no fourth command.</strong> 4 floors, 15 rooms, 148 commands, kinds used <code>{line, rect, text}</code>. A room border is drawn as four thin rects rather than a stroked path, precisely because adding <code>strokeRect</code> would be the fourth command arriving through the back door.</p>
+<h4 id="blk-27198">12.1 The shipped documents are not the spec's shape</h4>
+<p>The protocol spec §3 describes a flat <code>{ runefort, grid, rooms, claims, neighbors, state_bindings }</code>. The <strong>only real RuneFort document in the repo</strong> — <code>runefort.com/forts/welcome.json</code> — is <code>campus → buildings → floors → rooms</code>, with <code>columns</code> / <code>cell_height</code> / <code>gap</code> on the floor and <code>state_class</code> written straight onto the room. <code>@runefort/core</code> ships <code>rune-campus.js</code>, <code>rune-building.js</code> and <code>rune-elevator.js</code>, so the hierarchy is the implemented model.</p>
+<p>Meanwhile the protocol spec's §11 still lists <strong>&quot;Nesting. A room inside a room (zoomable). Worth adding to core, or push to a vocabulary?&quot;</strong> as an <em>open question for v0.2</em>. The shipped app answered it and the spec was never told.</p>
+<p><code>floorsOf()</code> normalises both and <code>stats.shape</code> reports which arrived, because rendering only the spec shape would render nothing that exists, and rendering only the app shape would silently bless the drift. <strong>This is a runefort.com spec issue, not an RRABBIT one</strong> — flagged here because this is where it surfaced.</p>
+<h4 id="blk-27202">12.2 A canvas pane cannot be a conformant Runefort renderer</h4>
+<p>Renderer contract §5 MUST-4: <em>&quot;Each room MUST be focusable (keyboard) and have a stable accessible name.&quot;</em> MUST-5 requires arrow/<code>hjkl</code> focus movement along neighbour edges.</p>
+<p>A canvas has no focus and no accessibility tree. The <strong>paint</strong> tier therefore satisfies §5.1 (layout, which explicitly allows &quot;visually equivalent&quot;), §5.3 (state classes, visually) and §5.2 in part — and <strong>cannot</strong> satisfy §5.4 or §5.5 at all. It is a <em>viewer</em>, not a conformant renderer, and should not be described as one.</p>
+<p>This is the strongest argument yet for rung 6: the <strong>read</strong> tier uses <code>CSS3DRenderer</code> and real <code>@runefort/core</code> Custom Elements, which have real focus and a real accessible name for free. Conformance is not a nice-to-have that arrives with polish — it arrives with the DOM or it does not arrive.</p>
+<h3 id="blk-27206">13. Rung 2 in the guest, and what it did NOT establish</h3>
+<p>Five panes stand on the first road in the FreeBSD guest: three <code>.bend</code> documents and two Runefort floors, at alternating sides, placed through the same slot algebra windows use. Corpus doc 19 renders at the <strong>paint</strong> tier with its heading, its typed link and its five-phase list legible from the driver's seat; doc 12's <strong>edge rail</strong> is readable on the opposite side; and doc 06 mid-road has already dropped to the <strong>card</strong> tier (<code>4 blocks · 0 edges · core</code>). So both tiers are real, and the tier boundary is visible in one frame.</p>
+<p><code>slotFree</code> learned about panes (<code>world.js</code> <code>papers</code>), because the algebra knew two occupants — windows and ramps — and a third it had never heard of is a pane a window gets placed on top of. That failure would not read as an incomplete slot table; it would read as a document that vanished.</p>
+<p><strong>Clicks are deliberately not wired.</strong> A pane is inert. Wiring a click now would create the second interaction vocabulary that <code>OP_VOCABULARY_DRAFT.md</code> §0 exists to prevent — the moment a pane accepts input, that input has to pass the same seam a recorded op does. Rung 6 is gated on the ruling, not on effort.</p>
+<h4 id="blk-27210">13.1 The frame cost is NOT measured, and the gauge cannot measure it</h4>
+<p>The dash read 17.1 ms/frame with no panes and 51.2 with five, which looks like a finding and is not one. Sampling three more times while feeding input gave <strong>67.7 / 34.3 / 67.4</strong> — the spread is the <strong>idle brake</strong> engaging and disengaging between samples, not pane cost. See <code>project_rrabbit_idle_brake</code>: the brake keys on input, so a gauge read from a screenshot is sampling the brake as much as the scene.</p>
+<p>What the design does guarantee, from the code rather than from a measurement: <code>syncPaper</code> repaints <strong>only on tier change</strong>, so a settled pane costs no layout per frame and is three draw calls (frame, quad, post). What is unmeasured is whether that holds at N in the hundreds. <strong>Rung 4's proof — &quot;frame time flat in N&quot; — is still owed, and needs an in-page harness, not a photograph of a dial.</strong></p>
+<h4 id="blk-27213">13.2 Two guest traps, each of which cost a cycle</h4>
+<ul><li><p><strong>Do not `pkill firefox` to change the shell's URL.</strong> Firefox <em>is</em> the kiosk session leader; killing</p></li></ul>
+<p>it drops the whole X session to the SDDM greeter. Recovery is <code>virsh send-key</code> one keycode at a time (a multi-keycode <code>send-key</code> is one <em>chord</em>, not typing) to log back in.</p>
+<ul><li><p><strong>`rrabbit-session` already has the escape hatch:</strong> <code>RRABBIT_URL_EXTRA</code> is appended to the shell</p></li></ul>
+<p>URL, exactly as <code>RRABBIT_DIR</code> overrides the install path. Set it in <code>~/.xprofile</code> and log in. The guest currently carries <code>export RRABBIT_URL_EXTRA=papers=seed</code>; <strong>delete that line to get a clean road back.</strong></p>
+<ul><li><p>A reload via Ctrl+R raises a <code>beforeunload</code> confirm dialog. It is dismissed with <code>KEY_ENTER</code></p></li></ul>
+<p>(&quot;Leave page&quot; is focused), and a screenshot that still shows the old road may simply be a dialog nobody answered.</p>
+<h3 id="blk-27226">14. Rung 4 — the number, and the estimator that had to be changed to get it</h3>
+<p><code>?papers=bench</code> sweeps N ∈ {0, 25, 50, 100, 200, 400}, samples 50 rAF intervals per step after a 12-frame warmup, and <strong>draws its own result on the glass</strong> — the guest has no console, so an overlay is what makes a screenshot a valid instrument again: what is photographed is a number the page computed rather than a needle being interpreted.</p>
+<p>Measured in the FreeBSD guest, two runs:</p>
+<pre><code>   N |  med ms |  p95 ms |  min ms | hz | paint/card/hid | cvs | atlas
+   0 |   50.31 |   85.42 |   16.08 |  0 |          0/0/0 |   0 | 0p 0
+  25 |   50.29 |   84.34 |   16.06 |  0 |         0/0/25 |   0 | 0p 0
+  50 |   50.22 |   68.32 |   16.08 |  0 |         0/0/50 |   0 | 0p 0
+ 100 |   51.28 |  152.90 |   17.06 |  0 |        56/44/0 |  56 | 1p 44
+ 200 |  118.50 |  186.84 |   17.08 |  0 |       56/144/0 |  56 | 2p 144
+ 400 |  118.63 |  186.18 |   17.02 |  0 |      56/332/12 |  56 | 4p 332</code></pre>
+<h4 id="blk-27230">14.1 The median is the wrong estimator, and the bench said so itself</h4>
+<p>First run's medians: 67.5 / 51.5 / 50.7 / 118.3 / 118.6 / 102.4. <strong>N=25 was faster than N=0</strong>, and the sequence is non-monotonic in both runs. A cost curve cannot go down when you add work, so what those numbers measure is the scene's noise floor — live clients decoding, software rasterisation in a VM — and not panes. The first version of this bench printed <code>87.15 us/pane</code> from exactly that data. It was noise wearing a decimal point.</p>
+<p><strong>Frame-time noise is one-sided.</strong> Nothing makes a frame finish sooner than the work in it allows; stalls only ever make frames longer. So the <strong>minimum</strong> is the robust estimator — the closest thing to &quot;what this frame costs when nothing else interferes&quot; — and contamination can only push the other samples up and away from it. The bench now reports <code>min</code> as the verdict and prints <code>NON-MONOTONIC = noise-dominated, do not quote as per-pane cost</code> beside the median so the retired mistake cannot be made again from the same table.</p>
+<p>Its resolution is one vsync. A best case pinned near 16.6 ms cannot resolve a cost below that, so the claim is a <strong>bound</strong>, not a zero.</p>
+<h4 id="blk-27234">14.2 What the numbers say</h4>
+<ul><li><p><strong>Best case: 16.08 ms at N=0 → 17.02 ms at N=400.</strong> Delta 0.94 ms — under one frame of headroom for</p></li></ul>
+<p>four hundred documents.</p>
+<ul><li><p><strong>The cleanest rows are 100 → 400</strong>, where panes were actually being drawn: min 17.06 → 17.08 →</p></li></ul>
+<p>17.02. Tripling N moved the best-case frame by <strong>0.06 ms</strong>.</p>
+<ul><li><p><code>hz = 0</code> on every row in both runs, so the idle brake was never capping and these numbers are about</p></li></ul>
+<p>panes. That is a <em>recorded</em> fact, not an assumption — §13.1's failure was assuming it.</p>
+<h4 id="blk-27247">14.3 The result that matters more than the frame time</h4>
+<p><strong>`cvs` is 56 at N=100, at N=200 and at N=400.</strong> Paint canvases are bounded by <code>READ_Z</code> — by what is close enough to read — and not by N. Before this rung every pane allocated a 640×420 canvas in <code>build()</code> whether or not it would ever be read: 400 panes was ~428 MB of backing store before the first frame, and the <em>card</em> tier, whose whole purpose is to be the cheap one, was paying the read tier's price.</p>
+<p>Now 400 panes hold 56 canvases plus 4 atlas pages (~124 MB against ~428 MB), and the 56 does not move when N does. <strong>That is the property rung 5 rests on</strong> — 10,000 panes will hold 56 canvases too, because the bound is the road ahead, not the corpus.</p>
+<h4 id="blk-27250">14.4 Caveats, stated rather than discovered later</h4>
+<ul><li><p>The N=25 and N=50 rows show every pane <code>hidden</code> in this run and <code>paint</code> in the first. Those steps</p></li></ul>
+<p>run while the shell is still in its opening shot, so their tier mix is not representative and they are not evidence about drawing cost. The rows above 100 are.</p>
+<ul><li><p>400 panes were placed <strong>unslotted</strong> at quarter-dash spacing. A real road's spacing rule allows ~23</p></li></ul>
+<p>per side, so this sweep is denser than any road will be. That is the right direction for a bound.</p>
+<ul><li><p>The bench measures rAF intervals. It is not a profiler and cannot say <em>where</em> time went — only</p></li></ul>
+<p>whether it grows with N.</p>
+<h3 id="blk-27263">15. Rung 5 — ten thousand documents, and three instruments that lied first</h3>
+<p><code>?papers=store</code> seeds a real IndexedDB store and streams one road's chunk out of it. Measured in the guest:</p>
+<pre><code>store            idb
+corpus           10000 documents across 24 districts
+written/refused  10000 / 0
+open / write     55.9 ms / 2336.7 ms
+chunk load       204.8 ms          &lt;- entering the road
+resident panes   500               (bounded by the DISTRICT)
+scene objects    1386              (bounded by what is DRAWN)
+paint canvases   24                (bounded by a BUDGET)
+tiers            paint 24 / card 438 / hidden 38
+atlas            5 pages, 438 cards, 5 textures
+frame            min 17.1 ms   med 152.04 ms   hz 0</code></pre>
+<p><strong>The question was never &quot;can 10,000 panes be drawn&quot;</strong> — they cannot all be on one road and nobody would look at them. It was whether the cost of standing on a road is proportional to <em>that road</em> or to the corpus behind it. Three numbers answer it, and none of them moved with the corpus: 10,000 stored, 500 resident, 24 canvases held.</p>
+<h4 id="blk-27267">15.1 A pane is a record until it is on screen</h4>
+<p><code>build()</code> used to add a frame and a post to the scene the moment a pane was placed. At 400 that is 800 objects; at 10,000 it is <strong>twenty thousand</strong>, and three.js visits every one per frame to discover it is invisible — <code>visible = false</code> skips the draw, not the walk. Nothing enters the scene graph now until a tier asks for it. A pane on another road costs one JS object and its document.</p>
+<h4 id="blk-27269">15.2 The store is the first thing here that could not use <code>localStorage</code></h4>
+<p><code>tracks.js</code>, <code>layout.js</code> and <code>workspaces.js</code> all persist to <code>localStorage</code>, which is 5–10 MB. A million documents is ~1 GB (§3), so this is the first part of the shell that had to reach for IndexedDB. The store is split adapter-from-logic — validation, chunking and the district index are pure and run under <code>node</code> (<code>test/store.mjs</code>, 55 assertions, 10k put in 15 ms), while <code>idbAdapter</code> and <code>memoryAdapter</code> are the two backs. Same discipline as injecting <code>measure</code> in <code>bend-layout.js</code>, and for the same reason: IndexedDB does not exist under <code>node</code>, so a store written straight against it could only ever be tested through the FreeBSD deploy loop.</p>
+<h4 id="blk-27271">15.3 The bound that was true and still too loose</h4>
+<p>With distance as the only criterion, a 500-pane road put <strong>128</strong> documents at the paint tier at once and best-case frame time went 17 ms → <strong>33 ms</strong>. The bound was working exactly as designed — canvases tracked what was in view rather than the corpus — and it was still wrong, because <code>READ_Z</code> asks &quot;could this be read from here&quot;, which down a long road at a shallow angle is true of far more panes than anyone is reading.</p>
+<p>So distance now decides <em>eligibility</em> and <strong>count decides the tier</strong>: the nearest <code>PAINT_MAX = 24</code> are laid out and everything else in range is a card, which is what it looked like at that distance anyway. 128 canvases → 24, and 33.16 ms → 17.10 ms, back to one vsync.</p>
+<blockquote><p><strong>A bound can be correct and still be the wrong bound.</strong> &quot;Bounded by what is in view&quot; was true the whole time; it just was not a frame budget.</p></blockquote>
+<h4 id="blk-27276">15.4 Three instruments that produced plausible wrong numbers</h4>
+<p>Rung 5 cost more cycles to <em>measure</em> than to build, and every one of them was the instrument rather than the code:</p>
+<ol><li><p><strong>A stale overlay reads exactly like a fresh one.</strong> A <code>Ctrl+R</code> swallowed by the <code>beforeunload</code></p></li></ol>
+<p>dialog left the previous run's panel on screen. Caught only because two runs reported timings agreeing to three decimal places — which is impossible. The overlay now prints <code>ran at &lt;ISO&gt;</code> and <code>+N ms after load</code>. Same failure class as the stopped counter in <code>TRACKS_HANDOFF.md</code> §3.</p>
+<ol start="2"><li><p><strong>A snapshot taken mid-stream reads as an empty world.</strong> One run reported `resident=watch loads=1</p></li></ol>
+<p>got=500<code> beside </code>resident panes 0<code> — four numbers that look contradictory and are not. The shell had moved district, the auto-stream dropped the outgoing panes *synchronously* and was still fetching the incoming ones. Every count was correct for the instant sampled, and that instant was the gap between two districts. The bench now waits for </code>!streamBusy() &amp;&amp; streamResident() === state.district<code> and prints </code>settled<code> / </code>IN FLIGHT`.</p>
+<ol start="3"><li><p><strong>The shell moves district during startup, later than any settle window.</strong> Three attempts to bind</p></li></ol>
+<p>the chunk to &quot;the district the shell is on&quot; all came back <code>seeded into home / district now build</code>. The <code>arrived</code> hook takes the camera to a newly adopted window and clients connect on their own schedule. Racing it was the wrong shape; <strong>every real road gets a chunk</strong> instead — which is also what a real corpus looks like, since documents live on the road they belong to and not on the one you happen to boot into.</p>
+<h4 id="blk-27290">15.5 What rung 5 did not establish</h4>
+<ul><li><p><code>med 152 ms</code> is still noise-dominated (§14.1) and is not a per-pane cost. The <code>min</code> is the estimator.</p></li><li><p>Nothing was measured above 10,000. The claim is that cost tracks the road rather than the corpus,</p></li></ul>
+<p>evidenced at 10k; it is not a claim about a million.</p>
+<ul><li><p>The chunk load (~200 ms) blocks nothing but is not incremental — entering a road with a very large</p></li></ul>
+<p>chunk would show up as a hitch. Paging a chunk is not built.</p>
+<h3 id="blk-27301">16. Rung 6 — the tier that can claim conformance, and the seam it forced</h3>
+<p>This rung was gated on the op-vocabulary ruling and was built anyway, at Travis's direction. It is built <strong>as the experiment §9 of that draft asked for</strong>, not as ratification: see <code>OP_VOCABULARY_DRAFT.md</code> §8b, which is the deliverable for the ruling. Nothing in §8 of the draft is answered here.</p>
+<p>Measured in the guest:</p>
+<pre><code>seeded         20 panes across 4 roads
+target         build:r:8  [bend]      reading  build:r:8
+precheck plan  {&quot;ok&quot;:true,&quot;i&quot;:-1}
+apply park     {&quot;ok&quot;:true,&quot;op&quot;:&quot;park&quot;,&quot;result&quot;:null}
+apply read     {&quot;ok&quot;:true,&quot;op&quot;:&quot;read&quot;,&quot;result&quot;:{&quot;ok&quot;:true,&quot;pane&quot;:&quot;build:r:8&quot;}}
+apply bad dash {&quot;ok&quot;:false,&quot;why&quot;:&quot;OP_NO_PANE&quot;,&quot;detail&quot;:&quot;read&quot;}
+op log — 2 entries, 2 applied, 1 refused
+    0ms  park  by=program        1ms  read  by=program
+plan (2): park -&gt; read</code></pre>
+<p>The read pane on screen is real DOM: it scrolls, and it shows the paragraph <em>past</em> the point where the canvas tier had stopped and drawn its <code>more below</code> mark. A pane you can read to the end of is the difference this tier makes, and it is visible in one frame beside a canvas pane that cannot.</p>
+<h4 id="blk-27306">16.1 This is the only tier that can claim Runefort conformance</h4>
+<p>§12.2 recorded that a canvas pane <strong>cannot</strong> be a conformant Runefort renderer: §5.4 requires every room to be focusable with a stable accessible name, §5.5 requires focus to move along neighbour edges, and a canvas has no focus and no accessibility tree. Those do not arrive with polish.</p>
+<p>The read tier emits real elements, so it can. <code>test/dom-spec.mjs</code> is the claim, as <strong>93 assertions against the element tree rather than a sentence in a document</strong>:</p>
+<ul><li><p>§5.1 — CSS grid lines from <code>position</code>/<code>size</code> (0-based protocol → 1-based grid, the off-by-one that</p></li></ul>
+<p>silently moves every room up and left), and deterministic DOM order.</p>
+<ul><li><p>§5.3 — <code>runefort-state-cold|warm|hot|fault|idle</code>, with unknown classes degrading to cold per §2.4.</p></li><li><p>§5.4 — every room <code>tabindex=&quot;0&quot;</code> with a non-empty <code>aria-label</code>, falling back to the id.</p></li><li><p>§5.5 — neighbours on the element, <strong>symmetric for navigation</strong> even where the declaration is</p></li></ul>
+<p>directed. A directed-only adjacency makes focus a trap: you can arrow in and not back out.</p>
+<p>BendScript gains what a canvas could never give it either — real <code>h1</code>–<code>h6</code> (the outline a screen reader navigates by), real anchors, and <code>aria-disabled</code> on broken references, which is a thing a colour cannot say.</p>
+<h4 id="blk-27322">16.2 The element spec, and why it is not DOM</h4>
+<p><code>bendToSpec</code> / <code>runeToSpec</code> return <code>{tag, attrs, children}</code> trees; <code>read.js</code> mounts them. Same move as the draw commands one layer down, and for the same reason: <code>node</code> has no <code>document</code>, and the properties that most need testing here are exactly the ones a screenshot cannot check. &quot;It is accessible&quot; is the canonical claim that rots silently.</p>
+<h4 id="blk-27324">16.3 Why the read tier supersedes instead of refusing</h4>
+<p>§5 of this document originally specified &quot;a pane MUST NOT be promoted to read tier while another is already there&quot; as a <strong>hard refusal</strong>. <code>test/ops.mjs</code> §4 measured what that does to replay: a human who reads A, leaves, then reads B produces the plan <code>[read A, read B]</code> — <code>unread</code> is not plannable — and <strong>replaying it refuses at step 2</strong>. The recording is honest; replaying it fails.</p>
+<p>So <code>read</code> closes whatever is open. One pane at a time is still enforced; it is enforced by the second read closing the first. The general rule this produced is now in the draft's §8b.2: <strong>a non-plannable op is only safe to drop when the op that follows it implies it.</strong></p>
+<h4 id="blk-27327">16.4 What rung 6 did not do</h4>
+<ul><li><p><strong>Nothing was rerouted.</strong> The ops call the same <code>goDistrict</code> a gate calls; travel.js's own callers</p></li></ul>
+<p>are untouched. The seam is additive and reversible, so the refactor cost in the draft's §8.5 is still ahead, not paid.</p>
+<ul><li><p><strong>Preconditions are still hand-written JS</strong>, not the sealed data the draft's §4 asks for. Total and</p></li></ul>
+<p>bounded, but a track can still be edited to weaken its own guard.</p>
+<ul><li><p><strong>A pointer does not yet reach the seam.</strong> The demo drives it with <code>by: 'program'</code>; the pane is</p></li></ul>
+<p>inert to clicks. Wiring the raycast is small, and it is the last thing that should happen before the vocabulary is ruled on rather than the first.</p>
+<ul><li><p>CSS3D does not composite with WebGL depth, so the read pane is always in front. Correct for one</p></li></ul>
+<p>pane and wrong for two, which is why only one may be at this tier.</p>
+<h3 id="blk-27344">17. Pane chrome — the controls a window has, as ops</h3>
+<p>Reported: panes cannot be zoomed, pinned with <code>--&amp;</code>, resized or closed. They now can, and every one of them is an op through the seam rather than a handler that touches a pane directly — so the click path and the program path stay one path. <code>close</code>, <code>resize</code> and <code>cast</code> join <code>read</code>/<code>unread</code>, and the table went 4 → 7.</p>
+<p>The glyphs and the corner geometry are <strong>imported from `rrabbit.js`</strong>, not redrawn: <code>X--</code> top-left, <code>--&amp;</code> bottom-left, the resize grab top-right, same size and same distance out. A pane whose close button is a different mark from a window's close button is a second thing to learn for no reason.</p>
+<p>Measured in the guest, all three driven through <code>apply</code>:</p>
+<pre><code>before         20 panes, 5 canvases
+resize +150    {&quot;ok&quot;:true,&quot;result&quot;:{&quot;ok&quot;:true,&quot;w&quot;:450,&quot;h&quot;:296}}
+  size now     450 x 296, canvas 960x631
+cast           {&quot;ok&quot;:true,&quot;result&quot;:{&quot;ok&quot;:true,&quot;on&quot;:true,&quot;key&quot;:&quot;build:r:12&quot;}}
+close          {&quot;ok&quot;:true,&quot;result&quot;:{&quot;ok&quot;:true}}
+after          19 panes, 3 canvases
+close again    {&quot;ok&quot;:false,&quot;why&quot;:&quot;OP_NO_PANE&quot;}
+resize NaN     {&quot;ok&quot;:false,&quot;why&quot;:&quot;OP_BAD_SIZE&quot;}</code></pre>
+<p><strong>Resize re-lays the document out; it does not magnify it.</strong> The canvas is sized from the world size, so a wider pane fits more of the document. That is the difference between resizing a document and zooming a picture of one, and it is the only reason resize is worth having on a pane.</p>
+<p><strong>Zoom is the read tier.</strong> Clicking a pane's body emits <code>read</code>, which is a pane's analogue of standing in a window — and unlike a canvas zoom it can be read to the end, because it scrolls.</p>
+<h4 id="blk-27351">17.1 Cast took three fixes, and each reported success while showing nothing</h4>
+<p>Casting a pane was the worst-shaped bug of the rung: the op returned <code>ok</code> at every step and the screen stayed on the default panel.</p>
+<ol><li><p>**<code>tv.sync</code>'s liveness check is a <em>window</em> check.** It drops the picture unless</p></li></ol>
+<p><code>keyOf(showing)</code> is in the sign ledger, and <code>keyOf</code> reads <code>view.surface.resource…</code> — a pane has no surface. Passing <code>null</code> for <code>aliveKeys</code> when a pane is on air skips it, which is right: a pane's liveness is the shell's to know, not broadcast's.</p>
+<ol start="2"><li><p><strong>An on-air pane must pin its paint tier.</strong> Driving away released its texture,</p></li></ol>
+<p>the shell correctly took it off air, and the TV reverted. Correct by the rule and useless in practice — watching a pane <em>while driving away from it</em> is the entire reason to cast one. <code>castKey</code> is now exempt from retiering, exactly as the read pane is.</p>
+<ol start="3"><li><p><strong>The dashboard reserves the TV's rect from its own `onAir` flag</strong>, and that flag</p></li></ol>
+<p>only knew about windows. So the picture was set and there was no rect to draw it in.</p>
+<blockquote><p>Three separate layers each answered &quot;yes&quot; about a thing none of them could show. An op that reports success at every step and produces nothing on screen is the shape of failure that takes longest to find, and the only way through it was to stop trusting the return value and go looking for the rect.</p></blockquote>
+<h3 id="blk-27367">18. Rung 7 — a road's arrangement, sealed</h3>
+<p><code>?papers=read</code> now prints, beside the seam log:</p>
+<pre><code>RUNG 7 — this road, sealed
+sem-c0e64e4a7f9729d7f64f5f966cc5b50b343df230f736b5e431290f0e5d2f41ee
+5 panes, 0 citations</code></pre>
+<p><code>m2/paper/wiring.js</code> emits a WRL Core 0.1.2 program from a road and seals it with <strong>WRL's own spine</strong> (vendored as <code>wrl-core.js</code>, pinned in <code>test/wiring.mjs</code> against <code>DEMO_WORLD_SEMANTIC_ID</code> so a stale copy fails a test rather than minting ids nobody else computes). 35 assertions, run on the dev host.</p>
+<p><strong>The claim from §9 is two assertions, not one.</strong> Same arrangement → same id is satisfied by a constant; the other half is that any change to the arrangement changes it. Both hold: a road with one more pane, one fewer, or a different citation pattern each seal differently, and an empty road has its own id.</p>
+<h4 id="blk-27372">18.1 The role mapping was forced, not chosen</h4>
+<p>WRL's <code>PORTS</code> table is strict — SignalWire runs <code>sig_out → sig_in</code>, SocketControl runs <code>socket → pose</code>, and only certain roles have each. A road is a chain from a start, through documents, to an end, and exactly three roles can make that shape:</p>
+<table><thead><tr><th>road part</th><th>WRL role</th><th>why</th></tr></thead><tbody><tr><td>entrance</td><td><code>Pulser</code></td><td>out only — a thing that starts</td></tr><tr><td>each pane</td><td><code>Relay</code></td><td>in and out — takes and passes</td></tr><tr><td>exit gate</td><td><code>Door</code></td><td>in only — a thing that ends</td></tr></tbody></table>
+<h4 id="blk-27387">18.2 Citations had to fan OUT, because fan-IN is refused</h4>
+<p>The obvious encoding of &quot;pane A cites pane C&quot; is a second SignalWire into C's relay. It is <strong>refused</strong>: <code>WRL_CONTROLLER_CONFLICT</code>. Measured rather than guessed — an input in this profile has exactly one controller, and the chain already spends every relay's <code>sig_in</code>. Fan-*out* is legal, so a citation is an extra wire from the citing relay into a <code>Door</code> of its own, named for the pair. The Door is a sink: it records <em>&quot;r0 cites r2&quot;</em> without claiming anything drives r2.</p>
+<p><strong>That the encoding was forced by the port table is the useful part.</strong> It is what a network of durable identities can actually say about a road, rather than what would have been convenient to say.</p>
+<h4 id="blk-27390">18.3 What the id is over, stated because it is easy to over-read</h4>
+<p>The seal is over the <strong>wiring</strong>: how many panes, in what order, and which cite which. It is <strong>not</strong> a hash of the documents — BendScript already content-addresses those, and folding a doc hash in would change a road's identity when a typo is fixed.</p>
+<p>The consequence, asserted rather than hidden: <strong>with no citations, reordering the same documents is the same road.</strong> Four corpus documents in any order seal alike, because their edges point at ids that are not on the road. With citations it <em>is</em> a different road, because reordering changes which positions cite which. A test asserted the stronger claim first and was wrong; the design does not have that property and now says so.</p>
+<h4 id="blk-27393">18.4 An upstream discrepancy, found here</h4>
+<p><code>parseWrlCore → graphToIr → semanticArtifactId</code> — the three-step form WRL's own module header documents — <strong>refuses the `(every 2)` sugar</strong> that WRL's README and its <code>SHUFFLED</code> conformance fixture both use (<code>WRL_UNKNOWN_CONFIG_KEY</code>). <code>sealWorld</code> is the entry its conformance suite actually calls and the one that agrees with the published ids. Worth reporting to <code>WRL/</code>; not fixed here.</p>
+<h3 id="blk-27395">19. Two things reported from the road</h3>
+<p><strong>The ship flies to a pane now.</strong> <code>read</code> opened the DOM at the pane's road position and left the camera where it stood, so a document you entered appeared off in the distance instead of being arrived at. <code>flyToPaper</code> builds the same kind of flight <code>flattenTo</code> does — with <code>target: null</code>, so landing returns to <code>driving</code> rather than <code>flat</code>: a pane is not a window and does not flatten. The pane stays put and you move, which is also why it reads as flying in.</p>
+<p><strong>Controls only in the detailed view, and only on hover.</strong> They were drawn on every pane at the paint tier. Now: the pane must be the one being <em>read</em> <strong>and</strong> the pointer must be on it. Same two-condition rule <code>rrabbit.js</code> gives for a window's chrome, for the same reason — a control on a pane you are driving past is a fleck that does something, and one drawn permanently over a document you are reading covers a word. Only the read pane offers its (invisible) pads for aiming, so there is no dead hit area over panes whose controls are not drawn.</p>
+<h3 id="blk-27398">20. Feature parity with a window — five of seven</h3>
+<p>Reported, in one list: clicking a pane re-renders it and the font changes; scroll in the detail view drives away instead of zooming; Esc does not leave; <code>X--</code> has no confirm; the ST&amp;RT menu offers no panes; and the entrance signs should spawn them.</p>
+<h4 id="blk-27400">20.1 The mismatch was mine, and it was a misreading</h4>
+<p>Last turn's report flagged the panel saying <code>[rune]</code> beside what looked like a BendScript document, and called it possibly serious. It was not a bug. The panel now prints the format and title <strong>openRead itself returned</strong>:</p>
+<pre><code>target    build:r:16  [rune]
+rendered  rune  &quot;Why a protocol&quot;</code></pre>
+<p>They agree. The large BendScript document in that screenshot was a paint-tier canvas pane, not the read pane. <strong>The fix was to make the instrument answer the question</strong> rather than to change any behaviour — a screenshot could not distinguish &quot;the wrong document rendered&quot; from &quot;I am looking at a different pane&quot;, and now it does not have to.</p>
+<h4 id="blk-27404">20.2 The four that were real</h4>
+<ul><li><p><strong>Re-render and font change on click.</strong> Two causes. <code>read</code> forced the paint tier</p></li></ul>
+<p>unconditionally, re-laying the document out on every click; and the DOM tier laid out at a fixed 640×420 while the canvas lays out at <code>w × PX_PER_UNIT</code>, so a resized pane changed width on entry. The DOM tier now uses the pane's own pixel size, and its heading sizes are matched to <code>bend-layout.js</code>'s <code>HEADING_SIZE</code> table. Two renderers will never be glyph-identical; they can agree about size.</p>
+<ul><li><p><strong>Esc.</strong> It was bound on the CSS3D layer, and three capture-phase branches in</p></li></ul>
+<p>travel.js can stop propagation before a layer listener is reached — <strong>the exact fault `TRACKS_HANDOFF.md` §3 records for the replay's Escape, written down and then repeated.</strong> It lives in the capture chain now. Verified: <code>reading=true → Esc → reading=false, escSeen=1</code>.</p>
+<ul><li><p><strong>The wheel drove away.</strong> Landing from <code>flyToPaper</code> returns the shell to</p></li></ul>
+<p><code>driving</code>, so the driving wheel handler had the event. Standing in a pane is a place, and the wheel belongs to the thing you are standing in. It moves the camera along the pane's normal, clamped either side — not a scale, because the pane is an object in the world and scaling it would make it a different size than its frame.</p>
+<ul><li><p><strong>`X--` asks first.</strong> <code>state.paperAsking</code> mirrors <code>state.closeAsking</code>, the frame</p></li></ul>
+<p>turns red while the question is open, and the close mark stays up so the confirming press has something to aim at. Pointing elsewhere withdraws it.</p>
+<h4 id="blk-27421">20.3 Still owed</h4>
+<p><strong>The ST&amp;RT menu offers no paper panes, and the entrance signs still spawn windows only.</strong> Both are creation paths and neither is built. They are the difference between a pane being something the shell can show and something a user can make.</p>
+<p>Also unverified: the <strong>wheel zoom</strong>, because <code>virsh send-key</code> sends keys and not pointer events. <code>wheelToPane</code> counts events that reach the pane branch and reads 0 because no wheel has ever been sent. The counter is there so the first real scroll answers it.</p>
+<h3 id="blk-27424">21. The link that ejects you — NOT REPRODUCED, and the browser that made it</h3>
+<p>unaskable</p>
+<p>Carried two turns as <em>&quot;clicking a `bend:` link whose target is not on this road ejects you to the road rather than doing nothing — `paperFollow` treats 'not here' as not-a-failure, but something still releases. Not diagnosed.&quot;</em></p>
+<p>It is now diagnosed, and the measured answer is that <strong>it does not happen</strong>.</p>
+<h4 id="blk-27428">21.1 Why it stayed undiagnosed: both instruments were write-only</h4>
+<p><code>paperFollow</code> has written <code>state.lastPaperFollow</code> on every link click since it was built, and <code>release()</code> has written <code>state.releasedBy</code> — <strong>with a stack</strong>, deliberately, because it has six call sites and a per-frame reconciler that from outside are one symptom. Neither was readable from anywhere. So the one question that decides this — <em>did the release happen before the link was followed, or after?</em> — could only be answered by a guess and a deploy per guess, and two turns went by without one.</p>
+<p><code>window.__follow()</code> asks both, and <code>releasedSince</code> is the discriminator:</p>
+<pre><code>&gt; 0   something released AFTER the link was followed  -&gt; the link path
+  0   the eject happened BEFORE paperFollow ran       -&gt; the canvas pointerdown
+                                                         path, and not the link</code></pre>
+<p>It is in the <code>?report=</code> payload too, for the reason §21.2 makes unavoidable.</p>
+<h4 id="blk-27433">21.2 The dev host cannot ask this question at all, and that is measured</h4>
+<p>Chrome's <code>elementFromPoint</code> over the middle of a mounted read pane returns <code>CANVAS#gl</code>, not the link:</p>
+<pre><code>link  bend:bafyfakeloopdoc   rect [462,231,66,12]   at [495,237]
+elementFromPoint  CANVAS#gl     isTheLink  false
+__aim(495,237)    isPaper &quot;home:r:8&quot;  textured true</code></pre>
+<p>So on the host a real click on a <code>bend:</code> link never reaches the link. The raycast hits the pane's own quad and <code>onPaperHit</code> falls through to <code>read</code> on the pane you are already in — <strong>the link does nothing and `paperFollow` never runs</strong>. travel.js already states this divergence beside <code>overDetailView</code>; this is the same fact measured from the other side, and its consequence is worth naming plainly:</p>
+<blockquote><p><strong>The `bend:` link path exists only in the shipped kiosk.</strong> It cannot be exercised on the dev host in any browser available here, so it is guest-only testable — which is exactly the case §3 of the runbook exists for, and why <code>follow</code> had to go into the report rather than only onto <code>window</code>.</p></blockquote>
+<h4 id="blk-27439">21.3 What was measured in the guest</h4>
+<p>FreeBSD guest, Firefox kiosk, real pointer via <code>xdotool</code> (the live <code>XAUTHORITY</code> off the running firefox, not <code>~/.Xauthority</code>), read back out of <code>?report=10</code>. <strong>Both</strong> anchor kinds, because they are two different code paths in <code>dom-spec.js</code> — the edge rail's <code>&lt;a&gt;</code> (line 167) and an inline span's link mark (line 56):</p>
+<pre><code>rail   &quot;All nine core predicates&quot;    click bend:bafyfake01
+       why PAPER_LINK_NOT_ON_THIS_ROAD   releasedSince 0   mode read   reading home:l:8
+inline &quot;Larger structured document&quot;  click bend:bafyfakeloopdoc
+       why PAPER_LINK_NOT_ON_THIS_ROAD   releasedSince 0   mode read   reading home:r:8</code></pre>
+<p><code>releasedSince 0</code> on both, still in the same pane on both, confirmed on the glass. The link is reached, refused by name, and nothing releases. <strong>The reported behaviour is the behaviour that was wanted.</strong></p>
+<p>The two <code>release()</code> calls that did occur during the session were both an <code>Escape</code> leaving a pane, and <code>releasedBy</code>'s stack says so — <code>perform → applyOp → the pointer path</code> — which is <code>unread</code> doing exactly its job. That is the instrument earning its place: a release <em>did</em> happen twice and it named itself both times.</p>
+<p><strong>Stated as a limit rather than hidden:</strong> this is a non-reproduction, not a fix. Nothing was changed in the follow path. If it returns, <code>__follow()</code> now answers it in one report instead of a turn.</p>
+<h4 id="blk-27445">21.4 Keyboard cannot activate a link in a pane, found while measuring</h4>
+<p><code>Tab</code> then <code>Return</code> inside a read pane produced <code>last: null</code> — <code>paperFollow</code> never ran, so no link was activated. <code>openRead</code> focuses <code>[tabindex=&quot;0&quot;], a[href], h1</code>, and for a BendScript document the first match in document order is the title <code>h1</code>, which has no <code>tabindex</code> and therefore does not take focus at all.</p>
+<p>Not chased, and it is a smaller thing than it looks <em>for BendScript</em> — but it is not small for Runefort, where §5.4/§5.5 conformance is <em>about</em> keyboard reach and <code>test/dom-spec.mjs</code> asserts 95 times against the element tree while no key has ever been sent to one. <strong>The spec-conformance suite and the running pane have never been checked against each other with a keyboard.</strong></p>
+<h3 id="blk-27448">22. Pane spacing — the arithmetic says do not widen the constant</h3>
+<p>Also carried two turns: <em>&quot;pane RAMP SPACING … the law exists and the rule itself is wrong somewhere. Best hypothesis: the sweep is counted in DASHES while a pane's real footprint is not fixed.&quot;</em> The hypothesis is testable without asking anyone, and it does not survive.</p>
+<p>A pane and a window are both turned <code>0.42</code> rad, so an occupant of world width <code>w</code> takes <code>w · sin(0.42)</code> of z. <code>SLOT_GAP = 4</code> dashes at <code>DASH_PITCH = 180</code> is <strong>720 units</strong> between adjacent occupants on a side:</p>
+<table><thead><tr><th>pane width</th><th>z footprint</th><th></th></tr></thead><tbody><tr><td>150 (<code>MIN_W</code>)</td><td>61.2</td><td></td></tr><tr><td>300 (default)</td><td>122.3</td><td>the number a window is compared against</td></tr><tr><td>900 (<code>MAX_W</code>)</td><td>367.0</td><td>the widest <code>resize</code> will ever produce</td></tr></tbody></table>
+<p>Two panes <strong>at maximum width</strong> on adjacent legal slots clear each other by <strong>353 units</strong> — nearly half the pitch again. A 900-wide pane and a default window clear by 475. <strong>Nothing the resize op can produce collides at the current spacing</strong>, so footprint does not justify widening anything.</p>
+<h4 id="blk-27465">22.1 And the premise was half wrong — reading <code>slotFree</code> settles it</h4>
+<p>The asymmetric sweep is <strong>not</strong> the pane-vs-pane rule. Placing a window or a pane tests panes with <code>Math.abs(p.dash - dash) &lt; SLOT_GAP</code> — the window rule, four dashes, symmetric. <code>inRampSweep</code> (<code>RAMP_AHEAD = 1</code>, <code>RAMP_BEHIND = 4</code>) reaches a pane in exactly two places: when placing a <strong>ramp</strong>, and when placing a pane near an <strong>existing ramp</strong>. So the 1-ahead/4-behind asymmetry governs <strong>pane vs ramp</strong>, and its asymmetry is about the ramp's own curved sweep back along the road, which is the shape it should have. Six dashes of envelope against a footprint of at most 367 units is conservative, not wrong.</p>
+<blockquote><p><strong>A constant was about to be widened to fix a collision that the arithmetic says cannot occur.</strong> If panes are seen crowding on the road, <code>SLOT_GAP</code> and the ramp sweep are both ruled out and the cause is elsewhere — what is needed is what was actually seen, not a bigger number.</p></blockquote>
+<h3 id="blk-27469">DOCTRINE</h3>
+<ul><li><p><strong>not reproduced</strong> — the off-road <code>bend:</code> link does not eject you. Measured in</p></li></ul>
+<p>the shipped kiosk on both anchor kinds: reached, refused by name, <code>releasedSince 0</code>, still in the pane. A non-reproduction, not a fix — nothing was changed.</p>
+<ul><li><p><strong>found</strong> — a fact that is recorded but not readable is not an instrument. Both</p></li></ul>
+<p>halves of this question had been written to <code>state</code> for two turns and neither could be asked, so the only way to answer it was a guess and a deploy per guess. Same class as <code>__paperPoint</code>'s absence, one object over.</p>
+<ul><li><p><strong>measured</strong> — Chrome's <code>elementFromPoint</code> over a mounted read pane returns the</p></li></ul>
+<p>CANVAS, so a real click never reaches a <code>bend:</code> link on the dev host and the whole path is <strong>guest-only testable</strong>. Not an opinion about which browser is right: it is why <code>follow</code> is in the report.</p>
+<ul><li><p><strong>falsified</strong> — the pane-spacing hypothesis. At the 0.42 turn the widest pane</p></li></ul>
+<p><code>resize</code> can produce takes 367 units of z against 720 between slots, so the collision the constant was going to be widened for cannot occur; and the asymmetric sweep is the pane-vs-<strong>ramp</strong> rule, not the pane-vs-pane one.</p>
+<ul><li><p><strong>corrected</strong> — the <code>[rune]</code>/BendScript &quot;mismatch&quot; reported last turn was a</p></li></ul>
+<p>misread screenshot, not a defect. Raised as possibly serious, and it was not.</p>
+<ul><li><p><strong>found, again</strong> — a key that belongs to the topmost thing on screen belongs in</p></li></ul>
+<p>the capture chain that decides what the topmost thing is. Recorded in <code>TRACKS_HANDOFF.md</code> §3 and repeated anyway.</p>
+<ul><li><p><strong>measured</strong> — a road's arrangement seals to a <code>sem-</code> id via WRL's own spine, and</p></li></ul>
+<p>both halves of §9's claim hold: same arrangement alike, any change different.</p>
+<ul><li><p><strong>found</strong> — WRL refuses fan-in (<code>WRL_CONTROLLER_CONFLICT</code>); citations must fan out</p></li></ul>
+<p>to a sink. The encoding was forced by the port table.</p>
+<ul><li><p><strong>found</strong> — a control that reports success is not evidence the thing it controls</p></li></ul>
+<p>happened. §17.1 had three layers agreeing and one screen disagreeing.</p>
+<ul><li><p><strong>falsifiable, survived</strong> — the seam serves three consumers with no per-consumer branch, asserted</p></li></ul>
+<p>mechanically rather than by inspection (<code>test/ops.mjs</code> §3 and §6). This is the draft's §9 test and it passed.</p>
+<ul><li><p><strong>found</strong> — a non-plannable op is only safe to drop from a plan when its successor implies it.</p></li></ul>
+<p>§5 of the draft is right about <code>out</code> and right for a reason it does not state.</p>
+<ul><li><p><strong>measured</strong> — the read tier meets Runefort §5.1/§5.3/§5.4/§5.5 in 93 assertions. §12.2's statement</p></li></ul>
+<p>that a canvas tier cannot is unchanged and both remain true.</p>
+<ul><li><p><strong>measured</strong> — with a 10,000-document store, standing on a road costs 500 records, 1,386 scene</p></li></ul>
+<p>objects and 24 canvases, and best-case frame time is one vsync. The corpus does not appear in any of those three numbers.</p>
+<ul><li><p><strong>corrected</strong> — &quot;bounded by what is in view&quot; was a true bound and the wrong one. A frame budget is</p></li></ul>
+<p>a count, not a distance. §15.3.</p>
+<ul><li><p><strong>measured</strong> — best-case frame time is flat in N to within one vsync across N=0→400, and paint</p></li></ul>
+<p>canvases are bounded by view distance (56) rather than by N. Both in the guest, brake verified off.</p>
+<ul><li><p><strong>corrected</strong> — the median is not usable as a per-pane cost in this scene, and the first version of</p></li></ul>
+<p>the bench quoted it as one. Frame noise is one-sided, so the minimum is the estimator.</p>
+<ul><li><p><strong>measured</strong> — five panes render on a real road in the guest at two tiers. <strong>Not measured</strong> — what</p></li></ul>
+<p>a pane costs per frame; §13.1 says why the obvious instrument cannot answer it.</p>
+<ul><li><p><strong>falsifiable, survived</strong> — <code>{rect, line, text}</code> is closed. A second format with no prose in it</p></li></ul>
+<p>fit without widening the set. Had RuneFort needed an arc or a gradient the honest move would have been to widen the set on the record, not to special-case one renderer.</p>
+<ul><li><p><strong>measured</strong> — a <code>.bend</code> document averages 1,067 bytes across the 20-document v0.1 corpus</p></li></ul>
+<p>(min 300, max 4,224). A live window costs ~3 MB of VRAM for its colour target alone plus a process. The two are not the same kind of object and no scale claim should treat them as one.</p>
+<ul><li><p><strong>corrected</strong> — WRL Core 0.1.2 has no behaviours and cannot serve as the scripting layer. The op</p></li></ul>
+<p>vocabulary is that layer. Cited to WRL's own README and <code>reference.html#tiers</code>, not inferred.</p>
+<ul><li><p><strong>proposed</strong> — that the road's 1-D milepost order and the district graph are already the spatial</p></li></ul>
+<p>index, so paper roads need chunk streaming and not a tree. What would test it: §4.</p>
+<ul><li><p><strong>proposed</strong> — that keeping layout pure (no THREE, no DOM) is what makes this buildable on a host</p></li></ul>
+<p>that cannot open a WebGL context. What would test it: rung 1 ships with a passing node test run on the dev host, having never touched the guest.</p>
+<ul><li><p><strong>measured</strong> — the layout half runs under <code>node</code> on a host that cannot open a GL context, and the</p></li></ul>
+<p>painting half runs in an ordinary 2-D canvas. Neither needed the FreeBSD guest. Only rung 2 will.</p>
+<ul><li><p><strong>corrected</strong> — a passing test suite said nothing about whether edges rendered, because every</p></li></ul>
+<p>assertion was about blocks. §11. What would have caught it earlier: asserting on the <em>format's own reason to exist</em> rather than on its primitives one at a time.</p>
+<ul><li><p><strong>open</strong> — where the store lives. IndexedDB is assumed in §3 on the arithmetic alone; nothing has</p></li></ul>
+<p>been measured, and a million-row IndexedDB read pattern is not something this repo has evidence about.</p>
+<p><em>Sources consulted 2026-08-15: [Ladybird](https://ladybird.org/) and its [FAQ](https://github.com/LadybirdBrowser/ladybird/blob/master/Documentation/FAQ.md) for the cost of a real engine; [infinite-canvas culling](https://infinitecanvas.cc/guide/lesson-008) and [tile-based rendering](https://infinitecanvas.cc/guide/lesson-035) for the 2-D case this one avoids; [Gemtext](https://geminiprotocol.net/docs/gemtext-specification.gmi) and [What is Gemini?](https://drewdevault.com/gemini.html) for §7's cautionary number.</em></p></div>
+<p class="src"><a href="/#/RRABBIT/docs/PAPER_ROADS.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-27007" class="lvl2">0. The one-line version</a><a href="#blk-27009" class="lvl2">1. The premise that had to be corrected first</a><a href="#blk-27019" class="lvl2">2. The four layers, and which one is missing</a><a href="#blk-27038" class="lvl2">3. The cost measurement that decides the scale question</a><a href="#blk-27064" class="lvl2">4. Why the culling is easier here than on a canvas</a><a href="#blk-27080" class="lvl2">5. The three fidelity tiers (this is the LOD story)</a><a href="#blk-27101" class="lvl2">6. What a paper pane is, concretely</a><a href="#blk-27121" class="lvl2">7. Where the documents come from</a><a href="#blk-27134" class="lvl2">8. What this is NOT</a><a href="#blk-27152" class="lvl2">9. Where WRL actually enters</a><a href="#blk-27157" class="lvl2">10. Build order</a><a href="#blk-27188" class="lvl2">11. The defect the first render found</a><a href="#blk-27195" class="lvl2">12. What the second format settled, and two things it exposed</a><a href="#blk-27198" class="lvl3">12.1 The shipped documents are not the spec&#39;s shape</a><a href="#blk-27202" class="lvl3">12.2 A canvas pane cannot be a conformant Runefort renderer</a><a href="#blk-27206" class="lvl2">13. Rung 2 in the guest, and what it did NOT establish</a><a href="#blk-27210" class="lvl3">13.1 The frame cost is NOT measured, and the gauge cannot measure it</a><a href="#blk-27213" class="lvl3">13.2 Two guest traps, each of which cost a cycle</a><a href="#blk-27226" class="lvl2">14. Rung 4 — the number, and the estimator that had to be changed to get it</a><a href="#blk-27230" class="lvl3">14.1 The median is the wrong estimator, and the bench said so itself</a><a href="#blk-27234" class="lvl3">14.2 What the numbers say</a><a href="#blk-27247" class="lvl3">14.3 The result that matters more than the frame time</a><a href="#blk-27250" class="lvl3">14.4 Caveats, stated rather than discovered later</a><a href="#blk-27263" class="lvl2">15. Rung 5 — ten thousand documents, and three instruments that lied first</a><a href="#blk-27267" class="lvl3">15.1 A pane is a record until it is on screen</a><a href="#blk-27269" class="lvl3">15.2 The store is the first thing here that could not use localStorage</a><a href="#blk-27271" class="lvl3">15.3 The bound that was true and still too loose</a><a href="#blk-27276" class="lvl3">15.4 Three instruments that produced plausible wrong numbers</a><a href="#blk-27290" class="lvl3">15.5 What rung 5 did not establish</a><a href="#blk-27301" class="lvl2">16. Rung 6 — the tier that can claim conformance, and the seam it forced</a><a href="#blk-27306" class="lvl3">16.1 This is the only tier that can claim Runefort conformance</a><a href="#blk-27322" class="lvl3">16.2 The element spec, and why it is not DOM</a><a href="#blk-27324" class="lvl3">16.3 Why the read tier supersedes instead of refusing</a><a href="#blk-27327" class="lvl3">16.4 What rung 6 did not do</a><a href="#blk-27344" class="lvl2">17. Pane chrome — the controls a window has, as ops</a><a href="#blk-27351" class="lvl3">17.1 Cast took three fixes, and each reported success while showing nothing</a><a href="#blk-27367" class="lvl2">18. Rung 7 — a road&#39;s arrangement, sealed</a><a href="#blk-27372" class="lvl3">18.1 The role mapping was forced, not chosen</a><a href="#blk-27387" class="lvl3">18.2 Citations had to fan OUT, because fan-IN is refused</a><a href="#blk-27390" class="lvl3">18.3 What the id is over, stated because it is easy to over-read</a><a href="#blk-27393" class="lvl3">18.4 An upstream discrepancy, found here</a><a href="#blk-27395" class="lvl2">19. Two things reported from the road</a><a href="#blk-27398" class="lvl2">20. Feature parity with a window — five of seven</a><a href="#blk-27400" class="lvl3">20.1 The mismatch was mine, and it was a misreading</a><a href="#blk-27404" class="lvl3">20.2 The four that were real</a><a href="#blk-27421" class="lvl3">20.3 Still owed</a><a href="#blk-27424" class="lvl2">21. The link that ejects you — NOT REPRODUCED, and the browser that made it</a><a href="#blk-27428" class="lvl3">21.1 Why it stayed undiagnosed: both instruments were write-only</a><a href="#blk-27433" class="lvl3">21.2 The dev host cannot ask this question at all, and that is measured</a><a href="#blk-27439" class="lvl3">21.3 What was measured in the guest</a><a href="#blk-27445" class="lvl3">21.4 Keyboard cannot activate a link in a pane, found while measuring</a><a href="#blk-27448" class="lvl2">22. Pane spacing — the arithmetic says do not widen the constant</a><a href="#blk-27465" class="lvl3">22.1 And the premise was half wrong — reading slotFree settles it</a><a href="#blk-27469" class="lvl2">DOCTRINE</a></nav></div><div class="card"><div class="lab">links to</div><a href="/RRABBIT/docs/RUNBOOK.md/">RRABBIT runbook — bringing the stack up, and proving it</a><a href="/RRABBIT/docs/OP_VOCABULARY_DRAFT.md/">The Op Vocabulary — a draft for ruling</a></div><div class="card"><div class="lab">in this folder</div><a href="/RRABBIT/docs/OP_VOCABULARY_DRAFT.md/">The Op Vocabulary — a draft for ruling</a><a href="/RRABBIT/docs/ROAD_SHELL.md/">The road as a window manager — Tier 1</a><a href="/RRABBIT/docs/RUNBOOK.md/">RRABBIT runbook — bringing the stack up, and proving it</a><a href="/RRABBIT/docs/TRACKS_HANDOFF.md/">Tracks · Reel · Replay — session handoff</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraaop4sb2kvp35ucmwwzkfqjpmzy2fkyuz4egurpvl5yo5a4m7dhfq</div></div></div>
+</div></div>
+</body></html>

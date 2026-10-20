@@ -1,0 +1,120 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>W.1 — the cockpit observes one world incarnation · super · Ampersand Box</title>
+<meta name="description" content="Artifact: `and-super-rev-w1.zip`. Every gate green.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="W.1 — the cockpit observes one world incarnation">
+<meta property="og:description" content="Artifact: `and-super-rev-w1.zip`. Every gate green.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"W.1 — the cockpit observes one world incarnation","name":"W.1 — the cockpit observes one world incarnation","description":"Artifact: `and-super-rev-w1.zip`. Every gate green.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_REVIEW_BRIEF.md/","identifier":"bagaaierae2poodc3jsvqlfed34drtscudep7ku4bxebd5u3apqobl45i4ihq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Measured"},{"@type":"WebPageElement","name":"1 · Your first finding, verified — and one detail corrected"},{"@type":"WebPageElement","name":"2 · Your second finding, verified — and it was four samples, not two"},{"@type":"WebPageElement","name":"3 · The fence must not ask the coordinator"},{"@type":"WebPageElement","name":"4 · The seqlock starves, and refusing by name was the wrong fix"},{"@type":"WebPageElement","name":"5 · Three of my own witnesses were weak, and the harness caught all three"},{"@type":"WebPageElement","name":"6 · A defect found while building the witnesses"},{"@type":"WebPageElement","name":"7 · Your W.1 battery"},{"@type":"WebPageElement","name":"8 · What is not in this round, plainly"},{"@type":"WebPageElement","name":"9 · Ladder"},{"@type":"WebPageElement","name":"Verify"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"W_1_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/W_1_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Artifact: `and-super-rev-w1.zip`. Every gate green.</div>
+<div class="prose"><h1 id="blk-116832">W.1 — the cockpit observes one world incarnation</h1>
+<p><strong>Artifact: `and-super-rev-w1.zip`. Every gate green.</strong></p>
+<p>Both findings are real, both reproduce deterministically, and one of them is worse than you described. The read fence, the coherent frame, the <code>Continuity</code> enum and the host event loop are in — including the two rows F.8.2.5 reported as not implemented.</p>
+<p><strong>What W.1 does not deliver is the WebView itself.</strong> §8. The truth pipeline is complete up to the render; the render is not started, and the ladder says so rather than implying otherwise.</p>
+<pre><code>BEFORE                                    AFTER
+──────────────────────────────────────    ──────────────────────────────────────
+GEN-1 CHANNEL, manifest at generation 2   GEN-1 CHANNEL, manifest at generation 2
+  request_grant  → refused                  request_grant       → refused
+  agent_projection → SERVED, gen 2          agent_projection    → refused
+  preflight        → SERVED, gen 2          preflight           → refused
+                                            list_*              → refused
+snapshot cursor revision : 1                subscribe           → refused
+revision now             : 2
+the revoked grant        : gone           snapshot cursor revision : 2
+TORN                                      revision now             : 2
+                                          coherent</code></pre>
+<h3 id="blk-116837">0 · Measured</h3>
+<table><thead><tr><th></th><th>F.8.2.5</th><th>W.1</th></tr></thead><tbody><tr><td>conformance vectors</td><td>42</td><td><strong>42</strong></td></tr><tr><td>BEAM tests</td><td>194</td><td><strong>204</strong>, 0 failures at seed 0</td></tr><tr><td>browser assertions</td><td>64</td><td><strong>64</strong></td></tr><tr><td>BEAM sabotage falsifiers</td><td>56 · 0 not</td><td><strong>62 · 0 not</strong></td></tr><tr><td>host acceptance checks</td><td>48 held · 0 failed</td><td><strong>61 held · 0 failed</strong></td></tr><tr><td>host sabotage falsifiers</td><td>6 · 0 not</td><td><strong>8 · 0 not</strong></td></tr></tbody></table>
+<h3 id="blk-116860">1 · Your first finding, verified — and one detail corrected</h3>
+<p>Reproduced in exactly the interval you named, with <code>Ampd.Bridge</code> suspended so a lineage advance parks inside its transaction after the durable bump and before the barrier:</p>
+<pre><code>manifest now gen 2 · incarnation 1349278d…
+gen-1 peer still resolves: %{&quot;generation&quot; =&gt; 1, …}
+
+agent_projection    -&gt; SERVED  agent-projection@2   incarnation=nil
+preflight           -&gt; SERVED  (answered authority-missing out of generation 2)
+list_effect_history -&gt; BLOCKED on the held coordinator
+list_grant_requests -&gt; BLOCKED on the held coordinator
+operator_projection -&gt; BLOCKED on the held coordinator
+subscribe           -&gt; BLOCKED on the held coordinator
+request_grant       -&gt; BLOCKED on the held coordinator</code></pre>
+<p><strong>`subscribe` does not return a generation-2 snapshot in that window.</strong> It blocks — because <code>Ampd.Projection.continuity/0</code> calls the coordinator, and the coordinator is held by the advance that created the window. Your diagram is right about the law and wrong about which command demonstrates it; the two that actually crossed were <code>agent_projection</code> and <code>preflight</code>, neither of which touches the coordinator at all.</p>
+<p>That does not weaken the finding, it sharpens it. The block was incidental — an accident of which transaction happened to be holding the coordinator — not a fence. And it points at something worth noting: <code>agent_projection</code> carried <strong>no `world_incarnation` at all</strong>, so a client could not have checked it either. Only <code>projection-snapshot@1</code> and <code>history-page@1</code> carried a cursor. That is now true of every peer-bound read.</p>
+<h3 id="blk-116865">2 · Your second finding, verified — and it was four samples, not two</h3>
+<p><code>continuity/0</code> did not sample the cursor and the content independently. It sampled <em>itself</em> independently, four times:</p>
+<pre><code>World.incarnation()  → reads the manifest, hashes it
+generation()         → reads the manifest AGAIN
+epoch()              → GenServer.call to the coordinator
+revision()           → GenServer.call to the coordinator AGAIN</code></pre>
+<p>A lineage advance between the first two yields an incarnation from before the bump beside a generation from after it. A coordinator restart between the last two yields the <em>old</em> epoch with the <em>new</em> revision — a revision going backwards inside an epoch that never changed, which is the precise fault the epoch was introduced to make impossible.</p>
+<p>Now: one manifest read for both world fields, and <code>AuthorityCoordinator.cursor/0</code> for both runtime fields.</p>
+<p>The tear you described is real and measured, with <code>Ampd.Session</code> suspended to park the build between the cursor and the grant read:</p>
+<pre><code>snapshot cursor revision : 1
+revision now             : 2
+still in the snapshot?   : false
+TORN — the cursor names revision 1, the content is revision 2</code></pre>
+<h3 id="blk-116872">3 · The fence must not ask the coordinator</h3>
+<p>I implemented the read fence against <code>continuity/0</code> first, which is the obvious thing and is wrong in a way worth recording: <strong>the transaction most likely to have ended a channel's incarnation is a lineage advance, and a lineage advance holds the coordinator while it tears channels down.</strong> A fence that has to ask the coordinator cannot answer during the one operation it exists for.</p>
+<p>The suite said so immediately and unsubtly — every queued-work witness in F.8.2.5 stopped reaching the coordinator, because the fence in front of them was waiting on it, and the whole file wedged.</p>
+<p>The incarnation is a file. <code>Ampd.Projection.fence/1</code> reads the manifest and nothing else. That is also why the reads above no longer appear as <code>BLOCKED</code>: they are refused immediately, by something that needs no process to be free.</p>
+<h3 id="blk-116876">4 · The seqlock starves, and refusing by name was the wrong fix</h3>
+<p>Your before/after cursor validation is right and it is not sufficient on its own. Against a process issuing back-to-back grant edits, <strong>40 of 40</strong> projection reads failed to settle.</p>
+<p>I built the <code>projection-unstable</code> refusal you would expect, and then deleted it. A busy world that cannot be observed is a worse product than a slow one, and the cockpit has no other input. So:</p>
+<pre><code>optimistic  sample · build · sample · accept only if nothing moved   (3 attempts)
+pessimistic AuthorityCoordinator.observe/1 — assemble INSIDE the total
+            order, where nothing can linearize between cursor and content</code></pre>
+<p><code>observe/1</code> does <strong>not</strong> increment <code>seq</code> and does not notify subscribers: a read that counted as an ordered operation would advance the revision it is reporting — a cursor that changes because it was looked at, and a push that is its own reason for another push. There is a falsifier for exactly that.</p>
+<p><code>projection-unstable</code> is gone because the fallback made it unreachable, and a refusal code no input can produce is a promise to an operator that nothing keeps. That is the same defect class as the <code>world-meta-untrusted</code> code F.8's <code>seal_code/1</code> could never emit.</p>
+<p>The trade is honest and is why the pessimistic path is second: <code>fun</code> there walks a dozen registry processes and every authority mutation waits behind it.</p>
+<h3 id="blk-116883">5 · Three of my own witnesses were weak, and the harness caught all three</h3>
+<p>Worth reporting in full, because it is the same defect class the round is about.</p>
+<p><strong>The read-fence probe did not falsify.</strong> Disabling the fence in <code>Ampd.Control.served/3</code> left every read still refused — by the second fence inside <code>framed/2</code>. One property, two routes, and the probe was testing one of them. Exactly what this harness's own <code>probe()</code> documentation warns about. Now two pairs.</p>
+<p><strong>The churn witness did not falsify.</strong> It asserted liveness — nothing refused — and the sabotage that removes the fallback <em>preserves</em> liveness while destroying coherence, so it stayed green. A test that passes for a reason it is not measuring. Fixed by finding an invariant inside the frame: <code>Ampd.Core.snapshot_of/2</code> digests exactly the active grants, and the operator projection carries both that digest and the grant list, read at different points in the build. Recomputing one from the other is a coherence check on the frame itself, and it goes red the moment the build tears.</p>
+<p><strong>The host EOF witness did not falsify.</strong> It dropped the <code>Chan</code>, which empties the loop's slot — so the loop reacquired down the <code>None</code> arm and never consulted <code>closed()</code> at all. <code>tools/sabotage-host.sh</code> disabled the EOF check and stayed green. Now the witness calls <code>shutdown(2)</code> without closing, so the channel goes dead while its <code>Chan</code> stays in the slot.</p>
+<p>And two probes carried from F.8.2.5 reported <strong>SABOTAGE MISSED</strong> against my own refactor — their <code>sed</code> patterns no longer matched. Both re-pointed, and the bind-vs-submit one is better for it: W.1 gave <code>served/3</code> one binding that both fences read, so the probe now sabotages the <em>source</em> of the expectation rather than one of its two uses.</p>
+<h3 id="blk-116889">6 · A defect found while building the witnesses</h3>
+<p><code>Ampd.Bridge.reset/0</code> was a bare <code>GenServer.call/2</code> — a 5 s client deadline in front of a handler that waits up to 2 s <strong>per channel</strong>. Three wedged channels is already 6 s, so the caller times out and <strong>raises inside the transaction that called it</strong>:</p>
+<pre><code>** (stop) exited in: GenServer.call(Ampd.Bridge, :reset, 5000) ** (EXIT) time out
+    (ampd) lib/ampd/authority.ex:347: Ampd.Authority.close_channels!/0
+    (ampd) lib/ampd/authority.ex:331: anonymous fn/2 in Ampd.Authority.advance_lineage/2</code></pre>
+<p>That leaves a world at generation 2 whose channels were never closed — precisely the state F.8.2.5's barrier exists to make unreachable, reachable by a slow client. The wait is now one budget for the whole teardown rather than a fresh one per channel, and the call is given room above it.</p>
+<h3 id="blk-116893">7 · Your W.1 battery</h3>
+<table><thead><tr><th>Witness</th><th>Result</th></tr></thead><tbody><tr><td>current human channel subscribes</td><td>✅ coherent operator snapshot</td></tr><tr><td>snapshot cursor identifies the incarnation rendered</td><td>✅ on <strong>every</strong> peer-bound read, derived from <code>command-spec@1</code></td></tr><tr><td>authority changes during snapshot construction</td><td>✅ retried; frame carries the later revision, never the earlier</td></tr><tr><td>gen-1 channel asks for a projection mid-advance</td><td>✅ <code>world-incarnation-changed</code></td></tr><tr><td>same stale channel calls <code>subscribe</code></td><td>✅ refused · no snapshot · subscriber not registered</td></tr><tr><td>same stale channel requests history</td><td>✅ refused · no <code>items</code> key</td></tr><tr><td>fresh channel in gen 2</td><td>✅ served normally</td></tr><tr><td>coordinator epoch changes</td><td>✅ <code>Continuity::NewRuntime</code> · discards projection, keeps authority</td></tr><tr><td>world incarnation changes</td><td>✅ <code>Continuity::NewIncarnation</code> · <strong>reacquires</strong> authority</td></tr><tr><td>revision advances</td><td>✅ <code>Continuity::Advance</code></td></tr><tr><td>older/equal revision</td><td>✅ <code>Continuity::Seen</code></td></tr><tr><td>control socket at EOF</td><td>✅ noticed without being asked</td></tr><tr><td>reacquisition → fresh subscription → LIVE LOCAL</td><td>✅ and the reacquired channel answers</td></tr><tr><td><strong>the Tauri WebView renders it</strong></td><td>❌ <strong>not started</strong> — §8</td></tr></tbody></table>
+<p>Two additions of my own: a cursor holding nothing classifies its first frame as <code>Fresh</code> rather than as a discontinuity, so a host does not start by reacquiring authority it just took; and the incarnation is checked to be 128 bits <strong>on the wire</strong>, not in the runtime that produces it.</p>
+<p><code>world_incarnation</code> is now 16 bytes as you asked. It cost nothing and it is about to be the identity a restored world is recognised by across machines.</p>
+<h3 id="blk-116927">8 · What is not in this round, plainly</h3>
+<p><strong>There is no Tauri dependency in `host/Cargo.toml`, and I did not add one.</strong> The crate is <code>serde_json</code> and libc externs. Adding a WebView is a large dependency change on a build that every release gate runs through, and doing it in the same round as the truth pipeline would have meant shipping neither well. So W.1 delivers:</p>
+<pre><code>Rust event loop → take human control → subscribe → validated coherent
+projection → classify continuity → derive LIVE LOCAL</code></pre>
+<p>and stops one arrow short of <code>→ render Tauri WebView</code>. <code>Cockpit::LiveLocal</code> is derived and measured; nothing draws it yet.</p>
+<p><strong>The restore-triggered EOF still cannot be driven from the host</strong>, unchanged from F.8.2.5 and for the same reason: <code>advance_lineage/2</code> is on no channel. The EOF witness uses <code>shutdown(2)</code> on a live channel, which is what a runtime-side close looks like from here — it measures the reacquisition, not its cause.</p>
+<h3 id="blk-116932">9 · Ladder</h3>
+<p>C1.1     Tauri Rust host + private transport ├─ F.8.2.3  refusal is terminal · no channel outlives its world   ✓ ├─ F.8.2.4  world incarnation · authority fenced at the │           linearization point                                   ✓ ├─ F.8.2.5  generation is a fence · authority reacquired after │           a discontinuity · bind-time sampling falsified        ✓ └─ W.1      the cockpit observes one incarnation: · reads fenced to the peer's incarnation              ✓ · the cursor describes the content beside it          ✓ · a busy world stays observable, and coherent         ✓ · Continuity is an enum the host acts on              ✓ · the event loop reacquires after EOF                 ✓ · the WebView renders it                              ✗ W.2      REVOKE → Tauri IPC → human channel → authority transition → coherent pushed projection → the UI changes because truth did C1.1b    SQLite transactional persistence · durable revision</p>
+<p>I agree with your framing of what W.2 is, and with why it is the point where C1.1 becomes a product milestone rather than a well-tested substrate. The honest next step is the WebView itself: a render surface for a truth that is now, finally, mechanically identified.</p>
+<h3 id="blk-116935">Verify</h3>
+<pre><code>cd ampd &amp;&amp; mix test --seed 0          # 204 tests
+bash tools/sabotage.sh                # 62 falsified · 0 not   (~6m)
+cd .. &amp;&amp; bash tools/release.sh        # required gates, including both host gates
+./host/target/release/super-host verify        # 61 held · 0 failed
+bash tools/sabotage-host.sh                    # 8 falsified · 0 not</code></pre>
+<p>New this round: <code>ampd/test/cockpit_test.exs</code> (10 witnesses), <code>Ampd.Projection.framed/2</code> and <code>fence/1</code>, <code>Ampd.AuthorityCoordinator.cursor/0</code> and <code>observe/1</code>, <code>CommandSpec</code>'s <code>kind:</code> declaration, and <code>Continuity</code> + <code>CockpitLoop</code> in the host.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/W_1_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-116837" class="lvl2">0 · Measured</a><a href="#blk-116860" class="lvl2">1 · Your first finding, verified — and one detail corrected</a><a href="#blk-116865" class="lvl2">2 · Your second finding, verified — and it was four samples, not two</a><a href="#blk-116872" class="lvl2">3 · The fence must not ask the coordinator</a><a href="#blk-116876" class="lvl2">4 · The seqlock starves, and refusing by name was the wrong fix</a><a href="#blk-116883" class="lvl2">5 · Three of my own witnesses were weak, and the harness caught all three</a><a href="#blk-116889" class="lvl2">6 · A defect found while building the witnesses</a><a href="#blk-116893" class="lvl2">7 · Your W.1 battery</a><a href="#blk-116927" class="lvl2">8 · What is not in this round, plainly</a><a href="#blk-116932" class="lvl2">9 · Ladder</a><a href="#blk-116935" class="lvl2">Verify</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierae2poodc3jsvqlfed34drtscudep7ku4bxebd5u3apqobl45i4ihq</div></div></div>
+</div></div>
+</body></html>

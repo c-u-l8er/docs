@@ -1,0 +1,1051 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>E — ComputeDriven Event / Analytics Plane · e.computedriven.com · Ampersand Box</title>
+<meta name="description" content="Canonical public product/domain: e.computedriven.com Initial analytical freshness target: 2 hours Primary data plane: Cloudflare Workers + Cloudflare…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/e.computedriven.com/E_COMPUTEDRIVEN_OPUS_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="E — ComputeDriven Event / Analytics Plane">
+<meta property="og:description" content="Canonical public product/domain: e.computedriven.com Initial analytical freshness target: 2 hours Primary data plane: Cloudflare Workers + Cloudflare…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/e.computedriven.com/E_COMPUTEDRIVEN_OPUS_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"E — ComputeDriven Event / Analytics Plane","name":"E — ComputeDriven Event / Analytics Plane","description":"Canonical public product/domain: e.computedriven.com Initial analytical freshness target: 2 hours Primary data plane: Cloudflare Workers + Cloudflare…","url":"https://docs.ampersandboxdesign.com/e.computedriven.com/E_COMPUTEDRIVEN_OPUS_REVIEW_BRIEF.md/","identifier":"bagaaieraj3g7dkvx2ciusuiexa455qn5i2t57qe5w2tzw3hpz4md4vczmgma","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"e.computedriven.com","url":"https://docs.ampersandboxdesign.com/e.computedriven.com/"},"articleSection":"e.computedriven.com","hasPart":[{"@type":"WebPageElement","name":"Opus Review + Implementation Brief — Workers + Queues + ClickHouse Cloud"},{"@type":"WebPageElement","name":"2.1 Separate analytics data plane"},{"@type":"WebPageElement","name":"2.2 ClickHouse is analytical truth, not transactional product truth"},{"@type":"WebPageElement","name":"2.3 Live state is not ClickHouse state"},{"@type":"WebPageElement","name":"Cron time"},{"@type":"WebPageElement","name":"Do not acknowledge first"},{"@type":"WebPageElement","name":"Retry semantics"},{"@type":"WebPageElement","name":"Hero"},{"@type":"WebPageElement","name":"“Instrument once”"},{"@type":"WebPageElement","name":"“Two kinds of time”"},{"@type":"WebPageElement","name":"“One journey across domains”"},{"@type":"WebPageElement","name":"“Your event vocabulary belongs to you”"},{"@type":"WebPageElement","name":"“Scoped by construction”"},{"@type":"WebPageElement","name":"Architecture"},{"@type":"WebPageElement","name":"Quickstart"},{"@type":"WebPageElement","name":"Privacy"},{"@type":"WebPageElement","name":"Final CTA"},{"@type":"WebPageElement","name":"Ingest"},{"@type":"WebPageElement","name":"Queue / two-hour buffer"},{"@type":"WebPageElement","name":"ClickHouse"},{"@type":"WebPageElement","name":"Identity"},{"@type":"WebPageElement","name":"Vendor fanout"},{"@type":"WebPageElement","name":"Website"},{"@type":"WebPageElement","name":"Future Super seam"},{"@type":"WebPageElement","name":"Phase 0 — review only"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"e.computedriven.com","item":"https://docs.ampersandboxdesign.com/e.computedriven.com/"},{"@type":"ListItem","position":3,"name":"E_COMPUTEDRIVEN_OPUS_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/e.computedriven.com/E_COMPUTEDRIVEN_OPUS_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">e.computedriven.com</span>
+<span class="path">e.computedriven.com/E_COMPUTEDRIVEN_OPUS_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Canonical public product/domain: e.computedriven.com Initial analytical freshness target: 2 hours Primary data plane: Cloudflare Workers + Cloudflare Queues + ClickHouse Cloud F…</div>
+<div class="prose"><h1 id="blk-65198">E — ComputeDriven Event / Analytics Plane</h1>
+<h3 id="blk-65199">Opus Review + Implementation Brief — Workers + Queues + ClickHouse Cloud</h3>
+<p><strong>Canonical public product/domain:</strong> <code>e.computedriven.com</code> <strong>Initial analytical freshness target:</strong> <strong>2 hours</strong> <strong>Primary data plane:</strong> Cloudflare Workers + Cloudflare Queues + ClickHouse Cloud <strong>Future live plane:</strong> Durable Objects + WebSockets + Super <strong>Date:</strong> 2026-08-23 <strong>Status:</strong> architecture/review brief; Opus must inspect the current codebase before implementing</p>
+<h2 id="blk-65201">0. Product surface and domain</h2>
+<p>The public product surface is:</p>
+<blockquote><p><strong>`e.computedriven.com`</strong></p></blockquote>
+<p>It should contain:</p>
+<pre><code>e.computedriven.com
+  ├── marketing
+  ├── docs
+  ├── app/dashboard
+  ├── public API
+  ├── SDK documentation
+  └── canonical fallback ingest endpoint</code></pre>
+<p>For ComputeDriven-owned sites, prefer a <strong>first-party browser ingestion route on each site</strong>:</p>
+<pre><code>https://computedriven.com/_e/v1/events
+https://opensentience.org/_e/v1/events
+https://ampersandboxdesign.com/_e/v1/events
+...</code></pre>
+<p>Those routes should terminate in Cloudflare and forward through a Worker/service binding to the same central E ingest logic.</p>
+<p>External or non-Cloudflare integrations can later use:</p>
+<pre><code>https://e.computedriven.com/v1/events</code></pre>
+<p>or configure their own first-party proxy.</p>
+<p>E is one coherent product surface. The ingest endpoint, developer documentation, dashboard, and eventual live-context experience should all be designed as parts of that product rather than as separate products.</p>
+<h2 id="blk-65214">1. Product thesis</h2>
+<p>E is not “our own Google Analytics.”</p>
+<p>It is the <strong>event, journey, and live-context plane</strong> for ComputeDriven.</p>
+<p>The long-term idea is:</p>
+<blockquote><p><strong>Behavior should not end in a dashboard. It should become governed context that humans and agents can understand and act on while the user is still present.</strong></p></blockquote>
+<p>The short-term system is deliberately simpler:</p>
+<pre><code>browser / server events
+        |
+        v
+Cloudflare Workers
+        |
+        v
+Cloudflare Queue
+        |
+        | buffered
+        | every 2 hours
+        v
+ClickHouse Cloud
+        |
+        +----&gt; E dashboard
+        +----&gt; PostHog
+        +----&gt; Amplitude
+        +----&gt; cached summaries
+        |
+        `----&gt; later Super projections</code></pre>
+<p>The critical decisions are:</p>
+<ul><li><p>E owns the canonical semantic event contract.</p></li><li><p>E owns stable event IDs.</p></li><li><p>ClickHouse is an <strong>isolated analytics database</strong> from day one.</p></li><li><p>Existing ComputeDriven product databases are not part of this scaling/failure domain.</p></li><li><p>PostHog and Amplitude are downstream analytical lenses, not sources of truth.</p></li><li><p>Live session state will later live outside ClickHouse.</p></li><li><p>Historical analytical freshness starts at <strong>two hours</strong>, not seconds.</p></li><li><p>We deliberately learn Workers + Queues + ClickHouse now while mistakes are cheap.</p></li></ul>
+<h2 id="blk-65240">2. Hard boundaries</h2>
+<h3 id="blk-65241">2.1 Separate analytics data plane</h3>
+<p>Do not put E event tables in the existing ComputeDriven Pigsty deployment.</p>
+<p>Do not use the Keycloak/PlanetScale database.</p>
+<p>Do not create hidden cross-database coupling.</p>
+<p>Conceptually:</p>
+<pre><code>COMPUTEDRIVEN PRODUCT PLANE
+---------------------------
+identity
+accounts
+organizations
+worlds
+runs
+nodes
+billing
+product state
+existing Pigsty / product stores
+
+             |
+             | emits approved semantic events
+             v
+
+E ANALYTICS PLANE
+-----------------
+Cloudflare Workers
+Cloudflare Queues
+ClickHouse Cloud
+later Durable Objects
+later R2 archive</code></pre>
+<p>The product plane may <strong>publish</strong> events such as:</p>
+<pre><code>signup_completed
+workspace_created
+world_created
+build_completed
+subscription_started
+subscription_cancelled</code></pre>
+<p>but E must not require direct table reads from the product database to function.</p>
+<h3 id="blk-65250">2.2 ClickHouse is analytical truth, not transactional product truth</h3>
+<p>ClickHouse should hold:</p>
+<ul><li><p>accepted semantic events;</p></li><li><p>analytical session/journey facts;</p></li><li><p>attribution facts;</p></li><li><p>bot-intervention analytical events;</p></li><li><p>derived/materialized analytical views.</p></li></ul>
+<p>It must not become authoritative for:</p>
+<ul><li><p>auth;</p></li><li><p>organizations;</p></li><li><p>billing entitlement;</p></li><li><p>World authority;</p></li><li><p>secrets;</p></li><li><p>production mutations.</p></li></ul>
+<h3 id="blk-65277">2.3 Live state is not ClickHouse state</h3>
+<p>Do not keep ClickHouse awake merely to answer:</p>
+<pre><code>who is on this page now?
+what did this visitor click 3 seconds ago?
+is chat open?
+which component is visible?</code></pre>
+<p>Those are later Worker/Durable Object concerns.</p>
+<p>ClickHouse initially answers:</p>
+<pre><code>what happened in the last 2h/day/week/month?
+which journeys convert?
+where do funnels fail?
+which sources lead to signup?
+which events predict activation?</code></pre>
+<h2 id="blk-65283">3. Repo reconnaissance is mandatory</h2>
+<p>Before changing code, inspect the current repository/repositories and write a short findings note.</p>
+<p>Opus must determine:</p>
+<ol><li><p>Where the current ComputeDriven marketing site lives.</p></li><li><p>Whether <code>e.computedriven.com</code> already has DNS/routes/code.</p></li><li><p>Current Cloudflare Worker/Pages conventions.</p></li><li><p>Current package manager / monorepo layout.</p></li><li><p>Current TypeScript/shared-schema conventions.</p></li><li><p>Existing event/analytics abstractions, if any.</p></li><li><p>Existing PostHog, Amplitude, GA, Cloudflare Web Analytics, or custom analytics code.</p></li><li><p>Existing consent/privacy implementation.</p></li><li><p>Existing Cloudflare account resources managed by Wrangler/Terraform/Pulumi/manual configuration.</p></li><li><p>Existing CI/deploy patterns.</p></li><li><p>Current secrets-management convention.</p></li><li><p>Current ComputeDriven identity IDs that can safely become opaque analytics IDs.</p></li><li><p>Any existing cross-domain linking/UTM utilities.</p></li><li><p>Whether current sites are all on Cloudflare and can expose first-party <code>/_e/*</code> routes.</p></li><li><p>Any conflict between this brief and newer Super/ComputeDriven architecture already present in code.</p></li></ol>
+<p><strong>Do not duplicate existing abstractions.</strong></p>
+<p>If the repo materially contradicts this brief, report the contradiction before “fixing” it.</p>
+<h2 id="blk-65319">4. V1 deployment architecture</h2>
+<p>Recommended v1:</p>
+<pre><code>                         ComputeDriven-owned sites
+                 ┌─────────────────────────────────────┐
+                 │ computedriven.com                   │
+                 │ opensentience.org                   │
+                 │ ampersandboxdesign.com              │
+                 │ ...                                 │
+                 └─────────────────┬───────────────────┘
+                                   │
+                        /_e/v1/events
+                                   │
+                                   v
+                         Cloudflare route/Worker
+                                   │
+                          service binding / shared lib
+                                   │
+                                   v
+                    ┌──────────────────────────┐
+                    │    cd-e-ingest Worker    │
+                    │                          │
+                    │ validate                 │
+                    │ normalize                │
+                    │ redact                   │
+                    │ consent                  │
+                    │ rate-limit               │
+                    │ batch checks             │
+                    └────────────┬─────────────┘
+                                 │
+                                 v
+                       ┌──────────────────┐
+                       │ e-events Queue   │
+                       │                  │
+                       │ 2h buffer target │
+                       └────────┬─────────┘
+                                │
+                    scheduled pull every 2h
+                                │
+                                v
+                     ┌────────────────────┐
+                     │ cd-e-flush Worker  │
+                     │ Cron Trigger       │
+                     │ HTTP pull consumer │
+                     └─────────┬──────────┘
+                               │
+                               v
+                      ┌──────────────────┐
+                      │ ClickHouse Cloud │
+                      │ Basic initially  │
+                      └───────┬──────────┘
+                              │
+               ┌──────────────┼────────────────┐
+               │              │                │
+               v              v                v
+         materialized      fanout state    snapshots/cache
+            views              │
+                               ├── PostHog
+                               └── Amplitude</code></pre>
+<p>Public product:</p>
+<pre><code>e.computedriven.com
+        |
+        +-- /
+        +-- /live
+        +-- /architecture
+        +-- /docs
+        +-- /privacy
+        +-- /app
+        +-- /v1/events        fallback public ingest</code></pre>
+<h2 id="blk-65324">5. Why a pull Queue + 2-hour Cron matters</h2>
+<p>Do <strong>not</strong> attach the canonical event queue to a normal push consumer if the objective is to let ClickHouse sleep.</p>
+<p>A push consumer automatically consumes continuously. Delaying each message by two hours only creates a two-hour-offset continuous stream; after the initial delay it can still keep ClickHouse awake around the clock.</p>
+<p>The intended V1 behavior is:</p>
+<pre><code>00:00 - 01:59   Queue accumulates
+02:00           flush wakes ClickHouse
+02:00-02:0x     drain queue + insert
+02:0x           snapshot/materialized work complete
+02:0x+idle      ClickHouse scales down
+
+02:00 - 03:59   Queue accumulates
+04:00           next flush
+...</code></pre>
+<p>Use:</p>
+<ul><li><p>Cloudflare Queue configured with <strong>HTTP pull consumer</strong>;</p></li><li><p>Cloudflare Cron Trigger on a dedicated flush Worker;</p></li><li><p>cron expression conceptually every two hours;</p></li><li><p>scheduled Worker repeatedly pulls batches until:</p></li><li><p>queue is drained;</p></li><li><p>execution time budget is nearly exhausted;</p></li><li><p>ClickHouse failure occurs;</p></li><li><p>a safety/backpressure threshold is reached.</p></li></ul>
+<p>Cloudflare documents pull consumers specifically for cases where upstream consumption needs to be rate/availability controlled. Pull batch size currently supports up to 100 messages. Queue retention on Paid can be configured up to 14 days, giving ample recovery room for a 2-hour cadence.</p>
+<h3 id="blk-65348">Cron time</h3>
+<p>Cloudflare Cron Triggers run in UTC.</p>
+<p>Do not encode business meaning into the exact UTC boundary. “Every two hours” is an operational flush interval, not a reporting-day definition.</p>
+<h2 id="blk-65351">6. Initial freshness SLO</h2>
+<p>V1 historical analytical SLO:</p>
+<pre><code>normal freshness target: &lt;= 2h 15m</code></pre>
+<p>Reason:</p>
+<ul><li><p>up to ~2h wait before scheduled drain;</p></li><li><p>ClickHouse cold start;</p></li><li><p>drain/insert/materialization time;</p></li><li><p>cached dashboard snapshot publication.</p></li></ul>
+<p>Track:</p>
+<pre><code>oldest_unflushed_event_age_seconds
+queue_depth
+last_successful_flush_at
+last_successful_event_occurred_at
+clickhouse_flush_duration_ms
+events_flushed
+batches_flushed</code></pre>
+<p>Alert thresholds:</p>
+<pre><code>WARN     oldest event &gt; 2h 30m
+ERROR    oldest event &gt; 4h
+CRITICAL oldest event &gt; 8h</code></pre>
+<p>The queue retention must be much longer than the critical threshold.</p>
+<h2 id="blk-65369">7. Browser batching</h2>
+<p>Do not equate CDN HTTP requests with analytics events.</p>
+<p>Do not send one Worker request for every semantic event unless a specific event requires immediate delivery.</p>
+<p>Preferred SDK behavior:</p>
+<pre><code>browser session
+    |
+    +-- event
+    +-- event
+    +-- event
+    +-- event
+    |
+    v
+microbatch
+    |
+    +-- timer
+    +-- pagehide
+    +-- size threshold
+    v
+/_e/v1/events</code></pre>
+<p>Initial targets:</p>
+<pre><code>max events per browser batch:       25
+target payload:                      &lt; 64 KB
+hard payload cap:                    significantly below Worker/Queue limits
+flush timer:                         15-30 seconds
+flush on pagehide:                   yes
+sendBeacon/keepalive fallback:       where appropriate</code></pre>
+<p>Why target under 64 KB:</p>
+<p>Cloudflare Queue operations are metered in 64 KB chunks. Keeping a logical browser batch below that boundary makes cost and behavior simpler.</p>
+<p>Do not obsess over exactly 25. Measure actual encoded event sizes and tune.</p>
+<h2 id="blk-65379">8. Canonical semantic event envelope</h2>
+<p>E owns the schema.</p>
+<p>Suggested v1:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;schema_version&quot;</span>: <span class="t-num">1</span>,
+  <span class="t-key">&quot;event_id&quot;</span>: <span class="t-string">&quot;01J...&quot;</span>,
+  <span class="t-key">&quot;event_name&quot;</span>: <span class="t-string">&quot;pricing_viewed&quot;</span>,
+  <span class="t-key">&quot;occurred_at&quot;</span>: <span class="t-string">&quot;2026-08-23T16:30:00.000Z&quot;</span>,
+
+  <span class="t-key">&quot;site_id&quot;</span>: <span class="t-string">&quot;computedriven&quot;</span>,
+  <span class="t-key">&quot;domain&quot;</span>: <span class="t-string">&quot;computedriven.com&quot;</span>,
+  <span class="t-key">&quot;path&quot;</span>: <span class="t-string">&quot;/pricing&quot;</span>,
+
+  <span class="t-key">&quot;anonymous_id&quot;</span>: <span class="t-string">&quot;anon_...&quot;</span>,
+  <span class="t-key">&quot;user_id&quot;</span>: <span class="t-lit">null</span>,
+  <span class="t-key">&quot;account_id&quot;</span>: <span class="t-lit">null</span>,
+  <span class="t-key">&quot;session_id&quot;</span>: <span class="t-string">&quot;ses_...&quot;</span>,
+  <span class="t-key">&quot;journey_id&quot;</span>: <span class="t-lit">null</span>,
+
+  <span class="t-key">&quot;source&quot;</span>: {
+    <span class="t-key">&quot;referrer&quot;</span>: <span class="t-string">&quot;https://opensentience.org/...&quot;</span>,
+    <span class="t-key">&quot;source_domain&quot;</span>: <span class="t-string">&quot;opensentience.org&quot;</span>,
+    <span class="t-key">&quot;utm_source&quot;</span>: <span class="t-lit">null</span>,
+    <span class="t-key">&quot;utm_medium&quot;</span>: <span class="t-lit">null</span>,
+    <span class="t-key">&quot;utm_campaign&quot;</span>: <span class="t-lit">null</span>
+  },
+
+  <span class="t-key">&quot;context&quot;</span>: {
+    <span class="t-key">&quot;locale&quot;</span>: <span class="t-string">&quot;en-US&quot;</span>,
+    <span class="t-key">&quot;viewport_class&quot;</span>: <span class="t-string">&quot;desktop&quot;</span>,
+    <span class="t-key">&quot;release&quot;</span>: <span class="t-string">&quot;git-sha&quot;</span>
+  },
+
+  <span class="t-key">&quot;consent&quot;</span>: {
+    <span class="t-key">&quot;analytics&quot;</span>: <span class="t-lit">true</span>,
+    <span class="t-key">&quot;replay&quot;</span>: <span class="t-lit">false</span>,
+    <span class="t-key">&quot;personalization&quot;</span>: <span class="t-lit">false</span>
+  },
+
+  <span class="t-key">&quot;properties&quot;</span>: {
+    <span class="t-key">&quot;placement&quot;</span>: <span class="t-string">&quot;hero&quot;</span>
+  }
+}</code></pre>
+<p>Rules:</p>
+<ul><li><p><code>event_id</code> is immutable.</p></li><li><p>Event names are stable <code>snake_case</code>.</p></li><li><p>Reject unsupported schema versions.</p></li><li><p>Never use email as the canonical user key.</p></li><li><p><code>user_id</code>/<code>account_id</code> are opaque internal IDs.</p></li><li><p>Keep top-level fields tightly controlled.</p></li><li><p>Free-form properties have max nesting/bytes.</p></li><li><p>URLs/query strings are redacted/allowlisted.</p></li><li><p>Server strips known sensitive keys even if client validation fails.</p></li><li><p>Historical event semantics are never silently redefined.</p></li></ul>
+<h2 id="blk-65405">9. Event vocabulary: start semantic, not exhaustive</h2>
+<p>V1 canonical events should remain intentionally small.</p>
+<p>Suggested core:</p>
+<pre><code>page_viewed
+cta_clicked
+docs_opened
+research_opened
+pricing_viewed
+
+signup_started
+signup_completed
+login_completed
+
+workspace_created
+project_created
+world_created
+first_build_started
+first_build_completed
+
+checkout_started
+subscription_started
+subscription_upgraded
+subscription_cancelled
+
+chat_started
+chat_question_asked
+bot_help_offered
+bot_help_accepted
+bot_action_proposed
+bot_action_completed
+bot_action_rejected</code></pre>
+<p>Do not put:</p>
+<pre><code>mousemove
+every scroll tick
+every DOM mutation
+raw replay frame</code></pre>
+<p>into the canonical ClickHouse semantic lane.</p>
+<p>High-resolution behavioral exhaust remains primarily a PostHog concern.</p>
+<h2 id="blk-65413">10. ClickHouse Cloud V1</h2>
+<p>Use <strong>ClickHouse Cloud Basic initially</strong> unless repo/security requirements force Scale.</p>
+<p>Current public AWS us-east-1 list pricing checked 2026-08-23:</p>
+<pre><code>Basic compute:  $0.2181 / compute unit-hour
+Basic storage:  $25.30 / TB-month
+Basic storage:  up to 1 TB
+Basic memory:   8-12 GiB total
+Basic AZs:      1</code></pre>
+<p>ClickHouse states that unused resources can scale down to zero.</p>
+<p>This is intentionally a learning/starter deployment. Cloudflare Queues isolates event acceptance from ClickHouse availability.</p>
+<p>Upgrade triggers to Scale should be measurement-driven:</p>
+<pre><code>need &gt;1 TB
+need stronger production availability
+need 2+ AZ
+need configurable memory / compute separation
+need private networking
+need workload isolation</code></pre>
+<p>Do not self-host ClickHouse yet merely to save tens of dollars.</p>
+<p>The point of V1 is to learn:</p>
+<ul><li><p>schema design;</p></li><li><p>sort keys;</p></li><li><p>partitions;</p></li><li><p>inserts;</p></li><li><p>async inserts;</p></li><li><p>idempotency;</p></li><li><p>materialized views;</p></li><li><p>query behavior;</p></li><li><p>compression;</p></li><li><p>cost per million events;</p></li><li><p>cold starts;</p></li><li><p>scale-to-zero behavior;</p></li><li><p>operational failure modes.</p></li></ul>
+<h2 id="blk-65450">11. ClickHouse client</h2>
+<p>For Worker access, use the official web/fetch client unless repo testing shows a reason not to:</p>
+<pre><code>@clickhouse/client-web</code></pre>
+<p>The official ClickHouse JavaScript client documents Cloudflare Workers compatibility.</p>
+<p>Keep all ClickHouse access server-side.</p>
+<p>Never ship ClickHouse credentials to browser code.</p>
+<p>Create distinct ClickHouse users/roles:</p>
+<pre><code>e_ingest
+  INSERT approved raw tables
+  minimal SELECT if required for health
+  no broad ALTER
+
+e_query
+  SELECT approved tables/views
+  no INSERT
+  no ALTER
+
+e_admin
+  migrations/schema
+  tightly held
+
+e_super            later
+  SELECT only explicitly approved views</code></pre>
+<p>Do not give Super raw arbitrary SQL authority.</p>
+<h2 id="blk-65459">12. Initial raw table design</h2>
+<p>Opus should benchmark actual query patterns before freezing <code>ORDER BY</code>.</p>
+<p>A candidate—not a final ruling:</p>
+<pre data-lang="sql"><code>CREATE TABLE events_v1
+(
+    event_id UUID,
+    batch_id UUID,
+    schema_version UInt16,
+
+    event_name LowCardinality(String),
+
+    occurred_at DateTime64(3, 'UTC'),
+    received_at DateTime64(3, 'UTC'),
+
+    site_id LowCardinality(String),
+    domain LowCardinality(String),
+    path String,
+
+    anonymous_id String,
+    user_id Nullable(String),
+    account_id Nullable(String),
+    session_id String,
+    journey_id Nullable(String),
+
+    source_domain LowCardinality(String),
+    referrer String,
+
+    context JSON,
+    consent JSON,
+    properties JSON
+)
+ENGINE = MergeTree
+PARTITION BY toYYYYMM(occurred_at)
+ORDER BY
+(
+    site_id,
+    toDate(occurred_at),
+    event_name,
+    occurred_at,
+    session_id,
+    event_id
+);</code></pre>
+<p>Benchmark alternatives based on real intended queries, especially:</p>
+<pre><code>events for one session
+events for one user
+events by site and time
+events by event type and time
+funnel sequences
+source -&gt; conversion
+journey traversal
+bot-assisted conversion</code></pre>
+<p>Write a short benchmark note before finalizing the key.</p>
+<h2 id="blk-65466">13. Queue message format</h2>
+<p>The Queue should carry <strong>microbatches</strong>, not single events.</p>
+<p>Example:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;batch_version&quot;</span>: <span class="t-num">1</span>,
+  <span class="t-key">&quot;batch_id&quot;</span>: <span class="t-string">&quot;01J...&quot;</span>,
+  <span class="t-key">&quot;site_id&quot;</span>: <span class="t-string">&quot;computedriven&quot;</span>,
+  <span class="t-key">&quot;accepted_at&quot;</span>: <span class="t-string">&quot;2026-08-23T16:30:02.000Z&quot;</span>,
+  <span class="t-key">&quot;events&quot;</span>: [
+    { <span class="t-key">&quot;...&quot;</span>: <span class="t-string">&quot;...&quot;</span> },
+    { <span class="t-key">&quot;...&quot;</span>: <span class="t-string">&quot;...&quot;</span> }
+  ]
+}</code></pre>
+<p>Requirements:</p>
+<ul><li><p>one <code>batch_id</code> per accepted Worker microbatch;</p></li><li><p>every event also has its own <code>event_id</code>;</p></li><li><p>target message size &lt;64 KB;</p></li><li><p>hard max event count;</p></li><li><p>hard max bytes;</p></li><li><p>invalid event handling is explicit;</p></li><li><p>never queue unchecked arbitrary payloads.</p></li></ul>
+<h2 id="blk-65486">14. Two-hour flush algorithm</h2>
+<p>Pseudo-flow:</p>
+<pre><code>scheduled() every 2h
+    |
+    v
+acquire flush lease / avoid overlapping drain
+    |
+    v
+wake/query ClickHouse
+    |
+    v
+repeat:
+    pull &lt;=100 queue messages
+    if empty -&gt; stop
+
+    flatten validated event batches
+    bound aggregate insert bytes/rows
+    INSERT into ClickHouse
+
+    if INSERT confirmed:
+        ack pulled queue messages
+    else:
+        do not ack
+        exit / allow visibility timeout
+until time budget reached
+    |
+    v
+refresh materialized/snapshot outputs if needed
+    |
+    v
+write cheap dashboard freshness snapshot
+    |
+    v
+end; ClickHouse becomes idle</code></pre>
+<h3 id="blk-65489">Do not acknowledge first</h3>
+<p>Correct:</p>
+<pre><code>pull -&gt; insert -&gt; confirmed -&gt; ack</code></pre>
+<p>Wrong:</p>
+<pre><code>pull -&gt; ack -&gt; insert</code></pre>
+<p>The wrong order can lose analytics on a failed insert.</p>
+<h3 id="blk-65495">Retry semantics</h3>
+<p>Assume at-least-once delivery.</p>
+<p>Design ClickHouse insert/idempotency handling so a Worker crash after database success but before queue ACK does not silently duplicate analytical meaning.</p>
+<p>Test this explicitly.</p>
+<p>Do not claim “exactly once” unless the entire path actually proves it.</p>
+<h2 id="blk-65500">15. ClickHouse sleeping strategy</h2>
+<p>The database only stays cheap if E does not constantly wake it.</p>
+<p>Therefore:</p>
+<pre><code>WRITE PATH
+queue -&gt; ClickHouse every ~2h
+
+NORMAL PUBLIC READ PATH
+cached snapshots / cheap edge state
+
+DEEP ANALYTICS READ PATH
+explicit ClickHouse query</code></pre>
+<p>At the end of a successful flush, publish summary data required for the ordinary dashboard to a cheap always-available layer.</p>
+<p>Possible v1 choices after repo inspection:</p>
+<pre><code>Cloudflare KV
+D1
+Cache API
+static JSON snapshot in R2 later</code></pre>
+<p>Do not build a second analytical database there.</p>
+<p>Store only dashboard-serving summaries such as:</p>
+<pre><code>last_flush_at
+events_last_24h
+pageviews_today
+signups_today
+top_sites
+top_pages
+conversion snapshot
+vendor delivery health</code></pre>
+<p>Opening the public E homepage should not wake ClickHouse.</p>
+<h2 id="blk-65511">16. Approximate early cost envelope</h2>
+<p>Do not promise these numbers. Measure them.</p>
+<p>At the current portfolio traffic level, CDN requests are not equal to analytics events.</p>
+<p>If semantic browser/server events are batched before entering Workers, Cloudflare should remain inexpensive.</p>
+<p>Cloudflare Workers Paid currently lists:</p>
+<pre><code>$5/month base
+10M Worker requests/month included
+$0.30 per additional million requests
+30M CPU-ms/month included</code></pre>
+<p>Cloudflare Queues Paid currently lists:</p>
+<pre><code>1M operations/month included
+$0.40 per additional million operations
+typical successful message ~= write + read + delete</code></pre>
+<p>ClickHouse Cloud Basic currently lists:</p>
+<pre><code>$0.2181 / compute unit-hour in AWS us-east-1
+$25.30 / TB-month storage</code></pre>
+<p>The exact cost of a two-hour wake pattern depends on:</p>
+<ul><li><p>service size;</p></li><li><p>resume latency;</p></li><li><p>insert duration;</p></li><li><p>merge/background activity;</p></li><li><p>idle timeout;</p></li><li><p>dashboard queries;</p></li><li><p>batch size;</p></li><li><p>actual analytics event volume.</p></li></ul>
+<p>Initial engineering target:</p>
+<blockquote><p><strong>keep the core E data plane in roughly the $10-$30/month range if real measurements support it, without sacrificing correctness merely to hit that number.</strong></p></blockquote>
+<p>The software must expose actual:</p>
+<pre><code>ClickHouse active minutes/day
+events per flush
+bytes per flush
+compressed bytes/event
+Worker requests/month
+Queue operations/month
+cost per 1M accepted events</code></pre>
+<p>so future cost decisions are empirical.</p>
+<h2 id="blk-65545">17. PostHog and Amplitude fanout</h2>
+<p>The canonical chain should be:</p>
+<pre><code>browser
+  |
+  v
+E ingress
+  |
+  v
+Queue
+  |
+  v
+ClickHouse accepted event
+  |
+  +---&gt; PostHog
+  `---&gt; Amplitude</code></pre>
+<p>E is the semantic source of truth.</p>
+<p>PostHog receives:</p>
+<ul><li><p>canonical semantic events;</p></li><li><p>plus its own high-resolution browser behavior/replay path where configured.</p></li></ul>
+<p>Amplitude receives:</p>
+<ul><li><p>curated canonical semantic events;</p></li><li><p>not raw behavioral exhaust.</p></li></ul>
+<p>Use stable E <code>event_id</code> downstream for dedup/reference.</p>
+<p>Do not scatter direct semantic <code>posthog.capture()</code> and Amplitude calls throughout site code if they bypass E’s event contract.</p>
+<p>Vendor-specific behavioral features may remain vendor-specific.</p>
+<h2 id="blk-65564">18. Identity model</h2>
+<p>Both PostHog and Amplitude must be able to see anonymous -&gt; authenticated journeys.</p>
+<p>Do not split:</p>
+<pre><code>guests -&gt; PostHog
+members -&gt; Amplitude</code></pre>
+<p>Use:</p>
+<pre><code>before login:
+anonymous_id = anon_x
+user_id = null
+
+after login:
+anonymous_id = anon_x
+user_id = usr_y</code></pre>
+<p>Record an identity link according to privacy policy.</p>
+<p>On logout:</p>
+<ul><li><p>reset vendor identity state;</p></li><li><p>prevent a later browser user from inheriting the prior authenticated identity.</p></li></ul>
+<p>Never use email address as the analytics primary key.</p>
+<h2 id="blk-65578">19. Cross-domain portfolio journeys</h2>
+<p>Cookies do not become first-party across unrelated registrable domains.</p>
+<p>Do not use fingerprinting or hidden third-party-cookie hacks.</p>
+<p>For known portfolio links:</p>
+<pre><code>source domain
+     |
+signed short-lived journey token
+     |
+     v
+destination domain
+     |
+local anonymous session linked to journey_id</code></pre>
+<p>The token:</p>
+<ul><li><p>contains no secrets;</p></li><li><p>contains no email;</p></li><li><p>expires quickly;</p></li><li><p>is signed;</p></li><li><p>is removed from the visible URL after exchange where practical;</p></li><li><p>cannot magically deanonymize unrelated traffic.</p></li></ul>
+<p>Example conceptual payload:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;v&quot;</span>: <span class="t-num">1</span>,
+  <span class="t-key">&quot;journey_id&quot;</span>: <span class="t-string">&quot;jny_...&quot;</span>,
+  <span class="t-key">&quot;source_site&quot;</span>: <span class="t-string">&quot;opensentience&quot;</span>,
+  <span class="t-key">&quot;source_session&quot;</span>: <span class="t-string">&quot;ses_...&quot;</span>,
+  <span class="t-key">&quot;iat&quot;</span>: <span class="t-num">1787500000</span>,
+  <span class="t-key">&quot;exp&quot;</span>: <span class="t-num">1787500600</span>
+}</code></pre>
+<h2 id="blk-65599">20. First-party <code>/_e</code> routing</h2>
+<p>For ComputeDriven-owned Cloudflare zones, investigate a reusable deployment pattern:</p>
+<pre><code>domain.com/_e/*
+        |
+        v
+zone Worker route
+        |
+        v
+service binding to cd-e-ingest</code></pre>
+<p>Benefits:</p>
+<ul><li><p>first-party browser endpoint;</p></li><li><p>no cross-origin ceremony for our own sites;</p></li><li><p>less obvious third-party tracking hostname;</p></li><li><p>one central validation implementation;</p></li><li><p>site identity can be bound by route/config instead of trusting arbitrary browser input.</p></li></ul>
+<p>Security rule:</p>
+<blockquote><p>The ingest Worker should derive/verify <code>site_id</code> from trusted route/config where possible, not blindly trust client-supplied <code>site_id</code>.</p></blockquote>
+<p>Fallback:</p>
+<pre><code>e.computedriven.com/v1/events</code></pre>
+<p>for integrations where first-party routing is unavailable.</p>
+<h2 id="blk-65620">21. <code>e.computedriven.com</code> website</h2>
+<p>E is both product surface and architecture demonstration.</p>
+<p>Suggested routes:</p>
+<pre><code>/
+ /live
+ /architecture
+ /docs
+ /privacy
+ /app
+ /app/events
+ /app/funnels
+ /app/journeys
+ /app/sources
+ /app/system
+ /v1/events
+ /health</code></pre>
+<p>Initial public positioning:</p>
+<p><strong>Eyebrow</strong></p>
+<blockquote><p>LIVE BEHAVIORAL CONTEXT</p></blockquote>
+<p><strong>Hero</strong></p>
+<blockquote><p><strong>Your analytics should be in the room.</strong></p></blockquote>
+<p><strong>Subhead</strong></p>
+<blockquote><p>Instrument once. Understand the journey. Turn behavior into governed context that humans and agents can use.</p></blockquote>
+<p>Alternative:</p>
+<blockquote><p><strong>Understand the journey. Join it.</strong></p></blockquote>
+<p>Do not market V1 features as live if the ClickHouse analytical layer is intentionally two hours fresh.</p>
+<p>Explain the two planes honestly:</p>
+<pre><code>historical analytics: buffered / ~2h
+live context: future/current separate live plane</code></pre>
+<h2 id="blk-65640">22. Marketing page structure</h2>
+<h3 id="blk-65641">Hero</h3>
+<p>Show the E event flow.</p>
+<h3 id="blk-65643">“Instrument once”</h3>
+<p>One E event -&gt; ClickHouse -&gt; PostHog -&gt; Amplitude.</p>
+<h3 id="blk-65645">“Two kinds of time”</h3>
+<p>Show:</p>
+<ul><li><p>live session state;</p></li><li><p>analytical history.</p></li></ul>
+<h3 id="blk-65652">“One journey across domains”</h3>
+<p>Show portfolio link flow.</p>
+<h3 id="blk-65654">“Your event vocabulary belongs to you”</h3>
+<p>Vendor independence.</p>
+<h3 id="blk-65656">“Scoped by construction”</h3>
+<p>Preview future Super visibility/capability rules.</p>
+<h3 id="blk-65658">Architecture</h3>
+<p>Interactive technical diagram.</p>
+<h3 id="blk-65660">Quickstart</h3>
+<p>SDK/API snippets only when actual implementation exists.</p>
+<h3 id="blk-65662">Privacy</h3>
+<p>Specific redaction/consent model.</p>
+<h3 id="blk-65664">Final CTA</h3>
+<blockquote><p>Turn behavior into context.</p></blockquote>
+<p>Do not use fake customer logos, fake counts, or fake “real-time” claims.</p>
+<h2 id="blk-65668">23. Future live plane: Durable Objects</h2>
+<p>This is not required for initial ClickHouse ingestion, but preserve the seam.</p>
+<p>Later:</p>
+<pre><code>browser
+  |
+  v
+Session Durable Object
+  |
+  +-- WebSocket
+  +-- current page
+  +-- recent semantic events
+  +-- chat
+  +-- current SessionProjection
+  +-- typed website capabilities
+  |
+  v
+Super</code></pre>
+<p>ClickHouse remains historical evidence/analytics.</p>
+<p>Durable Object remains live session state.</p>
+<p>Do not force ClickHouse to become a low-latency actor/session store.</p>
+<h2 id="blk-65675">24. Future Super bridge</h2>
+<p>The eventual assistant receives a scoped projection, not browser omniscience.</p>
+<p>Example:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;identity&quot;</span>: {
+    <span class="t-key">&quot;kind&quot;</span>: <span class="t-string">&quot;anonymous&quot;</span>
+  },
+  <span class="t-key">&quot;page&quot;</span>: {
+    <span class="t-key">&quot;path&quot;</span>: <span class="t-string">&quot;/pricing&quot;</span>,
+    <span class="t-key">&quot;visible_components&quot;</span>: [<span class="t-string">&quot;plans&quot;</span>, <span class="t-string">&quot;local-vs-cloud&quot;</span>]
+  },
+  <span class="t-key">&quot;journey&quot;</span>: {
+    <span class="t-key">&quot;recent_events&quot;</span>: [
+      <span class="t-string">&quot;architecture_opened&quot;</span>,
+      <span class="t-string">&quot;pricing_viewed&quot;</span>
+    ]
+  },
+  <span class="t-key">&quot;capabilities&quot;</span>: [
+    <span class="t-string">&quot;navigate&quot;</span>,
+    <span class="t-string">&quot;highlight&quot;</span>,
+    <span class="t-string">&quot;open_docs&quot;</span>,
+    <span class="t-string">&quot;compare_plans&quot;</span>,
+    <span class="t-string">&quot;start_signup&quot;</span>
+  ]
+}</code></pre>
+<p>Never include by default:</p>
+<pre><code>password contents
+payment card fields
+API keys
+secrets
+clipboard
+arbitrary unsent form contents
+unrelated organization data
+raw database access</code></pre>
+<p>Bots should operate typed UI capabilities, not arbitrary JavaScript.</p>
+<h2 id="blk-65682">25. Privacy / consent</h2>
+<p>Define explicit categories:</p>
+<pre><code>analytics
+replay
+personalization
+support_chat</code></pre>
+<p>Do not hardcode legal conclusions.</p>
+<p>Engineering requirements:</p>
+<ul><li><p>browser consent API;</p></li><li><p>vendor initialization gated by policy;</p></li><li><p>replay separately governed;</p></li><li><p>server-side redaction even if client is buggy;</p></li><li><p>query-string allowlist/redaction;</p></li><li><p>deletion path by opaque identity;</p></li><li><p>retention policy configuration;</p></li><li><p>internal/bot traffic filtering;</p></li><li><p>privacy documentation based on implementation.</p></li></ul>
+<h2 id="blk-65706">26. Security</h2>
+<p>Minimum requirements:</p>
+<ul><li><p>restrictive allowed origins for fallback cross-origin ingest;</p></li><li><p>first-party Worker routes where possible;</p></li><li><p>request body limits;</p></li><li><p>event count limits;</p></li><li><p>property nesting/size limits;</p></li><li><p>schema validation;</p></li><li><p>sensitive-key redaction;</p></li><li><p>rate limits;</p></li><li><p>bot/abuse handling;</p></li><li><p>Worker secrets for ClickHouse credentials;</p></li><li><p>separate ClickHouse users/roles;</p></li><li><p>TLS only;</p></li><li><p>no browser DB credentials;</p></li><li><p>no public admin SQL endpoint;</p></li><li><p>CSP on E website;</p></li><li><p>authenticated protected <code>/app</code>;</p></li><li><p>CSRF where browser state changes exist;</p></li><li><p>no sensitive event payloads in ordinary logs;</p></li><li><p>environment separation:</p></li><li><p>dev;</p></li><li><p>staging;</p></li><li><p>prod;</p></li><li><p>separate queues and ClickHouse DB/table prefixes per environment.</p></li></ul>
+<h2 id="blk-65755">27. Suggested repository shape</h2>
+<p>Preserve existing monorepo conventions if present.</p>
+<p>Conceptually:</p>
+<pre><code>apps/
+  e-web/
+  e-ingest-worker/
+  e-flush-worker/
+  e-api-worker/            optional if separate
+
+packages/
+  e-schema/
+  e-sdk/
+  e-clickhouse/
+  e-privacy/
+  e-test-fixtures/
+
+infra/
+  cloudflare/
+  clickhouse/</code></pre>
+<p>If existing repo style differs, adapt rather than force this shape.</p>
+<p>Important separation:</p>
+<pre><code>e-schema</code></pre>
+<p>must be shared by:</p>
+<ul><li><p>browser SDK;</p></li><li><p>ingest validation;</p></li><li><p>tests;</p></li><li><p>ClickHouse mapping;</p></li><li><p>vendor adapters.</p></li></ul>
+<h2 id="blk-65774">28. Tests / falsifiers</h2>
+<p>Do not ship the happy path only.</p>
+<h3 id="blk-65776">Ingest</h3>
+<ol><li><p>Invalid schema never reaches Queue.</p></li><li><p>Unsupported schema version is rejected.</p></li><li><p>Oversized batch is rejected.</p></li><li><p>Oversized property object is rejected.</p></li><li><p>Sensitive configured keys are stripped server-side.</p></li><li><p><code>site_id</code> cannot be spoofed on first-party routes.</p></li><li><p>Duplicate <code>event_id</code> retry does not create double analytical meaning.</p></li><li><p>Page navigation does not block waiting on analytics.</p></li></ol>
+<h3 id="blk-65794">Queue / two-hour buffer</h3>
+<ol start="9"><li><p>Queue can accumulate for &gt;2h without loss.</p></li><li><p>Flush Worker does not run continuously.</p></li><li><p>No push consumer exists on canonical buffered queue.</p></li><li><p>Cron overlapping with previous drain is safely serialized or made harmless.</p></li><li><p>Empty queue does not keep ClickHouse awake with useless work.</p></li><li><p>Backlog survives a ClickHouse outage longer than one interval.</p></li><li><p>Messages are not ACKed before successful DB insert.</p></li><li><p>Worker crash after DB insert but before ACK is safe/idempotent.</p></li><li><p>Visibility timeout causes safe redelivery.</p></li><li><p>Backlog age alarms fire.</p></li></ol>
+<h3 id="blk-65816">ClickHouse</h3>
+<ol start="19"><li><p>Candidate sort keys are benchmarked against representative queries.</p></li><li><p>Materialized view failure behavior is understood/tested.</p></li><li><p>Cold-start duration is measured.</p></li><li><p>Idle scale-down is observed rather than assumed.</p></li><li><p>Insert batch size is measured for throughput/cost.</p></li><li><p>Raw event query remains correct across month partitions.</p></li><li><p>Query user cannot INSERT.</p></li><li><p>Ingest user cannot perform broad admin operations.</p></li></ol>
+<h3 id="blk-65834">Identity</h3>
+<ol start="27"><li><p>Anonymous -&gt; authenticated link works.</p></li><li><p>Logout prevents identity bleed to the next user.</p></li><li><p>Two users on one browser do not collapse.</p></li><li><p>Cross-domain journey token expires.</p></li><li><p>Tampered journey token fails.</p></li><li><p>Unrelated anonymous visits are not automatically linked.</p></li></ol>
+<h3 id="blk-65848">Vendor fanout</h3>
+<ol start="33"><li><p>ClickHouse succeeds while PostHog fails: canonical event remains valid.</p></li><li><p>ClickHouse succeeds while Amplitude fails: canonical event remains valid.</p></li><li><p>Vendor retry reuses E event ID.</p></li><li><p>One vendor outage does not block the other.</p></li></ol>
+<h3 id="blk-65858">Website</h3>
+<ol start="37"><li><p>E homepage does not wake ClickHouse under normal cached rendering.</p></li><li><p>Dashboard indicates freshness timestamp.</p></li><li><p>“live” UI never presents a two-hour snapshot as live.</p></li><li><p>Synthetic demo data is visibly labeled.</p></li><li><p>Privacy page corresponds to actual code.</p></li></ol>
+<h3 id="blk-65870">Future Super seam</h3>
+<ol start="42"><li><p>Session projection excludes passwords/secrets.</p></li><li><p>Unknown UI capability is rejected.</p></li><li><p>Bot cannot execute arbitrary JS through capability API.</p></li><li><p>Historical ClickHouse read permission does not imply product mutation authority.</p></li></ol>
+<h2 id="blk-65880">29. Operational metrics to dogfood</h2>
+<p>Measure E with E, while keeping system telemetry separate.</p>
+<p>Pipeline metrics:</p>
+<pre><code>accepted_events_total
+rejected_events_total
+accepted_batches_total
+worker_ingest_latency_ms
+
+queue_depth
+oldest_unflushed_event_age_seconds
+
+flush_runs_total
+flush_failures_total
+flush_duration_ms
+flush_events_total
+flush_bytes_total
+
+clickhouse_resume_latency_ms
+clickhouse_insert_latency_ms
+clickhouse_active_minutes_day
+clickhouse_compressed_bytes_event
+
+posthog_pending
+posthog_delivery_success_rate
+
+amplitude_pending
+amplitude_delivery_success_rate</code></pre>
+<p>Business/event metrics:</p>
+<pre><code>human_pageviews
+semantic_events_per_session
+signup_conversion
+source_to_signup
+portfolio_cross_domain_journeys</code></pre>
+<p>Keep infrastructure telemetry distinct from product semantic events.</p>
+<h2 id="blk-65887">30. Cost-learning dashboard</h2>
+<p>This is a deliberate learning project.</p>
+<p>Build a small internal cost/efficiency panel showing:</p>
+<pre><code>analytics events/day
+analytics events per human pageview
+browser batches/day
+events/batch
+bytes/batch
+
+Worker requests/month projection
+Worker CPU-ms/month projection
+
+Queue messages/month projection
+Queue operations/month projection
+
+ClickHouse:
+  flushes/day
+  active minutes/day
+  events/flush
+  bytes/flush
+  compressed GB
+  storage GB
+  estimated compute cost
+  estimated storage cost
+
+estimated $ / 1M semantic events</code></pre>
+<p>Do not rely forever on spreadsheet estimates.</p>
+<p>We want to learn the true operating curve before scale.</p>
+<h2 id="blk-65893">31. Initial 2-hour cost hypothesis</h2>
+<p>Treat this as a hypothesis to falsify.</p>
+<p>At current traffic:</p>
+<ul><li><p>Cloudflare CDN HTTP requests may be &lt;700k/day.</p></li><li><p>This does <strong>not</strong> imply 700k analytics events/day.</p></li><li><p>Browser microbatching should keep Worker requests far below raw event count.</p></li><li><p>Queue microbatches should keep Queue operation volume modest.</p></li><li><p>ClickHouse two-hour flushes should create about 12 scheduled wake opportunities/day rather than continuous ingestion.</p></li></ul>
+<p>Potential early target:</p>
+<pre><code>Cloudflare Workers/Queues     low single digits to low tens/month
+ClickHouse Basic              single digits to low tens/month if sleep behavior is favorable
+Total core E plane            target roughly $10-$30/month</code></pre>
+<p>Again: measure real active minutes before claiming this publicly.</p>
+<p>If ClickHouse is repeatedly kept awake by:</p>
+<ul><li><p>background work;</p></li><li><p>dashboard reads;</p></li><li><p>vendor fanout queries;</p></li><li><p>badly structured jobs;</p></li></ul>
+<p>fix the architecture before accepting a permanent 24/7 compute bill.</p>
+<h2 id="blk-65921">32. Materialized views / snapshots to learn early</h2>
+<p>Use a few meaningful views from day one.</p>
+<p>Examples:</p>
+<pre><code>pageviews_hourly
+events_hourly
+signups_daily
+conversions_by_source_daily
+sessions_daily
+bot_interventions_daily        later</code></pre>
+<p>Do not create dozens of speculative views.</p>
+<p>For normal E web rendering, write compact summary snapshots after each 2-hour flush.</p>
+<p>The homepage/app should display:</p>
+<pre><code>Last analytics refresh: 10:02 UTC</code></pre>
+<p>or equivalent.</p>
+<p>Freshness is a product property and should be visible.</p>
+<h2 id="blk-65931">33. Queries Opus should benchmark</h2>
+<p>Build a synthetic-but-realistic fixture corpus and benchmark:</p>
+<pre data-lang="sql"><code>-- one session journey
+events for session_id over 24h
+
+-- one user journey
+events for user_id over 30d
+
+-- site traffic
+page_viewed by site over 30d
+
+-- conversion
+signup_completed by source_domain over 30d
+
+-- simple funnel
+pricing_viewed -&gt; signup_started -&gt; signup_completed
+
+-- cross-domain
+source domain -&gt; destination -&gt; signup
+
+-- behavioral precursor
+events preceding subscription_started
+
+-- future
+bot_help_accepted -&gt; signup_completed</code></pre>
+<p>Record:</p>
+<pre><code>rows scanned
+elapsed
+memory
+cold vs warm
+candidate ORDER BY</code></pre>
+<p>Use the results to choose schema, not intuition alone.</p>
+<h2 id="blk-65937">34. Implementation sequence</h2>
+<h3 id="blk-65938">Phase 0 — review only</h3>
+<ul><li><p>inspect current codebase;</p></li><li><p>inspect DNS/Cloudflare;</p></li><li><p>inventory analytics;</p></li><li><p>produce conflicts/findings;</p></li><li><p>confirm domain routing.</p></li></ul>
+<h3 id="blk-65950">Phase 1 — E shell</h3>
+<ul><li><p><code>e.computedriven.com</code> marketing shell;</p></li><li><p>docs/architecture/privacy placeholders;</p></li><li><p>CI/deploy;</p></li><li><p>no fake live data.</p></li></ul>
+<h3 id="blk-65960">Phase 2 — schema + SDK</h3>
+<ul><li><p><code>e-schema</code>;</p></li><li><p>browser SDK;</p></li><li><p>first-party route proof on one ComputeDriven site;</p></li><li><p>validation/redaction tests.</p></li></ul>
+<h3 id="blk-65970">Phase 3 — Queue</h3>
+<ul><li><p>canonical <code>e-events</code> Queue;</p></li><li><p>producer;</p></li><li><p>microbatching;</p></li><li><p>paid retention configured;</p></li><li><p>no continuous push consumer.</p></li></ul>
+<h3 id="blk-65982">Phase 4 — ClickHouse</h3>
+<ul><li><p>Basic service;</p></li><li><p>roles/users;</p></li><li><p>candidate schemas;</p></li><li><p>benchmark;</p></li><li><p>final v1 schema/migrations.</p></li></ul>
+<h3 id="blk-65994">Phase 5 — 2-hour scheduled drain</h3>
+<ul><li><p>HTTP pull consumer;</p></li><li><p>Cron flush Worker;</p></li><li><p>idempotency;</p></li><li><p>backlog/failure tests;</p></li><li><p>measure scale-to-zero behavior.</p></li></ul>
+<h3 id="blk-66006">Phase 6 — cached dashboard</h3>
+<ul><li><p>post-flush summaries;</p></li><li><p>freshness timestamp;</p></li><li><p>public E dashboard does not wake ClickHouse.</p></li></ul>
+<h3 id="blk-66014">Phase 7 — vendor adapters</h3>
+<ul><li><p>PostHog;</p></li><li><p>Amplitude;</p></li><li><p>retries/delivery status;</p></li><li><p>canonical event ID mapping.</p></li></ul>
+<h3 id="blk-66024">Phase 8 — portfolio rollout</h3>
+<ul><li><p>add first-party <code>/_e</code> route to sites incrementally;</p></li><li><p>compare Cloudflare traffic to human pageviews;</p></li><li><p>build cost-learning dashboard.</p></li></ul>
+<h3 id="blk-66032">Phase 9 — live/Super</h3>
+<p>Only after event system is stable:</p>
+<ul><li><p>Durable Objects;</p></li><li><p>WebSockets;</p></li><li><p>chat;</p></li><li><p>SessionProjection;</p></li><li><p>typed UI capability protocol;</p></li><li><p>Super bridge.</p></li></ul>
+<h2 id="blk-66047">35. Do not build yet</h2>
+<p>Do not add:</p>
+<ul><li><p>Kafka;</p></li><li><p>self-hosted ClickHouse cluster;</p></li><li><p>R2 as a required hot-path dependency;</p></li><li><p>custom replay engine;</p></li><li><p>arbitrary browser-control agent;</p></li><li><p>full BI builder;</p></li><li><p>fingerprinting;</p></li><li><p>third-party-cookie hacks;</p></li><li><p>ClickHouse as product transaction DB;</p></li><li><p>second analytics Postgres;</p></li><li><p>a Phoenix backend unless the current codebase demonstrates a concrete need that Workers/Durable Objects do not satisfy;</p></li><li><p>24/7 ClickHouse queries merely to make a dashboard look “real-time.”</p></li></ul>
+<p>R2 can be added later for:</p>
+<pre><code>cold archive
+Parquet exports
+reprocessing
+training/research corpora
+long retention</code></pre>
+<p>when those jobs are real.</p>
+<h2 id="blk-66077">36. Review questions Opus must answer</h2>
+<p>Before implementation, return answers to:</p>
+<ol><li><p>What current code already overlaps this system?</p></li><li><p>Is <code>e.computedriven.com</code> already present anywhere?</p></li><li><p>Which current site should be the first instrumentation target?</p></li><li><p>Can all owned domains expose <code>/_e/*</code> via current Cloudflare setup?</p></li><li><p>What shared package location best fits <code>e-schema</code> and <code>e-sdk</code>?</p></li><li><p>Which existing user/account IDs are safe analytics identifiers?</p></li><li><p>What current consent/privacy mechanism should E reuse?</p></li><li><p>What will be required to deploy separate dev/staging/prod Workers/Queues?</p></li><li><p>What is the simplest robust way for the scheduled Worker to pull the HTTP Queue under current Cloudflare APIs?</p></li><li><p>What duplicate/idempotency semantics can be proven for:</p></li></ol>
+<ul><li><p>browser retry;</p></li><li><p>Queue redelivery;</p></li><li><p>ClickHouse insert retry;</p></li><li><p>PostHog retry;</p></li><li><p>Amplitude retry?</p></li></ul>
+<ol start="11"><li><p>Which ClickHouse <code>ORDER BY</code> candidate wins our representative benchmarks?</p></li><li><p>Does ClickHouse Basic actually scale to zero as expected under our workload?</p></li><li><p>What active-minutes/day result do we observe with a 2-hour cadence?</p></li><li><p>Does any normal <code>e.computedriven.com</code> page accidentally wake ClickHouse?</p></li></ol>
+<h2 id="blk-66120">37. Current research references</h2>
+<p>Checked 2026-08-23.</p>
+<p>Cloudflare:</p>
+<ul><li><p>Workers pricing</p></li></ul>
+<p>https://developers.cloudflare.com/workers/platform/pricing/</p>
+<ul><li><p>Cron Triggers</p></li></ul>
+<p>https://developers.cloudflare.com/workers/configuration/cron-triggers/</p>
+<ul><li><p>Queues overview</p></li></ul>
+<p>https://developers.cloudflare.com/queues/</p>
+<ul><li><p>Queues pricing</p></li></ul>
+<p>https://developers.cloudflare.com/queues/platform/pricing/</p>
+<ul><li><p>Queues limits</p></li></ul>
+<p>https://developers.cloudflare.com/queues/platform/limits/</p>
+<ul><li><p>Pull consumers</p></li></ul>
+<p>https://developers.cloudflare.com/queues/configuration/pull-consumers/</p>
+<ul><li><p>Queue configuration / retention</p></li></ul>
+<p>https://developers.cloudflare.com/queues/configuration/configure-queues/</p>
+<p>ClickHouse:</p>
+<ul><li><p>Cloud pricing</p></li></ul>
+<p>https://clickhouse.com/pricing</p>
+<ul><li><p>ClickHouse Cloud</p></li></ul>
+<p>https://clickhouse.com/cloud</p>
+<ul><li><p>Official JS client</p></li></ul>
+<p>https://github.com/ClickHouse/clickhouse-js</p>
+<p>Important currently verified facts:</p>
+<ul><li><p>Workers Paid includes 10M requests/month and then charges per additional million.</p></li><li><p>A Worker Cron Trigger can run scheduled jobs; triggers execute in UTC.</p></li><li><p>Queue pull consumers are intended for controlled consumption from upstream infrastructure.</p></li><li><p>Paid Queue retention can be configured up to 14 days.</p></li><li><p>Pull batch size currently supports up to 100 messages.</p></li><li><p>ClickHouse Cloud Basic is explicitly positioned for starter/testing projects.</p></li><li><p>ClickHouse Cloud advertises scaling unused compute down to zero.</p></li><li><p>The official <code>@clickhouse/client-web</code> client is compatible with Cloudflare Workers.</p></li></ul>
+<p>Do not freeze provider prices into product behavior. Prices are planning inputs only.</p>
+<h2 id="blk-66183">38. Final architecture ruling</h2>
+<p>Unless codebase review produces a material contradiction, implement toward:</p>
+<pre><code>                     PUBLIC PRODUCT
+                  e.computedriven.com
+                         |
+          ┌──────────────┼──────────────┐
+          │              │              │
+      marketing         docs           app
+                                          |
+                                     cached summaries
+                                          |
+                                          v
+                              historical ClickHouse views
+
+
+                  FIRST-PARTY EVENT PATH
+     computedriven.com/_e/v1/events
+     opensentience.org/_e/v1/events
+     ...owned sites...
+                   |
+                   v
+             cd-e-ingest Worker
+                   |
+                   v
+               e-events Queue
+                   |
+           buffered for ~2 hours
+                   |
+                   v
+             cd-e-flush Worker
+            scheduled HTTP pull
+                   |
+                   v
+             ClickHouse Cloud
+                   |
+           ┌───────┼────────┐
+           v       v        v
+        E views  PostHog  Amplitude
+
+
+                    LATER LIVE PLANE
+                         |
+                         v
+                  Durable Objects
+                         |
+                    WebSockets
+                         |
+                  SessionProjection
+                         |
+                         v
+                       Super</code></pre>
+<p>This deliberately gives E its own scaling and failure domain from the first real event.</p>
+<p>The initial goal is not maximum scale.</p>
+<p>The initial goal is to learn the <strong>correct scale architecture early</strong>:</p>
+<blockquote><p><strong>edge acceptance -&gt; durable buffering -&gt; analytical batch ingest -&gt; cheap historical queries -&gt; live state somewhere else.</strong></p></blockquote>
+<p>Break it while it is small. Measure everything. Preserve event identity. Fail without losing evidence.</p></div>
+<p class="src"><a href="/#/e.computedriven.com/E_COMPUTEDRIVEN_OPUS_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-65199" class="lvl2">Opus Review + Implementation Brief — Workers + Queues + ClickHouse Cloud</a><a href="#blk-65241" class="lvl2">2.1 Separate analytics data plane</a><a href="#blk-65250" class="lvl2">2.2 ClickHouse is analytical truth, not transactional product truth</a><a href="#blk-65277" class="lvl2">2.3 Live state is not ClickHouse state</a><a href="#blk-65348" class="lvl2">Cron time</a><a href="#blk-65489" class="lvl2">Do not acknowledge first</a><a href="#blk-65495" class="lvl2">Retry semantics</a><a href="#blk-65641" class="lvl2">Hero</a><a href="#blk-65643" class="lvl2">“Instrument once”</a><a href="#blk-65645" class="lvl2">“Two kinds of time”</a><a href="#blk-65652" class="lvl2">“One journey across domains”</a><a href="#blk-65654" class="lvl2">“Your event vocabulary belongs to you”</a><a href="#blk-65656" class="lvl2">“Scoped by construction”</a><a href="#blk-65658" class="lvl2">Architecture</a><a href="#blk-65660" class="lvl2">Quickstart</a><a href="#blk-65662" class="lvl2">Privacy</a><a href="#blk-65664" class="lvl2">Final CTA</a><a href="#blk-65776" class="lvl2">Ingest</a><a href="#blk-65794" class="lvl2">Queue / two-hour buffer</a><a href="#blk-65816" class="lvl2">ClickHouse</a><a href="#blk-65834" class="lvl2">Identity</a><a href="#blk-65848" class="lvl2">Vendor fanout</a><a href="#blk-65858" class="lvl2">Website</a><a href="#blk-65870" class="lvl2">Future Super seam</a><a href="#blk-65938" class="lvl2">Phase 0 — review only</a><a href="#blk-65950" class="lvl2">Phase 1 — E shell</a><a href="#blk-65960" class="lvl2">Phase 2 — schema + SDK</a><a href="#blk-65970" class="lvl2">Phase 3 — Queue</a><a href="#blk-65982" class="lvl2">Phase 4 — ClickHouse</a><a href="#blk-65994" class="lvl2">Phase 5 — 2-hour scheduled drain</a><a href="#blk-66006" class="lvl2">Phase 6 — cached dashboard</a><a href="#blk-66014" class="lvl2">Phase 7 — vendor adapters</a><a href="#blk-66024" class="lvl2">Phase 8 — portfolio rollout</a><a href="#blk-66032" class="lvl2">Phase 9 — live/Super</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/e.computedriven.com/FINDINGS.md/">E — Phase 0 review findings</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraj3g7dkvx2ciusuiexa455qn5i2t57qe5w2tzw3hpz4md4vczmgma</div></div></div>
+</div></div>
+</body></html>

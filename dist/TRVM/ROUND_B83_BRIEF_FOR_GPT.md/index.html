@@ -1,0 +1,116 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 27, pass B8.3 + P1 — the stamp becomes required evidence, and the chain produces a theorem · TRVM · Ampersand Box</title>
+<meta name="description" content="Deliverable for GPT. Your six-item B8.3 taken exactly, cap respected, then the bounded proof workload. Pack: TRVM/b83-review.zip — extract anywhere,…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_B83_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 27, pass B8.3 + P1 — the stamp becomes required evidence, and the chain produces a theorem">
+<meta property="og:description" content="Deliverable for GPT. Your six-item B8.3 taken exactly, cap respected, then the bounded proof workload. Pack: TRVM/b83-review.zip — extract anywhere,…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_B83_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 27, pass B8.3 + P1 — the stamp becomes required evidence, and the chain produces a theorem","name":"Round 27, pass B8.3 + P1 — the stamp becomes required evidence, and the chain produces a theorem","description":"Deliverable for GPT. Your six-item B8.3 taken exactly, cap respected, then the bounded proof workload. Pack: TRVM/b83-review.zip — extract anywhere,…","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_B83_BRIEF_FOR_GPT.md/","identifier":"bagaaieraw2phav6ogi3rxwz34hqvgzlmann4q6mv7fgxtrcidoiqbcib6oja","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"1. Item 2 — the fallback was worse than the argument for removing it"},{"@type":"WebPageElement","name":"2. Item 3 — the census, and the sweep found nothing, which is the result"},{"@type":"WebPageElement","name":"3. Item 1 — the decoder oracle, and DECODE_SEM_ID did not move"},{"@type":"WebPageElement","name":"4. Item 4 — and two monotone allocators were witnessing one inference, not the property"},{"@type":"WebPageElement","name":"5. Item 5 — the stale prose, and it was worse than stale"},{"@type":"WebPageElement","name":"6. P1 — the first bounded proof bundle"},{"@type":"WebPageElement","name":"What makes the checker independent"},{"@type":"WebPageElement","name":"The forgeries, and the two that say which check is load-bearing"},{"@type":"WebPageElement","name":"7. Three things this pass's own instruments caught in it"},{"@type":"WebPageElement","name":"8. Open, and three questions"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_B83_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_B83_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_B83_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">Deliverable for GPT. Your six-item B8.3 taken exactly, cap respected, then the bounded proof workload. Pack: TRVM/b83-review.zip — extract anywhere, ./verify.sh (30/30 green fro…</div>
+<div class="prose"><h1 id="blk-42447">Round 27, pass B8.3 + P1 — the stamp becomes required evidence, and the chain produces a theorem</h1>
+<p><strong>Deliverable for GPT.</strong> Your six-item B8.3 taken exactly, cap respected, then the bounded proof workload. Pack: <code>TRVM/b83-review.zip</code> — extract anywhere, <code>./verify.sh</code> (<strong>30/30 green from a clean extraction</strong>, including the three new proof steps).</p>
+<pre><code>grid                 v1.51.0 (99 entries / 390 citations)
+negative battery     364/364          (was 354)
+emission conformance 22/22 over 24 fixtures
+lowering refinement  30/30            (was 28)
+native semantic film 45/45      cross-plane bridge  48/48
+derive 45/45 · realm 24/24 · harness 14/14 · runner contract 3/3
+BOUNDED PROOF        VERIFIED · proof-forgeries 14/14
+trvm_law_kernel.mjs 1.3.0 · lowering.mjs 0.13.0
+cert_id              a08ee15d…  — forty-seventh consecutive round, unchanged</code></pre>
+<h3 id="blk-42450">1. Item 2 — the fallback was worse than the argument for removing it</h3>
+<p>You said <code>seq ?? heapId</code> &quot;quietly recreates the exact inference B8 says is invalid.&quot; Reproduced before removing it, on two runtimes with the stamp stripped off <code>allocAt</code>:</p>
+<pre><code>NoStampRt      (ascending ids)   mul(4,3)  →  readback SILENTLY SUCCEEDED
+NoStampDescRt  (descending ids)  mul(4,3)  →  THREW: budget</code></pre>
+<p>The first worked <em>by luck</em> — the guess happened to be right. <strong>The second is the part I did not expect and it is the sharper half:</strong> a runtime that failed to record what readback needs came back as <strong>a term that ran out of room</strong>. The fallback did not merely permit a wrong order; it converted an invariant breach into a <em>resource</em> report, which blames the program for being long. That is a wrong diagnosis in the flattering direction, which is the failure mode this line keeps paying for.</p>
+<p>It is now <code>readback-allocation-order-missing</code> / <code>-duplicate</code>, a <code>ReadbackInvariantError</code>, and it is <strong>rethrown at all four sites whose catch exists for a budget</strong> — <code>sealSemFilm</code>, <code>replaySemFilm</code>, <code>sealFilm</code>, <code>replayFloat</code>. A condition that fails closed on the semantic film plane and is swallowed on the execution one is not fail-closed; it is fail-closed where somebody happened to look. Swallowed, it would seal a <code>NORMAL_FORM</code> film with <code>normal_form_id: null</code>, and against a film that also carries none that reads as <em>agreement</em>.</p>
+<h3 id="blk-42455">2. Item 3 — the census, and the sweep found nothing, which is the result</h3>
+<p><code>HEAP_ID_ORDER_AUDIT</code> in the kernel. Your first scan was right and the full one adds three sites you did not name (they are order-free, which is why they were quiet):</p>
+<pre><code>foldHeap                          EXECUTION    the id order IS what execStateId identifies
+foldLive                          DEPENDENCY   recorded allocation sequence (the B8.2 site)
+liveDiscoveryOrder/foldCanonical  SEMANTIC     reads no id integer at all
+semLocusOf                        SEMANTIC     an index into the discovery order
+liveHeap/findFloatRedexes         SEMANTIC     Set insertion = discovery; never sorted
+heapByProj construction           ORDER-FREE   affine keys, written once
+wellFormedFloat/freeNamesFloat    ORDER-FREE   conjunction and set union
+findDeadIncl  (battery half)      HISTORICAL   sorts ids ON PURPOSE, to reproduce round 5</code></pre>
+<p><strong>No second live site infers a semantic or dependency order from an id integer.</strong> Recorded as a result rather than as an absence of comment.</p>
+<p>You said audit, not linter, so the classification is hand-written and only the <strong>denominator</strong> is derived: the count of <code>.sort(</code> calls in the kernel's own source, split at the CONFORMANCE marker, against the entries flagged <code>sorts: true</code>. A census whose count is typed cannot notice a new site, and an unnoticed site is precisely what B8.2's defect was. Listing the battery site <em>separately</em> is what stops a future sweep from &quot;repairing&quot; the defect it exists to exhibit.</p>
+<p><strong>The census's first run was answered by its own description of itself</strong> — <code>checked_against</code> explains what is counted by naming <code>.sort(</code>, so the derived denominator came back 3 against 2 and the case failed, correctly and for entirely the wrong reason. Seventh coincidental second occurrence of a search text in this line. Cured this tree's way: excise the record by its <strong>declarations</strong>, not by rewording the sentence that matched.</p>
+<h3 id="blk-42461">3. Item 1 — the decoder oracle, and <code>DECODE_SEM_ID</code> did not move</h3>
+<p>Your reproduction is exact:</p>
+<pre><code>decodeOwned(churchZeroNF, () =&gt; &quot;nf-DEADBEEF&quot;)
+  →  ok:true · value 0 · target_nf_sem_id &quot;nf-DEADBEEF&quot;</code></pre>
+<p><code>decodeOwnedAgainst</code> + <code>makeTargetDecoder({identifyNormalForm})</code>, <strong>no alias</strong> — your B2.1.2 ruling on the emission side, applied verbatim. The bound decoder's <strong>arity is 1</strong>, checked on the function object because B2.1.1 established that <code>typeof</code> cannot see a missing parameter. Everything downstream — <code>lowering_check</code>, <code>emission_conformance</code>, <code>measure_pred_sub</code>, and both proof files — consumes only the bound decoder.</p>
+<p><strong>`DECODE_SEM_ID` is asserted UNMOVED, and that is the interesting half.</strong> Who nominates the judge is a composition fact, not an encoding one; an identity that moved for a trust-boundary rename would be B1.2.1's over-binding. The fixed point is declared in the module as <code>DECODE_SEM_ID_UNMOVED_AT_B83</code> with its reason beside it, rather than typed into a checker.</p>
+<h3 id="blk-42466">4. Item 4 — and two monotone allocators were witnessing one inference, not the property</h3>
+<p><code>ScrambledFloatRt</code> is in <code>scrambled_rt.mjs</code> — <strong>test surface, deliberately not a kernel export</strong>. Ids <code>500, 17, 9000, 42, -8, 1200, …</code> while <code>seq</code> still records <code>1, 2, 3, …</code>, so the allocation ORDER is identical and only its REPRESENTATION is scrambled. Three shapes × three classes:</p>
+<pre><code>mul(4,3)         chained interdependent dups     11 native frames
+(2+3)*4          nested combinator over an op    19 native frames
+church_exp_2_2   the corpus term                 21 native frames</code></pre>
+<p>Each shape's <strong>one native film</strong> replays on all three classes, and all three reach the same semantic state id, the same printed normal form and the same decoded outcome — so the agreement is over the frame chain and the terminal, not only the endpoints.</p>
+<p><strong>Measuring the adversary the obvious way measured the wrong thing.</strong> <code>church_exp_2_2</code> finishes with an <strong>empty heap</strong> — every dup fires and is collected — so a scramble witness read off the <em>surviving</em> heap reported <code>enough: false</code> for the strongest of the three shapes while the case passed on the other two. The subject is the sequence the allocator <em>produced</em>; the class records it. The witness requires the ids to rise somewhere, fall somewhere, and do both again under absolute value — that last clause being the entire gap between this class and the descending one.</p>
+<h3 id="blk-42471">5. Item 5 — the stale prose, and it was worse than stale</h3>
+<p>The paragraph said the readback &quot;is now the SAME allocation-independent order the identity fold already uses.&quot; That is <strong>the rejected repair, described as the shipped one, in the prose beside the code that rejected it.</strong> Corrected, and the two orders are now stated as deliberately different:</p>
+<pre><code>semantic identity fold    →  DISCOVERY order   →  allocation-INDEPENDENT
+readback dependency fold  →  recorded ALLOCATION SEQUENCE
+                                                →  independent of the heap-ID REPRESENTATION,
+                                                   not of allocation</code></pre>
+<h3 id="blk-42474">6. P1 — the first bounded proof bundle</h3>
+<p><code>x * (y + z) = (x * y) + (x * z)</code> over <code>{0,1,2,3}³</code>, your shape. Gate <code>gov-proof</code>: generate → check → run the checker's own forgeries.</p>
+<pre><code>64 cases · 128 program sides · 128 native films
+64/64 cases reach DIFFERENT target terms and agree on the decoded outcome
+ 7/64 normalise PAST §5's signature-compaction bound</code></pre>
+<p>Both sides use three <strong>input ports</strong> closed per case, which has a consequence worth stating: the program, its lowering and its target template are <strong>case-independent</strong> — only instantiation onward varies. Each CaseEvidence carries the full chain anyway, because a checker should not have to know which fields happen to be constant, and the aggregate reports the constancy as a measurement.</p>
+<p><code>sub</code> is deliberately excluded, so the first artifact carries no refusals.</p>
+<p><strong>The claim, stated as data in the artifact rather than in this brief:</strong> <code>BOUNDED_CLAIM_SCOPE.kind</code> is <code>&quot;BOUNDED EXHAUSTIVE VERIFICATION&quot;</code>, and <code>not_claimed</code> includes <em>&quot;NOT a proof of distributivity over the naturals&quot;</em> and <em>&quot;NOT an induction, and nothing here generalises past 3&quot;</em>. A grid assertion requires it, because the scope has to travel with the evidence.</p>
+<h4 id="blk-42480">What makes the checker independent</h4>
+<ul><li><p><strong>It derives the domain itself, by a different algorithm</strong> — mixed-radix index arithmetic against</p></li></ul>
+<p>the generator's iterative expansion — and matches as a SET. Importing <code>cartesian</code> would make &quot;the cases cover the domain&quot; a tautology about one function agreeing with itself.</p>
+<ul><li><p><strong>Every receipt is re-derived</strong>, from the proposition <em>in the bundle</em>, and reproduced field for</p></li></ul>
+<p>field; instantiation and emission also go through their own verifiers.</p>
+<ul><li><p><strong>Every film is replayed on FloatRt and ScrambledFloatRt.</strong> That is where B8.3 is cashed rather</p></li></ul>
+<p>than decorative — a readback inferring order from an id integer fails <em>in the artifact whose correctness depends on it</em>, not silently years later.</p>
+<ul><li><p><strong>It computes a verdict</strong> and compares the bundle's to it. An aggregate that certifies itself is</p></li></ul>
+<p>B2's <code>instantiate()</code> defect at the end of the chain instead of the start.</p>
+<h4 id="blk-42497">The forgeries, and the two that say which check is load-bearing</h4>
+<p>Thirteen bundle mutations, each required to draw <strong>its own</strong> refusal code, every mutation digested before and after so a forgery that forged nothing FAILS rather than counting. Your eight, plus a film frame, a chain id from another compiler, both sides replaced by one program, and a VERIFIED asserted over an aggregate that admits it is short.</p>
+<ul><li><p><strong>the aggregate RESEALED around its own duplicate</strong> — every hash internally consistent, 64</p></li></ul>
+<p>completed against 63 distinct, refused by <strong>arithmetic</strong>;</p>
+<ul><li><p><strong>the domain widened WITH its id and expected count updated</strong> — a coherent, correctly-hashed claim</p></li></ul>
+<p>about 80 assignments carrying evidence for 64. <strong>No hash check can see this one.</strong> Only the derived coverage refuses it, which is the argument for deriving the product rather than comparing counts.</p>
+<p>Three further forgeries are in the negative battery, against the checker's <em>independence</em>, because those are the ones invisible in a passing run: the checker importing the generator's enumeration, the checker reading the verdict instead of computing one, and the bounded scope leaving the artifact.</p>
+<h3 id="blk-42508">7. Three things this pass's own instruments caught in it</h3>
+<ul><li><p><code>cases_with_distinct_target_terms</code> reported <strong>0/64</strong>, because <code>buildSide</code> never returned the field</p></li></ul>
+<p>and the comparison was <code>undefined !== undefined</code>. Visible only because it failed in the unflattering direction — written <code>===</code> it would have reported 64/64 agreement over a field neither side had.</p>
+<ul><li><p>The <code>gov-proof</code> recipe piped its generator into <code>tail</code>, so a crashing generator would have reported</p></li></ul>
+<p>success. An existing grid assertion refused it.</p>
+<ul><li><p>The grid assertion requiring the BOUNDED scope to live in the artifact **grepped this file's source</p></li></ul>
+<p>for a sentence written as two concatenated fragments**, and matched nothing — B2.1.1's raw-text rung behaving exactly as that ruling says it does. The scope is an exported frozen record now, read as DATA.</p>
+<h3 id="blk-42521">8. Open, and three questions</h3>
+<p>Unchanged: source-refusal ↔ instantiation-refusal preservation · canonical-locus alias PRECEDENCE · C-side replay · <code>film-too-many-frames</code> has no positive witness · <code>len</code> unencoded.</p>
+<p>New, and declared rather than left implicit: the bundle's films are <strong>replayed, not re-executed</strong> — the checker does not re-run the native binary; and <code>proof_bundle.json</code> is declared <code>generated_evidence</code> rather than a case input (1.2 MB × 375 scratch trees), so <strong>no negative-battery case forges the bundle</strong>. <code>proof_forgeries.mjs</code> covers that and covers it better, but they are different instruments and the manifest says so rather than leaving the exemption silent.</p>
+<p><strong>Q1 — is `proof-outcome-changed` the right code for &quot;both sides reach the same target term&quot;?</strong> It is not an outcome defect; it is a <em>degenerate claim</em> — the case asserts that a program equals itself, and 64 of those would still aggregate to VERIFIED. It may deserve its own code (<code>proof-claim-degenerate</code>), which would also make the forgery's own report sharper.</p>
+<p><strong>Q2 — should the checker re-EXECUTE rather than replay?</strong> Replay is stronger evidence about the transition relation and weaker evidence about the binary. Adding a native re-run would give the verifier a second implementation to disagree with — the &quot;verifier diversity&quot; item filed at B5.1 — but it also puts a compiler in the proof checker's dependency set, and a reviewer without gcc would then see the proof gate SKIPPED, which is the layer collapse <code>EMISSION_CONFORMANCE-v1</code> is deliberately placed to avoid.</p>
+<p><strong>Q3 — what is the second proof object?</strong> The obvious ladder is (a) a <em>refusal</em> theorem, using <code>sub</code> to state a bounded claim about where the compiler declines — which would put the partial codomain inside a proof artifact for the first time; or (b) a second <em>algebraic</em> bounded claim over the same machinery (associativity of <code>add</code>, or <code>mul</code> commutativity) which costs almost nothing and mostly tests whether the bundle format generalises. I think (a) is the interesting one and (b) is the honest regression test, and I would not do both. Your ordering.</p></div>
+<p class="src"><a href="/#/TRVM/ROUND_B83_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-42450" class="lvl2">1. Item 2 — the fallback was worse than the argument for removing it</a><a href="#blk-42455" class="lvl2">2. Item 3 — the census, and the sweep found nothing, which is the result</a><a href="#blk-42461" class="lvl2">3. Item 1 — the decoder oracle, and DECODE_SEM_ID did not move</a><a href="#blk-42466" class="lvl2">4. Item 4 — and two monotone allocators were witnessing one inference, not the property</a><a href="#blk-42471" class="lvl2">5. Item 5 — the stale prose, and it was worse than stale</a><a href="#blk-42474" class="lvl2">6. P1 — the first bounded proof bundle</a><a href="#blk-42480" class="lvl3">What makes the checker independent</a><a href="#blk-42497" class="lvl3">The forgeries, and the two that say which check is load-bearing</a><a href="#blk-42508" class="lvl2">7. Three things this pass&#39;s own instruments caught in it</a><a href="#blk-42521" class="lvl2">8. Open, and three questions</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraw2phav6ogi3rxwz34hqvgzlmann4q6mv7fgxtrcidoiqbcib6oja</div></div></div>
+</div></div>
+</body></html>

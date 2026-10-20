@@ -1,0 +1,83 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>F.8.2.3 — refusal is terminal, and no channel outlives its world · super · Ampersand Box</title>
+<meta name="description" content="Artifact: `and-super-rev-f823.zip`. Every gate green.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="F.8.2.3 — refusal is terminal, and no channel outlives its world">
+<meta property="og:description" content="Artifact: `and-super-rev-f823.zip`. Every gate green.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"F.8.2.3 — refusal is terminal, and no channel outlives its world","name":"F.8.2.3 — refusal is terminal, and no channel outlives its world","description":"Artifact: `and-super-rev-f823.zip`. Every gate green.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/","identifier":"bagaaieravcyix3j6x24ghie4mbjsmqkukydlqm22qdonvoiumki3kzai3nga","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Measured"},{"@type":"WebPageElement","name":"1 · Finding 1, and I took the simplification"},{"@type":"WebPageElement","name":"2 · Finding 2 is the one I would not have found"},{"@type":"WebPageElement","name":"3 · The harness tried to corrupt the tree, and that is the finding I owe you"},{"@type":"WebPageElement","name":"4 · Two probes that were not probes, and one that became one"},{"@type":"WebPageElement","name":"5 · Your table"},{"@type":"WebPageElement","name":"6 · Where that leaves the transport"},{"@type":"WebPageElement","name":"7 · Ladder"},{"@type":"WebPageElement","name":"Verify"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"C1_1_8_2_3_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Artifact: `and-super-rev-f823.zip`. Every gate green.</div>
+<div class="prose"><h1 id="blk-113551">F.8.2.3 — refusal is terminal, and no channel outlives its world</h1>
+<p><strong>Artifact: `and-super-rev-f823.zip`. Every gate green.</strong></p>
+<p>Both findings are real, both reproduce, both are closed. The second one is the most product-relevant defect any of these rounds has turned up, and it had nothing to do with descriptors.</p>
+<pre><code>1 · a startup refusal whose cleanup stalls
+      adopt returned after 1003 ms -&gt; :refused &quot;control-channel-already-claimed&quot;
+      socket fd 26 at the moment of refusal -&gt; :inheritable   (want :closed)
+      socket fd 26 1.5 s later              -&gt; :inheritable
+
+2 · a production world reset, with channels open
+      before reset: bridge lists 2 · peers 2
+      after Ampd.Bootstrap.reset_world!():
+        bridge lists            -&gt; 2 channel(s)
+        agent socket fd 28      -&gt; :inheritable
+        human socket fd 30      -&gt; :inheritable
+        can the person take a control channel in the NEW world? -&gt; false
+        REFUSED: control-channel-already-claimed</code></pre>
+<p>After:</p>
+<pre><code>1 · adopt returned after 2 ms · socket :closed at the moment of refusal
+2 · bridge 0 · peers 0 · both sockets :closed · subscriptions 0
+    can the person take a control channel in the NEW world? -&gt; true</code></pre>
+<h3 id="blk-113557">0 · Measured</h3>
+<table><thead><tr><th></th><th>F.8.2.2</th><th>F.8.2.3</th></tr></thead><tbody><tr><td>conformance vectors</td><td>42</td><td><strong>42</strong></td></tr><tr><td>BEAM tests</td><td>180</td><td><strong>182</strong>, 0 failures at seed 0</td></tr><tr><td>browser assertions</td><td>64</td><td><strong>64</strong></td></tr><tr><td>BEAM sabotage falsifiers</td><td>44 · 0 not</td><td><strong>48 · 0 not</strong></td></tr><tr><td>host acceptance checks</td><td>47 held</td><td><strong>47 held · 0 failed</strong></td></tr><tr><td>host sabotage falsifiers</td><td>6 · 0 not</td><td><strong>6 · 0 not</strong></td></tr></tbody></table>
+<h3 id="blk-113580">1 · Finding 1, and I took the simplification</h3>
+<p>Reaching it needed the shape you described: hold <code>Ampd.Peer</code>'s control claim so the bridge still believes the channel is free and the refusal happens one layer in, then fill the socket's send buffer so nobody is reading. <code>socket:send/2</code> is the infinity form; the connection stalls; the parent's flat one-second branch fires, demonitors, and returns <code>{:refused, _}</code> <strong>without rolling back</strong>. 1003 ms, socket open, still open a second and a half later — the timed-out-but-still-starting state the previous round said it had removed.</p>
+<p>Your simplification is right and I took it whole: <strong>a channel that was refused never became a channel.</strong> There is no reader on the other end by construction, and the refusal reaches whoever asked by the route they asked on — <code>bridge-reply@1</code> for the host, the return value of <code>adopt_channel/3</code> inside the BEAM. So the frame is gone, and with it the only thing in that path that could block.</p>
+<p>The escape is gone too, and in the way that matters more than removing the write: <code>settle/5</code> now <strong>always rolls back</strong>, and shares the startup deadline rather than inventing a second one. The bounded wait after the kill is a belt rather than a mechanism — <code>:kill</code> cannot be trapped, so the process is gone — and if it expired it would no longer take the channel with it.</p>
+<h3 id="blk-113584">2 · Finding 2 is the one I would not have found</h3>
+<p><code>do_reset_world!/0</code> reset <code>Ampd.Peer</code> and never <code>Ampd.Bridge</code>, under a comment that is already the argument for doing both: <em>every open channel was bound to the world being destroyed</em>. So the fail-closed half worked — old handles stopped resolving — and the liveness half did not: the bridge went on listing the old channels with <code>control_open</code> still true, and refused the person a control channel <strong>in the world they had just reset</strong>.</p>
+<blockquote><p>World generation changed; capability generation did not.</p></blockquote>
+<p>Fixed in your order, and the order is load-bearing: <code>Bridge.reset/0</code> first, so identities are detached by the table that minted them, then <code>Peer.reset/0</code> and its new epoch, then the stores.</p>
+<p>And <code>Bridge.reset/0</code> is a barrier now rather than a broadcast. It demonitored everything — dropping the backstop the previous round existed to build — then sent <code>:stop</code> and returned without proving anything had stopped. It terminates and disposes in its own process before replying. The graceful <code>:stop</code> is not available and the reason is Finding 1: <code>:stop</code> ends in <code>Wire.send_frame/2</code>, so one client that is not reading could hold a world reset open indefinitely. Closing the socket delivers EOF, which is the honest signal for a channel whose world no longer exists.</p>
+<p><strong>The test asserts this with no polling.</strong> <code>settled/3</code> would have passed against the fire-and-forget version too — the sockets do close eventually — so it measures nothing about a barrier. Asserting <code>NativeFd.state(fd) == :closed</code> on the line after <code>reset_world!/0</code> returns is the claim.</p>
+<h3 id="blk-113591">3 · The harness tried to corrupt the tree, and that is the finding I owe you</h3>
+<p>Extending <code>probe</code> to take several <code>(expression, file)</code> pairs — which I did last round to fix the redundant-route problem — had a bug I hit immediately: the world-reset probe targets <code>bridge.ex</code> twice, and the loop backed the file up once per pair. The second copy captured the file <strong>as the first sabotage had left it</strong>, so the restore wrote that sabotage back into the source permanently. It did exactly that to <code>Ampd.Bridge</code>, and the only reason I caught it is that the duplicate <code>mv</code> failed loudly afterwards.</p>
+<p>Repaired, and the loop now backs a file up once however many expressions target it. Worth saying plainly: a verification harness that can silently modify the source it is verifying is a worse defect than anything in the list it produces, and this one shipped for exactly one round because I added the capability and the first probe to use it in the same change.</p>
+<h3 id="blk-113594">4 · Two probes that were not probes, and one that became one</h3>
+<p><code>a world reset does not complete until its channels are gone</code> came back NOT A FALSIFIER on the first attempt — correctly, because the test polled. Making the assertion immediate is what turned the property into something a sabotage can break.</p>
+<p>The other three falsify directly: disabling <code>settle/5</code>'s rollback, restoring the wire refusal frame (which does not leak — it <em>stalls</em>, and the test's elapsed bound catches it), and removing <code>Bridge.reset/0</code> from the bootstrap sequence.</p>
+<h3 id="blk-113597">5 · Your table</h3>
+<table><thead><tr><th>Finding</th><th>State</th></tr></thead><tbody><tr><td>ordinary bind-refusal: one-second escape</td><td>✅ closed · rollback unconditional · shares the deadline</td></tr><tr><td>refusal frame on an uncommitted channel</td><td>✅ removed · no reader exists by construction</td></tr><tr><td>world reset → channel invalidation</td><td>✅ wired · <code>Bridge.reset/0</code> before <code>Peer.reset/0</code></td></tr><tr><td>world reset completion barrier</td><td>✅ synchronous · asserted with no polling</td></tr><tr><td>stale claim blocks the replacement channel</td><td>✅ closed · the measured product bug</td></tr></tbody></table>
+<h3 id="blk-113611">6 · Where that leaves the transport</h3>
+<p>Descriptor ownership, refusal ownership, startup ownership, process-death ownership, and now world-generation ownership. Every one of the five was found the same way — by someone reading the source and asking who disposes of a thing — and every one was reproduced before it was fixed.</p>
+<p>I am not going to write &quot;closed&quot;. What I will write is what has been true at each of the last five rounds: <strong>nothing measured and not fixed, and the next unmeasured edge is one we have not thought of yet.</strong> On your ruling that we have now traversed the ownership space, I agree, and the WebView is the right next thing.</p>
+<p>Your <code>channel lifetime ⊆ world-generation lifetime</code> note — making the generation explicit in channel metadata — I have not built. It is the right idea and it is a design decision rather than a closure, so I have left it for the round that wants it. A capability belonging to an incarnation of a world rather than to an actor is a change to what a channel <em>is</em>, not a repair.</p>
+<p>Carried and unchanged: <code>app-prototype.html</code>'s remote fonts (accepted for the production WebView), engine confinement, and the Rust child-process falsifier for <code>ensure_std_fds</code>.</p>
+<h3 id="blk-113616">7 · Ladder</h3>
+<p>C1.1     Tauri Rust host + private transport ├─ F.6      CommandSpec · exact-set linearized · limits · pack digest ├─ F.7      inherited descriptors · identity lifetime · epoch · │           demultiplexer · bounded projection ├─ F.8      CLOEXEC confinement · serialized writer · │           continuity cursor · lossless paging ├─ F.8.1    durable host world · one owner per world              ✓ ├─ F.8.2    the receiver owns what it receives · zero residue     ✓ ├─ F.8.2.1  adopt_channel consumes its argument exactly once      ✓ ├─ F.8.2.2  a channel handoff is a transaction                    ✓ └─ F.8.2.3  refusal is terminal · no channel outlives its world   ✓ ── remaining: the WebView C1.1b    SQLite transactional persistence · durable revision C1.2     FabricProvider.Tailscale</p>
+<h3 id="blk-113618">Verify</h3>
+<pre><code>cd ampd &amp;&amp; mix test                    # 182 tests, seed 0
+bash tools/sabotage.sh                 # 48 falsified · 0 not   (~5m)
+cd .. &amp;&amp; bash tools/release.sh         # required gates, including both host gates
+./host/target/release/super-host verify        # 47 held · 0 failed
+bash tools/sabotage-host.sh                    # 6 falsified · 0 not</code></pre></div>
+<p class="src"><a href="/#/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-113557" class="lvl2">0 · Measured</a><a href="#blk-113580" class="lvl2">1 · Finding 1, and I took the simplification</a><a href="#blk-113584" class="lvl2">2 · Finding 2 is the one I would not have found</a><a href="#blk-113591" class="lvl2">3 · The harness tried to corrupt the tree, and that is the finding I owe you</a><a href="#blk-113594" class="lvl2">4 · Two probes that were not probes, and one that became one</a><a href="#blk-113597" class="lvl2">5 · Your table</a><a href="#blk-113611" class="lvl2">6 · Where that leaves the transport</a><a href="#blk-113616" class="lvl2">7 · Ladder</a><a href="#blk-113618" class="lvl2">Verify</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a><a href="/super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md/">F.8.2.5 — generation is a fence, and the narrowing was never a product decision</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieravcyix3j6x24ghie4mbjsmqkukydlqm22qdonvoiumki3kzai3nga</div></div></div>
+</div></div>
+</body></html>

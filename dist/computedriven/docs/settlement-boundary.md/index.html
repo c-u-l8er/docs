@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>The settlement boundary — what this repository must never gain · computedriven · Ampersand Box</title>
+<meta name="description" content="Status: RULED (R91, root `REVISION_REGISTER.md`, 2026-09-19). Nothing to build.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/settlement-boundary.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The settlement boundary — what this repository must never gain">
+<meta property="og:description" content="Status: RULED (R91, root `REVISION_REGISTER.md`, 2026-09-19). Nothing to build.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/settlement-boundary.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"The settlement boundary — what this repository must never gain","name":"The settlement boundary — what this repository must never gain","description":"Status: RULED (R91, root `REVISION_REGISTER.md`, 2026-09-19). Nothing to build.","url":"https://docs.ampersandboxdesign.com/computedriven/docs/settlement-boundary.md/","identifier":"bagaaieraiov6xxpu4y3ec5yegoenevy6typ7dl5j4tw5tea4hsp274dlzrmq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"The four absences"},{"@type":"WebPageElement","name":"The one thing settlement reads"},{"@type":"WebPageElement","name":"The clause this adds, and where it lives"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"settlement-boundary.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/settlement-boundary.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/settlement-boundary.md</span>
+
+</div></div>
+<div class="lead">Status: RULED (R91, root `REVISION_REGISTER.md`, 2026-09-19). Nothing to build.</div>
+<div class="prose"><h1 id="blk-63219">The settlement boundary — what this repository must never gain</h1>
+<p><strong>Status: RULED (R91, root `REVISION_REGISTER.md`, 2026-09-19). Nothing to build.</strong></p>
+<p>This file exists so that a future round cannot add settlement here by accident. It is a list of absences, and the absences are the enforcement — the same discipline as <code>connect-model.md</code> §3's <code>TransportPeer</code>, which has no <code>create</code> because the missing constructor <em>is</em> the rule.</p>
+<blockquote><p><strong>`computedriven` owns the count format. `locu.systems` owns the money.</strong></p></blockquote>
+<p>The contract lives at <code>locu.systems/docs/spec/91_SETTLEMENT.md</code>. It was drafted here on 2026-09-19 as <code>settlement-model.md</code> and moved by R91: a substrate that carries our billing model cannot be run by anyone who is not us, and billing policy is not reusable the way the count record is.</p>
+<h3 id="blk-63225">The four absences</h3>
+<table><thead><tr><th>Must never gain</th><th>Why</th></tr></thead><tbody><tr><td>a payment or balance field on <code>PeerExpectation</code></td><td>it is the convenient place to put one, and it is the single most likely way the contract is lost</td></tr><tr><td>any settlement type nameable from <code>cd-connect</code> or <code>cd-rendezvous</code></td><td><code>connect-model.md</code> §1: <em>a connector that can NAME a rendezvous type can branch on provenance.</em> One level up: <strong>a connector that can name a settlement type can branch on solvency</strong></td></tr><tr><td>a solvency branch in <code>cd-core</code> / <code>cd-kernellet</code> admission — <strong>R90</strong></td><td>it would qualify the third clause, <em>only the lineage decides what they may do</em>, with an asterisk for money. And a settlement round trip on an admission path costing ~10² cycles (<code>floor-attribution.md</code>) makes settlement the dominant cost by six or more orders of magnitude</td></tr><tr><td>a debt, arrears or balance kind in the lineage — <strong>R91</strong></td><td>a settlement failure is the host's receivable, not a fact about what the world did</td></tr></tbody></table>
+<p><strong>There is no `cd-settle` crate and there is not going to be one.</strong> R90 removes the floor-side component entirely, so nothing remains here for a crate to hold.</p>
+<h3 id="blk-63238">The one thing settlement reads</h3>
+<p><code>90_LOCUS_HOSTING.md</code> §2a's count record — a class symbol per admitted transition, grouped by (transition class × epoch). It has to exist for the meter regardless, it is genuinely reusable, and it carries no billing policy. <strong>That is the whole interface.</strong></p>
+<h3 id="blk-63240">The clause this adds, and where it lives</h3>
+<pre><code>DISCOVERY CHOOSES WHERE WE TRY.             cd-rendezvous          here
+AUTHENTICATION DECIDES WHOM WE REACHED.     cd-connect             here
+ONLY THE LINEAGE DECIDES WHAT THEY MAY DO.  cd-core / cd-durable   here
+SETTLEMENT DECIDES HOW MUCH MAY BE SPENT.   ─────────────────────  NOT HERE</code></pre></div>
+<p class="src"><a href="/#/computedriven/docs/settlement-boundary.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-63225" class="lvl2">The four absences</a><a href="#blk-63238" class="lvl2">The one thing settlement reads</a><a href="#blk-63240" class="lvl2">The clause this adds, and where it lives</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraiov6xxpu4y3ec5yegoenevy6typ7dl5j4tw5tea4hsp274dlzrmq</div></div></div>
+</div></div>
+</body></html>

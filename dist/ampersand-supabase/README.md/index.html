@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>ampersand-supabase — ARCHIVED · ampersand-supabase · Ampersand Box</title>
+<meta name="description" content="Archived by decision on 2026-07-30. Archived, not failed — and not yet retired.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/ampersand-supabase/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ampersand-supabase — ARCHIVED">
+<meta property="og:description" content="Archived by decision on 2026-07-30. Archived, not failed — and not yet retired.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/ampersand-supabase/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"ampersand-supabase — ARCHIVED","name":"ampersand-supabase — ARCHIVED","description":"Archived by decision on 2026-07-30. Archived, not failed — and not yet retired.","url":"https://docs.ampersandboxdesign.com/ampersand-supabase/README.md/","identifier":"bagaaieraubemu4ubjbvc2vz7dpcghhuborf3doqi46ruhuwp2gryflkgbpsq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"ampersand-supabase","url":"https://docs.ampersandboxdesign.com/ampersand-supabase/"},"articleSection":"ampersand-supabase","hasPart":[{"@type":"WebPageElement","name":"What it is"},{"@type":"WebPageElement","name":"Why it was abandoned"},{"@type":"WebPageElement","name":"Why it is still here, and still running"},{"@type":"WebPageElement","name":"If you are an agent"},{"@type":"WebPageElement","name":"Provenance"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"ampersand-supabase","item":"https://docs.ampersandboxdesign.com/ampersand-supabase/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/ampersand-supabase/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">ampersand-supabase</span>
+<span class="path">ampersand-supabase/README.md</span>
+
+</div></div>
+<div class="lead">Archived by decision on 2026-07-30. Archived, not failed — and not yet retired.</div>
+<div class="prose"><h1 id="blk-54863">ampersand-supabase — ARCHIVED</h1>
+<p><strong>Archived by decision on 2026-07-30. Archived, not failed — and not yet retired.</strong></p>
+<p>Until 2026-08-15 nothing in this directory said so. <code>ARCHITECTURE.md</code> still opens with <em>&quot;Status: Implementation-ready&quot;</em> and a date of 2026-03-28, which was true when it was written and has been wrong for six weeks. This file exists so that opening the directory tells you what opening the directory should tell you.</p>
+<h3 id="blk-54866">What it is</h3>
+<p>One Supabase instance serving the whole [&amp;] Protocol ecosystem, each product in its own PostgreSQL schema. Measured in this tree on 2026-08-15: <strong>40 `.sql` migrations across 10 schemas</strong> — <code>agentelic</code>, <code>amp</code>, <code>fleet</code>, <code>geo</code>, <code>govern</code>, <code>kag</code>, <code>orchestrate</code>, <code>rune</code>, <code>temporal</code>, <code>webhost</code>.</p>
+<blockquote><p>Several documents in the portfolio say <em>&quot;35 migrations across 11 schemas.&quot;</em> That number came from a JSON example in <code>workbench/docs/spec/README.md</code> and was copied onward without being re-derived. The count above is from <code>ls ampersand-supabase/migrations/*.sql</code> and <code>grep -hoE 'create schema if not exists [a-z_]+'</code>. Re-run those rather than trusting either number.</p></blockquote>
+<h3 id="blk-54870">Why it was abandoned</h3>
+<p>Postgres stores a row but not <em>why the row is that row</em>, and nothing in the migration layer could refuse a row whose provenance did not check out. The stack's central claim — that a divergence is <strong>refusable</strong> rather than silent — stopped at the database boundary. It was also a dependency the stack does not control.</p>
+<p>The replacement is <strong>`studbook`</strong> (<code>studbook/docs/spec/README.md</code>), which is a <strong>draft spec with no implementation</strong>. Its §7 and §10 have not been ruled. <strong>Do not build from it yet.</strong></p>
+<h3 id="blk-54873">Why it is still here, and still running</h3>
+<p><strong>Nothing migrates off this until studbook can hold the same data with the same guarantees</strong> (studbook §9). Concretely, today:</p>
+<ul><li><p><code>fleet.*</code> still serves <strong>KILN</strong> and <strong>FleetPrompt</strong>.</p></li><li><p><code>kag.*</code> has been orphaned since the BendScript pivot.</p></li><li><p>The migrations still apply and the code written against them still runs.</p></li></ul>
+<p><strong>studbook is blocked on one unruled question — where confidentiality comes from</strong> (studbook §10.2). Content addressing is hostile to access control: if the key is the hash of the content, knowing the content is knowing the key. Until that is answered studbook cannot hold anything with a user in it, so it is <strong>not</strong> yet a replacement for what WebHost.Systems and FleetPrompt use Supabase Auth and RLS for. See <code>CONFIDENTIALITY.md</code> and <code>THREAT_MODEL.md</code> in the repository root.</p>
+<h3 id="blk-54883">If you are an agent</h3>
+<ul><li><p><strong>Do not build new products against this.</strong> New data-layer work waits on studbook.</p></li><li><p><strong>Do not tear it down either.</strong> It is load-bearing for two live products.</p></li><li><p>A <code>docs/spec/</code> document specifying Supabase tables, RLS or <code>amp.profiles</code> auth is describing this</p></li></ul>
+<p>route. Several now carry a supersession banner saying so.</p>
+<ul><li><p>Products that never used it at all: Graphonomous (embedded SQLite), Deliberatic (in-memory),</p></li></ul>
+<p>OpenSentience (ETS).</p>
+<h3 id="blk-54896">Provenance</h3>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Abandonment ruled</td><td>2026-07-30, Travis</td></tr><tr><td>This marker written</td><td>2026-08-15, after <code>REVISION_REGISTER.md</code> recorded that nothing verified the directory <em>said</em> it was archived</td></tr><tr><td>Replacement</td><td><code>studbook/</code> — spec rung, unbuilt</td></tr><tr><td>Blocker on the replacement</td><td>studbook §10.2 · <code>CONFIDENTIALITY.md</code> · <code>THREAT_MODEL.md</code></td></tr></tbody></table></div>
+<p class="src"><a href="/#/ampersand-supabase/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-54866" class="lvl2">What it is</a><a href="#blk-54870" class="lvl2">Why it was abandoned</a><a href="#blk-54873" class="lvl2">Why it is still here, and still running</a><a href="#blk-54883" class="lvl2">If you are an agent</a><a href="#blk-54896" class="lvl2">Provenance</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/ampersand-supabase/ARCHITECTURE.md/">[&amp;] Ecosystem — Shared Supabase Architecture</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraubemu4ubjbvc2vz7dpcghhuborf3doqi46ruhuwp2gryflkgbpsq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,94 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>F.8.2.1 — the fourth exit, and a baseline that had already absorbed it · super · Ampersand Box</title>
+<meta name="description" content="Artifact: `and-super-rev-f821.zip`. Every gate green.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="F.8.2.1 — the fourth exit, and a baseline that had already absorbed it">
+<meta property="og:description" content="Artifact: `and-super-rev-f821.zip`. Every gate green.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"F.8.2.1 — the fourth exit, and a baseline that had already absorbed it","name":"F.8.2.1 — the fourth exit, and a baseline that had already absorbed it","description":"Artifact: `and-super-rev-f821.zip`. Every gate green.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/","identifier":"bagaaiera5rwdt7gpm34ls7kw5jpyfk4m4lvvy45ezq7s5lzpsi6if5nt2w5a","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Measured"},{"@type":"WebPageElement","name":"1 · The law, encoded as a shape rather than a patch"},{"@type":"WebPageElement","name":"2 · The baseline moved to boot, and the numbers moved with it"},{"@type":"WebPageElement","name":"3 · The \u003c3 floor is gone, and it was hiding a crash"},{"@type":"WebPageElement","name":"4 · Sabotage"},{"@type":"WebPageElement","name":"5 · The release wording, taken"},{"@type":"WebPageElement","name":"6 · Your table"},{"@type":"WebPageElement","name":"7 · Open"},{"@type":"WebPageElement","name":"8 · WebView"},{"@type":"WebPageElement","name":"9 · Ladder"},{"@type":"WebPageElement","name":"Verify"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"C1_1_8_2_1_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Artifact: `and-super-rev-f821.zip`. Every gate green.</div>
+<div class="prose"><h1 id="blk-113381">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</h1>
+<p><strong>Artifact: `and-super-rev-f821.zip`. Every gate green.</strong></p>
+<p>You were right, and the diagnosis was exact: the fast refusal is a fourth exit, it leaks one descriptor per refused claim, and the battery's own single <code>second</code> call is what contaminated the baseline every later equality was measured against. Reproduced before touching anything:</p>
+<pre><code>boot baseline sockets: 3
+first control:  ok  -&gt; 4
+second control: refused (control-channel-already-claimed)
+after 100 REFUSED second-control claims -&gt; 104   (was 4)
+LEAKED: 100</code></pre>
+<p>A hundred refusals, a hundred descriptors, on the one move a hostile local process always has: asking for something it is not permitted to have. And &quot;one sink, three call sites, no fourth exit&quot; was a sentence I wrote about code I had not finished reading.</p>
+<h3 id="blk-113386">0 · Measured</h3>
+<table><thead><tr><th></th><th>F.8.2</th><th>F.8.2.1</th></tr></thead><tbody><tr><td>conformance vectors</td><td>42</td><td><strong>42</strong></td></tr><tr><td>BEAM tests</td><td>176</td><td><strong>176</strong>, 0 failures at seed 0</td></tr><tr><td>browser assertions</td><td>64</td><td><strong>64</strong></td></tr><tr><td>BEAM sabotage falsifiers</td><td>40 · 0 not</td><td><strong>40 · 0 not</strong></td></tr><tr><td>host acceptance checks</td><td>44 held</td><td><strong>47 held · 0 failed</strong></td></tr><tr><td>host sabotage falsifiers</td><td>5 · 0 not</td><td><strong>6 · 0 not</strong></td></tr></tbody></table>
+<h3 id="blk-113409">1 · The law, encoded as a shape rather than a patch</h3>
+<p>I did not fix the branch. Two clauses is <em>how</em> the branch happened — a second <code>handle_call/3</code> head that matched before the one holding the ownership contract, and named the descriptor <code>_fd</code> to say it did not care. So there is no longer a second clause:</p>
+<pre data-lang="elixir"><code><span class="t-kw">def</span> handle_call({<span class="t-atom">:adopt</span>, fd_or_socket, kind, actor}, _f, st) <span class="t-kw">do</span>
+  <span class="t-kw">if</span> kind == <span class="t-atom">:human_control</span> <span class="t-kw">and</span> st.control_open <span class="t-kw">do</span>
+    dispose(fd_or_socket)
+    {<span class="t-atom">:reply</span>, {<span class="t-atom">:refused</span>, control_taken()}, st}
+  <span class="t-kw">else</span>
+    ...</code></pre>
+<p>The law is in <code>adopt_channel/3</code>'s doc, where a caller reads it:</p>
+<blockquote><p><strong>This call consumes its channel argument exactly once</strong>, into a live connection or into a sink, and that holds for every refusal as much as every success. A caller hands over the channel; it does not get it back and must not close it.</p></blockquote>
+<p><code>dispose/1</code> is your split: an integer goes to <code>NativeFd.discard/1</code>, an already-adopted socket handle is <code>:socket.close/1</code>d.</p>
+<p><strong>The one exit that correctly does nothing is documented as such</strong>, because I checked it this time rather than counting: when <code>Connection.start/3</code> refuses, the connection process has already taken the socket and closes it on its own refusal path. Disposing there would be a double close, which is the mirror of this bug and just as bad.</p>
+<h3 id="blk-113417">2 · The baseline moved to boot, and the numbers moved with it</h3>
+<p>Your sequence, implemented in order. The descriptor baseline is now sampled beside the fd-3 sample, immediately after <code>Runtime::start</code>, before the first control channel exists:</p>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>the control channel</td><td><strong>exactly</strong> boot + 1</td></tr><tr><td>a second control claim</td><td>refused, and still boot + 1</td></tr><tr><td>100 refused claims</td><td><strong>still boot + 1</strong></td></tr><tr><td>0, 1 and 2 in the runtime</td><td>open, and none of them a socket</td></tr><tr><td>ten channels · 100 cycles · 30 rejected commands · 4 surplus rights</td><td>as before, now against a clean baseline</td></tr></tbody></table>
+<p>The correction is visible in the sabotage output: the local baseline the descriptor section computes fell from 11 to 10 and from 9 to 8 between revisions. That drop is the leaked descriptor F.8.2 had been calling normal.</p>
+<h3 id="blk-113433">3 · The <code>&lt;3</code> floor is gone, and it was hiding a crash</h3>
+<p>You are right that &quot;0, 1 and 2 are occupied&quot; is a fact about how this host spawns the runtime, not about Linux, and that it is exactly the assumption a GUI launch should not inherit. It was also an <em>ownership exception</em> living inside the module whose whole claim is that every received descriptor has an exit — the same shape as the bug being fixed.</p>
+<p><code>close_received/1</code> now takes any non-negative descriptor. Two things fell out:</p>
+<p><strong>It was masking a crash.</strong> With the floor, <code>discard(-1)</code> returned <code>{:error, 0}</code> and looked handled. Without it, the same call is a <code>badarg</code> that killed the bridge <code>GenServer</code> — reached from <code>adopt_channel(-1, :agent, &quot;kestrel&quot;)</code>, which is a test in this suite and a call any code inside the runtime can make. <code>discard/1</code> is documented as total and was not; it is now, with the NIF left strict underneath. A guard that hides a crash is its own argument against having had one.</p>
+<p><strong>The hazard moved to where it arises.</strong> The floor was worried about a received channel landing on the runtime's stdout — real, since <code>SCM_RIGHTS</code> takes the lowest free number like any other <code>dup</code>. That is the host's job: <code>fdpass::ensure_std_fds</code> runs after <code>fork</code> and before <code>exec</code>, opens <code>/dev/null</code> onto any of 0, 1, 2 that is closed, and runs <em>before</em> <code>dup_onto(theirs, 3)</code> so the ordering cannot invert.</p>
+<p><strong>And the check for it is an invariant check, not a falsifier — not counted as one.</strong> This battery is launched from a shell, so 0, 1 and 2 are occupied whether or not <code>ensure_std_fds</code> exists. It passes with the fix disabled, which is the definition. Both the code and this brief say so; the same call I made for <code>cmsg_cloexec</code> in F.8.1.</p>
+<h3 id="blk-113439">4 · Sabotage</h3>
+<p>Six now, each stubbing one fix and requiring a <strong>named</strong> check RED:</p>
+<pre><code>falsified   an adopted descriptor is disposed of
+falsified   F.8.1's dup:false adoption leaks one descriptor per channel
+falsified   a rejected command's descriptors are disposed of
+falsified   the FD_CLOEXEC that dup(2) drops is put back
+falsified   a refused control claim disposes of the channel it arrived on
+            → 105 sockets after 100 refused claims, expected 4
+falsified   the inherited bridge descriptor is adopted, not merely wrapped</code></pre>
+<h3 id="blk-113442">5 · The release wording, taken</h3>
+<p><code>release.sh</code> now prints:</p>
+<pre><code>RELEASE OK → and-super-rev-f821.zip (revision F.8.2.1 · required release gates green)
+  NOT run here: ampd/tools/sabotage.sh (~4m40s). A round is not closed without it.</code></pre>
+<p>You are right that it was stronger than the implementation warranted, and right that after everything this project has learned about claim discipline it is not the place to leave a prose-versus-evidence gap. The comment above it says the same thing at length: 176 passing tests and 176 tests <em>that can fail</em> are different claims, and only the falsifier battery separates them.</p>
+<h3 id="blk-113446">6 · Your table</h3>
+<table><thead><tr><th>Finding</th><th>State</th></tr></thead><tbody><tr><td>fourth exit: fast refusal keeps the descriptor</td><td>✅ closed · reproduced at 100/100 first, then fixed</td></tr><tr><td>the contract belongs on <code>adopt_channel</code>, not the branch</td><td>✅ one clause · law in the doc · integer→sink, socket→close</td></tr><tr><td>baseline taken after the adversary</td><td>✅ boot baseline, before the first channel exists</td></tr><tr><td>the <code>&lt;3</code> floor</td><td>✅ <strong>removed</strong> · hazard moved to <code>ensure_std_fds</code> · check labelled an invariant</td></tr><tr><td><code>discard/1</code> was not total</td><td>⚠️ not in the round; found by removing the floor · §3</td></tr><tr><td>&quot;every gate green&quot; overclaims</td><td>✅ &quot;required release gates green&quot; + what was not run</td></tr></tbody></table>
+<h3 id="blk-113462">7 · Open</h3>
+<p>Nothing measured-and-not-fixed in the transport.</p>
+<p>The two carried items are unchanged and still not this round: <code>app-prototype.html</code>'s remote fonts (accepted for the production WebView, not applied to a live marketing page), and engine confinement — Landlock/namespaces/bubblewrap — which wants its own design round between &quot;the cockpit works&quot; and any claim that a local agent is contained.</p>
+<h3 id="blk-113465">8 · WebView</h3>
+<p>Taking your sequencing and your version correction: current 2.11.x rather than the 2.11.1 floor, locked at whatever <code>2.11.5</code> resolves to when the app is scaffolded. Capability- scoped IPC, no remote content, bundled or system typography.</p>
+<p>persistent world → Rust host → human control capability → subscribe → projection → derive LIVE LOCAL → WebView</p>
+<p>then exactly one mutation — click REVOKE → Tauri command → Rust human channel → ampd authority transition → new projection → UI changes from truth. No optimistic UI, no shadow world, and <code>RECONNECTING</code> only once reacquisition exists to produce it.</p>
+<h3 id="blk-113469">9 · Ladder</h3>
+<p>C1.1     Tauri Rust host + private transport ├─ F.6      CommandSpec · exact-set linearized · limits · pack digest ├─ F.7      inherited descriptors · identity lifetime · epoch · │           demultiplexer · bounded projection ├─ F.8      CLOEXEC confinement · serialized writer · │           continuity cursor · lossless paging ├─ F.8.1    durable host world · one owner per world              ✓ ├─ F.8.2    the receiver owns what it receives · zero residue · │           the flag dup(2) drops · host gates in the chain       ✓ └─ F.8.2.1  adopt_channel consumes its argument exactly once · boot baseline · no exception in the sink              ✓ ── remaining: the WebView C1.1b    SQLite transactional persistence · durable revision C1.2     FabricProvider.Tailscale</p>
+<h3 id="blk-113471">Verify</h3>
+<pre><code>cd ampd &amp;&amp; mix test                    # 176 tests, seed 0
+bash tools/sabotage.sh                 # 40 falsified · 0 not   (4m40s)
+cd .. &amp;&amp; bash tools/release.sh         # required gates, including both host gates
+./host/target/release/super-host verify        # 47 held · 0 failed
+bash tools/sabotage-host.sh                    # 6 falsified · 0 not</code></pre></div>
+<p class="src"><a href="/#/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-113386" class="lvl2">0 · Measured</a><a href="#blk-113409" class="lvl2">1 · The law, encoded as a shape rather than a patch</a><a href="#blk-113417" class="lvl2">2 · The baseline moved to boot, and the numbers moved with it</a><a href="#blk-113433" class="lvl2">3 · The &lt;3 floor is gone, and it was hiding a crash</a><a href="#blk-113439" class="lvl2">4 · Sabotage</a><a href="#blk-113442" class="lvl2">5 · The release wording, taken</a><a href="#blk-113446" class="lvl2">6 · Your table</a><a href="#blk-113462" class="lvl2">7 · Open</a><a href="#blk-113465" class="lvl2">8 · WebView</a><a href="#blk-113469" class="lvl2">9 · Ladder</a><a href="#blk-113471" class="lvl2">Verify</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a><a href="/super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md/">F.8.2.5 — generation is a fence, and the narrowing was never a product decision</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera5rwdt7gpm34ls7kw5jpyfk4m4lvvy45ezq7s5lzpsi6if5nt2w5a</div></div></div>
+</div></div>
+</body></html>

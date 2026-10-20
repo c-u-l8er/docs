@@ -1,0 +1,165 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>D.1.3c·2c·0 — Terminal Presentation Authority · super · Ampersand Box</title>
+<meta name="description" content="A proposal for ruling. Nothing here is implemented, and the byte plane is stopped until it is ruled.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2C_0_PRESENTATION_AUTHORITY.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D.1.3c·2c·0 — Terminal Presentation Authority">
+<meta property="og:description" content="A proposal for ruling. Nothing here is implemented, and the byte plane is stopped until it is ruled.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2C_0_PRESENTATION_AUTHORITY.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"D.1.3c·2c·0 — Terminal Presentation Authority","name":"D.1.3c·2c·0 — Terminal Presentation Authority","description":"A proposal for ruling. Nothing here is implemented, and the byte plane is stopped until it is ruled.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2C_0_PRESENTATION_AUTHORITY.md/","identifier":"bagaaierae6s5lsbtj2qekc5kw2ecus2mjgvpkzzdzuwcz3vx5zyn3yw64wba","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Why this document exists instead of a terminal"},{"@type":"WebPageElement","name":"1 · What the human-control Peer actually is"},{"@type":"WebPageElement","name":"2 · The audit: every cross-peer relation that exists"},{"@type":"WebPageElement","name":"2.1 One thing found in passing, and it is not a hole today"},{"@type":"WebPageElement","name":"3 · What must NOT be treated as the authority"},{"@type":"WebPageElement","name":"4 · The proposal"},{"@type":"WebPageElement","name":"4.1 The relation is to a WORKER, not to a Peer"},{"@type":"WebPageElement","name":"4.2 It is a role predicate, not a grant"},{"@type":"WebPageElement","name":"4.3 Observe and drive are two different claims and should be ruled apart"},{"@type":"WebPageElement","name":"4.4 The one thing genuinely being asserted, and it is a disclosure claim"},{"@type":"WebPageElement","name":"5 · The page-facing contract, corrected"},{"@type":"WebPageElement","name":"6 · What it must not become"},{"@type":"WebPageElement","name":"7 · Falsifiers this relation would need"},{"@type":"WebPageElement","name":"8 · What is still open, and needs the ruling before any of it"},{"@type":"WebPageElement","name":"9 · What is accepted from the 2c design, unchanged"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"D_1_3C_2C_0_PRESENTATION_AUTHORITY.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2C_0_PRESENTATION_AUTHORITY.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/D_1_3C_2C_0_PRESENTATION_AUTHORITY.md</span>
+
+</div></div>
+<div class="lead">A proposal for ruling. Nothing here is implemented, and the byte plane is stopped until it is ruled.</div>
+<div class="prose"><h1 id="blk-114249">D.1.3c·2c·0 — Terminal Presentation Authority</h1>
+<p><strong>A proposal for ruling. Nothing here is implemented, and the byte plane is stopped until it is ruled.</strong></p>
+<p>Measured at <code>fe9a1e4ef39e23ffd9a889cac10f1b28c54f6a2b</code>, then re-checked and re-numbered against the C1.0b·2·1 tree. Every claim below carries the source it was read off — and a line number is the weakest form of that, so where a symbol name identifies the same thing it is given instead.</p>
+<h3 id="blk-114252">0 · Why this document exists instead of a terminal</h3>
+<p>The D.1.3c·2c design proposes one entry point:</p>
+<p>open_terminal_stream(peer_ref, attachment_ref, attachment_epoch) docs/reviews/D_1_3C_2C_DESIGN.md:95</p>
+<p>and resolves it by re-deriving <em>that the requesting Peer possesses that attachment</em> (<code>D_1_3C_2C_DESIGN.md:186</code>).</p>
+<p>The requesting Peer is the <strong>cockpit</strong>, which is a <code>:human_control</code> Peer. The possessing Peer is the <strong>agent</strong>. They are not the same semantic owner, and the design does not name the relation that would let the first act on the second's terminal.</p>
+<p>So the question was put to the source rather than to a design:</p>
+<blockquote><p>What existing semantic authority relation in ampd permits the human-control Peer to observe or interact with an agent Peer's terminal?</p></blockquote>
+<p><strong>Measured answer: none exists.</strong> Not a narrow one, not an indirect one. The audit is §2. Under the standing instruction — <em>if none exists, stop and return a narrow proposal rather than inventing one</em> — the data plane stops here.</p>
+<h3 id="blk-114261">1 · What the human-control Peer actually is</h3>
+<p>Peer.claim_control_channel/2      peer.ex:286 id prefix    &quot;pc-&quot;              peer.ex:1024 channel      :human_control     peer.ex:1029 actor        nil                peer.ex:1032</p>
+<p>with the load-bearing comment above that last line:</p>
+<blockquote><p>the person is not an actor: they hold no grants and exercise no capabilities. They are the only source of consent.</p></blockquote>
+<p>The cockpit presents <strong>no identity</strong>. It presents a descriptor over <code>SCM_RIGHTS</code>, and the runtime mints the Peer:</p>
+<p>cockpit/src/worker.rs:995      CockpitLoop::acquire() host/src/lib.rs:1840           bind_channel(&quot;bind_control_channel&quot;, None) ampd/lib/ampd/transport.ex:355 bind(:human_control, _) → claim_control_channel</p>
+<p>Two consequences follow mechanically and neither is incidental:</p>
+<ol><li><p><strong>No actor ⇒ no occupancy.</strong> <code>Worker.occupancy_of/3</code>'s first clause</p></li></ol>
+<p>refuses on a nil actor (<code>worker.ex:466</code>, <code>no_actor/1</code> at <code>worker.ex:597</code>).</p>
+<ol start="2"><li><p><strong>No occupancy ⇒ no attachment ⇒ no terminal.</strong></p></li></ol>
+<p><code>Carrier.Terminal.admit_attach/1</code> refuses at its first gate, <code>carrier-not-attached</code> (<code>Carrier.Terminal.occupied/1</code>, <code>carrier/terminal.ex:311</code>).</p>
+<p>So the predicate the 2c design would evaluate — <em>does the requesting Peer possess this attachment</em> — is not merely false for the operator today. It is <strong>structurally false and always will be</strong>, and a design that resolves an operator request by evaluating it is a design that can only ever refuse.</p>
+<h3 id="blk-114278">2 · The audit: every cross-peer relation that exists</h3>
+<table><thead><tr><th>#</th><th>relation</th><th>shape</th><th>keyed on</th><th>file</th></tr></thead><tbody><tr><td>1</td><td><code>approve_grant_request</code> / <code>deny_grant_request</code></td><td>consent</td><td><code>actor</code> string on the request</td><td><code>authority.ex:114</code>, <code>:183</code></td></tr><tr><td>2</td><td><code>approve_effect</code> / <code>deny_effect</code></td><td>consent</td><td><code>request_id</code> + <code>approval_id</code></td><td><code>control.ex:652</code>, <code>:518</code></td></tr><tr><td>3</td><td><code>revoke_grant</code> / <code>revoke_capability_domain</code></td><td>withdrawal</td><td><code>actor</code> / capability / resource</td><td><code>authority.ex:74</code>, <code>:87</code></td></tr><tr><td>4</td><td><code>open_worker</code> / <code>close_worker</code> / <code>reopen_worker</code></td><td><strong>destructive supervision</strong></td><td><code>worker_ref</code></td><td><code>authority.ex:295</code></td></tr><tr><td>5</td><td><code>reconcile_carrier_attempt</code></td><td>ticket clearing</td><td><code>ticket_id</code></td><td><code>control.ex:309</code></td></tr><tr><td>6</td><td>operator projection</td><td>disclosure of <strong>state</strong></td><td>world-complete</td><td><code>projection.ex:69</code></td></tr><tr><td>7</td><td>refusal disclosure (<code>operator_detail</code>)</td><td>disclosure of <strong>refusals</strong></td><td>refusal id</td><td><code>refusal.ex:140</code></td></tr></tbody></table>
+<p><strong>Not one of these is keyed on a `peer_ref`.</strong> <code>peer_ref</code> appears only inside <code>Ampd.Peer</code>, <code>Ampd.Carrier</code>, <code>Ampd.Carrier.Terminal</code> and <code>Ampd.Worker</code> — never in a command field, never in a grant, never in a capability.</p>
+<p>And three negative results that matter more than the table:</p>
+<ul><li><p><strong>The projection carries no terminal-attachment fact at all.</strong></p></li></ul>
+<p><code>Ampd.Projection</code> names <code>Ampd.Carrier.Terminal</code>, <code>Ampd.TerminalAttachment</code> and <code>terminal_attachment</code> <strong>zero</strong> times. (It does contain the word <code>terminal</code> seven times, and every one is <code>Ampd.Effects.terminal?/1</code> — a terminal <em>effect state</em>, COMMITTED/FAILED/UNKNOWN. An earlier draft of this document said &quot;contains the string <code>terminal</code> zero times&quot;, which is a different claim and a false one.) <code>Peer.terminal_attachments/0</code> (<code>peer.ex:509</code>) — the only enumerating accessor — has no production caller.</p>
+<ul><li><p><strong>The whole semantic possession layer is unreachable from any wire.</strong></p></li></ul>
+<p><code>Carrier.Terminal.acquire/1</code>, <code>release/1</code> and <code>resize/3</code> have zero production callers; <strong>none of `Ampd.CommandSpec`'s 35 commands</strong> names a terminal, and none carries a <code>peer_ref</code>.</p>
+<ul><li><p><strong>The byte layer has no caller check whatsoever.</strong> <code>TerminalAttachment</code>'s</p></li></ul>
+<p><code>read</code>/<code>write</code> are gated only by the stream's own phase (<code>terminal_attachment.ex:370</code>). Possession of the pid <em>is</em> the authorisation, and the pid is confined by construction — <code>Peer.terminal_owner/1</code> is <code>@doc false</code>, &quot;runtime machinery, not part of the relation&quot; (<code>peer.ex:569</code>). <strong>Any presentation API must supply the missing check itself. There is nothing at the byte layer to reuse.</strong></p>
+<p>The nearest thing to a precedent is a refusal: <code>K.3</code> (<code>test/terminal_possession_test.exs:334</code>) forges a ticket's <code>peer_ref</code> to a second agent peer and asserts <code>carrier-attached-elsewhere</code> — produced by structural re-derivation (<code>moved/1</code>), not by consulting a rule, because there is no rule to consult.</p>
+<h4 id="blk-114335">2.1 One thing found in passing, and it is not a hole today</h4>
+<p><code>Carrier.Terminal.resize_record/3</code> (<code>carrier/terminal.ex:1008</code>) takes a <code>peer_ref</code> from its caller and operates on <em>that peer's</em> record, with no check that the caller is entitled to name it. It is safe only because nothing on any wire reaches it (§2, third negative result). <strong>It becomes a confused deputy the moment a command is added that passes a caller-supplied `peer_ref` to it</strong> — which is exactly what the current 2c contract would do.</p>
+<h3 id="blk-114337">3 · What must NOT be treated as the authority</h3>
+<p>Stated as refusals because each is a plausible mistake and three of them are in the current design:</p>
+<ul><li><p><strong>Bridge privilege.</strong> The cockpit's channel is privileged for <em>binding</em>, not</p></li></ul>
+<p>for reading another Peer's content.</p>
+<ul><li><p><strong>Possession of a descriptor.</strong> The whole point of <code>Ampd.NativeFd</code>'s</p></li></ul>
+<p>confinement is that holding an fd is not a claim.</p>
+<ul><li><p><strong>Knowing a `peer_ref`.</strong> The operator projection already publishes every</p></li></ul>
+<p>agent's <code>peer_ref</code> in <code>&quot;peers&quot;</code> (<code>projection.ex:89</code>). If knowing it were sufficient, the relation would already be granted to everyone who can read the projection, which is the definition of not being a relation.</p>
+<ul><li><p><strong>Knowing an `attachment_ref`.</strong> A fresh full-width identity is an</p></li></ul>
+<p>unguessable <em>name</em>, not a capability. Treating it as one makes it a bearer token, which §6 refuses on other grounds too.</p>
+<ul><li><p><strong>Being the main webview</strong>, or being <em>called</em> human control.</p></li></ul>
+<h3 id="blk-114358">4 · The proposal</h3>
+<h4 id="blk-114359">4.1 The relation is to a WORKER, not to a Peer</h4>
+<p>terminal-presentation@1 subject    the human-control Peer (channel: :human_control) object     worker_ref content    the terminal attachment of whatever peer currently occupies that Worker, resolved by ampd at use time</p>
+<p>The operator designates <code>worker_ref</code>. ampd resolves</p>
+<p>worker_ref → current occupancy → occupying peer → that peer's terminal attachment → its stream owner</p>
+<p>and refuses <strong>by name</strong> at every link that is absent, closed, stale by generation, or occupied by a different attachment incarnation.</p>
+<p>Four reasons this is the right object and <code>peer_ref</code> is not:</p>
+<ol><li><p><strong>It matches the grain of every existing relation.</strong> All seven in §2 are</p></li></ol>
+<p>keyed on a durable object id. None is keyed on an ephemeral runtime handle.</p>
+<ol start="2"><li><p><strong>The operator already commands exactly this object.</strong> <code>open_worker</code>,</p></li></ol>
+<p><code>close_worker</code>, <code>reopen_worker</code> are human-control-only and take a <code>worker_ref</code> (<code>authority.ex:295</code>).</p>
+<ol start="3"><li><p><strong>The page never names another Peer</strong>, so the confused-deputy shape in §2.1</p></li></ol>
+<p>cannot arise: there is no caller-supplied <code>peer_ref</code> to trust.</p>
+<ol start="4"><li><p><strong>Re-derivation at use time is already how this tree stays honest.</strong> A</p></li></ol>
+<p>generation advance, a re-occupancy, or a Carrier replacement invalidates the resolution without anything having to be revoked.</p>
+<h4 id="blk-114381">4.2 It is a role predicate, not a grant</h4>
+<p>The human-control Peer holds no actor and therefore <strong>cannot hold a grant</strong> — grants are actor-keyed (<code>grant_registry.ex:441</code>). So this relation cannot be expressed in the grant algebra even in principle.</p>
+<p>It does not need to be. The tree already has an enforcement point for exactly this class: <strong>15 commands are declared `channel: :human_control` in `Ampd.CommandSpec` and enforced at `control.ex:108`.</strong> The proposal reuses it and adds nothing:</p>
+<p>new mechanism classes     0 new authority stores      0 new durable stores        0 new grant kinds           0 new command specs         1 or 2   (see §4.3)</p>
+<h4 id="blk-114385">4.3 Observe and drive are two different claims and should be ruled apart</h4>
+<ul><li><p><strong>`observe_worker_terminal`</strong> — bytes flow terminal → operator.</p></li><li><p><strong>`drive_worker_terminal`</strong> — bytes flow operator → terminal.</p></li></ul>
+<p>The second is materially larger: writing to an agent's terminal is <em>acting at the agent's position</em>, in a session whose shell state, working directory and history belong to that agent's execution. It is the first thing in this tree that would let the operator produce effects that are attributed to nobody — the agent has an actor and the operator does not.</p>
+<p><strong>Recommendation: rule `observe` now, defer `drive`.</strong> A read-only pane is the product-visible thing; a driveable one can wait for its own ruling.</p>
+<h4 id="blk-114393">4.4 The one thing genuinely being asserted, and it is a disclosure claim</h4>
+<p>Everything above is plumbing. This is the ruling:</p>
+<blockquote><p><strong>Opening a position entails the right to observe what is executed at it.</strong></p></blockquote>
+<p><code>Ampd.Projection</code> already says <em>&quot;this is the person, and the world is theirs&quot;</em> (<code>projection.ex:93</code>) — but it says it about <strong>state</strong>: grants, effects, receipts, lanes, workers. Terminal bytes are <strong>content</strong>: whatever the agent read, wrote, or was shown, including file contents the operator has not otherwise been disclosed and output from processes the operator did not run.</p>
+<p>Extending &quot;the world is theirs&quot; from state to content is a real widening and it should be decided rather than absorbed. Two things make it defensible and neither makes it automatic:</p>
+<ul><li><p>The operator already holds a <strong>destructive</strong> relation to the same object —</p></li></ul>
+<p><code>close_worker</code> kills the terminal through <code>Carrier.converge/1</code> → <code>release_terminal</code> (<code>peer.ex:1076</code>). Destroy without observe is an odd place to stand.</p>
+<ul><li><p>The Worker is a position <strong>the operator authored</strong>. Nothing occupies it</p></li></ul>
+<p>that the operator did not open.</p>
+<p>And the argument against, stated as fairly:</p>
+<ul><li><p><strong>Destroy does not imply read.</strong> Ending a session discloses nothing;</p></li></ul>
+<p>observing it discloses everything. They are not the same power and the tree has never conflated them.</p>
+<ul><li><p>The agent's own projection is <code>actor</code>-filtered precisely so that actors do</p></li></ul>
+<p>not see each other's work. This relation is asymmetric by design — but asymmetry is a decision, not a derivation.</p>
+<p><strong>This is the ruling requested.</strong></p>
+<h3 id="blk-114417">5 · The page-facing contract, corrected</h3>
+<p>The design's contract lets the page assert facts. It should designate, and nothing else:</p>
+<p>the page supplies    worker_ref            — already in its authorized projection the page NEVER supplies peer_ref attachment_ref attachment_epoch pty_epoch carrier_ref / carrier_epoch any descriptor</p>
+<p>The presenter's identity comes from <strong>the bound connection</strong>, not an argument. ampd resolves the peer, the Carrier, the PTY and both epochs internally, at use time, on every operation.</p>
+<p>Resize follows the same rule: the page supplies <code>rows</code> and <code>cols</code>, nothing else, and the backend resolves the current attachment identity and calls the existing semantic resize path (<code>carrier/terminal.ex:996</code>).</p>
+<p>Note this is <em>narrower</em> than the current design in one more way: the design has the page present an <code>attachment_ref</code> &quot;it was given&quot; (<code>:89</code>), which means the control projection must first disclose one. Under this proposal the control projection discloses <strong>no new identity at all</strong> — <code>worker_ref</code> is already there.</p>
+<h3 id="blk-114423">6 · What it must not become</h3>
+<ul><li><p><strong>Not a bearer credential.</strong> A presentation is an ephemeral binding of</p></li></ul>
+<p>already-established authority. If holding the handle were sufficient, it would be portable, and a portable handle to another Peer's terminal is the §3 mistake with extra steps. Prefer the name <code>terminal-presentation@1</code> over &quot;stream grant&quot; for exactly this reason.</p>
+<ul><li><p><strong>Not durable.</strong> No presentation ledger, no boot recovery, no entry in any</p></li></ul>
+<p>authority store. It dies with the connection, the Worker's generation, the Carrier, or the attachment incarnation — whichever goes first.</p>
+<ul><li><p><strong>Not a second owner.</strong> Closing a presentation must not close the</p></li></ul>
+<p>underlying ACTIVE possession. The agent's terminal outlives the operator looking at it.</p>
+<h3 id="blk-114436">7 · Falsifiers this relation would need</h3>
+<p>Written now so the ruling can be judged on what would have to be proved:</p>
+<ol><li><p>A <code>:human_control</code> Peer that names a <code>worker_ref</code> it did not open is</p></li></ol>
+<p>refused — <strong>the confused-deputy falsifier</strong>, and it must fail if the check is removed.</p>
+<ol start="2"><li><p>An <code>:agent</code> Peer that names any <code>worker_ref</code> is refused: this command is</p></li></ol>
+<p>human-control-only and the channel check is where that is enforced.</p>
+<ol start="3"><li><p>Naming a Worker whose generation has advanced since the page last saw it</p></li></ol>
+<p>is refused by name, not silently re-resolved to the new occupant.</p>
+<ol start="4"><li><p>Naming an open Worker that nothing occupies is refused</p></li></ol>
+<p><code>locus-not-occupied</code>, not answered with an empty stream.</p>
+<ol start="5"><li><p>The occupant changing mid-presentation closes the presentation. The</p></li></ol>
+<p>operator does not silently begin watching a different agent.</p>
+<ol start="6"><li><p><code>close_worker</code> during a presentation closes the presentation <strong>and</strong> the</p></li></ol>
+<p>possession, in that order, and the falsifier reads both.</p>
+<ol start="7"><li><p>Closing the presentation leaves the ACTIVE possession intact and the agent</p></li></ol>
+<p>still able to write to its terminal.</p>
+<ol start="8"><li><p>No <code>peer_ref</code>, <code>attachment_ref</code>, epoch or descriptor crosses to the page —</p></li></ol>
+<p>asserted against the serialized payload, not against the call site.</p>
+<ol start="9"><li><p>The presentation appears in no durable store: a runtime restart finds</p></li></ol>
+<p>nothing to recover, and the falsifier reads the stores rather than the absence of code.</p>
+<h3 id="blk-114474">8 · What is still open, and needs the ruling before any of it</h3>
+<ol><li><p><strong>The §4.4 disclosure claim.</strong> Does opening a position entail observing</p></li></ol>
+<p>what is executed at it? Everything else is contingent on this.</p>
+<ol start="2"><li><p><strong>Observe now, drive later</strong> — or both together?</p></li><li><p>Is <code>worker_ref</code> the right object, or should it be <code>locus_ref</code>? A Locus is</p></li></ol>
+<p>the durable position; a Worker is the assignment at it. <code>worker_ref</code> is proposed because that is what <code>open_worker</code>/<code>close_worker</code> take.</p>
+<ol start="4"><li><p>Fan-out: one presentation per attachment is proposed for 2c. Spectators</p></li></ol>
+<p>later, and a second operator is not a spectator — there is at most one human-control channel at a time (<code>peer.ex:668</code>).</p>
+<h3 id="blk-114489">9 · What is accepted from the 2c design, unchanged</h3>
+<p>The three-plane conclusion stands and is not reopened:</p>
+<p>AUTHORITY   ordered semantic state              ampd CONTROL     coalesced projection frames         cockpit DATA        lossless ordered terminal bytes     a dedicated plane</p>
+<p>A coalesced snapshot may discard an old state because a newer one supersedes it. A byte stream may not: <code>&quot;hel&quot;</code> then <code>&quot;lo\n&quot;</code> cannot legally become <code>&quot;lo\n&quot;</code> because <code>&quot;lo\n&quot;</code> is newer. Terminal bytes must not ride the frame stream, and the five reasons in <code>D_1_3C_2C_DESIGN.md:21-56</code> are all still true.</p>
+<p>Also carried forward, to be applied once §4.4 is ruled:</p>
+<ul><li><p><strong>Both directions are ordered</strong> — <code>OUT(seq)/OUT_ACK(seq)</code> and</p></li></ul>
+<p><code>IN(seq)/IN_ACK(seq)</code> in independent sequence spaces. The current design leaves input unsequenced and refers to a <code>§3.4</code> that does not exist. <code>IN_ACK</code> must mean the owning runtime path accepted the bytes, not that the frontend invoked a command.</p>
+<ul><li><p><strong>The pane gets its own capability label</strong>, not the parent window's. The</p></li></ul>
+<p>primitive is already built and already gated: <code>SUPER_COCKPIT_PANE=1</code> creates a child webview <code>&quot;pane&quot;</code> holding no capability (<code>cockpit/src/main.rs:302</code>), and <code>tools/check-webview-acl.mjs</code> already fails if <code>windows:</code> returns to <code>capabilities/default.json</code>.</p>
+<ul><li><p><strong>Backpressure is the page's ack, never a timer.</strong></p></li><li><p><strong>No server-side scrollback; reopening starts empty.</strong></p></li></ul></div>
+<p class="src"><a href="/#/super/docs/reviews/D_1_3C_2C_0_PRESENTATION_AUTHORITY.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-114252" class="lvl2">0 · Why this document exists instead of a terminal</a><a href="#blk-114261" class="lvl2">1 · What the human-control Peer actually is</a><a href="#blk-114278" class="lvl2">2 · The audit: every cross-peer relation that exists</a><a href="#blk-114335" class="lvl3">2.1 One thing found in passing, and it is not a hole today</a><a href="#blk-114337" class="lvl2">3 · What must NOT be treated as the authority</a><a href="#blk-114358" class="lvl2">4 · The proposal</a><a href="#blk-114359" class="lvl3">4.1 The relation is to a WORKER, not to a Peer</a><a href="#blk-114381" class="lvl3">4.2 It is a role predicate, not a grant</a><a href="#blk-114385" class="lvl3">4.3 Observe and drive are two different claims and should be ruled apart</a><a href="#blk-114393" class="lvl3">4.4 The one thing genuinely being asserted, and it is a disclosure claim</a><a href="#blk-114417" class="lvl2">5 · The page-facing contract, corrected</a><a href="#blk-114423" class="lvl2">6 · What it must not become</a><a href="#blk-114436" class="lvl2">7 · Falsifiers this relation would need</a><a href="#blk-114474" class="lvl2">8 · What is still open, and needs the ruling before any of it</a><a href="#blk-114489" class="lvl2">9 · What is accepted from the 2c design, unchanged</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierae6s5lsbtj2qekc5kw2ecus2mjgvpkzzdzuwcz3vx5zyn3yw64wba</div></div></div>
+</div></div>
+</body></html>

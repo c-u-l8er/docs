@@ -1,0 +1,114 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Workbench roadmap — recorder, loop closure, publication · workbench · Ampersand Box</title>
+<meta name="description" content="Status: active · Started: 2026-08-14 · Anchor doc: read this before doing Workbench work Companions: `INGEST_SPIKE.md` (what was measured) ·…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/workbench/docs/ROADMAP.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Workbench roadmap — recorder, loop closure, publication">
+<meta property="og:description" content="Status: active · Started: 2026-08-14 · Anchor doc: read this before doing Workbench work Companions: `INGEST_SPIKE.md` (what was measured) ·…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/workbench/docs/ROADMAP.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Workbench roadmap — recorder, loop closure, publication","name":"Workbench roadmap — recorder, loop closure, publication","description":"Status: active · Started: 2026-08-14 · Anchor doc: read this before doing Workbench work Companions: `INGEST_SPIKE.md` (what was measured) ·…","url":"https://docs.ampersandboxdesign.com/workbench/docs/ROADMAP.md/","identifier":"bagaaieranehmsv3r2bg5fcgfyouotct6iqqnmdyxkdua4uh5poyqz7fjqtla","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"workbench","url":"https://docs.ampersandboxdesign.com/workbench/"},"articleSection":"workbench","hasPart":[{"@type":"WebPageElement","name":"0. Where this came from"},{"@type":"WebPageElement","name":"1. Measured facts — do not re-derive these"},{"@type":"WebPageElement","name":"2. The corrected picture — two things a future session must not re-discover"},{"@type":"WebPageElement","name":"3. Phases"},{"@type":"WebPageElement","name":"Phase 0 — capability map completeness · ✅ done 2026-08-14"},{"@type":"WebPageElement","name":"Phase 1 — make the surface readable · ✅ built 2026-08-14, deploy verification open"},{"@type":"WebPageElement","name":"Phase 2 — workbench watch"},{"@type":"WebPageElement","name":"Phase 3 — workbench stats"},{"@type":"WebPageElement","name":"Phase 4 — close the PULSE circuit"},{"@type":"WebPageElement","name":"Phase 5 — real secret scanning"},{"@type":"WebPageElement","name":"Phase 6 — publish the aggregate"},{"@type":"WebPageElement","name":"Phase 7 — score the public commons (optional, high leverage)"},{"@type":"WebPageElement","name":"4. Decided"},{"@type":"WebPageElement","name":"5. The failure mode this project must not commit"},{"@type":"WebPageElement","name":"6. Open — needs a decision, do not guess"},{"@type":"WebPageElement","name":"7. Reproduce"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"workbench","item":"https://docs.ampersandboxdesign.com/workbench/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/workbench/docs/"},{"@type":"ListItem","position":4,"name":"ROADMAP.md","item":"https://docs.ampersandboxdesign.com/workbench/docs/ROADMAP.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">workbench</span>
+<span class="path">workbench/docs/ROADMAP.md</span>
+
+</div></div>
+<div class="lead">Status: active · Started: 2026-08-14 · Anchor doc: read this before doing Workbench work Companions: `INGEST_SPIKE.md` (what was measured) · `spec/README.md` (v0.1 spec)</div>
+<div class="prose"><h1 id="blk-122734">Workbench roadmap — recorder, loop closure, publication</h1>
+<p><strong>Status:</strong> active · <strong>Started:</strong> 2026-08-14 · <strong>Anchor doc:</strong> read this before doing Workbench work <strong>Companions:</strong> <a href="#/workbench/docs/INGEST_SPIKE.md" data-link>`INGEST_SPIKE.md`</a> (what was measured) · <a href="#/workbench/docs/spec/README.md" data-link>`spec/README.md`</a> (v0.1 spec)</p>
+<p>This document survives sessions. It records what is decided, what is measured, what is open, and what order the work goes in. Update it when a phase closes; do not re-derive it.</p>
+<h3 id="blk-122737">0. Where this came from</h3>
+<p>Workbench v0.1–0.3 produced bundles by driving a model through an in-browser chat page behind a pasted OpenRouter key. Two things killed that shape:</p>
+<ol><li><p><strong>Subscription auth cannot be hosted.</strong> The Claude Agent SDK's OAuth token is licensed for</p></li></ol>
+<p>individual use; a multi-user app on it violates Anthropic's terms. So the surface that uses a Claude subscription must run locally, and the hosted surface must stop needing a key.</p>
+<ol start="2"><li><p><strong>The material already exists.</strong> Claude Code writes every session to</p></li></ol>
+<p><code>~/.claude/projects/&lt;project&gt;/&lt;session&gt;.jsonl</code>. Nothing needed instrumenting.</p>
+<p>v0.4.0 shipped <code>/record</code>, which ingests one dropped transcript. The browser cannot reach <code>~/.claude</code>, so one-file-at-a-time is a ceiling, not a design.</p>
+<h3 id="blk-122748">1. Measured facts — do not re-derive these</h3>
+<p>Corpus survey, 2026-08-14, this machine, <code>src/lib/ingest/claude_code.ts</code> over all projects:</p>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Projects / sessions</td><td>16 / <strong>556</strong></td></tr><tr><td>Bytes</td><td>1.68 GB</td></tr><tr><td>Segments (one user turn + its tool loop)</td><td><strong>2,198</strong></td></tr><tr><td>Segments with ≥1 tool call</td><td><strong>1,802</strong></td></tr><tr><td>Tool calls</td><td><strong>50,561</strong></td></tr><tr><td>Full cold index pass</td><td><strong>13.4 s</strong></td></tr><tr><td>Sessions containing key-shaped strings</td><td>36 (<strong>6%</strong>, and this is a floor — the redactor is two regexes)</td></tr><tr><td>Largest single session</td><td>202 MB / 10,040 records / 75 segments</td></tr></tbody></table>
+<p>Capability distribution across all segments: <code>&amp;host.shell</code> 1527 · <code>&amp;host.fs_read</code> 1284 · <code>&amp;host.fs_write</code> 1126 · <code>ambient</code> 659 · <code>&amp;mcp.claude_preview</code> 183 · <code>&amp;mcp.claude_browser</code> 125 · <code>&amp;agent.spawn</code> 70 · <code>&amp;net.http</code> 43.</p>
+<p><strong>Gate signal is real</strong>: every segment seals twice — honest manifest (6/6 pass) and one capability withheld (<code>gate.no_hidden_capability</code> + <code>gate.authority</code> both fail, naming it).</p>
+<h3 id="blk-122771">2. The corrected picture — two things a future session must not re-discover</h3>
+<p><strong>(a) The deployed site is a 1,667-byte empty shell.</strong> Every route. 0 extractable words, no <code>&lt;title&gt;</code>, no JSON-LD, no internal links in HTML. SvelteKit runs <code>adapter-static</code> with <code>fallback: 'index.html'</code> and <strong>no page sets `prerender = true`</strong>, so nothing is server-rendered.</p>
+<p>alkeyword has already crawled it: <code>alkeyword.com/prototype/runs/workbench.opensentience.org.json</code> records <strong>0 claims</strong>, and flags the surface under <code>spa_pages</code> and <code>pages_without_schema</code>. This is the same failure as the docs-atlas headline finding (458,382 words → 6 extractable). The fix pattern is owned: <code>docs/prerender.mjs</code>.</p>
+<p><strong>(b) Deploys work.</strong> Cloudflare Pages is git-connected to <code>c-u-l8er/workbench</code>; pushing <code>main</code> builds and deploys. A 2026-08-11 session concluded the build was broken — <strong>that was wrong</strong>. The check grepped served HTML for hero copy that never appears in HTML for any version; the string it matched was a stale <code>&lt;meta name=&quot;description&quot;&gt;</code> in <code>src/app.html</code>. Verify a deploy by checking the route table in the served entry bundle, never by grepping HTML for page copy:</p>
+<pre data-lang="bash"><code>app=$(curl<span class="t-flag"> -s</span> https://workbench.opensentience.org/ | grep<span class="t-flag"> -oE</span> <span class="t-string">'/_app/immutable/entry/app\.[A-Za-z0-9_-]+\.js'</span> | head -<span class="t-undefined">1</span>)
+curl<span class="t-flag"> -s</span> <span class="t-string">&quot;https://workbench.opensentience.org$app&quot;</span> | grep<span class="t-flag"> -oE</span> <span class="t-string">'&quot;/[a-z]+&quot;'</span> | sort<span class="t-flag"> -u</span></code></pre>
+<h3 id="blk-122776">3. Phases</h3>
+<p>Ordered so each one is verifiable alone and nothing depends on an unbuilt thing.</p>
+<h4 id="blk-122778">Phase 0 — capability map completeness · ✅ <strong>done 2026-08-14</strong></h4>
+<p>The survey found four real tools with no mapping, recorded as <code>&amp;host.unknown_*</code>: <code>SendUserFile</code> (91), <code>AskUserQuestion</code> (75), <code>Monitor</code> (18), <code>SendMessage</code> (11). Fixed before a watcher mints bundles at scale, or 1,800 bundles would carry a wrong-ish capability.</p>
+<p>Mapped to <code>&amp;user.notify</code>, <code>&amp;user.prompt</code>, <code>&amp;agent.message</code>, <code>&amp;host.watch</code> — <strong>none to `ambient`</strong>: three reach the operator, one watches over time.</p>
+<p><strong>Gate met:</strong> a re-survey of all 556 sessions shows no <code>&amp;host.unknown_*</code> in the top 20 capabilities, and <code>claude_code.test.ts</code> asserts each new mapping plus <code>!== 'ambient'</code>.</p>
+<h4 id="blk-122782">Phase 1 — make the surface readable · ✅ <strong>built 2026-08-14, deploy verification open</strong></h4>
+<p><code>src/routes/+layout.ts</code> sets <code>prerender = true</code>; <code>skills/[id]/+layout.ts</code> opts back out. Per-route head via <code>$lib/PageHead.svelte</code> (title, description, canonical, JSON-LD matching <code>docs/prerender.mjs</code>'s shape). The hardcoded description in <code>src/app.html</code> is gone.</p>
+<p><strong>Gate met</strong> — <code>npm run check:prerender</code> after a build:</p>
+<table><thead><tr><th>route</th><th>words</th><th>canonical</th><th>JSON-LD</th></tr></thead><tbody><tr><td>index.html</td><td>384</td><td>yes</td><td>SoftwareApplication</td></tr><tr><td>record.html</td><td>325</td><td>yes</td><td>WebPage</td></tr><tr><td>compare.html</td><td>269</td><td>yes</td><td>WebPage</td></tr><tr><td>import.html</td><td>243</td><td>yes</td><td>WebPage</td></tr><tr><td>teach.html</td><td>205</td><td>yes</td><td>WebPage</td></tr><tr><td>skills.html</td><td>159</td><td>yes</td><td>CollectionPage</td></tr><tr><td>prism.html</td><td>109</td><td>yes</td><td>WebPage</td></tr></tbody></table>
+<p>Was <strong>0 words, no title, no JSON-LD</strong> on every route. <code>tools/check-prerender.mjs</code> uses the same extraction alkeyword's <code>crawl.py</code> does, so the gate and the crawler agree by construction.</p>
+<p><strong>Three traps this hit, recorded so they are not re-hit:</strong></p>
+<ol><li><p><code>fallback: 'index.html'</code> makes adapter-static <strong>silently overwrite the prerendered homepage</strong></p></li></ol>
+<p>with an empty shell — a build-log notice, not an error. The fallback is now <code>fallback.html</code> with <code>static/_redirects</code> routing <code>/skills/*</code> to it at 200.</p>
+<ol start="2"><li><p>Prerendering finally ran the link crawler and caught a real <strong>404 on `/favicon.svg`</strong> — the</p></li></ol>
+<p>file had never existed. Added rather than suppressed.</p>
+<ol start="3"><li><p>Writing literal tag names in an <code>app.html</code> comment pollutes the extracted-word measurement.</p></li></ol>
+<p>Three pages also turned out genuinely thin (55–98 words) because they render nothing before you interact; each got real static content rather than a lowered threshold.</p>
+<p><strong>Deployed and re-crawled, 2026-08-14</strong> (<code>cd alkeyword.com/prototype &amp;&amp; python3 crawl.py workbench.opensentience.org</code>):</p>
+<table><thead><tr><th></th><th>before</th><th>after</th></tr></thead><tbody><tr><td>Pages discovered</td><td>1</td><td><strong>7</strong></td></tr><tr><td>Total extractable words</td><td><strong>0</strong></td><td><strong>1,486</strong></td></tr><tr><td>Claims</td><td><strong>0</strong></td><td>real claims across all types</td></tr><tr><td>SPA pages (need JS)</td><td>1 / 1</td><td><strong>0</strong></td></tr><tr><td>Pages without schema</td><td>1 / 1</td><td><strong>0 / 7</strong></td></tr><tr><td>Page forms mintable</td><td>0</td><td><strong>1</strong> — Glossary, 5/3 definition claims</td></tr></tbody></table>
+<p>Still refused, and correctly: Statistics 1/5 <code>quantity</code> · FAQ 0/5 <code>question</code> · Comparison 4/6 · How-it-works 0/1 <code>process</code> · Entity 0/3 <code>credential</code>.</p>
+<p><strong>Readable is not the same as sufficient.</strong> The surface went from invisible to crawlable, and the refusal rule still declines to mint five of six forms because the material genuinely is not there. Phase 6 is what supplies the missing <code>quantity</code> claims — bundle counts and gate pass-rates, each resolving to a recomputable <code>content_hash</code>.</p>
+<p><strong>Deploys take ~75 s</strong> from <code>git push</code> to live. Verified twice this session.</p>
+<h4 id="blk-122858">Phase 2 — <code>workbench watch</code></h4>
+<p>Local daemon over <code>~/.claude/projects</code>. Incremental (mtime + size + tail offset). Writes to a local library. No network. Kills the one-file-at-a-time ceiling.</p>
+<p><strong>Gate:</strong> cold pass over 556 sessions produces N bundles unattended; a new session appended to while running is picked up without a restart; nothing leaves the machine.</p>
+<h4 id="blk-122861">Phase 3 — <code>workbench stats</code></h4>
+<p>Aggregate over the local library. This is the honest first version of &quot;learning&quot; — statistics, not ML. Which tool sequences recur, which capability sets cluster, which segments fail which gates, how patterns moved over time.</p>
+<p><strong>Gate:</strong> a report a person who is not the author can read and act on.</p>
+<h4 id="blk-122864">Phase 4 — close the PULSE circuit</h4>
+<p>Two files that the spec quotes but that <strong>do not exist</strong>: <code>workbench/pulse-manifest.v0.1.json</code> and <code>workbench/workbench.ampersand.json</code>. The spec'd manifest declares <code>&quot;consumes&quot;: []</code> — Workbench emits five token types and consumes nothing, which is exactly why nothing comes back.</p>
+<pre><code>workbench ──ConsolidationEvent──▶ graphonomous.act/learn/consolidate
+graphonomous.learn ──OutcomeSignal──▶ prism.observe          (already declared)
+prism.diagnose ──ReputationUpdate──▶ workbench.retrieve      (THE MISSING EDGE)</code></pre>
+<p><strong>Gate:</strong> the manifest validates against <code>PULSE/schemas/pulse-loop-manifest.v0.1.json</code>, lands in <code>PULSE/manifests/</code>, and <code>consumes</code> is non-empty.</p>
+<p><strong>Constraint that must not be violated:</strong> <code>ReputationUpdate</code> may rank retrieval. It must <strong>never</strong> influence a gate verdict. <code>verifyBundle</code> is pure and offline and that is most of why it is trustworthy; a scorer contaminated by its own downstream scores is not a scorer.</p>
+<h4 id="blk-122869">Phase 5 — real secret scanning</h4>
+<p>Publication is gated on this, not the other way around. The current redactor is two regexes (<code>sk-…</code>, email). A controlled study puts Gitleaks at 88% recall with hundreds of rules and entropy as a secondary signal, TruffleHog at 52%. Shell out; do not grow the regex list.</p>
+<p><strong>Gate:</strong> a corpus pass reports a scan rate per rule class, and <code>full</code> profile output survives an independent scanner with zero findings.</p>
+<h4 id="blk-122872">Phase 6 — publish the aggregate</h4>
+<p>Bundle counts and gate pass-rates are <code>quantity</code> claims with units — the type alkeyword's spec calls &quot;the strongest measured citation lever,&quot; and the type its G5 matrix is starved of (Statistics 7/20, FAQ 0/20, How-it-works 0/20).</p>
+<p><strong>Every published quantity must resolve to a `content_hash` a reader can recompute.</strong> See §5.</p>
+<h4 id="blk-122875">Phase 7 — score the public commons (optional, high leverage)</h4>
+<p><a href="https://trace-commons-web.hf.space/" target="_blank" rel="noopener">Trace Commons</a> and <a href="https://tracelab.cs.washington.edu/" target="_blank" rel="noopener">TraceLab</a> host public, contributor-reviewed agent traces. Scoring <em>those</em> yields cross-developer aggregate data while publishing nothing of ours. Nobody else scores traces against a stated algebra.</p>
+<h3 id="blk-122877">4. Decided</h3>
+<table><thead><tr><th>Decision</th><th>Choice</th></tr></thead><tbody><tr><td>Skill unit</td><td>one <code>user_message</code> + its tool loop</td></tr><tr><td>Parser purity</td><td>no <code>fs</code>/DOM in <code>lib/ingest/claude_code.ts</code> — browser and CLI share it</td></tr><tr><td>Real transcripts</td><td>read from disk, never committed; fixtures are synthetic</td></tr><tr><td><code>thinking</code> blocks / sidechains</td><td>excluded, <strong>counted</strong></td></tr><tr><td>Unmapped tools</td><td><code>&amp;host.unknown_&lt;name&gt;</code>, never <code>ambient</code></td></tr><tr><td>Learning, v1</td><td>statistics over the local corpus, not skill distillation</td></tr><tr><td>Aggregation</td><td>local-first; hosted multi-user is Phase 6+, after B1</td></tr></tbody></table>
+<h3 id="blk-122895">5. The failure mode this project must not commit</h3>
+<p><code>ACADEMY.md</code> §6e: <em>absence of evidence must remain distinguishable from evidence of absence, and every consequential transformation must expose why it occurred.</em></p>
+<p>Two recorded violations, both by tools whose job was to enforce it:</p>
+<ul><li><p>alkeyword v0.5.0 filed a portfolio work item asserting three docs hosts had no canonical. It</p></li></ul>
+<p>never parsed <code>&lt;link rel=&quot;canonical&quot;&gt;</code> and asserted absence anyway. Retracted by name.</p>
+<ul><li><p>A 2026-08-11 session declared the Cloudflare build broken by grepping HTML for copy that HTML</p></li></ul>
+<p>never contains. Corrected in §2(b).</p>
+<p>Same shape both times: <strong>measuring a proxy and reporting it as the thing.</strong> Piping auto-generated Workbench numbers into alkeyword scales this risk — a wrong gate verdict becomes a published statistic wearing a provenance link. Hence the Phase 6 rule.</p>
+<h3 id="blk-122907">6. Open — needs a decision, do not guess</h3>
+<ul><li><p><strong>Local library store:</strong> its own SQLite/JSON, or Graphonomous nodes? Repo policy says use the</p></li></ul>
+<p>graph; a local-only daemon says otherwise. Unresolved.</p>
+<ul><li><p><strong>B1 has never been run.</strong> <code>ACADEMY.md</code> §6 marks it runnable today: one outsider, one real task,</p></li></ul>
+<p>recorded either way. Phases 6–7 build a multi-user surface ahead of it. That is the documented risk, accepted knowingly or not at all.</p>
+<h3 id="blk-122916">7. Reproduce</h3>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> workbench/app &amp;&amp; npm test</code></pre>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> workbench/app &amp;&amp; ./node_modules/.bin/vite-node tools/ingest-transcript.ts ~/.claude/projects/&lt;project&gt;/&lt;session&gt;.jsonl</code></pre>
+<pre data-lang="bash"><code><span class="t-kw">cd</span> alkeyword.com/prototype &amp;&amp; python3 crawl.py workbench.opensentience.org</code></pre></div>
+<p class="src"><a href="/#/workbench/docs/ROADMAP.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-122737" class="lvl2">0. Where this came from</a><a href="#blk-122748" class="lvl2">1. Measured facts — do not re-derive these</a><a href="#blk-122771" class="lvl2">2. The corrected picture — two things a future session must not re-discover</a><a href="#blk-122776" class="lvl2">3. Phases</a><a href="#blk-122778" class="lvl3">Phase 0 — capability map completeness · ✅ done 2026-08-14</a><a href="#blk-122782" class="lvl3">Phase 1 — make the surface readable · ✅ built 2026-08-14, deploy verification open</a><a href="#blk-122858" class="lvl3">Phase 2 — workbench watch</a><a href="#blk-122861" class="lvl3">Phase 3 — workbench stats</a><a href="#blk-122864" class="lvl3">Phase 4 — close the PULSE circuit</a><a href="#blk-122869" class="lvl3">Phase 5 — real secret scanning</a><a href="#blk-122872" class="lvl3">Phase 6 — publish the aggregate</a><a href="#blk-122875" class="lvl3">Phase 7 — score the public commons (optional, high leverage)</a><a href="#blk-122877" class="lvl2">4. Decided</a><a href="#blk-122895" class="lvl2">5. The failure mode this project must not commit</a><a href="#blk-122907" class="lvl2">6. Open — needs a decision, do not guess</a><a href="#blk-122916" class="lvl2">7. Reproduce</a></nav></div><div class="card"><div class="lab">links to</div><a href="/workbench/docs/INGEST_SPIKE.md/">Ingest spike — Claude Code transcripts → SkillBundles</a><a href="/workbench/docs/spec/README.md/">Workbench — Crystallize agent behavior into replayable skills</a></div><div class="card"><div class="lab">in this folder</div><a href="/workbench/docs/INGEST_SPIKE.md/">Ingest spike — Claude Code transcripts → SkillBundles</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieranehmsv3r2bg5fcgfyouotct6iqqnmdyxkdua4uh5poyqz7fjqtla</div></div></div>
+</div></div>
+</body></html>

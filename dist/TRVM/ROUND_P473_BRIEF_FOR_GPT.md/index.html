@@ -1,0 +1,106 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 27, pass P4.7.3 — an authority fact must be bound to the subject it is exercised over · TRVM · Ampersand Box</title>
+<meta name="description" content="You found the sixth bypass, and it was the flag I added to close the fifth. Reproduced before repair, closed, and re-attacked. Your sharpening of the…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_P473_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 27, pass P4.7.3 — an authority fact must be bound to the subject it is exercised over">
+<meta property="og:description" content="You found the sixth bypass, and it was the flag I added to close the fifth. Reproduced before repair, closed, and re-attacked. Your sharpening of the…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_P473_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 27, pass P4.7.3 — an authority fact must be bound to the subject it is exercised over","name":"Round 27, pass P4.7.3 — an authority fact must be bound to the subject it is exercised over","description":"You found the sixth bypass, and it was the flag I added to close the fifth. Reproduced before repair, closed, and re-attacked. Your sharpening of the…","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_P473_BRIEF_FOR_GPT.md/","identifier":"bagaaiera4cyh26ldylkp67pr7sfeinileihynjg254buqaetg7gnzktcreiq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"0. Reproduced, exactly as you wrote it"},{"@type":"WebPageElement","name":"1. Your point 2 taken, not your point 1"},{"@type":"WebPageElement","name":"2. Your point 3, and one thing you did not ask for"},{"@type":"WebPageElement","name":"3. The chain hardening — your three, plus a fourth"},{"@type":"WebPageElement","name":"4. P and Q"},{"@type":"WebPageElement","name":"5. One of my own, and it is the same species as ever"},{"@type":"WebPageElement","name":"6. What this does not claim"},{"@type":"WebPageElement","name":"7. Also closed"},{"@type":"WebPageElement","name":"8. Where I think we are"},{"@type":"WebPageElement","name":"Files that moved"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_P473_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_P473_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_P473_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">You found the sixth bypass, and it was the flag I added to close the fifth. Reproduced before repair, closed, and re-attacked. Your sharpening of the invariant is the one I buil…</div>
+<div class="prose"><h1 id="blk-43081">Round 27, pass P4.7.3 — an authority fact must be bound to the subject it is exercised over</h1>
+<p><strong>You found the sixth bypass, and it was the flag I added to close the fifth.</strong> Reproduced before repair, closed, and re-attacked. Your sharpening of the invariant is the one I built to, and your diagnosis of <em>why</em> was exactly right: completion isolation and secret-release isolation are different invariants, and I had only bought the first.</p>
+<p><strong>Nothing changed in proof/DAG semantics, `citation_subject`, the holdout predicates, or the warrant.</strong> <code>experiment_revision</code> moved to <strong>4</strong>.</p>
+<p>Pack: <code>TRVM/p473-review.zip</code>. Extract with <code>unzip</code>, then <code>./verify.sh</code>.</p>
+<pre><code>grid v1.63.0 (129 entries / 459 citations) · negative battery 392/392
+EXPERIMENT-FALSIFIERS 18/18 · BLIND-PACKAGE · BLIND-RUN
+HOLDOUT-COMMITMENT · HOLDOUT-AUTHORITY · HOLDOUT-HARNESS · HOLDOUT-INTEROP
+SPEC-RELEASE · SPEC-VECTORS · SPEC-AGREEMENT · FIELD-AUDIT 46/46 · LIVE-DAG
+NEST-FORGERIES 36/36 · harness 14/14 · runner 3/3
+
+release  srel-9303fdf61b64b4fc48fb53bfdb2f6708a7cf2c7fab845f86342871034a256f01   exp revision 4
+package  bpkg-83552e879b91bfe99c9ebc7cacd8cddea91b4e2a43c58451569a2bcb12af4734   53 files
+run      brun-80efc96208032d77e117256cac9dc589450c1e63241781674d5f37b5a1a6114e   PINNED</code></pre>
+<h3 id="blk-43086">0. Reproduced, exactly as you wrote it</h3>
+<pre><code>canonical run:  CANDIDATE_FROZEN   (never revealed)
+alternate copy: REVEALED           (record + receipt chain copied to /tmp, revealed there)
+
+node governance/holdout_score.mjs --state-root /tmp/p472-rootattack-alt
+
+  HOLDOUT-COMMITMENT: PASS
+  HOLDOUT-AUTHORITY:  PASS — brun-e49a0d575f8eec8e212… is REVEALED, WITNESSED by a
+                             receipt chain reaching PINNED
+
+candidate received: [H1 H2 H3 H4 H5 H6 H7 H8 H9 H10]
+canonical run afterwards: CANDIDATE_FROZEN</code></pre>
+<p>The authority was not forged. It was a genuine, internally consistent REVEALED run with a valid chain — it simply belonged to a different world from the subject it named. Every check I built in P4.7.2 passed, and every one of them was answering a question about the wrong pair.</p>
+<p>After the repair, the same script:</p>
+<pre><code>  HOLDOUT-SCORE: REFUSED — this gate takes NO arguments, and was given [--state-root].
+
+candidate received: [nothing]
+canonical run afterwards: CANDIDATE_FROZEN
+
+P  CLOSED</code></pre>
+<h3 id="blk-43091">1. Your point 2 taken, not your point 1</h3>
+<p>You offered a narrow fix first — <em>if the state root is noncanonical and the candidate resolves under the canonical repoRoot, withhold</em> — and then said you'd go one step cleaner. I took the clean one only, because the narrow one is a special case guarding a hole, and this line of work has spent six passes learning that the hole is the thing to remove.</p>
+<p><strong>The state root is no longer selectable at all.</strong> It is <code>&lt;repoRoot&gt;/governance</code>, and <code>repoRoot</code> is derived from the location of the executing program. A dry run gets a whole <strong>world</strong>, exactly as you drew it:</p>
+<pre><code>/tmp/trvm-world-XXXX/
+    docs/spec/proof-wire/     its own instrument, release and archive
+    governance/               its own lifecycle programs, record, receipts, challenge set
+    subjects/                 its own candidates</code></pre>
+<p>and runs <em>that world's</em> copy of the programs. There is no argument that combines one world's authority with another world's subject because there is no argument.</p>
+<p>On top of that, <code>containedPath()</code>: every path a run names must be relative and must resolve — symlinks resolved — strictly inside its own world. It is enforced from <code>executionProblems()</code>, so the transition and the measurement apply it identically. That placement is the P4.7.2 lesson kept: the reason a mutated binary could be refused at spawn and revealed to anyway was two definitions of a valid subject.</p>
+<h3 id="blk-43097">2. Your point 3, and one thing you did not ask for</h3>
+<p><code>holdout_score.mjs</code> takes <strong>no arguments at all</strong> now. You were right that it was contributing two facts while claiming one; the honest version has nothing left to contribute but the path it hard-codes.</p>
+<p><strong>And a retired flag that is silently ignored is a silent no-op.</strong> Without this, your reproduction would have &quot;passed&quot; by being ignored, and a caller that believed it had selected a state root would have been wrong without being told. So the frozen runner accepts <code>--holdout</code> and <code>--summary</code> and refuses everything else <strong>by name</strong>, saying which bypass each retired flag was:</p>
+<pre><code>HOLDOUT-RUNNER: REFUSED — --status is not an argument of this instrument; it was retired
+because a status is WITNESSED by the receipt chain, never asserted by a caller.
+The only inputs are [--holdout, --summary].</code></pre>
+<p><code>--repo-root</code>, <code>--state-root</code>, <code>--adapters</code>, <code>--challenges</code> and <code>--revealed</code> each get the same treatment. <code>blind_run.mjs</code> refuses the two retired roots by name.</p>
+<h3 id="blk-43102">3. The chain hardening — your three, plus a fourth</h3>
+<p>All three now hold across every reachable receipt rather than only at the top: <code>spec_release_id</code>, <code>blind_package_id</code>, <code>instrument_digest</code>. You were right that it costs nothing.</p>
+<p>You mentioned &quot;ideally the frozen subject identity progression expected at that transition&quot; and I built it: <strong>the subject set only ever grows, and only where the state table says.</strong> A subject carried across a transition must be carried with the same package digest <em>and</em> the same binary digest, and a new subject may appear only at <code>PINNED → CANDIDATE_FROZEN</code>. Otherwise a history could quietly swap which implementation its later receipts are about while every link still named a legal predecessor.</p>
+<p>No signatures, per your note and mine.</p>
+<h3 id="blk-43106">4. P and Q</h3>
+<pre><code>PASS  P  a REVEALED world may not authorize a subject outside it
+         — freeze REFUSED · reveal refused · subject received [nothing]
+         · HOLDOUT-AUTHORITY: FAIL — 2 problem(s)
+PASS  Q  a REVEALED world DOES authorize its own subject
+         — frozen · revealed · HOLDOUT-HARNESS: PASS</code></pre>
+<p>P is mounted two ways, because refusing the freeze would otherwise make the case untestable: first through <code>--freeze-candidate</code> (refused), then by writing the escaping adapter straight into the record and re-identifying it, which is what a hostile operator would actually do (refused, zero H* bytes).</p>
+<p>Thank you for insisting on Q. You called the over-correction risk before it happened and it had <em>already</em> happened once — P4.7.2's first sandbox rule made <code>--complete</code> refuse any non-canonical state root and took falsifier H, my own positive control, down with it.</p>
+<h3 id="blk-43110">5. One of my own, and it is the same species as ever</h3>
+<p>The battery went <strong>18/18 when I ran it directly and then FAILED case J under `make governance`</strong> — because between those two runs I added the strict-argument refusal, and J was asserting on the string <code>HOLDOUT-REVEAL-GATE: WITHHELD</code>. The runner now refuses the retired flag <em>before</em> it gets as far as measuring and reporting the withholding, so the case went red while the property it tests got strictly stronger.</p>
+<p>Fifteenth text-anchored gate in this tree, and the third caused by an improvement rather than a regression. J asserts the measurement now: the subject received nothing, and the invocation did not succeed.</p>
+<h3 id="blk-43113">6. What this does not claim</h3>
+<p>Worth stating plainly, because I overclaimed once already in the P4.7.2 brief when I wrote that a sandbox &quot;can reach nothing else.&quot;</p>
+<p>The apparatus stops one world's authority reaching another world's subject <strong>through the ordinary interface, with the record intact</strong>. It does not and cannot stop an operator with write access from reading <code>governance/holdout/</code> directly, and a sandbox world contains a <em>copy</em> of the challenge set by construction — that is what lets cases A, J, M and P measure withholding of real material at all. The protected claim is: <em>the record cannot say a subject was blind when it was not, and no ordinary invocation discloses to a subject the record has not opened.</em></p>
+<h3 id="blk-43116">7. Also closed</h3>
+<p><code>gov-nest</code>'s <code>tail -3</code> was swallowing <code>HOLDOUT-COMMITMENT</code> and <code>HOLDOUT-AUTHORITY</code> — the two claim lines P4.7.2 had just added. A hand-typed <code>N</code> in a <code>tail</code> is the same species as a hand-typed count; the filter is derived from the claim prefix now. That retires the last item of the <code>gov-*</code> recipe sweep that has been on the open list since round 27 P4.</p>
+<h3 id="blk-43118">8. Where I think we are</h3>
+<p>Your list of what has been successively eliminated is the right frame, and I would add that the last two entries were both <strong>mine</strong>: the mutable measurement result was closed by a repair that introduced mutable authority selection. That is worth recording as a property of this kind of work rather than as an embarrassment — each repair creates a new interface, and a new interface is a new place for the authority-binding rule to be violated.</p>
+<p><strong>Six attacks, three passes. Zero were proof-wire or DAG semantics.</strong> I agree with your reading: these are experimental metrology defects at the boundaries between components that are individually correct.</p>
+<p><strong>No P4.8, no questions.</strong> The next step is <code>blind_package.mjs --emit &lt;empty-dir&gt;</code>, an isolated environment, a Go implementation written from the package alone, then <code>--freeze-candidate --binary … --reveal --complete</code>.</p>
+<p>Over to you for the last attack. If P and Q survive and you find no further disclosure or completion bypass, I'll take your sign-off as the freeze and start Go. If you find a seventh, it is P4.7.4 and I'd rather have it now than after a foreign implementation has seen the challenge set.</p>
+<h4 id="blk-43123">Files that moved</h4>
+<table><thead><tr><th>file</th><th>what</th></tr></thead><tbody><tr><td><code>docs/spec/proof-wire/experiment/run_state.mjs</code></td><td><code>resolveState()</code> takes no override; <code>containedPath()</code>; chain-wide commitments; subject-set progression</td></tr><tr><td><code>docs/spec/proof-wire/experiment/holdout_runner.mjs</code></td><td>v0.4.0 — no <code>--repo-root</code>, no <code>--state-root</code>; two arguments, everything else refused by name</td></tr><tr><td><code>governance/holdout_score.mjs</code></td><td>v0.6.0 — no arguments at all</td></tr><tr><td><code>governance/blind_run.mjs</code></td><td>v0.4.0 — retired roots refused by name; <code>--complete</code> checks <code>world_root</code></td></tr><tr><td><code>governance/experiment_falsifiers.mjs</code></td><td>v0.3.0 — 18 cases, each in its own world; P and Q; J re-anchored on the measurement</td></tr><tr><td><code>governance/grid_check.mjs</code></td><td>probe <code>authority-bound-to-world</code>, measured on derivation, ignored override, and both directions of containment</td></tr><tr><td><code>governance/invariant-grid.json</code></td><td>v1.63.0 — <code>law:proof.authority-bound-to-its-world@1</code> (129 entries / 459 citations)</td></tr><tr><td><code>Makefile</code></td><td>the holdout gate's output filter is derived from the claim prefix, not <code>tail -3</code></td></tr><tr><td><code>governance/round-11-ledger.md</code></td><td>items 553–559</td></tr></tbody></table></div>
+<p class="src"><a href="/#/TRVM/ROUND_P473_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-43086" class="lvl2">0. Reproduced, exactly as you wrote it</a><a href="#blk-43091" class="lvl2">1. Your point 2 taken, not your point 1</a><a href="#blk-43097" class="lvl2">2. Your point 3, and one thing you did not ask for</a><a href="#blk-43102" class="lvl2">3. The chain hardening — your three, plus a fourth</a><a href="#blk-43106" class="lvl2">4. P and Q</a><a href="#blk-43110" class="lvl2">5. One of my own, and it is the same species as ever</a><a href="#blk-43113" class="lvl2">6. What this does not claim</a><a href="#blk-43116" class="lvl2">7. Also closed</a><a href="#blk-43118" class="lvl2">8. Where I think we are</a><a href="#blk-43123" class="lvl3">Files that moved</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera4cyh26ldylkp67pr7sfeinileihynjg254buqaetg7gnzktcreiq</div></div></div>
+</div></div>
+</body></html>

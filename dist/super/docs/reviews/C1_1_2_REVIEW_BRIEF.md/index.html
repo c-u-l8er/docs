@@ -1,0 +1,112 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>C1.1.2 — the transport&#39;s acceptance battery, before the transport · super · Ampersand Box</title>
+<meta name="description" content="Artifact: `and-super-rev-f5.zip`. Every gate green.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C1.1.2 — the transport&#39;s acceptance battery, before the transport">
+<meta property="og:description" content="Artifact: `and-super-rev-f5.zip`. Every gate green.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"C1.1.2 — the transport's acceptance battery, before the transport","name":"C1.1.2 — the transport's acceptance battery, before the transport","description":"Artifact: `and-super-rev-f5.zip`. Every gate green.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/","identifier":"bagaaierav6fbwsv2s7vhkvopbldlib77bsnwvflddtpoalxuzx7og6wr742a","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Measured"},{"@type":"WebPageElement","name":"1 · Reproduced before fixed"},{"@type":"WebPageElement","name":"2 · Your dormant-grant scenario is real, and the install was never needed"},{"@type":"WebPageElement","name":"3 · The other four"},{"@type":"WebPageElement","name":"4 · public_code removed, exactly as you ruled"},{"@type":"WebPageElement","name":"5 · The wire"},{"@type":"WebPageElement","name":"6 · One thing I did not manage to make falsifiable, and am not counting"},{"@type":"WebPageElement","name":"7 · Your acceptance table"},{"@type":"WebPageElement","name":"8 · Ladder"},{"@type":"WebPageElement","name":"9 · Open"},{"@type":"WebPageElement","name":"Verify"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"C1_1_2_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/C1_1_2_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Artifact: `and-super-rev-f5.zip`. Every gate green.</div>
+<div class="prose"><h1 id="blk-113169">C1.1.2 — the transport's acceptance battery, before the transport</h1>
+<p><strong>Artifact: `and-super-rev-f5.zip`. Every gate green.</strong></p>
+<p>You ruled: <em>don't insert another sub-round; build the transport, but close the exact-grant identity, duration validation, transition-result truth, and hostile-input boundary on the way in.</em> None of those needs a socket, and each was a live authority defect — so this is that list, closed, with the battery green against the semantics before the socket is written.</p>
+<p>I took the &quot;no new sub-round&quot; part seriously: nothing here is polish. Every change fixes something that was reproduced failing first.</p>
+<h3 id="blk-113173">0 · Measured</h3>
+<table><thead><tr><th></th><th>C1.1.1</th><th>C1.1.2</th></tr></thead><tbody><tr><td>conformance vectors</td><td>39</td><td><strong>42</strong></td></tr><tr><td>BEAM tests</td><td>110</td><td><strong>128</strong>, 0 failures across 7 seeds + seed 0</td></tr><tr><td>browser assertions</td><td>60</td><td><strong>64</strong></td></tr><tr><td>sabotage probes</td><td>9 falsified</td><td><strong>18 falsified · 0 not</strong> (+1 declared un-falsifiable)</td></tr></tbody></table>
+<p>The corpus grew for the first time in three rounds, and for a reason: one of these was a defect in the <strong>frozen simulator too</strong>, so it is fixed in both engines and the law is held in the language-neutral corpus rather than only on the BEAM.</p>
+<h3 id="blk-113191">1 · Reproduced before fixed</h3>
+<p>Four of your five reproduced exactly as described. The fifth reproduced as something worse.</p>
+<pre><code>── revoke_grant crosses actors ───────────────────────────────
+   active before: [{kestrel, repo.read}, {kestrel, issue.read},
+                   {kestrel, pr.draft}, {mallory, repo.read}]
+   REPRODUCED  operator revoked Kestrel's row and Mallory's went too
+── duration is an open string ────────────────────────────────
+   agent requested duration=&quot;forever&quot; → minted duration=&quot;forever&quot;
+   REPRODUCED  a grant with duration &quot;forever&quot; authorizes
+   REPRODUCED  ...and survives an end_run AND a workspace change
+── human approval can WIDEN an agent's narrower request ──────
+   REPRODUCED  asked once, granted workspace
+── Control reports the command, not the transition ───────────
+   REPRODUCED  sealed revoke answered &quot;revoked&quot;
+   REPRODUCED  sealed request_grant reported a grant_request
+               returned: {:refused, %{&quot;code&quot; =&gt; &quot;recovery-state-missing&quot;…
+── hostile command arguments ─────────────────────────────────
+   request_effect([])     → {:raised, FunctionClauseError}
+   approve_effect([1])    → {:raised, FunctionClauseError}
+   preflight(42)          → {:raised, FunctionClauseError}</code></pre>
+<h3 id="blk-113194">2 · Your dormant-grant scenario is real, and the install was never needed</h3>
+<p>You reasoned: a grant for an undeclared capability lies dormant, then the pack installs, and <strong>installation activates authority</strong>. Correct. But when I ran it, day 1 already said ALLOW.</p>
+<p><code>postgres</code> ships at <code>installation: &quot;available&quot;</code> — discovered, never installed — and <strong>already declares its whole surface</strong>, because that is what makes it browsable in the catalog. Neither engine's authorize path ever read <code>installation</code>. In the frozen simulator it is read in exactly one place: <code>tabFor()</code>, to decide which tab a pack renders under.</p>
+<p>So the dormancy you described never happened. A grant against a merely <em>discovered</em> pack authorized immediately. <strong>Installation confers zero authority</strong> was running backwards, one step earlier than the step you were looking at: <em>discovery</em> conferred it.</p>
+<p>Closed at both ends, because either alone leaves a hole:</p>
+<ul><li><p><strong>At mint</strong> — a capability no <em>installed</em> pack declares cannot be granted, so the dormant grant</p></li></ul>
+<p>never exists to be activated. This is the end your version needs.</p>
+<ul><li><p><strong>At the gateway</strong> — <code>pack-not-installed</code>, so a grant that arrives another way (an older store,</p></li></ul>
+<p>a restored world, a hand-edited dets) is inert. This is the end mine needs.</p>
+<p>Three new vectors hold it in the corpus:</p>
+<pre><code>a discovered pack confers nothing                    → pack-not-installed
+installing after a refused mint still grants nothing → authority-missing
+an unenforceable duration is never minted            → authority-missing</code></pre>
+<p>Both engines changed. The browser battery gained four assertions and one of its old ones was wrong in the same way — it asserted <code>postgres.query.write</code> refuses <code>denied-by-default</code> while postgres was still discovered, which was reading a deny flag off a surface that is not in force. It now asserts the pack refusal there, and the policy refusal after the install.</p>
+<h3 id="blk-113210">3 · The other four</h3>
+<p><strong>Exact-grant identity.</strong> <code>revoke_grant(grant_id)</code>. Bulk is <code>revoke_capability_domain(scope, expected)</code> — it refuses an unbounded scope by name, and refuses when the count no longer matches what the operator was shown, naming both numbers. That makes &quot;confirm what you were shown&quot; mechanical rather than a dialog. Falsifier runs two actors holding the same capability.</p>
+<p><strong>Duration.</strong> Closed to <code>once · run · agent · workspace</code>. <code>agent</code> was already the intended fourth member — the frozen simulator's own comment said <code>/* agent: actor equality already required */</code> next to the <code>return true</code> that let everything else through. Unknown durations refuse <code>invalid-grant-duration</code> at three points: mint, the draft setter, and the scope check itself, so a grant that got past minting in some older world is still inert.</p>
+<p><strong>Narrowing only.</strong> <code>Core.duration_rank/1</code> orders the enum; approving with a wider duration refuses <code>grant-widening-refused</code> and <strong>leaves the request pending</strong>, because a refused approval must not consume the thing it refused.</p>
+<p><strong>Transition truth.</strong> One <code>settled/2</code> on every mutating dispatch. A refusal becomes a refusal. The falsifier seals the grant registry and asserts all three commands refuse, that no <code>grant_request</code> key appears on the refused one, and that the coordinator is still alive.</p>
+<h3 id="blk-113215">4 · <code>public_code</code> removed, exactly as you ruled</h3>
+<p>One canonical code on the object; <code>Ampd.Refusal.agent_code/1</code> is the entire disclosure policy.</p>
+<pre data-lang="elixir"><code><span class="t-kw">def</span> agent_code(<span class="t-string">&quot;actor-mismatch&quot;</span>), <span class="t-kw">do</span>: <span class="t-string">&quot;authority-missing&quot;</span>
+<span class="t-kw">def</span> agent_code(code) <span class="t-kw">when</span> is_binary(code), <span class="t-kw">do</span>: code</code></pre>
+<p>The exhaustive test enumerates all 33 canonical codes and asserts the hidden set is exactly <code>[&quot;actor-mismatch&quot;]</code> — so adding a code that needs hiding means adding a clause, and adding one that does <em>not</em> fails loudly if someone hides it. You were right that the per-call-site field was a drift axis: it put disclosure policy in the hands of whoever happened to be constructing a refusal, and no test naming the visible code could have caught a wrong one.</p>
+<h3 id="blk-113219">5 · The wire</h3>
+<p><code>Ampd.Wire</code> is the only entry point a transport should call. Decoding is <strong>total</strong>: any term, any shape, any depth, yields a decoded command or a named refusal with a <code>correlation_id</code>.</p>
+<ul><li><p><strong>Never `String.to_atom/1`.</strong> The vocabulary is a fixed map built from <code>Ampd.Control</code>'s own</p></li></ul>
+<p>command tables, so the two cannot drift — there is a test asserting they are the same set. A test sends 500 distinct unknown command words and asserts <code>:erlang.system_info(:atom_count)</code> is unchanged: the atom table has a hard ceiling and is never collected, so an interning decoder is a denial of service that outlives the connection.</p>
+<ul><li><p>Argument count (8), argument size (64 KB), and nesting depth (12) limits, refusing</p></li></ul>
+<p><code>invalid-command-arguments</code> rather than raising.</p>
+<ul><li><p>The <code>Ampd.Control.command/3</code> call is wrapped, so an arity with no clause becomes a refusal and</p></li></ul>
+<p>the handler stays alive.</p>
+<ul><li><p>Refusals minted here are projected by the peer's channel, and as an <em>agent</em> when there is no</p></li></ul>
+<p>peer — an unidentified caller gets the narrower answer, never the wider one.</p>
+<p>Frame limits at the socket and per-peer rate limiting remain the transport's, as you ruled.</p>
+<h3 id="blk-113238">6 · One thing I did not manage to make falsifiable, and am not counting</h3>
+<p>The <code>Peer</code> epoch is in, and every handle carries it. But stubbing the epoch comparison out leaves its test <strong>green</strong>, because a crashed <code>Peer</code> comes back with an empty map and <code>Map.get/2</code> returns nil whatever the handle says. The epoch is redundant today; it is insurance for a persistence or handoff path that does not exist yet, and insurance against a thing that does not exist cannot be falsified by a test.</p>
+<p>So it is excluded from <code>tools/sabotage.sh</code>, which says why in the script, and its test is labelled an invariant check rather than a falsifier. <code>18 falsified · 0 not</code> is the honest number; <code>19</code> would not have been.</p>
+<p>Your other two peer rulings are recorded and are the transport's: fail-closed reattachment after a crash, and <code>attach_agent/2</code> / <code>claim_control_channel/0</code> restricted to the host bridge the way registry mutations are restricted to the coordinator.</p>
+<h3 id="blk-113242">7 · Your acceptance table</h3>
+<table><thead><tr><th>C1.1 falsifier</th><th>state</th></tr></thead><tbody><tr><td>agent tries human command</td><td>✅ falsified</td></tr><tr><td>agent puts <code>actor=kestrel</code> in payload</td><td>✅ unphrasable — no such field</td></tr><tr><td>fake/old peer handle</td><td>✅ falsified</td></tr><tr><td>peer crashes → old channels invalid</td><td>✅ falsified (epoch itself: see §6)</td></tr><tr><td>claim control after restart</td><td>⛔ transport</td></tr><tr><td>revoke Kestrel's while Mallory holds same</td><td>✅ falsified</td></tr><tr><td>unknown grant duration</td><td>✅ falsified</td></tr><tr><td>agent asks <code>duration=forever</code></td><td>✅ falsified</td></tr><tr><td>approve grant for undeclared capability</td><td>✅ falsified — <strong>and for a discovered pack</strong></td></tr><tr><td>store sealed during revoke/request</td><td>✅ falsified</td></tr><tr><td>malformed command frame/args</td><td>✅ falsified</td></tr><tr><td>arbitrary command string → no atoms</td><td>✅ falsified</td></tr><tr><td>Kestrel projection contains only Kestrel</td><td>✅ falsified</td></tr><tr><td>UI updates without reload</td><td>⛔ transport</td></tr><tr><td>close/reopen → same durable world</td><td>⛔ transport</td></tr></tbody></table>
+<p>Twelve of fifteen. The three left are the socket.</p>
+<h3 id="blk-113277">8 · Ladder</h3>
+<p>C1.1.0   projection boundary correctness                   ✓ C1.1.1   identity + projection                             ✓ C1.1.2   the transport's acceptance battery                ✓  this round exact-grant identity · closed durations · discovery confers nothing · transition truth · centralized redaction · total wire decoder C1.1     Tauri Rust host + private inherited transport SIMULATED → LIVE LOCAL                            ← next, and now only this C1.1b    SQLite transactional persistence C1.2     FabricProvider.Tailscale</p>
+<h3 id="blk-113279">9 · Open</h3>
+<ol><li><p><strong>Should `Authority.mint/1` refuse an undeclared capability, or only warn?</strong> It refuses now,</p></li></ol>
+<p>which means an operator cannot pre-grant against a pack they are about to install. That is the correct default and it is also a workflow someone will want. The alternative — allow it, and let the gateway refuse — is exactly the dormant grant, so I do not think there is a middle.</p>
+<ol start="2"><li><p><strong>Is `expected_count` the right confirmation for bulk revocation?</strong> It makes &quot;confirm what you</p></li></ol>
+<p>were shown&quot; mechanical, but it is a count, not an identity: two grants revoked and two minted between render and click would pass. The identity-exact version is a list of grant ids, which is heavier and correct. I picked the count and would rather you ruled it.</p>
+<ol start="3"><li><p><strong>Where does the wire's argument schema live?</strong> It is currently shape checks in <code>Ampd.Wire</code></p></li></ol>
+<p>plus <code>Ampd.Control</code>'s function heads. A declared per-command schema would be better and is arguably C1.1's job, since the wire format is not settled until the socket exists.</p>
+<h3 id="blk-113292">Verify</h3>
+<pre><code>cd ampd &amp;&amp; mix test               # 128 tests
+bash tools/sabotage.sh            # 18 falsified · 0 not
+cd .. &amp;&amp; bash tools/release.sh    # full gate chain → and-super-rev-f5.zip</code></pre></div>
+<p class="src"><a href="/#/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-113173" class="lvl2">0 · Measured</a><a href="#blk-113191" class="lvl2">1 · Reproduced before fixed</a><a href="#blk-113194" class="lvl2">2 · Your dormant-grant scenario is real, and the install was never needed</a><a href="#blk-113210" class="lvl2">3 · The other four</a><a href="#blk-113215" class="lvl2">4 · public_code removed, exactly as you ruled</a><a href="#blk-113219" class="lvl2">5 · The wire</a><a href="#blk-113238" class="lvl2">6 · One thing I did not manage to make falsifiable, and am not counting</a><a href="#blk-113242" class="lvl2">7 · Your acceptance table</a><a href="#blk-113277" class="lvl2">8 · Ladder</a><a href="#blk-113279" class="lvl2">9 · Open</a><a href="#blk-113292" class="lvl2">Verify</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a><a href="/super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md/">F.8.2.5 — generation is a fence, and the narrowing was never a product decision</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierav6fbwsv2s7vhkvopbldlib77bsnwvflddtpoalxuzx7og6wr742a</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>A saved single-file review is staged again from its record — 2026-09-18 · super · Ampersand Box</title>
+<meta name="description" content="Status: built, unit-tested, driven on a real screen in a throwaway world; the install is recorded at the end. Finding 3 of…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/app/SAVED_SINGLE_FILE_REVIEW_2026_09_18.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A saved single-file review is staged again from its record — 2026-09-18">
+<meta property="og:description" content="Status: built, unit-tested, driven on a real screen in a throwaway world; the install is recorded at the end. Finding 3 of…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/app/SAVED_SINGLE_FILE_REVIEW_2026_09_18.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"A saved single-file review is staged again from its record — 2026-09-18","name":"A saved single-file review is staged again from its record — 2026-09-18","description":"Status: built, unit-tested, driven on a real screen in a throwaway world; the install is recorded at the end. Finding 3 of…","url":"https://docs.ampersandboxdesign.com/super/docs/app/SAVED_SINGLE_FILE_REVIEW_2026_09_18.md/","identifier":"bagaaieragmlmvqakmzfxcwtuvynk6zxyjk5slqcrs24mx6lw5cotd3xknw2q","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"What changed"},{"@type":"WebPageElement","name":"Evidence"},{"@type":"WebPageElement","name":"Not done here"},{"@type":"WebPageElement","name":"After the install — 2026-09-18 23:39Z"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"app","item":"https://docs.ampersandboxdesign.com/super/docs/app/"},{"@type":"ListItem","position":5,"name":"SAVED_SINGLE_FILE_REVIEW_2026_09_18.md","item":"https://docs.ampersandboxdesign.com/super/docs/app/SAVED_SINGLE_FILE_REVIEW_2026_09_18.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/app/SAVED_SINGLE_FILE_REVIEW_2026_09_18.md</span>
+
+</div></div>
+<div class="lead">Status: built, unit-tested, driven on a real screen in a throwaway world; the install is recorded at the end. Finding 3 of REVIEW_EVIDENCE_RULINGS_2026_09_18.md After the instal…</div>
+<div class="prose"><h1 id="blk-112135">A saved single-file review is staged again from its record — 2026-09-18</h1>
+<p><strong>Status: built, unit-tested, driven on a real screen in a throwaway world; the install is recorded at the end.</strong> Finding 3 of <code>REVIEW_EVIDENCE_RULINGS_2026_09_18.md</code> <em>After the install</em>: after a restart a single-file proposal could not be staged from its card — the transcript restores no live Editor reference and <code>saved-review.js</code> re-staged combined reviews only — so the driver of the first single-file round read the reviewed bytes from the content store by <code>result_sha256</code> and wrote the file by hand, and said so. This closes that gap through the page's own controls.</p>
+<h3 id="blk-112137">What changed</h3>
+<ul><li><p><strong>`saved-review.js`</strong> — <code>savedReviewFile(attempt, task)</code>: the single-file</p></li></ul>
+<p>record as a one-member list, under the same refusals a combined review's members get (<code>openReview</code>, <code>retainedMember</code>, both factored out of <code>savedReviewSet</code>, whose refusals are unchanged). A deletion basis is refused by name: the single-file dialog never deletes. The body read (<code>savedReviewBodies</code>), the repository check (<code>savedReviewItem</code>) and the item it yields are the existing ones; the item is exactly what <code>checkFileProposal</code> accepts, which the tests prove.</p>
+<ul><li><p><strong>`development.js`</strong> — the <code>stage-saved-review</code> handler branches on the</p></li></ul>
+<p>record's schema. A single-file review goes through <code>stageSavedFile</code>: the shared read (<code>readSavedReview</code>, factored out of <code>stageSavedReview</code>) sets up the one tab, then opens the <strong>single-file dialog</strong> (<code>reviewFileProposal</code>) with <code>recordAttempt: null</code> — the record exists — and the same <code>verifyPlan</code> the live proposal used, so <em>Use as editor draft</em> re-verifies the plan and pins the file to the recorded source basis before it touches the tab. <strong>Save in the Editor is still the step that writes.</strong></p>
+<ul><li><p><strong>`development-tasks.js`</strong> (34 KB, over the share cap, written directly) —</p></li></ul>
+<p><em>Stage this review again</em> is rendered for both shapes while the plan and the review are open; the note names the writing step for each. The review guide's <em>Apply</em> action already clicked this control when present.</p>
+<h3 id="blk-112150">Evidence</h3>
+<ul><li><p><code>node --test tools/*-test.mjs</code>: <strong>288 / 288</strong> (284 before; +2 in</p></li></ul>
+<p><code>saved-review-test.mjs</code>, +2 in <code>conversation-title-test.mjs</code>).</p>
+<ul><li><p><code>bash tools/gates.sh</code>: 7 held · 2 failed (ordered boundary, ordered</p></li></ul>
+<p>closure — pre-existing, <code>ampd/lib</code> only; the two census JSONs it rewrites were restored).</p>
+<ul><li><p><strong>`tools/saved-file-review-resume-smoke.mjs`</strong> — new, real cockpit,</p></li></ul>
+<p>throwaway world, <strong>no bot and no native dialog</strong>: the registered repository is opened by ref, a file is committed there, the single-file review is recorded <em>by intent exactly as the page records one</em> (bodies published by digest with <code>put_review_content</code>, the record its source basis alone, <code>content.held = &quot;staged&quot;</code>), and then, in a cockpit whose transcript never saw a proposal card: <strong>13 held · 0 failed</strong> on the binary built from this tree (<code>7c615270bc51…</code>). Seen on screen (<code>outputs/saved-file-resume/</code>):</p>
+<ol><li><p>the card offers <em>Stage saved review in Editor</em>, and before a file</p></li></ol>
+<p>request is prepared for the plan it is refused by name;</p>
+<ol start="2"><li><p>with the file request prepared, the single-file dialog opens on the</p></li></ol>
+<p>recorded file, the diff is the recorded change (1 added · 1 removed), <strong>Source pinned to `&lt;head&gt;` · exact file and result recorded</strong>, <em>Use as editor draft</em> enabled, no <em>Save review attempt</em> control (<code>02-single-file-dialog-resumed.png</code>);</p>
+<ol start="3"><li><p><em>Use as editor draft</em> leaves the proposed text in the Editor as an</p></li></ol>
+<p><strong>unsaved</strong> draft, the file on disk and <code>git status</code> unchanged (<code>03-editor-unsaved-draft.png</code>);</p>
+<ol start="4"><li><p>staging again with that draft unsaved is refused as an unsaved edit;</p></li></ol>
+<p>a file changed on disk since the review is refused <em>&quot;changed on disk since it was reviewed (now …, reviewed at …)&quot;</em> (<code>04-refused-changed-on-disk.png</code>).</p>
+<ul><li><p>Re-run on the same binary: plan-steps, palette-records, reference-text,</p></li></ul>
+<p>registered-repository smokes — results in the install section.</p>
+<h3 id="blk-112183">Not done here</h3>
+<ul><li><p>The live world's open single-file reviews <code>da_0064</code>–<code>da_0066</code> (dt_0063)</p></li></ul>
+<p>were reviewed at <code>df4ed066</code> against files that have since changed on disk (the palette change they proposed is installed), so this control will refuse them by name rather than stage them; that is the correct answer and the refusal was not driven on the live world.</p>
+<ul><li><p><code>saved-review-resume-smoke</code> (combined, native chooser) was not re-run: it</p></li></ul>
+<p>needs <code>DEVELOPMENT_TEST_ROOT</code> and a confirm this box cannot do.</p>
+<ul><li><p>Acceptance after Save was not driven here; it is unchanged and</p></li></ul>
+<p><code>development-acceptance-smoke</code> covers it.</p>
+<h3 id="blk-112196">After the install — 2026-09-18 23:39Z</h3>
+<p>Commit <code>b3c6f7e</code> (this change) and <code>48aa9d1</code> (the first-reply guard) were fast-forwarded into <code>~/build/super-review-content</code>, built there (<code>cargo build --release</code>, 34.7 s), and installed as <code>super-desktop</code> after <code>~/build/backup-world.sh</code> (<code>default-20260918T233855Z</code>): MainPID's <code>/proc/&lt;pid&gt;/exe</code> is the worktree's <code>super-cockpit</code>, sha256 <code>1be00b791212054f…</code>; gateway 4318 → 200, Expo 8081 → 200, connector 4320 → 403 without the identity header, as before. Driven from the installed checkout on that binary: <code>saved-file-review-resume</code> <strong>13 held · 0 failed</strong>, <code>plan-steps</code> 9/9. From the source clone before the install (binary <code>7c615270…</code>): saved-file-review-resume 13/13, plan-steps 9/9, palette-records 12/12, reference-text 55/55, registered-repository 19/19. The unit's journal since the restart carries no error line.</p></div>
+<p class="src"><a href="/#/super/docs/app/SAVED_SINGLE_FILE_REVIEW_2026_09_18.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-112137" class="lvl2">What changed</a><a href="#blk-112150" class="lvl2">Evidence</a><a href="#blk-112183" class="lvl2">Not done here</a><a href="#blk-112196" class="lvl2">After the install — 2026-09-18 23:39Z</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/app/ACCEPTED_BUILD_2026_09_10.md/">Super: build accepted app</a><a href="/super/docs/app/ACCEPTED_RESULT_CHECK_2026_09_10.md/">Super: checking accepted source before integration</a><a href="/super/docs/app/AUTHORITY_LOG_RETENTION_2026_09_24.md/">Authority log retention — candidate 3 (2026-09-24)</a><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/BOT_LIVE_ACTIVITY_2026_09_13.md/">Bot activity and Claude reconnect</a><a href="/super/docs/app/BOT_WORK_PAGES_2026_09_07.md/">Super progress — bot work pages</a><a href="/super/docs/app/BUILD_PREVIEW_2026_09_10.md/">Try an accepted Super build</a><a href="/super/docs/app/CANCELLED_PLAN_STEPS_2026_09_19.md/">A cancelled plan&#39;s stepper claims no step — 2026-09-19</a><a href="/super/docs/app/COMBINED_FILE_REVIEW_2026_09_10.md/">Combined file review — 2026-09-10</a><a href="/super/docs/app/COMBINED_TESTING_2026_09_10.md/">Combined testing and acceptance — 2026-09-10</a><a href="/super/docs/app/CONTINUE_WORK_2026_09_14.md/">Continue work and guided review</a><a href="/super/docs/app/DESKTOP_LAUNCH_2026_09_10.md/">Daily desktop launch — September 10, 2026</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieragmlmvqakmzfxcwtuvynk6zxyjk5slqcrs24mx6lw5cotd3xknw2q</div></div></div>
+</div></div>
+</body></html>

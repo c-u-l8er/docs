@@ -1,0 +1,625 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Motor ↔ Machine Architecture — Research &amp; Brainstorming Brief for Super / ComputeDriven · super · Ampersand Box</title>
+<meta name="description" content="Date: 2026-08-23 Status: research brief / design exploration, not yet a frozen spec Audience: next Opus/Super implementation session Purpose: continue the…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/MOTOR_MACHINE_RESEARCH_BRIEF_FOR_OPUS.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Motor ↔ Machine Architecture — Research &amp; Brainstorming Brief for Super / ComputeDriven">
+<meta property="og:description" content="Date: 2026-08-23 Status: research brief / design exploration, not yet a frozen spec Audience: next Opus/Super implementation session Purpose: continue the…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/MOTOR_MACHINE_RESEARCH_BRIEF_FOR_OPUS.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Motor ↔ Machine Architecture — Research & Brainstorming Brief for Super / ComputeDriven","name":"Motor ↔ Machine Architecture — Research & Brainstorming Brief for Super / ComputeDriven","description":"Date: 2026-08-23 Status: research brief / design exploration, not yet a frozen spec Audience: next Opus/Super implementation session Purpose: continue the…","url":"https://docs.ampersandboxdesign.com/super/MOTOR_MACHINE_RESEARCH_BRIEF_FOR_OPUS.md/","identifier":"bagaaiera5dr4ltwp3zl2wpjw3yylj3tgjixjgjtbe3g7vxlkhwt6426rzcdq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0. Executive thesis"},{"@type":"WebPageElement","name":"3.1 Google DeepMind: embodied reasoner → VLA"},{"@type":"WebPageElement","name":"3.2 NVIDIA GR00T: action chunks + embodiment adaptation"},{"@type":"WebPageElement","name":"3.3 OpenVLA: embodiment-specific action normalization is real work"},{"@type":"WebPageElement","name":"3.4 ros2_control: controller/hardware separation is worth stealing"},{"@type":"WebPageElement","name":"3.5 CANopen CiA 402: drives already look like governed state machines"},{"@type":"WebPageElement","name":"3.6 EtherCAT: deterministic synchronization belongs below the AI layer"},{"@type":"WebPageElement","name":"4.1 World"},{"@type":"WebPageElement","name":"4.2 Machine"},{"@type":"WebPageElement","name":"4.3 Motor"},{"@type":"WebPageElement","name":"4.4 MotorBinding"},{"@type":"WebPageElement","name":"4.5 Driver / Adapter"},{"@type":"WebPageElement","name":"4.6 Governor"},{"@type":"WebPageElement","name":"4.7 Receipt / settlement"},{"@type":"WebPageElement","name":"ActionChunk"},{"@type":"WebPageElement","name":"Mode A — LLM is the Motor"},{"@type":"WebPageElement","name":"Mode B — LLM is the planner; smaller Motor executes"},{"@type":"WebPageElement","name":"Mode C — LLM is teacher / trace labeler"},{"@type":"WebPageElement","name":"Mode D — LLM is exception solver"},{"@type":"WebPageElement","name":"Layer P4 — Super/WRL goal"},{"@type":"WebPageElement","name":"Layer P3 — Motor output"},{"@type":"WebPageElement","name":"Layer P2 — Machine adapter/controller"},{"@type":"WebPageElement","name":"Layer P1 — device protocol"},{"@type":"WebPageElement","name":"Layer P0 — hard safety and electrical control"},{"@type":"WebPageElement","name":"shadow"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"MOTOR_MACHINE_RESEARCH_BRIEF_FOR_OPUS.md","item":"https://docs.ampersandboxdesign.com/super/MOTOR_MACHINE_RESEARCH_BRIEF_FOR_OPUS.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/MOTOR_MACHINE_RESEARCH_BRIEF_FOR_OPUS.md</span>
+
+</div></div>
+<div class="lead">Date: 2026-08-23 Status: research brief / design exploration, not yet a frozen spec Audience: next Opus/Super implementation session Purpose: continue the earlier LLM → Motor →…</div>
+<div class="prose"><h1 id="blk-108865">Motor ↔ Machine Architecture — Research &amp; Brainstorming Brief for Super / ComputeDriven</h1>
+<p><strong>Date:</strong> 2026-08-23 <strong>Status:</strong> research brief / design exploration, not yet a frozen spec <strong>Audience:</strong> next Opus/Super implementation session <strong>Purpose:</strong> continue the earlier <strong>LLM → Motor → Machine</strong> idea and decide what the cleanest Motor/Machine seam should be before it gets baked into Super, WRL/TRVM, the Factory, or physical-device work.</p>
+<h3 id="blk-108867">0. Executive thesis</h3>
+<p>The most promising interpretation of the idea is:</p>
+<blockquote><p><strong>A Motor is not a machine, and it is not merely a model. A Motor is a bounded policy artifact that proposes actions against a typed Machine contract. A Machine is an embodiment/execution boundary. A separately identified Binding is what connects the two.</strong></p></blockquote>
+<p>That separation is the main recommendation of this brief.</p>
+<p>The system should <strong>not</strong> make a Motor own a Machine, embed a machine identifier into a Motor, or let an LLM speak directly to low-level hardware buses. Instead:</p>
+<pre><code>Goal / human / higher-level LLM
+            │
+            ▼
+      Reasoner / Planner
+            │
+            │ bounded goal / task
+            ▼
+          Motor
+   learned action policy
+            │
+            │ MotorProposal
+            ▼
+   Governor / TRVM laws
+            │
+            │ authorized intent
+            ▼
+      MotorBinding
+   adapters + limits + lease
+            │
+            ▼
+          Machine
+  deterministic execution edge
+            │
+      ┌─────┴─────────────┐
+      ▼                   ▼
+ digital executor     physical driver
+ browser/code/DB      ROS/CAN/EtherCAT/etc.
+      │                   │
+      └────────┬──────────┘
+               ▼
+       receipts / telemetry
+               │
+               ▼
+        authoritative World</code></pre>
+<p>The strongest rule to preserve from current Super/TRVM thinking is:</p>
+<blockquote><p><strong>The Motor proposes. Governance authorizes. The Machine executes. The World records what actually happened.</strong></p></blockquote>
+<p>For physical systems, add one more rule:</p>
+<blockquote><p><strong>The learned layer never owns the hard real-time or safety loop.</strong></p></blockquote>
+<p>Current robotics research is moving in a surprisingly similar direction. Google DeepMind's 2026 Gemini Robotics stack explicitly separates a high-level embodied reasoning model from a lower-level vision-language-action model that executes motion; its on-device model exists specifically to avoid network latency/connectivity constraints. NVIDIA's GR00T models consume language, vision and proprioception and output <em>action chunks</em>, while conventional robotics stacks such as <code>ros2_control</code> keep lifecycle, hardware interfaces and low-jitter control loops beneath the learned policy. That is much closer to the architecture Super has been converging on than a naive &quot;LLM controls a motor&quot; design.</p>
+<h2 id="blk-108881">1. Terminology: avoid the word collision now</h2>
+<p>This project is using <strong>Motor</strong> in a higher-level computational sense. Physical robotics also contains literal electric motors. That can become confusing fast.</p>
+<p>Use this convention in code/docs:</p>
+<ul><li><p><strong>`Motor`</strong> — capital M: learned or adaptive policy artifact in Super.</p></li><li><p><strong>machine</strong> / <strong>`Machine`</strong> — an embodiment or execution substrate exposing typed observations/actions.</p></li><li><p><strong>actuator / drive / servo / joint</strong> — physical motion hardware.</p></li><li><p><strong>controller</strong> — deterministic low-level control loop or state machine.</p></li><li><p><strong>driver</strong> — adapter between a Machine's semantic command interface and concrete hardware/software transport.</p></li><li><p><strong>Binding</strong> — the explicit artifact that mounts one Motor onto one Machine under a particular contract, calibration, governor policy and authority lease.</p></li></ul>
+<p>This lets the same abstraction cover:</p>
+<pre><code>Motor → browser Machine
+Motor → codebase Machine
+Motor → game-world Machine
+Motor → HVAC Machine
+Motor → robot-arm Machine
+Motor → CNC / industrial Machine
+Motor → future WRL-native computer/robot</code></pre>
+<p>A physical servo motor is therefore <strong>inside a physical Machine backend</strong>. It is not the thing meant by the Super <code>Motor</code> abstraction.</p>
+<h2 id="blk-108900">2. Existing idea to preserve from the prior discussion</h2>
+<p>The previous brainstorming already had a good primitive:</p>
+<pre><code>Motor M(P, G, C, H) → Δ</code></pre>
+<p>where the Motor receives some combination of:</p>
+<ul><li><p><strong>P</strong> — projection / perceived World state,</p></li><li><p><strong>G</strong> — goal,</p></li><li><p><strong>C</strong> — constraints/capabilities,</p></li><li><p><strong>H</strong> — relevant history,</p></li></ul>
+<p>and returns a proposed delta/action rather than mutating reality itself.</p>
+<p>The earlier Motor result vocabulary was also useful:</p>
+<pre><code>PROPOSE
+REFUSE
+REQUEST
+ESCALATE
+DECOMPOSE
+WAIT</code></pre>
+<p>Keep that spirit. A Motor is more interesting if refusal, information requests and escalation are first-class outputs rather than treating every inference as a command.</p>
+<p>The earlier lifecycle idea also still looks right:</p>
+<pre><code>trace → train → evaluate → challenger → champion → install</code></pre>
+<p>with Super managing Motor lifecycle, the Factory producing/testing Motor artifacts, WRL expressing goals/actions/world semantics, and TRVM/governance deciding what may become real.</p>
+<p>The key missing piece was: <strong>what exactly does a Motor install onto, and what does “compatible with this Machine” mean?</strong></p>
+<p>This brief proposes that <code>MotorBinding</code> is the answer.</p>
+<h2 id="blk-108922">3. Research signal: the industry is splitting reasoning from action</h2>
+<h3 id="blk-108923">3.1 Google DeepMind: embodied reasoner → VLA</h3>
+<p>As of July/August 2026, Google DeepMind describes <strong>Gemini Robotics ER 2</strong> as a high-level embodied reasoning model that understands the physical world, plans multi-step tasks, coordinates robots, and then <strong>hands motor execution to a lower-level VLA model</strong>. Gemini Robotics 2 is the action model; Gemini Robotics On-Device 2 is the local version optimized for network/latency constraints.</p>
+<p>The On-Device 2 model card describes inputs as text, images and robot proprioception, with <strong>numerical robot actions</strong> as outputs. DeepMind also emphasizes multi-embodiment adaptation rather than one model being permanently fused to one body.</p>
+<p><strong>Implication for Super:</strong> do not make the big LLM the machine driver. The higher model can reason, plan, select tools/Motors, generate goals, diagnose failure, or train challengers. The Motor should sit closer to action and can eventually be much smaller/faster than the reasoning model.</p>
+<h3 id="blk-108927">3.2 NVIDIA GR00T: action chunks + embodiment adaptation</h3>
+<p>NVIDIA's GR00T platform follows another useful pattern. Its VLA models accept onboard video, language commands and proprioceptive state, then output <strong>action chunks</strong>: predictive sequences of relative joint motions. GR00T is positioned as cross-embodiment and adaptable through post-training.</p>
+<p><strong>Implication for Super:</strong> the output of a Motor does not have to be a single atomic action. <code>MotorProposal</code> can contain a short bounded horizon / action chunk, as long as the Machine/Governor can interrupt, validate and settle it.</p>
+<p>This is useful because asking an expensive model to choose every 1 ms control update is absurd, but having it choose a short, bounded action trajectory can be practical.</p>
+<h3 id="blk-108931">3.3 OpenVLA: embodiment-specific action normalization is real work</h3>
+<p>OpenVLA and subsequent optimized fine-tuning work expose another important fact: a learned policy cannot simply emit universal numbers and assume every robot/body interprets them identically. Action normalization, action spaces, camera layouts and embodiment adaptation matter.</p>
+<p><strong>Implication for Super:</strong> resist the temptation to define one magical global <code>float[] action</code> ABI. Define semantic, versioned action/observation schemas and make adaptation an explicit artifact.</p>
+<h3 id="blk-108934">3.4 <code>ros2_control</code>: controller/hardware separation is worth stealing</h3>
+<p><code>ros2_control</code> separates controllers from dynamically loaded hardware components. Hardware components expose state and command interfaces; the controller manager owns lifecycle and hardware access. Its docs explicitly emphasize low jitter and real-time scheduling for actual hardware control.</p>
+<p><strong>Implication for Super:</strong> a physical Machine should expose a stable semantic interface above its device driver. Motor logic should not know whether a joint target ultimately becomes CANopen PDOs, EtherCAT process data, PWM, a serial message, or a simulator call.</p>
+<h3 id="blk-108937">3.5 CANopen CiA 402: drives already look like governed state machines</h3>
+<p>CiA 402 standardizes behavior for servo drives, frequency inverters and stepper drives with a finite-state automaton, control/status words and defined operating modes.</p>
+<p><strong>Implication for Super:</strong> the physical edge is not “write random voltage.” It is already naturally modeled as typed state transitions under a deterministic driver/controller. WRL/TRVM-style state and authority semantics can sit <em>above</em> that rather than replacing it.</p>
+<h3 id="blk-108940">3.6 EtherCAT: deterministic synchronization belongs below the AI layer</h3>
+<p>EtherCAT uses distributed clocks for tightly synchronized servo axes; its technology material describes sub-microsecond-class synchronization, and Safety over EtherCAT supports safety-critical motion/control architectures.</p>
+<p><strong>Implication for Super:</strong> let dedicated control infrastructure own synchronized actuation. Super/Motor should specify bounded intent/trajectory/goal semantics, not attempt to replace a proven bus-level servo scheduler with an LLM loop.</p>
+<h2 id="blk-108943">4. Recommended object model</h2>
+<p>I would make these distinct first-class concepts.</p>
+<h3 id="blk-108945">4.1 World</h3>
+<p>The <strong>World</strong> is authoritative state and causal history, not whatever the Motor currently believes.</p>
+<p>It contains or projects:</p>
+<ul><li><p>machine state,</p></li><li><p>available capabilities,</p></li><li><p>observations/telemetry,</p></li><li><p>goals,</p></li><li><p>leases,</p></li><li><p>completed actions,</p></li><li><p>refusals,</p></li><li><p>failures,</p></li><li><p>receipts,</p></li><li><p>relevant environment state.</p></li></ul>
+<p>A Motor receives a <strong>projection</strong> of this World, never implicit global knowledge.</p>
+<p>This stays aligned with the projection/authority work already happening in Super.</p>
+<h3 id="blk-108971">4.2 Machine</h3>
+<p>A <strong>Machine</strong> is an embodiment/execution boundary.</p>
+<p>A Machine should answer:</p>
+<ol><li><p>What can be observed?</p></li><li><p>What can be commanded?</p></li><li><p>At what semantic level?</p></li><li><p>What invariants/limits can never be bypassed?</p></li><li><p>What timing model applies?</p></li><li><p>Can it be paused/reset/snapshotted/simulated?</p></li><li><p>What counts as successful settlement?</p></li></ol>
+<p>A Machine may be:</p>
+<ul><li><p>a real physical robot,</p></li><li><p>a simulated robot,</p></li><li><p>a browser,</p></li><li><p>a software repo,</p></li><li><p>a database,</p></li><li><p>a game actor,</p></li><li><p>a cluster,</p></li><li><p>a client computer,</p></li><li><p>an HVAC system,</p></li><li><p>an industrial process,</p></li><li><p>eventually a WRL-native hardware machine.</p></li></ul>
+<p>The Machine is <strong>not itself the learned intelligence</strong>.</p>
+<h3 id="blk-109014">4.3 Motor</h3>
+<p>A <strong>Motor</strong> is an action policy artifact.</p>
+<p>It packages more than weights:</p>
+<ul><li><p>model/policy artifact,</p></li><li><p>input observation contract,</p></li><li><p>output proposal contract,</p></li><li><p>supported Machine contract families,</p></li><li><p>required capabilities,</p></li><li><p>inference/runtime requirements,</p></li><li><p>timing expectations,</p></li><li><p>bounded action horizon,</p></li><li><p>training provenance,</p></li><li><p>evaluation evidence,</p></li><li><p>known limitations,</p></li><li><p>artifact hash/version,</p></li><li><p>optional adapter requirements.</p></li></ul>
+<p>This is the important conceptual distinction:</p>
+<blockquote><p><strong>Model ≠ Motor.</strong>  A model becomes a Motor only when it has an action ABI, authority assumptions, compatibility contract, provenance and evaluation evidence.</p></blockquote>
+<h3 id="blk-109047">4.4 MotorBinding</h3>
+<p>The <strong>Binding</strong> is the missing connection object.</p>
+<p>A Motor should not be modified when installed on a Machine. Instead mounting it creates a separate immutable/receipt-backed object:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;schema&quot;</span>: <span class="t-string">&quot;motor-binding@1&quot;</span>,
+  <span class="t-key">&quot;binding_id&quot;</span>: <span class="t-string">&quot;...&quot;</span>,
+  <span class="t-key">&quot;motor&quot;</span>: {
+    <span class="t-key">&quot;artifact&quot;</span>: <span class="t-string">&quot;sha256:...&quot;</span>,
+    <span class="t-key">&quot;abi&quot;</span>: <span class="t-string">&quot;motor-abi@1&quot;</span>
+  },
+  <span class="t-key">&quot;machine&quot;</span>: {
+    <span class="t-key">&quot;id&quot;</span>: <span class="t-string">&quot;machine:robot-arm-7&quot;</span>,
+    <span class="t-key">&quot;contract&quot;</span>: <span class="t-string">&quot;sha256:...&quot;</span>
+  },
+  <span class="t-key">&quot;observation_adapter&quot;</span>: <span class="t-string">&quot;sha256:...&quot;</span>,
+  <span class="t-key">&quot;action_adapter&quot;</span>: <span class="t-string">&quot;sha256:...&quot;</span>,
+  <span class="t-key">&quot;governor_policy&quot;</span>: <span class="t-string">&quot;sha256:...&quot;</span>,
+  <span class="t-key">&quot;capability_lease&quot;</span>: <span class="t-string">&quot;lease:...&quot;</span>,
+  <span class="t-key">&quot;calibration&quot;</span>: <span class="t-string">&quot;calibration:...&quot;</span>,
+  <span class="t-key">&quot;mode&quot;</span>: <span class="t-string">&quot;shadow&quot;</span>,
+  <span class="t-key">&quot;max_horizon_ms&quot;</span>: <span class="t-num">250</span>,
+  <span class="t-key">&quot;rate&quot;</span>: {
+    <span class="t-key">&quot;target_hz&quot;</span>: <span class="t-num">20</span>,
+    <span class="t-key">&quot;deadline_ms&quot;</span>: <span class="t-num">40</span>
+  },
+  <span class="t-key">&quot;created_from_eval&quot;</span>: <span class="t-string">&quot;eval:...&quot;</span>,
+  <span class="t-key">&quot;expires_at&quot;</span>: <span class="t-string">&quot;...&quot;</span>
+}</code></pre>
+<p>The UI can call the operation <strong>Mount Motor</strong>, while the canonical record is a <code>MotorBinding</code>.</p>
+<p>This gives us:</p>
+<pre><code>one Motor → many Machines
+one Machine → many Motors
+one Machine → Motor A for navigation + Motor B for manipulation
+one Motor → sim Machine first, real Machine later</code></pre>
+<p>without mutating the Motor artifact itself.</p>
+<h3 id="blk-109055">4.5 Driver / Adapter</h3>
+<p>The adapter translates between a Machine's native embodiment and the Motor's declared semantic spaces.</p>
+<p>Examples:</p>
+<pre><code>Motor action:     end_effector_delta@2
+Machine action:   franka_joint_trajectory@4
+Adapter:          IK + limits + calibration</code></pre>
+<p>or:</p>
+<pre><code>Motor action:     browser.intent@1
+Machine action:   super.web.command@3
+Adapter:          typed command mapper</code></pre>
+<p>Adapters should be content-addressed and independently testable. This is analogous to a device driver plus an embodiment adapter, not “prompt glue.”</p>
+<h3 id="blk-109062">4.6 Governor</h3>
+<p>The Governor is the non-negotiable enforcement layer between proposal and execution.</p>
+<p>It can validate:</p>
+<ul><li><p>capability authority,</p></li><li><p>machine state,</p></li><li><p>action bounds,</p></li><li><p>resource conflicts,</p></li><li><p>current lease,</p></li><li><p>rate/horizon limits,</p></li><li><p>safety envelope,</p></li><li><p>approval requirements,</p></li><li><p>action preconditions,</p></li><li><p>stale observations,</p></li><li><p>contradictory Motor proposals.</p></li></ul>
+<p>A Motor cannot bypass the Governor merely because it is local, trusted, small, or previously successful.</p>
+<h3 id="blk-109089">4.7 Receipt / settlement</h3>
+<p>Every executed proposal should settle into something like:</p>
+<pre><code>proposal_id
+binding_id
+motor_artifact_hash
+machine_contract_hash
+basis/world cursor
+requested action
+allowed/transformed action
+execution start/end
+observed outcome
+refusal/fault if any
+resulting World revision</code></pre>
+<p>That is the substrate the Factory later learns from.</p>
+<h2 id="blk-109093">5. Proposed ABI</h2>
+<p>The earlier compact formula can become a typed ABI rather than a philosophical statement.</p>
+<pre><code>Motor.step(
+  observation: ProjectionFrame,
+  goal: Goal,
+  constraints: MotorConstraints,
+  history: MotorHistory
+) -&gt; MotorProposal</code></pre>
+<p>Possible <code>MotorProposal</code> variants:</p>
+<pre><code>PROPOSE(ActionChunk)
+REFUSE(Reason)
+REQUEST(ObservationOrCapability)
+ESCALATE(Reason, Context)
+DECOMPOSE(Subgoals)
+WAIT(Condition | Deadline)</code></pre>
+<h4 id="blk-109098">ActionChunk</h4>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;schema&quot;</span>: <span class="t-string">&quot;action-chunk@1&quot;</span>,
+  <span class="t-key">&quot;basis&quot;</span>: <span class="t-string">&quot;world:cursor:...&quot;</span>,
+  <span class="t-key">&quot;space&quot;</span>: <span class="t-string">&quot;machine.end_effector_delta@2&quot;</span>,
+  <span class="t-key">&quot;horizon_ms&quot;</span>: <span class="t-num">200</span>,
+  <span class="t-key">&quot;steps&quot;</span>: [<span class="t-string">&quot;...&quot;</span>],
+  <span class="t-key">&quot;interruptible&quot;</span>: <span class="t-lit">true</span>,
+  <span class="t-key">&quot;expected_effects&quot;</span>: [<span class="t-string">&quot;...&quot;</span>],
+  <span class="t-key">&quot;stop_conditions&quot;</span>: [<span class="t-string">&quot;...&quot;</span>]
+}</code></pre>
+<p>The Motor must not silently assume that <code>basis</code> remains current for the whole horizon. The binding/governor decides whether a proposal can continue, must be revalidated, or must be interrupted.</p>
+<p>This makes Motor execution fit naturally with the current Super work on projection freshness, claim validity and authority.</p>
+<h2 id="blk-109102">6. Machine contract</h2>
+<p>A Machine contract could look roughly like:</p>
+<pre data-lang="json"><code>{
+  <span class="t-key">&quot;schema&quot;</span>: <span class="t-string">&quot;machine-contract@1&quot;</span>,
+  <span class="t-key">&quot;machine_kind&quot;</span>: <span class="t-string">&quot;physical&quot;</span>,
+  <span class="t-key">&quot;observations&quot;</span>: [
+    <span class="t-string">&quot;joint_state@1&quot;</span>,
+    <span class="t-string">&quot;camera.rgb@2&quot;</span>,
+    <span class="t-string">&quot;gripper.force@1&quot;</span>
+  ],
+  <span class="t-key">&quot;actions&quot;</span>: [
+    <span class="t-string">&quot;joint_trajectory@3&quot;</span>,
+    <span class="t-string">&quot;gripper.position@1&quot;</span>
+  ],
+  <span class="t-key">&quot;timing&quot;</span>: {
+    <span class="t-key">&quot;observation_hz&quot;</span>: <span class="t-num">50</span>,
+    <span class="t-key">&quot;command_hz_max&quot;</span>: <span class="t-num">100</span>,
+    <span class="t-key">&quot;hard_control_loop_hz&quot;</span>: <span class="t-num">1000</span>
+  },
+  <span class="t-key">&quot;invariants&quot;</span>: [
+    <span class="t-string">&quot;joint_limits@4&quot;</span>,
+    <span class="t-string">&quot;workspace_limits@2&quot;</span>,
+    <span class="t-string">&quot;estop@1&quot;</span>
+  ],
+  <span class="t-key">&quot;lifecycle&quot;</span>: [
+    <span class="t-string">&quot;OFFLINE&quot;</span>,
+    <span class="t-string">&quot;SAFE&quot;</span>,
+    <span class="t-string">&quot;READY&quot;</span>,
+    <span class="t-string">&quot;ACTIVE&quot;</span>,
+    <span class="t-string">&quot;FAULT&quot;</span>
+  ],
+  <span class="t-key">&quot;simulation&quot;</span>: {
+    <span class="t-key">&quot;available&quot;</span>: <span class="t-lit">true</span>,
+    <span class="t-key">&quot;contract_equivalent&quot;</span>: <span class="t-lit">true</span>
+  }
+}</code></pre>
+<p>For a digital Machine, the same shape works with different semantics:</p>
+<pre><code>observations: DOM projection, repo state, service health
+commands: click/type/navigate, patch/apply/test, deploy/restart
+invariants: capability rules, protected branches, effect wall</code></pre>
+<p>This is important: <strong>Motor/Machine should be general enough that robotics is one embodiment of the architecture, not a second architecture bolted onto Super.</strong></p>
+<h2 id="blk-109108">7. The LLM's role</h2>
+<p>There are at least four legitimate ways an LLM can participate. The architecture should support all four without conflating them.</p>
+<h3 id="blk-109110">Mode A — LLM is the Motor</h3>
+<p>Useful early in development.</p>
+<pre><code>projection + goal → LLM → typed MotorProposal</code></pre>
+<p>Advantages:</p>
+<ul><li><p>fastest to prototype,</p></li><li><p>broad generalization,</p></li><li><p>good for novel/low-frequency actions,</p></li><li><p>generates traces for later training.</p></li></ul>
+<p>Disadvantages:</p>
+<ul><li><p>latency,</p></li><li><p>cost,</p></li><li><p>stochasticity,</p></li><li><p>poor fit for high-rate loops,</p></li><li><p>harder to certify.</p></li></ul>
+<p>This should be considered the <strong>bootstrap Motor</strong>, not necessarily the final Motor.</p>
+<h3 id="blk-109136">Mode B — LLM is the planner; smaller Motor executes</h3>
+<p>This is my recommended target architecture and is close to the current Gemini Robotics ER → VLA split.</p>
+<pre><code>LLM / Reasoner
+   ↓ goal/subtask
+small Motor / VLA / policy
+   ↓ bounded action chunk
+Machine</code></pre>
+<p>This is probably where Super becomes interesting: the expensive model handles semantics and exception cases while cheap learned policies accumulate beneath it.</p>
+<h3 id="blk-109140">Mode C — LLM is teacher / trace labeler</h3>
+<p>The LLM watches traces, explains failures, proposes policies/examples and helps generate training/evaluation data. It never directly controls the Machine during production.</p>
+<p>This fits the Factory particularly well.</p>
+<h3 id="blk-109143">Mode D — LLM is exception solver</h3>
+<p>Normal operation uses deterministic/small learned Motors. Unknown state causes:</p>
+<pre><code>Motor → ESCALATE
+      → LLM reasons
+      → governed proposal
+      → trace captured
+      → candidate skill/Motor crystallized later</code></pre>
+<p>This matches the broader Super thesis that expensive cognition should be an exception path and successful higher-level reasoning should <strong>crystallize downward</strong> into cheaper reusable handlers/policies.</p>
+<h2 id="blk-109147">8. Motor hierarchy instead of one giant policy</h2>
+<p>Do not require one Motor to control every semantic timescale.</p>
+<p>A physical Machine might have:</p>
+<pre><code>mission Motor            ~0.2–2 Hz
+manipulation Motor       ~10–30 Hz
+locomotion Motor         ~20–100 Hz
+trajectory controller    ~100–1000+ Hz
+servo/drive loop         hardware-specific, often higher</code></pre>
+<p>A digital Machine might similarly have:</p>
+<pre><code>project Motor        chooses work
+coding Motor         proposes patch/action chunks
+browser Motor        interacts with page
+low-level executor   deterministic command API</code></pre>
+<p>The important part is not the exact frequencies. It is that each layer has a <strong>contract and bounded authority</strong>, and the low-level loops do not disappear merely because a higher-level model can theoretically emit actions.</p>
+<p>Potential future abstraction:</p>
+<pre><code>MotorGraph
+  nodes = Motors/controllers
+  edges = typed goals/observations/action spaces
+  governor = authority + arbitration across edges</code></pre>
+<p>That begins to look like a learned causal/program graph rather than today's monolithic “agent harness.”</p>
+<h2 id="blk-109157">9. Physical Machines: recommended bridge</h2>
+<p>When Super eventually controls real hardware, I would not invent a proprietary bus first. Put Super above existing device-control standards and learn from them.</p>
+<h3 id="blk-109159">Layer P4 — Super/WRL goal</h3>
+<pre><code>&quot;move this part into fixture B&quot;</code></pre>
+<h3 id="blk-109161">Layer P3 — Motor output</h3>
+<pre><code>semantic pose / action chunk / skill command</code></pre>
+<h3 id="blk-109163">Layer P2 — Machine adapter/controller</h3>
+<pre><code>IK / trajectory / mode state machine / limits</code></pre>
+<p><code>ros2_control</code> is a good reference architecture here: controllers and hardware components are distinct, hardware exposes command/state interfaces, and lifecycle is explicit.</p>
+<h3 id="blk-109166">Layer P1 — device protocol</h3>
+<p>Depending on hardware:</p>
+<ul><li><p>CAN / CAN FD via Linux SocketCAN,</p></li><li><p>CANopen / CiA 402 for drives,</p></li><li><p>EtherCAT for synchronized multi-axis systems,</p></li><li><p>serial/vendor APIs,</p></li><li><p>industrial Ethernet/fieldbus,</p></li><li><p>microcontroller-specific link.</p></li></ul>
+<h3 id="blk-109181">Layer P0 — hard safety and electrical control</h3>
+<ul><li><p>drive limits,</p></li><li><p>current/torque limits,</p></li><li><p>watchdog,</p></li><li><p>emergency stop,</p></li><li><p>safe torque off / equivalent safety functions,</p></li><li><p>servo loop.</p></li></ul>
+<p><strong>No LLM output should bypass P2/P1/P0.</strong></p>
+<p>For a prototype robot, SocketCAN is especially appealing because Linux exposes CAN as a normal network-style socket interface and even supports virtual CAN (<code>vcan</code>) for test/simulation. That could make a nice early Super Machine driver because the same higher-level code can run against a virtual bus before real hardware exists.</p>
+<p>For industrial synchronized motion, EtherCAT is the more serious direction; its distributed clocks and safety ecosystem are exactly the sort of concerns the AI layer should consume as a Machine capability, not reimplement.</p>
+<h2 id="blk-109198">10. Shadow → Suggest → Execute should be a first-class binding mode</h2>
+<p>Never jump directly from “Motor loaded” to “Motor owns Machine.”</p>
+<p>A binding should have an explicit mode:</p>
+<h4 id="blk-109201"><code>shadow</code></h4>
+<p>Motor sees the live projection and proposes actions, but nothing is executed. Compare proposals against human/controller decisions.</p>
+<h4 id="blk-109203"><code>suggest</code></h4>
+<p>Motor proposals are visible and may be accepted by a person or higher-level governor.</p>
+<h4 id="blk-109205"><code>execute</code></h4>
+<p>Motor may receive an execution lease for its declared action space and bounds.</p>
+<p>Potential later modes:</p>
+<pre><code>execute_canary
+execute_bounded
+execute_autonomous</code></pre>
+<p>Promotion can be evidence-based:</p>
+<pre><code>shadow traces
+  ↓
+offline evaluation
+  ↓
+simulation replay
+  ↓
+challenger
+  ↓
+canary binding
+  ↓
+champion binding</code></pre>
+<p>The <strong>Motor artifact does not change</strong> during promotion. The Binding/authority does.</p>
+<p>That is cleaner for provenance and rollback.</p>
+<h2 id="blk-109213">11. Motor compatibility should be proven at bind time</h2>
+<p>A Motor should not simply claim “works with robot arms.”</p>
+<p>Binding should require compatibility evidence such as:</p>
+<pre><code>Motor input schema      ⊇ projected observations provided by Machine
+Motor action schema     → adapter exists → Machine action schema
+rate/deadline            compatible
+required capabilities    grantable
+required sensors          present
+calibration               valid
+safety envelope           enforceable beneath Motor
+model runtime             fits target hardware or remote budget
+simulation/eval           meets threshold</code></pre>
+<p>This is where TRVM-style certificates could eventually become extremely useful.</p>
+<p>A binding could be <strong>committable only if</strong> its compatibility proof is valid.</p>
+<p>This is much more interesting than today's agent ecosystem, where a prompt/harness often “supports a tool” merely because its name appears in a schema.</p>
+<h2 id="blk-109220">12. Multi-Motor arbitration</h2>
+<p>A Machine will eventually have multiple Motors that want overlapping authority.</p>
+<p>Do not solve this by prompt etiquette.</p>
+<p>Possible deterministic arbitration inputs:</p>
+<ul><li><p>capability scope,</p></li><li><p>lease/ownership,</p></li><li><p>Motor priority,</p></li><li><p>World state,</p></li><li><p>resource locks,</p></li><li><p>action-space overlap,</p></li><li><p>safety preemption,</p></li><li><p>deadline,</p></li><li><p>operator override.</p></li></ul>
+<p>Example:</p>
+<pre><code>navigation Motor wants base.velocity
+inspection Motor wants camera.pan
+manipulation Motor wants arm.joint_trajectory
+safety controller wants STOP</code></pre>
+<p>Non-overlapping resources can run concurrently. Conflicting resources need a deterministic winner or refusal.</p>
+<p>This looks like a natural extension of the authority/lease work already happening in Super.</p>
+<h2 id="blk-109247">13. The World should learn from execution, not from Motor confidence</h2>
+<p>A Motor can say:</p>
+<pre><code>&quot;I expect the gripper to close on the object.&quot;</code></pre>
+<p>That is not World truth.</p>
+<p>The Machine executes. Sensors/receipts then establish what happened.</p>
+<p>This gives a clean physical version of a principle Super is already enforcing digitally:</p>
+<blockquote><p><strong>Command success is not projection truth.</strong></p></blockquote>
+<p>For robotics:</p>
+<pre><code>MotorProposal accepted
+      ≠
+object actually grasped</code></pre>
+<p>For code:</p>
+<pre><code>patch command returned success
+      ≠
+tests/deployment actually correct</code></pre>
+<p>For a browser:</p>
+<pre><code>click intent accepted
+      ≠
+page transitioned as expected</code></pre>
+<p>The same causal model can therefore span physical and digital Machines.</p>
+<h2 id="blk-109262">14. Training / Factory loop</h2>
+<p>The Factory could eventually produce Motors from governed traces.</p>
+<p>Each training row can carry:</p>
+<pre><code>World basis
+Machine contract
+Binding/adapters
+Goal
+projection
+proposal
+whether proposal was authorized
+executed action
+observed result
+human correction
+reward/eval label
+refusal/escalation outcome
+artifact/version identities</code></pre>
+<p>Then:</p>
+<pre><code>large teacher / LLM
+        │
+        ├─ successful traces
+        ├─ corrections
+        └─ exception solutions
+             ↓
+       Motor dataset
+             ↓
+    candidate Motor
+             ↓
+  sim / replay / falsifiers
+             ↓
+         challenger
+             ↓
+     shadow on Machine
+             ↓
+         champion</code></pre>
+<p>This makes the earlier “AI Factory” idea concrete: <strong>the factory manufactures action policies, not merely prompts.</strong></p>
+<p>The Store could then distribute content-addressed Motor artifacts plus their manifests/evals, while site-local Bindings remain authority-sensitive and Machine-specific.</p>
+<h2 id="blk-109270">15. A useful analogy: drivers, cartridges and nervous systems</h2>
+<p>Three analogies help explain the architecture, but none should become the formal model.</p>
+<h3 id="blk-109272">Driver analogy</h3>
+<p>The Motor does not know the bus. The Machine driver translates semantic commands into concrete execution.</p>
+<p>Good for engineering.</p>
+<h3 id="blk-109275">Cartridge analogy</h3>
+<p>A Motor is installable intelligence; a Binding is the cartridge inserted into a compatible Machine slot.</p>
+<p>Good for product/UI language.</p>
+<h3 id="blk-109278">Nervous-system analogy</h3>
+<p>LLM = deliberative cortex, Motor = learned motor program, deterministic controller = spinal/reflex layer, Machine = body, World projection = sensed environment.</p>
+<p>Good for intuition, but avoid pretending biology maps perfectly.</p>
+<p>The formal architecture should remain typed contracts + governed bindings.</p>
+<h2 id="blk-109282">16. What not to do</h2>
+<p>I would explicitly reject these designs for now:</p>
+<h3 id="blk-109284">A. <code>machine.motor = model_id</code></h3>
+<p>Too fused. No explicit compatibility, authority, calibration, adapter or provenance.</p>
+<h3 id="blk-109286">B. LLM emits CAN/EtherCAT packets</h3>
+<p>Wrong abstraction level and unsafe. Bus semantics belong in a driver/controller.</p>
+<h3 id="blk-109288">C. One universal raw numeric action vector</h3>
+<p>Embodiments differ. Make semantic action spaces versioned and adapt explicitly.</p>
+<h3 id="blk-109290">D. Treat Motor output as state</h3>
+<p>A proposal is not an outcome. Only Machine execution + observation settles World truth.</p>
+<h3 id="blk-109292">E. Put safety only in the prompt/system message</h3>
+<p>Hard constraints belong below the learned layer.</p>
+<h3 id="blk-109294">F. Require every Machine to run ROS</h3>
+<p>ROS is useful prior art and a bridge for robotics; it should not define Super's general Machine ABI.</p>
+<h3 id="blk-109296">G. Make one giant Motor do planning, manipulation and servo control</h3>
+<p>Different timescales and guarantees deserve different components.</p>
+<h3 id="blk-109298">H. Make cloud availability part of the hard action loop</h3>
+<p>A cloud LLM may plan or teach. Physical/deterministic safety and control must remain local enough to survive network loss.</p>
+<h2 id="blk-109300">17. Recommended first experiment inside Super — before buying/building a robot</h2>
+<p>Do this <strong>digitally first</strong>.</p>
+<p>Create a tiny <code>Machine</code> abstraction with a simulated embodiment.</p>
+<p>Example Machine: <strong>2D gantry / cursor world</strong></p>
+<pre><code>state:
+  x, y
+  carrying?
+  target objects
+
+actions:
+  move(dx, dy)
+  grab()
+  release()
+
+invariants:
+  bounds
+  max step
+  one object at a time</code></pre>
+<p>Create three Motor implementations against the exact same Machine contract:</p>
+<ol><li><p><strong>LLM Motor</strong> — expensive general policy.</p></li><li><p><strong>Deterministic Motor</strong> — hand-coded controller.</p></li><li><p><strong>Small learned Motor</strong> — trained/distilled from traces.</p></li></ol>
+<p>Then test:</p>
+<ul><li><p>same Motor against sim Machine and alternative Machine adapter,</p></li><li><p>same Machine with different Motors,</p></li><li><p>shadow/suggest/execute promotion,</p></li><li><p>stale projection refusal,</p></li><li><p>Motor requests missing observation,</p></li><li><p>conflicting Motors and deterministic arbitration,</p></li><li><p>action chunk interrupted mid-horizon,</p></li><li><p>Machine lies/faults and receipts expose divergence,</p></li><li><p>binding revoked while Motor is running,</p></li><li><p>Motor artifact upgraded without mutating old Binding history.</p></li></ul>
+<p>Only after this abstraction feels right should a physical driver be added.</p>
+<p>This experiment is more valuable than immediately wiring an LLM to an Arduino because it tests the architecture we actually care about.</p>
+<h2 id="blk-109337">18. Recommended first physical experiment</h2>
+<p>After the digital contract works, use a deliberately boring physical Machine.</p>
+<p>A good target is a <strong>1-axis or 2-axis position-controlled actuator</strong> with encoder feedback and a controller that already enforces current/position limits.</p>
+<p>Suggested architecture:</p>
+<pre><code>Super Motor
+   ↓ bounded target/action chunk
+Machine adapter
+   ↓ semantic position/velocity command
+local controller
+   ↓
+SocketCAN / CANopen or vendor driver
+   ↓
+drive + actuator
+   ↑
+encoder/status telemetry
+   ↑
+Machine observation
+   ↑
+World receipt</code></pre>
+<p>Use <code>vcan</code> first to prove the driver path without hardware, then substitute a real CAN interface.</p>
+<p>Do <strong>not</strong> make the initial physical proof “LLM generates PWM.” The interesting proof is that the same governed Motor/Machine contract survives the transition from simulated execution to a real embodied Machine.</p>
+<h2 id="blk-109344">19. Proposed falsifiers / laws</h2>
+<p>These are the questions I would want the next Opus agent to turn into executable tests before calling the abstraction real.</p>
+<h4 id="blk-109346">MM-1 — Proposal is not mutation</h4>
+<p>A Motor can produce any proposal and the Machine/World remains unchanged until governance commits execution.</p>
+<h4 id="blk-109348">MM-2 — Binding is the authority seam</h4>
+<p>Possessing a Motor artifact alone grants no Machine authority.</p>
+<h4 id="blk-109350">MM-3 — Machine identity is not Motor identity</h4>
+<p>The same Motor hash can bind to two compatible Machines without producing a new Motor artifact.</p>
+<h4 id="blk-109352">MM-4 — Adapter identity is semantic</h4>
+<p>Changing the action/observation adapter changes Binding identity and invalidates compatibility evidence tied to the old adapter.</p>
+<h4 id="blk-109354">MM-5 — Revocation wins</h4>
+<p>Revoking a Binding/lease prevents future chunks from executing even if the Motor process continues running.</p>
+<h4 id="blk-109356">MM-6 — Basis matters</h4>
+<p>A proposal made against an invalid/stale basis cannot silently execute when the action's preconditions depend on changed state.</p>
+<h4 id="blk-109358">MM-7 — Action acknowledgement is not outcome</h4>
+<p>Machine command acknowledgement cannot by itself establish the predicted World effect.</p>
+<h4 id="blk-109360">MM-8 — Hard limits are below the Motor</h4>
+<p>Sabotaging/replacing the Motor cannot bypass Machine-level limits.</p>
+<h4 id="blk-109362">MM-9 — Action horizon is bounded</h4>
+<p>A Motor cannot acquire an unbounded future action lease by submitting one chunk.</p>
+<h4 id="blk-109364">MM-10 — Execution multiplicity survives the stack</h4>
+<p>If an action is at-most-once, every layer capable of invoking it must preserve/discharge that multiplicity constraint. This is the physical/digital continuation of the W.1.4.1 law.</p>
+<h4 id="blk-109366">MM-11 — Shadow cannot actuate</h4>
+<p>A shadow Binding can observe/propose/score but no path from its proposal reaches a Machine command interface.</p>
+<h4 id="blk-109368">MM-12 — Simulation is not silently equivalent</h4>
+<p>A Motor passing simulation does not become executable on a physical Machine unless the Binding explicitly carries the required embodiment/compatibility evidence.</p>
+<h2 id="blk-109370">20. Open design questions for the next Opus session</h2>
+<p>These are worth brainstorming before coding too deeply.</p>
+<ol><li><p><strong>Is `Motor` the right permanent noun?</strong> It is evocative and fits “learned motor program,” but collides with physical motors. Uppercase convention may be enough.</p></li></ol>
+<ol start="2"><li><p><strong>Should `Machine` mean every executable substrate or only a persistent World-hosted object?</strong> I lean broad: anything with typed observation/action ports and governed settlement can be a Machine.</p></li></ol>
+<ol start="3"><li><p><strong>Does the Motor output WRL directly, or an action IR that WRL can encode?</strong> My current preference: Motor returns a typed action/proposal IR whose canonical semantic representation can be WRL. Do not require a neural policy to emit pretty source text.</p></li></ol>
+<ol start="4"><li><p><strong>Where does adapter logic live?</strong> I lean Binding-owned, content-addressed adapter artifacts, never implicit transforms inside Motor runtime.</p></li></ol>
+<ol start="5"><li><p><strong>Can Motors call Motors?</strong> Probably via goals/subcontracts rather than direct hidden calls. A MotorGraph or orchestrator can make the hierarchy explicit.</p></li></ol>
+<ol start="6"><li><p><strong>Should every Motor be learned?</strong> Probably no. The interface should admit deterministic/manual policies too. A hand-coded controller can satisfy <code>motor-abi@1</code>; that gives us baselines and lets the Factory replace components gradually.</p></li></ol>
+<ol start="7"><li><p><strong>What is the smallest Motor runtime?</strong> The long-term interesting target may be tiny local policies/compiled nets/WRL programs with an LLM only on exception.</p></li></ol>
+<ol start="8"><li><p><strong>How do we represent action time?</strong> A physical Machine needs deadlines, horizon, interruption semantics and perhaps a Machine clock—not merely a list of actions.</p></li></ol>
+<ol start="9"><li><p><strong>How much of `MotorBinding` belongs in TRVM law/certificates versus Super orchestration?</strong> Likely identity/compatibility/authority laws in TRVM; lifecycle/UI/scheduling in Super.</p></li></ol>
+<ol start="10"><li><p><strong>Does Factory train Motors per Machine or per contract family?</strong> The bigger thesis becomes much stronger if Motors learn portable semantic action spaces and adapters handle embodiments.</p></li></ol>
+<h2 id="blk-109402">21. Suggested sequence for implementation</h2>
+<p>Do not interrupt the current W.1.4.x → W.2 LIVE LOCAL sequence to build robotics. Treat this as the design lane to pick up after/alongside the desktop foundation.</p>
+<p>Suggested progression:</p>
+<pre><code>M.0  terminology + Motor/Machine/Binding records only
+M.1  simulated digital Machine + deterministic Motor
+M.2  LLM Motor using same ABI
+M.3  shadow/suggest/execute + receipts
+M.4  multiple Motors + arbitration + revocation
+M.5  trace → challenger Motor training experiment
+M.6  virtual physical bus / SocketCAN vcan Machine
+M.7  real one-axis actuator
+M.8  ROS2-control / richer robot embodiment adapter
+M.9  VLA Motor experiment (OpenVLA/GR00T/etc.)</code></pre>
+<p>The critical milestone is not M.7. It is M.3/M.4: proving that intelligence can be swapped without changing Machine truth/authority semantics.</p>
+<h2 id="blk-109407">22. Strongest product/research thesis</h2>
+<p>The most exciting form of this idea is <strong>not</strong> “Super can control robots.” Lots of stacks can control robots.</p>
+<p>It is:</p>
+<blockquote><p><strong>Super can turn reasoning traces into installable, governed Motors that can be mounted onto compatible digital or physical Machines, while TRVM/WRL keep authority, causality, receipts and world truth outside the learned policy.</strong></p></blockquote>
+<p>That gives the portfolio a possible unifying line:</p>
+<pre><code>Worlds are what exist.
+Machines are what can act.
+Motors are learned ways to act.
+Bindings say where they may act.
+Governance says what may become real.
+Receipts say what actually happened.
+The Factory turns expensive reasoning into cheaper Motors.</code></pre>
+<p>If that works, the architecture is more specific than <strong>Agent = Model + Harness</strong>. It becomes closer to a programmable substrate for manufacturing and deploying behavior.</p>
+<p>And the physical-machine path becomes a particularly strong demonstration because the causal boundary is impossible to hand-wave: the robot either moved, the sensor either changed, and the receipt either establishes it or it does not.</p>
+<h2 id="blk-109416">23. External research consulted (current as of 2026-08-23)</h2>
+<p>These sources are research anchors, not dependencies the Super design must adopt wholesale.</p>
+<ol><li><p><strong>Google DeepMind — Gemini Robotics 2</strong></p></li></ol>
+<p>High-level Gemini Robotics ER 2 + lower-level VLA/On-Device architecture; multi-embodiment physical agents. https://deepmind.google/models/gemini-robotics/</p>
+<ol start="2"><li><p><strong>Google DeepMind — Gemini Robotics ER 2</strong></p></li></ol>
+<p>Explicitly describes the embodied reasoning model as a high-level brain that hands motor execution to a lower-level VLA model. https://deepmind.google/models/gemini-robotics/embodied-reasoning/</p>
+<ol start="3"><li><p><strong>Google DeepMind — Gemini Robotics On-Device 2 model card</strong></p></li></ol>
+<p>Text/image/proprioception inputs; numerical robot-action outputs; on-device execution. https://deepmind.google/models/model-cards/gemini-robotics-on-device-2/</p>
+<ol start="4"><li><p><strong>NVIDIA — Isaac GR00T</strong></p></li></ol>
+<p>Cross-embodiment robot foundation models; video + language + proprioception → action chunks; simulation/training/runtime stack. https://developer.nvidia.com/isaac/gr00t</p>
+<ol start="5"><li><p><strong>NVIDIA Research — GR00T N1.6</strong></p></li></ol>
+<p>Current open generalist humanoid robot foundation-model direction. https://research.nvidia.com/labs/gear/gr00t-n1_6/</p>
+<ol start="6"><li><p><strong>OpenVLA</strong></p></li></ol>
+<p>Open VLA implementation and fine-tuning work; useful evidence around embodiment/action-space adaptation and action inference. https://github.com/openvla/openvla</p>
+<ol start="7"><li><p><strong>ros2_control documentation</strong></p></li></ol>
+<p>Controller manager, hardware interfaces, lifecycle and real-time control architecture. https://control.ros.org/</p>
+<ol start="8"><li><p><strong>CAN in Automation — CiA 402</strong></p></li></ol>
+<p>Standardized finite-state behavior and command/status interfaces for servo drives, inverters and steppers. https://www.can-cia.org/can-knowledge/cia-402-series-canopen-device-profile-for-drives-and-motion-control</p>
+<ol start="9"><li><p><strong>Linux Kernel — SocketCAN</strong></p></li></ol>
+<p>Linux's common CAN networking interface; includes virtual CAN useful for development/testing. https://docs.kernel.org/networking/can.html</p>
+<ol start="10"><li><p><strong>EtherCAT Technology Group — EtherCAT technology / Safety over EtherCAT</strong></p></li></ol>
+<p>Distributed clocks, synchronized motion and safety transport as examples of guarantees that belong below the learned layer. https://www.ethercat.org/en/technology.html https://www.ethercat.org/en/safety.html</p>
+<h2 id="blk-109458">24. One-paragraph handoff to Opus</h2>
+<p><strong>Please treat this as a brainstorming/research input, not an instruction to derail W.2.</strong> The key proposal is to make <code>Motor</code>, <code>Machine</code>, and <code>MotorBinding</code> separate identities. A Motor is a content-addressed learned/deterministic policy with a typed observation/action ABI; a Machine is an embodiment/execution boundary with typed ports, lifecycle, timing and invariants; a Binding connects them through explicit adapters, calibration, governor policy and capability lease. Motor output is always a proposal against a World basis, never World truth. Governance authorizes, Machine executes, receipts establish actual outcomes. LLMs can bootstrap Motors, plan above them, teach them or solve exceptions, but the long-term direction is to crystallize repeated expensive reasoning into smaller local Motors. For physical Machines, preserve deterministic controllers and safety beneath Motor output, using existing hardware interfaces (ROS2-control/CANopen/EtherCAT/etc.) rather than letting an LLM own the real-time bus. The first implementation should be a simulated Machine and multiple interchangeable Motors before touching real hardware.</p></div>
+<p class="src"><a href="/#/super/MOTOR_MACHINE_RESEARCH_BRIEF_FOR_OPUS.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-108867" class="lvl2">0. Executive thesis</a><a href="#blk-108923" class="lvl2">3.1 Google DeepMind: embodied reasoner → VLA</a><a href="#blk-108927" class="lvl2">3.2 NVIDIA GR00T: action chunks + embodiment adaptation</a><a href="#blk-108931" class="lvl2">3.3 OpenVLA: embodiment-specific action normalization is real work</a><a href="#blk-108934" class="lvl2">3.4 ros2_control: controller/hardware separation is worth stealing</a><a href="#blk-108937" class="lvl2">3.5 CANopen CiA 402: drives already look like governed state machines</a><a href="#blk-108940" class="lvl2">3.6 EtherCAT: deterministic synchronization belongs below the AI layer</a><a href="#blk-108945" class="lvl2">4.1 World</a><a href="#blk-108971" class="lvl2">4.2 Machine</a><a href="#blk-109014" class="lvl2">4.3 Motor</a><a href="#blk-109047" class="lvl2">4.4 MotorBinding</a><a href="#blk-109055" class="lvl2">4.5 Driver / Adapter</a><a href="#blk-109062" class="lvl2">4.6 Governor</a><a href="#blk-109089" class="lvl2">4.7 Receipt / settlement</a><a href="#blk-109098" class="lvl3">ActionChunk</a><a href="#blk-109110" class="lvl2">Mode A — LLM is the Motor</a><a href="#blk-109136" class="lvl2">Mode B — LLM is the planner; smaller Motor executes</a><a href="#blk-109140" class="lvl2">Mode C — LLM is teacher / trace labeler</a><a href="#blk-109143" class="lvl2">Mode D — LLM is exception solver</a><a href="#blk-109159" class="lvl2">Layer P4 — Super/WRL goal</a><a href="#blk-109161" class="lvl2">Layer P3 — Motor output</a><a href="#blk-109163" class="lvl2">Layer P2 — Machine adapter/controller</a><a href="#blk-109166" class="lvl2">Layer P1 — device protocol</a><a href="#blk-109181" class="lvl2">Layer P0 — hard safety and electrical control</a><a href="#blk-109201" class="lvl3">shadow</a><a href="#blk-109203" class="lvl3">suggest</a><a href="#blk-109205" class="lvl3">execute</a><a href="#blk-109272" class="lvl2">Driver analogy</a><a href="#blk-109275" class="lvl2">Cartridge analogy</a><a href="#blk-109278" class="lvl2">Nervous-system analogy</a><a href="#blk-109284" class="lvl2">A. machine.motor = model_id</a><a href="#blk-109286" class="lvl2">B. LLM emits CAN/EtherCAT packets</a><a href="#blk-109288" class="lvl2">C. One universal raw numeric action vector</a><a href="#blk-109290" class="lvl2">D. Treat Motor output as state</a><a href="#blk-109292" class="lvl2">E. Put safety only in the prompt/system message</a><a href="#blk-109294" class="lvl2">F. Require every Machine to run ROS</a><a href="#blk-109296" class="lvl2">G. Make one giant Motor do planning, manipulation and servo control</a><a href="#blk-109298" class="lvl2">H. Make cloud availability part of the hard action loop</a><a href="#blk-109346" class="lvl3">MM-1 — Proposal is not mutation</a><a href="#blk-109348" class="lvl3">MM-2 — Binding is the authority seam</a><a href="#blk-109350" class="lvl3">MM-3 — Machine identity is not Motor identity</a><a href="#blk-109352" class="lvl3">MM-4 — Adapter identity is semantic</a><a href="#blk-109354" class="lvl3">MM-5 — Revocation wins</a><a href="#blk-109356" class="lvl3">MM-6 — Basis matters</a><a href="#blk-109358" class="lvl3">MM-7 — Action acknowledgement is not outcome</a><a href="#blk-109360" class="lvl3">MM-8 — Hard limits are below the Motor</a><a href="#blk-109362" class="lvl3">MM-9 — Action horizon is bounded</a><a href="#blk-109364" class="lvl3">MM-10 — Execution multiplicity survives the stack</a><a href="#blk-109366" class="lvl3">MM-11 — Shadow cannot actuate</a><a href="#blk-109368" class="lvl3">MM-12 — Simulation is not silently equivalent</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/README.md/">[&amp;] Super — Rev W.2.3.3 bundle</a><a href="/super/W_2_2_ADDENDUM_AFTER_PACKAGING.md/">W.2.2 · addendum, written AFTER the artifact was sealed</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera5dr4ltwp3zl2wpjw3yylj3tgjixjgjtbe3g7vxlkhwt6426rzcdq</div></div></div>
+</div></div>
+</body></html>

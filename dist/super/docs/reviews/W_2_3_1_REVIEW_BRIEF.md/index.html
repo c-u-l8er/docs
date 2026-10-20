@@ -1,0 +1,225 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>W.2.3.1 — a recovery tested one layer below the failure is not evidence · super · Ampersand Box</title>
+<meta name="description" content="Predecessor: `W.2.3`, ZIP `sha256:6dad087179686ac9b0038217530c33e5c9e58948170677f589b21de375fbf358`, content…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/W_2_3_1_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="W.2.3.1 — a recovery tested one layer below the failure is not evidence">
+<meta property="og:description" content="Predecessor: `W.2.3`, ZIP `sha256:6dad087179686ac9b0038217530c33e5c9e58948170677f589b21de375fbf358`, content…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/W_2_3_1_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"W.2.3.1 — a recovery tested one layer below the failure is not evidence","name":"W.2.3.1 — a recovery tested one layer below the failure is not evidence","description":"Predecessor: `W.2.3`, ZIP `sha256:6dad087179686ac9b0038217530c33e5c9e58948170677f589b21de375fbf358`, content…","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/W_2_3_1_REVIEW_BRIEF.md/","identifier":"bagaaierahlxb7tgwusty4jlfkgsp4lfbndgloh5jes3f2rjpn6q2ykt5hdia","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Verdict"},{"@type":"WebPageElement","name":"1 · The seam you proposed is readonly — measured, not reasoned"},{"@type":"WebPageElement","name":"2 · Your mechanism, checked in the pinned sources"},{"@type":"WebPageElement","name":"3 · The claim W.2.3 made, withdrawn and replaced"},{"@type":"WebPageElement","name":"4 · The witness, and what it measured"},{"@type":"WebPageElement","name":"5 · Three defects the right layer found"},{"@type":"WebPageElement","name":"5.1 · One rebind is not a recovery"},{"@type":"WebPageElement","name":"5.2 · A heartbeat may not end a withdrawal"},{"@type":"WebPageElement","name":"5.3 · The abandoned callback — you were right, and it is measured"},{"@type":"WebPageElement","name":"6 · Your large-frame point, made mechanical"},{"@type":"WebPageElement","name":"7 · Measured"},{"@type":"WebPageElement","name":"8 · What is still not true"},{"@type":"WebPageElement","name":"9 · How to reproduce"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"W_2_3_1_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/W_2_3_1_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/W_2_3_1_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Predecessor: `W.2.3`, ZIP `sha256:6dad087179686ac9b0038217530c33e5c9e58948170677f589b21de375fbf358`, content `sha256:bf723f04be085ed71efe14e4b72011e31a3e08d7e7049d95600791a6d749…</div>
+<div class="prose"><h1 id="blk-117169">W.2.3.1 — a recovery tested one layer below the failure is not evidence</h1>
+<p><strong>Predecessor: `W.2.3`, ZIP `sha256:6dad087179686ac9b0038217530c33e5c9e58948170677f589b21de375fbf358`, content `sha256:bf723f04be085ed71efe14e4b72011e31a3e08d7e7049d95600791a6d74994b7`.</strong></p>
+<blockquote><p><strong>Evidence and transport boundary only, as you scoped it.</strong> No <code>ampd</code> change, no W.1 change, no ACL grant change, no queue change, no Cloud, no Motor. Every W.2 / W.2.1 / W.2.2 / W.2.3 witness is preserved and still green. <code>InFlight</code>, same-seq retransmission, duplicate ACK, stale-seq rejection, the heartbeat, the lease, the withdrawal, the rebind and the &gt;8192 witness are all kept.  <strong>One cosmetic change is in the diff and is accounted for here so it is not a surprise:</strong> the window title and the page <code>&lt;title&gt;</code> said <code>[&amp;] Super — cockpit</code>. The product is <code>Super (CD)</code> — that is what <code>release.json</code> carries and what the prototype's own wordmark reads. Both now say <code>Super (CD) — cockpit</code>. No behaviour, no gate.</p></blockquote>
+<p><strong>Your finding is correct, it reproduces here, and it was load-bearing.</strong> It also turned out to be load-bearing in a way neither of us had it: putting the falsifier at the right layer found <strong>three further defects</strong>, one of which is W.2.2's own defect wearing a different hat.</p>
+<p><strong>And the falsifier you proposed cannot run.</strong> That is the first thing in this brief, because had I taken it the round would have been designed around a seam that does not exist.</p>
+<h3 id="blk-117175">0 · Verdict</h3>
+<pre><code>&quot;retransmission closes wry#1644&quot;      WITHDRAWN · it closes loss ABOVE the ordering
+                                                  layer and cannot close loss below it
+exact transport-index loss            REPRODUCED · at the callbacks map, one raw
+                                                  callback below Channel.onmessage
+retransmission cannot repair it       MEASURED · host kept sending, page heard none of it
+fresh channel recovers from it        MEASURED · new channel id, LIVE LOCAL, no reload
+abandoned callback cleaned up         WAS NOT · measured still registered; now retired
+reacquisition survives a 2nd failure  WAS NOT · one rebind, ever; now a loop</code></pre>
+<h3 id="blk-117177">1 · The seam you proposed is readonly — measured, not reasoned</h3>
+<p>Your falsifier opens:</p>
+<pre data-lang="js"><code>window.__TAURI_INTERNALS__.runCallback = (id, raw) =&gt; { … }</code></pre>
+<p><code>tauri-2.11.5/scripts/core.js</code> installs that property with</p>
+<pre data-lang="js"><code><span class="t-type">Object</span>.<span class="t-fn">defineProperty</span>(window.__TAURI_INTERNALS__, <span class="t-string">'runCallback'</span>, { value: runCallback })</code></pre>
+<p>and a descriptor that omits <code>writable</code> and <code>configurable</code> gets <code>false</code> for both. Asked of the running cockpit through WebDriver:</p>
+<pre><code>Q1 · descriptor of window.__TAURI_INTERNALS__.runCallback
+     {&quot;value&quot;:&quot;[function]&quot;,&quot;writable&quot;:false,&quot;enumerable&quot;:false,&quot;configurable&quot;:false}
+
+Q2 · assigning to it from strict-mode code
+     THREW: TypeError: Attempted to assign to readonly property.
+
+Q2b · redefining it with Object.defineProperty
+     THREW: TypeError: Attempting to change value of a readonly property.</code></pre>
+<p><code>cockpit.js</code> is a module, so it is strict: that is an exception on line one, not a silent no-op. The property cannot be deleted, shadowed on that object, or redefined.</p>
+<p><strong>The same file hands over a better seam.</strong> Three lines below:</p>
+<pre data-lang="js"><code><span class="t-type">Object</span>.<span class="t-fn">defineProperty</span>(window.__TAURI_INTERNALS__, <span class="t-string">'callbacks'</span>, { value: callbacks })</code></pre>
+<p>— &quot;just for the debugging purposes&quot;, says the comment. The <em>binding</em> is readonly; the <code>Map</code> is not. And <code>runCallback(id, data)</code> is <code>callbacks.get(id)(data)</code>, so replacing one entry drops a raw payload <strong>before the Channel's own closure runs</strong>, which is exactly the property you asked for. It is also strictly better than intercepting <code>runCallback</code> globally: it is scoped to one channel id and cannot eat an unrelated <code>invoke</code> reply.</p>
+<pre><code>Q3 · window.__TAURI_INTERNALS__.callbacks
+     {&quot;ctor&quot;:&quot;Map&quot;,&quot;size&quot;:1,&quot;descriptor_writable&quot;:false,&quot;keys&quot;:[451163848]}
+
+Q4 · raw payloads observed at that layer
+     [{&quot;id&quot;:451163848,&quot;schema&quot;:&quot;cockpit-heartbeat@1&quot;,&quot;index&quot;:1,&quot;keys&quot;:[&quot;message&quot;,&quot;index&quot;]},
+      {&quot;id&quot;:451163848,&quot;schema&quot;:&quot;cockpit-heartbeat@1&quot;,&quot;index&quot;:2,&quot;keys&quot;:[&quot;message&quot;,&quot;index&quot;]},
+      {&quot;id&quot;:451163848,&quot;schema&quot;:&quot;cockpit-heartbeat@1&quot;,&quot;index&quot;:3,&quot;keys&quot;:[&quot;message&quot;,&quot;index&quot;]}]</code></pre>
+<p><code>{message, index}</code> — the shape <code>channel_on()</code> formats. The witness is at the transport.</p>
+<h3 id="blk-117190">2 · Your mechanism, checked in the pinned sources</h3>
+<p>Not taken. The bundle Tauri 2.11.5 injects is minified; this is <code>class c</code> from <code>scripts/bundle.global.js</code> with the private-field helpers read back:</p>
+<pre data-lang="js"><code><span class="t-kw">this</span>.id = <span class="t-fn">transformCallback</span>((e) =&gt; {
+  <span class="t-kw">const</span> index = e.index;
+  <span class="t-kw">if</span> (<span class="t-string">'end'</span> <span class="t-kw">in</span> e) {
+    <span class="t-kw">if</span> (index == <span class="t-kw">this</span>.#nextMessageIndex) <span class="t-kw">return</span> <span class="t-kw">this</span>.<span class="t-fn">cleanupCallback</span>();
+    <span class="t-kw">this</span>.#messageEndIndex = index; <span class="t-kw">return</span>;
+  }
+  <span class="t-kw">const</span> message = e.message;
+  <span class="t-kw">if</span> (index == <span class="t-kw">this</span>.#nextMessageIndex) {
+    <span class="t-kw">this</span>.#<span class="t-fn">onmessage</span>(message);
+    <span class="t-kw">this</span>.#nextMessageIndex += <span class="t-num">1</span>;
+    <span class="t-kw">while</span> (<span class="t-kw">this</span>.#nextMessageIndex <span class="t-kw">in</span> <span class="t-kw">this</span>.#pendingMessages) { … }
+    <span class="t-kw">if</span> (<span class="t-kw">this</span>.#nextMessageIndex === <span class="t-kw">this</span>.#messageEndIndex) <span class="t-kw">this</span>.<span class="t-fn">cleanupCallback</span>();
+  } <span class="t-kw">else</span> {
+    <span class="t-kw">this</span>.#pendingMessages[index] = message;          <span class="t-comment">// ← forever</span>
+  }
+})</code></pre>
+<p>and the Rust half, <code>src/ipc/channel.rs</code> <code>channel_on()</code>:</p>
+<pre data-lang="rust"><code>let current_index = counter.fetch_add(1, Ordering::Relaxed);</code></pre>
+<p>stamped on every send, direct-eval path and fetch path alike. So all three of your claims hold:</p>
+<ol><li><p>a lost index buffers everything after it, permanently;</p></li><li><p>**a retransmission arrives under a NEW index and is buffered behind the hole it was sent to</p></li></ol>
+<p>fill** — nothing sent on that channel can repair it;</p>
+<ol start="3"><li><p>later heartbeats queue behind the same hole, which is what makes the lease fire rather than</p></li></ol>
+<p>sit behind a link that looks alive.</p>
+<p><strong>Your correction to your own first pass is right and I am adopting the corrected version.</strong> The problem was never &quot;the heartbeat masks the broken frame&quot;. It is that W.2.3's witness sat downstream of the ordering layer whose failure it claimed to reproduce.</p>
+<h3 id="blk-117207">3 · The claim W.2.3 made, withdrawn and replaced</h3>
+<p>W.2.3 §0 said:</p>
+<pre><code>W.2.2 §6 wedge          CAUSE IDENTIFIED · wry#1644 · retransmission closes it</code></pre>
+<p>The second clause is wrong. Replaced everywhere — brief, <code>worker.rs</code>, battery prose — by the layered result, which is the one the code actually implements:</p>
+<pre><code>loss ABOVE the Channel's ordering              same-seq retransmission
+  (a renderer that throws, a delivery
+   entry point that drops)
+
+loss BELOW it — a transport index that         the lease withdraws the claim,
+  never existed (wry#1644)                     a FRESH channel establishes a new
+                                               stream with its own ordering state</code></pre>
+<p><code>RETRY_LIMIT = 3</code> makes the ladder mechanical rather than rhetorical: three attempts inside one 6 s lease, then the host stops and says <code>&quot;exhausted&quot;: true</code> in the heartbeat. Retrying past that is not merely futile — see §6.</p>
+<h3 id="blk-117213">4 · The witness, and what it measured</h3>
+<p><code>tools/cockpit-battery.mjs</code> gaps <strong>two</strong> channels at the callbacks-map layer, taking the first raw payload on each — a <code>run_javascript</code> that fails does not care what the payload was, and neither does the ordering layer.</p>
+<pre><code>channel A · first raw callback dropped, at transport index N
+   host sends again (new index N+1)   →  buffered behind the hole
+   host beats       (new index N+2)   →  buffered behind the hole
+   page hears NOTHING                 →  frames and beats frozen at the values
+                                         sampled inside the drop handler
+   lease expires                      →  withdraw: world region cleared, every
+                                         button[data-intent] disabled
+   rebind → channel B                 →  and channel A is retired
+channel B · first raw callback dropped
+   page is still withdrawn, so nothing can clear the flag
+   reacquire fires again              →  rebind → channel C
+channel C · clean
+   LIVE LOCAL, world region rebuilt, authority submittable
+   NOTHING WAS UN-SABOTAGED</code></pre>
+<p><strong>It took the first payload of any kind because an earlier draft did not, and that is worth recording.</strong> The draft waited for a <code>cockpit-frame@1</code> on channel A so the witness could say a state a person was entitled to see had been lost. It measured nothing for twenty-five seconds: that late in a battery run the intent it fired did not move the projection cursor, <code>differs()</code> was false, no frame was produced — and four downstream checks went red <strong>for want of a fault rather than for want of a fix</strong>. A witness that needs the world to move cannot be run against a quiet one, which is the case this whole round is about.</p>
+<p>Two more the same run cost, both mine and both the same shape — <em>an assertion that is true of a page nothing happened to</em>:</p>
+<ul><li><p><code>!withdrawn &amp;&amp; state === 'live-local'</code> went green while the gap it was reporting on had</p></li></ul>
+<p>never fired. It now also requires <code>applied &gt;</code> the value sampled <strong>inside the drop handler</strong> and <code>channel_id !==</code> the wedged one — a statement only recovery can satisfy.</p>
+<ul><li><p><code>#world .row &gt; 0</code> is a claim about the <strong>world's contents</strong>; by that point the flagship and</p></li></ul>
+<p>four witnesses have revoked everything, so a correct recovery onto an empty world failed it. <code>render()</code> writes its three section headings whatever the lists hold and the withdrawal writes none, so <code>#world h2 === 3</code> is the frame-derived difference.</p>
+<p>The two that carry the round:</p>
+<pre><code>and NONE of it reaches the page — a retransmission cannot fill a hole in the transport
+and a FRESH channel restores LIVE LOCAL — with nothing un-sabotaged and no reload</code></pre>
+<p><strong>Your item 3 — &quot;prove the lease withdraws the stale World&quot; — is asserted here as well as above, and deliberately.</strong> The withdrawal already had a witness and a falsifier, but both ran against a <code>deliver</code>-level sabotage. That is the exact shape of the thing you caught: <em>a property asserted under a different fault is not evidence for this one.</em> So it is asserted again against a gap in the transport, where the page's only signal is that it has heard nothing — no rows, no headings, no submittable control, badge on <code>reacquire</code>, all sampled in one call so the check cannot straddle the recovery.</p>
+<p>The second is the one W.2.3 could not make. Its lease witness recovered by <strong>restoring the sabotaged function</strong> — that is, by removing the fault, which under the real mechanism is not available to anybody. Recovery there was asserted of the harness, not of the product.</p>
+<p><strong>A distinction that fell out of this and is worth putting to you.</strong> The frame that comes back on channel C is <em>not</em> the frame that was lost; it is the present state under a later sequence, because <code>Delivery::bind</code> clears <code>sent</code>. That is not the defect the same-seq rule exists to prevent. Those two rules govern different situations and the round now states so:</p>
+<blockquote><p>A retransmission repairs an outstanding frame on a live channel, and must be the same sequence and the same bytes — inventing a newer state there silently skips one a person was entitled to see. A <strong>reacquisition</strong> follows an admitted gap in knowledge that the page has already told the person about, and must show what the world <strong>is</strong> — replaying a superseded state there would be presenting the past as the present.</p></blockquote>
+<p>Asserted: <code>applied &gt;</code> the value sampled at the gap, and — when the payload that was dropped carried one — <code>applied &gt;</code> its sequence too.</p>
+<h3 id="blk-117234">5 · Three defects the right layer found</h3>
+<h4 id="blk-117235">5.1 · One rebind is not a recovery</h4>
+<pre data-lang="js"><code><span class="t-kw">function</span> <span class="t-fn">withdraw</span>() {
+  <span class="t-kw">if</span> (c.withdrawn) <span class="t-kw">return</span>;      <span class="t-comment">// ← and only `deliver` ever cleared it</span>
+  …
+  c.rebinds += <span class="t-num">1</span>; <span class="t-fn">bind</span>();
+}</code></pre>
+<p><strong>Exactly one rebind was ever attempted per episode.</strong> If the channel that rebind produced was also dead, the page sat on <em>stream lost</em> forever, having tried once. That is W.2.2's defect one layer further out — a recovery path whose own failure is permanent silence — and it is not hypothetical here: nothing about a failed WebKit <code>run_javascript</code> says the next call succeeds.</p>
+<p>W.2.3 masked it by accident. <code>restore()</code> was called from the heartbeat arm, so a heartbeat on the new channel re-armed the one-shot. Under the <em>exact</em> failure no heartbeat arrives, because heartbeats queue behind the hole — so the mask is removed by the same mechanism that makes the bug matter.</p>
+<p>Fixed: <code>reacquire()</code> on its own timer (<code>REACQUIRE_EVERY = 3000</code>), driven from <code>leaseTick</code> for as long as the page is withdrawn. The lease decides when to <strong>stop claiming</strong>; this decides how often to <strong>try again while not claiming</strong>. W.2.3 had them as one flag.</p>
+<h4 id="blk-117240">5.2 · A heartbeat may not end a withdrawal</h4>
+<p><code>restore()</code> used to be called from the heartbeat arm — evidence about the <strong>link</strong> clearing a claim about the <strong>world</strong>. Hearing a heartbeat ends the <em>silence</em> (<code>heard_at</code> moves, so the lease will not fire); only a frame can end the <em>withdrawal</em>, because only a frame refills the region the withdrawal cleared.</p>
+<p><strong>Guarded statically, and that is a limitation I am stating rather than dressing up.</strong> On the shipped host a fresh channel's first message is always a frame — <code>run()</code> delivers before it beats — so there is no window in which a heartbeat reaches a withdrawn page first, and a battery witness for it would be asserting another process's emit order. Which is the reason to make the rule hold by construction instead. <code>check-webview-acl.mjs</code> now requires <code>restore</code> to have exactly one call site and the heartbeat arm not to contain it; <code>sabotage-cockpit.sh</code> probe 21 puts it back and that check goes red.</p>
+<h4 id="blk-117243">5.3 · The abandoned callback — you were right, and it is measured</h4>
+<p>A <code>Channel</code> unregisters itself when <code>#nextMessageIndex</code> reaches the <code>end</code> index its Rust side evals on drop. <strong>A permanent hole is exactly the state that guarantees the count never gets there.</strong> Measured on the running app before the fix:</p>
+<pre><code>Q6 · is the wedged channel id still in the callbacks map?
+     {&quot;wedged_id&quot;:451163848,&quot;still_registered&quot;:true,&quot;map_size&quot;:2,
+      &quot;unregister_is_fn&quot;:true}</code></pre>
+<p>It is worse than a stale map entry: <code>#pendingMessages</code> holds every buffered payload, and each of those is a whole operator projection. Every recovery would add another.</p>
+<p>Taking your first option, and it is not a hack: <strong>the page performs `cleanupCallback()`'s own body — `unregisterCallback(this.id)` — in the one case its caller can never run.</strong> Not the webview reload; a reload resets the receipt rail, which is a person's record of what they submitted, and the whole point of the lease is that it needs no reload.</p>
+<p>It is a real dependency on a Tauri internal, so it is <strong>declared</strong> rather than discovered: <code>check-webview-acl.mjs</code> fails the build if <code>cockpit.js</code> reaches for any internal other than <code>unregisterCallback</code>, and refuses <code>runCallback</code> by name so nobody rediscovers §1 the hard way. Feature-detected — a Tauri without it leaves the old callback registered, which is where W.2.3 already was.</p>
+<h3 id="blk-117249">6 · Your large-frame point, made mechanical</h3>
+<p><code>fetch_channel_data</code> removes the cached body <strong>when the fetch runs</strong>:</p>
+<pre data-lang="rust"><code>if let Some(data) = cache.0.lock().unwrap().remove(&amp;id) { Ok(Response::new(data)) }</code></pre>
+<p>so a send above 8192 bytes whose script never executed leaves a whole projection in <code>ChannelDataIpcQueue</code> — upstream state this process cannot reach. Unbounded retransmission into a gap that retransmission provably cannot repair is therefore a leak with no ceiling, and W.2.3 §6 listed &quot;retransmission is unbounded&quot; as a cosmetic limitation. It is not cosmetic.</p>
+<p><code>RETRY_LIMIT = 3</code> bounds it to one lease's worth. It is not a fix for the upstream cache — the entries from those three attempts are still lost — and this brief does not claim otherwise.</p>
+<h3 id="blk-117254">7 · Measured</h3>
+<p>Figures in <code>site/proof/measurements.json</code> — <code>cockpit_assertions</code>, <code>cockpit_falsifiers</code>, <code>webview_acl</code>, <code>big_frame</code>, <code>intent_surface</code>, <code>fixture_guard</code>. <strong>Not repeated here, and I tried to.</strong> I typed the three tallies into this section from my own terminal, and <code>check-measurement-prose.mjs</code> would have refused the release for it: its patterns are derived from the receipt, not from a list, so any prose that recreates a measured figure is a number that can drift away from the artifact it claims to describe. The new assertions, named rather than counted — the list is the count:</p>
+<pre><code>  the page names the transport it is bound to, so a witness can reach under it
+  a raw Channel callback can be lost below the ordering layer, carrying its transport index
+  the host goes on sending on that channel — this is loss, not a quiet world
+  and NONE of it reaches the page — a retransmission cannot fill a hole in the transport
+  reacquisition keeps trying — a second dead channel does not end the recovery
+  and a FRESH channel restores LIVE LOCAL — with nothing un-sabotaged and no reload
+  on a channel this page had not been bound to when the gap was made
+  the recovered frame is the PRESENT, not a replay of the state that was lost
+  the lease withdraws the stale world under a transport gap, not just an application one
+  the world region is rebuilt from that frame, and authority is submittable again
+  the wedged channel is retired rather than left registered with its buffered frames
+  the page reaches for exactly one Tauri internal, and it is the declared one
+  `runCallback` is not reached for — it is readonly and assigning to it throws
+  a withdrawal is ended by a frame and by nothing else — `restore` has one call site
+  and whether the host is still trying — a bounded retry that does not say so is silence</code></pre>
+<p>New falsifiers, each disabling one fix and requiring <strong>named</strong> checks red:</p>
+<pre><code>one rebind is not a recovery                 → reacquisition keeps trying
+  ← W.2.3's withdraw(), restored             → and a FRESH channel restores LIVE LOCAL
+                                             → the world region is rebuilt from that frame
+only a frame may end a withdrawal            → a withdrawal is ended by a frame and by
+                                               nothing else  (static)
+the channel a rebind replaces is retired     → the wedged channel is retired rather than
+                                               left registered
+a witness that cannot name the transport     → the page names the transport it is bound to
+  cannot model the failure
+a bounded retry says it is bounded           → whether the host is still trying</code></pre>
+<p>The withdrawal under a transport gap did <strong>not</strong> get a probe of its own. Removing the lease is one line either way, so <code>a dead stream withdraws the claim rather than looking quiet</code> — which already existed — now requires <strong>both</strong> names red: the application-level one and the transport one. Two probes running the identical sabotage to grep two different lines would have been the same six-minute battery twice, which is what this harness's <code>%%</code> exists to prevent, and I wrote the duplicate before I remembered that.</p>
+<h3 id="blk-117260">8 · What is still not true</h3>
+<ul><li><p><strong>The upstream defect is still not fixed, it is survived.</strong> Checked this round against the</p></li></ul>
+<p><strong>code</strong>, not the issue tracker, because an issue's state is a fact about a repository and the defect is a fact about a function. <code>wry 0.56.1</code> — the latest published crate, 13 August 2026, one minor ahead of the pinned 0.55.1 — still reads:</p>
+<p>``<code>rust self.webview.run_javascript(js, cancellable, |result| { if let Some(callback) = callback { … callback(result); } }); </code>``</p>
+<p>With no callback nothing touches <code>result</code>, and <code>eval</code> has already returned <code>Ok(())</code>. So the mechanism is present in the version this would upgrade to, and none of the repair here depends on a fork, a patch, or the issue being triaged. (wry#1644 is also still open with no linked PR, fetched directly — a keyword search does not surface that issue number, which is why the code is the check and the issue is the footnote.)</p>
+<ul><li><p><strong>The W.2.2 §6 original is still not reproduced.</strong> What is reproduced is a failure of the</p></li></ul>
+<p>same shape at the same layer, deliberately induced.</p>
+<ul><li><p><strong>The `ChannelDataIpcQueue` entries from lost large sends are not reclaimed.</strong> Bounded to</p></li></ul>
+<p>three per episode; not zero. Nothing page-side can reach that map.</p>
+<ul><li><p><strong>The abandoned Channel's `#pendingMessages` is released by garbage collection</strong>, once the</p></li></ul>
+<p>callback is unregistered and this page drops its reference. Not measured — the battery asserts the registration is gone, which is the part that is observable.</p>
+<ul><li><p><strong>The lease is still a page-side timer.</strong> A frozen renderer and a dead stream remain the same</p></li></ul>
+<p>picture.</p>
+<ul><li><p><strong>§5.2 is guarded statically, not dynamically.</strong> Stated in place.</p></li><li><p><strong>`REACQUIRE_EVERY` is a judgement, not a measurement.</strong> A withdrawn page abandons the</p></li></ul>
+<p>channel it just bound after 3 s and binds another. It only reaches that state after a full 6 s lease of total silence, and the host's loop turn is 80 ms, so a channel that has said nothing for nine seconds is dead by any reading — but a <em>transient</em> stall longer than 3 s would be killed rather than waited out, and nothing here measures how long a real one lasts.</p>
+<ul><li><p><strong>Nothing bounds how many channels a permanently broken link burns through.</strong> Each</p></li></ul>
+<p>reacquisition allocates a callback id and retires the last. That is the correct behaviour for a link that recovers; for one that never does, it is an unbounded loop this round does not escalate out of. The page says <em>stream lost</em> throughout, so nothing is claimed — but there is no <em>give up and say so terminally</em> state, and <code>ack</code>'s terminal path is not it.</p>
+<ul><li><p>Carried forward unchanged: the pane is a boundary witness and not a feature; three lists;</p></li></ul>
+<p><code>REACQUIRE</code>/<code>RESNAPSHOT</code> rendered but not exercised; the fixture guard checks the extracted predicate; the archive is not byte-reproducible; <code>bundle.active</code> is <code>false</code>; the empty <em>Attached</em> row.</p>
+<h3 id="blk-117297">9 · How to reproduce</h3>
+<pre><code>cd super
+cargo build --release --manifest-path host/Cargo.toml
+cargo build --release --manifest-path cockpit/Cargo.toml
+cargo install tauri-driver                 # once
+node tools/check-webview-acl.mjs
+node tools/check-intent-surface.mjs
+bash tools/check-fixture-guard.sh
+node tools/cockpit-battery.mjs             # the flagship — needs a display
+node tools/cockpit-bigframe.mjs            # the &gt;8192 transport
+bash tools/sabotage-cockpit.sh             # long; most probes re-run the flagship</code></pre>
+<p>The internals probe of §1 is reproducible standalone: ask the running cockpit for <code>Object.getOwnPropertyDescriptor(window.__TAURI_INTERNALS__, 'runCallback')</code>.</p>
+<p><strong>Process note taken:</strong> W.2.3's ZIP went without its sibling <code>*.receipt.json</code>. This one ships both.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/W_2_3_1_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-117175" class="lvl2">0 · Verdict</a><a href="#blk-117177" class="lvl2">1 · The seam you proposed is readonly — measured, not reasoned</a><a href="#blk-117190" class="lvl2">2 · Your mechanism, checked in the pinned sources</a><a href="#blk-117207" class="lvl2">3 · The claim W.2.3 made, withdrawn and replaced</a><a href="#blk-117213" class="lvl2">4 · The witness, and what it measured</a><a href="#blk-117234" class="lvl2">5 · Three defects the right layer found</a><a href="#blk-117235" class="lvl3">5.1 · One rebind is not a recovery</a><a href="#blk-117240" class="lvl3">5.2 · A heartbeat may not end a withdrawal</a><a href="#blk-117243" class="lvl3">5.3 · The abandoned callback — you were right, and it is measured</a><a href="#blk-117249" class="lvl2">6 · Your large-frame point, made mechanical</a><a href="#blk-117254" class="lvl2">7 · Measured</a><a href="#blk-117260" class="lvl2">8 · What is still not true</a><a href="#blk-117297" class="lvl2">9 · How to reproduce</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierahlxb7tgwusty4jlfkgsp4lfbndgloh5jes3f2rjpn6q2ykt5hdia</div></div></div>
+</div></div>
+</body></html>

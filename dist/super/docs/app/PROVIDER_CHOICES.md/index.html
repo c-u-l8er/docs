@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Provider choices, catalogs, thinking, and attachments · super · Ampersand Box</title>
+<meta name="description" content="2026-09-06, local app development changes (uncommitted).">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/app/PROVIDER_CHOICES.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Provider choices, catalogs, thinking, and attachments">
+<meta property="og:description" content="2026-09-06, local app development changes (uncommitted).">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/app/PROVIDER_CHOICES.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Provider choices, catalogs, thinking, and attachments","name":"Provider choices, catalogs, thinking, and attachments","description":"2026-09-06, local app development changes (uncommitted).","url":"https://docs.ampersandboxdesign.com/super/docs/app/PROVIDER_CHOICES.md/","identifier":"bagaaierap6jn2qxdkc3oognn7chnqyvwfwlcehw5xzr3zqfrgfy4rejkslbq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super"},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"app","item":"https://docs.ampersandboxdesign.com/super/docs/app/"},{"@type":"ListItem","position":5,"name":"PROVIDER_CHOICES.md","item":"https://docs.ampersandboxdesign.com/super/docs/app/PROVIDER_CHOICES.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/app/PROVIDER_CHOICES.md</span>
+
+</div></div>
+<div class="lead">2026-09-06, local app development changes (uncommitted).</div>
+<div class="prose"><h1 id="blk-110964">Provider choices, catalogs, thinking, and attachments</h1>
+<p>2026-09-06, local app development changes (uncommitted).</p>
+<p>Provider switches restore the active configuration, transcript, proposal cards, draft, staged files, and selected model within the app session. Model, endpoint, last provider, and per-model thinking choices persist in localStorage; credentials remain in their existing provider-managed store or system keychain. Conversations, drafts and text attachments are saved on this device and can be reopened from Saved conversations after an app restart. Saved proposal history has no Apply buttons; request a fresh proposal before applying a step. Local history is limited to 20 conversations and reports storage failures without discarding older saves.</p>
+<p>Catalogs refresh on connection and when returning to an active provider; Refresh models requests another catalog without resetting the conversation or replacing the chosen model. Codex uses paginated app-server model/list. Claude uses the installed CLI's streaming initialize control response, including resolved model names and supportedEffortLevels; it does not make an inference request to discover models. Ollama lists installed models. API connections list models using their native HTTPS catalog endpoints. API catalogs may include models unsuitable for this app's chat adapter. The saved model remains selectable if absent from the current catalog; a provider may reject it when sent. A failed refresh preserves previous choices and displays an error.</p>
+<p>The thinking menu beneath the composer uses Codex and Claude's advertised model options. A selected level is forwarded to Codex turn/start or Claude --effort. Other adapters currently expose Provider default only. No universal Ultra level is assumed. Availability depends on account access and the installed harness version; Refresh models cannot upgrade the harness.</p>
+<p>Attachments currently support UTF-8 text/code files: up to four per message, at most 32 KB per file and 256 KB across conversation attachments. A native file chooser supplies the contents; arbitrary page-provided filesystem paths are never read. Names and contents are encoded as data in provider conversation messages only when Send is clicked. Staging and removing files make no provider request. Failed sends restore the draft and attached files. Binary files, screenshots/images, and PDFs are not implemented yet.</p>
+<p>Model replies remain proposals: existing explicit Apply controls are required to mutate the runtime.</p></div>
+<p class="src"><a href="/#/super/docs/app/PROVIDER_CHOICES.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card"><div class="lab">referenced by</div><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/app/ACCEPTED_BUILD_2026_09_10.md/">Super: build accepted app</a><a href="/super/docs/app/ACCEPTED_RESULT_CHECK_2026_09_10.md/">Super: checking accepted source before integration</a><a href="/super/docs/app/AUTHORITY_LOG_RETENTION_2026_09_24.md/">Authority log retention — candidate 3 (2026-09-24)</a><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/BOT_LIVE_ACTIVITY_2026_09_13.md/">Bot activity and Claude reconnect</a><a href="/super/docs/app/BOT_WORK_PAGES_2026_09_07.md/">Super progress — bot work pages</a><a href="/super/docs/app/BUILD_PREVIEW_2026_09_10.md/">Try an accepted Super build</a><a href="/super/docs/app/CANCELLED_PLAN_STEPS_2026_09_19.md/">A cancelled plan&#39;s stepper claims no step — 2026-09-19</a><a href="/super/docs/app/COMBINED_FILE_REVIEW_2026_09_10.md/">Combined file review — 2026-09-10</a><a href="/super/docs/app/COMBINED_TESTING_2026_09_10.md/">Combined testing and acceptance — 2026-09-10</a><a href="/super/docs/app/CONTINUE_WORK_2026_09_14.md/">Continue work and guided review</a><a href="/super/docs/app/DESKTOP_LAUNCH_2026_09_10.md/">Daily desktop launch — September 10, 2026</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierap6jn2qxdkc3oognn7chnqyvwfwlcehw5xzr3zqfrgfy4rejkslbq</div></div></div>
+</div></div>
+</body></html>

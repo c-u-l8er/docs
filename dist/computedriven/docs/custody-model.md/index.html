@@ -1,0 +1,76 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>R0.4.3 custody &amp; provenance model — written before the mechanism · computedriven · Ampersand Box</title>
+<meta name="description" content="Two invariants discovered by the R0.4.2 review:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/custody-model.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R0.4.3 custody &amp; provenance model — written before the mechanism">
+<meta property="og:description" content="Two invariants discovered by the R0.4.2 review:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/custody-model.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"R0.4.3 custody & provenance model — written before the mechanism","name":"R0.4.3 custody & provenance model — written before the mechanism","description":"Two invariants discovered by the R0.4.2 review:","url":"https://docs.ampersandboxdesign.com/computedriven/docs/custody-model.md/","identifier":"bagaaieracomhodbae3ji4gg6jnag5jph2c6po752gymnwatkapurifrir6dq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"Knowledge vs possession"},{"@type":"WebPageElement","name":"Provenance chain"},{"@type":"WebPageElement","name":"Recovery model (review cases A–D)"},{"@type":"WebPageElement","name":"Two-layer provenance checking"},{"@type":"WebPageElement","name":"The trust boundary, stated exactly (no papering over)"},{"@type":"WebPageElement","name":"Falsifiers this model must survive (implemented in R0.4.3)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"custody-model.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/custody-model.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/custody-model.md</span>
+
+</div></div>
+<div class="lead">Two invariants discovered by the R0.4.2 review:</div>
+<div class="prose"><h1 id="blk-58758">R0.4.3 custody &amp; provenance model — written before the mechanism</h1>
+<p>Two invariants discovered by the R0.4.2 review:</p>
+<blockquote><p><strong>Replay may reconstruct knowledge; replay alone must never reconstruct possession.</strong></p></blockquote>
+<blockquote><p><strong>Naming something cannot grant lifecycle authority over it.</strong></p></blockquote>
+<h3 id="blk-58764">Knowledge vs possession</h3>
+<p><code>replay_lifecycle(log)</code> answers &quot;what is believed about locus L&quot; — it is public, descriptive, and mints nothing. Acting <em>as</em> a participant requires a possession value that public evidence cannot produce:</p>
+<table><thead><tr><th>To act as…</th><th>You must hold…</th></tr></thead><tbody><tr><td>the live Carrier</td><td><code>LocusAttachment</code> (live) or <code>CarrierCustody</code> (persisted recovery material) + the log</td></tr><tr><td>the finality authority</td><td><code>FinalityWarden</code></td></tr><tr><td>a lifecycle creator</td><td><code>WorldRoot</code> → <code>LocusRoot</code></td></tr></tbody></table>
+<h3 id="blk-58775">Provenance chain</h3>
+<pre><code>WorldRoot::bootstrap(mark)          &lt;- THE trust boundary (see below)
+   │  create_locus(LocusId)
+   ▼
+LocusRoot                            (move-only; one lifecycle start each)
+   │  begin()
+   ▼
+VacantLocus(0) + FinalityWarden
+   │  attach(carrier)
+   ▼
+LocusAttachment(N) ── suspend() ──&gt; CarrierCustody(N)   [CONSUMES the live value]
+CarrierCustody(N)  ── recover_attachment(custody, &amp;admission) ──&gt; LocusAttachment(N)   [admission = current, linear]</code></pre>
+<p>(R0.4.5: Live XOR Recoverable. The former <code>custody()</code> accessor was removed because it aliased live and recoverable possession.) Every minted value and evidence record privately carries the root's <code>mark</code>. A <code>LocusId</code> appears nowhere in this chain as an input that grants anything: knowing a name mints no vacancy, no warden, no custody.</p>
+<h3 id="blk-58778">Recovery model (review cases A–D)</h3>
+<ul><li><p>**A. Same-Carrier planned restart (linear checkpointed</p></li></ul>
+<p>reconstitution):** <code>suspend()</code> consumes the live attachment and yields the one <code>CarrierCustody</code>; <code>recover_attachment(custody, &amp;admission)</code> consumes the custody and yields the live attachment again, judged against the lineage's CURRENT <code>LifecycleAdmission</code> (R0.4.6/7 — never a caller-chosen slice; see docs/freshness-model.md, docs/admission-model.md). Recovery never advances a generation; a failed recovery hands the custody back. This is planned restart only — see docs/linearity-model.md for why unplanned crash recovery is NOT claimed.</p>
+<ul><li><p><strong>B. Physical Carrier loss:</strong> the custody material died with the</p></li></ul>
+<p>Carrier. Orderly detach is therefore <em>unavailable</em> — exactly as intended — and only the warden's finality path can close the generation.</p>
+<ul><li><p><strong>C. Network partition:</strong> the log stays readable everywhere, but a</p></li></ul>
+<p>reader holds neither A's custody nor a finality decision. The generation stays attached to A. Knowledge without possession.</p>
+<ul><li><p><strong>D. Vacant locus:</strong> passive knowledge of vacancy is NOT mutation</p></li></ul>
+<p>authority (explicit decision). A <code>VacantLocus</code> value is held only by (i) the releasing Carrier via <code>detach(admission)</code> (which may hand it off deliberately), or (ii) the finality authority via <code>finalize_loss(…, admission)</code>, which materializes the successor vacancy atomically with the closure (R0.4.7).</p>
+<h3 id="blk-58795">Two-layer provenance checking</h3>
+<ol><li><p><code>replay_lifecycle</code> (public, descriptive) additionally rejects logs</p></li></ol>
+<p>whose events carry differing marks (<code>MixedProvenance</code>): splicing forged-root evidence into an honest history fails even descriptively.</p>
+<ol start="2"><li><p><code>audit_replay(&amp;WorldRoot, …)</code> (authoritative, descriptive) verifies</p></li></ol>
+<p>every event against the root's own mark (<code>ForeignProvenance</code>).</p>
+<ol start="3"><li><p><code>LifecycleAdmission</code> (linear, current) is bound to the lineage mark</p></li></ol>
+<p>from birth; every transition checks the acting value's provenance against it (<code>ForeignProvenance</code>) and hands everything back on failure.</p>
+<h3 id="blk-58808">The trust boundary, stated exactly (no papering over)</h3>
+<p><code>WorldRoot::bootstrap(mark)</code> is publicly callable — a library cannot make a global singleton. What the types DO enforce, in-process: no API reveals a mark (no accessor, no PartialEq on custody), so a holder of records, logs, custody-less state, or LocusIds cannot extract or forge the mark; evidence minted under a different bootstrap is rejected by both layers above. What is NOT claimed: cryptographic attestation (marks are modeling material, not crypto — skepticism list unchanged), secrecy of the bootstrap entropy (a deployment duty), or cross-log split-brain resolution. The claim is narrowed to exactly this: <strong>within a process, neither public evidence nor a LocusId can manufacture custody or finality capability; only material descending from the same bootstrap can.</strong></p>
+<h3 id="blk-58810">Falsifiers this model must survive (implemented in R0.4.3)</h3>
+<ol><li><p>Honest <code>Attached(A,0)</code> log + no A-local custody → no way to mint</p></li></ol>
+<p><code>DetachReceipt(A,0)</code> (Attack A dead; <code>reconstitute</code> no longer exists).</p>
+<ol start="2"><li><p><code>VacantLocus::genesis</code>/<code>genesis_with_warden</code> no longer exist —</p></li></ol>
+<p>LocusId-based minting is a compile error.</p>
+<ol start="3"><li><p>A forged-root warden's finalization spliced into an honest log →</p></li></ol>
+<p><code>MixedProvenance</code>; a fully forged log → <code>ForeignProvenance</code> on audit.</p>
+<ol start="4"><li><p>Direct struct construction of custody/warden/records still E0451.</p></li><li><p>Stale custody (from a closed generation) cannot recover.</p></li><li><p>Custody for the wrong carrier cannot recover.</p></li><li><p>Legitimate bootstrap still creates and runs a full lifecycle.</p></li></ol></div>
+<p class="src"><a href="/#/computedriven/docs/custody-model.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-58764" class="lvl2">Knowledge vs possession</a><a href="#blk-58775" class="lvl2">Provenance chain</a><a href="#blk-58778" class="lvl2">Recovery model (review cases A–D)</a><a href="#blk-58795" class="lvl2">Two-layer provenance checking</a><a href="#blk-58808" class="lvl2">The trust boundary, stated exactly (no papering over)</a><a href="#blk-58810" class="lvl2">Falsifiers this model must survive (implemented in R0.4.3)</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a><a href="/computedriven/docs/fcb-stage0-review-2026-09-16.md/">ComputeDriven competitive benchmark — Codex stage-0 review and Fable stage-0.1 assignment</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieracomhodbae3ji4gg6jnag5jph2c6po752gymnwatkapurifrir6dq</div></div></div>
+</div></div>
+</body></html>

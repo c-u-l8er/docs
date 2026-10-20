@@ -1,0 +1,130 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>R6.2 placement-activation model — written before the mechanism · computedriven · Ampersand Box</title>
+<meta name="description" content="R6.1 closed F87: the transport may copy the bytes, the transfer authority is consumed once, and the frozen R0.8 layer supplies that authority. Its crash…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/placement-activation-model.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R6.2 placement-activation model — written before the mechanism">
+<meta property="og:description" content="R6.1 closed F87: the transport may copy the bytes, the transfer authority is consumed once, and the frozen R0.8 layer supplies that authority. Its crash…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/placement-activation-model.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"R6.2 placement-activation model — written before the mechanism","name":"R6.2 placement-activation model — written before the mechanism","description":"R6.1 closed F87: the transport may copy the bytes, the transfer authority is consumed once, and the frozen R0.8 layer supplies that authority. Its crash…","url":"https://docs.ampersandboxdesign.com/computedriven/docs/placement-activation-model.md/","identifier":"bagaaierajncf3fjf4m5j3wsdnscvlalij2arqjdfznul7gzlmms6a5qec6cq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"0. Standing rulings adopted from R6.1 (permanent)"},{"@type":"WebPageElement","name":"1. Vocabulary, corrected"},{"@type":"WebPageElement","name":"2. Floor incarnation"},{"@type":"WebPageElement","name":"3. The activation barrier"},{"@type":"WebPageElement","name":"4. Encoding on the frozen substrate — the hypothesis to falsify"},{"@type":"WebPageElement","name":"5. Recovery, by history"},{"@type":"WebPageElement","name":"6. Falsifiers"},{"@type":"WebPageElement","name":"7. The state-sufficiency test"},{"@type":"WebPageElement","name":"8. Predictions, before the battery"},{"@type":"WebPageElement","name":"9. Adjudicated (2026-09-05) — what stands, what was amended"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"placement-activation-model.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/placement-activation-model.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/placement-activation-model.md</span>
+
+</div></div>
+<div class="lead">R6.1 closed F87: the transport may copy the bytes, the transfer authority is consumed once, and the frozen R0.8 layer supplies that authority. Its crash battery then found a sta…</div>
+<div class="prose"><h1 id="blk-61836">R6.2 placement-activation model — written before the mechanism</h1>
+<p>R6.1 closed F87: the transport may copy the bytes, the transfer authority is consumed once, and the frozen R0.8 layer supplies that authority. Its crash battery then found a state the model could only name and never continue from: a claimant that dies after its claim is recorded leaves the placement saying <em>resident</em> on a floor that holds nothing, and the model refuses every continuation because it cannot tell that history from one in which the holder installed, acted, and died. GPT's ruling on R6.1 turns that into the next round:</p>
+<blockquote><p><strong>Exclusive claim is not permission to execute.</strong> Two histories that require different legal futures may not share a stored state.</p></blockquote>
+<p>This document fixes the vocabulary R6.1 got wrong, introduces the two things the crash windows showed are missing — a floor <em>incarnation</em> and an <em>activation barrier</em> — and states, before anything is built, how both are encoded on the frozen substrate, which recoveries become legal, and what falsifies it.</p>
+<h3 id="blk-61841">0. Standing rulings adopted from R6.1 (permanent)</h3>
+<ul><li><p>physical core ≠ floor ≠ Carrier ≠ Locus;</p></li><li><p>relocating a Locus is not Carrier succession and does not advance its</p></li></ul>
+<p>lifecycle generation;</p>
+<ul><li><p>transport delivery ≠ transfer authority;</p></li><li><p>transfer authority is coherent <strong>per Locus / per placement lineage</strong> —</p></li></ul>
+<p>never one system-wide serialization point; disjoint Loci stay independently movable;</p>
+<ul><li><p>per-core floors share no mutable semantic state;</p></li><li><p>R0.8 is the durable / fork-refusal <strong>substrate</strong> of placement authority.</p></li></ul>
+<p>&quot;Placement is lifecycle one rung up&quot; was experimentally sufficient for R6.1 and is <strong>not canonized</strong>: this round determines the minimal placement algebra the crash windows require.</p>
+<h3 id="blk-61860">1. Vocabulary, corrected</h3>
+<p>R6.1's <code>RESIDENT(F)</code> did two jobs: the authoritative holder assignment and the physical presence of state on F. The battery caught it doing the first without the second twice (a source after MOVE_OUT, a claimant after a recorded claim). Split them:</p>
+<pre><code>authority-side phase (what the placement lineage knows)     materialization (what the floor holds)
+  ACTIVE(F, I)      this incarnation may execute L             INSTALLED | NOT_INSTALLED | UNKNOWN (floor dead)
+  CLAIMED(F, I, m)  transfer m consumed by (F, I); no execution authority yet
+  IN_TRANSFER(m)    relinquished; one admissible claim outstanding</code></pre>
+<p><code>RESIDENT</code> is retired. R6.1's <code>RESIDENT_HOLDER_UNINSTALLED</code> was the observed predecessor of <strong>`CLAIMED_UNINSTALLED`</strong>, which this round makes a real, distinguishable, recoverable state. <code>whereis(L)</code> answers a phase; the harness reports materialization beside it, never inside it.</p>
+<h3 id="blk-61864">2. Floor incarnation</h3>
+<pre><code>FloorId              the stable execution-domain identity          F1
+FloorIncarnationId   one concrete live incarnation of that floor    I17, then I18 after a restart</code></pre>
+<p>Distinct from the CPU core, the CarrierId and the LocusId. A claim belongs to <code>(F, I)</code>, never to <code>F</code>: a restarted floor is <code>(F1, I18)</code> and cannot inherit <code>(F1, I17)</code>'s unfinished claim by carrying the same stable id. Carrier identity is untouched and still not bound to a floor or a core.</p>
+<p>In the harness an incarnation is one floor <em>process</em>: the supervisor (the harness) mints the incarnation id at BOOT and is the only party that can say the incarnation has ended.</p>
+<h3 id="blk-61868">3. The activation barrier</h3>
+<pre><code>ACTIVE(source, Is)
+   │ source quiesced: MOVE_OUT (the floor holds nothing); execution authority revoked
+   ▼
+IN_TRANSFER(m)
+   │ destination consumes the transfer authority              — CLAIM   (durable)
+   ▼
+CLAIMED(dest, Id, m)
+   │ bytes installed on the floor, DORMANT                     — INSTALL (local)
+   │ execution authority recorded for (dest, Id)               — ACTIVATE (durable)
+   ▼
+ACTIVE(dest, Id)
+   │ the floor's ACTIVATE op lifts the dormancy               — only now do ordinary transitions run</code></pre>
+<p><strong>Runnable(L, F, I) = Installed(L, F, I) ∧ ActivePlacement(L, F, I)</strong>, and for every L, Σ Runnable ≤ 1. The floor half is made structural in the <code>move</code> profile: <code>MOVE_IN</code> installs a slot <strong>dormant</strong>, and every op on a dormant slot except <code>STATE</code> and <code>ACTIVATE</code> is refused <code>BAD DORMANT</code>. The floor cannot check the durable record — it has no store — so the sequence is still the agent's discipline, but &quot;installed ≠ runnable&quot; is now a state the floor holds and refuses from, not a comment in a harness.</p>
+<p>The floor half lives in its own measurement feature, <code>moveact</code>, on top of <code>move</code>, so the image R6 measured stays byte-identical and the retained R6 and R6.1 batteries run on it unchanged; the battery asserts that identity against R6's receipt.</p>
+<p><strong>Contention is re-asked, never counted.</strong> Every durable step opens the placement's incarnation lock for milliseconds; a claim or activation that meets <code>CONTENDED</code> — another incarnation's claim or activation in flight — is retried by the agent. A refusal is a refusal only when R0.8 answered from committed state.</p>
+<h3 id="blk-61873">4. Encoding on the frozen substrate — the hypothesis to falsify</h3>
+<p>R0.8 keeps two families per lineage and they are exactly the two facts the barrier separates:</p>
+<table><thead><tr><th>placement fact</th><th>R0.8 family</th><th>transition</th></tr></thead><tbody><tr><td>claim / holder</td><td>lifecycle</td><td><code>attach(carrier = F‖I) req=claim:&lt;m&gt;</code></td></tr><tr><td>execution authority</td><td>authority</td><td><code>worker inc-&lt;I&gt; &lt;id&gt; req=reg:&lt;I&gt;</code> then <code>grant inc-&lt;I&gt; req=activate:&lt;m&gt;</code></td></tr><tr><td>quiesce</td><td>authority</td><td><code>revoke inc-&lt;I&gt; req=quiesce:&lt;m&gt;</code></td></tr><tr><td>relinquish (take)</td><td>lifecycle</td><td><code>detach req=take:&lt;m&gt;</code></td></tr><tr><td>reassign after a dead pre-activation claimant (take, re-issued)</td><td>lifecycle</td><td><code>finalize F‖I &lt;gen&gt; supervisor req=take:&lt;m'&gt;</code> — <code>LossBasis::SupervisorAttestation</code>, R0.8's own &quot;the supervisor attests the carrier is gone&quot;</td></tr></tbody></table>
+<p>So the hypothesis: <strong>R0.4's separation of possession from authority, frozen in R0.8, already is the claim/activation split one rung up.</strong> The stored state distinguishes the two crash histories without a new field — <code>CLAIMED</code> = attached to (F, I) with <code>authority inc-I = none</code>; <code>ACTIVE</code> = attached with <code>authority inc-I = some</code>. The sufficiency test (§7) is what decides whether that holds or whether placement needs a field of its own. Whichever way it falls, the durability machinery is reused, not duplicated.</p>
+<p>Three things the adapter must supply because the substrate does not, and which the receipt must say are the adapter's: the substrate enforces <strong>none</strong> of the barrier rules — cd-core's <code>finalize_loss</code> checks generation and carrier and will finalize an ACTIVE holder; a grant appends evidence unconditionally; the floor's ACTIVATE checks only that the slot is used. So (1) <strong>activation is witness-gated</strong>: an agent may not activate for an incarnation the supervisor has reaped (F107), and <code>activate</code> takes the supervisor's witness; (2) <strong>activation binds to the current claim</strong>, not to ledger membership: the ledger remembers every claim an incarnation ever made on a lineage, so the capsule carries the placement generation of its take and an activation is refused unless the placement is at that generation with this holder's claim on record; (3) <strong>replays are classified from the ledger</strong>, not from revision distance — activation adds revisions of its own, so &quot;one past the transfer&quot; no longer means consumed. The incarnation worker is registered at the claim, so an activation's only mutation is the grant, and the fault points measured during ACTIVATE are on the grant.</p>
+<p>The capsule now carries the take's exact request words (<code>detach …</code> or <code>finalize … supervisor …</code>) so the ledger probe re-submits precisely the take it names; the probe stays side-effect-free on a vacant placement (<code>finalize</code> on a vacant placement is refused <code>NotAttached</code> and moves nothing — measured before this was written).</p>
+<h3 id="blk-61897">5. Recovery, by history</h3>
+<table><thead><tr><th>history</th><th>phase after the death</th><th>legal continuation</th></tr></thead><tbody><tr><td>A. claimant dies after CLAIM (± INSTALL), <strong>before ACTIVATE</strong></td><td><code>CLAIMED(F, I, m)</code>, authority none</td><td>after <strong>positive finality</strong> of I, the supervisor re-issues the transfer: <code>finalize F‖I … supervisor req=take:&lt;m'&gt;</code> → <code>IN_TRANSFER(m')</code>; the same payload bytes (any copy) bind to <code>m'</code> and one incarnation claims them. Legal because I never had execution authority: nothing it could have done to L exists</td></tr><tr><td>B. holder dies <strong>after ACTIVATE</strong></td><td><code>ACTIVE(F, I)</code>, floor dead</td><td>the transfer capsule is never replayed. Recovery needs the holder's durable Locus state, and <strong>that does not exist in this stack</strong>: the floor is in-memory and R3 egress exports evidence, not state. Named dependency: <em>a floor-side durable Locus history</em>. This round stops there and does not weaken the rule</td></tr><tr><td>C. claimant is paused, delayed, unreachable</td><td><code>CLAIMED</code> or <code>ACTIVE</code></td><td><strong>no reassignment.</strong> No timeout, missed heartbeat or silence is a death. Only the supervisor's positive witness — the process has exited and been reaped — ends an incarnation</td></tr><tr><td>D. a finalized incarnation's agent resumes and tries to ACTIVATE</td><td>whatever the lineage now says</td><td>refused: the holder is no longer (F, I)</td></tr><tr><td>E. F restarts as (F, I') and presents I's claim</td><td><code>CLAIMED(F, I, m)</code></td><td>refused: I' ≠ I</td></tr><tr><td>F. the durable ACTIVATE landed and the floor died before lifting dormancy</td><td><code>ACTIVE(F, I)</code>, floor dead</td><td><code>ACTIVE_NEVER_RAN</code>: by the record indistinguishable from B and treated as B, conservatively — the capsule is not replayed, re-issue is refused by name</td></tr><tr><td>G. a CLAIMED holder wants to give L up</td><td><code>CLAIMED(F, I, m)</code></td><td>not a relinquish: a claim is completed by activation or ended by the claimant's death (<code>NOT_ACTIVE</code>); the floor likewise refuses MOVE_OUT of a dormant slot</td></tr></tbody></table>
+<h3 id="blk-61923">6. Falsifiers</h3>
+<ul><li><p><strong>F97</strong> a claimant that died before ACTIVATE cannot be safely reassigned</p></li></ul>
+<p>after positive finality, or can be reassigned without it.</p>
+<ul><li><p><strong>F98</strong> a paused or delayed claimant is reassigned (silence read as</p></li></ul>
+<p>death).</p>
+<ul><li><p><strong>F99</strong> a finalized incarnation activates, or a restarted floor inherits</p></li></ul>
+<p>its predecessor's claim.</p>
+<ul><li><p><strong>F100</strong> an incarnation that installed but never activated gets a</p></li></ul>
+<p>semantic operation accepted (floor or authority side).</p>
+<ul><li><p><strong>F101</strong> after ACTIVATE and one transition, the transfer capsule replays.</p></li><li><p><strong>F102</strong> a duplicate capsule racing claim/activation yields two ACTIVE</p></li></ul>
+<p>incarnations.</p>
+<ul><li><p><strong>F103</strong> an activation for Locus A activates B, or a stale activation</p></li></ul>
+<p>for move N activates move N+1.</p>
+<ul><li><p><strong>F104</strong> a crash at a claim or activation boundary has no named state</p></li></ul>
+<p>or no legal continuation.</p>
+<ul><li><p><strong>F105</strong> two placement histories with different legal futures map to one</p></li></ul>
+<p>stored state (the sufficiency test, §7).</p>
+<ul><li><p><strong>F106</strong> the negative controls stop reproducing: no barrier ⇒ a dead</p></li></ul>
+<p>claimant's payload executes twice; floor id without incarnation ⇒ a zombie inherits a claim.</p>
+<ul><li><p><strong>F107</strong> an agent activates for an incarnation the supervisor has</p></li></ul>
+<p>reaped, or an activation for an earlier claim of the same incarnation activates the current one.</p>
+<ul><li><p><strong>F86</strong> (kept) the <code>move</code> profile leaks into the production image.</p></li></ul>
+<h3 id="blk-61969">7. The state-sufficiency test</h3>
+<blockquote><p>If two placement histories map to the same stored state, every future legal or refused operation must be the same.</p></blockquote>
+<p>Primary falsifier: the pre-activation crash (A) and the post-activation crash (B). Under the encoding of §4 they must read as different stored states and admit different continuations; the battery also runs the <strong>control</strong> in which activation is not recorded (R6.1's mapping) and shows the two histories collapse — that collapse is the evidence that placement needs the authority family, i.e. a phase beyond possession.</p>
+<h3 id="blk-61973">8. Predictions, before the battery</h3>
+<ul><li><p>The §4 encoding distinguishes A from B in the stored state; the control</p></li></ul>
+<p>without activation records does not.</p>
+<ul><li><p>A reassigns exactly once after positive finality; the old capsule and</p></li></ul>
+<p>the re-issued capsule are two authorities for one payload, the first consumed by the dead claim, the second by the new one.</p>
+<ul><li><p>Pausing the claimant with SIGSTOP leaves <code>poll()</code> unfinished; every</p></li></ul>
+<p>recovery attempt is refused; SIGCONT lets the claimant activate normally.</p>
+<ul><li><p><code>finalize … supervisor</code> is refused <code>NotAttached</code> on a vacant placement</p></li></ul>
+<p>and <code>already-applied</code> on replay; as a re-issuing take it advances the placement generation by one.</p>
+<ul><li><p>The floor refuses <code>BAD DORMANT</code> for ATTACH, DETACH, GRANT, REVOKE, AUTH,</p></li></ul>
+<p>SUSPEND, RECOVER, FINALIZE on an installed-not-activated slot, answers STATE, and behaves exactly as before after ACTIVATE; the production image is byte-identical.</p>
+<ul><li><p>B stops on the named dependency; no recovery is attempted.</p></li></ul>
+<h3 id="blk-61997">9. Adjudicated (2026-09-05) — what stands, what was amended</h3>
+<p>R6.2 was <strong>accepted</strong>. Standing after the ruling:</p>
+<ul><li><p><strong>phase ≠ materialization</strong>, <code>FloorIncarnationId</code>, claim ≠ activation ≠</p></li></ul>
+<p>runnable, positive finality only: accepted <strong>permanently</strong>.</p>
+<ul><li><p>**The encoding (§4) is accepted as implementation, with one precise</p></li></ul>
+<p>interpretation:** the R0.8 lifecycle and authority families are a sufficient <em>durable realization</em> of the tested placement claim/activation algebra. <strong>Placement remains its own semantic domain and API</strong> — <code>claim / activate / quiesce / reissue / phase</code> — and the adapter lowers those into <code>attach / grant / revoke / finalize</code>. The substrate's words are encoding details: do not expose <code>placement.carrier = F‖I</code> or <code>placement.worker = inc-I</code> as ComputeDriven semantics, and <strong>do not canonize &quot;a FloorIncarnation is a Carrier&quot;</strong> merely because the substrate stores its 16 bytes in a column historically named <code>carrier</code>.</p>
+<ul><li><p><strong>No new durable `placement_phase` field</strong> under current evidence: a</p></li></ul>
+<p>third stored fact would create its own consistency problem (lifecycle says attached, authority says none, the field says ACTIVE — which wins?). Added only if a future state-sufficiency falsifier requires it.</p>
+<ul><li><p>The wording <em>&quot;placement literally is lifecycle one rung up&quot;</em> is</p></li></ul>
+<p><strong>rejected</strong>; <em>&quot;the possession/authority decomposition is a sufficient durable realization of the placement algebra&quot;</em> is the sentence that stands.</p>
+<ul><li><p>The adapter boundary is load-bearing and stays: R0.8 does <strong>not</strong> enforce</p></li></ul>
+<p>the placement protocol (activation on the current claim, the live witness, ledger-classified replays, dormancy until the durable activation) — <em>R0.8 semantics ≠ placement semantics</em> even though <em>R0.8 primitives suffice to implement placement semantics</em>.</p>
+<ul><li><p>History A (§5): <strong>closed</strong>. History B: the <strong>real open dependency</strong>, and</p></li></ul>
+<p>the next round — <code>docs/durable-locus-history-model.md</code> (R6.3). U11's <code>ACTIVE_NEVER_RAN</code> boundary stands as the conservative rule: once execution authority is durably activated, recovery assumes post-transfer history may exist unless another authoritative mechanism proves otherwise.</p>
+<ul><li><p>Not a hot-context concern: the frozen <code>cd-durable</code> authority history is a</p></li></ul>
+<p>growing evidence vector, so placement is not limited to four activations; durable placement-history compaction is a future storage matter, not a reason to add bytes to the 309-byte hot Locus state.</p></div>
+<p class="src"><a href="/#/computedriven/docs/placement-activation-model.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-61841" class="lvl2">0. Standing rulings adopted from R6.1 (permanent)</a><a href="#blk-61860" class="lvl2">1. Vocabulary, corrected</a><a href="#blk-61864" class="lvl2">2. Floor incarnation</a><a href="#blk-61868" class="lvl2">3. The activation barrier</a><a href="#blk-61873" class="lvl2">4. Encoding on the frozen substrate — the hypothesis to falsify</a><a href="#blk-61897" class="lvl2">5. Recovery, by history</a><a href="#blk-61923" class="lvl2">6. Falsifiers</a><a href="#blk-61969" class="lvl2">7. The state-sufficiency test</a><a href="#blk-61973" class="lvl2">8. Predictions, before the battery</a><a href="#blk-61997" class="lvl2">9. Adjudicated (2026-09-05) — what stands, what was amended</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajncf3fjf4m5j3wsdnscvlalij2arqjdfznul7gzlmms6a5qec6cq</div></div></div>
+</div></div>
+</body></html>

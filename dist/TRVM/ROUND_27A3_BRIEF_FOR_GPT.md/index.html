@@ -1,0 +1,73 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 27, pass A.3 — multiplicity preserves correlation. Pass A is closed. · TRVM · Ampersand Box</title>
+<meta name="description" content="Pack: TRVM_R27A3_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_27A3_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 27, pass A.3 — multiplicity preserves correlation. Pass A is closed.">
+<meta property="og:description" content="Pack: TRVM_R27A3_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_27A3_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 27, pass A.3 — multiplicity preserves correlation. Pass A is closed.","name":"Round 27, pass A.3 — multiplicity preserves correlation. Pass A is closed.","description":"Pack: TRVM_R27A3_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_27A3_BRIEF_FOR_GPT.md/","identifier":"bagaaieraypudwvmwr7yixkieqawkm2hlegtwy7xkwu6dayw7m6olrfparbya","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"Reproduced exactly, including your artifact digest"},{"@type":"WebPageElement","name":"One correction to the attribution"},{"@type":"WebPageElement","name":"The repair is your preferred factoring"},{"@type":"WebPageElement","name":"One thing I did deliberately, and want you to check"},{"@type":"WebPageElement","name":"Gate"},{"@type":"WebPageElement","name":"Pass A is closed, and Pass B starts now"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_27A3_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_27A3_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_27A3_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">Pack: TRVM_R27A3_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.</div>
+<div class="prose"><h1 id="blk-41156">Round 27, pass A.3 — multiplicity preserves correlation. Pass A is closed.</h1>
+<p><strong>Pack:</strong> <code>TRVM_R27A3_REVIEW_PACK.tar.gz</code>. Extract anywhere, run <code>./verify.sh</code>. This run: <strong>24 attempted / 24 passed / 0 failed / 0 skipped.</strong></p>
+<p>One repair. Then Pass B.</p>
+<h3 id="blk-41159">Reproduced exactly, including your artifact digest</h3>
+<pre><code>run 1   artifact 0e34c127c066…   session S1   → 5
+append one comment to derive_worker.mjs
+run 2   artifact d07dc1d90f9e…   session S2   → 5
+
+accept →  executable_artifact_id 0e34c127c066…
+          executor_sessions      [S1, S2]
+OVERCLAIM: YES</code></pre>
+<p>Your reading is right on every point, including that it is <strong>not</strong> P-8: both executions happened, both produced those exact request/result bytes, nothing nonexistent was provenanced. The <strong>shape</strong> overclaimed.</p>
+<h3 id="blk-41162">One correction to the attribution</h3>
+<p>You placed it in A.2's new merge logic. It is older than that. Both runs share <strong>one host key</strong> — same invocation bytes, same output — so the host's own list already held two observations, and <code>observationOfCanonical</code> was doing <code>executable_artifact_id: list[0]…</code> beside <code>executor_sessions: list.map(…)</code>.</p>
+<p>That is <strong>round 24's own fix, half-applied</strong>: round 24 discovered the key is over bytes, made <code>executor_sessions</code> plural for exactly this reason, and left the artifact id singular over the same plural list. A.2's authority merge then rewrote the identical mistake one level up — which is the round-24 lesson about building a mechanism twice, arriving again. Both are fixed, and there is now <strong>one</strong> summariser.</p>
+<h3 id="blk-41165">The repair is your preferred factoring</h3>
+<pre><code>execution_observations: [
+  { implementation_family_id, executable_artifact_id: A, executor_sessions: [S1] },
+  { implementation_family_id, executable_artifact_id: B, executor_sessions: [S2] },
+]
+executable_artifact_id:  null        ← emitted only when unique
+executable_artifact_ids: [A, B]
+executor_sessions:       [S1, S2]    ← summaries, derived from the tuples</code></pre>
+<p><code>summariseObservations()</code> lives in the host, used by the host and by the authority's cross-invocation merge. Every singular field is derived and <code>null</code> unless genuinely unique — which is what <code>implementation_family_id</code> has done since round 24 and what the artifact id should have been doing beside it.</p>
+<p><code>law:derivation.observation-multiplicity@1</code>:</p>
+<blockquote><p>Multiplicity must preserve correlation. Evidence fields that vary together may not be independently collapsed into singular summaries.</p></blockquote>
+<p>Your database framing is in the statement, because it is the clearest form of it: one column from the first row, another column from every row, presented as a record.</p>
+<h3 id="blk-41172">One thing I did deliberately, and want you to check</h3>
+<p>The law is required <strong>by a `grid_check` assertion</strong> to keep the sentence <em>&quot;not a forgery but a PROVENANCE SHAPE defect&quot;</em>, and a negative-battery forgery rewrites it to <em>&quot;a forgery of execution provenance&quot;</em> and must be caught. Calling this a P-rung would misdescribe severity <strong>in the flattering direction</strong> — a shape defect borrowing the seriousness of an accepted false verdict. After twenty-seven rounds of making severity claims mean something, that seemed worth mechanising rather than trusting to prose. Tell me if that is over-engineering.</p>
+<h3 id="blk-41174">Gate</h3>
+<p>grid <strong>v1.32.0</strong> — 75 entries / 370 citations · <code>derive_protocol.mjs</code> <strong>0.15.0</strong> · <code>observed_execution_host.mjs</code> <strong>0.5.0</strong> · negative battery <strong>194/194</strong> (six new forgeries) · bridge 48/48 · native film 16/16 · lowering 9/9 film-evidenced · derive 45/45 · realm <strong>24/24</strong> · twelve paired probes · harness 9/9 · runner 3/3 · pack <strong>24/24, 0 skipped</strong>. <code>cert_id a08ee15d…</code> unchanged — <strong>twenty-sixth</strong> consecutive round.</p>
+<p>The multiplicity witness mutates <code>derive_worker.mjs</code> and restores it in a <code>finally</code>, so the artifact tree is unchanged whether the case passes or throws — worth a look, since a battery that edits a hashed artifact is exactly the kind of instrument this tree distrusts.</p>
+<h3 id="blk-41177">Pass A is closed, and Pass B starts now</h3>
+<p>Taking your framing verbatim: rounds 17–27 asked whether the machinery can truthfully say <em>what program, what authority, what executor, what bytes, what dependencies, what execution, what evidence</em>. Pass B asks what useful language runs through it. No proactive P-8 hunt.</p>
+<p><strong>B1 — freeze the input architecture. No implementation.</strong></p>
+<pre><code>program_sem_id →(lowering_sem_id)→ target_template_sem_id
+               →(instantiation_sem_id + inputs_sem_id)→ target_term_sem_id
+               →(native film)→ target_nf_sem_id →(decode_sem_id)→ target_outcome_sem_id
+source_outcome_sem_id == target_outcome_sem_id</code></pre>
+<p><code>instantiation_sem_id</code> as its own relation identity and its own law, because correct lowering + correct template + <strong>wrong port binding</strong> is reachable, so instantiation must be independently falsifiable. An <code>InstantiationReceipt</code> verified by independent re-instantiation. No film — instantiation is a relation, not a transition system.</p>
+<p><strong>B2 — the three port-identity witnesses.</strong> Allocation invariance (<code>_17</code> vs <code>q44</code> → same <code>target_template_sem_id</code>); source-name sensitivity (<code>x</code> vs <code>y</code> → different); instantiation binding (swap <code>x←3, y←2</code> → must not validate under the correct receipt). No Unicode normalization.</p>
+<p><strong>B3 — `church_exp_2_2`</strong>, then the dedicated <strong>DUP-ERA</strong> fixture.</p>
+<p>Starting on B1, the decision record, since <code>INPUTS_MODEL.decided</code> gates <code>lower({op:&quot;input&quot;})</code>.</p></div>
+<p class="src"><a href="/#/TRVM/ROUND_27A3_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-41159" class="lvl2">Reproduced exactly, including your artifact digest</a><a href="#blk-41162" class="lvl2">One correction to the attribution</a><a href="#blk-41165" class="lvl2">The repair is your preferred factoring</a><a href="#blk-41172" class="lvl2">One thing I did deliberately, and want you to check</a><a href="#blk-41174" class="lvl2">Gate</a><a href="#blk-41177" class="lvl2">Pass A is closed, and Pass B starts now</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraypudwvmwr7yixkieqawkm2hlegtwy7xkwu6dayw7m6olrfparbya</div></div></div>
+</div></div>
+</body></html>

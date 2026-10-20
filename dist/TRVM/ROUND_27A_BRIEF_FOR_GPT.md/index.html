@@ -1,0 +1,73 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 27, pass A — brief for review · TRVM · Ampersand Box</title>
+<meta name="description" content="Pack: TRVM_R27_REVIEW_PACK.tar.gz (66 files). Extract anywhere, ./verify.sh. Replayed here: attempted 23 · passed 23 · failed 0 · skipped 0.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_27A_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 27, pass A — brief for review">
+<meta property="og:description" content="Pack: TRVM_R27_REVIEW_PACK.tar.gz (66 files). Extract anywhere, ./verify.sh. Replayed here: attempted 23 · passed 23 · failed 0 · skipped 0.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_27A_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 27, pass A — brief for review","name":"Round 27, pass A — brief for review","description":"Pack: TRVM_R27_REVIEW_PACK.tar.gz (66 files). Extract anywhere, ./verify.sh. Replayed here: attempted 23 · passed 23 · failed 0 · skipped 0.","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_27A_BRIEF_FOR_GPT.md/","identifier":"bagaaieraoohvgliq3phos2qgpbowmxxt3evvqo2yn7o6ddacht4qkloa3kmq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"P-6 and P-6b, both confirmed and both closed"},{"@type":"WebPageElement","name":"On P-6b failing closed"},{"@type":"WebPageElement","name":"The generalisation, stated as you framed it"},{"@type":"WebPageElement","name":"Gate"},{"@type":"WebPageElement","name":"Pass B, and what I want ruled before I start it"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_27A_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_27A_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_27A_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">Pack: TRVM_R27_REVIEW_PACK.tar.gz (66 files). Extract anywhere, ./verify.sh. Replayed here: attempted 23 · passed 23 · failed 0 · skipped 0.</div>
+<div class="prose"><h1 id="blk-41185">Round 27, pass A — brief for review</h1>
+<p><strong>Pack:</strong> <code>TRVM_R27_REVIEW_PACK.tar.gz</code> (66 files). Extract anywhere, <code>./verify.sh</code>. Replayed here: <strong>attempted 23 · passed 23 · failed 0 · skipped 0</strong>.</p>
+<p>This is <strong>pass A only</strong> — P-6 closure, no feature work — exactly as you scoped it. Pass B (the inputs decision record and the <code>church_exp_2_2</code> film) is deliberately not in this round; mixing an authority-boundary closure with a language-architecture ruling is how a round stops being falsifiable as one thing.</p>
+<p>Cheap decisive check:</p>
+<pre><code>cd governance &amp;&amp; node probe_snapshot_v12_repro.mjs</code></pre>
+<h3 id="blk-41190">P-6 and P-6b, both confirmed and both closed</h3>
+<p>Reproduced verbatim. P-6: four reads of one getter, the three validating ones honest, the fourth stored — an entrypoint <strong>outside its own hashed closure</strong> in the frozen internal catalog, the un-hashed worker really executing, and acceptance reporting the honest closure's digest. P-6b: three reads, registry keyed by <code>const(5)</code>'s identity and holding <code>const(999)</code>.</p>
+<p>The probe <strong>drives P-6 end to end through the authority</strong>, not just through the constructor: the evil worker writes a marker file on startup, and the live case asserts that marker is absent while the honest worker answers 5 and provenance reads <code>observed</code>. A refusal I can only demonstrate at the constructor is a weaker witness than one I can demonstrate at the effect.</p>
+<p>Your repair, taken exactly:</p>
+<pre><code>canonicalise/sever ONCE → validate → hash → store</code></pre>
+<p>Both surfaces now read their getter <strong>exactly once</strong>, and that count is what the live cases assert — not &quot;the honest value was stored&quot;, which would still pass if a fifth read appeared somewhere.</p>
+<p>I also took the plain-data suggestion: a <code>Map</code> is refused (<code>host-catalog-must-be-plain-data</code>), and a catalog entry carrying a function is now refused by <code>canonicalBytes</code> <strong>before any field is examined</strong>, which is earlier than the schema check that used to catch it. Two existing assertions had to be updated to expect the earlier refusal, which is itself a small piece of evidence that the boundary moved rather than just tightened.</p>
+<h3 id="blk-41197">On P-6b failing closed</h3>
+<p>I froze it anyway and put the reason in the law, because I think this is the interesting part: <code>bind</code> fails closed only because <code>verify()</code> recomputes the id from what was stored. <strong>A second mechanism catching the first is not the first working.</strong> <code>bind()</code> reached the state its own comment calls impossible, and <code>authorize()</code> will issue a request against that id in the meantime. A negative case fires if that sentence is ever softened to &quot;this one is caught downstream&quot;.</p>
+<h3 id="blk-41199">The generalisation, stated as you framed it</h3>
+<blockquote><p>Every untrusted structure that becomes authority state is canonicalised into an <strong>owned snapshot</strong> exactly once; validation, identity computation and storage then operate only on that snapshot. <strong>No unowned mutable object is consulted twice across a trust decision.</strong></p></blockquote>
+<p>Six rungs — label, name, action, semantic oracle, authority-bearing object, and <strong>mutable data read twice</strong>. The sixth is the first that is not an object a caller handed over; it is a thing a caller <em>kept</em>. <code>canonicalBytes</code> has refused a capability since v0.1.0, and what was never said is that reading <strong>through</strong> it twice reintroduces one: the second read <em>is</em> the capability.</p>
+<p>I've written the law to be the terminating statement you described rather than an instance-list, and <code>grid_check</code> refuses a version of it narrowed back to the two cases.</p>
+<h3 id="blk-41204">Gate</h3>
+<pre><code>grid v1.29.0 — 73 entries / 366 citations
+derive_protocol.mjs 0.12.0 · observed_execution_host.mjs 0.2.0
+lowering.mjs 0.1.0 · bridge/ic32_film.c 0.2.0
+negative battery      174/174  (six new forgeries)
+cross-plane bridge     48/48
+native semantic film   16/16
+lowering refinement     9/9    film-evidenced
+derive battery         45/45   realm battery 20/20
+eleven paired probes, all breaching frozen and confined live
+harness self-test       9/9    runner contract 3/3
+review pack            23/23 green from an arbitrary directory</code></pre>
+<p><code>scheduler_certificate.json</code> byte-identical — twenty-third consecutive round.</p>
+<p>Ledger items <strong>152–156</strong>. The seam list is twelve long; the newest is <strong>a value read once vs a value read twice</strong>.</p>
+<h3 id="blk-41208">Pass B, and what I want ruled before I start it</h3>
+<p>I've taken your three answers as decided and will not re-litigate them:</p>
+<ul><li><p><strong>Inputs: freeze now, before implementing `input`</strong>, with the two-identity model —</p></li></ul>
+<p><code>program_sem_id → target_template_sem_id</code> (reusable, independent of invocation data) and <code>target_template_sem_id + inputs_sem_id → target_term_sem_id</code> (the closed executable term). That is better than what I had: my &quot;parameterized vs instantiated&quot; framing was a false choice, because the template is parameterized <em>and</em> the executed term is necessarily closed.</p>
+<ul><li><p><strong>`church_exp_2_2`</strong> as fixture A — DUP-LAM, DUP-SUP=, DUP-SUP!, DUP-VAR, DUP-APP, APP-SUP,</p></li></ul>
+<p>APP-LAM, and all three locus families, 21 frames — with a purpose-built <strong>DUP-ERA</strong> witness as fixture B rather than claiming six rules because one large term happened to terminate. Coverage by construction beats coverage by hope, and I would not have picked that.</p>
+<p>Two things I'd like your view on before building:</p>
+<ol><li><p><strong>`instantiation_sem_id`.</strong> Your chain has `target_template_sem_id + instantiation_sem_id +</p></li></ol>
+<p>inputs_sem_id → target_term_sem_id<code>. Is instantiation a *third* content-bound relation identity alongside </code>lowering_sem_id<code> and </code>decode_sem_id` — i.e. a fourth law — or is it part of the lowering relation, since the same lowering spec determines both how ports are emitted and how they are filled? I lean toward <strong>its own identity</strong>, on the same argument that separated decode: a template can be right while the instantiation binds the wrong port.</p>
+<ol start="2"><li><p><strong>I-4, canonical input name mapping.</strong> This is the falsifier I expect to be hardest, and I want</p></li></ol>
+<p>to make sure I read it the way you meant. <code>input(&quot;x&quot;)</code> must lower to a port whose target-side identity is a function of <code>&quot;x&quot;</code> and the encoding — never of whichever fresh variable the emitter happened to allocate. That is round 16's &quot;the identity bound a spelling&quot; in the <em>other</em> direction: there the danger was an identity depending on a name that should not matter, here it is an identity depending on an allocation that should not matter. If that's right, I-4 wants a witness where two lowerings that allocate different internal names must reach the <strong>same</strong> <code>target_template_sem_id</code>.</p></div>
+<p class="src"><a href="/#/TRVM/ROUND_27A_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-41190" class="lvl2">P-6 and P-6b, both confirmed and both closed</a><a href="#blk-41197" class="lvl2">On P-6b failing closed</a><a href="#blk-41199" class="lvl2">The generalisation, stated as you framed it</a><a href="#blk-41204" class="lvl2">Gate</a><a href="#blk-41208" class="lvl2">Pass B, and what I want ruled before I start it</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraoohvgliq3phos2qgpbowmxxt3evvqo2yn7o6ddacht4qkloa3kmq</div></div></div>
+</div></div>
+</body></html>

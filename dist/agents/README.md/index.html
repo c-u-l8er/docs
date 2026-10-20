@@ -1,0 +1,81 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Agent lanes — what can be worked on in parallel, and what will collide · agents · Ampersand Box</title>
+<meta name="description" content="Written 2026-08-15. Six lanes. Each has a brief in this directory. Start a session by pointing it at its brief; the brief is written to be self-sufficient.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/agents/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent lanes — what can be worked on in parallel, and what will collide">
+<meta property="og:description" content="Written 2026-08-15. Six lanes. Each has a brief in this directory. Start a session by pointing it at its brief; the brief is written to be self-sufficient.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/agents/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Agent lanes — what can be worked on in parallel, and what will collide","name":"Agent lanes — what can be worked on in parallel, and what will collide","description":"Written 2026-08-15. Six lanes. Each has a brief in this directory. Start a session by pointing it at its brief; the brief is written to be self-sufficient.","url":"https://docs.ampersandboxdesign.com/agents/README.md/","identifier":"bagaaiera3rh532dtrjugglous7zw6demla7ozynw5jxodqyqrqaqs7u5w5qq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"agents","url":"https://docs.ampersandboxdesign.com/agents/"},"articleSection":"agents","hasPart":[{"@type":"WebPageElement","name":"The constraint that shapes everything: one working tree"},{"@type":"WebPageElement","name":"Can they start now?"},{"@type":"WebPageElement","name":"What is blocking B, C and D — all of it is yours"},{"@type":"WebPageElement","name":"What is already ruled — do not relitigate"},{"@type":"WebPageElement","name":"Read before any non-trivial work"},{"@type":"WebPageElement","name":"The house rules every lane is held to"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"agents","item":"https://docs.ampersandboxdesign.com/agents/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/agents/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">agents</span>
+<span class="path">agents/README.md</span>
+
+</div></div>
+<div class="lead">Written 2026-08-15. Six lanes. Each has a brief in this directory. Start a session by pointing it at its brief; the brief is written to be self-sufficient.</div>
+<div class="prose"><h1 id="blk-53202">Agent lanes — what can be worked on in parallel, and what will collide</h1>
+<p><strong>Written 2026-08-15.</strong> Six lanes. Each has a brief in this directory. Start a session by pointing it at its brief; the brief is written to be self-sufficient.</p>
+<blockquote><p><strong>2026-08-16 — a second set exists: `agents/SITES.md`, lanes G–N</strong>, covering the domain <code>index.html</code>s. It touches no A–F file. Two things in it bind every lane here too: <strong>half the domains live in `/home/travis/Projects/`, not this tree</strong>, and four names exist in both with only one copy live. See <code>SITES.md</code> §0.1 for the byte-count check that settles which.</p></blockquote>
+<blockquote><p><strong>`docs/` is the stackdocs aggregation site</strong> and anything put there is swept into the atlas build. That is why these live in <code>agents/</code> at the root instead.</p></blockquote>
+<h3 id="blk-53208">The constraint that shapes everything: one working tree</h3>
+<p><strong>All your sessions share `/home/travis/ProjectAmp2`. There are no worktrees.</strong> Two agents editing the same file is not merge conflict — it is one silently overwriting the other, and it has cost real work before.</p>
+<p><strong>So the lanes are partitioned by file ownership, and the ownership is the contract.</strong> Every brief opens with what it owns and what it must not touch. If a lane needs a file another lane owns, it says so and stops rather than reaching across.</p>
+<p><strong>Do not run all six at once.</strong> Three or four is the realistic ceiling on one tree.</p>
+<h3 id="blk-53212">Can they start now?</h3>
+<table><thead><tr><th>Lane</th><th>Owns</th><th>Ready?</th></tr></thead><tbody><tr><td><strong>A — Shell wiring</strong></td><td><code>RRABBIT/m2/</code>, <code>RRABBIT/test/</code></td><td>⚠️ <strong>only if no other session is in `m2/`</strong></td></tr><tr><td><strong>B — studbook</strong></td><td><code>studbook/</code></td><td>❌ blocked on two [TRAVIS] rulings</td></tr><tr><td><strong>C — Infrastructure</strong></td><td>no repo files; cloud accounts</td><td>❌ needs you present — spend and credentials</td></tr><tr><td><strong>D — Worker / auth / control plane</strong></td><td><code>worker/</code>, <strong>incl. `worker/migrations/`</strong></td><td>⚠️ <strong>schema + RLS + token tests unblocked 2026-08-21</strong>; cloud integration still on C</td></tr><tr><td><strong>E — Site</strong></td><td><code>computedriven.com/</code> <em>(nav moved to lane N, 2026-08-16)</em></td><td>✅ <strong>now</strong></td></tr><tr><td><strong>F — Docs reconciliation</strong></td><td>root <code>*.md</code></td><td>✅ <strong>now</strong></td></tr><tr><td><strong>O — Cloud site</strong></td><td><code>cloud.computedriven.com/</code> (new, 2026-08-21)</td><td>✅ <strong>now</strong> — static; its claims read from <code>status.json</code></td></tr></tbody></table>
+<p><strong>Start today: D, E, F and O.</strong> D's local half needs no cloud account at all — a local Postgres and a locally generated keypair carry the schema, the tenant-isolation battery and token verification.</p>
+<blockquote><p><strong>2026-08-21 — lanes D and O both touch the Cloud v1 round and must not be run in one session.</strong> D owns the Worker and the schema; O owns the marketing/status surface. The seam between them is <code>cloud.computedriven.com/status.json</code>, which <strong>O owns and D only reads</strong>. If a capability's rung changes, D reports it and O edits the file — never both.</p></blockquote>
+<p><strong>A is the highest-value build work</strong> and the only question is whether the tracks/reel session is still live. Check <code>git log --oneline -3</code> in <code>RRABBIT/</code> — if the newest commit is <code>a4ea112</code> (&quot;Somewhere to put a track…&quot;), that was this session and the lane is free.</p>
+<h3 id="blk-53242">What is blocking B, C and D — all of it is yours</h3>
+<p>None of these is a task. Each is a decision only you make.</p>
+<ol><li><p><strong>studbook §10.5 — does the identity ladder admit a `track-` prefix?</strong> A track records a *live OS</p></li></ol>
+<p>world*, not a sealed <code>sem-</code> world. The code already uses <code>track-</code> and marks it <strong>provisional</strong>; if the answer is no, that constant changes and every id changes with it. <strong>Blocks B, and makes anything published before it disposable.</strong></p>
+<ol start="2"><li><p><strong>The index question</strong> (<code>CONFIDENTIALITY.md</code> §4) — the operator-visible graph: accept it,</p></li></ol>
+<p>minimise it, or encrypt it. Recommendation is <em>minimise</em> (ids, sizes, edges; no names, no paths). <strong>Blocks B's schema.</strong></p>
+<ol start="3"><li><p><strong>The threat model</strong> (<code>CONFIDENTIALITY.md</code> §1) — which of T1–T7 are in scope. Everything in</p></li></ol>
+<p>class B (private data) is downstream. <strong>Blocks B's crypto, not its index.</strong></p>
+<ol start="4"><li><p><strong>Spend approval</strong> for Hetzner, Fly, PlanetScale, Cloudflare R2. <strong>Blocks C.</strong></p></li></ol>
+<p><strong>Amended 2026-08-21:</strong> it no longer blocks all of D. D's local half — schema, RLS, tenant batteries, JWT verification against a generated keypair — runs with no account. Only the <em>integration</em> half waits on spend.</p>
+<ol start="5"><li><p><strong>The enterprise tier price.</strong> <strong>~$438/month</strong> carries 65% on 10 TB; the <em>product</em> is dedicated</p></li></ol>
+<p>infrastructure, not gigabytes. <strong>Blocks E's pricing copy.</strong> <strong>Corrected 2026-08-16</strong> — this said ~$236, which carries <strong>35%</strong>. $153.45 ÷ $236 = 65.02%, i.e. COGS÷price, the inverse of margin.</p>
+<ol start="6"><li><p><strong>`STACK_COMPLETION.md` §0/§6 re-rating</strong> — the ruling changed an input those ratings read as</p></li></ol>
+<p>strength. <strong>Blocks nothing; it is just wrong until you do it.</strong></p>
+<h3 id="blk-53268">What is already ruled — do not relitigate</h3>
+<p>Every brief repeats the ones it needs, but the whole set:</p>
+<ul><li><p><strong>Cloudflare for everything; Fly for Keycloak alone.</strong> Workers are V8 isolates and cannot run</p></li></ul>
+<p>Java — the mirror of Firecracker being unable to boot FreeBSD.</p>
+<ul><li><p><strong>Hetzner for the VM.</strong> T&amp;R and Pigsty both need a real machine.</p></li><li><p><strong>PlanetScale PS-5 HA ($15/mo) for Keycloak's database.</strong> Not Fly Managed Postgres ($38).</p></li><li><p><strong>R2 for bulk objects</strong> — zero egress is what makes the restore claim true.</p></li><li><p><strong>Compute moves into the OS.</strong> The ten Fly apps are being wound down, but **nothing is torn down</p></li></ul>
+<p>before its OS-side replacement is <code>live_local</code>.**</p>
+<ul><li><p><strong>T&amp;R backs up the user's machine, 10 GB–10 TB.</strong> Not just the shell's graph.</p></li><li><p><strong>Confidentiality is four questions.</strong> Published needs none (v0); enterprise is isolation;</p></li></ul>
+<p>private-single-user is client-side keys; shared-private is deferred.</p>
+<ul><li><p><strong>Convergent encryption is refused by name</strong> — it restores the confirmation-of-a-file attack.</p></li></ul>
+<p><strong>Added 2026-08-21 — the Cloud v1 rulings (R7–R16, `REVISION_REGISTER.md`):</strong></p>
+<ul><li><p><strong>No server-hosted BEAM in Cloud v1.</strong> The control plane is Workers, reaching Pigsty over</p></li></ul>
+<p>Hyperdrive → Workers VPC → Cloudflare Tunnel. Super stays Elixir/OTP <em>on the user's machine</em>.</p>
+<ul><li><p><strong>The R2 credential minter survives</strong> and is now the API surface. Bulk bytes go client ↔ R2</p></li></ul>
+<p><strong>directly</strong>; a Worker in the byte path is a design error, not an optimisation.</p>
+<ul><li><p><strong>PlanetScale is Keycloak's database and nothing else</strong> — for failure isolation, not for price.</p></li><li><p><strong>Keycloak `sub` is not an identity.</strong> It is a <em>binding</em> to one, in <code>principal_identities</code>.</p></li><li><p><strong>Three world sizes, three names:</strong> WORLD (the machine, 10 GB–10 TB) · WORLD VERSION (a manifest</p></li></ul>
+<p>root in R2) · WRL GRAPH (the small semantic layer inside it). Never one <code>current_head</code>.</p>
+<ul><li><p><strong>World sync + restore ships before hosted compute.</strong> M2, not M5.</p></li><li><p><strong>Driver/Fleet/Factory do not include a VM.</strong> Hosted capacity is a separate metered SKU.</p></li><li><p><strong>RLS raises on missing tenant context.</strong> An empty result set is not a refusal.</p></li></ul>
+<h3 id="blk-53317">Read before any non-trivial work</h3>
+<p><code>CLAUDE.md</code> (repo instructions, corrected 2026-08-15) → <code>REVISION_REGISTER.md</code> (what is still stale) → then the lane's brief.</p>
+<p><strong>Do not trust an undated planning doc.</strong> This tree had <code>CLAUDE.md</code> teaching an architecture abandoned sixteen days earlier, and a rung table that was wrong one day after it was measured.</p>
+<h3 id="blk-53320">The house rules every lane is held to</h3>
+<p>From <code>DOCTRINE.md</code>, which is entrenched and which Travis alone ratifies:</p>
+<ul><li><p><strong>A check outranks an opinion.</strong> If a command settles it, run the command.</p></li><li><p><strong>Do not fabricate</strong> counts, statuses or provenance. <code>?</code> is an acceptable answer.</p></li><li><p><strong>Name the gap.</strong> Say what is not built, in the same breath as what is.</p></li><li><p><strong>Measure before you claim, and say how.</strong></p></li><li><p><strong>Retract out loud</strong>, by name, in the same place the claim was made.</p></li><li><p><strong>Some decisions are Travis's.</strong> Flag and stop.</p></li><li><p><strong>Commit so work survives; verify so it is worth surviving.</strong></p></li></ul>
+<p>Every report ends with a <code>DOCTRINE:</code> section saying which of <em>advanced / contradicted / proposed / none</em> applies. <strong>`none` is common and correct</strong> — do not manufacture a finding.</p></div>
+<p class="src"><a href="/#/agents/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-53208" class="lvl2">The constraint that shapes everything: one working tree</a><a href="#blk-53212" class="lvl2">Can they start now?</a><a href="#blk-53242" class="lvl2">What is blocking B, C and D — all of it is yours</a><a href="#blk-53268" class="lvl2">What is already ruled — do not relitigate</a><a href="#blk-53317" class="lvl2">Read before any non-trivial work</a><a href="#blk-53320" class="lvl2">The house rules every lane is held to</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/agents/A-shell-wiring.md/">Lane A — wire publishing into the shell</a><a href="/agents/B-studbook.md/">Lane B — build studbook</a><a href="/agents/C-infrastructure.md/">Lane C — stand up the cloud</a><a href="/agents/D-worker-auth.md/">Lane D — the credential surface, and now the control plane</a><a href="/agents/E-site.md/">Lane E — the site and the nav</a><a href="/agents/F-docs.md/">Lane F — finish the reconciliation</a><a href="/agents/SHELL.md/">The portfolio shell</a><a href="/agents/SITES.md/">Site lanes — updating the domain index.htmls in parallel</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera3rh532dtrjugglous7zw6demla7ozynw5jxodqyqrqaqs7u5w5qq</div></div></div>
+</div></div>
+</body></html>

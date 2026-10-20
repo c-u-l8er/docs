@@ -1,0 +1,89 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Floor Census R2 — method, and what the numbers do not claim · computedriven · Ampersand Box</title>
+<meta name="description" content="Companion to receipts/SFLR-R2-OPEN.md (the contract, falsifiers first) and the generated receipts/SFLR-R2-DYNAMIC-&lt;stamp&gt;.md (the numbers). This file is…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/sflr-r2.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Floor Census R2 — method, and what the numbers do not claim">
+<meta property="og:description" content="Companion to receipts/SFLR-R2-OPEN.md (the contract, falsifiers first) and the generated receipts/SFLR-R2-DYNAMIC-&lt;stamp&gt;.md (the numbers). This file is…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/sflr-r2.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Floor Census R2 — method, and what the numbers do not claim","name":"Floor Census R2 — method, and what the numbers do not claim","description":"Companion to receipts/SFLR-R2-OPEN.md (the contract, falsifiers first) and the generated receipts/SFLR-R2-DYNAMIC-\u003cstamp>.md (the numbers). This file is…","url":"https://docs.ampersandboxdesign.com/computedriven/docs/sflr-r2.md/","identifier":"bagaaierahlonl7kupxsrilnwiocpb2hdm4pgy2c4oimtjtvk4rs5f4kifxrq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"The shape of the experiment"},{"@type":"WebPageElement","name":"Why in-process, and not through the ABI"},{"@type":"WebPageElement","name":"The four workload classes"},{"@type":"WebPageElement","name":"What the instrument cannot see, and what it distorts"},{"@type":"WebPageElement","name":"Memory: three denominators, never one"},{"@type":"WebPageElement","name":"What the round does not claim"},{"@type":"WebPageElement","name":"Recorded architectural finding: the copy is not the guarantee"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"sflr-r2.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/sflr-r2.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/sflr-r2.md</span>
+
+</div></div>
+<div class="lead">Companion to receipts/SFLR-R2-OPEN.md (the contract, falsifiers first) and the generated receipts/SFLR-R2-DYNAMIC-&lt;stamp&gt;.md (the numbers). This file is the method and the limit…</div>
+<div class="prose"><h1 id="blk-63242">Floor Census R2 — method, and what the numbers do not claim</h1>
+<p>Companion to <code>receipts/SFLR-R2-OPEN.md</code> (the contract, falsifiers first) and the generated <code>receipts/SFLR-R2-DYNAMIC-&lt;stamp&gt;.md</code> (the numbers). This file is the method and the limits. Nothing here carries a figure; figures live only in the generated receipt, because prose that carries a number is how the published and printed law counts drifted apart in this tree once already.</p>
+<h3 id="blk-63244">The shape of the experiment</h3>
+<p>Every system under test is a program with one contract:</p>
+<pre><code>PROG &lt;contexts&gt; &lt;iterations&gt;   run contexts×iterations×2 governed transitions
+                               IN PROCESS, print transitions=&lt;T&gt;, exit 0
+PROG &lt;mode&gt; --witness          answer the external battery, one line each</code></pre>
+<p>Cost per transition is <code>(counts(2K) − counts(K)) / (T(2K) − T(K))</code>. Everything fixed cancels: process startup, runtime initialisation, JIT warm-up, the first GC, BEAM's ~50 ms boot. That is the only reason a 200-cycle figure can be taken from a managed runtime at all.</p>
+<p>The round-robin loop is deliberately identical to cd-kernellet's <code>BENCH</code> op: for each context in turn, one <code>attach</code> then one <code>detach</code>. A transition is one attach or one detach.</p>
+<h3 id="blk-63249">Why in-process, and not through the ABI</h3>
+<p>A real caller drives cd-kernellet through stdin/stdout: two syscalls per command. A goroutine handoff or a BEAM message send is user-space. Comparing CD-through-its-ABI against a channel send would compare a syscall-bound path to a user-space one, and CD would lose for a reason that has nothing to do with its architecture. So the comparison uses the in-image <code>BENCH</code> loop, and the ABI syscall cost is a <strong>separate, deployment-level</strong> question this round does not answer.</p>
+<h3 id="blk-63251">The four workload classes</h3>
+<ul><li><p><strong>class N — naked.</strong> Each system does the minimum its own idiom does: no</p></li></ul>
+<p>generation check, no possession check, no evidence ring. Prices the concurrency abstraction alone.</p>
+<ul><li><p><strong>class S — semantic.</strong> Every system implements the full check set and must</p></li></ul>
+<p>pass the same external witness battery before it is given a number.</p>
+<ul><li><p><strong>class R — rollback.</strong> Class S in C three ways: in-place (no guarantee),</p></li></ul>
+<p>copy-in/copy-out (cd-kernellet's shape), in-place plus an undo log. Isolates what the guarantee costs from what one particular way of getting it costs.</p>
+<ul><li><p><strong>class X — suspend.</strong> A unit must park mid-transition awaiting an external</p></li></ul>
+<p>event. CD is BLOCKED by construction and the row says so.</p>
+<p><code>S − N</code> within one system is what the guarantees cost there. <code>CD − plain C</code> within class S is what the floor costs over a hand-written state machine with the same guarantees. Those two deltas are the result; everything else is context.</p>
+<h3 id="blk-63269">What the instrument cannot see, and what it distorts</h3>
+<ul><li><p><strong>No kernel work is counted.</strong> <code>perf_event_paranoid</code> is 2, so</p></li></ul>
+<p><code>exclude_kernel=1</code> is forced. That hides the syscall and the context switch — exactly what makes a kernel-scheduled unit expensive. Wall-clock ns/transition and context-switches/transition are printed beside every row for that reason, and <strong>no row may be read from the instruction column alone</strong>.</p>
+<ul><li><p><strong>A `rep`-string instruction retires once</strong> however many bytes it moves. The</p></li></ul>
+<p>instruction column therefore flatters cd-kernellet's <code>fastmem</code> build against a vectorised <code>memcpy</code> doing identical work. L1D accesses and cycles are printed beside it; the CD:C ratio is quoted from those, not from instructions.</p>
+<ul><li><p><strong>Instructions retired is not deterministic on x86.</strong> A hardware interrupt's</p></li></ul>
+<p><code>iret</code> counts as a userspace instruction, so the count drifts with interrupt rate and therefore with load. It is far steadier than cycles here, but steadier is not exact. Branches retired is carried as the deterministic cross-check.</p>
+<ul><li><p><strong>The PMU has finite counters.</strong> Ask for more hardware events than it has and</p></li></ul>
+<p>the kernel time-slices them and returns partial counts. Every event is opened with <code>PERF_FORMAT_TOTAL_TIME_ENABLED|RUNNING</code>, the hardware events are split into groups that fit, and any counter the kernel shared is <strong>discarded, never scaled</strong>.</p>
+<ul><li><p><strong>This host is heterogeneous.</strong> Zen 5 cores and Zen 5c cores differ in clock</p></li></ul>
+<p>and in nothing the workload cares about except that they are different cores. Every run names the CPU it was pinned to and its class.</p>
+<ul><li><p><strong>This host is shared.</strong> Other sessions run on it. Cycles carry their</p></li></ul>
+<p>observed spread and the concurrent load average; instructions are primary.</p>
+<h3 id="blk-63294">Memory: three denominators, never one</h3>
+<p>312 B is the slope of a static <code>.data</code> section, exact, read from the ELF. A BEAM process figure is a heap allocation. A goroutine's 2 KiB is a stack reservation. One column for all three would be a category error, and whichever column was chosen would decide the winner. So the receipt prints:</p>
+<ol><li><p><strong>marginal bytes per additional context</strong> — measured as the peak-RSS</p></li></ol>
+<p>difference between a small and a large N, so every constant cancels;</p>
+<ol start="2"><li><p><strong>total including the runtime</strong> — the deployment number;</p></li><li><p><strong>bytes touched per transition</strong> — the L1D-access column, which is the one</p></li></ol>
+<p>that predicts the density ceiling.</p>
+<p>Peak RSS is read by each SUT from its own <code>/proc/self/status</code> <code>VmHWM</code>. The harness's <code>ru_maxrss</code> is not usable: it counts the pages the child inherited from its Python parent before <code>exec</code>, which is about 11 MB and swamps anything small — it made the C slope come out <strong>negative</strong> before this was found.</p>
+<h3 id="blk-63307">What the round does not claim</h3>
+<p>The unclaim list is in the contract, §2, and it is the load-bearing half. In short: not that a Locus Context can do what a thread does; not that its 312 B &quot;beats&quot; a BEAM process's, because it holds no application state at all; not memory isolation; not multicore; and not that a density ceiling measured against this cache generalises off this host.</p>
+<p>The ceiling in particular is a <strong>worst case</strong>: the workload touches every context every lap. A skewed access pattern would not cliff at the same N, and that measurement is not in this receipt.</p>
+<h3 id="blk-63310">Recorded architectural finding: the copy is not the guarantee</h3>
+<p>Ruled 2026-09-04, after a control in R2 disproved the natural reading.</p>
+<p>The invariant cd-kernellet actually holds is:</p>
+<pre><code>a transition RECEIVES owned semantic values
+  on success   it returns successor values
+  on refusal   it returns the original admissible values
+the caller ALWAYS installs what was returned</code></pre>
+<p><code>dispatch</code> writes the returned <code>Lineage</code> back to the table <strong>unconditionally</strong> — refusal or not. So the property does not come from the copy. It comes from cd-core's failure paths returning the same values they were given (<code>Err((v, adm, e))</code> feeding the <code>back!</code> macro), which linear types make unavoidable: a transition body never holds mutable access to the caller's value, so it has no half-written version to return.</p>
+<p>The whole-context move is <strong>one implementation consequence</strong> of expressing that discipline in Rust's move semantics. It is not the invariant.</p>
+<p>R2 proved the distinction the only way it can be proved — by building the wrong thing. A C build that copies out, mutates, and copies back <em>unconditionally</em> pays the full 312-byte cost twice per transition and still fails the refusal witness (<code>E-L6b</code>). Cost without guarantee. And the converse also holds: where a transition body takes <code>&amp;mut</code> and rolls back explicitly, LLVM narrows the saved state to the fields the body actually touches, so the same witness is bought for about six extra L1D accesses instead of forty.</p>
+<p>Two consequences follow, and they belong to later rounds:</p>
+<ul><li><p>The evidence ring is <strong>41% of a Locus Context</strong> (measured, R2.1 §EV_RING) and</p></li></ul>
+<p>is moved on every attach and every detach, neither of which reads or writes it. That is the largest and most obviously unnecessary part of the traffic.</p>
+<ul><li><p>Narrowing the move to the components a transition actually consumes would</p></li></ul>
+<p>keep the structural property — the body still never sees a half-written caller state — while removing most of the 2.4× overhead. That is R4.</p></div>
+<p class="src"><a href="/#/computedriven/docs/sflr-r2.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-63244" class="lvl2">The shape of the experiment</a><a href="#blk-63249" class="lvl2">Why in-process, and not through the ABI</a><a href="#blk-63251" class="lvl2">The four workload classes</a><a href="#blk-63269" class="lvl2">What the instrument cannot see, and what it distorts</a><a href="#blk-63294" class="lvl2">Memory: three denominators, never one</a><a href="#blk-63307" class="lvl2">What the round does not claim</a><a href="#blk-63310" class="lvl2">Recorded architectural finding: the copy is not the guarantee</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierahlonl7kupxsrilnwiocpb2hdm4pgy2c4oimtjtvk4rs5f4kifxrq</div></div></div>
+</div></div>
+</body></html>

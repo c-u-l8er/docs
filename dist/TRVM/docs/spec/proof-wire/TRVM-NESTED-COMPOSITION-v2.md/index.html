@@ -1,0 +1,166 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>TRVM-NESTED-COMPOSITION-v2 — a proof DAG over a content-addressed store · TRVM · Ampersand Box</title>
+<meta name="description" content="Status: NORMATIVE. Depends on TRVM-PROOF-WIRE-v1.md, which defines the wire, the content address, resolution, input ownership and resource policy. This…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/TRVM-NESTED-COMPOSITION-v2.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TRVM-NESTED-COMPOSITION-v2 — a proof DAG over a content-addressed store">
+<meta property="og:description" content="Status: NORMATIVE. Depends on TRVM-PROOF-WIRE-v1.md, which defines the wire, the content address, resolution, input ownership and resource policy. This…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/TRVM-NESTED-COMPOSITION-v2.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"TRVM-NESTED-COMPOSITION-v2 — a proof DAG over a content-addressed store","name":"TRVM-NESTED-COMPOSITION-v2 — a proof DAG over a content-addressed store","description":"Status: NORMATIVE. Depends on TRVM-PROOF-WIRE-v1.md, which defines the wire, the content address, resolution, input ownership and resource policy. This…","url":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/TRVM-NESTED-COMPOSITION-v2.md/","identifier":"bagaaierarmxxs2jrrlhnedfkgom5f7232tfta6g2djwf3fe2ag66m7ln6urq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"1. What the protocol is for"},{"@type":"WebPageElement","name":"2. Six planes, and none of them stands in for another"},{"@type":"WebPageElement","name":"3. Records"},{"@type":"WebPageElement","name":"4. Identities"},{"@type":"WebPageElement","name":"5. The chain is derived, never declared"},{"@type":"WebPageElement","name":"6. Verification"},{"@type":"WebPageElement","name":"7. Refusal vocabulary"},{"@type":"WebPageElement","name":"8. What this protocol does not claim"},{"@type":"WebPageElement","name":"9. Open, and deliberately unspecified"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/TRVM/docs/"},{"@type":"ListItem","position":4,"name":"spec","item":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/"},{"@type":"ListItem","position":5,"name":"proof-wire","item":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/"},{"@type":"ListItem","position":6,"name":"TRVM-NESTED-COMPOSITION-v2.md","item":"https://docs.ampersandboxdesign.com/TRVM/docs/spec/proof-wire/TRVM-NESTED-COMPOSITION-v2.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/docs/spec/proof-wire/TRVM-NESTED-COMPOSITION-v2.md</span>
+
+</div></div>
+<div class="lead">Status: NORMATIVE. Depends on TRVM-PROOF-WIRE-v1.md, which defines the wire, the content address, resolution, input ownership and resource policy. This document defines one proo…</div>
+<div class="prose"><h1 id="blk-48325">TRVM-NESTED-COMPOSITION-v2 — a proof DAG over a content-addressed store</h1>
+<p><strong>Status: NORMATIVE.</strong> Depends on <code>TRVM-PROOF-WIRE-v1.md</code>, which defines the wire, the content address, resolution, input ownership and resource policy. This document defines one proof protocol carried on it.</p>
+<p>Conformance vectors: <code>vectors/manifest.json</code>.</p>
+<h3 id="blk-48328">1. What the protocol is for</h3>
+<p>A nested composition asserts the <strong>conjunction</strong> of the claims named by its operands, and nothing else. It carries none of them: each is named by a content address and resolved from an untrusted store.</p>
+<p>The theorem is deliberately trivial. What the protocol is for is the <strong>shape</strong> — a proof DAG whose shared nodes are stored once and whose every node is judged by the checker of its own protocol.</p>
+<h3 id="blk-48331">2. Six planes, and none of them stands in for another</h3>
+<p>An artifact of this protocol has exactly these members. Every one is required except the three marked non-semantic.</p>
+<table><thead><tr><th>member</th><th>plane</th><th>answers</th></tr></thead><tbody><tr><td><code>protocol</code></td><td>CHECKED</td><td>which protocol this is</td></tr><tr><td><code>claim</code></td><td>semantic</td><td>WHAT is asserted</td></tr><tr><td><code>chain_ids</code></td><td>derived</td><td>UNDER WHICH COMPILERS</td></tr><tr><td><code>references</code></td><td>transport</td><td>WHERE THE OCTETS ARE</td></tr><tr><td><code>aggregate</code></td><td>evidence</td><td>WHAT EVIDENCE HOLDS</td></tr><tr><td><code>structure</code></td><td>shape</td><td>WHAT SHAPE THE DAG IS</td></tr><tr><td><code>type</code>, <code>version</code>, <code>annotations</code></td><td>NON-SEMANTIC</td><td>nothing</td></tr></tbody></table>
+<p>A sixth plane — <strong>verifier execution</strong>, how many times a checker ran and whether it reused a derivation — is <strong>not in the artifact at all</strong>. It is a property of a verification run, no artifact can be right about it, and placing it in the claim or the aggregate means a sound verifier changing <em>strategy</em> renames the theorem.</p>
+<p><strong>2.1. `claim.operands` MUST NOT contain an address.</strong> A locator may rename the artifact carrying a proof; it MUST NOT rename the proof. An implementation that binds <code>artifact_root</code> into the claim identity will find that rewording a non-semantic annotation on a leaf renames the theorem at every level above it.</p>
+<p><strong>2.2. What an artifact may state about its own shape MUST be strategy-independent.</strong> <code>edges</code> and <code>films_below_by_edge_multiplicity</code> are properties of the DAG. <code>checker_evaluations</code> is not.</p>
+<p><strong>2.3. `annotations` establishes nothing.</strong> It is bounded to strings, arrays of strings, and flat records of those. It is inside the artifact root — so editing it changes the artifact's <em>address</em> — and it is outside every semantic identity, so editing it changes no claim, aggregate or certificate.</p>
+<h3 id="blk-48362">3. Records</h3>
+<p><code>protocol</code> is the string <code>TRVM-NESTED-COMPOSITION-v2</code>.</p>
+<pre><code>bundle      = { protocol, claim, chain_ids, references, aggregate, structure,
+                type?, version?, annotations? }
+claim       = { connective, scope, operands, nested_claim_sem_id }
+scope       = { kind, quantifier, generalizes_beyond_children,
+                children_rechecked_by_their_own_checkers, parent_rederives_leaf_evidence }
+operand     = { protocol, claim_sem_id, aggregate_id, verified_claim_sem_id }
+references  = { contract, operands }
+contract    = { resolution, wire, address_is_a_warrant }
+reference   = { verified_claim_sem_id, artifact_root }
+chain_ids   = { leaf_chains }
+aggregate   = { operands, child_verdicts, leaf_receipts_rederived_by_parent,
+                films_replayed_by_parent, nested_verdict, aggregate_id }
+structure   = { edges, unique_artifacts, max_depth_below, bytes_if_inlined, unique_bytes,
+                films_below_by_edge_multiplicity, films_below_distinct,
+                cases_below_by_edge_multiplicity, cases_below_distinct, structure_sem_id }</code></pre>
+<p><strong>3.1. The key sets are EXACT.</strong> A member not listed for a record is a refusal. This is not a convenience: a producer that can add a member can state things the checker never agreed to without altering any value the checker reads. Extending the vocabulary is a protocol revision.</p>
+<p><strong>3.2. The checker owns the vocabulary.</strong> An implementation MUST declare these key sets itself and MUST NOT read them from the artifact.</p>
+<p><strong>3.3. Values the checker declares</strong> (<code>CHECKED</code> — compared against the implementation's own copy, never read from the artifact):</p>
+<pre><code>scope.kind                                      &quot;NESTED_COMPOSED_VERIFIED_CLAIM_CONJUNCTION&quot;
+scope.quantifier                                &quot;OVER_CITED_CHILD_CERTIFICATES&quot;
+scope.generalizes_beyond_children               false
+scope.children_rechecked_by_their_own_checkers  true
+scope.parent_rederives_leaf_evidence            false
+references.contract.resolution                  &quot;CONTENT_ADDRESSED&quot;
+references.contract.wire                        &quot;CANONICAL&quot;
+references.contract.address_is_a_warrant        false
+claim.connective                                one of [&quot;CONJUNCTION&quot;]</code></pre>
+<p>A scope value that is a string containing whitespace is a refusal: explanatory prose does not belong in a machine-readable value.</p>
+<h3 id="blk-48370">4. Identities</h3>
+<p>All three use the canonical encoding of <code>TRVM-PROOF-WIRE-v1.md</code> §1 and a domain-separation prefix that is part of the preimage.</p>
+<pre><code>nested_claim_sem_id = &quot;nclaim-&quot; ++ hex(SHA-256(
+    &quot;TRVM-NESTED-COMPOSITION-v2|&quot; ++ canonical_bytes({
+        protocol: &quot;TRVM-NESTED-COMPOSITION-v2&quot;, connective, scope, operands })))
+
+aggregate_id        = &quot;nagg-&quot;   ++ hex(SHA-256(
+    &quot;TRVM-NESTED-COMPOSITION-v2|&quot; ++ canonical_bytes(aggregate WITHOUT aggregate_id)))
+
+structure_sem_id    = &quot;nstruct-&quot; ++ hex(SHA-256(
+    &quot;TRVM-NESTED-COMPOSITION-v2|&quot; ++ canonical_bytes(structure WITHOUT structure_sem_id)))</code></pre>
+<p><strong>4.1.</strong> <code>nested_claim_sem_id</code> binds the operand <strong>sequence</strong>. Two artifacts differing only in operand order are different claims.</p>
+<p><strong>4.2.</strong> The certificate identity of a child, <code>verified_claim_sem_id</code>, is defined by the certificate protocol and binds <code>(protocol, claim_sem_id, aggregate_id, chain_ids)</code> together. An artifact that does not carry all four <strong>cannot be cited at all</strong> — this is <em>citability</em>, and it comes before identity, availability and warrant.</p>
+<p><strong>4.3. The verifier's own coordinates.</strong> Two further identities are about the VERIFIER rather than the artifact, and are reported with the verdict rather than sealed into it:</p>
+<pre><code>verifier_policy_id      = &quot;nestpol-&quot;  ++ hex(SHA-256(
+    &quot;TRVM-NESTED-COMPOSITION-v2|&quot; ++ &lt;the effective policy, key-sorted k=v joined by &quot;|&quot;&gt;))
+
+child_protocol_set_id   = &quot;nestcps-&quot; ++ hex(SHA-256(
+    &quot;TRVM-NESTED-COMPOSITION-v2|&quot; ++ canonical_bytes(
+        the SORTED supplied list of {protocol, checker_id, claim_field})))</code></pre>
+<p>When a table was supplied, <code>child_protocol_set_id</code> is folded into the preimage of <code>verifier_policy_id</code>, so <strong>one coordinate names both what was bounded and who was allowed to check</strong>. Two verifiers holding the same supplied set report the same set id; a verifier holding none reports <code>verifier_policy_id</code> byte-identically to every id issued before the table existed.</p>
+<h3 id="blk-48378">5. The chain is derived, never declared</h3>
+<pre><code>chain_ids(leaf)     = the leaf's own chain record
+chain_ids(composed) = { leaf_chains: the flat, deduplicated set of its DIRECT
+                        children's chain records, canonically ordered }</code></pre>
+<p><strong>5.1.</strong> A composed child's set is already flat, so it never grows with depth and a parent reads only its direct children. It is O(distinct compilers), not O(evidence); this is not flattening.</p>
+<p><strong>5.2.</strong> <code>leaf_chains</code> is compared as a <strong>SET</strong>. Order is not part of the protocol.</p>
+<p><strong>5.3.</strong> A producer MUST NOT write its own chain. A producer that could would be naming the compiler its own proof was checked under.</p>
+<h3 id="blk-48383">6. Verification</h3>
+<p>Three phases, in this order.</p>
+<p><strong>6.1. RESOLVE.</strong> Walk <code>references.operands</code> from the root, resolving each cited root per <code>TRVM-PROOF-WIRE-v1.md</code> §3 into a snapshot the verifier owns. Every resource bound is decided here. When resolution completes, the store MUST NOT be consulted again.</p>
+<ul><li><p>each unique root is resolved once;</p></li><li><p>a root already on the current path is a cycle refusal;</p></li><li><p>for each edge, <code>depth + 1 + height(child)</code> MUST NOT exceed the depth bound (§6 of the wire spec);</p></li><li><p>resolution count, total resolved octets and per-node operand counts are all bounded, and <strong>both</strong></p></li></ul>
+<p><code>claim.operands</code> and <code>references.operands</code> are bounded before either is iterated.</p>
+<p><strong>6.2. JUDGE.</strong> Each <strong>distinct</strong> artifact in the snapshot is handed to the checker of its own protocol. A verifier MAY reuse a judgment it derived itself in this run; the verdict and the refusal set MUST be identical to recomputation.</p>
+<p><strong>6.2.1. The protocol→checker table belongs to the VERIFIER, never to the artifact.</strong> A verifier MAY extend the table in §3's <code>child_protocols</code> with protocols it does not implement natively, and MUST refuse a supplied entry that would REPLACE one it ships (<code>nest-child-protocol-override-refused</code>) or that is not the shape it holds (<code>nest-child-protocol-registration-malformed</code>). An artifact MUST NOT be able to name, carry or inject checker code: what the caller supplies is verifier configuration, read once and copied field by field, and a later mutation of the caller's object MUST reach nothing. When a table was supplied, the verdict MUST name the effective set — the built-in keys, the supplied <code>(protocol, checker_id)</code> pairs and a <code>child_protocol_set_id</code> over them — and the reported <code>verifier_policy_id</code> MUST fold that set id in. With no supplied table nothing is added and no identity moves.</p>
+<p><strong>6.3. WALK.</strong> For every operand:</p>
+<ul><li><p>exactly one reference names the same <code>verified_claim_sem_id</code> — the two planes are matched as <strong>SETS</strong>,</p></li></ul>
+<p>not by position;</p>
+<ul><li><p>the resolved artifact's certificate is <strong>recomputed</strong> and compared to the citation field by field,</p></li></ul>
+<p>because agreeing on a hash is not agreeing about what the hash names;</p>
+<ul><li><p>the child's verdict is VERIFIED.</p></li></ul>
+<p>Then: operands are pairwise distinct by certificate at this node (the same artifact reached by two different <strong>paths</strong> is the diamond and is what the protocol is for); <code>nested_claim_sem_id</code>, <code>aggregate_id</code> and <code>structure_sem_id</code> are recomputed; and <strong>every</strong> member of <code>aggregate</code> and <code>structure</code> is derived and compared.</p>
+<p><strong>6.4. There is no fourth category.</strong> Every member of every record is DERIVED (the checker computes the value itself), CHECKED (compared against a value the checker declares), or NON-SEMANTIC (nothing depends on it). A member that is hashed and read by nothing is not evidence — <code>nested_verdict</code> was exactly that, and an artifact stating of itself that it was REFUSED verified.</p>
+<h3 id="blk-48412">7. Refusal vocabulary</h3>
+<p>An implementation MUST use these codes. Conformance on negative vectors is compared as a <strong>SET</strong>; refusal precedence is <strong>not</strong> part of this protocol and MUST NOT be relied on.</p>
+<pre><code>nest-ingress-refused              the artifact handed in has no canonical form
+nest-protocol-mismatch            not a nested composition
+nest-vocabulary-unknown           a member this checker's grammar does not have
+nest-scope-mismatch               scope is not the one this checker implements
+nest-reference-contract-mismatch  the transport contract is not this one
+nest-connective-unsupported       a connective this checker cannot evaluate
+nest-operand-malformed            an operand missing a field a citation needs
+nest-operand-duplicated           the same certificate cited twice at one node
+nest-reference-mismatch           references and operands do not name the same set
+nest-artifact-root-malformed      a citation that is not a well-formed root
+nest-artifact-unresolvable        the store has no octets under a cited root
+nest-artifact-invalid-utf8        the octets are not valid UTF-8
+nest-artifact-malformed           the octets do not parse, or have no canonical form
+nest-artifact-non-canonical       the octets are not the canonical encoding of what they parse to
+nest-artifact-root-mismatch       the octets are not the artifact that was cited
+nest-child-protocol-unsupported   a child protocol with no checker here
+nest-child-refused                a child's OWN checker did not return VERIFIED
+nest-certificate-stale            the recomputed certificate id is not the one cited
+nest-citation-cross-wired         the id is right and the claim or aggregate it names is not
+nest-chain-ids-mismatch           the stored chain set is not the one the children give
+nest-claim-id-mismatch            nested_claim_sem_id is not over these operands
+nest-count-inconsistent           an aggregate member this checker derives otherwise
+nest-structure-mismatch           a structural member this checker derives otherwise
+nest-depth-exceeded               a citation chain past the policy ceiling
+nest-budget-exceeded              octets, resolutions or operands past the policy ceiling
+nest-cycle                        a root cited by one of its own ancestors
+nest-policy-weakened              a caller asked for a policy looser than the shipped one
+nest-child-protocol-override-refused
+                                  a supplied entry would REPLACE a checker the verifier ships
+nest-child-protocol-registration-malformed
+                                  a supplied table, or one of its entries, is not the shape
+                                  the verifier holds
+nest-checker-threw                the checker raised instead of refusing</code></pre>
+<p><code>nest-cycle</code> is <strong>defence in depth and not load-bearing</strong>: sealing a cycle requires octets that hash to a root those octets already contain. That was not achieved in a bounded experiment of 512 attempted fixpoints; it is <em>assumed computationally infeasible</em> under the hash model and is <strong>not</strong> proved.</p>
+<h3 id="blk-48416">8. What this protocol does not claim</h3>
+<ul><li><p><strong>Not a new mathematical result.</strong> The conjunction is redundant by design.</p></li><li><p><strong>Not that resolving an address establishes anything about the artifact.</strong></p></li><li><p><strong>Not a warrant cache.</strong> A verifier may reuse a judgment it derived itself, in this run, over a</p></li></ul>
+<p>snapshot it owns. Believing a verdict issued elsewhere, or one that outlived a run, is a different object and does not exist in this protocol.</p>
+<ul><li><p><strong>Not unbounded.</strong> Every dimension an untrusted store controls is bounded by a policy the checker</p></li></ul>
+<p>owns and a caller may only tighten.</p>
+<ul><li><p><strong>Not a claim about how many times anything was checked.</strong></p></li><li><p><strong>Not transitive in the sense of trust.</strong> A nested composition may cite another, and every artifact</p></li></ul>
+<p>in the graph is judged by its own protocol's checker regardless of depth.</p>
+<ul><li><p><strong>Not a verdict independent of who checked it.</strong> A <code>VERIFIED</code> issued while a supplied child-protocol</p></li></ul>
+<p>table was in force is meaningful ONLY together with the <code>verifier_policy_id</code> and <code>child_protocol_set_id</code> reported beside it. A <code>checker_id</code> is a NAME, not a warrant: a supplied checker that answers <code>VERIFIED</code> to everything widens only what THAT verifier will hold, and says nothing about what any other verifier would. A consumer MUST NOT equate two verdicts because the token is the same string; <strong>verification without verifier identity is incomplete evidence.</strong></p>
+<h3 id="blk-48439">9. Open, and deliberately unspecified</h3>
+<p>These are named so an implementer does not assume they were forgotten:</p>
+<ul><li><p><strong>Refusal precedence.</strong> Not decided. Compare sets.</p></li><li><p><strong>Connectives other than CONJUNCTION.</strong> Not specified.</p></li><li><p><strong>A persistent, verifier-issued warrant.</strong> Not specified, and §8 says why.</p></li><li><p><strong>A generic checker-derived citation subject.</strong> <code>verified_claim_sem_id</code> is currently defined by the</p></li></ul>
+<p>certificate protocol and requires <code>chain_ids</code>; a composition's flattened <code>leaf_chains</code> is <em>redundant for binding</em> — a child certificate already propagates a compiler change into every ancestor's claim id — and load-bearing only for citability. The interface that would replace it is not specified here.</p>
+<ul><li><p><strong>Full RFC 8785 conformance.</strong> The bundled corpus is not the reference suite.</p></li></ul></div>
+<p class="src"><a href="/#/TRVM/docs/spec/proof-wire/TRVM-NESTED-COMPOSITION-v2.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-48328" class="lvl2">1. What the protocol is for</a><a href="#blk-48331" class="lvl2">2. Six planes, and none of them stands in for another</a><a href="#blk-48362" class="lvl2">3. Records</a><a href="#blk-48370" class="lvl2">4. Identities</a><a href="#blk-48378" class="lvl2">5. The chain is derived, never declared</a><a href="#blk-48383" class="lvl2">6. Verification</a><a href="#blk-48412" class="lvl2">7. Refusal vocabulary</a><a href="#blk-48416" class="lvl2">8. What this protocol does not claim</a><a href="#blk-48439" class="lvl2">9. Open, and deliberately unspecified</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/docs/spec/proof-wire/TRVM-PROOF-WIRE-v1.md/">TRVM-PROOF-WIRE-v1 — the canonical wire and the content address</a><a href="/TRVM/docs/spec/proof-wire/TRVM-VERIFIED-CLAIM-v1.md/">TRVM-VERIFIED-CLAIM-v1 — the citable identity of a verified claim</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierarmxxs2jrrlhnedfkgom5f7232tfta6g2djwf3fe2ag66m7ln6urq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>SpecPrompt · specprompt.com · Ampersand Box</title>
+<meta name="description" content="Content-addressed identity for specifications — a spec whose name is a hash of what it says, so changing the claim changes the name. Elixir/OTP with a…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/specprompt.com/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpecPrompt">
+<meta property="og:description" content="Content-addressed identity for specifications — a spec whose name is a hash of what it says, so changing the claim changes the name. Elixir/OTP with a…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/specprompt.com/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"SpecPrompt","name":"SpecPrompt","description":"Content-addressed identity for specifications — a spec whose name is a hash of what it says, so changing the claim changes the name. Elixir/OTP with a…","url":"https://docs.ampersandboxdesign.com/specprompt.com/README.md/","identifier":"bagaaieralckov7hnwzwyzxnnom6ofq4mhywzxyzaaibqh5fdfponhnqmqkbq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"specprompt.com","url":"https://docs.ampersandboxdesign.com/specprompt.com/"},"articleSection":"specprompt.com","hasPart":[{"@type":"WebPageElement","name":"Status, honestly"},{"@type":"WebPageElement","name":"Two modes, and only one of them is superseded"},{"@type":"WebPageElement","name":"Quick start"},{"@type":"WebPageElement","name":"The specification is authoritative, and superseded in part"},{"@type":"WebPageElement","name":"A standing direction that affects this repository"},{"@type":"WebPageElement","name":"The portfolio nav"},{"@type":"WebPageElement","name":"Conventions"},{"@type":"WebPageElement","name":"Related"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"specprompt.com","item":"https://docs.ampersandboxdesign.com/specprompt.com/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/specprompt.com/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">specprompt.com</span>
+<span class="path">specprompt.com/README.md</span>
+
+</div></div>
+<div class="lead">Content-addressed identity for specifications — a spec whose name is a hash of what it says, so changing the claim changes the name. Elixir/OTP with a Phoenix API and an MCP ser…</div>
+<div class="prose"><h1 id="blk-107550">SpecPrompt</h1>
+<p>Content-addressed identity for specifications — a spec whose name is a hash of what it says, so changing the claim changes the name. Elixir/OTP with a Phoenix API and an MCP server. Part of the <a href="https://computedriven.com" target="_blank" rel="noopener">ComputeDriven</a> world.</p>
+<p><strong>Written 2026-08-16.</strong> This repository had no README before that date. Every figure below was measured that day with the command beside it.</p>
+<h3 id="blk-107553">Status, honestly</h3>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Version</td><td><code>0.1.0</code> (<code>mix.exs</code>, app <code>:specprompt</code>)</td></tr><tr><td>Tests</td><td><strong>93 passing, 0 failures</strong> — 71 Elixir (<code>mix test</code>) + 22 TypeScript (<code>npx vitest run</code> in <code>npm/</code>)</td></tr><tr><td>Marketing page</td><td><strong>live</strong> — <code>https://specprompt.com</code> answers 200</td></tr><tr><td>Application</td><td><strong>live on Fly</strong> as app <code>specprompt</code> — <code>https://app.specprompt.com</code> answers 200</td></tr><tr><td>Evidence rung</td><td><code>live_deployed</code></td></tr></tbody></table>
+<p><strong>Correction, 2026-08-17 — 71 and 93 are both right, of different things, and this file used to say one of them was wrong.</strong> It read <em>&quot;The test count is 71, not 93 … the suite says 71&quot;</em>. Re-derived by running both suites: <code>mix test</code> prints <strong>71 tests, 0 failures</strong>, and <code>npx vitest run</code> in <code>npm/</code> prints <strong>22 passed</strong>. 71 + 22 = <strong>93</strong>. The plan's figure was the whole repository and <code>mix test</code> is the Elixir half of it — a scope collision, not a stale number, and the same shape as the 103-vs-118 law counts on <code>opensentience.org</code>. The earlier diagnosis would have made the landing page understate itself by 22 tests.</p>
+<p><strong>Never hand-type either number.</strong> <code>build-site.mjs</code> executes both runners on every build, parses what they print, and refuses to emit the landing page if a count has moved off <code>records/tests.json</code>.</p>
+<p><strong>What is live is the prior design.</strong> The marketing page describes content-addressed spec identity. What is deployed predates that, which is why the portfolio nav carries <code>status: &quot;live · prior design&quot;</code> rather than &quot;shipped&quot;. It runs; it is not yet the thing the page describes.</p>
+<h3 id="blk-107570">Two modes, and only one of them is superseded</h3>
+<p>The spec defines a <strong>filesystem mode</strong> (git-based, no database, auth-optional, for local CLI use) and a <strong>registry mode</strong> (multi-tenant, Supabase-backed). This distinction matters more here than in the sibling repositories:</p>
+<ul><li><p><strong>Filesystem mode is unaffected</strong> by the data-layer ruling. It commits to git</p></li></ul>
+<p>and needs no database at all.</p>
+<ul><li><p><strong>Registry mode rests on the abandoned shared-Supabase layer</strong> — <code>spec.specs</code>,</p></li></ul>
+<p>workspace scoping, <code>amp.profiles</code> identity via Supabase Auth.</p>
+<h3 id="blk-107580">Quick start</h3>
+<pre data-lang="bash"><code>mix deps.get
+mix compile<span class="t-flag"> --warnings-as-errors</span>
+mix test                       <span class="t-comment"># 71 tests</span>
+mix format<span class="t-flag"> --check-formatted</span>
+mix phx.server</code></pre>
+<p>Deploy is <code>fly deploy</code> against <code>fly.toml</code> (app <code>specprompt</code>).</p>
+<p>The deployed MCP endpoint answers on <code>POST /mcp</code>. Note it is content-type particular — a bare JSON-RPC POST without the accept header it wants returns <strong>406</strong>, which is the app refusing the request rather than failing to serve it.</p>
+<h3 id="blk-107584">The specification is authoritative, and superseded in part</h3>
+<p><code>docs/spec/README.md</code> (v1.1, dated February 2026) drives implementation. It carries a supersession banner added 2026-08-15:</p>
+<ul><li><p><strong>Superseded:</strong> §5.2's Supabase schema, the <code>workspace_id</code> multi-tenancy,</p></li></ul>
+<p><code>supabase://auth</code> as the identity source — everything in registry mode that rests on the shared data layer abandoned by ruling on <strong>2026-07-30</strong>. The replacement, <code>studbook</code>, is a spec with no implementation and is blocked on an unruled confidentiality question. <strong>Do not build against it yet.</strong></p>
+<ul><li><p><strong>Not superseded:</strong> the content-addressing design, the spec identity model, the</p></li></ul>
+<p>filesystem mode, and the CLI. That is the part worth reading.</p>
+<p>The spec was <strong>not rewritten</strong>. It is a dated design record and rewriting it would fabricate a review nobody performed.</p>
+<h3 id="blk-107595">A standing direction that affects this repository</h3>
+<p>Ruled 2026-08-15: <strong>compute moves into the ComputeDriven OS, and the Fly.io apps become storage or nothing.</strong> This app is one of them. Nothing is torn down before its OS-side replacement runs locally, but check <code>STACK_HUB.md</code> in the workspace before planning new Fly-shaped work.</p>
+<h3 id="blk-107597">The portfolio nav</h3>
+<p><code>amp-nav.js</code> is a <strong>deployed copy</strong>. The source is <code>ampersand-nav/src/amp-nav.js</code>, fanned out by <code>sync-nav.sh</code>. Edits here are lost on the next sync.</p>
+<h3 id="blk-107599">Conventions</h3>
+<ul><li><p><code>mix format</code>, warnings-as-errors.</p></li><li><p>Never commit secrets.</p></li><li><p><code>old_scrap/</code> is historical and not authoritative.</p></li></ul>
+<h3 id="blk-107607">Related</h3>
+<ul><li><p><a href="https://computedriven.com" target="_blank" rel="noopener">computedriven.com</a> — the discipline this is built under</p></li><li><p><a href="https://fleetprompt.com" target="_blank" rel="noopener">fleetprompt.com</a> — the registry that installs what this names</p></li><li><p><a href="https://bendscript.com" target="_blank" rel="noopener">bendscript.com</a> — graph-first documents, which reference this</p></li><li><p><a href="https://ampersandboxdesign.com" target="_blank" rel="noopener">ampersandboxdesign.com</a> — the [&amp;] Protocol</p></li></ul></div>
+<p class="src"><a href="/#/specprompt.com/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-107553" class="lvl2">Status, honestly</a><a href="#blk-107570" class="lvl2">Two modes, and only one of them is superseded</a><a href="#blk-107580" class="lvl2">Quick start</a><a href="#blk-107584" class="lvl2">The specification is authoritative, and superseded in part</a><a href="#blk-107595" class="lvl2">A standing direction that affects this repository</a><a href="#blk-107597" class="lvl2">The portfolio nav</a><a href="#blk-107599" class="lvl2">Conventions</a><a href="#blk-107607" class="lvl2">Related</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/specprompt.com/AGENTS.md/">SpecPrompt — Agent Interface</a><a href="/specprompt.com/CLAUDE.md/">SpecPrompt — Open Standard for Spec-Driven AI Development</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieralckov7hnwzwyzxnnom6ofq4mhywzxyzaaibqh5fdfponhnqmqkbq</div></div></div>
+</div></div>
+</body></html>

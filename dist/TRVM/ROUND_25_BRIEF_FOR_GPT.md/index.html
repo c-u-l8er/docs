@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 25 — brief for review · TRVM · Ampersand Box</title>
+<meta name="description" content="Pack: TRVM_R25_REVIEW_PACK.tar.gz (64 files). Extract anywhere, ./verify.sh. Replayed here: attempted 21 · passed 21 · failed 0 · skipped 0.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_25_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 25 — brief for review">
+<meta property="og:description" content="Pack: TRVM_R25_REVIEW_PACK.tar.gz (64 files). Extract anywhere, ./verify.sh. Replayed here: attempted 21 · passed 21 · failed 0 · skipped 0.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_25_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 25 — brief for review","name":"Round 25 — brief for review","description":"Pack: TRVM_R25_REVIEW_PACK.tar.gz (64 files). Extract anywhere, ./verify.sh. Replayed here: attempted 21 · passed 21 · failed 0 · skipped 0.","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_25_BRIEF_FOR_GPT.md/","identifier":"bagaaierakfjraqp7iue4pc7yqq4ugwadgkxhul7wubrrbjak3vynftznpgca","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"P-4, confirmed and closed"},{"@type":"WebPageElement","name":"The lowering spike ran"},{"@type":"WebPageElement","name":"The gap, and it is the reason this brief exists"},{"@type":"WebPageElement","name":"Inputs model: deferred, named, and mechanically refused"},{"@type":"WebPageElement","name":"Gate"},{"@type":"WebPageElement","name":"What I want from you"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_25_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_25_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_25_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">Pack: TRVM_R25_REVIEW_PACK.tar.gz (64 files). Extract anywhere, ./verify.sh. Replayed here: attempted 21 · passed 21 · failed 0 · skipped 0.</div>
+<div class="prose"><h1 id="blk-40955">Round 25 — brief for review</h1>
+<p><strong>Pack:</strong> <code>TRVM_R25_REVIEW_PACK.tar.gz</code> (64 files). Extract anywhere, <code>./verify.sh</code>. Replayed here: <strong>attempted 21 · passed 21 · failed 0 · skipped 0</strong>.</p>
+<p>Two things happened: <strong>P-4 closed</strong>, and then the <strong>lowering spike ran end to end</strong>.</p>
+<p>Cheap decisive pair:</p>
+<pre><code>cd governance &amp;&amp; node probe_semoracle_v10_repro.mjs &amp;&amp; node lowering_check.mjs</code></pre>
+<p>(the second needs <code>gcc -O2 -o bridge/ic32_canon bridge/ic32_canon.c</code> and the same for <code>ic32_film</code>.)</p>
+<h3 id="blk-40961">P-4, confirmed and closed</h3>
+<p>I reproduced your attack verbatim before touching anything: an issued <code>const(5)</code> request accepted as <strong>999</strong> under <code>{verify: () =&gt; ({ok:true}), get: () =&gt; const(999)}</code>, with the identical result refused as <code>foreign-result-divergence</code> by the real registry. Your reading is exactly right — re-derivation was working perfectly, it re-derived against the program the <em>claimant</em> nominated and agreed with itself.</p>
+<p>Repaired as you specified: <code>new DerivationAuthority(reader, programImage, host)</code>, the authority <strong>builds</strong> its own <code>ProgramRegistry</code> from canonical data (<code>bind</code> severs through <code>canonicalBytes</code>), and <code>execute(req)</code> / <code>accept(req, res)</code> take no registry.</p>
+<p>I added <strong>P-4b</strong> because the ownership point deserved a witness that isn't a duck: the oracle is a <em>genuine</em> <code>ProgramRegistry</code> instance holding a different program. <code>instanceof</code> passes. That case is in the probe so a future session cannot &quot;fix&quot; this with a type check — and the law says so in its own statement, with a negative case (<code>ownership-becomes-a-typecheck</code>) that fires if that sentence is removed.</p>
+<p><code>bindProgram</code> stays and needs no second rule: ids are content-bound, so <code>const(999)</code> gets its own. There's a live case proving it can't repoint an issued id.</p>
+<p>The probe's last two cases check the ladder <strong>as a set</strong> rather than one rung at a time — a ladder is only closed if the list is finite and someone wrote the list down.</p>
+<h3 id="blk-40967">The lowering spike ran</h3>
+<pre><code>add(const 2, const 3)   inputs = {}
+   │ lowering_sem_id                      re-lowered independently and compared
+   ▼
+one canonical ic32 term  ──▶ target_term_sem_id     kernel AND ic32_canon agree
+   │ native ic32, launched by ObservedExecutionHost from a catalog entry
+   ▼
+L0(L1(A(N0,A(N0,A(N0,A(N0,A(N0,N1)))))))  ──▶ target_nf_sem_id
+   │ decode_sem_id
+   ▼
+{status:&quot;value&quot;, value:5}  ──▶ target_outcome_sem_id
+source evaluator ────────▶ {status:&quot;value&quot;, value:5} ──▶ source_outcome_sem_id
+                          EQUAL</code></pre>
+<p><code>lowering_check.mjs</code> <strong>9/9</strong>. Six identities, six distinct values, asserted.</p>
+<p>All three rulings taken: decode is its own law; lowering gets <strong>no film</strong> and is verified by <strong>re-lowering</strong> (<code>add(3,2)</code> reaches a different <code>target_term_sem_id</code>, so the check isn't vacuous); <code>lowering_id</code> split into the relation's id and a <code>LoweringReceipt</code>.</p>
+<p>One thing I decided that you didn't specify: <strong>the decoder reads the canonical signature, not the readback string.</strong> That means it reads the same bytes the 48/48 bridge has agreed on since round 12 and cannot be misled by a binder name — which is precisely how round 23's first film emitter went wrong. Consequence: §5 compaction is irreversible, so a compacted signature is <strong>refused</strong> (<code>decode-signature-compacted</code>) rather than guessed at. That bounds the decodable numerals at roughly a dozen applications. Stated in the law rather than discovered later. Tell me if you'd rather the decoder read the readback and accept the binder-name risk.</p>
+<h3 id="blk-40972">The gap, and it is the reason this brief exists</h3>
+<p><strong>The native execution leg is OBSERVED, not FILM-EVIDENCED</strong>, and I could not close that this round.</p>
+<p>Every lowered addition carries a dup cell <strong>by construction</strong> — Church addition uses its function argument twice and ic32's net is linear — and <code>ic32_film</code> v0.1.0 is the dup-free one-step fragment. So the film emitter refuses this exact fixture, and <code>lowering_check.mjs</code> <strong>asserts that refusal</strong> (<code>native-film-absent-by-refusal</code>) rather than routing around it. The gap is measured at the fixture the refinement runs on.</p>
+<p>The law therefore names <strong>two grades of evidence for the execution leg</strong> and claims only the first:</p>
+<pre><code>OBSERVED         the host hashed a catalogued binary and then ran it
+FILM-EVIDENCED   the kernel independently replayed the transition sequence</code></pre>
+<p>with a negative case (<code>execution-grades-collapsed</code>) that fires if the distinction is ever smoothed away, and another (<code>film-gap-unlocated</code>) if the statement stops naming <em>where</em> the gap is.</p>
+<p>This is the first place in twenty-five rounds where separating two claims cost something rather than buying something, and I want you to check that I priced it right. <strong>Is &quot;observed, not film-evidenced&quot; an acceptable grade for a refinement witness, or does the refinement theorem only mean what you want it to mean once the transition sequence is replayed?</strong> If the latter, the round's headline should be weaker than I've written it.</p>
+<p>Closing it is concretely scoped now rather than named in the abstract: DUP-LAM · DUP-SUP= · DUP-SUP! · DUP-ERA · DUP-VAR · DUP-APP in the emitter, the <code>d:</code> and <code>v:</code> loci (which is where the canonical locus stops being a tree path and becomes a discovery index), and multi-frame films. That upgrades <strong>this same witness</strong> from observed to film-evidenced without changing the fixture.</p>
+<h3 id="blk-40980">Inputs model: deferred, named, and mechanically refused</h3>
+<p><code>INPUTS_MODEL.decided</code> is <code>false</code>, the grid checks it, and <code>lower({op:&quot;input&quot;})</code> returns <code>lower-inputs-undecided</code>. Four other out-of-fragment refusals are named and checked. So the question cannot be answered by accident while implementing the op — which was your point.</p>
+<h3 id="blk-40982">Gate</h3>
+<pre><code>grid v1.27.0 — 71 entries / 363 citations
+derive_protocol.mjs 0.10.0 · observed_execution_host.mjs 0.1.0 · lowering.mjs 0.1.0
+negative battery      159/159  (sixteen new forgeries across the two rounds)
+cross-plane bridge     48/48
+native semantic film   14/14
+lowering refinement     9/9    ← new
+derive battery         45/45   realm battery 20/20
+nine paired probes, all breaching frozen and confined live
+harness self-test       9/9    runner contract 3/3
+review pack            21/21 green from an arbitrary directory</code></pre>
+<p><code>scheduler_certificate.json</code> byte-identical — <strong>twenty-first consecutive round</strong>. This is the first one where that number means more than hygiene: a source program was compiled, executed on a different runtime in a different language, decoded, and found to agree, and the calculus underneath did not move by a byte.</p>
+<p>Ledger items <strong>132–144</strong>. The seam list is ten long; the newest is <strong>re-derivation vs the oracle it re-derives against</strong>.</p>
+<h3 id="blk-40986">What I want from you</h3>
+<ol><li><p><strong>Is there a P-5?</strong> The supplier ladder is empty as far as I can find it — a caller supplies an</p></li></ol>
+<p>intent and a result to validate. But I have now been wrong about that four times, and each time the next rung was in the parameter I had stopped looking at because it was &quot;obviously infrastructure&quot;.</p>
+<ol start="2"><li><p><strong>The film-grade question above</strong>, which changes how strongly this round should be stated.</p></li><li><p><strong>Whether the dup work is the right next round</strong>, or whether the parameterized-vs-instantiated</p></li></ol>
+<p>ruling should come first. My instinct is dup-first, because it upgrades an existing witness without adding a new claim — but that is also the easier thing to want.</p></div>
+<p class="src"><a href="/#/TRVM/ROUND_25_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-40961" class="lvl2">P-4, confirmed and closed</a><a href="#blk-40967" class="lvl2">The lowering spike ran</a><a href="#blk-40972" class="lvl2">The gap, and it is the reason this brief exists</a><a href="#blk-40980" class="lvl2">Inputs model: deferred, named, and mechanically refused</a><a href="#blk-40982" class="lvl2">Gate</a><a href="#blk-40986" class="lvl2">What I want from you</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierakfjraqp7iue4pc7yqq4ugwadgkxhul7wubrrbjak3vynftznpgca</div></div></div>
+</div></div>
+</body></html>

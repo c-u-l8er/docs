@@ -1,0 +1,58 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Identity layers · computedriven · Ampersand Box</title>
+<meta name="description" content="Four things in this system are routinely called &quot;the address of that node&quot;, and they are four different things. They are listed here in the order they…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/identity-layers.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Identity layers">
+<meta property="og:description" content="Four things in this system are routinely called &quot;the address of that node&quot;, and they are four different things. They are listed here in the order they…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/identity-layers.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Identity layers","name":"Identity layers","description":"Four things in this system are routinely called \"the address of that node\", and they are four different things. They are listed here in the order they…","url":"https://docs.ampersandboxdesign.com/computedriven/docs/identity-layers.md/","identifier":"bagaaieranpfz4a3ly3mvs6vunwth4ko36fx7lnfw3corwz2pkektdjo4elkq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"What each round actually separated"},{"@type":"WebPageElement","name":"The equality falsifier, and why R0.6's was vacuous"},{"@type":"WebPageElement","name":"What is still not claimed"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"identity-layers.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/identity-layers.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/identity-layers.md</span>
+
+</div></div>
+<div class="lead">Four things in this system are routinely called &quot;the address of that node&quot;, and they are four different things. They are listed here in the order they were separated by evidence…</div>
+<div class="prose"><h1 id="blk-61631">Identity layers</h1>
+<p>Four things in this system are routinely called &quot;the address of that node&quot;, and they are four different things. They are listed here in the order they were separated by evidence, and the separations are executed results, not design intentions.</p>
+<pre><code>1  NodeId                semantic identity of a Fabric node
+   ─────────────────────────────────────────────────────────────────
+2  ObservedRoute         application-visible route to that endpoint
+   ─────────────────────────────────────────────────────────────────
+3  WireGuard public key  transport authentication credential
+   ─────────────────────────────────────────────────────────────────
+4  WireGuard endpoint    current underlay network location</code></pre>
+<p>Nothing derives any of these from any other. A NodeId comes from <code>/dev/urandom</code> into an identity file and cd-node has no knowledge that WireGuard exists; a WireGuard keypair comes from <code>wg genkey</code> and has no knowledge that a NodeId exists; an ObservedRoute is whatever <code>recv_from</code> reported as the source of the datagram that just arrived; an underlay endpoint is whatever the peer is currently dialling.</p>
+<h3 id="blk-61635">What each round actually separated</h3>
+<p><strong>R0.4</strong> separated 1 from 2. <code>hello_once</code> returns <code>(NodeId, ObservedRoute)</code> as two values and there is no conversion between them. Two exchanges from two different sockets, same responder: same NodeId, different ObservedRoute.</p>
+<p><strong>R0.6B</strong> separated 1 from 3. The server's WireGuard keypair was replaced under a responder that was never restarted, and the exchange still returned the same NodeId.</p>
+<p><strong>R0.6C</strong> separated 1 from 4 — and this is the layer that was mislabelled. R0.6C moved the server's UNDERLAY endpoint, <code>192.168.2.10 -&gt; 192.168.2.20</code>, vacated the old address, and repointed the peers. What it did <strong>not</strong> do is change the application-visible route: across all 21 R0.6 runs the transcripts report</p>
+<pre><code>observed_route=10.100.0.2:47001</code></pre>
+<p>both before and after the move, because the responder stayed bound to the same overlay address throughout. The supported claim is therefore:</p>
+<blockquote><p><strong>The WireGuard underlay endpoint location changed while both the semantic NodeId and the application-visible ObservedRoute remained stable.</strong></p></blockquote>
+<p>Do not read the R0.6 receipts as demonstrating an ObservedRoute change. Their <code>DOCTRINE</code> block collapses layers 2 and 4 into one line — <code>IP endpoint  observed reachability  (ObservedRoute)</code> — which named the right experiment under the wrong label. Those receipts are historical and are left exactly as executed; this file supersedes their terminology, and R0.7 onwards records all four layers separately, per row, in its identity table.</p>
+<h3 id="blk-61644">The equality falsifier, and why R0.6's was vacuous</h3>
+<p>R0.6 gated &quot;no NodeId equals any WireGuard public key&quot; by comparing the two as printed strings. That gate could never have fired: a NodeId prints as 64 hexadecimal characters and a WireGuard public key as 44 base64 characters, so string equality is structurally impossible even if the underlying 32 bytes were identical. It was not load-bearing — the real evidence for 1 ≠ 3 is R0.6B's key rotation under an unchanged NodeId, plus the source-level independence above — but it was not evidence either.</p>
+<p>R0.7 keeps the falsifier and makes it mean something: both sides are decoded to their 32 raw bytes before comparison. An equality falsifier over encoded forms is worth nothing; over canonical bytes it is worth having.</p>
+<h3 id="blk-61647">What is still not claimed</h3>
+<ul><li><p><strong>No discovery and no rendezvous.</strong> In both R0.6 and R0.7 the runner</p></li></ul>
+<p>is the out-of-band configuration channel: an operator moved a host, or started a successor, and told the peers. Nothing learns a new endpoint by itself.</p>
+<ul><li><p><strong>No durable identity across a lab lifetime.</strong> Each run mints fresh</p></li></ul>
+<p>NodeIds. Identity survives the network manipulations <em>within</em> one running responder; a fresh lab lifetime is a fresh identity.</p>
+<ul><li><p><strong>No relation between a NodeId and a Carrier, Worker, or Locus.</strong></p></li></ul>
+<p>R0.7 records <code>LocusId</code>, <code>WorkerId</code>, <code>CarrierId</code> and <code>NodeId</code> side by side precisely so that the question of which of them a persistent NodeId belongs to stays open and answerable by a later experiment, rather than being settled silently by a convenient equality.</p></div>
+<p class="src"><a href="/#/computedriven/docs/identity-layers.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-61635" class="lvl2">What each round actually separated</a><a href="#blk-61644" class="lvl2">The equality falsifier, and why R0.6&#39;s was vacuous</a><a href="#blk-61647" class="lvl2">What is still not claimed</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieranpfz4a3ly3mvs6vunwth4ko36fx7lnfw3corwz2pkektdjo4elkq</div></div></div>
+</div></div>
+</body></html>

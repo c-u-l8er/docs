@@ -1,0 +1,155 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>W.2 — a real desktop surface that consumes the truth without becoming another source of it · super · Ampersand Box</title>
+<meta name="description" content="Predecessor: `W.1.4.3`, ZIP `sha256:77cec0245bdb47fb517635b62c18e0c676cd139e31ef165be1c93d8f08b9b8f5`, content…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/W_2_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="W.2 — a real desktop surface that consumes the truth without becoming another source of it">
+<meta property="og:description" content="Predecessor: `W.1.4.3`, ZIP `sha256:77cec0245bdb47fb517635b62c18e0c676cd139e31ef165be1c93d8f08b9b8f5`, content…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/W_2_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"W.2 — a real desktop surface that consumes the truth without becoming another source of it","name":"W.2 — a real desktop surface that consumes the truth without becoming another source of it","description":"Predecessor: `W.1.4.3`, ZIP `sha256:77cec0245bdb47fb517635b62c18e0c676cd139e31ef165be1c93d8f08b9b8f5`, content…","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/W_2_REVIEW_BRIEF.md/","identifier":"bagaaieraktp3myu2ba37sbcdetvgxbqmowzfblysltpsaucdnwqoifc2igxq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · What is new"},{"@type":"WebPageElement","name":"1 · The flagship, measured"},{"@type":"WebPageElement","name":"2 · Your \"otherwise it can pass vacuously\", and what the hold is made of"},{"@type":"WebPageElement","name":"3 · Falsified"},{"@type":"WebPageElement","name":"4 · The architecture, and the one thing I refused to duplicate"},{"@type":"WebPageElement","name":"5 · The demo fixture, and where I put its guard"},{"@type":"WebPageElement","name":"6 · Your two W.1.4.3 edges"},{"@type":"WebPageElement","name":"7 · What is still not true"},{"@type":"WebPageElement","name":"8 · How to reproduce"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"W_2_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/W_2_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/W_2_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Predecessor: `W.1.4.3`, ZIP `sha256:77cec0245bdb47fb517635b62c18e0c676cd139e31ef165be1c93d8f08b9b8f5`, content `sha256:88c5f33c51b7611771a94d6c8f05fbbb0d7b2448e04941025fdf3e5576…</div>
+<div class="prose"><h1 id="blk-117665">W.2 — a real desktop surface that consumes the truth without becoming another source of it</h1>
+<p><strong>Predecessor: `W.1.4.3`, ZIP `sha256:77cec0245bdb47fb517635b62c18e0c676cd139e31ef165be1c93d8f08b9b8f5`, content `sha256:88c5f33c51b7611771a94d6c8f05fbbb0d7b2448e04941025fdf3e5576349be2`.</strong></p>
+<blockquote><p><strong>W.1.4.3 is frozen and there is no W.1.4.4.</strong> Your two remaining edges are recorded at the bottom of this brief with what was and was not done about them, and neither one moved.</p></blockquote>
+<p>You asked for the Tauri cockpit and for one test, staged so it cannot pass vacuously. Both exist. The flagship runs against a real WebKit WebView driven by <code>tauri-driver</code>, with a real <code>ampd</code> on the other side of a real descriptor, and it goes red under six sabotages.</p>
+<h3 id="blk-117670">0 · What is new</h3>
+<pre><code>super/host/          split into lib + bin — src/lib.rs is the whole program,
+                     src/main.rs is three lines. The cockpit links the SAME
+                     CockpitLoop; there is no second state machine.
+super/cockpit/       the Tauri v2 app
+  src/main.rs        Tauri setup · intent() · frame_ack() · two CLI probes
+  src/worker.rs      the frame pump: Runtime + CockpitLoop + the delivery valve
+  ui/                index.html · cockpit.css · cockpit.js — no bundler, no deps
+super/tools/
+  cockpit-battery.mjs      the flagship, over raw W3C WebDriver
+  check-intent-surface.mjs the surface, checked against Ampd.CommandSpec
+  check-fixture-guard.sh   the demo fixture cannot touch a person's world
+  sabotage-cockpit.sh      six probes; each expects a named check RED</code></pre>
+<h3 id="blk-117672">1 · The flagship, measured</h3>
+<p><code>node tools/cockpit-battery.mjs</code> — real app, real WebView, real click, real IPC. <strong>The figures are in `site/proof/measurements.json` under `cockpit_assertions`, `cockpit_falsifiers`, `intent_surface` and `fixture_guard`</strong>; this lists what is asserted, not how many:</p>
+<pre><code>  the cockpit reaches LIVE LOCAL from a real desktop WebView
+  LIVE LOCAL carries the projection it is a view of, not merely a cursor
+  the frame names the world incarnation it was assembled in
+  both clocks arrive — authority revision and view revision
+  the DOM shows a grant
+  the grant on screen is the grant in the frame — the DOM is derived, not invented
+  the revocation is submitted and the runtime answers SUCCESS
+  the intent succeeded and the grant is STILL on screen
+  and no frame has been delivered — the row is there because nothing has said otherwise
+  it is a state and not a race: 1.5 s later the grant is still there and still no frame
+  the receipt rail moved and the world region did not
+  the grant leaves the screen only when a frame says so
+  and the frame that removed it is a frame in which the grant is genuinely gone
+  the held frame reports the states it superseded rather than dropping them silently
+  the WebView cannot submit a read — a second way to learn the world is a second source of truth</code></pre>
+<p>The sequence you specified, with the intermediate state where you put it:</p>
+<pre><code>DOM shows grant
+      │
+      ▼   WebDriver clicks the real button
+Tauri IPC resolves SUCCESS               receipt rail: revoke_grant · accepted
+      │
+      ▼
+DOM STILL SHOWS GRANT                    held for 1.5 s and asserted twice
+      │
+      ▼   frame_ack(seq, ready: true)
+new cockpit-frame@1 without the grant
+      │
+      ▼
+DOM removes the grant</code></pre>
+<h3 id="blk-117677">2 · Your &quot;otherwise it can pass vacuously&quot;, and what the hold is made of</h3>
+<p>This is the part I want reviewed hardest, because you are right that the obvious implementation of this test passes against a cockpit that removes the row optimistically — the assertion just has to land in the millisecond before the frame arrives, and on this machine it would.</p>
+<p><strong>The hold is not a timer and it is not a branch for tests.</strong> It is a product rule:</p>
+<blockquote><p>Do not reflow the list a person is clicking on.</p></blockquote>
+<p>Between &quot;revoke pressed&quot; and &quot;the runtime answered&quot;, the rows hold still. Otherwise the row under the cursor can move while the cursor is on it, in a surface where a mis-click grants or removes authority. So <code>ui/cockpit.js</code> brackets every submission:</p>
+<pre data-lang="js"><code><span class="t-kw">await</span> window.cockpit.<span class="t-fn">pause</span>();          <span class="t-comment">// frame_ack(seq, ready: false)</span>
+… <span class="t-kw">await</span> <span class="t-fn">invoke</span>(<span class="t-string">'intent'</span>, …) …
+<span class="t-kw">await</span> window.cockpit.<span class="t-fn">resume</span>();         <span class="t-comment">// frame_ack(seq, ready: true)</span></code></pre>
+<p>and <code>worker.rs</code> honours it, because the delivery valve was already there for backpressure:</p>
+<pre data-lang="rust"><code>fn open(&amp;self) -&gt; bool {
+    self.in_flight.is_none() &amp;&amp; !self.paused
+}</code></pre>
+<p><strong>Ordering is what makes it deterministic rather than probable.</strong> The pause and the intent are two messages on one bounded queue, drained in order by the one thread that also emits. The pause is therefore in force before the intent is submitted, which is before the world can move. There is no window in which the frame could arrive early.</p>
+<p>The battery's only intervention is to replace <code>window.cockpit.resume</code> with a function that does nothing — which is the state a slow renderer is already in. It then asserts <strong>two independent things</strong> about the intermediate state, and the second is the one that closes your objection:</p>
+<pre><code>the grant is still in the DOM        — would also pass if a frame had arrived
+                                       and the renderer had failed to apply it
+window.cockpit.frames is unchanged   — says no frame arrived at all</code></pre>
+<h3 id="blk-117689">3 · Falsified</h3>
+<p><code>bash tools/sabotage-cockpit.sh</code> — each probe disables one fix, rebuilds, and requires a <strong>named</strong> check to go red. Two of them disable the two halves of the same law on opposite sides of the IPC boundary, because either one alone would leave the other looking like it was doing the work.</p>
+<pre><code>the renderer does not draw its own optimism         → the intent succeeded and the
+                                                      grant is STILL on screen        RED
+the host honours a paused renderer                  → no frame has been delivered     RED
+a submission pauses delivery before it is sent      → no frame has been delivered     RED
+the world region is rebuilt from the frame,         → the grant leaves the screen
+  not remembered                                      only when a frame says so       RED
+the intent surface admits no read                   → no intent on the surface
+                                                      is a read                       RED
+the demo fixture is refused against a person's      → the fixture is refused against
+  world                                               a persistent world              RED</code></pre>
+<p>The first is the W.2 defect itself, restored verbatim — the four-line <code>submit</code> every desktop app is written with:</p>
+<pre data-lang="js"><code><span class="t-fn">receipt</span>(name, refusal ? <span class="t-string">'refused'</span> : <span class="t-string">'accepted'</span>, refusal ?? <span class="t-string">''</span>);
+<span class="t-kw">if</span> (!refusal) document.<span class="t-fn">querySelector</span>(<span class="t-string">`#world .row[data-id=&quot;${args.grant_id}&quot;]`</span>)?.<span class="t-fn">remove</span>();</code></pre>
+<h3 id="blk-117694">4 · The architecture, and the one thing I refused to duplicate</h3>
+<pre><code>World                     ampd — the only thing that decides
+  │
+CockpitLoop               super_host::CockpitLoop, UNMODIFIED
+  │                       `super-host verify` and the cockpit link the same code
+cockpit-frame@1           ordered · at most one un-acknowledged · newest-wins
+  │
+WebView                   renders the frame
+  │
+intent()                  back into the human control channel</code></pre>
+<p><code>host/</code> is now a library with a three-line binary on top of it. The alternative — a Tauri app with its own continuity handling — would have been a second implementation of the hierarchy F.8.2.5 and W.1 spent four rounds getting right, agreeing with the first by inspection. Every check in <code>super-host verify</code> is now a check about the cockpit's state machine, not merely about a battery's.</p>
+<p><strong>Three consequences worth naming:</strong></p>
+<ul><li><p><strong>One reader, one writer.</strong> <code>Chan</code> has no correlation between concurrent callers — the F.8 lesson,</p></li></ul>
+<p>measured at 2 replies out of 96. A Tauri command runs on whatever thread the runtime hands it, so commands never touch the channel: every message into the world goes through the worker's queue, and the socket has exactly one caller for its whole life.</p>
+<ul><li><p><strong>`intent()` is `async`.</strong> A synchronous Tauri command runs on the main thread, which on GTK is</p></li></ul>
+<p>the thread painting the window. A click that waited there would freeze the surface it is trying to keep truthful.</p>
+<ul><li><p><strong>The intent surface has no read on it.</strong> <code>INTENT_SURFACE</code> is six names, and</p></li></ul>
+<p><code>check-intent-surface.mjs</code> proves against <code>Ampd.CommandSpec</code> — not against the comment beside it — that every one is a <code>:mutation</code> exclusive to <code>:human_control</code>, and that the set is <em>equal</em> to the runtime's human-control mutations. A cockpit that could call <code>operator_projection</code> would hold a second, uncursored view with no incarnation, epoch or revision attached, and could render from that instead.</p>
+<h3 id="blk-117710">5 · The demo fixture, and where I put its guard</h3>
+<p>The flagship needs a grant to revoke. <code>SUPER_COCKPIT_FIXTURE=1</code> seeds one <strong>through ordinary commands on ordinary channels</strong> — bind an agent channel, the agent asks, the person approves. There is no privileged route into the registry, and <code>Ampd.TestFixture.seed_demo!/0</code> is deliberately not reachable from here: a fixture that can mint authority without a person is the thing this runtime exists to make impossible.</p>
+<p>It still mints authority, so it is refused against a world this program did not create. <strong>The judgement is extracted from the I/O</strong> — <code>worker::fixture_allowed(&amp;WorldDir) -&gt; bool</code>, with <code>super-cockpit --fixture-check</code> printing its answer for a given environment — because a gate that had to boot a runtime against somebody's real world in order to watch it not be touched is a gate nobody runs twice.</p>
+<p>I am flagging the limit honestly: that check exercises the predicate, not the whole seeding path. The path has one caller and one guard, and the sabotage removes the guard rather than faking the check, but it is a smaller claim than the flagship's.</p>
+<h3 id="blk-117714">6 · Your two W.1.4.3 edges</h3>
+<p><strong>POSIX/ZIP metadata outside `release_content_sha256`.</strong> Not reopened, per your recommendation, and your framing is adopted: when Super ships artifacts whose mode bits, symlinks or ownership are semantically load-bearing, that becomes <em>artifact semantics</em> — <code>path · type · mode · size · content_sha256</code> — and not a retrofit of the W.1.4 byte-content law. Recorded, not built.</p>
+<p><strong>Classification is not intentional inclusion.</strong> Agreed, and it is now visibly true rather than abstractly true: this round adds a Rust crate whose build products are 1.1 GB. <code>cockpit/target</code> was already excluded by <code>SKIP_DIR</code>, but <code>cockpit/gen/</code> — four JSON schema files that <code>tauri-build</code> regenerates on every build — was not, and would have shipped. <strong>That is the `ampd/priv/data` lesson exactly</strong>: a figure that depends on whether a build has run yet is not a property of the release. It is excluded by name with the reason written down.</p>
+<p>The positive-manifest move you sketched is not in this round, deliberately — a release-scope change under a round whose subject is a desktop surface is how two unrelated things fail together. It is the obvious next packaging round.</p>
+<h3 id="blk-117718">7 · What is still not true</h3>
+<ul><li><p><strong>The cockpit renders three lists.</strong> Grants, pending requests, attached peers, plus the badge</p></li></ul>
+<p>and the receipt rail. Effects, approvals, receipts, refusals and history are in the frame and are not drawn. Nothing claims otherwise on screen; there is no tab that opens onto nothing.</p>
+<ul><li><p><strong>`REACQUIRE` and `RESNAPSHOT` are reachable and rendered but not exercised by this battery.</strong></p></li></ul>
+<p><code>super-host verify</code> exercises them against a real restore; the WebView's rendering of them is asserted only by the state badge's existence.</p>
+<ul><li><p><strong>The archive is still not byte-reproducible</strong> (ZIP entries carry mtimes), unchanged from W.1.4.3.</p></li><li><p><strong>No bundle target.</strong> <code>bundle.active</code> is <code>false</code>: this builds and runs, and there is no installer.</p></li></ul>
+<p>The site still says no desktop app exists to install, which remains true of the thing a person would download.</p>
+<ul><li><p><strong>`Motor`/`Machine` is architectural input only</strong>, exactly as you asked. Nothing in this round</p></li></ul>
+<p>anticipates it, and <code>MOTOR_MACHINE_RESEARCH_BRIEF_FOR_OPUS.md</code> was not edited.</p>
+<h3 id="blk-117737">8 · How to reproduce</h3>
+<pre><code>cd super
+cargo build --release --manifest-path host/Cargo.toml
+cargo build --release --manifest-path cockpit/Cargo.toml
+cargo install tauri-driver                 # once
+node tools/cockpit-battery.mjs             # the flagship — needs a display
+node tools/check-intent-surface.mjs
+bash tools/check-fixture-guard.sh
+bash tools/sabotage-cockpit.sh             # ~12 min; four probes rebuild and re-run the flagship</code></pre>
+<p><code>WebKitWebDriver</code> comes with <code>webkit2gtk-4.1</code>. The battery starts its own runtime in an <strong>ephemeral</strong> world and destroys it; it never opens the world a person uses.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/W_2_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-117670" class="lvl2">0 · What is new</a><a href="#blk-117672" class="lvl2">1 · The flagship, measured</a><a href="#blk-117677" class="lvl2">2 · Your &quot;otherwise it can pass vacuously&quot;, and what the hold is made of</a><a href="#blk-117689" class="lvl2">3 · Falsified</a><a href="#blk-117694" class="lvl2">4 · The architecture, and the one thing I refused to duplicate</a><a href="#blk-117710" class="lvl2">5 · The demo fixture, and where I put its guard</a><a href="#blk-117714" class="lvl2">6 · Your two W.1.4.3 edges</a><a href="#blk-117718" class="lvl2">7 · What is still not true</a><a href="#blk-117737" class="lvl2">8 · How to reproduce</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraktp3myu2ba37sbcdetvgxbqmowzfblysltpsaucdnwqoifc2igxq</div></div></div>
+</div></div>
+</body></html>

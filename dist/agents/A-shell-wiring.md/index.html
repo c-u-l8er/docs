@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Lane A — wire publishing into the shell · agents · Ampersand Box</title>
+<meta name="description" content="Owns: RRABBIT/m2/, RRABBIT/test/, RRABBIT/docs/ Must not touch: anything outside RRABBIT/. Root *.md belongs to lane F; the site to lane E.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/agents/A-shell-wiring.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lane A — wire publishing into the shell">
+<meta property="og:description" content="Owns: RRABBIT/m2/, RRABBIT/test/, RRABBIT/docs/ Must not touch: anything outside RRABBIT/. Root *.md belongs to lane F; the site to lane E.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/agents/A-shell-wiring.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Lane A — wire publishing into the shell","name":"Lane A — wire publishing into the shell","description":"Owns: RRABBIT/m2/, RRABBIT/test/, RRABBIT/docs/ Must not touch: anything outside RRABBIT/. Root *.md belongs to lane F; the site to lane E.","url":"https://docs.ampersandboxdesign.com/agents/A-shell-wiring.md/","identifier":"bagaaierac6qxkyr36l67g62y5rgbjfyk77g4gwqzh4avm3y7toiy73vw44fq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"agents","url":"https://docs.ampersandboxdesign.com/agents/"},"articleSection":"agents","hasPart":[{"@type":"WebPageElement","name":"Read first"},{"@type":"WebPageElement","name":"What is already true"},{"@type":"WebPageElement","name":"What is missing — this lane's work"},{"@type":"WebPageElement","name":"1. Wire publishing into the reel"},{"@type":"WebPageElement","name":"2. Connect a fetched track to ops.replay"},{"@type":"WebPageElement","name":"3. Fix the silent-persistence defect"},{"@type":"WebPageElement","name":"Done means"},{"@type":"WebPageElement","name":"Traps this tree has already paid for"},{"@type":"WebPageElement","name":"Reserved for Travis"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"agents","item":"https://docs.ampersandboxdesign.com/agents/"},{"@type":"ListItem","position":3,"name":"A-shell-wiring.md","item":"https://docs.ampersandboxdesign.com/agents/A-shell-wiring.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">agents</span>
+<span class="path">agents/A-shell-wiring.md</span>
+
+</div></div>
+<div class="lead">Owns: RRABBIT/m2/, RRABBIT/test/, RRABBIT/docs/ Must not touch: anything outside RRABBIT/. Root *.md belongs to lane F; the site to lane E.</div>
+<div class="prose"><h1 id="blk-52720">Lane A — wire publishing into the shell</h1>
+<p><strong>Owns:</strong> <code>RRABBIT/m2/</code>, <code>RRABBIT/test/</code>, <code>RRABBIT/docs/</code> <strong>Must not touch:</strong> anything outside <code>RRABBIT/</code>. Root <code>*.md</code> belongs to lane F; the site to lane E.</p>
+<blockquote><p>## ⚠️ CHECK FOR A COLLISION BEFORE YOU START  <code>m2/</code> was being actively worked by another session on 2026-08-15 (tracks, reel, replay). Run <code>git -C RRABBIT log --oneline -3</code> and <code>git -C RRABBIT status --short</code>.  - Newest commit is <strong>`a4ea112`</strong> and the tree is clean → <strong>the lane is free.</strong> - Anything newer, or modified files in <code>m2/</code> → <strong>another session is live. Stop and ask Travis.</strong>   Two agents in <code>m2/</code> is not a merge conflict, it is one overwriting the other.</p></blockquote>
+<h3 id="blk-52724">Read first</h3>
+<ol><li><p><code>RRABBIT/docs/TRACKS_HANDOFF.md</code> — <strong>the authoritative rung table.</strong> Written by the session that</p></li></ol>
+<p>built tracks/reel/replay.</p>
+<ol start="2"><li><p><code>RRABBIT/docs/RUNBOOK.md</code> — the port map and the probes that settle arguments.</p></li><li><p><code>PUBLISH_PATH.md</code> §0a — what was built on 2026-08-15 and what deliberately was not.</p></li><li><p><code>RRABBIT/m2/publish.js</code> and <code>m2/trackstore.js</code> — both pure, both tested, <strong>neither wired in.</strong></p></li></ol>
+<h3 id="blk-52736">What is already true</h3>
+<ul><li><p><strong>DRIVE, TRACK and REPLAY are `live_local`.</strong> Three rungs stand.</p></li><li><p><strong>`publish.js`</strong> seals a track into a content-addressed bundle. *The address is the hash of the</p></li></ul>
+<p>bundle and the guard is inside the bundle*, so a tampered track fails either on id mismatch or on a derived-vs-stated comparison. 33 tests.</p>
+<ul><li><p><strong>`trackstore.js`</strong> puts and fetches bundles, and <strong>never trusts the store</strong> — every read</p></li></ul>
+<p>re-derives the hash. Two adapters (<code>memoryAdapter</code>, <code>httpAdapter</code>), logic in neither. 34 tests.</p>
+<ul><li><p><strong>The machine-A-publishes / machine-B-refuses demo exists as a test</strong> (<code>test/trackstore.mjs</code> §5).</p></li><li><p>Whole suite: <strong>507 tests, 0 failures</strong>, eight files.</p></li></ul>
+<h3 id="blk-52752">What is missing — this lane's work</h3>
+<h4 id="blk-52753">1. Wire publishing into the reel</h4>
+<p>There is no <code>publish</code> verb, no button, nothing in the UI. The reel (gear <strong>R</strong>) is where a track is managed, so it is where &quot;publish this one&quot; belongs. Seal → show the id → offer the bytes.</p>
+<p><strong>Design constraint:</strong> the shell must keep working with no network. Publishing is an action a user takes, never something that happens on a timer or on save.</p>
+<h4 id="blk-52756">2. Connect a fetched track to <code>ops.replay</code></h4>
+<p><code>check()</code> answers <em>may this run here</em>. Handing the steps to the seam is the remaining piece, and it is small on purpose — <code>ops.replay</code> is already a <code>for</code> loop over <code>apply</code>, deliberately not a second code path. <strong>Do not add a second one here.</strong> A fetched track's steps go through the same <code>apply</code> every local replay uses, or the §9 claim in <code>OP_VOCABULARY_DRAFT.md</code> is false.</p>
+<p>Order is fixed: <code>store.get</code> (verifies) → <code>check</code> (roads, before anything moves) → <code>ops.replay</code>.</p>
+<h4 id="blk-52759">3. Fix the silent-persistence defect</h4>
+<p><strong>Measured 2026-08-15:</strong> <code>tracks.js</code> permits ~212.9 MB (999 tracks × <code>REC_MAX</code> 4096), the real <code>localStorage</code> quota is <strong>5,187,584 bytes (4.95 MB)</strong> — a <strong>43× gap</strong>, so only ~23 full tracks fit. <code>save()</code> wraps <code>setItem</code> in <code>try {} catch {}</code>, right for private-browsing mode and <strong>wrong for `QuotaExceededError`</strong>, which it swallows too. The shell keeps running, stops persisting, and loses the drive on the next reload with nothing said.</p>
+<p><code>workspaces.js</code> and <code>layout.js</code> have the same bare-catch pattern — check them too.</p>
+<p>Direction (not a ruling): probe once at load with a tiny key to tell private-mode from quota; surface the quota case via <code>#status</code>, which already un-hides itself when written; and consider whether the caps should be bounded by the real store rather than by numbers 43× above it.</p>
+<p><strong>4.95 MB is one Chrome.</strong> The guest runs a <strong>Firefox</strong> kiosk, which was never measured. Measure it before hard-coding a threshold.</p>
+<h3 id="blk-52764">Done means</h3>
+<ul><li><p><code>node test/publish.mjs &amp;&amp; node test/trackstore.mjs &amp;&amp; node test/ops.mjs</code> green, plus the rest of</p></li></ul>
+<p><code>test/</code>.</p>
+<ul><li><p>A track published from the reel and replayed on a <strong>second profile or machine</strong> — and a refusal</p></li></ul>
+<p>demonstrated when a road is missing. The refusal is the interesting half.</p>
+<ul><li><p>Quota exhaustion produces a <strong>visible</strong> message, proven by filling it rather than by reading code.</p></li></ul>
+<h3 id="blk-52776">Traps this tree has already paid for</h3>
+<ul><li><p><strong>`REC_MAX`/`MAX` do not protect you</strong> — they are 43× larger than the store.</p></li><li><p><strong>Measure the EFFECT before the INPUT.</strong> A control that &quot;does not respond&quot; cost four rounds when</p></li></ul>
+<p><code>#transport { display: flex }</code> from an id selector beat <code>[hidden]</code>. It was told to hide 55 times.</p>
+<ul><li><p><strong>A stopped instrument reads as a measurement.</strong> A frozen counter looked like evidence about</p></li></ul>
+<p>handlers. Put a heartbeat on anything you intend to trust.</p>
+<ul><li><p><strong>The dev host may not run the 3D shell</strong> — other sessions hold the WebGL context pool. The</p></li></ul>
+<p>FreeBSD guest is the test environment; the deploy loop is in <code>TRACKS_HANDOFF.md</code> §1.</p>
+<ul><li><p><strong>`agent-browser click` takes a selector, not coordinates.</strong> <code>click 1120 737</code> matches nothing,</p></li></ul>
+<p><strong>exits 0, and dispatches no event.</strong> A coordinate click is <code>mouse move</code> → <code>mouse down</code> → <code>mouse up</code>, and you should arm a capture listener to prove the event arrived.</p>
+<h3 id="blk-52795">Reserved for Travis</h3>
+<ul><li><p><strong>studbook §10.5 — the `track-` prefix.</strong> It is provisional. Anything published before the ruling</p></li></ul>
+<p>may need re-sealing under a different id. Wire it; do not publish anything you would miss.</p>
+<ul><li><p>Whether the reel is the right home for publish, or whether it wants its own scene.</p></li></ul></div>
+<p class="src"><a href="/#/agents/A-shell-wiring.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-52724" class="lvl2">Read first</a><a href="#blk-52736" class="lvl2">What is already true</a><a href="#blk-52752" class="lvl2">What is missing — this lane&#39;s work</a><a href="#blk-52753" class="lvl3">1. Wire publishing into the reel</a><a href="#blk-52756" class="lvl3">2. Connect a fetched track to ops.replay</a><a href="#blk-52759" class="lvl3">3. Fix the silent-persistence defect</a><a href="#blk-52764" class="lvl2">Done means</a><a href="#blk-52776" class="lvl2">Traps this tree has already paid for</a><a href="#blk-52795" class="lvl2">Reserved for Travis</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/agents/B-studbook.md/">Lane B — build studbook</a><a href="/agents/C-infrastructure.md/">Lane C — stand up the cloud</a><a href="/agents/D-worker-auth.md/">Lane D — the credential surface, and now the control plane</a><a href="/agents/E-site.md/">Lane E — the site and the nav</a><a href="/agents/F-docs.md/">Lane F — finish the reconciliation</a><a href="/agents/README.md/">Agent lanes — what can be worked on in parallel, and what will collide</a><a href="/agents/SHELL.md/">The portfolio shell</a><a href="/agents/SITES.md/">Site lanes — updating the domain index.htmls in parallel</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierac6qxkyr36l67g62y5rgbjfyk77g4gwqzh4avm3y7toiy73vw44fq</div></div></div>
+</div></div>
+</body></html>

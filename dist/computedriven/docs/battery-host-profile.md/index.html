@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>The dedicated-host profile for performance batteries on this machine · computedriven · Ampersand Box</title>
+<meta name="description" content="Status: standing operational procedure, adopted 2026-09-12 by ruling 4 of receipts/R7.2.1D-CLOSED.md. It is a precondition and a preparation, not a gate…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/battery-host-profile.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The dedicated-host profile for performance batteries on this machine">
+<meta property="og:description" content="Status: standing operational procedure, adopted 2026-09-12 by ruling 4 of receipts/R7.2.1D-CLOSED.md. It is a precondition and a preparation, not a gate…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/battery-host-profile.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"The dedicated-host profile for performance batteries on this machine","name":"The dedicated-host profile for performance batteries on this machine","description":"Status: standing operational procedure, adopted 2026-09-12 by ruling 4 of receipts/R7.2.1D-CLOSED.md. It is a precondition and a preparation, not a gate…","url":"https://docs.ampersandboxdesign.com/computedriven/docs/battery-host-profile.md/","identifier":"bagaaieraplwd3aiixlr3ugt73sdt2z7ijqfbpyltzumeja23dprosjiwdvqq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"0. Why this document exists"},{"@type":"WebPageElement","name":"1. The procedure"},{"@type":"WebPageElement","name":"2. The gates that actually decide"},{"@type":"WebPageElement","name":"3. What a reboot is not"},{"@type":"WebPageElement","name":"4. Two instrument notes carried forward"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"battery-host-profile.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/battery-host-profile.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/battery-host-profile.md</span>
+
+</div></div>
+<div class="lead">Status: standing operational procedure, adopted 2026-09-12 by ruling 4 of receipts/R7.2.1D-CLOSED.md. It is a precondition and a preparation, not a gate and not evidence. It rul…</div>
+<div class="prose"><h1 id="blk-58617">The dedicated-host profile for performance batteries on this machine</h1>
+<p><strong>Status:</strong> standing operational procedure, adopted 2026-09-12 by ruling 4 of <code>receipts/R7.2.1D-CLOSED.md</code>. It is a <strong>precondition and a preparation</strong>, not a gate and not evidence. It rules nothing about any result. <strong>Applies to:</strong> every official performance battery in the ComputeDriven lane from R7.2.1B onward. Battery records cite this file instead of restating it.</p>
+<h3 id="blk-58619">0. Why this document exists</h3>
+<p>Three consecutive attempts at the R7.2.1D-2C battery on this host were refused by their own instruments before a single outcome run was made:</p>
+<table><thead><tr><th>attempt</th><th>host as started</th><th>baseline level vs fixed reference</th><th>baseline RSD</th><th>status</th></tr></thead><tbody><tr><td>1</td><td>load 3.9–4.1, all-core idle 0.81–0.84 (passed an observational wait)</td><td><strong>−34 %</strong></td><td>5.7 % / 6.3 %</td><td>NOT EXECUTED</td></tr><tr><td>2</td><td>load 6.3, all-core idle 0.76; WebKit, two BEAM nodes, a QEMU guest, a browser</td><td><strong>−11.8 % / −17.2 %</strong></td><td>19.2 % / 23.2 %</td><td>NOT EXECUTED</td></tr><tr><td>3</td><td>rebooted, one terminal, nothing else running</td><td><strong>+0.35 % / +1.23 %</strong></td><td>0.24 % / 0.37 %</td><td><strong>EXECUTED</strong></td></tr></tbody></table>
+<p>The lesson is in the first row, not the third. <strong>An acceptable load average with 81–84 % all-core idle coexisted with a third of the compiled home's capacity gone.</strong> Load, idle and PSI are delayed, include work that may not contend, and are blind to contention outside the pinned cores — the four-core witness missed a 13–33 % capacity swing in 2B, and the observational wait passed while capacity was depressed by 34 % in 2C attempt 1. What saw all of it was the sentinel.</p>
+<h3 id="blk-58643">1. The procedure</h3>
+<p>Before an official battery:</p>
+<ol><li><p><strong>Reboot the machine.</strong></p></li><li><p><strong>Open one terminal only.</strong> No second Claude or Codex session, no browser, no</p></li></ol>
+<p>VM, no BEAM service, no substantial development workload — including the things that are easy to forget because they are not &quot;running a program&quot;: an open preview tab holding a render loop, a paused guest, a language server.</p>
+<ol start="3"><li><p>Start the battery from that terminal, with the scratch and target directories</p></li></ol>
+<p>off <code>/tmp</code> and no development knob set.</p>
+<p>That is the whole procedure. It takes the host from <em>shared</em> to <em>dedicated</em>; it does not certify that the host is fast enough, and it never substitutes for a measurement.</p>
+<h3 id="blk-58656">2. The gates that actually decide</h3>
+<p>These are unchanged by this document and remain authoritative:</p>
+<ul><li><p><strong>Baseline level</strong> — each policy's baseline mean within its band of a **fixed</p></li></ul>
+<p>absolute reference<strong> derived from prior calibration receipts </strong>on the same binary**, never centred on the run's own baseline. This is the guard that catches a consistently depressed host, which RSD alone cannot: a host held at two-thirds of capacity can be perfectly stable there.</p>
+<ul><li><p><strong>Baseline RSD</strong> — the spread of the baseline sentinels against its cap.</p></li></ul>
+<p>Clipping to the cap is not a pass.</p>
+<ul><li><p><strong>Both-policy sentinel pairs bracketing every block</strong> — either policy outside</p></li></ul>
+<p>its tolerance refuses the whole shared block.</p>
+<ul><li><p><strong>Isolation re-applied per block</strong>, with each moved process's own mask recorded</p></li></ul>
+<p>and restored, and the restored set verified.</p>
+<ul><li><p><strong>The core witness and the structural witnesses</strong> stay active for every block.</p></li></ul>
+<p>Either baseline guard failing means <strong>NOT EXECUTED before any outcome run</strong>, and the lane stops rather than searching for a favourable window.</p>
+<h3 id="blk-58678">3. What a reboot is not</h3>
+<ul><li><p>It is <strong>not a gate.</strong> No record may report &quot;rebooted&quot; as a reason a result is</p></li></ul>
+<p>trustworthy.</p>
+<ul><li><p>It is <strong>not evidence.</strong> The four numbers that made attempt 3 believable are the</p></li></ul>
+<p>two baseline levels and the two baseline RSDs, followed by 21 in-tolerance sentinel pairs — every one of them a measurement taken after the reboot.</p>
+<ul><li><p>It is <strong>not sufficient.</strong> A dedicated host still drifts: attempt 3's RR-FAIR</p></li></ul>
+<p>sentinel fell 1.7 % monotonically over twelve blocks on an idle machine while CLOCK-AGE stayed flat. Within tolerance, no block refused, cause unestablished — and the reason it is known at all is that the sentinels kept measuring.</p>
+<h3 id="blk-58691">4. Two instrument notes carried forward</h3>
+<ol><li><p><strong>The load-average flag is uninformative during a battery.</strong> The battery's own</p></li></ol>
+<p>drivers, source and home lift the 1-minute load from ~1.2 to 2.3–2.8, so a &quot;greater than 2× the block-0 start&quot; flag fires on most blocks of a healthy run. It is a diagnostic and never gates; a future record may baseline it <em>after</em> isolation rather than before.</p>
+<ol start="2"><li><p><strong>Diagnostics are recorded, never promoted.</strong> All-core idle, steal, PSI,</p></li></ol>
+<p>MemAvailable and load are kept in every receipt so a later reader can see the host, and no verdict may rest on them.</p></div>
+<p class="src"><a href="/#/computedriven/docs/battery-host-profile.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-58619" class="lvl2">0. Why this document exists</a><a href="#blk-58643" class="lvl2">1. The procedure</a><a href="#blk-58656" class="lvl2">2. The gates that actually decide</a><a href="#blk-58678" class="lvl2">3. What a reboot is not</a><a href="#blk-58691" class="lvl2">4. Two instrument notes carried forward</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a><a href="/computedriven/docs/fcb-stage0-review-2026-09-16.md/">ComputeDriven competitive benchmark — Codex stage-0 review and Fable stage-0.1 assignment</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraplwd3aiixlr3ugt73sdt2z7ijqfbpyltzumeja23dprosjiwdvqq</div></div></div>
+</div></div>
+</body></html>

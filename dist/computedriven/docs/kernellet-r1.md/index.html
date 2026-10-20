@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Floor Census R1 — the production floor image and the semantic-context scheduler · computedriven · Ampersand Box</title>
+<meta name="description" content="Status: measurement round, executed on GPT&#39;s R1 order. Opens no new semantics; stops for adjudication. Numbers: receipts/KERNELLET-R1.md (generated,…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/kernellet-r1.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Floor Census R1 — the production floor image and the semantic-context scheduler">
+<meta property="og:description" content="Status: measurement round, executed on GPT&#39;s R1 order. Opens no new semantics; stops for adjudication. Numbers: receipts/KERNELLET-R1.md (generated,…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/kernellet-r1.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Floor Census R1 — the production floor image and the semantic-context scheduler","name":"Floor Census R1 — the production floor image and the semantic-context scheduler","description":"Status: measurement round, executed on GPT's R1 order. Opens no new semantics; stops for adjudication. Numbers: receipts/KERNELLET-R1.md (generated,…","url":"https://docs.ampersandboxdesign.com/computedriven/docs/kernellet-r1.md/","identifier":"bagaaieran6sz5ycnxmcdttxkxjpg4dm2bgnquzejxynyxx5lrtquscrhitba","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"0. The order, and what each item became"},{"@type":"WebPageElement","name":"1. What the production image is"},{"@type":"WebPageElement","name":"2. Three things the image does that are findings, not conveniences"},{"@type":"WebPageElement","name":"3. How the measurements are made"},{"@type":"WebPageElement","name":"4. What the numbers do not say"},{"@type":"WebPageElement","name":"5. Instrument defects found while building R1"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"kernellet-r1.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/kernellet-r1.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/kernellet-r1.md</span>
+
+</div></div>
+<div class="lead">Status: measurement round, executed on GPT&#39;s R1 order. Opens no new semantics; stops for adjudication. Numbers: receipts/KERNELLET-R1.md (generated, gated) and receipts/KERNELLE…</div>
+<div class="prose"><h1 id="blk-61660">Floor Census R1 — the production floor image and the semantic-context scheduler</h1>
+<p><strong>Status:</strong> measurement round, executed on GPT's R1 order. Opens no new semantics; stops for adjudication. <strong>Numbers:</strong> <code>receipts/KERNELLET-R1.md</code> (generated, gated) and <code>receipts/KERNELLET-R1-DYNAMIC-&lt;stamp&gt;.md</code> (generated, stamped, not gated). <strong>Instrument:</strong> <code>cd-kernellet/</code>, <code>tools/kernellet_abi.py</code>, <code>tools/kernellet_census.py</code>, <code>tools/kernellet_bench.py</code>. <strong>R0 corrections applied:</strong> <code>docs/floor-census.md</code> §1 and §4.</p>
+<p>No numeral in this document is a measurement.</p>
+<h3 id="blk-61663">0. The order, and what each item became</h3>
+<p>GPT's ruling on the R0 census listed seven items. Each maps to something in the tree:</p>
+<table><thead><tr><th>order item</th><th>where it landed</th></tr></thead><tbody><tr><td>fix the self-hashing manifest</td><td><code>scripts/make-floor-census-bundle.sh</code> excludes <code>SHA256SUMS</code> from itself</td></tr><tr><td>relabel lifecycle &quot;marginal&quot; as removal-closure</td><td><code>tools/floor_census.py</code>, receipt §1; <code>docs/floor-census.md</code> §1</td></tr><tr><td>build all valid feature subsets</td><td><code>tools/floor_census.py</code> builds every valid subset; conditional deltas, precedence-constrained Shapley, pairwise interactions</td></tr><tr><td>a non-instrumented production-floor image</td><td><code>cd-kernellet</code> with no features; <strong>PRODUCTION FLOOR 8K gate</strong> in <code>receipts/KERNELLET-R1.md</code> §1</td></tr><tr><td>an external witness battery</td><td><code>tools/kernellet_census.py::battery</code>, driving the ELF through its ABI; receipt §3</td></tr><tr><td>measure the hot instruction working set</td><td>ptrace single-step, exact; receipt §4. L1I misses per transition in the dynamic receipt</td></tr><tr><td>a 1…128-context run-to-completion scheduler on one image and one stack</td><td><code>cd-kernellet</code> itself; bytes per context in receipt §2; cycles, misses, latency and shared-stack high-water in the dynamic receipt</td></tr></tbody></table>
+<p>Not done, on the order's own instruction: no migration protocol, no shadow promotion, no new semantics.</p>
+<h3 id="blk-61683">1. What the production image is</h3>
+<p>One freestanding <code>no_std</code> ELF in the same 64 KiB RAM map as cd-micro. It contains: the entry and a fixed-frame invocation ABI on stdin/stdout, the memory intrinsics, cd-core's lifecycle transitions and finality, worker- authority reconstruction over a bounded per-context evidence ring, a table of N contexts, and the dispatch that runs one command to completion on one context. It contains no reporter, no size table, no strings, no replay, no codec, and no measurement ops. N is a build-time constant read from the environment, so bytes-per-context is the slope of <code>.data + .bss</code> across builds and is never printed by the image.</p>
+<p><strong>A context is one lineage:</strong> the admission, the finality warden, the current possession (vacant, attached, or with the <code>custody</code> feature suspended), and the evidence ring. The semantic part is what cd-floor sized as one live locus; the ring is the scheduler's addition and the receipt separates the two.</p>
+<p><strong>The ABI is the scheduler.</strong> <code>step(context, input) -&gt; outcome</code> is the whole execution model: no threads, no resumption, one shared stack. A refused transition hands every value back, so the context is bit-for-bit what it was.</p>
+<h3 id="blk-61687">2. Three things the image does that are findings, not conveniences</h3>
+<ul><li><p><strong>Evidence egress is not in the hot floor.</strong> cd-core mints an attach</p></li></ul>
+<p>record, a detach receipt or a loss finalization on every transition; the kernellet drops them, because it has nowhere to put them. A cold log is a service above the floor. The byte cost of evidence egress is therefore <strong>not in the gate figure</strong> and must be measured when that service exists.</p>
+<ul><li><p><strong>A world root is born once.</strong> There is no second BOOT and no re-mark, so</p></li></ul>
+<p>a foreign root cannot enter through the ABI, and cd-core's ForeignProvenance path is unreachable from outside. It stays covered by cd-floor's internal witness. Several other refusals (NotVacant, WrongLocus, CustodyMismatch, MixedProvenance) are likewise pre-empted by the context state machine; the receipt names them.</p>
+<ul><li><p><strong>The evidence ring refuses when full.</strong> Rolling the oldest entry away</p></li></ul>
+<p>could drop a revocation and change what <code>reconstruct</code> answers, so the ring refuses instead. The size of the ring is a scheduler decision the round did not rule; the receipt states it.</p>
+<h3 id="blk-61700">3. How the measurements are made</h3>
+<ul><li><p><strong>Gate:</strong> <code>.text + .rodata</code> of the production image against the limit,</p></li></ul>
+<p>and every external witness green. Both halves are required; a size under the limit with a failed witness is a FAIL.</p>
+<ul><li><p><strong>External battery:</strong> a fresh process per session, driven one command at</p></li></ul>
+<p>a time; each check names the witness, the expected outcome fields, and the observed ones. A second battery runs on every slot the image has to show contexts are independent. The battery runs on the smallest and the largest image built, not only the default.</p>
+<ul><li><p><strong>Bytes per context:</strong> the slope of <code>.data + .bss</code> over N must be the</p></li></ul>
+<p>same between every adjacent pair of builds, or the census refuses. (The table lands in <code>.data</code>, not <code>.bss</code>, because an empty slot is not all-zero.)</p>
+<ul><li><p><strong>Hot instruction working set:</strong> the image is single-stepped under</p></li></ul>
+<p>ptrace over a deterministic command stream; the set of executed instruction addresses inside <code>.text</code>, their summed lengths from objdump, and the distinct 64-byte lines they touch. Exact, not sampled. The instruction count from this instrument agrees with the hardware <code>instructions</code> counter to within the exec stub, which is the control that the two instruments see the same run.</p>
+<ul><li><p><strong>Cycles, instructions, L1 misses per transition:</strong> user-space-only</p></li></ul>
+<p>hardware counters opened before exec and enabled on exec, over the whole process. Per-transition figures are the <em>difference</em> between a run of 2K iterations and a run of K iterations, divided by the difference in transitions, so the fixed cost of boot, context birth, I/O and histogram readout cancels. Median of repeats. A transition is one attach or one detach.</p>
+<ul><li><p><strong>Latency distribution:</strong> the <code>bench</code> feature adds an in-image op that</p></li></ul>
+<p>runs round-robin attach/detach with <code>rdtsc</code> around each transition and keeps a log2 histogram; p50 and p99 are reported as the bucket they fall in, which is a range, not a point. The <code>rdtsc</code> pair itself is inside the figure.</p>
+<ul><li><p><strong>Shared stack high-water:</strong> the <code>bench</code> image paints the reserve under</p></li></ul>
+<p>the dispatcher's frame at start and scans for the deepest touched byte on request. A fixed margin under the paint point is never counted, so the figure never reads below the margin.</p>
+<ul><li><p><strong>Intrinsics versus semantics:</strong> the <code>fastmem</code> feature swaps the byte-loop</p></li></ul>
+<p><code>memcpy</code>/<code>memset</code> for <code>rep movsb</code>/<code>rep stosb</code> with no semantic change. The two rows bound how much of a transition's instruction count is the intrinsic moving a context into and out of its slot rather than cd-core.</p>
+<h3 id="blk-61733">4. What the numbers do not say</h3>
+<ul><li><p>The <code>bench</code> and <code>fastmem</code> images are not the production image; the gate</p></li></ul>
+<p>is measured on the image with no features. <code>bench</code> adds ops, statics and <code>rdtsc</code>; it is reported beside, never instead.</p>
+<ul><li><p>Hardware-counter figures are this CPU, this frequency, this day. The</p></li></ul>
+<p>dynamic receipt is stamped for that reason and must not be diffed.</p>
+<ul><li><p>p50/p99 are log2 buckets. A bucket is a factor-of-two range; do not quote</p></li></ul>
+<p>its lower edge as the percentile.</p>
+<ul><li><p>Cycles from <code>rdtsc</code> are TSC ticks; cycles from the counter are core</p></li></ul>
+<p>cycles. They differ by the frequency ratio and are reported in separate columns.</p>
+<ul><li><p>One image and one stack on one core is measured. **Nothing is measured</p></li></ul>
+<p>across cores**, and nothing about shadow promotion, which the order excluded and which remains the INDETERMINATE problem.</p>
+<ul><li><p>&quot;Contexts scale to N&quot; here means bytes and independence. Throughput per</p></li></ul>
+<p>core under a realistic mix of operations is not measured; the bench workload is attach/detach only.</p>
+<ul><li><p>A thread-or-process comparison was not run. The honest comparison needs</p></li></ul>
+<p>its own harness and its own round.</p>
+<h3 id="blk-61762">5. Instrument defects found while building R1</h3>
+<ul><li><p><strong>The single-slot battery expected the wrong thing.</strong> With one slot,</p></li></ul>
+<p>slot 0 is detached before the finalize step, so the finalize must be refused NotAttached, not admitted. The first version of the battery wrote the multi-slot expectation into the one-slot case and the receipt's PROBLEMS section caught it. Fixed; the one-slot witness now names the refusal it expects.</p>
+<ul><li><p><strong>`.text` varies slightly with N.</strong> LLVM picks a different encoding when</p></li></ul>
+<p>N is an immediate that fits a shorter form, and unrolls at N=1. Recorded as a note, not a failure: the floor does not grow with N.</p>
+<ul><li><p><strong>The hardware-counter probe read zero on its first run</strong> because the</p></li></ul>
+<p>enable-on-exec flag was set at the wrong bit. Found by the agreement check against ptrace; fixed before any figure was recorded.</p></div>
+<p class="src"><a href="/#/computedriven/docs/kernellet-r1.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-61663" class="lvl2">0. The order, and what each item became</a><a href="#blk-61683" class="lvl2">1. What the production image is</a><a href="#blk-61687" class="lvl2">2. Three things the image does that are findings, not conveniences</a><a href="#blk-61700" class="lvl2">3. How the measurements are made</a><a href="#blk-61733" class="lvl2">4. What the numbers do not say</a><a href="#blk-61762" class="lvl2">5. Instrument defects found while building R1</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieran6sz5ycnxmcdttxkxjpg4dm2bgnquzejxynyxx5lrtquscrhitba</div></div></div>
+</div></div>
+</body></html>

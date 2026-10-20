@@ -1,0 +1,62 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>R0.4.6 freshness / anti-rollback model — written before the mechanism · computedriven · Ampersand Box</title>
+<meta name="description" content="Invariant from the R0.4.5 review:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/freshness-model.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R0.4.6 freshness / anti-rollback model — written before the mechanism">
+<meta property="og:description" content="Invariant from the R0.4.5 review:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/freshness-model.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"R0.4.6 freshness / anti-rollback model — written before the mechanism","name":"R0.4.6 freshness / anti-rollback model — written before the mechanism","description":"Invariant from the R0.4.5 review:","url":"https://docs.ampersandboxdesign.com/computedriven/docs/freshness-model.md/","identifier":"bagaaieraqwllszs4dvby7g247v7cjmlokyzfwfs26jpbkvr3pfqpzs7oowoa","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"The hole"},{"@type":"WebPageElement","name":"Closure: a linear, non-rollbackable current token"},{"@type":"WebPageElement","name":"What stays outside the claim (unchanged honest boundary)"},{"@type":"WebPageElement","name":"Falsifiers this model must survive"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"freshness-model.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/freshness-model.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/freshness-model.md</span>
+
+</div></div>
+<div class="lead">Invariant from the R0.4.5 review:</div>
+<div class="prose"><h1 id="blk-61192">R0.4.6 freshness / anti-rollback model — written before the mechanism</h1>
+<p>Invariant from the R0.4.5 review:</p>
+<blockquote><p><strong>An old valid lifecycle prefix must never reactivate possession that a newer finalized history has fenced.</strong> Recovery requires freshness, not merely internally valid history.</p></blockquote>
+<h3 id="blk-61196">The hole</h3>
+<p>&lt;!-- historical --&gt; Before R0.4.6, recovery and (the since-removed) reopen proved possession against <em>whatever event slice the caller supplied</em>. A stale custody for A@0 fails against the current history, but succeeds against the old prefix <code>[Attached(A,0)]</code>. Same for reopen: a warden that never reopened plus an old closed prefix materializes a vacancy at a generation that is currently occupied via an orderly succession. Both are rollbacks: making an old truth current again. &lt;!-- /historical --&gt;</p>
+<h3 id="blk-61198">Closure: a linear, non-rollbackable current token</h3>
+<p>(Introduced in R0.4.6 as a &quot;head&quot; advanced in a separate step; since R0.4.7 the same linear value is the <code>LifecycleAdmission</code> and is advanced only by the transitions themselves — see docs/admission-model.md. The freshness property is unchanged.)</p>
+<pre><code>LocusRoot::begin() ─────────────► Vacant(0) + FinalityWarden + LifecycleAdmission(gen 0, vacant)
+Vacant/Attachment/Warden + Admission ──transition──► ... + Admission'   [CONSUMES the admission]
+CarrierCustody + &amp;LifecycleAdmission ──recover──► LocusAttachment</code></pre>
+<ul><li><p><code>LifecycleAdmission</code> is born once per lineage at <code>begin</code>, has private</p></li></ul>
+<p>fields and no public constructor, is move-only, and advances only by being consumed by a transition. An older admission therefore cannot coexist with the current one as recovery authority: it was consumed to produce the current one.</p>
+<ul><li><p>Possession-granting operations no longer accept an event slice at all.</p></li></ul>
+<p>Passing <code>&amp;[LifecycleEvent]</code> where a head is required is a compile error. &quot;Caller must supply the latest log&quot; is thereby encoded, not documented.</p>
+<ul><li><p><code>replay_lifecycle</code> / <code>audit_replay</code> remain public and descriptive over</p></li></ul>
+<p>slices: knowledge of any prefix is still available; possession from a prefix is not.</p>
+<h3 id="blk-61213">What stays outside the claim (unchanged honest boundary)</h3>
+<ul><li><p>A trusted root can fork lineages via repeated <code>create_locus</code>, each with</p></li></ul>
+<p>its own head; a fork can be fed the honest prefix and would recover the stale custody. Locus-birth uniqueness is the future World-level invariant; cross-lineage rollback resistance is not claimed.</p>
+<ul><li><p>Durable crash recovery and cross-process/disk copies remain unclaimed;</p></li></ul>
+<p>a persisted head is bytes and copies freely — the same future incarnation/CAS/fencing primitive applies to heads as to custody.</p>
+<ul><li><p>No distributed consensus, leases, or network protocol in this round.</p></li></ul>
+<h3 id="blk-61225">Falsifiers this model must survive</h3>
+<ol><li><p>The review's 7-step scenario: stale A custody fails against the</p></li></ol>
+<p>current head; there is no API path to present the old prefix.</p>
+<ol start="2"><li><p>At an occupied generation, finality of the wrong carrier/generation</p></li></ol>
+<p>fails and no second vacancy can be minted; no slice path exists.</p>
+<ol start="3"><li><p>A consumed admission cannot be reused (compile gate); a failed</p></li></ol>
+<p>transition hands the admission back.</p>
+<ol start="4"><li><p><code>LifecycleAdmission</code> cannot be fabricated (private fields); recovery</p></li></ol>
+<p>rejects event slices (type error).</p>
+<ol start="5"><li><p>All prior falsifiers remain green under the head-based API.</p></li></ol></div>
+<p class="src"><a href="/#/computedriven/docs/freshness-model.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-61196" class="lvl2">The hole</a><a href="#blk-61198" class="lvl2">Closure: a linear, non-rollbackable current token</a><a href="#blk-61213" class="lvl2">What stays outside the claim (unchanged honest boundary)</a><a href="#blk-61225" class="lvl2">Falsifiers this model must survive</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraqwllszs4dvby7g247v7cjmlokyzfwfs26jpbkvr3pfqpzs7oowoa</div></div></div>
+</div></div>
+</body></html>

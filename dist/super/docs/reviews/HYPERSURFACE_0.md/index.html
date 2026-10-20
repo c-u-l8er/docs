@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>HyperSurface-0: fixed local Carrier profile · super · Ampersand Box</title>
+<meta name="description" content="Implementation slice, 2026-09-13. No new backend, public command option or confinement guarantee. start_carrier(locus_ref) resolves the runtime-owned…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/HYPERSURFACE_0.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HyperSurface-0: fixed local Carrier profile">
+<meta property="og:description" content="Implementation slice, 2026-09-13. No new backend, public command option or confinement guarantee. start_carrier(locus_ref) resolves the runtime-owned…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/HYPERSURFACE_0.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"HyperSurface-0: fixed local Carrier profile","name":"HyperSurface-0: fixed local Carrier profile","description":"Implementation slice, 2026-09-13. No new backend, public command option or confinement guarantee. start_carrier(locus_ref) resolves the runtime-owned…","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/HYPERSURFACE_0.md/","identifier":"bagaaieraifzriz7e6dlit57r634klaqr7xxyrm2hmmljdpwv3doxezjvflhq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super"},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"HYPERSURFACE_0.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/HYPERSURFACE_0.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/HYPERSURFACE_0.md</span>
+
+</div></div>
+<div class="lead">Implementation slice, 2026-09-13. No new backend, public command option or confinement guarantee. start_carrier(locus_ref) resolves the runtime-owned super.local-carrier-termina…</div>
+<div class="prose"><h1 id="blk-115504">HyperSurface-0: fixed local Carrier profile</h1>
+<p>Implementation slice, 2026-09-13. No new backend, public command option or confinement guarantee. <code>start_carrier(locus_ref)</code> resolves the runtime-owned <code>super.local-carrier-terminal.v0</code> profile after existing occupancy checks.</p>
+<p><code>Ampd.SurfaceProfile</code> binds the contract vocabulary, current floor version and digest, host profile digest and execution-basis digest into <code>surface_binding</code>. The existing attempt persists that binding before machine submission. Commit checks the binding alongside the existing currentness, payload correspondence and confinement checks. The accepted incarnation retains the binding.</p>
+<p>This profile means trusted-host Linux process confinement, mandatory physical terminal (access separately authorized), no network, no hard resource quota claim, host-selected payload, and fresh execution after confirmed absence. Preflight is eligibility to attempt, not observed-instance acceptance.</p>
+<p>The start command removes the internal binding from its response and returns a bounded summary instead. Worker projections add <code>surface</code> with only <code>status</code>, <code>admission_profile</code> and <code>evidence</code>. A live current member supplies accepted evidence, independently of attempt bookkeeping. Pending/indeterminate attempts expose their existing state without claiming accepted-instance evidence. Missing legacy bindings remain readable and are marked <code>legacy-or-unrecorded</code>; they cannot commit new membership under this profile. No migration rewrites old evidence. Physical absence and no active membership remain different facts.</p>
+<p>The new integration tests use the actual Control/Carrier/Worker path with the explicit existing machine harness. The queued-start experiment suspends the real Gate, waits its production caller timeout, resumes it, observes the late harness submission, and reconciles the attempt. This establishes the queue semantics, not the cost or cleanup latency of a real slow VM backend. Existing native <code>super-host verify</code> remains the check against real confined processes.</p>
+<p>The public profile-selection cases from the research catalog remain future work: V0 deliberately exposes no new command fields. Unsupported requirements are covered at the internal preflight seam. No Wasmtime integration, durable external-completion owner, concurrent-start transport or VM backend is added.</p>
+<p>Validation commands from an isolated checkout:</p>
+<pre data-lang="sh"><code>(<span class="t-kw">cd</span> host &amp;&amp; cargo build<span class="t-flag"> --offline</span><span class="t-flag"> --release</span>)
+bash tools/build-payloads.sh<span class="t-flag"> --offline</span>
+(<span class="t-kw">cd</span> ampd &amp;&amp; mix compile<span class="t-flag"> --warnings-as-errors</span> &amp;&amp; mix test)
+host/target/release/super-host verify</code></pre>
+<p>The test runtime uses private scratch data. Do not substitute a product-world path for its test data directory. Native verification also creates its own worlds. Review the accompanying implementation receipt for measured results.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/HYPERSURFACE_0.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraifzriz7e6dlit57r634klaqr7xxyrm2hmmljdpwv3doxezjvflhq</div></div></div>
+</div></div>
+</body></html>

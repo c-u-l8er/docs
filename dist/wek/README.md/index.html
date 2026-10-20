@@ -1,0 +1,141 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>wek/ — the R2 bounded executable model · wek · Ampersand Box</title>
+<meta name="description" content="Round: R2, slice 4 (boundary ownership and the reserved journal, authorized by WEK_R2_SLICE3_ADJUDICATED.md §5) Status: a model, not an implementation.…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/wek/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wek/ — the R2 bounded executable model">
+<meta property="og:description" content="Round: R2, slice 4 (boundary ownership and the reserved journal, authorized by WEK_R2_SLICE3_ADJUDICATED.md §5) Status: a model, not an implementation.…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/wek/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"wek/ — the R2 bounded executable model","name":"wek/ — the R2 bounded executable model","description":"Round: R2, slice 4 (boundary ownership and the reserved journal, authorized by WEK_R2_SLICE3_ADJUDICATED.md §5) Status: a model, not an implementation.…","url":"https://docs.ampersandboxdesign.com/wek/README.md/","identifier":"bagaaieram4sx3mztpvoygoxazk5ail3sisq3o6xqrbt7qz3c4a2gh4k3zdjq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"wek","url":"https://docs.ampersandboxdesign.com/wek/"},"articleSection":"wek","hasPart":[{"@type":"WebPageElement","name":"What it models, and why only this much"},{"@type":"WebPageElement","name":"Zero dependencies"},{"@type":"WebPageElement","name":"Files"},{"@type":"WebPageElement","name":"Administrative and ordinary operations"},{"@type":"WebPageElement","name":"The ownership boundary — what holds it, and what does not"},{"@type":"WebPageElement","name":"Six results the model produces"},{"@type":"WebPageElement","name":"The worker boundary (R2 closure repair, 2026-09-13)"},{"@type":"WebPageElement","name":"Four digests, ruled apart"},{"@type":"WebPageElement","name":"Mutations and vectors that found their own defects"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"wek","item":"https://docs.ampersandboxdesign.com/wek/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/wek/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">wek</span>
+<span class="path">wek/README.md</span>
+
+</div></div>
+<div class="lead">Round: R2, slice 4 (boundary ownership and the reserved journal, authorized by WEK_R2_SLICE3_ADJUDICATED.md §5) Status: a model, not an implementation. Nothing here runs in prod…</div>
+<div class="prose"><h1 id="blk-122470"><code>wek/</code> — the R2 bounded executable model</h1>
+<blockquote><p><strong>R2 CLOSED 2026-09-13</strong> under the four-register checklist (<code>WEK_R2_CLOSED.md</code>). These bytes are the closed model; <code>WEK_R3_ADMISSION_PROPOSAL.md</code> is what comes next, and is not authorized.</p></blockquote>
+<p><strong>Round:</strong> R2, slice 4 (boundary ownership and the reserved journal, authorized by <code>WEK_R2_SLICE3_ADJUDICATED.md</code> §5) <strong>Status:</strong> a <strong>model</strong>, not an implementation. Nothing here runs in production, talks to a network, or touches <code>super/</code>. It exists so that R1's refusals can be <em>executed</em> instead of asserted. <strong>Run it:</strong> <code>node wek/run.mjs</code> — exits non-zero if any guard, law, mutation control or oracle comparison is off. About three minutes on this machine: each mutant runs its law suite in its own process, in a pool.</p>
+<pre><code>node wek/run.mjs                          full run; derives wek/COVERAGE.md and wek/RECEIPT.json
+node wek/run.mjs --quiet                  verdict line only
+bash scripts/check-wek-model-digests.sh   reproduce all four receipt digests outside this program
+node scripts/wek-slice3-probes.mjs wek    the slice-2 adjudicator's bypasses, against this tree
+node scripts/wek-slice4-probes.mjs wek    the slice-3 adjudicator's bypasses, against this tree</code></pre>
+<pre><code>WEK R2.4 GREEN · 47/47 laws · 50/50 behavioural mutants · clean-copy control held · 5/5 guards · 50625+21696+729 sequences/0 mismatches</code></pre>
+<p>Those are <strong>separate figures</strong> (ruled 2026-09-12): 47 executable invariants; 50 behavioural mutants; 1 clean-copy control; 5 shallow source guards; and three bounded explorations against hand-written oracles — 50,625 lifecycle sequences (depth 4 over 15 op instances), 21,696 attack sequences (every prefix of depth ≤ 3, then one attack, then one probe; max depth 5), and 729 store sequences (depth 3 over 9 ops). <code>COVERAGE.md</code> reports <strong>43 distinct failure signatures under this mutant set</strong> — which laws only ever move together — and any law no mutant exercises (none). A signature count is not a dimension count and is not assurance.</p>
+<h3 id="blk-122477">What it models, and why only this much</h3>
+<table><thead><tr><th></th><th>from</th><th>why it is here</th></tr></thead><tbody><tr><td><strong>REQ-1</strong> — the authority consequence of a classified embodiment change, through a <strong>configured monitor</strong></td><td><code>CLAIMS_0.md</code> §6</td><td>the program's only named consumer</td></tr><tr><td><strong>the capability lifecycle</strong> — a transition table, issuance against current state, replay, the duplicate rule</td><td>slice-2 and slice-3 adjudications</td><td>the bypasses that composed across calls</td></tr><tr><td><strong>ownership at the boundary</strong> — nothing returned aliases what is owned; nothing accepted is kept by reference</td><td>slice-3 adjudication §2.1</td><td>a returned binding edited a refused revalidation into an accepted one</td></tr><tr><td><strong>canonical vector #27</strong> — <code>Σ.A</code> basis adjudicability, RETAIN + ORDER</td><td><code>WORLD_STATE_0.md</code> §3.4</td><td>M0-2, runnable; per-basis order and two variants</td></tr><tr><td><strong>W-7.1</strong> — the visible gap, and a loss the enumerator was not designed for</td><td><code>WRM_0.md</code> W-7</td><td>M0-4; retained as the counterexample</td></tr><tr><td><strong>W-7.2</strong> — declared-write mediation with private scope and a <strong>reserved journal</strong></td><td><code>WRM_0.md</code> W-7, ruled 2026-09-12</td><td>the completeness half W-7.1 lacks; prevention separate from audit</td></tr></tbody></table>
+<p>Not modelled, by ruling: a WCI transport, atomicity claims, plateau results, a production backend, substrate authorization of administrative operations, anything implementation-shaped.</p>
+<h3 id="blk-122501">Zero dependencies</h3>
+<p><code>node:crypto</code> only. Ed25519 with keys from a fixed seed, so the model stays deterministic.</p>
+<h3 id="blk-122503">Files</h3>
+<pre><code>model.mjs                     canonical bytes · declared refusal classes · Σ.P · Σ.A · Σ.H with
+                              RETENTION modes (BR-*) and ORDER modes (ORD-*), every record copied in
+                              and DETACHED out · place() · W-7 commit classes · the W-7.2 store set:
+                              ONE commitIntent() with validation, an opaque handle, PRIVATE scope, a
+                              RESERVED journal, journal copies, an optional audit sink · recovery that
+                              NAMES corruption
+classify.mjs                  the VERIFIER. Receives an assertion, opaque basis identities, and
+                              verifier-owned trust state (public keys, copied at construction). Holds
+                              no signing key.
+fixtures/agent-invariants.mjs the CLASSIFIER FIXTURE. Stands in for Agent-Invariants; the only file
+                              with a signing key. Never imported by the verifier (guard G1).
+authority.mjs                 the MONITOR. Built once from trust + profile (copied); owns history,
+                              capability and grant state; names ADMINISTRATIVE vs ORDINARY operations;
+                              exports monitor() and its tables, nothing that takes trust/history/grants
+                              as a call argument (guard G4). Every response and read is detached.
+oracle.mjs                    the INDEPENDENT oracles: the lifecycle (with the duplicate rule and the
+                              three attack families, ruled ABSORBED) and the mediated store. Imports
+                              nothing from the monitor (guard G5).
+vectors.mjs                   #27 (4 modes) · #27b · #27c · W-7.1 · W-7.2 (8 bypass attempts, crash,
+                              audit-sink-down, reserved journal, invalid declarations, malformed
+                              journal) · the REQ-1 matrix · the attacker set · revalidation · the
+                              lifecycle table · the alias attacks · three explorations. Deterministic.
+laws.mjs                      47 executable invariants, taking the modules as an argument
+mutations.mjs                 50 behavioural mutants + the clean-copy control, each evaluated in its
+                              own process by mutant-worker.mjs; a mutant may name laws it must EVADE.
+                              The WORKER BOUNDARY: every worker outcome is classified with a name
+                              (WORKER_FAILURES) and recorded; a failure is never a caught mutant
+mutant-worker.mjs             one mutant, one process: runs the laws from its directory, writes the
+                              result to result.json (written whole, renamed into place) and a sha256
+                              trailer on stdout; the parent requires both
+fault-worker.mjs              the FAULT worker: misbehaves in one named way (fault-modes.mjs) and runs
+                              no laws; stands in for the mutant worker under the harness controls
+harness-controls.mjs          17 harness controls, two of them POSITIVE: 12 named faults + 2 positive
+                              (a well-formed result must be ADMITTED) through runWorker, and 3 through
+                              the real pool path, where the control must FAIL and the mutant must be a
+                              harness failure, not a law gap
+run.mjs                       the guard; stamps RECEIPT.json INCOMPLETE first, ABORTED on a handled failure
+                              (INCOMPLETE stays after an uncatchable termination),
+                              and writes RECEIPT.json + COVERAGE.md + a run log at the end
+history/                      slice-2, slice-3 and slice-4 receipts and coverage, preserved as delivered
+r3/                           the E3-1 CONTRACT, executable (R3, 2026-09-14): contract.mjs (authorize · classify ·
+                              checkTrace · acceptCase · validateIntent · categorize, tables as data), fixtures.mjs
+                              (32 synthetic traces: the walkthroughs, the review discrepancies, malformed evidence,
+                              must-fail cases), check.mjs (replay, 8 contract mutants, generated CONTRACT_TABLES.md,
+                              RECEIPT.json). `node wek/r3/check.mjs` — SYNTHETIC; establishes NO substrate conformance</code></pre>
+<h3 id="blk-122505">Administrative and ordinary operations</h3>
+<pre><code>ADMINISTRATIVE  construct · establish · reconfigure · issueGrant · revoke
+                configuration authority — WEK SPECIFIES the requirement, the substrate DISCHARGES it;
+                this model names the split and does not implement substrate authorization
+ORDINARY        applyEmbodimentChange · check · revalidate
+                requests — WEK's to refuse; a request carrying its own trust, history, grants,
+                capability snapshot or target basis is not honoured (L38)
+READ-ONLY       state · grant · liveBasis · records · trustIssuers — every read is a detached copy</code></pre>
+<p>The constructor's caller is trusted by stated assumption. That trust does not let a mutable alias escape afterwards: accepted profiles are copied in, and every committed record, history read, retained envelope, state snapshot and grant read is a deep-frozen deep copy (<code>L39</code>–<code>L41</code>).</p>
+<h3 id="blk-122508">The ownership boundary — what holds it, and what does not</h3>
+<pre><code>Agent-Invariants   owns the FACTUAL classification of an embodiment change
+WEK                owns its AUTHORITY CONSEQUENCE, and enforces that
+WEK MUST NOT       invent the underlying classification theory</code></pre>
+<p>What holds it: the fixture signs; the verifier owns public material only; <code>L21</code> re-verifies every <em>admitted</em> class against the fixture's public key, independently of the verifier, and requires it to equal the class WEK <em>committed</em>. <code>L13</code> is a shallow two-argument probe and says so; three mutants derive a class inside <code>admit()</code> and are <strong>recorded as evading L13</strong> while <code>L21</code> catches them.</p>
+<h3 id="blk-122511">Six results the model produces</h3>
+<p><strong>1 — Basis adjudicability is RETAIN + ORDER, and the order needed is per-basis.</strong></p>
+<pre><code>BR-NONE             A=INDETERMINATE  B=INDETERMINATE  discriminates=false
+BR-LOCAL-NO-ORDER   A=LEGAL          B=INDETERMINATE  discriminates=false
+BR-LOCAL            A=LEGAL          B=ILLEGAL        discriminates=true     (total order: one implementation)
+BR-LOCAL-PER-BASIS  A=LEGAL          B=ILLEGAL        discriminates=true     (the weakest sufficient relation)</code></pre>
+<p><strong>2 — W-7.2: an undeclared write never lands, the journal is reserved, and corruption is named.</strong></p>
+<p>Eight bypass attempts refuse with the store unchanged. Declaring <code>_intent</code> is <code>INTENT_INVALID</code> and journals nothing; writing there under a real handle is refused; six invalid declarations refuse before any mutation. A journal holding malformed durable records recovers to a <strong>named corruption outcome</strong> — not a throw, not &quot;clean&quot; — that still lists the gaps of the records that parsed. With the audit sink down, the write is still refused. No journaled backend is reported W-7 conformant.</p>
+<p><strong>3 — Freshness is validated issuance against a current suspension; replay is not usability.</strong></p>
+<p>A revalidation grant is issued <strong>for</strong> a capability's <em>current</em> suspension (a LIVE capability: <code>SUSPENSION_UNKNOWN</code>) and bound to capability, generation, target basis and fact-set version. Stale in any one dimension is <code>AUTHORITY_NOT_FRESH</code>. A retry of a consumed grant returns the <strong>current</strong> state as its value and the prior outcome separately, creating no transition — after a further suspension the value is SUSPENDED while the prior outcome was LIVE.</p>
+<p><strong>4 — The lifecycle is a table, resolved from current state, with no generation churn.</strong></p>
+<pre><code>LIVE         STILL→LIVE · REQUIRES→SUSPENDED(gen+1) · INVALIDATED→WITHDRAWN · UNAVAILABLE→UNAVAILABLE
+SUSPENDED    STILL→TRANSITION_REFUSED · REQUIRES(distinct transition)→SUSPENDED(gen+1) · INVALIDATED→WITHDRAWN · UNAVAILABLE→UNAVAILABLE
+WITHDRAWN    every class TRANSITION_REFUSED
+UNAVAILABLE  every class TRANSITION_REFUSED   (terminal for this capability instance in this model — ruled)
+identical classification again  → CLASSIFICATION_DUPLICATE, no transition, no new generation</code></pre>
+<p><strong>5 — Nothing that crosses the boundary carries authority.</strong></p>
+<p>Editing a returned issue response's binding (committed and value) throws, changes neither the grant record nor the history, and leaves a refused revalidation refused. Editing a supplied profile after construction or reconfiguration moves nothing. Editing a history read, a state snapshot, a grant read, a retained envelope, or the registry's entry array changes nothing held. The slice-3 model failed all of these.</p>
+<p><strong>6 — Every sequence in three bounded universes agrees with its oracle.</strong></p>
+<p>Lifecycle: 15 op instances, depth 4, 50,625 sequences. Attacks: every prefix of depth ≤ 3, then one of three attack families (edit a returned binding, edit a supplied profile, edit a history read — ruled ABSORBED), then one of two probes: 21,696 sequences. Store: 9 ops incl. a reserved declaration and a journal write, depth 3, 729 sequences. 0 mismatches. What is claimed is exactly those universes and depths; nothing outside them.</p>
+<h3 id="blk-122524">The worker boundary (R2 closure repair, 2026-09-13)</h3>
+<p>The adjudicator's two pooled reruns of slice 4 each died with <code>SyntaxError: Unexpected end of JSON input</code> at <code>mutations.mjs:286</code>: a worker had exited 0 with empty stdout, and the parent parsed that inside a bare <code>execFile</code> callback, so the throw escaped the promise, the run ended with no receipt, and the previous GREEN receipt stayed on disk looking current. The repair treats a worker's output as data from another process:</p>
+<ul><li><p><strong>Transport.</strong> The worker writes its result to <code>result.json.partial</code> synchronously and renames</p></li></ul>
+<p>it to <code>result.json</code> (a partial file is never a result), then prints one trailer line naming the file's sha256 and byte length. On this Linux/Node 25 a piped stdout is asynchronous (a large write followed by <code>process.exit</code> delivers one pipe buffer), which is why the result no longer rides the pipe. The parent requires both channels and names which one failed — file absent means the worker never completed; file complete with no trailer means the stdio channel.</p>
+<ul><li><p><strong>Validation.</strong> Termination by signal or non-zero exit, no result, malformed JSON, a wrong</p></li></ul>
+<p>shape, an empty law list, duplicate, missing or undeclared law IDs, a missing or mismatched trailer — each is a named <code>WORKER_*</code> harness failure. None counts as a caught mutant; on the clean copy each is a FAILED control (the old control computed <code>[].every(...)</code> and would have held over an empty list).</p>
+<ul><li><p><strong>Records.</strong> Every worker leaves a record — pid, exit, signal, stdout bytes, a stderr tail,</p></li></ul>
+<p>timing, result bytes and digest, and what it reported about itself (node version, platform, execPath) — in the run log <code>run.mjs</code> names at the end. A RED receipt carries its failures.</p>
+<ul><li><p><strong>Settings.</strong> <code>WEK_WORKERS=N</code> or <code>--workers=N</code> bounds the pool; <code>WEK_SCRATCH_DIR</code> moves the</p></li></ul>
+<p>mutant copies off the OS temp dir. <code>--inject-worker-fault=&lt;mode&gt;</code> substitutes the fault worker for <code>MUT-1</code> in a full run, which must then end RED with exit 1.</p>
+<ul><li><p><strong>No stale GREEN.</strong> <code>RECEIPT.json</code> is stamped <code>INCOMPLETE</code> before anything runs and <code>ABORTED</code></p></li></ul>
+<p>(with the error) on a handled failure — an uncaught exception, an unhandled rejection, an exit before the verdict. An uncatchable termination leaves <code>INCOMPLETE</code>, which is the right reading: a run started and no verdict was written. Only a finished run writes a verdict.</p>
+<h3 id="blk-122546">Four digests, ruled apart</h3>
+<p><code>RECEIPT.json</code> carries <code>evidence_digest</code> (over what the model produced), <code>source_digest</code> (over all thirteen files), and the same listing split into <code>model_source_digest</code> and <code>harness_digest</code> — the harness half binds <code>mutations.mjs</code>, the file that decides the mutants and their expected failures, and since the closure repair the worker, the fault worker and the harness controls, so the recorded verdict is bound to the harness that produced it. <code>scripts/check-wek-model-digests.sh</code> reproduces the three source digests with coreutils and the evidence digest with two runs.</p>
+<h3 id="blk-122548">Mutations and vectors that found their own defects</h3>
+<p>Slice 1: <code>MUT-1</code> → <code>L20</code>. Slice 2: <code>MUT-16</code> walked past an <code>L21</code> that compared the input against its own label. Slice 3: a grant-name collision hid the positive case; every stale-generation grant was also stale in target. Slice 4: the alias vector expected the wrong first history record; the duplicate rule masked <code>MUT-35</code> from <code>L35</code> until a wrong-source-live-target case existed; and the exploration cannot see a construction-time alias because its universe reconfigures in setup — recorded on <code>MUT-41</code>, with <code>MUT-51</code> (the reconfigure-time alias) as the one it does see.</p></div>
+<p class="src"><a href="/#/wek/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-122477" class="lvl2">What it models, and why only this much</a><a href="#blk-122501" class="lvl2">Zero dependencies</a><a href="#blk-122503" class="lvl2">Files</a><a href="#blk-122505" class="lvl2">Administrative and ordinary operations</a><a href="#blk-122508" class="lvl2">The ownership boundary — what holds it, and what does not</a><a href="#blk-122511" class="lvl2">Six results the model produces</a><a href="#blk-122524" class="lvl2">The worker boundary (R2 closure repair, 2026-09-13)</a><a href="#blk-122546" class="lvl2">Four digests, ruled apart</a><a href="#blk-122548" class="lvl2">Mutations and vectors that found their own defects</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/wek/COVERAGE.md/">WEK R2 — law-to-mutant coverage</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieram4sx3mztpvoygoxazk5ail3sisq3o6xqrbt7qz3c4a2gh4k3zdjq</div></div></div>
+</div></div>
+</body></html>

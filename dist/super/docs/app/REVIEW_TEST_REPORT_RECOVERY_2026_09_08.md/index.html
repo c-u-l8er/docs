@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Review test completion report recovery · super · Ampersand Box</title>
+<meta name="description" content="Implemented 8 September 2026. The native host retains an exact completion payload in memory before attempting to finish its admitted runtime test run. If…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/app/REVIEW_TEST_REPORT_RECOVERY_2026_09_08.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Review test completion report recovery">
+<meta property="og:description" content="Implemented 8 September 2026. The native host retains an exact completion payload in memory before attempting to finish its admitted runtime test run. If…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/app/REVIEW_TEST_REPORT_RECOVERY_2026_09_08.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Review test completion report recovery","name":"Review test completion report recovery","description":"Implemented 8 September 2026. The native host retains an exact completion payload in memory before attempting to finish its admitted runtime test run. If…","url":"https://docs.ampersandboxdesign.com/super/docs/app/REVIEW_TEST_REPORT_RECOVERY_2026_09_08.md/","identifier":"bagaaiera3it4p3panhvcbwyuvr5w3honpwr6xa5ntr5ptuxlsb6b4ndgfajq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super"},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"app","item":"https://docs.ampersandboxdesign.com/super/docs/app/"},{"@type":"ListItem","position":5,"name":"REVIEW_TEST_REPORT_RECOVERY_2026_09_08.md","item":"https://docs.ampersandboxdesign.com/super/docs/app/REVIEW_TEST_REPORT_RECOVERY_2026_09_08.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/app/REVIEW_TEST_REPORT_RECOVERY_2026_09_08.md</span>
+
+</div></div>
+<div class="lead">Implemented 8 September 2026. The native host retains an exact completion payload in memory before attempting to finish its admitted runtime test run. If that report fails, the…</div>
+<div class="prose"><h1 id="blk-112042">Review test completion report recovery</h1>
+<p>Implemented 8 September 2026. The native host retains an exact completion payload in memory before attempting to finish its admitted runtime test run. If that report fails, the review panel offers <strong>Retry saving outcome</strong>. Retry submits the retained payload and never launches a test process.</p>
+<p>The existing <code>review_tests</code> native command accepts <code>retry</code> with only world and run id. It accepts no outcome from the page. Pending payloads are not rebuilt from the device cache; cache contents cannot advertise a trusted retry. A native host restart loses this retry capability. Full crash reconciliation of runtime starts remains open; missing outcomes are never promoted to passing results.</p>
+<p>Retries must match the captured full world tuple. The runtime's existing exact-outcome idempotence handles an acknowledgement lost after a successful write. Repeated reporting errors retain the pending completion. Listing overlays native memory so deleting the local cache does not hide a pending result; successful retry recreates its small local index. A maximum of 32 pending completions bounds retained memory.</p>
+<p>Validation: native Rust tests cover exact replay, lost acknowledgements, repeated failure, cache tampering/loss, session/world refusal and rejection of page-supplied outcomes. The native plan/file workflow covers real successful completion, cancellation, cache removal and rejection of an unknown retry. Separate, visibly labeled UI component fixtures exercise a reporting failure, retry and success through the production panel in the native window. These fixtures simulate the reporting transport; they do not prove a live runtime-disconnect-and-reconnect sequence.</p>
+<p>No runtime schema, acceptance rules, test profile or repository file writing behavior changes in this increment. Full app-process restart reconciliation and explicit acceptance bound to the tested result are the next MVP gaps.</p></div>
+<p class="src"><a href="/#/super/docs/app/REVIEW_TEST_REPORT_RECOVERY_2026_09_08.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card"><div class="lab">in this folder</div><a href="/super/docs/app/ACCEPTED_BUILD_2026_09_10.md/">Super: build accepted app</a><a href="/super/docs/app/ACCEPTED_RESULT_CHECK_2026_09_10.md/">Super: checking accepted source before integration</a><a href="/super/docs/app/AUTHORITY_LOG_RETENTION_2026_09_24.md/">Authority log retention — candidate 3 (2026-09-24)</a><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/BOT_LIVE_ACTIVITY_2026_09_13.md/">Bot activity and Claude reconnect</a><a href="/super/docs/app/BOT_WORK_PAGES_2026_09_07.md/">Super progress — bot work pages</a><a href="/super/docs/app/BUILD_PREVIEW_2026_09_10.md/">Try an accepted Super build</a><a href="/super/docs/app/CANCELLED_PLAN_STEPS_2026_09_19.md/">A cancelled plan&#39;s stepper claims no step — 2026-09-19</a><a href="/super/docs/app/COMBINED_FILE_REVIEW_2026_09_10.md/">Combined file review — 2026-09-10</a><a href="/super/docs/app/COMBINED_TESTING_2026_09_10.md/">Combined testing and acceptance — 2026-09-10</a><a href="/super/docs/app/CONTINUE_WORK_2026_09_14.md/">Continue work and guided review</a><a href="/super/docs/app/DESKTOP_LAUNCH_2026_09_10.md/">Daily desktop launch — September 10, 2026</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera3it4p3panhvcbwyuvr5w3honpwr6xa5ntr5ptuxlsb6b4ndgfajq</div></div></div>
+</div></div>
+</body></html>

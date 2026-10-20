@@ -1,0 +1,112 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>W.1.1 — LIVE LOCAL holds one live renderable view · super · Ampersand Box</title>
+<meta name="description" content="Artifact: `and-super-rev-w11.zip`. Every gate green.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_1_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="W.1.1 — LIVE LOCAL holds one live renderable view">
+<meta property="og:description" content="Artifact: `and-super-rev-w11.zip`. Every gate green.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_1_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"W.1.1 — LIVE LOCAL holds one live renderable view","name":"W.1.1 — LIVE LOCAL holds one live renderable view","description":"Artifact: `and-super-rev-w11.zip`. Every gate green.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_1_REVIEW_BRIEF.md/","identifier":"bagaaierajzqbjo3mbxo4pq7glsta5mxgjsyry7y5bxpcm5lrq7tavgx6f7eq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Measured"},{"@type":"WebPageElement","name":"1 · The cockpit holds the view"},{"@type":"WebPageElement","name":"2 · Two clocks, and it was three sources, not two"},{"@type":"WebPageElement","name":"3 · A subscription is a lease"},{"@type":"WebPageElement","name":"4 · kind: :read did not mean safe to retry"},{"@type":"WebPageElement","name":"5 · What I got wrong building it"},{"@type":"WebPageElement","name":"6 · Your W.1.1 battery"},{"@type":"WebPageElement","name":"7 · Still no Tauri, and what this round did about that"},{"@type":"WebPageElement","name":"8 · Ladder"},{"@type":"WebPageElement","name":"Verify"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"W_1_1_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_1_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/W_1_1_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Artifact: `and-super-rev-w11.zip`. Every gate green.</div>
+<div class="prose"><h1 id="blk-115855">W.1.1 — LIVE LOCAL holds one live renderable view</h1>
+<p><strong>Artifact: `and-super-rev-w11.zip`. Every gate green.</strong></p>
+<p>All four findings are real. Three reproduced exactly as you drew them; the fourth reproduced harder than you drew it, and my first attempt to measure it read zero because I grepped for the wrong refusal code. All four are closed, with falsifiers.</p>
+<p>The <code>CockpitLoop</code> one is as direct as you said. <code>Cockpit::LiveLocal</code> was documented as <em>&quot;control held, subscribed, and holding a projection&quot;</em> and the struct had no field for one. I wrote both the doc and the struct in the same round.</p>
+<pre><code>                        BEFORE                          AFTER
+CockpitLoop             rt chan cursor state            + projection: Option&lt;Value&gt;
+LiveLocal means         I received a cursor             I hold the view that cursor
+                        from a coherent snapshot        belongs to · invariant checked
+agent channel opens     pushes: 0 · revision 1 -&gt; 1     pushes: 1 · revision unchanged,
+                        subscriber holds 1 channel      view_revision moved
+Subscriptions killed    connection alive · 0 pushes     connection closed · host sees EOF
+                        LIVE LOCAL forever              → reacquires → LIVE LOCAL
+one denied preflight    4 refusals recorded             1 refusal recorded</code></pre>
+<h3 id="blk-115860">0 · Measured</h3>
+<table><thead><tr><th></th><th>W.1</th><th>W.1.1</th></tr></thead><tbody><tr><td>conformance vectors</td><td>42</td><td><strong>42</strong></td></tr><tr><td>BEAM tests</td><td>204</td><td><strong>211</strong>, 0 failures at seed 0 and at 91731</td></tr><tr><td>browser assertions</td><td>64</td><td><strong>64</strong></td></tr><tr><td>BEAM sabotage falsifiers</td><td>62 · 0 not</td><td><strong>67 · 0 not</strong></td></tr><tr><td>host acceptance checks</td><td>61 held · 0 failed</td><td><strong>68 held · 0 failed</strong></td></tr><tr><td>host sabotage falsifiers</td><td>8 · 0 not</td><td><strong>10 · 0 not</strong></td></tr></tbody></table>
+<h3 id="blk-115883">1 · The cockpit holds the view</h3>
+<p><code>CockpitLoop</code> gains <code>projection: Option&lt;Value&gt;</code>, and <code>LiveLocal</code> is now only reachable through one function:</p>
+<pre data-lang="rust"><code>fn go_live(&amp;mut self, frame: &amp;Value) -&gt; bool {
+    let complete = frame[&quot;schema&quot;] == &quot;projection-snapshot@1&quot;
+        &amp;&amp; frame[&quot;world_incarnation&quot;].is_string()
+        &amp;&amp; frame[&quot;projection_epoch&quot;].is_string()
+        &amp;&amp; frame[&quot;view_revision&quot;].is_u64()
+        &amp;&amp; frame[&quot;projection&quot;].is_object();
+    if !complete || self.chan.is_none() { … Acquiring }</code></pre>
+<p><code>acquire</code> validates the subscribe reply before claiming anything, <code>turn</code> adopts the <strong>whole frame</strong> rather than its cursor, and <code>discard()</code> runs before every reacquisition so a view belonging to an ended world is never on screen across one. <code>invariant_holds()</code> is the property from outside: LIVE LOCAL with no projection, no channel, or no incarnation is a badge that means nothing, and the battery checks it.</p>
+<p>The render object is yours:</p>
+<pre data-lang="rust"><code>pub struct CockpitFrame { state, world: ProjectionCursor, projection: Option&lt;Value&gt; }</code></pre>
+<p>One call, one coherent answer — so nothing downstream has to take a second sample to draw what the cursor describes. That was the real risk you identified: the easiest next move would have been a WebView calling <code>operator_projection</code> again, breaking the cursor/content relation at the last hop.</p>
+<h3 id="blk-115890">2 · Two clocks, and it was three sources, not two</h3>
+<p>Confirmed: <code>Ampd.AuthorityCoordinator</code> was the only production caller of <code>Subscriptions.changed/0</code>. Measured:</p>
+<pre><code>subscribed · channels in view: 1
+an agent channel opens
+pushes received: 0 · revision 1 -&gt; 1
+a fresh snapshot now shows 2 channels — the subscriber still holds 1</code></pre>
+<p>You named <code>peers</code> and <code>channels</code>. <code>recent_refusals</code> is the third, and it is the one that matters most for a diagnostic view: a refusal that reaches no coordinator — an agent asking for a human-only command, refused by <code>Ampd.Control</code> before dispatch — changed the operator projection and announced nothing.</p>
+<p>So:</p>
+<pre><code>revision       ordered AUTHORITY mutations · which durable state this is based on
+view_revision  everything a projection can SHOW · is this newer than what I render</code></pre>
+<p><code>Ampd.Peer</code>, <code>Ampd.Bridge</code> and <code>Ampd.RefusalLog</code> call <code>AuthorityCoordinator.touched/0</code> — a <strong>cast</strong>, necessarily: <code>Ampd.Bridge.reset/0</code> is called from inside a coordinator transaction by <code>advance_lineage/2</code>, so a synchronous call would deadlock against the transaction calling it.</p>
+<p><strong>One naming decision I made and am flagging rather than burying.</strong> You proposed <code>authority_revision</code> / <code>projection_revision</code>. On the wire I kept <code>revision</code> and added <code>view_revision</code>, because <code>revision</code> is in the host, the fixtures and a dozen tests, and a wire rename is its own decision rather than a side effect of this one. In Rust the fields are named honestly — <code>ProjectionCursor { authority_revision, view_revision }</code> — so the misleading pairing only survives on the wire. Say the word and it becomes <code>authority_revision</code> in W.2.</p>
+<h3 id="blk-115898">3 · A subscription is a lease</h3>
+<p>Confirmed, and the measurement is stark:</p>
+<pre><code>subscribers before: 1
+Ampd.Subscriptions killed
+subscribers after restart: 0
+an authority mutation
+pushes: 0 · the control connection is still alive: true</code></pre>
+<p>No EOF, no frame, no error. Your smallest fix is the one that shipped: the subscriber watches the subscription server from its own side, so its death closes the channel and W.1's already-working EOF path does the rest. A monitor rather than a link, and in that direction only — a link would let one dying connection take the subscription server down for everyone.</p>
+<p>Measured after:</p>
+<pre><code>killing Ampd.Subscriptions ...
+connection alive: false · bridge lists 0 · peer resolves: false</code></pre>
+<h3 id="blk-115904">4 · <code>kind: :read</code> did not mean safe to retry</h3>
+<p>Confirmed, and worse than the <code>preflight</code> case alone. Under forced churn, for <strong>one</strong> client command:</p>
+<pre><code>preflight (denied)      refusals recorded: 4   %{&quot;denied-by-default&quot; =&gt; 4}
+inspect_refusal (404)   refusals recorded: 4   %{&quot;refusal-unknown&quot; =&gt; 4}
+agent_projection        refusals recorded: 0
+list_receipts           refusals recorded: 0</code></pre>
+<p><em>(My first probe grepped for `authority-missing` and read 0. The code is `denied-by-default`. I was measuring the wrong string, not a working system.)</em></p>
+<p>Your <code>retry:</code> axis is what shipped, because you were right that the abstraction is what is wrong rather than <code>preflight</code>:</p>
+<pre><code>kind:  :read | :mutation      may this be assembled under a cursor?
+retry: :safe | :once          may it be executed more than once?</code></pre>
+<p><code>preflight</code> and <code>inspect_refusal</code> are <code>read + once</code> and go straight to the ordered path via <code>Projection.framed_once/2</code>. Both facts are declared in <code>Ampd.CommandSpec</code> and the build fails if a read omits either.</p>
+<p>This also became load-bearing rather than tidy: recording a refusal now advances the <em>view</em> revision, and the view revision is what the seqlock compares — so a speculative read that constructs a refusal would invalidate its own attempt, retry, and record again. The two findings are one fix.</p>
+<h3 id="blk-115912">5 · What I got wrong building it</h3>
+<p><strong>The refusal witness was weak and the probe caught it.</strong> My first version used <code>request_effect</code>, which runs an authority transaction whether or not it is allowed — so the push it produced came from the coordinator, and the witness stayed green with the refusal notification removed entirely. Replaced with an agent issuing a human-only command, which is refused before anything is dispatched and moves no authority. Asserted as a precondition in the test so it cannot silently regress.</p>
+<p><strong>A cap-dependent assertion.</strong> The refusal test counted <code>recent_refusals</code>, which is a window of 20 — so once the ring is full the length cannot grow, and the test passed alone and failed in the full suite. It now asserts the newest correlation id changed, which is the actual claim.</p>
+<p><strong>Two more probes went stale against my own refactor</strong> and reported SABOTAGE MISSED: the coordinator's <code>init</code> line gained <code>view: 0</code>, and the <code>:observe</code> clause moved to <code>cursor_of(st)</code>. That is four stale probes across two rounds, all from me editing lines a probe was pinned to.</p>
+<h3 id="blk-115916">6 · Your W.1.1 battery</h3>
+<table><thead><tr><th>Witness</th><th>Result</th></tr></thead><tbody><tr><td>successful subscribe retains the complete frame</td><td>✅</td></tr><tr><td><code>LiveLocal</code> impossible with <code>projection == None</code></td><td>✅ <code>invariant_holds()</code> · one entry point</td></tr><tr><td>malformed/incomplete snapshot never produces <code>LiveLocal</code></td><td>✅ validated in <code>acquire</code></td></tr><tr><td>authority push updates projection and cursor together</td><td>✅ whole frame adopted</td></tr><tr><td>EOF / new incarnation discards before reacquiring</td><td>✅ <code>discard()</code> on both paths</td></tr><tr><td>agent channel opens → newer view, no authority mutation</td><td>✅ BEAM <strong>and</strong> host</td></tr><tr><td>agent channel closes → same</td><td>✅ BEAM and host</td></tr><tr><td>a new operator-visible refusal reaches the view</td><td>✅ and it moves no authority</td></tr><tr><td>topology change advances the view revision</td><td>✅</td></tr><tr><td>authority-only change advances <strong>both</strong></td><td>✅</td></tr><tr><td>kill <code>Ampd.Subscriptions</code> → cannot stay silently LIVE</td><td>✅ channel closes</td></tr><tr><td>subscription restart → reacquire → fresh truth</td><td>✅ via W.1's EOF path</td></tr><tr><td>one denied <code>preflight</code> under churn → exactly one refusal</td><td>✅ and <code>inspect_refusal</code> too</td></tr><tr><td>remove stored projection → RED</td><td>✅ host probe 9</td></tr><tr><td>remove topology notification → RED</td><td>✅ BEAM probe, three routes</td></tr><tr><td>remove the view clock → RED</td><td>✅ separate probe</td></tr><tr><td>remove subscription-death handling → RED</td><td>✅</td></tr><tr><td>drive the stream by the authority revision → RED</td><td>✅ host probe 10</td></tr></tbody></table>
+<h3 id="blk-115956">7 · Still no Tauri, and what this round did about that</h3>
+<p>Unchanged and deliberate: <code>host/Cargo.toml</code> is <code>serde_json</code> and libc externs. What changed is that the thing a WebView would need now exists as one value.</p>
+<p>Your guidance about a <code>Channel&lt;CockpitFrame&gt;</code> rather than generic events, an async command, a dedicated worker rather than the UI thread, and a microscopic capability surface — that is the shape <code>CockpitFrame</code> was built for: a single ordered stream of whole coherent frames, produced by a loop that already owns its own blocking socket and condvar. W.2 follows it.</p>
+<p>The restore-triggered EOF still cannot be driven from the host, unchanged for the third round: <code>advance_lineage/2</code> is on no channel.</p>
+<h3 id="blk-115960">8 · Ladder</h3>
+<p>C1.1     ├─ F.8.2.5  generation is a fence · authority reacquired         ✓ ├─ W.1      the cockpit observes one incarnation                 ✓ └─ W.1.1    LIVE LOCAL holds one live renderable view: · the loop holds the projection, not just its cursor ✓ · view revision ≠ authority revision                 ✓ · a subscription is a lease, not a past success      ✓ · a read that writes is executed exactly once        ✓ · the WebView renders it                             ✗ W.2      Tauri Channel&lt;CockpitFrame&gt; → WebView · REVOKE → capability-scoped IPC → human channel → authority transaction → both clocks move → one coherent frame → the UI changes because truth changed C1.1b    SQLite transactional persistence · durable revision</p>
+<h3 id="blk-115962">Verify</h3>
+<pre><code>cd ampd &amp;&amp; mix test --seed 0          # 211 tests
+bash tools/sabotage.sh                # 67 falsified · 0 not   (~7m)
+cd .. &amp;&amp; bash tools/release.sh        # required gates, including both host gates
+./host/target/release/super-host verify        # 68 held · 0 failed
+bash tools/sabotage-host.sh                    # 10 falsified · 0 not</code></pre>
+<p>New this round: <code>Ampd.AuthorityCoordinator.touched/0</code>, <code>Ampd.Projection.framed_once/2</code>, <code>CommandSpec</code>'s <code>retry:</code> declaration, the subscription lease in <code>Ampd.Subscriptions</code> and <code>Ampd.Transport.Connection</code>, and <code>CockpitFrame</code> + <code>CockpitLoop.projection</code> in the host.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/W_1_1_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-115860" class="lvl2">0 · Measured</a><a href="#blk-115883" class="lvl2">1 · The cockpit holds the view</a><a href="#blk-115890" class="lvl2">2 · Two clocks, and it was three sources, not two</a><a href="#blk-115898" class="lvl2">3 · A subscription is a lease</a><a href="#blk-115904" class="lvl2">4 · kind: :read did not mean safe to retry</a><a href="#blk-115912" class="lvl2">5 · What I got wrong building it</a><a href="#blk-115916" class="lvl2">6 · Your W.1.1 battery</a><a href="#blk-115956" class="lvl2">7 · Still no Tauri, and what this round did about that</a><a href="#blk-115960" class="lvl2">8 · Ladder</a><a href="#blk-115962" class="lvl2">Verify</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierajzqbjo3mbxo4pq7glsta5mxgjsyry7y5bxpcm5lrq7tavgx6f7eq</div></div></div>
+</div></div>
+</body></html>

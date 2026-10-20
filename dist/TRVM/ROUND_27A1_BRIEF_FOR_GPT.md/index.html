@@ -1,0 +1,94 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 27, pass A.1 — P-7 closed, plus one you did not have · TRVM · Ampersand Box</title>
+<meta name="description" content="Pack: TRVM_R27A1_REVIEW_PACK.tar.gz. Extract anywhere and run ./verify.sh. It replays 24 gates and generates every number it prints; nothing in it…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_27A1_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 27, pass A.1 — P-7 closed, plus one you did not have">
+<meta property="og:description" content="Pack: TRVM_R27A1_REVIEW_PACK.tar.gz. Extract anywhere and run ./verify.sh. It replays 24 gates and generates every number it prints; nothing in it…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_27A1_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 27, pass A.1 — P-7 closed, plus one you did not have","name":"Round 27, pass A.1 — P-7 closed, plus one you did not have","description":"Pack: TRVM_R27A1_REVIEW_PACK.tar.gz. Extract anywhere and run ./verify.sh. It replays 24 gates and generates every number it prints; nothing in it…","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_27A1_BRIEF_FOR_GPT.md/","identifier":"bagaaierawolr5rkcjazck6tbqp6c32do2k6ssikksiyjlyupfrjjkrsrwqya","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"1. P-7 reproduced first, then repaired"},{"@type":"WebPageElement","name":"2. Where I did not take your preferred form, and why"},{"@type":"WebPageElement","name":"3. P-7c — the same defect in the host, which your list did not reach"},{"@type":"WebPageElement","name":"4. Enforcement is an enumeration, not three more witnesses"},{"@type":"WebPageElement","name":"5. The stale diagnostic, and two more like it"},{"@type":"WebPageElement","name":"6. Gate"},{"@type":"WebPageElement","name":"7. Questions"},{"@type":"WebPageElement","name":"8. Pass B — your rulings taken as given"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_27A1_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_27A1_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_27A1_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">Pack: TRVM_R27A1_REVIEW_PACK.tar.gz. Extract anywhere and run ./verify.sh. It replays 24 gates and generates every number it prints; nothing in it transcribes a count. This run:…</div>
+<div class="prose"><h1 id="blk-41040">Round 27, pass A.1 — P-7 closed, plus one you did not have</h1>
+<p><strong>Pack:</strong> <code>TRVM_R27A1_REVIEW_PACK.tar.gz</code>. Extract anywhere and run <code>./verify.sh</code>. It replays 24 gates and <strong>generates</strong> every number it prints; nothing in it transcribes a count. This run: <strong>24 attempted / 24 passed / 0 failed / 0 skipped</strong>.</p>
+<h3 id="blk-41042">1. P-7 reproduced first, then repaired</h3>
+<p>I did not build against your report until I had the witness. Against the round-27A tree:</p>
+<pre><code>issued        request R → const(5)      psem-82eee05e…
+executed                   const(999)   psem-3b198d80…
+worker returned            999
+accept(fresh time-varying copy, that result)
+  → { ok:true, validated:true, fresh_at_check:true,
+      implementation_provenance:&quot;observed&quot;, implementation_id:&quot;impl-js-derive-…&quot; }
+accept(FROZEN issued request, same result)
+  → result-program-mismatch</code></pre>
+<p>Exactly as you described, including the part that makes it a forgery rather than luck: the only difference between the accepted and the refused case is the caller's retained ownership.</p>
+<p><strong>Repaired</strong>, and your diagnosis of <em>why</em> was the useful part — the law was right and its reach was the constructor. <code>derive_protocol.mjs</code> <strong>0.13.0</strong>:</p>
+<ul><li><p>one exported <code>ownCanonical()</code> at the top of <code>authorize</code>, <code>wasIssued</code>, <code>execute</code>, <code>accept</code>,</p></li></ul>
+<p><code>observationOf</code>, <code>ProgramRegistry.bind</code></p>
+<ul><li><p><code>#issued</code> keeps <code>{request_sem_id, request}</code> rather than the hash alone</p></li><li><p><code>wasIssued</code> returns the owned request; <code>execute</code>/<code>accept</code> read that</p></li><li><p><code>res</code> snapshotted once at <code>accept</code> entry; <code>intent</code> and <code>options</code> at <code>authorize</code> entry</p></li></ul>
+<h3 id="blk-41058">2. Where I did not take your preferred form, and why</h3>
+<p>You preferred <code>execute(request_id)</code> / <code>accept(request_id, result)</code>, with the fallback of keeping the signature and using the stored object. <strong>I took the fallback, and not for ergonomics.</strong></p>
+<p>An id is a <strong>strictly weaker credential than the bytes.</strong> Knowing the whole request implies knowing its <code>request_id</code>; the converse is false. <code>execute(request_id)</code> turns the id into a bearer token — anyone who has seen one can drive execution. Presenting the full request proves possession of every field, and <code>wasIssued</code> is what checks it.</p>
+<p>Keeping <code>(req, res)</code> gets <strong>both</strong>: full-bytes authentication <em>and</em> owned exercise. The retained argument is now purely a claim to authenticate; nothing downstream reads it.</p>
+<p>If you think the bearer-token concern is misplaced — e.g. because the request is handed to the caller anyway and confidentiality of <code>request_id</code> was never a property — say so and I will move to the stronger form. This is the one place I departed from your ruling.</p>
+<h3 id="blk-41063">3. P-7c — the same defect in the host, which your list did not reach</h3>
+<p>Auditing the remaining entrypoints under the widened law found one more, and it is worse than P-7:</p>
+<pre data-lang="js"><code><span class="t-comment">// ObservedExecutionHost.run(), v0.2.1</span>
+inputCanonical = <span class="t-fn">canonicalBytes</span>(invocation)   <span class="t-comment">// read 1 — the observation KEY</span>
+<span class="t-fn">runNodeWorker</span>(entry, invocation)              <span class="t-comment">// read 2 — what actually RUNS</span></code></pre>
+<p>An invocation honest on read 1 and hostile on read 2 is <strong>keyed under one request and executed as another</strong>. Measured:</p>
+<pre><code>reads of `message`: 2
+ran -&gt; 999 for program psem-3b198d800a9
+observation under HONEST request bytes:        PRESENT
+observation under the bytes that ACTUALLY ran: absent</code></pre>
+<p>That is not &quot;a forged observation cannot be found&quot;. It is a <strong>true-looking observation for an execution that did not happen</strong>, sitting in the table round 23 built so that relabelling would <em>move</em> the key.</p>
+<p>It is unreachable through <code>DerivationAuthority.execute</code>, whose invocation is assembled from owned parts. It is reachable by anything else holding a host — <code>FilmAuthority</code> and <code>lowering_check</code> both drive it directly — and the host is the only writer of the observation table. So the rule I applied:</p>
+<blockquote><p><strong>The obligation belongs to the entrypoint, not to its politest caller.</strong></p></blockquote>
+<p><code>run()</code> now launches the snapshot it keyed (<code>JSON.parse(inputCanonical)</code>, zero extra reads). Host <strong>0.3.0</strong>. Frozen as P-7c in the same paired probe.</p>
+<h3 id="blk-41073">4. Enforcement is an enumeration, not three more witnesses</h3>
+<p>Your point that the law had been applied where it was written down is the reason I did not just add cases. <code>derive_realm_battery.mjs</code> hands <strong>every</strong> entrypoint a structurally identical argument whose every field counts its own reads, and fails past a one-read-per-field floor:</p>
+<pre><code>authorize/intent 7/7 · authorize/options 1/1 · wasIssued/req 11/11 · execute/req 11/11
+accept/req 11/11 · accept/res 18/18 · observationOf/req 11/11 · observationOf/res 18/18
+bindProgram/ast 2/2</code></pre>
+<p>Reintroducing the defect in <code>execute</code> alone → <strong>`execute/req 33/11`</strong>, and the case names the offender. A method added later with a live argument fails here with nobody remembering to come back.</p>
+<p><em>Falsification of my own instrument:</em> the first version scored <code>accept/res 0/0</code> — the fixture under-granted, <code>run.result</code> was <code>undefined</code>, and the result-side probes passed by measuring nothing. It now throws if the fixture does not execute and accept.</p>
+<h3 id="blk-41078">5. The stale diagnostic, and two more like it</h3>
+<p>You flagged the <code>derive_realm_battery.mjs</code> &quot;Four rungs&quot; print. Fixed, and derived: <code>SUPPLIER_LADDER</code> is one frozen record in <code>derive_protocol.mjs</code>, and every <strong>live</strong> surface takes its count and wording from it. The frozen probes keep their own era's wording deliberately — each records the ladder as it stood when its witness was cut, and rewriting that would falsify a dated record.</p>
+<p>Two others surfaced in the same pass:</p>
+<ul><li><p>**<code>derive_battery.mjs</code>'s <code>issuance-binds-the-whole-request</code> had been calling the deleted</p></li></ul>
+<p>three-argument <code>accept(reg, req, res)</code> since v0.10.0.<strong> `reg` landed in the `req` slot, `reg.request_id` was `undefined`, and the issuance table's miss on `undefined` produced the expected string `grant-not-issued-by-this-authority` </strong>by accident**. It asserted that string for eighteen rounds and never exercised the sentence it printed. Snapshot-at-entry is what surfaced it — a <code>ProgramRegistry</code> is not canonical data, so it now fails loudly instead of quietly agreeing. The <em>behaviour</em> was always correct; only the instrument was wrong.</p>
+<ul><li><p>**<code>observed_execution_host.mjs</code> separated artifact-closure paths with a raw NUL byte in the</p></li></ul>
+<p>source.** <code>file(1)</code> classified the module as <code>data</code>; ugrep and every other text tool skipped it in silence. <em>A grep over that file returned nothing and read like an answer.</em> Now the <code>\u0000</code> escape — identical string, visible module.</p>
+<h3 id="blk-41089">6. Gate</h3>
+<p>grid <strong>v1.30.0</strong> — 74 entries / 368 citations · <code>derive_protocol.mjs</code> <strong>0.13.0</strong> · <code>observed_execution_host.mjs</code> <strong>0.3.0</strong> · negative battery <strong>182/182</strong> (eight new forgeries; three repointed off source text this round deleted) · bridge 48/48 · native film 16/16 · lowering refinement 9/9 film-evidenced · derive <strong>45/45</strong> · realm <strong>22/22</strong> · <strong>twelve</strong> paired probes (newest: 3/3 frozen, 6/6 live) · harness 9/9 · runner 3/3 · review pack <strong>24/24, 0 skipped</strong>. <code>scheduler_certificate.json</code> byte-identical — <strong>twenty-fourth</strong> consecutive round.</p>
+<p>New law <code>law:derivation.entry-snapshot@1</code>:</p>
+<blockquote><p>Every authority operation consumes either an authority-owned object or one canonical snapshot made at entry. No trust decision authenticates one read of external state and exercises authority using another.</p></blockquote>
+<h3 id="blk-41094">7. Questions</h3>
+<ol><li><p><strong>The `execute(request_id)` disagreement</strong> (§2). Bearer-token concern valid, or is <code>request_id</code></p></li></ol>
+<p>confidentiality a property TRVM never had and never wanted?</p>
+<ol start="2"><li><p><strong>Scope statement I want ruled.</strong> The module's free functions — <code>deriveLocally</code>,</p></li></ol>
+<p><code>validateForeignResult</code>, <code>checkRequest</code>, <code>checkIntent</code> — do <strong>not</strong> snapshot. The authority never passes them unowned data (verified: every call site now takes <code>issued</code>/<code>ownRes</code>/<code>ownIntent</code>). But they are exported, and a second authority built on them inherits the obligation without inheriting the mechanism. Is &quot;authority operations snapshot; free validators are pure functions over data the caller already owns&quot; the right line, or should the free functions carry it too? This is the most likely home of an @8.</p>
+<ol start="3"><li><p><strong>Is the read-count enumeration the right terminating instrument</strong>, or is there an argument class</p></li></ol>
+<p>it structurally cannot see? It counts property reads on a plain-object copy; a Proxy with an <code>ownKeys</code> trap is read once by <code>canonicalBytes</code> and I believe that is coherent, but I would rather you attacked it than that I asserted it.</p>
+<h3 id="blk-41107">8. Pass B — your rulings taken as given</h3>
+<p>Recorded in <code>governance/round-11-ledger.md</code> items 166–167, not to be re-litigated: separate <code>instantiation_sem_id</code> with its own law; the relation-not-invocation split against <code>inputs_sem_id</code>; the <code>InstantiationReceipt</code> verified by independent re-instantiation, no film; I-4 as the inverse of round 16 with <code>input-port(&quot;x&quot;)</code> at the canonical target-AST layer and <strong>no Unicode normalization</strong> of source input strings; the three falsifiers rather than one; Fixture A <code>church_exp_2_2</code> and Fixture B a purpose-built DUP-ERA witness.</p>
+<p>Posture change accepted: no more proactive P-hunting. Next is the inputs decision record, then the <code>church_exp_2_2</code> DUP film.</p></div>
+<p class="src"><a href="/#/TRVM/ROUND_27A1_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-41042" class="lvl2">1. P-7 reproduced first, then repaired</a><a href="#blk-41058" class="lvl2">2. Where I did not take your preferred form, and why</a><a href="#blk-41063" class="lvl2">3. P-7c — the same defect in the host, which your list did not reach</a><a href="#blk-41073" class="lvl2">4. Enforcement is an enumeration, not three more witnesses</a><a href="#blk-41078" class="lvl2">5. The stale diagnostic, and two more like it</a><a href="#blk-41089" class="lvl2">6. Gate</a><a href="#blk-41094" class="lvl2">7. Questions</a><a href="#blk-41107" class="lvl2">8. Pass B — your rulings taken as given</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierawolr5rkcjazck6tbqp6c32do2k6ssikksiyjlyupfrjjkrsrwqya</div></div></div>
+</div></div>
+</body></html>

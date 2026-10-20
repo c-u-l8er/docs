@@ -1,0 +1,76 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Lane B — build studbook · agents · Ampersand Box</title>
+<meta name="description" content="Owns: studbook/ Must not touch: TRVM/forge/ (substrate — consume it, never reimplement it), RRABBIT/m2/, root *.md.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/agents/B-studbook.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lane B — build studbook">
+<meta property="og:description" content="Owns: studbook/ Must not touch: TRVM/forge/ (substrate — consume it, never reimplement it), RRABBIT/m2/, root *.md.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/agents/B-studbook.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Lane B — build studbook","name":"Lane B — build studbook","description":"Owns: studbook/ Must not touch: TRVM/forge/ (substrate — consume it, never reimplement it), RRABBIT/m2/, root *.md.","url":"https://docs.ampersandboxdesign.com/agents/B-studbook.md/","identifier":"bagaaieragabgu5mlcghq7yfwmg57titohgczptauhwx6m32g3mcjo2l4wm7q","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"agents","url":"https://docs.ampersandboxdesign.com/agents/"},"articleSection":"agents","hasPart":[{"@type":"WebPageElement","name":"Read first, in this order"},{"@type":"WebPageElement","name":"What studbook is, in one line"},{"@type":"WebPageElement","name":"What is decided"},{"@type":"WebPageElement","name":"Substrate you must consume rather than rebuild"},{"@type":"WebPageElement","name":"The work, once unblocked"},{"@type":"WebPageElement","name":"The prolly-tree finding — do this while blocked"},{"@type":"WebPageElement","name":"Traps"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"agents","item":"https://docs.ampersandboxdesign.com/agents/"},{"@type":"ListItem","position":3,"name":"B-studbook.md","item":"https://docs.ampersandboxdesign.com/agents/B-studbook.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">agents</span>
+<span class="path">agents/B-studbook.md</span>
+
+</div></div>
+<div class="lead">Owns: studbook/ Must not touch: TRVM/forge/ (substrate — consume it, never reimplement it), RRABBIT/m2/, root *.md.</div>
+<div class="prose"><h1 id="blk-52803">Lane B — build studbook</h1>
+<p><strong>Owns:</strong> <code>studbook/</code> <strong>Must not touch:</strong> <code>TRVM/forge/</code> (substrate — consume it, never reimplement it), <code>RRABBIT/m2/</code>, root <code>*.md</code>.</p>
+<blockquote><p>## ❌ BLOCKED. Do not write schema until two things are ruled  1. <strong>studbook §10.5 — does the identity ladder admit a new prefix?</strong> A studbook record is not a    <code>sem-</code>, <code>scen-</code> or <code>replay-</code>. If the answer is no, studbook is keyed by something else and the    schema changes shape. 2. <strong>The index question</strong> (<code>CONFIDENTIALITY.md</code> §4) — accept, minimise, or encrypt the    operator-visible graph. This decides what columns exist.  Both are <strong>[TRAVIS]</strong>. Reading, and the prolly-tree finding below, can proceed meanwhile.</p></blockquote>
+<h3 id="blk-52807">Read first, in this order</h3>
+<ol><li><p><code>studbook/docs/spec/README.md</code> — the whole spec. Its header says *&quot;draft spec. No</p></li></ol>
+<p>implementation. Nothing in §7 or §10 has been ruled. Do not build from this yet.&quot;* That still holds for §7 and §10.</p>
+<ol start="2"><li><p><code>PUBLISH_PATH.md</code> — studbook's first named consumer.</p></li><li><p><code>CONFIDENTIALITY.md</code> — §4 is the tension that decides the schema.</p></li><li><p><code>STACK_HUB.md</code> §0.8 — why Postgres is right for the index and catastrophic for the bytes.</p></li></ol>
+<h3 id="blk-52819">What studbook is, in one line</h3>
+<blockquote><p><em>&quot;A record in studbook carries where it came from, and a record that cannot show its provenance is refused rather than stored.&quot;</em></p></blockquote>
+<h3 id="blk-52822">What is decided</h3>
+<ul><li><p><strong>Supabase is abandoned</strong> (2026-07-30). studbook replaces it. <strong>Nothing migrates</strong> until studbook</p></li></ul>
+<p>holds the same data with the same guarantees — <code>fleet.*</code> serves KILN and FleetPrompt <em>today</em>.</p>
+<ul><li><p><strong>Postgres is the index, R2 holds the bytes.</strong> Measured: bytes in Postgres is <strong>18.7×</strong> R2 and</p></li></ul>
+<p>puts every tier underwater — a 10 TB customer would cost <strong>$2,867/month</strong>. The same customer's <em>index</em> is ~250 MB, or <strong>seven cents</strong>.</p>
+<ul><li><p><strong>This does not reverse §2.</strong> §2 rejected Postgres as the <em>data model</em> — a row does not say why it</p></li></ul>
+<p>is that row. As an <strong>index over content-addressed blobs</strong>, the refusal still comes from content addressing and Postgres only makes it queryable. <strong>Never describe this as &quot;studbook moved back to Postgres.&quot;</strong></p>
+<ul><li><p><strong>Postgres lives on the Hetzner VM</strong> (lane C), managed by Pigsty, shared with nothing that has a</p></li></ul>
+<p>user's bytes in it.</p>
+<ul><li><p><strong>Enterprise clients get their own VM and their own database.</strong> Single-tenant, which sidesteps</p></li></ul>
+<p>§10.2 for them entirely.</p>
+<h3 id="blk-52843">Substrate you must consume rather than rebuild</h3>
+<p>studbook §4: <em>&quot;If studbook reimplements something substrate already proves, that is a finding, not a shortcut.&quot;</em> <code>TRVM/forge/</code> already ships, with batteries:</p>
+<table><thead><tr><th>Capability</th><th>Where</th><th>Guarantee</th></tr></thead><tbody><tr><td>Content-addressed store</td><td><code>wrl_store.py</code> <code>_ContentStore</code></td><td>key <strong>is</strong> <code>sha(bytes)</code>; <code>WRL_STORE_ID_MISMATCH</code></td></tr><tr><td>Verified read</td><td><code>_get_bytes</code></td><td>re-hashes every read; <code>WRL_STORE_CORRUPT</code></td></tr><tr><td>Durable atomic write</td><td><code>_atomic_write</code></td><td>temp → fsync → <code>os.replace</code> → dir fsync</td></tr><tr><td>Optimistic concurrency</td><td><code>wrl_project.py</code></td><td>per-document exact-CAS, <code>WRL_PROJECT_STALE</code>, no auto-merge</td></tr><tr><td>Verified export/import</td><td><code>wrl_bundle.py</code></td><td>closure, identity re-derivation, corruption</td></tr><tr><td>Crash recovery</td><td><code>RecoveryJournalV1</code></td><td>atomic, non-authoritative, never auto-applied</td></tr></tbody></table>
+<h3 id="blk-52867">The work, once unblocked</h3>
+<ol><li><p><strong>The index schema.</strong> Records, ancestry edges, chunk manifests. Per <code>CONFIDENTIALITY.md</code> §4</p></li></ol>
+<p>option 2 (recommended): <strong>opaque ids, sizes and edges — no names, no paths.</strong> A manifest does not need to know a file is called <code>taxes-2026.pdf</code> to say which chunks compose it, and the human-readable fields are exactly the leaky ones.</p>
+<ol start="2"><li><p><strong>The three queries that justify the whole thing</strong> (studbook §4): given a record, its ancestry;</p></li></ol>
+<p>given two states, what changed; given a claim, the evidence chain, every link re-derivable.</p>
+<ol start="3"><li><p><strong>The R2 adapter.</strong> <code>RRABBIT/m2/trackstore.js</code> is the shape to follow — *the store is never</p></li></ol>
+<p>trusted, every read re-derives the hash.* Do not weaken that.</p>
+<ol start="4"><li><p><strong>The parity gate</strong> before anything migrates: same reads, same refusals, side by side with</p></li></ol>
+<p>Supabase still up.</p>
+<h3 id="blk-52884">The prolly-tree finding — do this while blocked</h3>
+<p>§7.3 proposes a prolly tree for §6.1's index gap and calls itself <em>&quot;a reading task before it is a build task.&quot;</em> But <code>STACK_HUB.md</code> §0.8 argues <strong>Postgres may simply be the answer</strong> — ordered access and range scans today, at the cost of history-independence and cheap subtree diff.</p>
+<p><strong>Produce a written finding on which trade is right.</strong> That is a real deliverable and it needs no ruling. Do not start building a prolly tree.</p>
+<h3 id="blk-52887">Traps</h3>
+<ul><li><p>**A track records a <em>live OS world</em>, not a sealed <code>sem-</code> world.** Conflating them is the plan's</p></li></ul>
+<p>R9 and it <strong>fails quietly</strong> — WRLM's passing test counts would appear to back OS-world claims they do not touch.</p>
+<ul><li><p><strong>Convergent encryption is refused by name.</strong> Deriving the key from the plaintext restores</p></li></ul>
+<p>cross-user dedup and looks like free money; it also restores the confirmation-of-a-file attack §6.2 identified. Per-user dedup has none of this and is where the saving is.</p>
+<ul><li><p><strong>studbook §9's non-goals are load-bearing.</strong> Not a general database, not a SQLite competitor, not</p></li></ul>
+<p>a new identity rung without §10.5. A hub asking for joins is not a reason to relax them.</p>
+<ul><li><p><strong>`studbook/` is a local-only git repo with no remote.</strong> Commits survive; pushes have nowhere to</p></li></ul>
+<p>go. Do not assume it is backed up.</p>
+<ul><li><p>Travis said on 2026-08-15 that studbook runs on Fly with a site at <code>studbook.computedriven.com</code>.</p></li></ul>
+<p><strong>Five checks found neither</strong> — no DNS record, no HTTP response, no Fly app, no source in tree. Recorded in <code>PUBLISH_PATH.md</code> §6 and <strong>still unresolved.</strong> Do not assume a deployment exists.</p></div>
+<p class="src"><a href="/#/agents/B-studbook.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-52807" class="lvl2">Read first, in this order</a><a href="#blk-52819" class="lvl2">What studbook is, in one line</a><a href="#blk-52822" class="lvl2">What is decided</a><a href="#blk-52843" class="lvl2">Substrate you must consume rather than rebuild</a><a href="#blk-52867" class="lvl2">The work, once unblocked</a><a href="#blk-52884" class="lvl2">The prolly-tree finding — do this while blocked</a><a href="#blk-52887" class="lvl2">Traps</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/agents/A-shell-wiring.md/">Lane A — wire publishing into the shell</a><a href="/agents/C-infrastructure.md/">Lane C — stand up the cloud</a><a href="/agents/D-worker-auth.md/">Lane D — the credential surface, and now the control plane</a><a href="/agents/E-site.md/">Lane E — the site and the nav</a><a href="/agents/F-docs.md/">Lane F — finish the reconciliation</a><a href="/agents/README.md/">Agent lanes — what can be worked on in parallel, and what will collide</a><a href="/agents/SHELL.md/">The portfolio shell</a><a href="/agents/SITES.md/">Site lanes — updating the domain index.htmls in parallel</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieragabgu5mlcghq7yfwmg57titohgczptauhwx6m32g3mcjo2l4wm7q</div></div></div>
+</div></div>
+</body></html>

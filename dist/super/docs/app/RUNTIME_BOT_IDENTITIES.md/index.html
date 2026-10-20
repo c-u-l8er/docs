@@ -1,0 +1,60 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Runtime bot identities — 2026-09-07 · super · Ampersand Box</title>
+<meta name="description" content="Bots can now register a durable identity in a workspace. Existing local profiles and conversation history are preserved. Registration is explicit from a…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/app/RUNTIME_BOT_IDENTITIES.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Runtime bot identities — 2026-09-07">
+<meta property="og:description" content="Bots can now register a durable identity in a workspace. Existing local profiles and conversation history are preserved. Registration is explicit from a…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/app/RUNTIME_BOT_IDENTITIES.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Runtime bot identities — 2026-09-07","name":"Runtime bot identities — 2026-09-07","description":"Bots can now register a durable identity in a workspace. Existing local profiles and conversation history are preserved. Registration is explicit from a…","url":"https://docs.ampersandboxdesign.com/super/docs/app/RUNTIME_BOT_IDENTITIES.md/","identifier":"bagaaierauejg5rehts6voz7vowrknx2ky4s66leutgxzrxer6ul6yembierq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"User flow"},{"@type":"WebPageElement","name":"Runtime contract"},{"@type":"WebPageElement","name":"What remains open"},{"@type":"WebPageElement","name":"Bots and Swarms"},{"@type":"WebPageElement","name":"Verification"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"app","item":"https://docs.ampersandboxdesign.com/super/docs/app/"},{"@type":"ListItem","position":5,"name":"RUNTIME_BOT_IDENTITIES.md","item":"https://docs.ampersandboxdesign.com/super/docs/app/RUNTIME_BOT_IDENTITIES.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/app/RUNTIME_BOT_IDENTITIES.md</span>
+
+</div></div>
+<div class="lead">Bots can now register a durable identity in a workspace. Existing local profiles and conversation history are preserved. Registration is explicit from a bot page; it is never pe…</div>
+<div class="prose"><h1 id="blk-112063">Runtime bot identities — 2026-09-07</h1>
+<p>Bots can now register a durable identity in a workspace. Existing local profiles and conversation history are preserved. Registration is explicit from a bot page; it is never performed automatically on upgrade or while connecting a provider.</p>
+<h3 id="blk-112065">User flow</h3>
+<ol><li><p>Open or create a bot under Bots.</p></li><li><p>Choose a workspace and select <strong>Register in workspace</strong>.</p></li><li><p>Wait for the confirming runtime frame. The page now shows Registered in runtime.</p></li><li><p>Edit bot updates the registered profile with a checked revision. The app refuses</p></li></ol>
+<p>stale edits and waits for a confirming frame before leaving the form.</p>
+<ol start="5"><li><p>Inspect runtime identity opens a record page with its workspace and lanes. The</p></li></ol>
+<p>Create lane action fills the registered actor into the existing lane form.</p>
+<ol start="6"><li><p>Remove runtime registration requires confirmation and refuses when lanes,</p></li></ol>
+<p>active grants, pending grant requests/approvals or active effects reference the actor. Removing a registration preserves local conversations.</p>
+<p>A disconnected runtime is shown as unavailable. Previously observed registration is not relabeled as local-only, and its profile edit is disabled until the runtime can confirm the current record. Returning to a different world does not reuse its registration. Profile and conversation data on this device remain separate.</p>
+<h3 id="blk-112085">Runtime contract</h3>
+<p><code>bot@1</code> lives in the existing loci store; no new durable store was added. Fields: <code>id</code>, <code>actor</code>, <code>client_ref</code>, <code>workspace_ref</code>, <code>name</code>, <code>role</code>, <code>instructions</code>, <code>group</code>, <code>provider</code>, <code>revision</code>, <code>world_ref</code>, and <code>schema</code>.</p>
+<p>The runtime mints the record ID and a random actor name. They cannot be supplied or changed by profile fields. <code>client_ref</code> correlates an existing local profile and its history; it is not a credential or authority token. Matching repeated registration returns the same identity; conflicting reuse is refused. Edits cannot change workspace, actor or local reference and require the exact current revision.</p>
+<p>Three typed human-control mutations were added: <code>register_bot</code>, <code>update_bot</code>, and <code>remove_bot</code>. They use the existing ordered create/patch participant boundary and native intent queue. Mutations are confirmed through the accepted projection, not by installing the submission response as UI truth.</p>
+<p>The operator projection includes the directory. The existing agent projection includes only the identity matching that channel's actor. It does not expose other bots, grant observations to a new bot, or provide a new agent credential. New lane assignments for a registered actor must use its registered workspace.</p>
+<p>Recovery adds an empty <code>bots</code> collection to older loci snapshots. That adds no identity or authority. Store sealing stays unchanged. Profiles are bounded to 50 records and 64 KiB aggregate logical size so this new directory cannot grow without limit inside the bounded runtime frame. It is not a guarantee that all other world collections combined fit in one frame.</p>
+<h3 id="blk-112091">What remains open</h3>
+<p>Registration does not launch a bot, grant permissions, connect its model to an agent channel, or implement delegated execution. Conversation requests still use explicitly shared human workspace context and reviewed proposals. The scoped identity in the agent projection is a prerequisite, not the complete prototype's observation-grant/citation contract.</p>
+<p>Next: actor-authenticated execution, scoped observation, typed parent/child capability delegation and revocation, then worktree execution and diff review.</p>
+<h3 id="blk-112094">Bots and Swarms</h3>
+<p>Keep <strong>Bots</strong> for individual persistent roles. Use <strong>Swarms</strong> for coordinated teams with a shared goal, coordinator, member roles and delegated tasks/results. Current sidebar groups are organization labels; they do not yet implement a swarm. A future Swarms section should show each team's goal, members, blockers, task handoffs and measured progress, with links into individual bot pages. Naming that section Swarms becomes useful when those team operations exist.</p>
+<h3 id="blk-112096">Verification</h3>
+<ul><li><p>Final native app smoke: 90 held, including registration, versioned edit, identity</p></li></ul>
+<p>inspection, disconnection handling and removal with draft preservation.</p>
+<ul><li><p>Runtime regression suite: 136 tests passed before the final directory-budget</p></li></ul>
+<p>addition; final targeted registry/workspace suite: 18 tests passed.</p>
+<ul><li><p>Separate-process persistent-world check passed for identity and zero granted authority.</p></li><li><p>Existing 18 JavaScript storage/navigation/guidance tests passed.</p></li><li><p>Release build, warnings-as-errors runtime compilation, ordered-boundary and</p></li></ul>
+<p>ordered-closure gates, 32 WebView ACL checks and 6 intent checks passed. The intent surface now covers 18 human-control mutations.</p>
+<ul><li><p>Screenshots reviewed. No live provider inference or autonomous coding was run.</p></li></ul>
+<p>Changes remain local and uncommitted; earlier local development was retained.</p></div>
+<p class="src"><a href="/#/super/docs/app/RUNTIME_BOT_IDENTITIES.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-112065" class="lvl2">User flow</a><a href="#blk-112085" class="lvl2">Runtime contract</a><a href="#blk-112091" class="lvl2">What remains open</a><a href="#blk-112094" class="lvl2">Bots and Swarms</a><a href="#blk-112096" class="lvl2">Verification</a></nav></div><div class="card"><div class="lab">referenced by</div><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/MVP_PASS_2026_09_07.md/">Super prototype → usable development MVP</a></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/app/ACCEPTED_BUILD_2026_09_10.md/">Super: build accepted app</a><a href="/super/docs/app/ACCEPTED_RESULT_CHECK_2026_09_10.md/">Super: checking accepted source before integration</a><a href="/super/docs/app/AUTHORITY_LOG_RETENTION_2026_09_24.md/">Authority log retention — candidate 3 (2026-09-24)</a><a href="/super/docs/app/BOTS.md/">Bots — first conversation and orchestration connection</a><a href="/super/docs/app/BOT_LIVE_ACTIVITY_2026_09_13.md/">Bot activity and Claude reconnect</a><a href="/super/docs/app/BOT_WORK_PAGES_2026_09_07.md/">Super progress — bot work pages</a><a href="/super/docs/app/BUILD_PREVIEW_2026_09_10.md/">Try an accepted Super build</a><a href="/super/docs/app/CANCELLED_PLAN_STEPS_2026_09_19.md/">A cancelled plan&#39;s stepper claims no step — 2026-09-19</a><a href="/super/docs/app/COMBINED_FILE_REVIEW_2026_09_10.md/">Combined file review — 2026-09-10</a><a href="/super/docs/app/COMBINED_TESTING_2026_09_10.md/">Combined testing and acceptance — 2026-09-10</a><a href="/super/docs/app/CONTINUE_WORK_2026_09_14.md/">Continue work and guided review</a><a href="/super/docs/app/DESKTOP_LAUNCH_2026_09_10.md/">Daily desktop launch — September 10, 2026</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierauejg5rehts6voz7vowrknx2ky4s66leutgxzrxer6ul6yembierq</div></div></div>
+</div></div>
+</body></html>

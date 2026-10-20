@@ -1,0 +1,453 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>D.1.3c·2d·2 — Intervention provenance, revised · super · Ampersand Box</title>
+<meta name="description" content="DESIGN ONLY. Nothing here is implemented. No Elixir changed, no schema file written. This revises D.1.3c·2d·1 against an external reviewer&#39;s eight…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D.1.3c·2d·2 — Intervention provenance, revised">
+<meta property="og:description" content="DESIGN ONLY. Nothing here is implemented. No Elixir changed, no schema file written. This revises D.1.3c·2d·1 against an external reviewer&#39;s eight…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"D.1.3c·2d·2 — Intervention provenance, revised","name":"D.1.3c·2d·2 — Intervention provenance, revised","description":"DESIGN ONLY. Nothing here is implemented. No Elixir changed, no schema file written. This revises D.1.3c·2d·1 against an external reviewer's eight…","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md/","identifier":"bagaaieraof45ant44ybkpsfwigawakkfj2fxkbtsv4fdil5wcsf2nunsnejq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · What 2d·1 got wrong"},{"@type":"WebPageElement","name":"J1 · One identifier, and it is the one that already exists"},{"@type":"WebPageElement","name":"The audit"},{"@type":"WebPageElement","name":"Is the id durable enough to be historical provenance?"},{"@type":"WebPageElement","name":"The recommendation"},{"@type":"WebPageElement","name":"The law"},{"@type":"WebPageElement","name":"J2 · Two facts, because the ledger cannot be edited"},{"@type":"WebPageElement","name":"The audit"},{"@type":"WebPageElement","name":"The design"},{"@type":"WebPageElement","name":"The law that falls out of append-only"},{"@type":"WebPageElement","name":"J3 · The agent-projection claim is FALSE, and the same defect is already live"},{"@type":"WebPageElement","name":"The measurement"},{"@type":"WebPageElement","name":"The live precedent — this is already happening today, unremarked"},{"@type":"WebPageElement","name":"And that invisibility has already made a falsifier vacuous"},{"@type":"WebPageElement","name":"The design"},{"@type":"WebPageElement","name":"The prohibition"},{"@type":"WebPageElement","name":"J4 · The Receipts consumer audit"},{"@type":"WebPageElement","name":"What Receipts.emit/1 actually guarantees"},{"@type":"WebPageElement","name":"The consumers, and what each one does when a second kind interleaves"},{"@type":"WebPageElement","name":"Recommendation: kind-awareness in the module, not in each caller"},{"@type":"WebPageElement","name":"Four hard constraints on the new records"},{"@type":"WebPageElement","name":"One pre-existing latent defect, recorded and out of scope"},{"@type":"WebPageElement","name":"Conclusion"},{"@type":"WebPageElement","name":"J5 · Two dimensions, and the one 2d·1 assumed does not exist yet"},{"@type":"WebPageElement","name":"Dimension A — what happened to this attempt"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"D_1_3C_2D_2_INTERVENTION_PROVENANCE.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md</span>
+
+</div></div>
+<div class="lead">DESIGN ONLY. Nothing here is implemented. No Elixir changed, no schema file written. This revises D.1.3c·2d·1 against an external reviewer&#39;s eight directives (J1–J8). The shape…</div>
+<div class="prose"><h1 id="blk-115009">D.1.3c·2d·2 — Intervention provenance, revised</h1>
+<p><strong>DESIGN ONLY. Nothing here is implemented.</strong> No Elixir changed, no schema file written. This revises D.1.3c·2d·1 against an external reviewer's eight directives (J1–J8). The shape 2d·1 arrived at survives — an intervention is an <em>activity</em> whose initiator is not a principal, recorded in <code>Ampd.Receipts</code> — but four of its statements about this tree were wrong, and one of them was wrong in the way that matters most: it would have shipped a surface that silently returned nothing while a ruling said it must return something.</p>
+<h3 id="blk-115011">0 · What 2d·1 got wrong</h3>
+<p>Stated first, because a revision that buries its corrections is a revision that lets them be re-derived by the next reader.</p>
+<table><thead><tr><th>#</th><th>2d·1 said</th><th>the source says</th><th>§</th></tr></thead><tbody><tr><td>1</td><td>the record carries <code>initiator.incarnation_ref</code> <strong>and</strong> <code>control_peer_ref</code></td><td>there is no control-channel incarnation object in this tree; the Peer id <strong>contains</strong> the epoch (<code>peer.ex:1024</code>). Two names, one fact.</td><td>J1</td></tr><tr><td>2</td><td>the record is &quot;appended before the ioctl is requested, <strong>settled to</strong> APPLIED/REFUSED/INDETERMINATE after&quot; (§7)</td><td><code>Ampd.Receipts</code> has <strong>no update-in-place operation at all</strong>. Three writes exist: append, wholesale replace, truncate. This is not implementable.</td><td>J2</td></tr><tr><td>3</td><td>interventions are &quot;keyed on <code>target.actor</code>, so <code>Ampd.Projection.agent/1</code>'s existing <code>record[&quot;actor&quot;] == actor</code> filter is reused <em>correctly</em>&quot; (§6, lines 260–262)</td><td>the filter reads a <strong>top-level</strong> <code>&quot;actor&quot;</code> (<code>projection.ex:231</code>). A nested <code>target.actor</code> yields <code>nil</code>, every intervention is dropped, and the C3 ruling is unmet with no crash and no failing test.</td><td>J3</td></tr><tr><td>4</td><td>INDETERMINATE is &quot;repaired by re-observation&quot; — the property §4's whole recommendation rests on</td><td><strong>re-observation does not exist.</strong> The host's operation vocabulary has no geometry read, and <code>Pty::winsize()</code> has zero callers anywhere.</td><td>J5</td></tr></tbody></table>
+<p>Correction 3 is the dangerous one. Corrections 1, 2 and 4 produce a design that cannot be built; correction 3 produces a design that builds, passes, and is empty.</p>
+<h3 id="blk-115035">J1 · One identifier, and it is the one that already exists</h3>
+<p><strong>The `pc-…` control-Peer id and a &quot;control-channel incarnation&quot; are not two facts. They are one fact under two names, and the second name has no referent in this tree.</strong></p>
+<h4 id="blk-115037">The audit</h4>
+<p>The control Peer id is minted in one place:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># ampd/lib/ampd/peer.ex:1024</span>
+id = <span class="t-string">&quot;pc-&quot;</span> &lt;&gt; st.epoch &lt;&gt; <span class="t-string">&quot;-&quot;</span> &lt;&gt; (<span class="t-atom">:crypto</span>.strong_rand_bytes(<span class="t-num">8</span>) |&gt; <span class="t-type">Base</span>.encode16(<span class="t-kw">case</span>: <span class="t-atom">:lower</span>))</code></pre>
+<p><code>st.epoch</code> is set once per runtime incarnation in <code>init/1</code> (<code>peer.ex:118</code>), under a comment (<code>peer.ex:103–112</code>) saying exactly why: <em>&quot;Every incarnation gets a fresh epoch, and every handle carries it. A supervisor restart therefore invalidates every outstanding handle by construction.&quot;</em> The epoch <strong>is</strong> the incarnation, and it is already inside the id.</p>
+<p>The rest of the tree's &quot;incarnation&quot; vocabulary is two other things, neither of which is the control channel: <code>world_incarnation</code> (<code>projection.ex:343</code>, <code>:476</code>, <code>:553</code>, <code>:567</code>), and the <code>effect-channel@1</code> / carrier-channel incarnations minted by whoever created the endpoint (<code>bridge.ex:164–176</code>, <code>:213–216</code>). Naming a SHAPE record's initiator with an &quot;incarnation_ref&quot; would either restate the epoch already in the peer id, or borrow a word that in this tree means the bridge channel — which is the host's identity, not the human's.</p>
+<p>The only <em>other</em> control-channel identity in the tree is deliberately not an id at all. <code>Ampd.Terminal.Presentation.resolve/3</code> attaches both to a presentation:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># ampd/lib/ampd/terminal/presentation.ex:158–162</span>
+{<span class="t-atom">:ok</span>,
+ <span class="t-type">Map</span>.merge(p, %{
+   <span class="t-string">&quot;control_peer_ref&quot;</span> =&gt; peer[<span class="t-string">&quot;id&quot;</span>],
+   <span class="t-string">&quot;control_owner&quot;</span> =&gt; <span class="t-type">Peer</span>.owner_pid(peer[<span class="t-string">&quot;id&quot;</span>])
+ })}</code></pre>
+<p>and <code>presentation.ex:154–157</code> says why the second is a <strong>pid</strong>: <em>&quot;an id would have to be looked up later, and by then the answer is `nil` for both 'closed' and 'never existed'.&quot;</em> A pid is runtime machinery with no durability and no meaning after the process ends. It is not a candidate for provenance and was never proposed as one.</p>
+<p>So there is nothing for a second field to name.</p>
+<h4 id="blk-115046">Is the id durable enough to be historical provenance?</h4>
+<p>The reviewer's test is the right one, and the answer is a clean split.</p>
+<pre><code>  &quot;pc-&quot; &lt;&gt; epoch &lt;&gt; &quot;-&quot; &lt;&gt; 8 random bytes            peer.ex:1024
+         │           │
+         │           └─ 64 bits from strong_rand_bytes
+         └───────────── the runtime incarnation, re-minted on every restart
+
+  THE STRING                          THE BINDING
+  ──────────                          ───────────
+  written into a receipt, it is       gone when the owning process dies:
+  in dets under Ampd.Store.save/2     handle_info({:DOWN, …}) → drop/2
+  and survives restart, restore       peer.ex:994–998
+  and the world's seal surface
+                                      gone when Ampd.Peer restarts: the
+                                      table is `peers: %{}` in init/1
+                                      (peer.ex:113–118), with no
+                                      `Ampd.Store.boot` anywhere in the
+                                      module — eight modules boot a
+                                      durable store; Ampd.Peer is not
+                                      one of them, and is absent from
+                                      `Ampd.seals/0` (ampd.ex:50–65)
+
+                                      and unresolvable from another
+                                      incarnation by explicit check:
+                                      resolve/1 returns nil unless the id
+                                      contains the CURRENT epoch
+                                      (peer.ex:695–699)</code></pre>
+<p>That split is not a defect to work around. <strong>It is the `auid` property, and this tree has it in a stronger form than Linux does.</strong> <code>auid</code> authorises nothing but is at least readable by a live process; a dead <code>pc-…</code> id resolves to <code>nil</code> by construction, in three independent ways. The string is durable history; the binding cannot be resurrected into a principal even by a caller who wants to.</p>
+<p>One honest limit: <code>pc-&lt;epoch&gt;-&lt;rand&gt;</code> says nothing about <em>which world</em> it belonged to. The epoch is re-minted per runtime incarnation, not per world, so the id alone cannot be located in history. That is why the record's <code>basis</code> must still carry <code>world_incarnation</code> and <code>world_generation</code> — the 2d·1 record was right about that and it is retained unchanged.</p>
+<h4 id="blk-115051">The recommendation</h4>
+<p>One field. <code>initiator.control_peer_ref</code>, plus <code>initiator.kind: &quot;human-control&quot;</code>. The second identifier is not minted, because the measured semantic need for it does not exist.</p>
+<h4 id="blk-115053">The law</h4>
+<p><strong>This identifier is provenance and nothing else.</strong> It authorizes nothing. It owns nothing. It cannot receive a grant, cannot hold a capability, cannot occupy a Locus, cannot bind a channel, cannot embody a Carrier. It is never page-supplied. It is not queryable as an actor and no index exists that accepts it as a key.</p>
+<p>Two of those are already structural rather than aspirational, and should be named as such so the next slice does not re-argue them:</p>
+<ul><li><p><strong>`actor: nil` stands.</strong> <code>peer.ex:1030–1032</code> — *&quot;The person is not an actor:</p></li></ul>
+<p>they hold no grants and exercise no capabilities. They are the only source of consent.&quot;* 2d·1 §1 adopted this from GPT's ruling; nothing here touches it.</p>
+<ul><li><p><strong>&quot;never page-supplied&quot; is already enforced by the shape of the resolver.</strong></p></li></ul>
+<p><code>presentation.ex:140–143</code> — the peer is *&quot;the <strong>bound connection's</strong> peer record, supplied by <code>Ampd.Control</code> from the channel binding — never a caller argument. That is the whole of the identity check: an argument the caller chooses is not an identity.&quot;* SHAPE resolves its initiator the same way or not at all.</p>
+<p>The one law that is <em>not</em> yet structural is &quot;not queryable as an actor,&quot; and J3 is where it has to be kept.</p>
+<h3 id="blk-115065">J2 · Two facts, because the ledger cannot be edited</h3>
+<p><strong>`Ampd.Receipts` has no update-in-place operation. 2d·1 §7's &quot;appended before the ioctl is requested, settled to APPLIED/REFUSED/INDETERMINATE after&quot; is not implementable in this tree and must be replaced.</strong></p>
+<h4 id="blk-115067">The audit</h4>
+<p>Every write to the receipt ledger, exhaustively:</p>
+<table><thead><tr><th>where</th><th>what it does</th><th>who may</th></tr></thead><tbody><tr><td><code>receipts.ex:87</code></td><td>`%{s \</td><td>&quot;log&quot; =&gt; s[&quot;log&quot;] ++ [m]}` — <strong>append</strong>, seq+1</td><td>anyone</td></tr><tr><td><code>receipts.ex:92–95</code></td><td><code>handle_ordered({:load_state, s})</code> — replaces the <strong>whole</strong> state</td><td>ordered only (<code>receipts.ex:58–77</code>)</td></tr><tr><td><code>receipts.ex:97</code></td><td><code>handle_ordered(:reset)</code> — truncates to <code>initial/0</code></td><td>ordered only</td></tr></tbody></table>
+<p>There is no fourth. There is no <code>handle_call({:update, id, …})</code>, no read-modify-write of one record, and no addressing scheme that could carry one: <code>Ampd.Store.save/2</code> writes the entire <code>%{&quot;log&quot; =&gt; [...], &quot;seq&quot; =&gt; n}</code> blob under a single key, so a record has an id for <em>sorting and paging</em> (<code>projection.ex:180</code>, <code>:209</code>) and no durable identity to send an update to.</p>
+<p><code>load_state/1</code> is not an escape hatch. It replaces everything, it is ordered-only, and it exists for restore and for tests that need a constructed history (<code>locus_test.exs:175</code>). Using it to amend one record would mean re-writing the whole ledger to change one field, inside the total order, on the hot path of a human resizing a window.</p>
+<h4 id="blk-115085">The design</h4>
+<p>Two kinds, appended, sharing one reference:</p>
+<pre><code>   t0   ORDERED   terminal-intervention-attempt@1
+                    intervention_ref  iv_&lt;hex&gt;          minted here
+                    kind              SHAPE
+                    initiator         control_peer_ref, kind: human-control
+                    target            worker_ref, worker_generation, locus_ref,
+                                      target_actor                     (J3)
+                    basis             world_incarnation, world_generation,
+                                      attachment_ref, attachment_epoch,
+                                      carrier_epoch, pty_epoch
+                    request           rows, cols
+                    committed         false                            (J4)
+
+   t1   ── the request leaves the runtime ──
+
+   t2   ORDERED   terminal-intervention-outcome@1
+                    intervention_ref  the SAME iv_&lt;hex&gt;
+                    outcome           APPLIED | REFUSED | INDETERMINATE
+                    refused_as        the host's or the runtime's code, if REFUSED
+                    committed         true only when outcome == APPLIED</code></pre>
+<p>The pairing is a join at read time, not a mutation at write time. Nothing in <code>Ampd.Receipts</code> needs to change to support it.</p>
+<h4 id="blk-115089">The law that falls out of append-only</h4>
+<p><strong>An ATTEMPT with no OUTCOME is a first-class durable state, not a bug.</strong></p>
+<p>It is the only honest record a runtime can leave when it dies between the request and the answer. A design that could not produce it would be a design that lies about that cut — and this tree already refuses that trade in the adjacent mechanism: <code>Ampd.Locus</code>'s lifecycle carries <code>RECOVERY_REQUIRED</code> with the reason <em>&quot;evidence is durable and the commit is not&quot;</em> rather than guessing (<code>locus.ex</code>, the <code>check</code> ladder).</p>
+<p>Two consequences, both binding:</p>
+<ol><li><p><strong>A reconciler may never manufacture an outcome for an unmatched attempt.</strong></p></li></ol>
+<p>It may append a <em>third</em> record saying what it observed (J5), and that record's subject is the world, not the attempt.</p>
+<ol start="2"><li><p>**The attempt is appended before the request is sent, and the send is</p></li></ol>
+<p>conditional on the append.** If the append is refused NOT_APPLIED, nothing is sent. If the append is refused INDETERMINATE, nothing is sent either — an intervention whose attempt record may or may not exist must not also be performed, because the two unknowns compound into a history no reader can resolve. This is J6's cut 1 and it is the one cut where the safe action is unambiguous.</p>
+<h3 id="blk-115101">J3 · The agent-projection claim is FALSE, and the same defect is already live</h3>
+<p><strong>2d·1 §6 (lines 260–262) says interventions keyed on `target.actor` reuse `Ampd.Projection.agent/1`'s filter &quot;correctly&quot;. That is false. The filter reads a top-level `&quot;actor&quot;`, a nested `target.actor` is invisible to it, every intervention would be silently dropped, and the C3 ruling — an agent MUST be able to learn it was human-intervened — would be unmet with no crash and no failing test.</strong></p>
+<h4 id="blk-115103">The measurement</h4>
+<pre data-lang="elixir"><code><span class="t-comment"># ampd/lib/ampd/projection.ex:230–231</span>
+<span class="t-kw">def</span> agent(actor) <span class="t-kw">when</span> is_binary(actor) <span class="t-kw">do</span>
+  mine = <span class="t-kw">fn</span> list -&gt; <span class="t-type">Enum</span>.filter(list, &amp;(&amp;<span class="t-num">1</span>[<span class="t-string">&quot;actor&quot;</span>] == actor)) <span class="t-kw">end</span></code></pre>
+<p>applied to receipts at <code>projection.ex:256</code>:</p>
+<pre data-lang="elixir"><code><span class="t-string">&quot;receipts&quot;</span> =&gt; <span class="t-type">Receipts</span>.all() |&gt; mine.() |&gt; window(),</code></pre>
+<p>and its paged twin, which is what <code>list_receipts</code> actually serves (<code>control.ex:629–630</code>):</p>
+<pre data-lang="elixir"><code><span class="t-comment"># ampd/lib/ampd/projection.ex:276–277</span>
+<span class="t-kw">def</span> history_for(<span class="t-atom">:receipts</span>, <span class="t-lit">nil</span>), <span class="t-kw">do</span>: <span class="t-type">Receipts</span>.all()
+<span class="t-kw">def</span> history_for(<span class="t-atom">:receipts</span>, actor), <span class="t-kw">do</span>: <span class="t-type">Enum</span>.filter(<span class="t-type">Receipts</span>.all(), &amp;(&amp;<span class="t-num">1</span>[<span class="t-string">&quot;actor&quot;</span>] == actor))</code></pre>
+<p>Both read <code>&amp;1[&quot;actor&quot;]</code> — one map access, at the top level, no nesting. A record shaped <code>%{&quot;target&quot; =&gt; %{&quot;actor&quot; =&gt; &quot;kestrel&quot;}}</code> returns <code>nil</code> from that access, <code>nil == &quot;kestrel&quot;</code> is false, and the record is dropped. Not refused, not logged: dropped, into an empty list that renders as a normal empty history.</p>
+<h4 id="blk-115110">The live precedent — this is already happening today, unremarked</h4>
+<p><code>Ampd.Locus.emit_receipt/5</code> (<code>locus.ex:676–707</code>) emits <code>worktree_created@1</code> into the same ledger, and its actor is under a <em>different key</em>:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># ampd/lib/ampd/locus.ex:678, :683</span>
+<span class="t-string">&quot;kind&quot;</span> =&gt; <span class="t-attr">@receipt_kind</span>,          <span class="t-comment"># &quot;worktree_created@1&quot;  (locus.ex:66)</span>
+...
+<span class="t-string">&quot;locus_actor&quot;</span> =&gt; lane[<span class="t-string">&quot;actor&quot;</span>],</code></pre>
+<p>There is no top-level <code>&quot;actor&quot;</code> anywhere in that map. So <strong>every `worktree_created@1` receipt in this tree is already invisible to `Ampd.Projection.agent/1` and to `list_receipts` on the agent channel</strong>, and has been since the kind was introduced. An agent cannot see the receipt for its own worktree.</p>
+<h4 id="blk-115114">And that invisibility has already made a falsifier vacuous</h4>
+<p><code>locus_test.exs</code>'s F19f walk checks that no serialized surface carries a host path. It opens by proving its <em>walker</em> is not vacuous —</p>
+<blockquote><p><code>locus_test.exs:1593</code> — <em>&quot;If this fails, every assertion below is vacuous.&quot;</em></p></blockquote>
+<p>— and then asserts over surfaces without proving any of them is non-empty. Two of those surfaces cannot contain the record under test:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># ampd/test/locus_test.exs:1621–1625</span>
+refute_discloses!(
+  <span class="t-type">Control</span>.command(ctx.agent, <span class="t-atom">:list_receipts</span>, [<span class="t-lit">nil</span>, <span class="t-num">50</span>]),
+  ctx,
+  <span class="t-string">&quot;list_receipts on the agent channel&quot;</span>
+)
+
+<span class="t-comment"># ampd/test/locus_test.exs:1627</span>
+refute_discloses!(<span class="t-type">Ampd.Projection</span>.agent(ctx.lane[<span class="t-string">&quot;actor&quot;</span>]), ctx, <span class="t-string">&quot;the agent projection&quot;</span>)</code></pre>
+<p><code>list_receipts</code> on the agent channel routes to <code>history_for(:receipts, peer[&quot;actor&quot;])</code>, which filters on top-level <code>&quot;actor&quot;</code>, which <code>worktree_created@1</code> does not have. The test's setup (<code>locus_test.exs:1588–1589</code>) produces exactly one receipt and it is that kind. The page is empty. The assertion cannot fail for the reason it was written.</p>
+<p>The property itself is <em>not</em> unprotected — <code>locus_test.exs:1607</code> checks <code>r[&quot;receipt&quot;]</code> directly, and <code>:1677</code> walks the whole stored log. What is vacuous is the claim that the <strong>projection surfaces</strong> are clean, which is the claim about the thing an agent can actually reach.</p>
+<p>This is stated here not to relitigate F19f but because it is the same defect in advance: a receipt kind that does not carry a top-level <code>&quot;actor&quot;</code> is a receipt kind that leaves the agent-facing surfaces silently.</p>
+<h4 id="blk-115123">The design</h4>
+<p><strong>Do not put the agent's actor in the top-level `&quot;actor&quot;` slot.</strong> That field has a meaning in this ledger and it is not this one:</p>
+<blockquote><p><code>gateway.ex:410–412</code> — <em>&quot;`actor` is on the receipt so a receipt can be projected to the actor it belongs to. Without it the ledger is all-or-nothing: either every agent reads every receipt on the machine, or none reads its own.&quot;</em></p></blockquote>
+<p><code>&quot;actor&quot;</code> means <strong>the authority principal responsible for the ordinary capability effect</strong> — the one that held the grant and exercised the capability. An intervention has no such principal by construction: that is the entire finding of 2d·0. Writing the agent's actor there would say the agent was responsible for a keystroke it did not make, which is the laundering this slice exists to refuse, re-entered through the schema. It would also silently enrol interventions in every <code>&quot;actor&quot;</code>-keyed consumer at once, including <code>Receipts.count/0</code> (J4).</p>
+<p>So, three things instead:</p>
+<ol><li><p><strong>A top-level `&quot;target_actor&quot;`</strong> on both intervention kinds. Explicit,</p></li></ol>
+<p>flat, and distinct from <code>&quot;actor&quot;</code> in name as well as in meaning. It is a subject, not a principal.</p>
+<ol start="2"><li><p><strong>A separate bounded `&quot;interventions&quot;` surface on the agent projection</strong>,</p></li></ol>
+<p>filtered on <code>&quot;target_actor&quot;</code> and passed through <code>Ampd.Projection.window/1</code> (<code>projection.ex:208–219</code>) — bounded for the same reason <code>&quot;receipts&quot;</code> is (<code>projection.ex:243–245</code>): a party the agent does not control can grow the list without limit, and an unbounded list in a projection is the frame-size failure the windows exist to remove.</p>
+<ol start="3"><li><p><strong>A paged command to follow its cursor</strong>, because *&quot;every window a</p></li></ol>
+<p>projection hands out has a <code>next_cursor</code>, and every one of them needs a command that can follow it — a cursor with nothing to give it to is a promise the protocol does not keep&quot;* (<code>projection.ex:271–274</code>). Whether that is a new <code>list_interventions</code> or a kind parameter on <code>list_receipts</code> is not settled here; either works, because J4 requires the ids stay <code>rcpt-</code>-prefixed and the existing cursor check therefore applies unchanged.</p>
+<h4 id="blk-115141">The prohibition</h4>
+<p><strong>There must be no &quot;query all actions by initiator peer&quot; surface.</strong> No index keyed on <code>control_peer_ref</code>, on any channel, for any caller — not the agent, and not the operator projection either.</p>
+<p>The reason is sharper than 2d·1 stated it. J1's law is that the <code>pc-…</code> id cannot be resolved into a principal, and that is currently true <em>because the only lookup, `Peer.resolve/1`, refuses it</em> (<code>peer.ex:695–699</code>). An index over receipts keyed on the initiator would hand back a second lookup — one that works after the connection is gone, works across restarts, and returns a set of actions. That is a principal with a history, assembled out of provenance, which is the <code>X-Remote-Group</code> shape 2d·1 §2 is about. Interventions are reachable from their target and from the operator's whole-world view, and by no other index.</p>
+<h3 id="blk-115144">J4 · The Receipts consumer audit</h3>
+<p><strong>Reuse survives, and no new durable store is warranted — but a second kind emitted during the existing flows breaks a stated invariant, and the audit has to be done before the kind exists, not after.</strong></p>
+<h4 id="blk-115146">What <code>Receipts.emit/1</code> actually guarantees</h4>
+<pre data-lang="elixir"><code><span class="t-comment"># ampd/lib/ampd/receipts.ex:85–87</span>
+id = <span class="t-string">&quot;rcpt-&quot;</span> &lt;&gt; <span class="t-type">String</span>.pad_leading(<span class="t-type">Integer</span>.to_string(s[<span class="t-string">&quot;seq&quot;</span>]), <span class="t-num">4</span>, <span class="t-string">&quot;0&quot;</span>)
+m = <span class="t-type">Map</span>.merge(%{<span class="t-string">&quot;kind&quot;</span> =&gt; <span class="t-string">&quot;capability-effect-receipt@1&quot;</span>, <span class="t-string">&quot;id&quot;</span> =&gt; id, <span class="t-string">&quot;committed&quot;</span> =&gt; <span class="t-lit">true</span>}, m)
+{<span class="t-atom">:reply</span>, m, %{st | s: <span class="t-type">Ampd.Store</span>.save(tab, %{s | <span class="t-string">&quot;log&quot;</span> =&gt; s[<span class="t-string">&quot;log&quot;</span>] ++ [m], <span class="t-string">&quot;seq&quot;</span> =&gt; s[<span class="t-string">&quot;seq&quot;</span>] + <span class="t-num">1</span>})}}</code></pre>
+<p><code>Map.merge/2</code> takes the <strong>second</strong> map's value on a conflict, so <strong>the caller wins on every key, including `kind`, `id` and `committed`.</strong> The defaults are defaults, not guarantees. That is what makes multi-kind possible at all, and it is also three ways to break the ledger by accident.</p>
+<p>The ledger is already multi-kind, in production, today:</p>
+<table><thead><tr><th>kind</th><th>emitted by</th><th>since</th></tr></thead><tbody><tr><td><code>capability-effect-receipt@1</code></td><td><code>gateway.ex:413</code> (the merge default)</td><td>the beginning</td></tr><tr><td><code>worktree_created@1</code></td><td><code>locus.ex:66</code>, <code>locus.ex:677</code></td><td>D.1.1</td></tr></tbody></table>
+<p>So &quot;add a kind&quot; is not a new mechanism class. It is a second use of one.</p>
+<h4 id="blk-115161">The consumers, and what each one does when a second kind interleaves</h4>
+<p><strong>`Receipts.count/0` is `length(all())` (`receipts.ex:54`)</strong> — every kind, no filter — and roughly fifteen assertions across seven test files read it as <em>how many capability effects committed</em>:</p>
+<table><thead><tr><th>file</th><th>lines</th><th>reads it as</th></tr></thead><tbody><tr><td><code>linearization_test.exs</code></td><td>29, 36, 63, 84, 90, 112, <strong>138–139</strong></td><td>effects committed</td></tr><tr><td><code>control_test.exs</code></td><td>62, 73, 79, 121, 140</td><td>effects committed</td></tr><tr><td><code>conformance_test.exs</code></td><td>94–95</td><td>a per-fixture expected count</td></tr><tr><td><code>crash_test.exs</code></td><td>50, 51, 52, 67</td><td>survived a restart</td></tr><tr><td><code>lineage_test.exs</code></td><td>77, 107</td><td>nothing happened</td></tr><tr><td><code>transport_test.exs</code></td><td>690</td><td>n effects</td></tr><tr><td><code>incarnation_test.exs</code></td><td>159, 185</td><td>unchanged across an incarnation</td></tr><tr><td><code>effect_test.exs</code></td><td>50</td><td>exactly one</td></tr></tbody></table>
+<p><code>linearization_test.exs:138–139</code> is the one that matters most, because it elevates the count to a <strong>stated invariant with a message that names the ledger</strong>:</p>
+<pre data-lang="elixir"><code>assert <span class="t-type">Receipts</span>.count() == allowed,
+       <span class="t-string">&quot;round #{round}: #{allowed} allowed but #{Receipts.count()} receipts — verdict and ledger disagree&quot;</span></code></pre>
+<p>A second kind emitted anywhere inside that concurrent round makes that message a lie: the verdict and the ledger would agree perfectly while the assertion reports them disagreeing. An invariant whose failure message misdescribes the failure is worse than no invariant.</p>
+<p><strong>`List.last(Receipts.all())` readers break harder than the counts</strong>, because they do not compare a number — they read capability-shaped fields off whatever happens to be last:</p>
+<ul><li><p><code>effect_test.exs:51</code> — <code>List.last(Receipts.all())[&quot;effect_ref&quot;] == e[&quot;id&quot;]</code></p></li><li><p><code>effect_test.exs:70</code> — <code>…[&quot;idempotency_key&quot;]</code> against the attempt's</p></li><li><p><code>conformance_test.exs:133</code>, <code>:139</code>, <code>:151</code> — <code>authority_snapshot_at_entry</code>,</p></li></ul>
+<p><code>authority_snapshot_after</code>, <code>idempotency_key</code>/<code>effect_key</code></p>
+<p>An intervention appended after a capability effect makes all six read <code>nil</code> and assert against it.</p>
+<p><strong>`crash_test.exs:53` is different and should not be lumped in.</strong> It reads <code>hd(Receipts.all())[&quot;capability&quot;]</code> — the <em>oldest</em> record, not the newest — so it breaks only if an intervention can be appended before the first capability effect in that test's flow. It cannot today. It is listed because a helper that fixes <code>List.last</code> by kind and leaves <code>hd</code> alone would leave a latent one behind.</p>
+<p><strong>Footprints count all kinds:</strong> <code>worker_test.exs:962</code> and <code>effect_channel_test.exs:851</code> both take <code>length(Receipts.all())</code> as part of a &quot;the world did not move&quot; tuple. Those are <em>correct</em> as written — an intervention IS the world moving — but they will need updating in any test where a SHAPE happens inside a should-change-nothing assertion.</p>
+<p><strong>The precedent that this was already solved once, locally, and never generalised:</strong> <code>locus_test.exs:179–180</code></p>
+<pre data-lang="elixir"><code><span class="t-kw">defp</span> worktree_receipts,
+  <span class="t-kw">do</span>: <span class="t-type">Enum</span>.filter(<span class="t-type">Receipts</span>.all(), &amp;(&amp;<span class="t-num">1</span>[<span class="t-string">&quot;kind&quot;</span>] == <span class="t-type">Locus</span>.receipt_kind()))</code></pre>
+<p>One test file needed kind-awareness, wrote a private helper, and nothing moved it into <code>Ampd.Receipts</code> where the next kind would find it. That is the whole reason this audit is a section rather than a footnote.</p>
+<h4 id="blk-115209">Recommendation: kind-awareness in the module, not in each caller</h4>
+<p>Add <code>Receipts.of_kind/1</code> and <code>Receipts.count/1</code> beside the existing pair, and migrate the readers that mean &quot;capability effects&quot;:</p>
+<ul><li><p><strong>Must adopt:</strong> <code>linearization_test.exs:138–139</code> (the stated invariant),</p></li></ul>
+<p><code>conformance_test.exs:94–95</code>, and the six <code>List.last</code> readers above.</p>
+<ul><li><p><strong>Should adopt for clarity, no behaviour change today:</strong> <code>effect_test.exs:50</code>,</p></li></ul>
+<p><code>control_test.exs:62,73,79,121,140</code>, <code>crash_test.exs:50,52,67</code>, <code>lineage_test.exs:77,107</code>, <code>transport_test.exs:690</code>, <code>incarnation_test.exs:159,185</code>.</p>
+<ul><li><p><strong>Leave, deliberately:</strong> the two footprints — they mean &quot;all kinds&quot; and</p></li></ul>
+<p>should keep meaning it.</p>
+<p><code>Receipts.count/0</code> itself should stay, with a docstring saying it counts <em>every</em> kind, so the next reader does not have to infer it from <code>length/1</code>.</p>
+<h4 id="blk-115224">Four hard constraints on the new records</h4>
+<p><strong>1 · No forbidden key names, at any depth.</strong> <code>effect_channel_test.exs:259</code> puts <code>Receipts.all()</code> into its surfaces map, and <code>:266–268</code> walks every key of every record forbidding:</p>
+<pre><code>channel_epoch  effect_endpoint  effect_channel  fd  descriptor
+socket  endpoint  sock  request_id</code></pre>
+<p><code>:271–275</code> additionally forbids the channel epoch and the raw fd as <em>values</em>. The live consequence: <code>EffectChannel.request/5</code> mints a correlation id and puts it on the wire as <code>request_id</code>, and that is the obvious thing to record for a lost-reply investigation. <strong>It may not be recorded under that name</strong>, and on reflection should not be recorded at all — it is a channel-layer correlation token whose only use is inside the round trip that created it. The <code>intervention_ref</code> is the durable correlation and it is minted by the runtime.</p>
+<p><strong>2 · No host path, at any depth.</strong> <code>locus_test.exs:1677</code> runs <code>refute_discloses!(Receipts.all(), …)</code> recursively over the whole stored log. A SHAPE record carries refs, epochs, rows and cols, so this is satisfiable — but it forbids ever putting a pty device path, a carrier working directory or a socket path into the record, including inside a refusal detail copied from the host.</p>
+<p><strong>3 · The id must be minted by `Receipts.emit/1`.</strong> <code>Projection.page/3</code> sorts by <code>record[&quot;id&quot;]</code> descending (<code>projection.ex:180</code>) and <code>window/1</code> does the same (<code>projection.ex:209</code>); the resulting <code>next_cursor</code> is fed back through <code>CommandSpec</code>'s <code>{:id, &quot;rcpt-&quot;}</code> declaration (<code>command_spec.ex:242–251</code>, the cursor field at <code>:248</code>) and checked at <code>command_spec.ex:691–702</code>, which refuses any value not carrying that prefix. Because the caller wins the merge, supplying an <code>&quot;id&quot;</code> would silently replace the minted one — and a non-<code>rcpt-</code> id would corrupt the sort <em>and</em> be rejected as a cursor. <strong>The intervention records supply no `&quot;id&quot;`.</strong></p>
+<p><strong>4 · `&quot;committed&quot;` must be set explicitly on the attempt.</strong> The merge default is <code>true</code> (<code>receipts.ex:86</code>), so an attempt record that omits the key inherits an assertion that the intervention committed — at the moment it was merely requested. And this one has no falsifier: <code>&quot;committed&quot;</code> is <em>written</em> at <code>receipts.ex:86</code> and <strong>read nowhere in `lib/` or `test/`</strong>. Nothing would catch it. That is precisely why it has to be stated as a constraint rather than left to a test.</p>
+<h4 id="blk-115231">One pre-existing latent defect, recorded and out of scope</h4>
+<pre data-lang="elixir"><code><span class="t-comment"># ampd/lib/ampd/receipts.ex:85</span>
+id = <span class="t-string">&quot;rcpt-&quot;</span> &lt;&gt; <span class="t-type">String</span>.pad_leading(<span class="t-type">Integer</span>.to_string(s[<span class="t-string">&quot;seq&quot;</span>]), <span class="t-num">4</span>, <span class="t-string">&quot;0&quot;</span>)</code></pre>
+<p>Four digits. <code>initial/0</code> starts the counter at 7 (<code>receipts.ex:51</code>). At <code>seq</code> ≥ 10000 the ids stop sorting:</p>
+<pre><code>   &quot;rcpt-9999&quot;    9 chars
+   &quot;rcpt-10000&quot;  10 chars
+
+   lexicographic:  '1' &lt; '9'   →   &quot;rcpt-10000&quot; &lt; &quot;rcpt-9999&quot;</code></pre>
+<p>Both <code>page/3</code> (<code>projection.ex:180</code>) and <code>window/1</code> (<code>projection.ex:209</code>) sort by that string, so past 10000 the newest page pins to <code>rcpt-9999</code> and the cursor walks backwards into the four-digit block. It corrupts silently — no crash, no refusal, a history that simply stops advancing.</p>
+<p><strong>This is not caused by this slice and is not fixed by it.</strong> It is recorded because a second kind on the same counter reaches the boundary sooner, and a SHAPE record is emitted per window resize rather than per authorized effect — a far higher-frequency source. Two records per intervention doubles it again.</p>
+<h4 id="blk-115237">Conclusion</h4>
+<p>Receipt reuse survives the audit. A new durable store would mean a new dets file, a new entry in <code>Ampd.seals/0</code> (<code>ampd.ex:50–65</code>), a new boot path, a new recovery path and a new seal semantics — five new surfaces to falsify — for a record the existing ledger already carries two kinds of. <strong>Design 3 stands.</strong></p>
+<h3 id="blk-115239">J5 · Two dimensions, and the one 2d·1 assumed does not exist yet</h3>
+<p><strong>Attempt outcome and state convergence are different questions with different evidence, and conflating them is how an INDETERMINATE gets rewritten into an APPLIED that nothing measured.</strong></p>
+<h4 id="blk-115241">Dimension A — what happened to <em>this attempt</em></h4>
+<p><code>APPLIED</code> / <code>REFUSED</code> / <code>INDETERMINATE</code>, from C1.0b·2's vocabulary (<code>participant.ex:38–48</code>).</p>
+<p>The classification cannot be read off the return value, because the transport collapses the classes. <code>EffectChannel.request/5</code> returns <code>{:ok, observation}</code> or <code>{:error, String.t()}</code>, and the string is the only discriminator:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># ampd/lib/ampd/worktree/effect_channel.ex:417–433</span>
+<span class="t-kw">case</span> <span class="t-atom">:socket</span>.send(sock, &lt;&lt;byte_size(body):<span class="t-atom">:big</span>-<span class="t-num">32</span>&gt;&gt; &lt;&gt; body) <span class="t-kw">do</span>
+  <span class="t-atom">:ok</span> -&gt;
+    <span class="t-comment"># **Past this line the effect may have happened.** Every failure</span>
+    <span class="t-comment"># below is therefore indeterminate rather than failed, and none of</span>
+    <span class="t-comment"># them may resubmit.</span>
+    await(sock, request_id, epoch, deadline(timeout), expect)
+
+  {<span class="t-atom">:error</span>, e} -&gt;
+    {<span class="t-atom">:error</span>, <span class="t-string">&quot;the effect channel could not be written: #{inspect(e)}&quot;</span>}
+<span class="t-kw">end</span></code></pre>
+<p>Below that line, three distinct facts arrive wearing one shape: the deadline expired (<code>:442</code>), the channel closed before an observation (<code>:449–455</code>), some other socket failure (<code>:458</code>). The source already draws the right conclusion at <code>:422–424</code> and it is binding on SHAPE: <strong>anything past the send is INDETERMINATE and none of it may resubmit.</strong></p>
+<p>The <code>:socket.send</code> failure at <code>:426–431</code> is the one cut where NOT_APPLIED is provable — nothing left the runtime. The tree currently reports it conservatively as indeterminate anyway (<code>:427–430</code>), and SHAPE should follow rather than diverge; a second opinion about the same socket in a different module is how two mechanisms come to disagree about one cut.</p>
+<p>And <code>APPLIED</code> needs stating precisely, because the host does not measure what the name suggests:</p>
+<pre data-lang="rust"><code>// host/src/lib.rs:340–341, 356–359
+let rows = req[&quot;rows&quot;].as_u64().unwrap_or(0);
+let cols = req[&quot;cols&quot;].as_u64().unwrap_or(0);
+...
+match c.pty().map(|p| p.set_winsize(ws)) {
+    Some(Ok(())) =&gt; json!({
+        &quot;schema&quot;: &quot;carrier-pty-resize-observation@1&quot;,
+        &quot;resized&quot;: true, &quot;rows&quot;: rows, &quot;cols&quot;: cols,
+    }),</code></pre>
+<p>The <code>rows</code> and <code>cols</code> in the observation are the ones <strong>parsed out of the request</strong>, echoed back. <code>set_winsize</code> (<code>host/src/pty.rs:298–305</code>) returns <code>Ok(())</code> when the <code>TIOCSWINSZ</code> syscall returns ≥ 0. So <code>APPLIED</code> means <em>the ioctl was issued on the master the host holds and the kernel accepted it</em> — a real and useful attestation, and an <strong>execution</strong> fact, not a state observation.</p>
+<p><code>REFUSED</code> is genuine and enumerable, from two layers: the host's (<code>lib.rs:328</code> no such carrier, <code>:338</code> attachment address mismatch, <code>:342–347</code> degenerate dimensions, <code>:363–366</code> that carrier has no terminal) and the runtime's, which never reach the wire at all (<code>terminal.ex:1076–1112</code>: <code>terminal-not-attached</code>, <code>terminal-attachment-stale</code>, <code>terminal-not-possessed</code>, <code>terminal-stream-not-active</code>, <code>terminal-resize-degenerate</code>).</p>
+<h4 id="blk-115251">Dimension B — did the world converge</h4>
+<p><code>REQUESTED_GEOMETRY_OBSERVED</code> / <code>CONVERGED</code> / <code>NOT_CONVERGED</code>. A statement about the terminal, not about the attempt.</p>
+<p><strong>And here is correction 4: this dimension has no instrument today.</strong></p>
+<p>2d·1 §4 recommends design 3 on the strength of SHAPE being *&quot;idempotent <strong>and externally observable</strong>, so a lost reply is repaired by re-reading the geometry and re-applying&quot;<em>, and §7 says INDETERMINATE is </em>&quot;resolvable by re-observation, which is the property §4 rests on.&quot;* Measured against the host:</p>
+<pre><code>  the host's entire operation vocabulary          host/src/lib.rs
+  ────────────────────────────────────────
+    drain          :186
+    start          :205
+    stop           :242
+    pty-attach     :261
+    pty-detach     :306
+    pty-resize     :327
+                                    ← there is no geometry read
+
+  Pty::winsize()  — TIOCGWINSZ, implemented    host/src/pty.rs:329–338
+      callers in host/ and carrier-fixture/:   ZERO
+
+  the only geometry read anywhere in the tree is the fixture reading
+  its OWN fd 0                    carrier-fixture/src/main.rs:68, :174
+                                    ← guest side, not reachable by the runtime</code></pre>
+<p>The idempotency half of 2d·1 §4's argument survives untouched — <code>tty_do_resize()</code> still makes a redundant <code>TIOCSWINSZ</code> a true no-op, and that is still why <code>Ampd.Effects</code>' reconciliation machinery is the wrong purchase. The observability half is a <strong>future</strong> property requiring a new host operation. Stating it as present would have shipped a reconciler with nothing to call.</p>
+<h4 id="blk-115257">The reviewer's example, worked</h4>
+<pre><code>  geometry before   40 × 120
+  requested         40 × 120        the human asked for what it already had
+  reply             lost
+  geometry after    40 × 120        what a read-back would report, if one existed
+
+  the observation proves:      the terminal HAS the desired state
+  the observation does NOT prove:  this ioctl executed
+
+  why:  tty_do_resize() returns 0 and sends no SIGWINCH when the size is
+        unchanged, so &quot;applied as a no-op&quot; and &quot;never applied&quot; leave the
+        world in the SAME state and are indistinguishable from outside.</code></pre>
+<p>The evidence is consistent with the ioctl having run, with it having been dropped in the host's queue, with the runtime having died before the socket write, and with a fourth party having resized the terminal in between. One observation, four histories.</p>
+<h4 id="blk-115260">The law</h4>
+<p><strong>INDETERMINATE is a fact about an attempt. It is never rewritten.</strong></p>
+<p>A later observation may append a <em>third</em> record — <code>terminal-intervention-observation@1</code>, sharing the <code>intervention_ref</code> — saying the geometry now matches. It records <code>REQUESTED_GEOMETRY_OBSERVED</code>, and that is a claim about the world at a time. It does not touch the outcome record, and by J2 it structurally cannot.</p>
+<p>This is not an analogy to an existing rule, it is the same rule. <code>Ampd.Participant</code> already refuses exactly this upgrade:</p>
+<pre data-lang="elixir"><code><span class="t-comment"># ampd/lib/ampd/participant.ex:267–273</span>
+<span class="t-kw">defp</span> after_death(<span class="t-atom">:mutate</span>, witness) <span class="t-kw">when</span> is_function(witness, <span class="t-num">0</span>) <span class="t-kw">do</span>
+  <span class="t-kw">case</span> run_witness(witness) <span class="t-kw">do</span>
+    <span class="t-atom">:applied</span> -&gt; <span class="t-atom">:indeterminate</span>      <span class="t-comment"># ← a witness cannot promote</span>
+    <span class="t-atom">:not_applied</span> -&gt; <span class="t-atom">:not_applied</span>
+    _ -&gt; <span class="t-atom">:indeterminate</span>
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<p>with the reasoning at <code>:278–282</code>: <em>&quot;A witness that says APPLIED does not make the operation a success… Only a witness that establishes the mutation point was never crossed narrows anything.&quot;</em> And the asymmetry at <code>:71–87</code>: a witness is sound after a death, unsound after a timeout, because a timed-out participant is alive and still holds the request. The tree already recorded this as <em>a timeout is not a death</em> (<code>project_super_terminal_possession</code>); a geometry read-back is a witness by another name, over a socket instead of a process boundary, and it inherits the constraint whole.</p>
+<p>The narrowing direction is the only one open: an observation could in principle establish NOT_APPLIED — but for SHAPE it cannot even do that, because a no-op apply is invisible. So for this operation the read-back is useful for <strong>convergence</strong>, and useless for <strong>outcome</strong>. That is worth saying plainly, since it is the reason dimension B cannot simply be folded into dimension A once the host operation exists.</p>
+<h3 id="blk-115267">J6 · The failure cuts</h3>
+<p>Read <code>re-observe?</code> as &quot;would be permitted once a host geometry operation exists&quot;; it is unavailable today for every row, per J5.</p>
+<table><thead><tr><th>#</th><th>cut</th><th>durable evidence that exists</th><th>what may have happened</th><th>re-observe?</th><th>reapply?</th><th>re-establish human-control authority?</th><th>what final history says</th></tr></thead><tbody><tr><td>1</td><td>attempt append fails <strong>before</strong> the request</td><td>nothing, or an INDETERMINATE refusal in <code>Ampd.RefusalLog</code></td><td>nothing was sent — the send is conditional on the append (J2)</td><td>n/a</td><td><strong>no</strong> — nothing to reapply</td><td>not applicable; the operator simply retries</td><td>no intervention occurred</td></tr><tr><td>2</td><td>attempt appended, runtime crashes <strong>before</strong> the ioctl leaves</td><td>ATTEMPT, no OUTCOME</td><td>nothing reached the host</td><td>yes</td><td><strong>no</strong></td><td><strong>yes</strong> — the control channel died with the runtime</td><td>an attempt with no outcome; unresolved</td></tr><tr><td>3</td><td>request never delivered — <code>:socket.send</code> fails (<code>effect_channel.ex:426–431</code>)</td><td>ATTEMPT + OUTCOME <code>INDETERMINATE</code></td><td>provably nothing left the runtime; reported conservatively</td><td>yes</td><td><strong>no</strong></td><td>no — the connection is alive; a <strong>new</strong> intervention may be initiated</td><td>indeterminate, with the write-failure reason</td></tr><tr><td>4</td><td>ioctl returns a refusal (<code>lib.rs:328/338/347/365</code>, or <code>terminal.ex:1076–1112</code>)</td><td>ATTEMPT + OUTCOME <code>REFUSED</code> + <code>refused_as</code></td><td>the terminal was not resized</td><td>not needed</td><td><strong>no</strong> — a refusal is an answer</td><td>no</td><td>refused, by name</td></tr><tr><td>5</td><td>ioctl applies, reply arrives</td><td>ATTEMPT + OUTCOME <code>APPLIED</code></td><td><code>TIOCSWINSZ</code> returned 0 on the master</td><td>not needed</td><td><strong>no</strong></td><td>no</td><td>applied</td></tr><tr><td>6</td><td>ioctl applies, reply lost — channel closed (<code>effect_channel.ex:449–455</code>)</td><td>ATTEMPT + OUTCOME <code>INDETERMINATE</code></td><td>applied; the answer died in transit</td><td>yes</td><td><strong>no</strong></td><td>no</td><td>indeterminate, possibly converged</td></tr><tr><td>7</td><td>still queued at the deadline (<code>effect_channel.ex:439–442</code>)</td><td>ATTEMPT + OUTCOME <code>INDETERMINATE</code></td><td>may be <strong>about to</strong> happen — the request is abandoned, the work is not (<code>participant.ex:55–69</code>)</td><td>yes</td><td><strong>no</strong> — a retry here is a second execution</td><td>no</td><td>indeterminate, may still land</td></tr><tr><td>8</td><td>outcome append fails after a <strong>known</strong> apply</td><td>ATTEMPT only; the apply is known to the process and to nothing durable</td><td>the terminal was resized and history does not say so</td><td>yes</td><td><strong>no</strong> — the effect already happened</td><td>no</td><td>an attempt with no outcome; <strong>indistinguishable from cut 2 and 9</strong></td></tr><tr><td>9</td><td>runtime crashes after the ioctl, before the outcome</td><td>ATTEMPT only</td><td>applied, refused, or still queued — unknown</td><td>yes</td><td><strong>no</strong></td><td><strong>yes</strong></td><td>an attempt with no outcome; unresolved</td></tr><tr><td>10</td><td>control/presentation authority expires before recovery</td><td>ATTEMPT, and possibly OUTCOME</td><td>anything above</td><td>yes — observation needs no authority to intervene</td><td><strong>no</strong></td><td><strong>yes</strong> — <code>control_owner</code> is a pid and dies with the channel (<code>presentation.ex:149–162</code>)</td><td>whatever was recorded; no new intervention without a new initiator</td></tr><tr><td>11</td><td>Worker generation changes before recovery</td><td>ATTEMPT, and possibly OUTCOME</td><td>the position the attempt named no longer exists under that name</td><td>yes, against the <strong>new</strong> generation, labelled as such</td><td><strong>no</strong> — the target is a different assignment</td><td><strong>yes</strong> — <code>fresh/2</code> refuses <code>worker-generation-stale</code> (<code>presentation.ex:242–262</code>)</td><td>the attempt is history about generation <em>n</em>; nothing about <em>n+1</em></td></tr></tbody></table>
+<p>Three things the table makes visible that a prose account hides:</p>
+<p><strong>Cuts 2, 8 and 9 produce byte-identical durable evidence.</strong> An attempt with no outcome does not say which of them happened, and no amount of schema design makes it. That is the honest floor of an append-only ledger over a non-transactional boundary, and it is why J2's law makes the unmatched attempt a first-class state rather than something a reconciler is expected to resolve.</p>
+<p><strong>Every row says no to reapply.</strong> Not one of them is a case where repeating is correct, and the reasons differ: nothing to repeat (1), the effect already happened (5, 6, 8), the request may be about to run (7), the target is gone (11), the authority is gone (2, 9, 10).</p>
+<p><strong>Cut 10 is the one where the temptation is strongest</strong>, because SHAPE <em>is</em> idempotent and a stale resize is harmless in the way a stale <code>rm</code> is not.</p>
+<h4 id="blk-115370">The law</h4>
+<p><strong>Idempotency does not grant authority.</strong></p>
+<p>After a restart, or after the control incarnation that initiated an attempt has ended, do not reapply merely because repeating is technically safe. The authority to intervene is a live human-control presentation, and the tree already builds it to die with the connection: <code>resolve/3</code> binds <code>control_owner</code> to <code>Peer.owner_pid/1</code> <em>&quot;because an id would have to be looked up later&quot;</em> (<code>presentation.ex:149–162</code>), the peer record is dropped when its owner dies (<code>peer.ex:994–998</code>), and no <code>pc-…</code> id from a previous incarnation resolves (<code>peer.ex:695–699</code>).</p>
+<p>A reapply after that point is not a retry. It is a <strong>new intervention with no initiator</strong> — an act with a target, a basis and an effect, and nobody to attribute it to. Which is precisely the laundering shape D.1.3c·2d·0 measured, reintroduced through a reconciler instead of through a keystroke. A mechanism built to refuse provenance laundering must not contain a path that performs it automatically, at boot, unattended.</p>
+<h3 id="blk-115374">J7 · Where SHAPE orchestration executes</h3>
+<p><strong>C1.0b·2's four classes exist only inside `Ampd.AuthorityCoordinator`. Outside it, `Ampd.Participant.call/4` is a plain `GenServer.call` and a participant fault EXITS the caller. A non-ordered SHAPE orchestration therefore does not inherit INDETERMINATE isolation — it has to be given it explicitly.</strong></p>
+<h4 id="blk-115376">The measurement</h4>
+<pre data-lang="elixir"><code><span class="t-comment"># ampd/lib/ampd/participant.ex:197–205</span>
+<span class="t-kw">def</span> call(server, op, class, opts \\ []) <span class="t-kw">when</span> class <span class="t-kw">in</span> [<span class="t-atom">:read</span>, <span class="t-atom">:mutate</span>] <span class="t-kw">do</span>
+  timeout = <span class="t-type">Keyword</span>.get(opts, <span class="t-atom">:timeout</span>, <span class="t-num">5_000</span>)
+
+  <span class="t-kw">if</span> inside?() <span class="t-kw">do</span>
+    guarded(server, op, class, timeout, <span class="t-type">Keyword</span>.get(opts, <span class="t-atom">:witness</span>))
+  <span class="t-kw">else</span>
+    <span class="t-type">GenServer</span>.call(server, op, timeout)
+  <span class="t-kw">end</span>
+<span class="t-kw">end</span></code></pre>
+<p>and the moduledoc's own statement of it (<code>participant.ex:132–137</code>): <em>&quot;Outside the total order, nothing changes. A caller that is not the coordinator gets a plain `GenServer.call`, byte for byte.&quot;</em></p>
+<p><code>Ampd.Receipts.emit/1</code> routes through <code>ask/2</code> → <code>Participant.call/4</code> with class <code>:mutate</code> (<code>receipts.ex:19–29</code>, <code>:52</code>). So:</p>
+<pre><code>   INSIDE  AuthorityCoordinator.transact/1
+   ────────────────────────────────────────
+     Receipts crash → Participant.Failure raised
+                    → classify/1 catches BY STRUCT      coordinator.ex:465–469
+                    → run/2 returns {:refused, refusal} coordinator.ex:440–445
+                    → and touched/0 on the indeterminate branch  :441
+     the coordinator survives. THE CALLER OF transact SURVIVES and
+     receives a value.
+
+   OUTSIDE
+   ───────
+     Receipts crash → bare GenServer.call
+                    → caller EXITS with the reason      participant.ex:12–14
+     whatever process ran the orchestration dies. If that process is the
+     control connection, the operator's connection dies because a receipt
+     could not be appended.</code></pre>
+<p>That second column is the requirement in this directive, and it is not hypothetical: it is the same measurement C1.0b·2 was built on, one layer out.</p>
+<h4 id="blk-115382">The precedent to copy: <code>Ampd.Carrier.Terminal.acquire/1</code></h4>
+<p><code>acquire/1</code> (<code>terminal.ex:934–950</code>) already solves the general problem — an operation with an unbounded machine phase in the middle of ordered decisions:</p>
+<table><thead><tr><th>phase</th><th>ordered?</th><th>source</th></tr></thead><tbody><tr><td><code>admit_attach/1</code> — agree the ticket</td><td><strong>yes</strong>, <code>AuthorityCoordinator.transact</code></td><td><code>terminal.ex:280–282</code></td></tr><tr><td><code>machine_attach/1</code> — ask the host</td><td><strong>no</strong></td><td><code>terminal.ex:374–384</code></td></tr><tr><td><code>own_stream/3</code> — take the descriptor</td><td>no</td><td><code>terminal.ex:397</code></td></tr><tr><td><code>commit_b1/3</code>, <code>commit_b2/3</code></td><td><strong>yes</strong>, two linearization points</td><td><code>terminal.ex:436–457</code>, <code>:543–545</code></td></tr></tbody></table>
+<p>and the reason for the middle is stated in the source: *&quot;The machine phase. <strong>Not ordered</strong>, and it decides nothing… The duration is unbounded, which is the whole reason it is outside the total order.&quot;* (<code>terminal.ex:376–381</code>).</p>
+<p>SHAPE's middle phase is the same kind of thing. <code>ask_resize/3</code> → <code>EffectChannel.request/5</code> (<code>terminal.ex:1181–1201</code>) is a synchronous socket round trip with <code>EffectChannel.deadline_ms()</code> = 10 000 ms (<code>effect_channel.ex:168</code>), against a coordinator whose own budget is 15 000 ms (<code>authority_coordinator.ex:160</code>). Running it inside <code>transact</code> would park the total order behind a terminal that is slow to answer, and every authority mutation on the machine would queue behind a window resize.</p>
+<h4 id="blk-115402">The comparison</h4>
+<table><thead><tr><th></th><th>ordered mutation (all of it inside <code>transact</code>)</th><th>non-ordered orchestration process</th></tr></thead><tbody><tr><td><strong>advantage</strong></td><td>participant isolation is free (<code>classify/1</code>); linearized against every other authority mutation; the attempt/outcome pair cannot interleave with a <code>reset</code></td><td>the coordinator is free during the 10 s round trip; matches the shape <code>acquire/1</code> already established; the ordered phases are still ordered</td></tr><tr><td><strong>cost</strong></td><td>up to 10 s of the total order per resize; <code>budget_ms</code> is 15 s, so two slow resizes exceed it; a busy terminal becomes a control-plane stall</td><td>isolation is <strong>not</strong> inherited and must be built; the interleaving window between attempt and outcome is real and must be represented (J2 already does)</td></tr><tr><td><strong>participant semantics</strong></td><td>four classes, refusals graded by <code>Participant.refusal/1</code> (<code>participant.ex:354–368</code>)</td><td>none — bare <code>GenServer.call</code>; a fault is an exit, unclassified</td></tr><tr><td><strong>what must be added explicitly</strong></td><td>nothing</td><td>a process boundary, a supervision/monitor decision, and a rule that the round trip's failures cannot escape as exits</td></tr></tbody></table>
+<h4 id="blk-115419">Recommendation</h4>
+<p><strong>Copy `acquire/1`'s shape — ordered, not-ordered, ordered — and run the composition in a process that is not the control connection.</strong></p>
+<pre><code>  control connection process
+        │  shape_terminal(worker_ref, expected_generation, rows, cols)
+        │  peer comes from the BINDING, never from the payload
+        │                                   presentation.ex:140–143
+        ▼
+  spawn_monitor ─── the intervention process ──────────────────────────┐
+        │                                                              │
+        │  ORDERED   transact:                                         │
+        │              Presentation.resolve/3 from the bound peer      │
+        │              re-derive attachment currency + stream phase    │
+        │                             terminal.ex:1073–1116            │
+        │              append terminal-intervention-attempt@1          │
+        │            a participant fault here is {:refused, …}         │
+        │            and NOTHING is sent                    (J2, J6·1) │
+        │                                                              │
+        │  NOT ORDERED   ask_resize → EffectChannel.request, ≤ 10 s    │
+        │                terminal.ex:1181–1201 · effect_channel.ex:168 │
+        │                the coordinator is free for the whole wait    │
+        │                                                              │
+        │  ORDERED   transact: append terminal-intervention-outcome@1  │
+        │            classified per J5, never better than measured     │
+        └──────────────────────────────────────────────────────────────┘
+        ▼
+  the connection receives a VALUE; a fault inside arrives as a DOWN</code></pre>
+<p>Five things must be added explicitly, because none of them is inherited:</p>
+<ol><li><p><strong>`spawn_monitor`, not a link and not a `Task`.</strong> The argument is already</p></li></ol>
+<p>written in this tree, for the coordinator rather than the connection: <em>&quot;A `Task` LINKS to its caller… an abnormal exit in the witness process propagates through that link and kills the coordinator unless it traps exits, which it does not&quot;</em> (<code>participant.ex:300–310</code>). Substitute &quot;the control connection&quot; for &quot;the coordinator&quot; and the reasoning is unchanged.</p>
+<ol start="2"><li><p><strong>Both appends go through `transact/1`</strong>, so a <code>Receipts</code> fault is a</p></li></ol>
+<p>classified refusal (<code>authority_coordinator.ex:440–445</code>) rather than an exit. This is the whole reason not to append from the non-ordered phase.</p>
+<ol start="3"><li><p><strong>The non-ordered phase must not be able to raise into the parent.</strong> It</p></li></ol>
+<p>touches no participant — <code>EffectChannel.request/5</code> writes and reads a socket — but it can raise, and the round trip must be wrapped so that neither a raise nor a 10 s block escapes the intervention process.</p>
+<ol start="4"><li><p><strong>A deadline on the whole composition</strong>, strictly greater than the</p></li></ol>
+<p>channel's 10 s and strictly less than whatever the connection is willing to wait. <code>Ampd.WorktreeTest</code>'s deadline-ordering falsifier reads these numbers off the modules that own them and fails if the chain stops decreasing (<code>authority_coordinator.ex:156–158</code>); a new orchestration deadline joins that chain rather than sitting beside it.</p>
+<ol start="5"><li><p><strong>INDETERMINATE is reported as INDETERMINATE.</strong> A refusal that says</p></li></ol>
+<p>nothing happened, when the outcome append was indeterminate, is the collapse <code>Ampd.Participant</code> exists to prevent — and the graded refusal already carries the right words (<code>participant.ex:380–383</code>: <em>&quot;a timed-out request is abandoned but its work is not. Do not retry — establish the outcome first&quot;</em>).</p>
+<h4 id="blk-115443">The acceptance property</h4>
+<p>A <code>Ampd.Receipts</code> or <code>Ampd.Peer</code> fault during a SHAPE must:</p>
+<ul><li><p><strong>(a)</strong> not kill the control connection,</p></li><li><p><strong>(b)</strong> not kill <code>Ampd.AuthorityCoordinator</code>, and</p></li><li><p><strong>(c)</strong> not produce an outcome record claiming more than was measured.</p></li></ul>
+<p>(b) comes free from <code>transact</code>. (a) and (c) do not, and are what the process boundary and the classification rule above are for.</p>
+<h3 id="blk-115453">J8 · DRIVE remains deferred</h3>
+<p>No terminal input this round. 2d·1 §7's finding is retained in full and sharpened in one place.</p>
+<p><strong>Input is not idempotent</strong> — <code>&quot;rm -rf &quot;</code> sent twice is not <code>&quot;rm -rf &quot;</code> sent once — and after J5 it is not re-observable either. SHAPE was recommended into <code>Ampd.Receipts</code> on the strength of idempotency; DRIVE has neither that property nor the observability half that J5 has now shown does not yet exist for anything. So nothing in this document extends to DRIVE by inheritance.</p>
+<p><strong>And raw terminal input must not become durable provenance.</strong> The surveyed products are unanimous and 2d·1 §7 tabulates them: Teleport does not capture stdin, RHEL <code>tlog</code> disables it by default <em>&quot;to avoid intercepting raw passwords&quot;</em>, <code>script(1)</code> warns twice that input logging is independent of the terminal's echo flag, sudo 1.9.10 had to add an output heuristic to hide password prompts from a feature that captures input <em>&quot;even when not echoed&quot;</em>. The argument in one line, unchanged: <strong>terminal echo state is a property of the terminal, not of the recorder</strong>, so a recorder on the input path captures the password precisely in the case where the terminal hid it.</p>
+<h4 id="blk-115457">Why a digest is refused too, and not as a compromise</h4>
+<p>A digest of the input is a <strong>verifier</strong>, and terminal input is exactly the input class verifiers break on.</p>
+<pre><code>   H(bytes) retained durably
+
+   an attacker (or an auditor, or a future feature) holding the log can
+   test any guess for one hash:
+
+       for candidate in guesses:
+           if H(candidate) == recorded:   ← the password is confirmed
+
+   the guess space for a typed password is small and structured.
+   a human at a prompt types something rememberable. this is not the
+   uniform 256-bit input a digest is safe over; it is the low-entropy,
+   guessable input a digest is a CRACKING ORACLE over.</code></pre>
+<p>Salting does not rescue it: a salt is only useful to a later reader if the salt is stored, and a stored salt beside a stored digest is a stored plaintext with extra steps. Keying it does not either, for the same reason — the key would have to outlive the session to serve the audit purpose the digest was retained for, and a durable key beside a durable digest is a durable password.</p>
+<p>And the case where it is worst is the same case the echo argument names: the terminal hid the characters, the human believes nothing was recorded, and a &quot;redacted&quot; provenance record is holding a confirmable copy.</p>
+<p>So the retained set for DRIVE, when it is designed, starts from:</p>
+<pre><code>   raw bytes             ← refused
+   digest of the bytes   ← refused, on the oracle argument above
+   byte count            ← candidate
+   sequence range        ← candidate
+   redacted semantic operation observed BELOW the input path  ← the direction</code></pre>
+<p>The last is Teleport's answer to the resulting blind spot and it is the architecturally interesting one: it does not start recording stdin, it moves the observation point down a layer and emits <code>session.command</code> / <code>session.exec</code> / <code>session.network</code> from BPF — commands, without password prompts.</p>
+<p><strong>A provenance mechanism must not become a durable keystroke logger while trying to solve attribution.</strong> That ruling is mandatory before DRIVE and is a slice of its own.</p>
+<h3 id="blk-115466">What this design does NOT settle</h3>
+<ul><li><p><strong>The host geometry operation.</strong> Whether to add one, its schema (something</p></li></ul>
+<p>like <code>carrier-pty-geometry-observation@1</code>), whether reading the master's winsize from the host is inside the Carrier floor's attested surface, and what a reconciler may do with the answer. <code>Pty::winsize()</code> (<code>host/src/pty.rs:329–338</code>) already implements the syscall and has no callers, so the mechanism exists and the <em>operation</em> does not. Until it does, dimension B of J5 is unmeasurable and <code>terminal-intervention-observation@1</code> is a design, not a plan.</p>
+<ul><li><p><strong>Exact field names.</strong> Provisional, as 2d·1 §8 said, and derived from the</p></li></ul>
+<p>tree at implementation time the way <code>terminal-attachment@1</code> was.</p>
+<ul><li><p><strong>The `Receipts.count/0` migration.</strong> J4 names the readers and the</p></li></ul>
+<p>breakage; it does not decide whether <code>count/0</code> is kept with a clarified docstring, deprecated, or left alone with every caller migrated. Roughly fifteen assertions across seven files is a real change and it should be costed rather than assumed.</p>
+<ul><li><p><strong>`list_interventions` vs a kind parameter on `list_receipts`.</strong> Both work</p></li></ul>
+<p>under J4's id constraint. Neither is chosen here.</p>
+<ul><li><p><strong>The `rcpt-` four-digit id defect</strong> (<code>receipts.ex:85</code>). Recorded, not</p></li></ul>
+<p>scheduled, and explicitly not this slice's to fix — but a second, higher-frequency kind on the same counter shortens the fuse.</p>
+<ul><li><p><strong>Whether an unmatched attempt becomes a standing operator item.</strong> The</p></li></ul>
+<p>shape exists — <code>&quot;carrier_attempts&quot;</code> on the operator projection is exactly <em>&quot;the list of things that are stuck, not a history&quot;</em> (<code>projection.ex:114–129</code>) — and nothing here rules on whether an intervention with no outcome belongs in it.</p>
+<ul><li><p><strong>Multiple human identities.</strong> Unchanged from 2d·1 §8: today &quot;the</p></li></ul>
+<p>human-control role&quot; and &quot;this human&quot; are the same thing because <code>Ampd.Peer</code> refuses a second control channel (<code>peer.ex:668</code>, <code>control_claimed</code>). When that stops being true, <code>initiator</code> gains a field; it does not become an actor.</p>
+<ul><li><p><strong>Whether interventions ever share a substrate with `Ampd.Effects`.</strong></p></li></ul>
+<p>2d·1 §5 says they may; nothing here requires it and nothing here forbids it.</p>
+<ul><li><p><strong>DRIVE's retained set</strong> (J8), which is a ruling and a slice of its own.</p></li></ul>
+<h4 id="blk-115502">Sources for the external claims</h4>
+<p>The external citations in 2d·1 (W3C PROV-DM/PROV-O, <code>auid</code> / <code>CONFIG_AUDIT_LOGINUID_IMMUTABLE</code>, Kubernetes <code>impersonatedUser</code>, CloudTrail <code>sourceIdentity</code>, <code>tty_do_resize()</code> / <code>ioctl_tty(2)</code>, mosh, Teleport / <code>tlog</code> / <code>script(1)</code> / sudo / AWS SSM, and the provenance-identifier-as-credential family) are carried forward unchanged and are not restated here. Every claim in this document about <strong>this tree</strong> is cited inline as <code>file:line</code> against <code>super/</code> at the time of writing.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/D_1_3C_2D_2_INTERVENTION_PROVENANCE.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-115011" class="lvl2">0 · What 2d·1 got wrong</a><a href="#blk-115035" class="lvl2">J1 · One identifier, and it is the one that already exists</a><a href="#blk-115037" class="lvl3">The audit</a><a href="#blk-115046" class="lvl3">Is the id durable enough to be historical provenance?</a><a href="#blk-115051" class="lvl3">The recommendation</a><a href="#blk-115053" class="lvl3">The law</a><a href="#blk-115065" class="lvl2">J2 · Two facts, because the ledger cannot be edited</a><a href="#blk-115067" class="lvl3">The audit</a><a href="#blk-115085" class="lvl3">The design</a><a href="#blk-115089" class="lvl3">The law that falls out of append-only</a><a href="#blk-115101" class="lvl2">J3 · The agent-projection claim is FALSE, and the same defect is already live</a><a href="#blk-115103" class="lvl3">The measurement</a><a href="#blk-115110" class="lvl3">The live precedent — this is already happening today, unremarked</a><a href="#blk-115114" class="lvl3">And that invisibility has already made a falsifier vacuous</a><a href="#blk-115123" class="lvl3">The design</a><a href="#blk-115141" class="lvl3">The prohibition</a><a href="#blk-115144" class="lvl2">J4 · The Receipts consumer audit</a><a href="#blk-115146" class="lvl3">What Receipts.emit/1 actually guarantees</a><a href="#blk-115161" class="lvl3">The consumers, and what each one does when a second kind interleaves</a><a href="#blk-115209" class="lvl3">Recommendation: kind-awareness in the module, not in each caller</a><a href="#blk-115224" class="lvl3">Four hard constraints on the new records</a><a href="#blk-115231" class="lvl3">One pre-existing latent defect, recorded and out of scope</a><a href="#blk-115237" class="lvl3">Conclusion</a><a href="#blk-115239" class="lvl2">J5 · Two dimensions, and the one 2d·1 assumed does not exist yet</a><a href="#blk-115241" class="lvl3">Dimension A — what happened to this attempt</a><a href="#blk-115251" class="lvl3">Dimension B — did the world converge</a><a href="#blk-115257" class="lvl3">The reviewer&#39;s example, worked</a><a href="#blk-115260" class="lvl3">The law</a><a href="#blk-115267" class="lvl2">J6 · The failure cuts</a><a href="#blk-115370" class="lvl3">The law</a><a href="#blk-115374" class="lvl2">J7 · Where SHAPE orchestration executes</a><a href="#blk-115376" class="lvl3">The measurement</a><a href="#blk-115382" class="lvl3">The precedent to copy: Ampd.Carrier.Terminal.acquire/1</a><a href="#blk-115402" class="lvl3">The comparison</a><a href="#blk-115419" class="lvl3">Recommendation</a><a href="#blk-115443" class="lvl3">The acceptance property</a><a href="#blk-115453" class="lvl2">J8 · DRIVE remains deferred</a><a href="#blk-115457" class="lvl3">Why a digest is refused too, and not as a compromise</a><a href="#blk-115466" class="lvl2">What this design does NOT settle</a><a href="#blk-115502" class="lvl3">Sources for the external claims</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraof45ant44ybkpsfwigawakkfj2fxkbtsv4fdil5wcsf2nunsnejq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 27 B1.2 — the layer B1 presumed and did not have · TRVM · Ampersand Box</title>
+<meta name="description" content="Pack: TRVM_B12_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_B12_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 27 B1.2 — the layer B1 presumed and did not have">
+<meta property="og:description" content="Pack: TRVM_B12_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_B12_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 27 B1.2 — the layer B1 presumed and did not have","name":"Round 27 B1.2 — the layer B1 presumed and did not have","description":"Pack: TRVM_B12_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_B12_BRIEF_FOR_GPT.md/","identifier":"bagaaierapicp4bfpo7ih2dy4niwkgzmd5xx6fgq7t77w5umhb4t2a524pdja","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"1. There was no target-AST layer, so a port had nowhere to live"},{"@type":"WebPageElement","name":"2. The regression, which is why doing this before B2 was safe"},{"@type":"WebPageElement","name":"3. LoweringReceipt was still the pre-B1 relation"},{"@type":"WebPageElement","name":"4. The hashed semantics were still incomplete — B1.1's own defect, one round later"},{"@type":"WebPageElement","name":"5. consumed_inputs, named so it cannot be erased"},{"@type":"WebPageElement","name":"6. The stale header"},{"@type":"WebPageElement","name":"Gate"},{"@type":"WebPageElement","name":"B2 is now small"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_B12_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_B12_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_B12_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">Pack: TRVM_B12_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.</div>
+<div class="prose"><h1 id="blk-41388">Round 27 B1.2 — the layer B1 presumed and did not have</h1>
+<p><strong>Pack:</strong> <code>TRVM_B12_REVIEW_PACK.tar.gz</code>. Extract anywhere, run <code>./verify.sh</code>. This run: <strong>24 attempted / 24 passed / 0 failed / 0 skipped.</strong></p>
+<p>You took interpretation B and you were right. B1 froze an architecture the compiler could not express, and you saw it before a line of B2 was written.</p>
+<h3 id="blk-41391">1. There was no target-AST layer, so a port had nowhere to live</h3>
+<p>Confirmed: <code>lower()</code> built an ic32 <strong>string</strong>. A port could only have become <code>$input_x</code> — spelling as semantics, the defect the ruling forbids, reintroduced by the absence of the representation it presumes.</p>
+<p><code>TRVM-TARGET-TEMPLATE-v1</code>, minimal, exactly today's fragment, with its own content-bound encoding id:</p>
+<pre><code>Template := church(n) | add(Template, Template) | port(source_name)</code></pre>
+<p><strong>And I-4a is now structural rather than promised.</strong> A template contains <strong>no binder names and no dup labels</strong> — <code>emit()</code> invents both from its shape by the declared depth-first policy. Two emitters allocating <code>_impl17</code> and <code>q93</code> cannot differ in the template because <em>there is no field an allocation could occupy</em>. That is a better answer than asking the emitter to behave. <code>emit()</code> refuses a template still holding a port.</p>
+<p>I took one liberty worth flagging: your sketch listed <code>lam</code>/<code>app</code>/<code>dup</code>/binders as template nodes. I kept <code>church(n)</code> and <code>add(a,b)</code> opaque and pushed <strong>all</strong> allocation into <code>emit()</code>, which is what makes &quot;no field an allocation could occupy&quot; literally true. The cost is that the template does not yet model target binders structurally, so a future fragment with real lambdas will need to extend the grammar rather than inherit it. Say if you would rather have the fuller AST now.</p>
+<h3 id="blk-41397">2. The regression, which is why doing this before B2 was safe</h3>
+<pre><code>pre-B1.2   lower(add(2,3)).target_term    129 chars
+post-B1.2  emit(template)                 129 chars     BYTE-IDENTICAL</code></pre>
+<p>Verified against the previous commit's <code>lower()</code>, and on a nested fixture. Same six-frame film, same normal form, same value 5, refinement still FILM-EVIDENCED. Introducing the phase changed neither the executable term nor its outcome.</p>
+<h3 id="blk-41400">3. <code>LoweringReceipt</code> was still the pre-B1 relation</h3>
+<p>You were right that it is load-bearing. It ends at <code>target_template_sem_id</code> now (receipt domain v2); a receipt ending at the term keeps asserting lowering produced the executable term, which the two-level ruling denies.</p>
+<h3 id="blk-41402">4. The hashed semantics were still incomplete — B1.1's own defect, one round later</h3>
+<p><code>lowered_ops</code> was <code>[&quot;const&quot;,&quot;add&quot;]</code>, so <strong>B2 adding `input` would have moved `LOWERING_SEM_ID`</strong>. Exactly your interpretation-B point. The whole fragment including <code>input</code> is in the semantics now with its rule frozen:</p>
+<pre><code>{op:&quot;input&quot;, name:N}  →  {t:&quot;port&quot;, source_name:N}      N carried through UNCHANGED</code></pre>
+<p>and <code>lower-input-not-implemented</code> is an <strong>operational</strong> refusal in <code>LOWERING_STATUS</code>, not a semantic one. <strong>Measured by simulating B2</strong> — deleting the refusal line so <code>input</code> lowers, <em>and</em> flipping both lifecycle flags:</p>
+<pre><code>baseline                     lsem-d95ee1cbc0e8f37   isem-bf9434fc751a2fb
+input lowering IMPLEMENTED   lsem-d95ee1cbc0e8f37   isem-bf9434fc751a2fb
++ implemented: true          lsem-d95ee1cbc0e8f37   isem-bf9434fc751a2fb</code></pre>
+<p>Neither moves. The B1.1 promise is now true rather than nearly true. And the simulated B2 produces the right template for your I-4c fixture:</p>
+<pre><code>x + (x + y)  →  {t:add, a:{t:port,x}, b:{t:add, a:{t:port,x}, b:{t:port,y}}}
+ports [&quot;x&quot;,&quot;y&quot;] · emit → emit-unbound-port: x</code></pre>
+<h3 id="blk-41409">5. <code>consumed_inputs</code>, named so it cannot be erased</h3>
+<p>Your grant-versus-footprint framing is in <code>INSTANTIATION_SEMANTICS</code>. Supplied and consumed inputs are different sets, <code>inputs_sem_id</code> commits to the whole supplied record, and no <code>input_footprint</code> is emitted yet — named rather than implied, so B2 cannot collapse it by accident.</p>
+<h3 id="blk-41411">6. The stale header</h3>
+<p>Fixed. It drew <code>program_sem_id → target_term_sem_id</code> and said the inputs model was undecided while the sections below said the opposite — a file contradicting itself, which is the class this tree does not tolerate anywhere else.</p>
+<h3 id="blk-41413">Gate</h3>
+<p>grid <strong>v1.36.0</strong> — 77 entries / 372 citations · <code>lowering.mjs</code> <strong>0.4.0</strong> · negative battery <strong>221/221</strong> (six new B1.2 forgeries) · lowering <strong>12/12</strong>, refinement unchanged and still FILM-EVIDENCED · derive 45/45 · realm 24/24 · bridge 48/48 · film 16/16 · twelve paired probes · harness 9/9 · runner 3/3 · pack <strong>24/24, 0 skipped</strong>. <code>cert_id a08ee15d…</code> — <strong>thirtieth</strong> consecutive round.</p>
+<h3 id="blk-41415">B2 is now small</h3>
+<ol><li><p>Delete one refusal line: <code>input</code> → <code>T.port(name)</code>.</p></li><li><p><code>instantiate(template, inputs)</code> → closed term + <code>InstantiationReceipt</code>, verified by independent</p></li></ol>
+<p>re-instantiation. No film. Extras ignored, missing refused, scope stated in the witness.</p>
+<ol start="3"><li><p><strong>I-4a</strong> — same source name, different allocation → same <code>target_template_sem_id</code>. Structural now.</p></li><li><p><strong>I-4b</strong> — different source name, same allocation → different id.</p></li><li><p><strong>I-4c</strong> on the mandated <code>x + (x + y)</code>, all the way through: correct binding → target term → native</p></li></ol>
+<p>execution → <strong>7</strong>; swapped → <strong>8</strong>; and the correct <code>InstantiationReceipt</code> accepts only the 7-producing term. Your &quot;causally meaningful all the way to the outcome&quot; version.</p>
+<ol start="6"><li><p>Then the <code>add(2,3)</code> regression restated through <code>instantiate({})</code> — same ic32 bytes, same film,</p></li></ol>
+<p>same outcome — so the layer's arrival is provable rather than assumed.</p>
+<p>Then <code>church_exp_2_2</code> and the dedicated DUP-ERA fixture.</p></div>
+<p class="src"><a href="/#/TRVM/ROUND_B12_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-41391" class="lvl2">1. There was no target-AST layer, so a port had nowhere to live</a><a href="#blk-41397" class="lvl2">2. The regression, which is why doing this before B2 was safe</a><a href="#blk-41400" class="lvl2">3. LoweringReceipt was still the pre-B1 relation</a><a href="#blk-41402" class="lvl2">4. The hashed semantics were still incomplete — B1.1&#39;s own defect, one round later</a><a href="#blk-41409" class="lvl2">5. consumed_inputs, named so it cannot be erased</a><a href="#blk-41411" class="lvl2">6. The stale header</a><a href="#blk-41413" class="lvl2">Gate</a><a href="#blk-41415" class="lvl2">B2 is now small</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierapicp4bfpo7ih2dy4niwkgzmd5xx6fgq7t77w5umhb4t2a524pdja</div></div></div>
+</div></div>
+</body></html>

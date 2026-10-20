@@ -1,0 +1,71 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>R0.4.4 linearity &amp; non-leakage model — written before the mechanism · computedriven · Ampersand Box</title>
+<meta name="description" content="Two invariants from the R0.4.3 review:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/linearity-model.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R0.4.4 linearity &amp; non-leakage model — written before the mechanism">
+<meta property="og:description" content="Two invariants from the R0.4.3 review:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/linearity-model.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"R0.4.4 linearity & non-leakage model — written before the mechanism","name":"R0.4.4 linearity & non-leakage model — written before the mechanism","description":"Two invariants from the R0.4.3 review:","url":"https://docs.ampersandboxdesign.com/computedriven/docs/linearity-model.md/","identifier":"bagaaiera7dmv7p3jzxsgj344qtbdzf4gnnzsoioc44j2xqatoyy2yjhsfl3q","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"Non-leakage"},{"@type":"WebPageElement","name":"Claim narrowed (per review)"},{"@type":"WebPageElement","name":"Linear custody (the transition diagram, every arrow linear)"},{"@type":"WebPageElement","name":"What linearity does and does not give (persistence honesty)"},{"@type":"WebPageElement","name":"Falsifiers this model must survive"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"linearity-model.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/linearity-model.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/linearity-model.md</span>
+
+</div></div>
+<div class="lead">Two invariants from the R0.4.3 review:</div>
+<div class="prose"><h1 id="blk-61775">R0.4.4 linearity &amp; non-leakage model — written before the mechanism</h1>
+<p>Two invariants from the R0.4.3 review:</p>
+<blockquote><p><strong>A descendant capability must never reveal material sufficient to reconstruct an ancestor capability.</strong></p></blockquote>
+<blockquote><p><strong>Evidence may be Copy. Authority-bearing transition tokens may not be Copy, Clone, repeatably derivable, or reproducible from immutable inputs.</strong> A value being non-copyable is not enough; authority must have a non-forking derivation.</p></blockquote>
+<h3 id="blk-61781">Non-leakage</h3>
+<p>Every provenance-bearing type carried the root mark and derived <code>Debug</code>; derived Debug prints private fields, so any holder of an honest event could recover the world-global mark and, <code>bootstrap</code> being public, reconstruct root authority — descendant→ancestor amplification. Closure:</p>
+<ul><li><p>Manual <code>Debug</code> for every mark-bearing type; the mark renders as</p></li></ul>
+<p><code>&lt;redacted&gt;</code>. No Display/Hash/serialization impls exist.</p>
+<ul><li><p><code>PartialEq</code>/<code>Eq</code> removed from all mark-bearing types: equality over a</p></li></ul>
+<p>secret is a guess-oracle, and nothing in replay needs record equality.</p>
+<ul><li><p>A DOWNSTREAM test (cd-node, not in-crate) formats every public</p></li></ul>
+<p>diagnostic surface with a distinctive mark and proves the bytes are absent.</p>
+<ul><li><p>Documented authority-amplification boundary: the same raw bytes that</p></li></ul>
+<p>tag descendants are what <code>bootstrap</code> accepts. Without cryptographic one-way derivation (out of scope for <code>no_std</code> R0, and faking one with an invertible permutation would be worse than honesty), redaction plus the absence of any read-back API is the containment. A deployment must replace marks with derived/attested material; stated on the skepticism list.</p>
+<h3 id="blk-61799">Claim narrowed (per review)</h3>
+<p>Not &quot;unforgeable within a process&quot; — type privacy is not hostile-process isolation. The enforceable claim: <strong>safe-Rust API-level unforgeability for callers that do not possess ancestor capabilities or bootstrap material.</strong> <code>cd-core</code> itself remains <code>#![forbid(unsafe_code)]</code>.</p>
+<h3 id="blk-61801">Linear custody (the transition diagram, every arrow linear)</h3>
+<pre><code>LocusRoot ──begin()──────────────► Vacant(L,0) + FinalityWarden + Admission(0)
+Vacant(L,N) + Admission ──attach(c)──► Attached(L,c,N) + AttachRecord(N) + Admission'  [no recovery value exists]
+Attached ──detach()──────────────► Vacant(L,N+1) + DetachReceipt(N)
+Attached ──suspend()─────────────► CarrierCustody(N)                       [CONSUMES live: Live XOR Recoverable]
+CarrierCustody(N) + &amp;Admission ──recover──► Attached(L,c,N)              [CONSUMES custody; judged vs CURRENT admission]
+Warden + Admission ──finalize_loss► LossFinalization + Vacant(L,N+1) + Admission'   [atomic; R0.4.7]
+(every transition above also consumes and returns the Admission — docs/admission-model.md)</code></pre>
+<ul><li><p>R0.4.5 invariant: **a recovery representation of possession must be</p></li></ul>
+<p>mutually exclusive with live possession, unless an external fencing primitive proves only one can become active.** The R0.4.4 shape (custody minted at attach beside the live value) violated this by aliasing; the former <code>custody()</code> accessor is gone for the same reason. Now custody exists only by consuming the live attachment, and recovery consumes the custody. Two operational attachments for one locus/carrier/generation cannot be derived via any safe-Rust API.</p>
+<ul><li><p>Reopen was removed in R0.4.7: finality now materializes the successor</p></li></ul>
+<p>vacancy atomically with the admission advance, so an accepted closure yields exactly one vacancy within one lineage by construction. A trusted root can still mint parallel lineages via repeated <code>create_locus</code>; global Locus-birth uniqueness is a future World-level invariant.</p>
+<ul><li><p>The root's <code>create_locus(same id)</code> repeatability remains an explicitly</p></li></ul>
+<p>trusted-root act, stated, outside the linearity claim.</p>
+<h3 id="blk-61815">What linearity does and does not give (persistence honesty)</h3>
+<p>The R0 property is <strong>linear checkpointed restart/reconstitution in safe Rust</strong>: a planned <code>suspend()</code> then <code>recover</code>. An unplanned crash cannot call a consuming transition first, so <strong>unplanned crash recovery is NOT modeled or claimed.</strong> Durable persistence inherently copies bytes (RAM/disk/backup/journal), so <code>!Clone</code> is not evidence of durable single-use semantics. Durable recovery will need an explicitly modeled primitive (incarnation counters over monotonic/CAS storage, secure-element monotonicity, or supervisor fencing) — deliberately NOT designed in R0.4.4; claimed nowhere.</p>
+<p>Consequently the possession claim in STATUS is corrected to: <strong>single-log replay accepts at most one Carrier per generation</strong>, with capability-graph forking limits (trusted-root duplicate genesis; durable copies of custody bytes) stated explicitly.</p>
+<h3 id="blk-61818">Falsifiers this model must survive</h3>
+<ol><li><p>Debug of every public diagnostic surface contains no mark bytes</p></li></ol>
+<p>(downstream test).</p>
+<ol start="2"><li><p><code>attachment.custody()</code> no longer exists (compile gate).</p></li><li><p>A consumed custody cannot be used twice (compile gate); recovery</p></li></ol>
+<p>yields exactly one successor.</p>
+<ol start="4"><li><p>A consumed admission cannot be reused (compile gate); one accepted</p></li></ol>
+<p>closure yields exactly one successor vacancy (finality is atomic).</p>
+<ol start="5"><li><p>All R0.4.1–R0.4.3 falsifiers still pass unchanged in meaning.</p></li></ol></div>
+<p class="src"><a href="/#/computedriven/docs/linearity-model.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-61781" class="lvl2">Non-leakage</a><a href="#blk-61799" class="lvl2">Claim narrowed (per review)</a><a href="#blk-61801" class="lvl2">Linear custody (the transition diagram, every arrow linear)</a><a href="#blk-61815" class="lvl2">What linearity does and does not give (persistence honesty)</a><a href="#blk-61818" class="lvl2">Falsifiers this model must survive</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera7dmv7p3jzxsgj344qtbdzf4gnnzsoioc44j2xqatoyy2yjhsfl3q</div></div></div>
+</div></div>
+</body></html>

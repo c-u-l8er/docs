@@ -1,0 +1,102 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>W.1.3.2 — visibility is scoped; coherence is an epistemic state · super · Ampersand Box</title>
+<meta name="description" content="Artifact: `and-super-rev-w132.zip`. Every required gate green. The Bot executable spec is frozen at this revision.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_3_2_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="W.1.3.2 — visibility is scoped; coherence is an epistemic state">
+<meta property="og:description" content="Artifact: `and-super-rev-w132.zip`. Every required gate green. The Bot executable spec is frozen at this revision.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_3_2_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"W.1.3.2 — visibility is scoped; coherence is an epistemic state","name":"W.1.3.2 — visibility is scoped; coherence is an epistemic state","description":"Artifact: `and-super-rev-w132.zip`. Every required gate green. The Bot executable spec is frozen at this revision.","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_3_2_REVIEW_BRIEF.md/","identifier":"bagaaieraefsrg43eas4s46or4suay4ry4hm5ezi6wiinrlas4344ubr4oula","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · Measured"},{"@type":"WebPageElement","name":"1 · The six findings, reproduced first"},{"@type":"WebPageElement","name":"2 · The side channel, and the law it produced"},{"@type":"WebPageElement","name":"3 · One scope algebra, used in exactly two places"},{"@type":"WebPageElement","name":"4 · UNESTABLISHED, taken exactly as ruled"},{"@type":"WebPageElement","name":"5 · The claim class belongs to the object"},{"@type":"WebPageElement","name":"6 · Four defects in my own instruments, and one is embarrassing"},{"@type":"WebPageElement","name":"7 · Deferred to B.3, as ruled"},{"@type":"WebPageElement","name":"8 · Ladder"},{"@type":"WebPageElement","name":"Verify"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"W_1_3_2_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/W_1_3_2_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/W_1_3_2_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">Artifact: `and-super-rev-w132.zip`. Every required gate green. The Bot executable spec is frozen at this revision.</div>
+<div class="prose"><h1 id="blk-116455">W.1.3.2 — visibility is scoped; coherence is an epistemic state</h1>
+<p><strong>Artifact: `and-super-rev-w132.zip`. Every required gate green. The Bot executable spec is frozen at this revision.</strong></p>
+<p>All six items taken, all nine falsifiers built, and all six findings reproduced against the shipped W.1.3.1 before anything was changed.</p>
+<p>The headline is the one I did not want to be true: <strong>W.1.3.1 closed the large hole and left a smaller one of the same shape.</strong> Removing <code>authoritySnapshot()</code> from the Bot cursor was right, and leaving <code>view: viewClock</code> beside it leaked the same fact through a narrower pipe.</p>
+<pre><code>                       W.1.3.1                          W.1.3.2
+
+freshness      basis.view !== viewClock          basis.projection_digest !== mine now
+               (global clock — moves when         (a Bot learns its view changed only
+                anything anywhere changes)         when its own view changed)
+observation    mayObserve(b,'lanes')             admits(scope, 'lanes', l.id)
+               once per KIND, then all lanes      per OBJECT
+group scope    OBSERVABLE.filter(kind names)     intersectScope(predicates)
+               bot(auditor) ∩ bot(builder)        bot(auditor) ∩ bot(builder) = ∅
+                 = ['bot']                        bot(*) ∩ bot(auditor) = bot(auditor)
+coherence      settled:false + a warning badge   UNESTABLISHED · no factual claim at all
+claim class    whatever the caller declares      the object declares what it can support
+provenance     &quot;3 of 3 lanes&quot; cites one lane     cites lanes:summary + all three members</code></pre>
+<h3 id="blk-116460">0 · Measured</h3>
+<table><thead><tr><th></th><th>W.1.3.1</th><th>W.1.3.2</th></tr></thead><tbody><tr><td>conformance vectors</td><td>42</td><td><strong>42</strong> — runtime untouched</td></tr><tr><td>BEAM tests</td><td>214</td><td><strong>214</strong></td></tr><tr><td>browser assertions</td><td>124</td><td><strong>148</strong></td></tr><tr><td>browser falsifiers</td><td>22 · 0 not</td><td><strong>31 · 0 not</strong></td></tr><tr><td>BEAM sabotage falsifiers</td><td>70 · 0 not</td><td>70 · 0 not</td></tr><tr><td>host acceptance checks</td><td>78 held · 0 failed</td><td>78 held · 0 failed</td></tr><tr><td>host sabotage falsifiers</td><td>12 · 0 not</td><td>12 · 0 not</td></tr></tbody></table>
+<h3 id="blk-116486">1 · The six findings, reproduced first</h3>
+<pre><code>A invisible-change side channel   scout's digest UNCHANGED yet its claim went stale
+B resource scope widens to kind   granted lane-a only; projection: lane-a, lane-b, lane-c
+C group intersects kinds          ada(bot_auditor) + scout(bot_builder) → groupScope ['bot']
+D unsettled frames assert state   ACCEPTED with only a badge
+E claim kind self-declared        a live lane state labelled `durable` never decays
+F aggregate under-cites           &quot;3 of 3 lanes are running&quot; cites only lane:lane-a</code></pre>
+<p>After:</p>
+<pre><code>A closed  scout's digest unchanged; its claim stale? false
+B closed  projection lanes = lane:lane-a   (summary names: lane:lane-a)
+C closed  groupScope = [evidence(*), runtime(*)] — the bot predicate intersects to ∅
+D closed  unestablished-basis · no world state was found in which these facts coexisted
+E closed  claim-class-mismatch · lane:lane-a cannot support a durable claim (it supports snapshot)
+F closed  &quot;4 of 4 lanes are running&quot; cites 5 objects: lanes:summary, lane-a, lane-b, lane-c, lane-d</code></pre>
+<h3 id="blk-116490">2 · The side channel, and the law it produced</h3>
+<p>Your example is exactly what happened. Scout observes evidence and runtime, produces an evidence claim, and a <strong>lane</strong> changes — Scout's permitted projection stays byte-identical and its claim went stale anyway. Scout learned that something, somewhere, moved.</p>
+<blockquote><p><strong>A Bot learns that its view changed only when its own projection changed.</strong></p></blockquote>
+<p><code>claimStale</code> now compares <code>basis.projection_digest</code> against a fresh digest of that Bot's own projection, and the cursor carries <strong>no global clock at all</strong> — <code>view</code> is gone from <code>bot-projection@1</code>, from the basis line, and from the board, which used to print <code>view N</code> for the same reason. A Bot with no observation grant can now never be told anything.</p>
+<p>The distinction is worth having as a named primitive, as you say:</p>
+<pre><code>operator view_revision   versions everything the cockpit may see
+projection_digest        versions only what THIS Bot may see</code></pre>
+<h3 id="blk-116497">3 · One scope algebra, used in exactly two places</h3>
+<p>You were right that two implementations was the cause rather than a coincidence — both were wrong in the same direction. There is now one: a scope is a set of <code>(kind, resource)</code> predicates, with <code>admits</code> and <code>intersectScope</code>.</p>
+<p><strong>The `resource === undefined` branch is gone.</strong> <code>assembleFrame</code> asks per object and an object always has an id, so the question that produced the widening bug — <em>may this Bot see lanes</em>, with no lane named — cannot be asked from the projection path. A resource-scoped grant now answers <strong>no</strong> to the bare kind, asserted directly, so the defence survives even if a future caller asks badly.</p>
+<p>Intersection is over predicates, and the attenuation property holds in both directions:</p>
+<pre><code>bot(bot_auditor) ∩ bot(bot_builder)  = ∅
+bot(*)           ∩ bot(bot_auditor)  = bot(bot_auditor)</code></pre>
+<p>Both are asserted, and the second matters as much as the first: <code>*</code> ∩ X = X is what makes attenuation <em>add</em> restrictions rather than replace them, and it is the same property delegation has one layer down.</p>
+<p><strong>A collection cannot smuggle its members past the boundary.</strong> <code>lanes:summary</code> is admitted by every lane it names, not by its own id — otherwise granting a group &quot;the summary&quot; would disclose three lanes to a group permitted to see none of them. Falsified with a group granted exactly <code>lanes · summary</code>.</p>
+<h3 id="blk-116504">4 · UNESTABLISHED, taken exactly as ruled</h3>
+<p>You are right that a badge is too permissive, and the reason is the one you gave: it is not old truth, it is unestablished truth. <code>botSay</code> refuses <code>unestablished-basis</code> outright, and the Bot's only remaining utterance is</p>
+<blockquote><p><em>I could not establish a coherent view of the world — these facts were never shown to hold together, so I will not tell you they did.</em></p></blockquote>
+<p>which carries no claims. <code>COHERENT</code> and <code>UNESTABLISHED</code> are named states rather than a boolean, and the pessimistic fallback is in the shape you described — three optimistic attempts, then one ordered attempt, then the refusal.</p>
+<p><strong>One honesty note about that fallback.</strong> In this prototype nothing can interleave with a synchronous build, so the ordered attempt is the shape and not the force. It is labelled <code>ordered</code> in the frame and named as such in the source rather than presented as the runtime's linearized read, because claiming otherwise would be the overclaim this arc keeps finding.</p>
+<h3 id="blk-116510">5 · The claim class belongs to the object</h3>
+<p><code>claimStale</code> exempts everything that is not <code>snapshot</code>, so a self-declared class was a way to make any fact eternal. Each frame object now declares what it can support, and <code>botSay</code> refuses <code>claim-class-mismatch</code>.</p>
+<p><strong>And the executable-spec overclaim you spotted is gone.</strong> W.1.3.1 demonstrated <code>durable</code> by citing <code>gates:board</code> and <code>evidence:ledger</code> — both live state. Those are <code>snapshot</code> objects now, and the only durable objects in the frame are receipts. At boot no receipt has been minted, so <strong>Ada's brief currently makes no durable claim at all</strong>, which is the honest answer: don't demonstrate a class you have no object for.</p>
+<p>Aggregates cite what established them — <code>lanes:summary</code> names its members and a claim citing it must cite all of them, refused <code>incomplete-provenance</code> otherwise.</p>
+<h3 id="blk-116514">6 · Four defects in my own instruments, and one is embarrassing</h3>
+<p><strong>Two probes could never have matched.</strong> In a <em>single-quoted</em> bash argument <code>\$</code> reaches perl as an escaped dollar — a literal <code>$</code>, not end-of-line. Two probes were silently pattern-dead and reported MISSED, which is the only reason this is a note rather than a false number: the harness scores a stale pattern as a failure, never as a pass. Third consecutive round in which <code>sed</code>-pinned probes are the fragile part.</p>
+<p><strong>A probe that measured a defence in depth, not the law.</strong> Sabotaging <code>mayObserve</code> proved nothing, because <code>assembleFrame</code> calls <code>admits</code> directly — I had refactored the projection path and left the probe pointed at the old door.</p>
+<p><strong>A crash masking a probe.</strong> With the <code>unobserved-citation</code> check disabled, the class check dereferenced a missing object and the battery <em>threw</em> instead of printing FAIL — so the probe read as &quot;the law is unfalsifiable&quot; when the law was fine and my guard chain was not null-safe. Fixed in the code, not the probe.</p>
+<p><strong>And an instrument error in my own repro.</strong> Finding B first re-read as still OPEN because my check counted objects of kind <code>lanes</code> — which now includes the derived <code>lanes:summary</code>. The projection contained exactly <code>lane:lane-a</code>. The check was wrong, not the fix.</p>
+<h3 id="blk-116519">7 · Deferred to B.3, as ruled</h3>
+<p><code>parent_grant_id</code> is still <code>bg_&lt;bot&gt;:&lt;capability&gt;</code>, which cannot distinguish two grants for the same capability with different resources. You scoped that to B.3 and I have not done it — noting it here so it is not mistaken for something this round asserts.</p>
+<h3 id="blk-116521">8 · Ladder</h3>
+<p>C1.1  ├─ W.1 … W.1.3.1                                                  ✓ └─ W.1.3.2  visibility is scoped · coherence is an epistemic state ✓ ── Bot executable spec FROZEN W.2   Tauri Channel&lt;CockpitFrame&gt; → WebView · REVOKE                 ← next B.1   real :bot principal · bot-projection@1 · observation grants B.2   persistent conversation + memory B.3   attenuated delegation (real parent grant ids) + routines B.4   disclosure-scoped groups</p>
+<p>Going to W.2. No W.1.3.3.</p>
+<h3 id="blk-116524">Verify</h3>
+<pre><code>node tools/authority-battery.mjs      # 148 assertions
+bash tools/sabotage-bots.sh           # 31 falsified · 0 not   (~3m)
+bash tools/release.sh                 # required gates + both tree-integrity brackets
+cd ampd &amp;&amp; bash tools/sabotage.sh     # 70 · 0 not  (~10m, still outside the chain)</code></pre></div>
+<p class="src"><a href="/#/super/docs/reviews/W_1_3_2_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-116460" class="lvl2">0 · Measured</a><a href="#blk-116486" class="lvl2">1 · The six findings, reproduced first</a><a href="#blk-116490" class="lvl2">2 · The side channel, and the law it produced</a><a href="#blk-116497" class="lvl2">3 · One scope algebra, used in exactly two places</a><a href="#blk-116504" class="lvl2">4 · UNESTABLISHED, taken exactly as ruled</a><a href="#blk-116510" class="lvl2">5 · The claim class belongs to the object</a><a href="#blk-116514" class="lvl2">6 · Four defects in my own instruments, and one is embarrassing</a><a href="#blk-116519" class="lvl2">7 · Deferred to B.3, as ruled</a><a href="#blk-116521" class="lvl2">8 · Ladder</a><a href="#blk-116524" class="lvl2">Verify</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">C1.0b — bootstrap truth &amp; effect atomicity · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraefsrg43eas4s46or4suay4ry4hm5ezi6wiinrlas4344ubr4oula</div></div></div>
+</div></div>
+</body></html>

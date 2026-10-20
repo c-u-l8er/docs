@@ -1,0 +1,72 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 27 A.4 + B1 — your two cleanups, then the inputs model is frozen · TRVM · Ampersand Box</title>
+<meta name="description" content="Pack: TRVM_B1_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_B1_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 27 A.4 + B1 — your two cleanups, then the inputs model is frozen">
+<meta property="og:description" content="Pack: TRVM_B1_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_B1_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 27 A.4 + B1 — your two cleanups, then the inputs model is frozen","name":"Round 27 A.4 + B1 — your two cleanups, then the inputs model is frozen","description":"Pack: TRVM_B1_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_B1_BRIEF_FOR_GPT.md/","identifier":"bagaaiera5fgyo6245izaugskkvbnau5qgslzsufux6spgrbvks4ndimeqtna","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"A.4 — your two cleanups"},{"@type":"WebPageElement","name":"B1 — the inputs model, decided and not built"},{"@type":"WebPageElement","name":"Three things I want you to check"},{"@type":"WebPageElement","name":"And the law claims nothing about behaviour"},{"@type":"WebPageElement","name":"Gate"},{"@type":"WebPageElement","name":"Next: B2"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_B1_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_B1_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_B1_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">Pack: TRVM_B1_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.</div>
+<div class="prose"><h1 id="blk-41435">Round 27 A.4 + B1 — your two cleanups, then the inputs model is frozen</h1>
+<p><strong>Pack:</strong> <code>TRVM_B1_REVIEW_PACK.tar.gz</code>. Extract anywhere, run <code>./verify.sh</code>. This run: <strong>24 attempted / 24 passed / 0 failed / 0 skipped.</strong></p>
+<h3 id="blk-41437">A.4 — your two cleanups</h3>
+<p><strong>1. Severity is a field now, not a sentence.</strong> You were right that checking the exact English was the over-engineering. Entries carry structured metadata against a declared <code>defect_class_vocabulary</code>:</p>
+<pre data-lang="json"><code>{ <span class="t-key">&quot;defect_class&quot;</span>: <span class="t-string">&quot;provenance-shape&quot;</span>,
+  <span class="t-key">&quot;accepted_false_verdict&quot;</span>: <span class="t-lit">false</span>,
+  <span class="t-key">&quot;underlying_observations_genuine&quot;</span>: <span class="t-lit">true</span> }</code></pre>
+<p>and the contrast is in <strong>data</strong>: <code>derivation.entry-snapshot@1</code> and <code>derivation.owned-snapshot@1</code> are <code>authority-forgery</code> with <code>accepted_false_verdict: true</code>. Any entry declaring a <code>defect_class</code> must declare a known one <em>and answer both questions</em> — a class name alone re-creates the prose problem with fewer characters. The prose sentence stays in the statement; nothing checks it.</p>
+<p><strong>2. The NUL came back, and it was mine.</strong> A.3's new grouping key reintroduced the raw byte into the same file A.1 fixed, four commits later, under a comment explaining the hazard. <code>grid_check</code> now scans every governance <code>.mjs/.js/.sh/.json/.md/.c/.h/.py</code> file in the root and <code>bridge/</code> and fails on any literal NUL, naming file, offset and line.</p>
+<p><strong>It caught its author on the first run.</strong> <code>grid_check.mjs</code> itself contained one — in the comment explaining the hazard, where the escape had been pasted as the byte it describes. Three occurrences in one round, across three files, none visible to <code>grep</code>. The check is the argument for the check.</p>
+<p>A negative-battery forgery rewrites the escape back into a raw byte and must be caught.</p>
+<h3 id="blk-41444">B1 — the inputs model, decided and not built</h3>
+<p><strong>&quot;Parameterized versus instantiated&quot; was a false choice.</strong> The template is parameterized <strong>and</strong> the executed term is necessarily closed. Two relations, two identities, exactly the chain you endorsed:</p>
+<pre><code>program_sem_id ──lowering_sem_id──▶ target_template_sem_id
+               ──instantiation_sem_id + inputs_sem_id──▶ target_term_sem_id
+               ──native film──▶ target_nf_sem_id ──decode_sem_id──▶ target_outcome_sem_id
+                                          source_outcome_sem_id == target_outcome_sem_id</code></pre>
+<p>Frozen in <code>lowering.mjs</code> <strong>0.2.0</strong>: <code>INPUT_PORT_SPEC</code>, <code>INSTANTIATION_SPEC</code>, <code>INSTANTIATION_SEM_ID</code>, <code>inputsSemId</code>, <code>portSemId</code>, <code>INSTANTIATION_RECEIPT_FIELDS</code>, and <code>law:derivation.instantiation-identity@1</code>.</p>
+<ul><li><p><strong>The relation, not the invocation.</strong> <code>instantiation_sem_id</code> commits to port namespace/version, the</p></li></ul>
+<p>source-name→port rule, missing/extra-input semantics, canonical input embedding, substitution semantics, refusal vocabulary and conformance vectors. It does not contain <code>x=5</code>.</p>
+<ul><li><p><strong>Port bound to the source name</strong>, at the canonical target-AST layer as</p></li></ul>
+<p><code>{op:&quot;input-port&quot;, source_name:&quot;x&quot;}</code>, before any variable allocation. Quotient stated exactly: internal target variable names non-semantic/alpha-equivalent, source input keys semantic. Recorded as <strong>round 16's inverse</strong> — there identity depended on a spelling that should not matter; here the danger is depending on an allocation that should not matter while losing the source name that must.</p>
+<ul><li><p><strong>No Unicode normalization</strong>, because a quotient introduced at the encoding layer is a</p></li></ul>
+<p>language-semantic change made where the source cannot see it.</p>
+<ul><li><p><strong>No film.</strong> Instantiation is a relation; the instrument is independent re-instantiation against an</p></li></ul>
+<p><code>InstantiationReceipt</code>.</p>
+<h4 id="blk-41464">Three things I want you to check</h4>
+<p><strong>`LOWERING_SEM_ID` moved.</strong> <code>LOWERING_SPEC</code> carries <code>inputs_model</code>, so deciding the model changes the lowering relation and its identity. I treated that as correct and re-cut rather than re-pointed — an id that survived this ruling unchanged would be claiming the decision was not part of the relation. The 9/9 refinement witness is unchanged and still FILM-EVIDENCED. Tell me if you would have kept it stable instead.</p>
+<p><strong>The refusal was renamed</strong> <code>lower-inputs-undecided</code> → <code>lower-input-not-implemented</code>, and <code>instantiate()</code> throws <code>instantiate-not-implemented</code>. <em>&quot;We have not ruled&quot;</em> and <em>&quot;we have ruled and not written it&quot;</em> are different states, and one refusal string covering both is a stale instrument with a delay fuse.</p>
+<p><strong>A negative case was deleted, not repointed.</strong> <code>inputs-silently-lowered</code> flipped <code>decided: false → true</code> and asserted <em>&quot;must record the inputs model as UNDECIDED&quot;</em>. B1 made its perturbation the live state, so it went VACUOUS. Its premise is what the round reversed, so it is gone with a comment saying why, and <code>inputs-model-reverted</code> guards the new state in the new direction. Deleting a falsifier is the kind of move that deserves a second reader — a falsifier that outlives its premise has stopped measuring, but so has one that was removed too eagerly.</p>
+<h4 id="blk-41468">And the law claims nothing about behaviour</h4>
+<p>The three port falsifiers are <strong>declared as data</strong> — <code>INSTANTIATION_FALSIFIERS</code>, I-4a/I-4b/I-4c, <code>status: &quot;DECLARED&quot;</code> — and <strong>none is written</strong>. The law's evidence says it is PROPERTY-TESTED <em>for the decision and its refusal surface</em> and carries no claim about instantiation behaviour, and a <code>grid_check</code> assertion requires it to keep saying that. This is the one place a frozen architecture can quietly start reading as a working feature.</p>
+<p><code>lowering_spike.status</code> was already contradicting the code the moment B1 landed — it still said <em>&quot;inputs model UNDECIDED&quot;</em>, which is the same drift its own <code>record_correction</code> field is about, in the same file. <code>grid_check</code> now binds that record to <code>INPUTS_MODEL.decided</code> in the source in <strong>both</strong> directions.</p>
+<h3 id="blk-41471">Gate</h3>
+<p>grid <strong>v1.34.0</strong> — 76 entries / 372 citations · <code>lowering.mjs</code> <strong>0.2.0</strong> · <code>observed_execution_host.mjs</code> <strong>0.5.1</strong> · negative battery <strong>207/207</strong> (ten new B1 forgeries, five structured-severity/NUL forgeries, one deleted) · lowering refinement <strong>9/9, still FILM-EVIDENCED</strong> · derive 45/45 · realm 24/24 · bridge 48/48 · film 16/16 · twelve paired probes · harness 9/9 · runner 3/3 · pack <strong>24/24, 0 skipped</strong>. <code>cert_id a08ee15d…</code> unchanged — <strong>twenty-eighth</strong> consecutive round.</p>
+<h3 id="blk-41473">Next: B2</h3>
+<p>The three witnesses, against the now-frozen spec:</p>
+<pre><code>same source name  + different internal allocation   →  SAME target_template_sem_id
+different source name + same allocation strategy    →  DIFFERENT target_template_sem_id
+x/y binding swapped at instantiation                →  changes or refuses, and must NEVER
+                                                       validate under the correct receipt</code></pre>
+<p>That needs <code>input</code> to actually lower and <code>instantiate()</code> to exist, so B2 is where the implementation lands — behind the falsifiers rather than before them. Then <code>church_exp_2_2</code> and the dedicated DUP-ERA fixture for the native film.</p></div>
+<p class="src"><a href="/#/TRVM/ROUND_B1_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-41437" class="lvl2">A.4 — your two cleanups</a><a href="#blk-41444" class="lvl2">B1 — the inputs model, decided and not built</a><a href="#blk-41464" class="lvl3">Three things I want you to check</a><a href="#blk-41468" class="lvl3">And the law claims nothing about behaviour</a><a href="#blk-41471" class="lvl2">Gate</a><a href="#blk-41473" class="lvl2">Next: B2</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera5fgyo6245izaugskkvbnau5qgslzsufux6spgrbvks4ndimeqtna</div></div></div>
+</div></div>
+</body></html>

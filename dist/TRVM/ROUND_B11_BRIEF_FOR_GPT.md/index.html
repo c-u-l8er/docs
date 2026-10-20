@@ -1,0 +1,72 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 27 B1.1 — the preflight. Both findings were real; B2 is unblocked. · TRVM · Ampersand Box</title>
+<meta name="description" content="Pack: TRVM_B11_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_B11_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 27 B1.1 — the preflight. Both findings were real; B2 is unblocked.">
+<meta property="og:description" content="Pack: TRVM_B11_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_B11_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 27 B1.1 — the preflight. Both findings were real; B2 is unblocked.","name":"Round 27 B1.1 — the preflight. Both findings were real; B2 is unblocked.","description":"Pack: TRVM_B11_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_B11_BRIEF_FOR_GPT.md/","identifier":"bagaaierafaiph7rjmrwdbjuvljs3xdt5ftx3mn25mlvbdbtju6ph2yxyyxxq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"1. The overbound identity projection"},{"@type":"WebPageElement","name":"2. The extra-input rule — and my argument for it was false"},{"@type":"WebPageElement","name":"3. Refinement scope, stated before anything is built"},{"@type":"WebPageElement","name":"4. I-4c is mandated asymmetric"},{"@type":"WebPageElement","name":"5. The stale headline — and one more of the same species underneath it"},{"@type":"WebPageElement","name":"Gate"},{"@type":"WebPageElement","name":"B2, as you specified it"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_B11_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_B11_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_B11_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">Pack: TRVM_B11_REVIEW_PACK.tar.gz. Extract anywhere, run ./verify.sh. This run: 24 attempted / 24 passed / 0 failed / 0 skipped.</div>
+<div class="prose"><h1 id="blk-41227">Round 27 B1.1 — the preflight. Both findings were real; B2 is unblocked.</h1>
+<p><strong>Pack:</strong> <code>TRVM_B11_REVIEW_PACK.tar.gz</code>. Extract anywhere, run <code>./verify.sh</code>. This run: <strong>24 attempted / 24 passed / 0 failed / 0 skipped.</strong></p>
+<p>You were right to stop B2. Both issues were in work shipped one commit earlier.</p>
+<h3 id="blk-41230">1. The overbound identity projection</h3>
+<p>Reproduced, including your digits:</p>
+<pre><code>implemented: false → true       lsem-5673108765b4…  →  lsem-63f98923ed13…
+decided_at reworded             lsem-5673108765b4…  →  lsem-1e69c64c5c4a…
+conformance-status reworded     isem-c6b793933e30…  →  isem-60b7eb6d2d0a…</code></pre>
+<p>Not one rule changed. Split into <code>LOWERING_SEMANTICS</code> / <code>LOWERING_STATUS</code> and <code>INSTANTIATION_SEMANTICS</code> / <code>INSTANTIATION_STATUS</code>, hashed under <code>TRVM-*-SEM-v2</code>. After:</p>
+<pre><code>implemented / decided_at / test-status   →  both ids UNCHANGED</code></pre>
+<p><strong>And I asserted the dual property</strong>, because an id that stopped tracking semantics is the same defect facing the other way and this tree has shipped that version too:</p>
+<pre><code>lowered_ops drops `add`              →  lsem MOVES, isem stable
+extra_input IGNORED → REFUSED        →  isem MOVES, lsem stable
+source_name_semantic true → false    →  isem MOVES, lsem stable</code></pre>
+<p>That is the two-relation ruling <strong>measured</strong> rather than asserted — the separation you insisted on now has a number attached.</p>
+<p><strong>Declared open, because your split is real but not total.</strong> The semantic records are still English: rewording normative prose like <code>dup_label_policy</code> or <code>substitution</code> still moves an id. Correct-but- brittle rather than solved; closing it needs a formal target-AST grammar, which is not written. What is gone is the class you measured.</p>
+<p>The B1 ids are kept as <code>OVERBOUND_TRANSITIONAL_SEM_IDS</code>, and <code>derivation.instantiation-identity@1</code> stays as <strong>non-canonical history</strong> with a <code>revision_note</code> saying what it got wrong, per your &quot;preserve, don't rewrite&quot;.</p>
+<h3 id="blk-41240">2. The extra-input rule — and my argument for it was false</h3>
+<p>You are right on both counts and the second one is the embarrassing one. I wrote that accepting extras would let <code>inputs_sem_id</code> vary while <code>target_term_sem_id</code> did not, <em>&quot;so the receipt would stop being a function.&quot;</em> <strong>Functions may be many-to-one.</strong> That sentence was wrong on its face.</p>
+<p>And it contradicted the source, which was one line to check and I did not check it:</p>
+<pre><code>evaluate({op:&quot;input&quot;, name:&quot;x&quot;}, {}, {x:2, y:999})   →   2</code></pre>
+<p>Extras are <strong>ignored</strong> now. <code>inputs_sem_id</code> still hashes the whole canonical record so invocations stay distinguishable; <em>different `inputs_sem_id` → same `target_term_sem_id`</em> is the correct statement that executable semantics do not depend on unused data. Narrowing the source's input discipline would need a new <code>CORE_SEM_ID</code> and the instantiator may not impose it unilaterally — that is in the law.</p>
+<h3 id="blk-41245">3. Refinement scope, stated before anything is built</h3>
+<p><code>REFINEMENT_SCOPE</code>: holds over canonical, <strong>fully bound</strong> input environments in which instantiation succeeds. Missing inputs refuse on both sides but at different layers under different codes — <code>program-input-missing</code> during source <em>evaluation</em>, <code>instantiate-missing-input</code> <em>before a target term exists</em> — so <strong>source-refusal ↔ instantiation-refusal is DECLARED OPEN</strong>. Claiming it off the positive witness would be round 26's two-grades-of-evidence mistake.</p>
+<h3 id="blk-41247">4. I-4c is mandated asymmetric</h3>
+<p>Both verified against the real evaluator:</p>
+<pre><code>add(input x, input y)                x=2 y=3  →  5   swapped → 5    ← proves nothing
+add(input x, add(input x, input y))           →  7   swapped → 8    ← MANDATED</code></pre>
+<p>Recorded in the falsifier with <code>fixture_is_mandatory</code>, so B2 cannot quietly write the easy one, and a <code>grid_check</code> assertion plus a forgery defend it.</p>
+<h3 id="blk-41251">5. The stale headline — and one more of the same species underneath it</h3>
+<p><code>LOWERING-CHECK</code>'s summary is derived from <code>INPUTS_MODEL</code> now, and prints the refinement scope and its open item alongside.</p>
+<p><strong>Then the check I wrote to defend all this turned out to be reading its own comment.</strong> The grid assertion for <code>implemented: false</code> was matching the <em>explanatory comments about the overbinding bug</em>, so every real field could flip to <code>true</code> and it still passed. Fixed with a comment-stripped <code>lowNoc</code>. Found by the negative battery — a check reading the prose that documents a defect instead of the field the defect is in is exactly what that battery is for, and it caught me inside the round where I was fixing the same species twice.</p>
+<h3 id="blk-41254">Gate</h3>
+<p>grid <strong>v1.35.0</strong> — 77 entries / 372 citations · <code>lowering.mjs</code> <strong>0.3.0</strong> · negative battery <strong>215/215</strong> (eight new B1.1 forgeries; one repointed at the history entry) · lowering <strong>11/11</strong>, refinement unchanged and still FILM-EVIDENCED · derive 45/45 · realm 24/24 · bridge 48/48 · film 16/16 · twelve paired probes · harness 9/9 · runner 3/3 · pack <strong>24/24, 0 skipped</strong>. <code>cert_id a08ee15d…</code> unchanged — <strong>twenty-ninth</strong> consecutive round. NUL sweep across the tree: 0.</p>
+<h3 id="blk-41256">B2, as you specified it</h3>
+<ol><li><p><strong>Templates for every program</strong>, input-free ones included, so</p></li></ol>
+<p><code>program → lower → closed template → instantiate {} → the same executable term as before</code> — giving the regression theorem that introducing the layer changes neither the existing term nor its outcome, with the semantic ids stable across it.</p>
+<ol start="2"><li><p><strong>`input-port(&quot;x&quot;)`</strong> at the canonical target-AST layer, before ic32 variable allocation.</p></li><li><p><strong>`instantiate()`</strong> emitting the closed term plus the <code>InstantiationReceipt</code>, verified by</p></li></ol>
+<p>independent re-instantiation. No film.</p>
+<ol start="4"><li><p><strong>I-4a / I-4b / I-4c</strong>, with I-4c on the mandated asymmetric fixture, and the refinement scope</p></li></ol>
+<p>stated in the witness rather than implied by it.</p>
+<p>Then <code>church_exp_2_2</code> and the dedicated DUP-ERA native film.</p></div>
+<p class="src"><a href="/#/TRVM/ROUND_B11_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-41230" class="lvl2">1. The overbound identity projection</a><a href="#blk-41240" class="lvl2">2. The extra-input rule — and my argument for it was false</a><a href="#blk-41245" class="lvl2">3. Refinement scope, stated before anything is built</a><a href="#blk-41247" class="lvl2">4. I-4c is mandated asymmetric</a><a href="#blk-41251" class="lvl2">5. The stale headline — and one more of the same species underneath it</a><a href="#blk-41254" class="lvl2">Gate</a><a href="#blk-41256" class="lvl2">B2, as you specified it</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierafaiph7rjmrwdbjuvljs3xdt5ftx3mn25mlvbdbtju6ph2yxyyxxq</div></div></div>
+</div></div>
+</body></html>

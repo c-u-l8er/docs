@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Lane D — the credential surface, and now the control plane · agents · Ampersand Box</title>
+<meta name="description" content="Owns: worker/ (created 2026-08-21), including worker/migrations/ — the Pigsty schema. Must not touch: RRABBIT/, studbook/, root *.md,…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/agents/D-worker-auth.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lane D — the credential surface, and now the control plane">
+<meta property="og:description" content="Owns: worker/ (created 2026-08-21), including worker/migrations/ — the Pigsty schema. Must not touch: RRABBIT/, studbook/, root *.md,…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/agents/D-worker-auth.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Lane D — the credential surface, and now the control plane","name":"Lane D — the credential surface, and now the control plane","description":"Owns: worker/ (created 2026-08-21), including worker/migrations/ — the Pigsty schema. Must not touch: RRABBIT/, studbook/, root *.md,…","url":"https://docs.ampersandboxdesign.com/agents/D-worker-auth.md/","identifier":"bagaaieranvss4rib2ri37swurdrqbooz7iio7thsaeiw7rzxp3z2bsndumvq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"agents","url":"https://docs.ampersandboxdesign.com/agents/"},"articleSection":"agents","hasPart":[{"@type":"WebPageElement","name":"What changed on 2026-08-21"},{"@type":"WebPageElement","name":"Read first"},{"@type":"WebPageElement","name":"The one job"},{"@type":"WebPageElement","name":"What it must do"},{"@type":"WebPageElement","name":"What this does NOT solve — do not let it drift"},{"@type":"WebPageElement","name":"Done means"},{"@type":"WebPageElement","name":"Traps"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"agents","item":"https://docs.ampersandboxdesign.com/agents/"},{"@type":"ListItem","position":3,"name":"D-worker-auth.md","item":"https://docs.ampersandboxdesign.com/agents/D-worker-auth.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">agents</span>
+<span class="path">agents/D-worker-auth.md</span>
+
+</div></div>
+<div class="lead">Owns: worker/ (created 2026-08-21), including worker/migrations/ — the Pigsty schema. Must not touch: RRABBIT/, studbook/, root *.md, cloud.computedriven.com/.</div>
+<div class="prose"><h1 id="blk-52995">Lane D — the credential surface, and now the control plane</h1>
+<p><strong>Owns:</strong> <code>worker/</code> (created 2026-08-21), including <code>worker/migrations/</code> — the Pigsty schema. <strong>Must not touch:</strong> <code>RRABBIT/</code>, <code>studbook/</code>, root <code>*.md</code>, <code>cloud.computedriven.com/</code>.</p>
+<blockquote><p>## ⚠️ PARTIALLY UNBLOCKED — 2026-08-21, R7/R8  <strong>What is no longer blocked:</strong> the schema, the RLS battery, the tenant-context contract and the token-verification unit tests. All of it runs against <strong>local PostgreSQL</strong> and a <strong>locally generated keypair</strong>. None of it needs a cloud account. That is most of M1.  <strong>What is still blocked on lane C:</strong> integration against a real realm, a real Hyperdrive binding, and a real R2 bucket. Those stay <code>NOT DEPLOYED</code> and must be <em>named</em> so, never mocked into a production claim.  <strong>Not needed for v0 public tracks.</strong> Public tracks are world-readable and need no credential at all, which is why lane A ships without this. This lane exists for <strong>private</strong> data.</p></blockquote>
+<h3 id="blk-52999">What changed on 2026-08-21</h3>
+<p>A proposed Cloud brief dropped this lane entirely — R2 objects and a Pigsty <code>storage ref</code> appeared in its architecture with <strong>no credential minter anywhere</strong>. <strong>R8 keeps the lane and widens it.</strong></p>
+<p>This is now <em>two</em> jobs in one Worker, not one:</p>
+<ol><li><p><strong>the control-plane API</strong> — the portal BFF and <code>api.computedriven.com</code>, reaching Pigsty over</p></li></ol>
+<p><strong>Hyperdrive → Workers VPC → Cloudflare Tunnel</strong> (R7);</p>
+<ol start="2"><li><p><strong>the credential minter</strong> — unchanged in purpose, better in mechanism (below).</p></li></ol>
+<p>It stops being &quot;small and stateless&quot;. Re-read the free-tier arithmetic below with that in mind: the 100k req/day ceiling now has to cover portal traffic, not just credential mints.</p>
+<h3 id="blk-53010">Read first</h3>
+<p><code>STACK_HUB.md</code> §0.7 (the shape) and §0.4.3 (the hole this fills) · <code>CONFIDENTIALITY.md</code> (what this does <strong>not</strong> solve).</p>
+<h3 id="blk-53012">The one job</h3>
+<pre><code>Keycloak (Fly)      issues an OIDC JWT — who you are, which plan you hold
+      ↓  JWKS
+Worker (Cloudflare) verify signature · check entitlement ·
+                    mint a SCOPED, SHORT-LIVED credential
+      ↓
+R2                  encrypted blobs — never sees a plaintext byte</code></pre>
+<p><strong>This closes the only hole in the compute-in-the-OS design:</strong> an object store cannot decide who deserves a credential. Everything else moved into the user's machine; this could not, because a customer who could mint their own credential could mint their own subscription.</p>
+<p><strong>Keep it small.</strong> It is a stateless request/response handler and it fits inside the Workers <strong>free</strong> plan — 100,000 requests/day, 10 ms CPU per invocation. If it grows past that, something has gone wrong with the design rather than with the plan.</p>
+<blockquote><p><strong>Amended 2026-08-21 (R8).</strong> &quot;Small&quot; now means <em>the bytes never come through here</em>, not <em>the request count is tiny</em>. The rule that matters:  ``<code> Super / client       │  authenticate  ────────────►  Worker       │                                 ├── resolve principal + organization       │                                 ├── consult Pigsty (Hyperdrive)       │                                 ├── authorize the requested object scope       │                                 └── mint a scoped, short-lived R2 credential       │  ◄───────────────────────────────┘       │       └──────────── chunks ────────────►  R2      DIRECT. Never via the Worker. </code>`<code>  **Not** </code>client → Worker → 400 GB of machine backup → R2`. A Worker in the byte path would blow the CPU limit, the request duration and the cost model simultaneously, and it buys nothing: the credential already carries the authorization.  <strong>Mechanism:</strong> use R2's <strong>temporary-credentials</strong> API for a chunk session — short-lived S3 credentials scoped to a bucket, a set of operations, and an exact prefix or object path. Use a <strong>presigned URL</strong> where the operation is genuinely one object. The chunker does batches, so temporary credentials are the normal case and presigned URLs are the exception.  <strong>Verify both against Cloudflare's own docs at the point of use.</strong> This tree has quoted stale provider facts three times; §0.2's rule applies to API shapes as much as to prices.</p></blockquote>
+<h3 id="blk-53018">What it must do</h3>
+<ol><li><p><strong>Verify the JWT</strong> against the realm's JWKS. Workers cannot use Node-native libraries — use</p></li></ol>
+<p><code>jose</code> or <code>cloudflare-worker-jwt</code>. Cache the JWKS briefly; rotate.</p>
+<ol start="2"><li><p><strong>Check `iss`, `aud`, `exp`</strong> and the claims. A valid signature on a token for a different</p></li></ol>
+<p>audience is not authorization.</p>
+<ol start="3"><li><p><strong>Check entitlement</strong> — is this subscription current, and for which tier.</p></li></ol>
+<blockquote><p><strong>SUPERSEDED 2026-08-21 (R7).</strong> This said subscriber state lives in <strong>D1</strong>. It does not. R7 makes <strong>Pigsty the single owner of ComputeDriven truth</strong>, and entitlements are that — they are joined against organizations, worlds and usage, which is exactly the shape D1 is wrong for. <code>entitlements</code> is a Pigsty table reached over Hyperdrive.  D1 keeps no application state under this ruling. If it earns a job later it will be a cache with a named invalidation rule, not a second source of truth.</p></blockquote>
+<ol start="4"><li><p><strong>Mint a scoped, short-lived credential</strong> — a presigned URL or scoped token, narrowed to that</p></li></ol>
+<p>tenant's prefix. <strong>Never hand out a broad credential because it is simpler.</strong></p>
+<ol start="5"><li><p><strong>Fail closed.</strong> Anything unverifiable is a refusal, by name, with no fallback path.</p></li></ol>
+<h3 id="blk-53039">What this does NOT solve — do not let it drift</h3>
+<p><strong>This is authorization, not confidentiality.</strong> They are different questions with different mechanisms, and collapsing them is the same category error as conflating a <code>sem-</code> world with an OS world:</p>
+<table><thead><tr><th>Question</th><th>Answered by</th></tr></thead><tbody><tr><td>Who are you, and are you entitled?</td><td><strong>this lane</strong></td></tr><tr><td>Why can the storage provider not read your data?</td><td><strong>client-side keys</strong> — nothing here touches it</td></tr></tbody></table>
+<p>Keycloak controls <em>who may ask for a credential</em>. It has nothing to say about <em>why knowing a content hash does not reveal content</em>. <strong>Never describe this as making anything end-to-end encrypted.</strong></p>
+<h3 id="blk-53049">Done means</h3>
+<ul><li><p>Unit tests against a locally generated keypair: valid token accepted, expired refused, wrong</p></li></ul>
+<p>audience refused, bad signature refused, <code>alg: none</code> refused, a token for tenant A unable to obtain a credential for tenant B.</p>
+<ul><li><p>Integration against a real Keycloak realm once lane C lands.</p></li><li><p>A measured request cost showing it fits the free tier.</p></li></ul>
+<h3 id="blk-53059">Traps</h3>
+<ul><li><p><strong>`alg: none` and algorithm confusion.</strong> Pin the expected algorithm; never take it from the token.</p></li><li><p><strong>Clock skew</strong> — allow a small leeway on <code>exp</code>/<code>nbf</code>, and say how much.</p></li><li><p><strong>A JWKS fetch that fails must refuse, not fall back</strong> to a cached key indefinitely.</p></li><li><p><strong>Scope every credential to a tenant prefix.</strong> The most likely real bug in this lane is a</p></li></ul>
+<p>credential that works for more than it should, and it will not show up in a happy-path test.</p>
+<ul><li><p><strong>Do not build auth by hand.</strong> Verify tokens someone else issued; issue none yourself.</p></li></ul></div>
+<p class="src"><a href="/#/agents/D-worker-auth.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-52999" class="lvl2">What changed on 2026-08-21</a><a href="#blk-53010" class="lvl2">Read first</a><a href="#blk-53012" class="lvl2">The one job</a><a href="#blk-53018" class="lvl2">What it must do</a><a href="#blk-53039" class="lvl2">What this does NOT solve — do not let it drift</a><a href="#blk-53049" class="lvl2">Done means</a><a href="#blk-53059" class="lvl2">Traps</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/agents/A-shell-wiring.md/">Lane A — wire publishing into the shell</a><a href="/agents/B-studbook.md/">Lane B — build studbook</a><a href="/agents/C-infrastructure.md/">Lane C — stand up the cloud</a><a href="/agents/E-site.md/">Lane E — the site and the nav</a><a href="/agents/F-docs.md/">Lane F — finish the reconciliation</a><a href="/agents/README.md/">Agent lanes — what can be worked on in parallel, and what will collide</a><a href="/agents/SHELL.md/">The portfolio shell</a><a href="/agents/SITES.md/">Site lanes — updating the domain index.htmls in parallel</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieranvss4rib2ri37swurdrqbooz7iio7thsaeiw7rzxp3z2bsndumvq</div></div></div>
+</div></div>
+</body></html>

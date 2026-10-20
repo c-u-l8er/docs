@@ -1,0 +1,81 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>locu.systems · locu.systems · Ampersand Box</title>
+<meta name="description" content="Direction, ruled 2026-09-14: a host for ComputeDriven loci — a locus is what the customer deploys and is billed for, a carrier is the rented machine under…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/locu.systems/AGENTS.md/">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="locu.systems">
+<meta property="og:description" content="Direction, ruled 2026-09-14: a host for ComputeDriven loci — a locus is what the customer deploys and is billed for, a carrier is the rented machine under…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/locu.systems/AGENTS.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"locu.systems","name":"locu.systems","description":"Direction, ruled 2026-09-14: a host for ComputeDriven loci — a locus is what the customer deploys and is billed for, a carrier is the rented machine under…","url":"https://docs.ampersandboxdesign.com/locu.systems/AGENTS.md/","identifier":"bagaaierazi25ewhenycownoq6wuz34uvy65nke2wa3lqv4a7p3buly6tania","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"locu.systems","url":"https://docs.ampersandboxdesign.com/locu.systems/"},"articleSection":"locu.systems","hasPart":[{"@type":"WebPageElement","name":"What is here"},{"@type":"WebPageElement","name":"The marketing page is GENERATED. Do not hand-edit index.html."},{"@type":"WebPageElement","name":"ONE PAGE. The site and the console share a document and a URL space."},{"@type":"WebPageElement","name":"Source-of-truth spec"},{"@type":"WebPageElement","name":"[&] Protocol integration — specified, not implemented"},{"@type":"WebPageElement","name":"Build and test"},{"@type":"WebPageElement","name":"Constraints"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"locu.systems","item":"https://docs.ampersandboxdesign.com/locu.systems/"},{"@type":"ListItem","position":3,"name":"AGENTS.md","item":"https://docs.ampersandboxdesign.com/locu.systems/AGENTS.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">locu.systems</span>
+<span class="path">locu.systems/AGENTS.md</span>
+
+</div></div>
+<div class="lead">Direction, ruled 2026-09-14: a host for ComputeDriven loci — a locus is what the customer deploys and is billed for, a carrier is the rented machine under it, and the meter coun…</div>
+<div class="prose"><h1 id="blk-82054">locu.systems</h1>
+<p><strong>Direction, ruled 2026-09-14: a host for ComputeDriven loci</strong> — a locus is what the customer deploys and is billed for, a carrier is the rented machine under it, and the meter counts admitted transitions. Record: <code>docs/spec/90_LOCUS_HOSTING.md</code>. <strong>Nothing in it is built.</strong> <code>80_SERVICE_MANAGEMENT_PILOT.md</code> is the superseded direction from earlier the same day, banded rather than rewritten.</p>
+<p><strong>The domain is new; the repository, this directory and the nav property key are not renamed.</strong> The shared nav still renders the previous name; the page declares that disagreement and the gate refuses to publish while it is undeclared. Do not edit <code>amp-nav.js</code> to fix it — that file belongs to lane N.</p>
+<p>What is in the tree from the abandoned agent-deployment direction: a Postgres schema and edge functions in the sibling <code>ampersand-supabase/</code>, and a Vite/React/TypeScript dashboard against a Supabase client. <strong>It does not execute an agent on a runtime.</strong></p>
+<h3 id="blk-82058">What is here</h3>
+<pre><code>index.html          the marketing page — GENERATED, see below
+_redirects          sends old_scrap/, src/ and apps/ away from the live host (SHELL.md r14)
+console/            the PHASE-TWO CONSOLE PROTOTYPE, served at /console/ — hand-authored, not generated
+src/                the marketing page's template, stylesheet and two scripts
+records/            the frozen records the page is generated from
+build-site.mjs      emits index.html, boot.js, say.js
+launch-gate.mjs     reads the artifact and refuses to publish a page that lies
+apps/web/           the dashboard — Vite + React + TypeScript, Supabase client
+docs/spec/          the v1 specification set, part of it superseded
+amp-nav.js          portfolio nav, a DEPLOYED copy — do not edit it here
+old_scrap/          previous versions, historical, not authoritative</code></pre>
+<p><code>package.json</code> declares npm workspaces at <code>apps/*</code> and <code>packages/*</code>. There is one workspace, <code>apps/web</code>. <strong>`packages/` does not exist</strong>, so there is no SDK and no CLI, and the marketing page says so with a probe that re-checks it on every build.</p>
+<p>The edge functions and migrations this product runs on are <strong>not in this repository</strong>. They live in the sibling <code>ampersand-supabase/</code> repo, under <code>functions/webhost-*</code> and <code>migrations/*webhost*</code>.</p>
+<h3 id="blk-82062">The marketing page is GENERATED. Do not hand-edit <code>index.html</code>.</h3>
+<p><code>/index.html</code>, <code>/boot.js</code> and <code>/say.js</code> are emitted by <code>build-site.mjs</code> from <code>records/surface.json</code>, <code>records/evidence.json</code>, <code>src/landing.html</code>, <code>src/shell.css</code>, <code>src/boot.js</code> and <code>src/say.js</code>. <strong>An edit to the served HTML is silently reverted by the next build.</strong> Change the record or the template.</p>
+<pre><code>npm run site:launch   # emit the page, then prove it</code></pre>
+<p><code>launch-gate.mjs</code> reads the emitted artifact and refuses to publish when it and the records disagree — a retracted claim reinstated (anywhere, including inside a comment or an attribute), a rung invented, a call to action the rung has not earned, a hand-typed count, a cited source line that has stopped saying what it is quoted as saying, a <code>mailto:</code>, a text token below 4.5:1, a button whose colour is decided by a non-button rule, an artifact that is not what its source compiles to, or an animation constant leaking into the copy. The gate prints its own total; <strong>do not hand-type a check count anywhere</strong>, that is how the published and printed numbers drift apart.</p>
+<p>Most of the page's claims are NEGATIVE — &quot;there is no AWS dependency&quot;, &quot;nothing reads an <code>ampersand.json</code>&quot;, &quot;<code>packages/</code> does not exist&quot;. Those are the ones the build re-derives off disk on every run, because nobody edits a sentence on a marketing page when they add a dependency.</p>
+<p>**The three <code>site:*</code> scripts are deliberately not wired into <code>build</code>, <code>dev</code> or <code>test</code>.** Those belong to <code>apps/web</code>, which is a separate artifact with a separate toolchain. Do not entangle them.</p>
+<h3 id="blk-82068">ONE PAGE. The site and the console share a document and a URL space.</h3>
+<p>There is no second site. <code>/</code> serves the home view; <code>#/ops/*</code> and <code>#/account/*</code> are the operator console and the client portal, rendered by <code>/app.js</code> into <code>#app</code>. Three rules hold that together and all three are checked:</p>
+<ol><li><p><strong>The home view is in the served bytes.</strong> <code>build-site.mjs</code> generates it into</p></li></ol>
+<p><code>#home</code> from the frozen records. <code>/app.js</code> may show or hide it and may <strong>never author it</strong> — §3c deletes every script and the empty <code>#app</code> from the artifact and requires each text node a reader sees to survive. A price, a status or a count migrating into the script is refused there.</p>
+<ol start="2"><li><p><strong>`src/app.css` is scoped to `#app`.</strong> It shares <code>.btn</code>, <code>.tag</code>, <code>.status</code>,</p></li></ol>
+<p><code>.card</code> and bare <code>table</code> rules with the shell for different things; unscoped it would silently restyle the page a visitor lands on. Only the overlays appended to <code>&lt;body&gt;</code> (scrim, modal, toast) are unscoped, and none of those names exists in the shell. The gate enumerates every rule.</p>
+<ol start="3"><li><p><strong>The palette is not its own.</strong> Every colour name in <code>app.css</code> is an alias of</p></li></ol>
+<p>the shell token carrying that role, so one palette paints both halves. Only <code>--util</code>, <code>--alarm</code> and <code>--indet</code> are new, and <code>--util</code> must never be the accent: the argument of the site is that one of those two numbers is louder than the other for a reason.</p>
+<p><strong>The standing notice</strong> carries <code>data-prototype</code> and must sit outside <code>#app</code>, because a notice the panel paints disappears the moment the panel throws. The panel's fleet is invented and <strong>its figures may not be repeated anywhere</strong> until a kernel counts admitted transitions under load.</p>
+<h3 id="blk-82083">Source-of-truth spec</h3>
+<ul><li><p><code>docs/spec/00_MASTER_SPEC.md</code> — master engineering spec</p></li><li><p><code>docs/spec/10_API_CONTRACTS.md</code> · <code>20_RUNTIME_PROVIDER_INTERFACE.md</code> ·</p></li></ul>
+<p><code>30_DATA_MODEL_SUPABASE.md</code> · <code>40_SECURITY_SECRETS_COMPLIANCE.md</code> · <code>50_OBSERVABILITY_BILLING_LIMITS.md</code> · <code>60_TESTING_ACCEPTANCE.md</code> · <code>70_AMPERSAND_PROTOCOL_INTEGRATION.md</code></p>
+<ul><li><p><code>docs/spec/80_SERVICE_MANAGEMENT_PILOT.md</code> — the current direction and first pilot; read it first</p></li><li><p><code>docs/spec/adr/</code> — architecture decision records</p></li><li><p><code>docs/spec/progress/</code> — implementation progress logs</p></li><li><p><code>docs/spec/REALIGNMENT_PLAN.md</code></p></li></ul>
+<p>Read the master spec before implementing features, <strong>and read its supersession banner first</strong>: the data-layer half of the spec set is superseded. See README.md.</p>
+<h3 id="blk-82100">[&amp;] Protocol integration — specified, not implemented</h3>
+<p><code>docs/spec/70_AMPERSAND_PROTOCOL_INTEGRATION.md</code> describes <code>ampersand.json</code> manifest support, MCP sidecar orchestration, agent-to-agent routing and Delegatic governance enforcement. <strong>None of it is built.</strong> No code in this repository or in the sibling edge functions reads an <code>ampersand.json</code>; the build counts the source files that so much as mention one, and the count is zero.</p>
+<h3 id="blk-82102">Build and test</h3>
+<pre><code>npm install
+npm run dev            # Vite dev server for apps/web
+npm test               # vitest across workspaces
+npm run typecheck
+npm run lint
+npm run format:check
+npm run site:launch    # the marketing page: emit, then prove</code></pre>
+<h3 id="blk-82104">Constraints</h3>
+<ul><li><p>Node &gt;= 20</p></li><li><p>TypeScript strict mode; ESLint + Prettier enforced</p></li><li><p>Never commit secrets. <code>apps/web/env.example</code> shows the shape.</p></li><li><p><strong>Do not add a dependency to make a marketing claim true — fix the claim.</strong></p></li></ul></div>
+<p class="src"><a href="/#/locu.systems/AGENTS.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-82058" class="lvl2">What is here</a><a href="#blk-82062" class="lvl2">The marketing page is GENERATED. Do not hand-edit index.html.</a><a href="#blk-82068" class="lvl2">ONE PAGE. The site and the console share a document and a URL space.</a><a href="#blk-82083" class="lvl2">Source-of-truth spec</a><a href="#blk-82100" class="lvl2">[&amp;] Protocol integration — specified, not implemented</a><a href="#blk-82102" class="lvl2">Build and test</a><a href="#blk-82104" class="lvl2">Constraints</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/locu.systems/CLAUDE.md/">locu.systems</a><a href="/locu.systems/README.md/">locu.systems</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierazi25ewhenycownoq6wuz34uvy65nke2wa3lqv4a7p3buly6tania</div></div></div>
+</div></div>
+</body></html>

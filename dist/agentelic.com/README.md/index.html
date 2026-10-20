@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Agentelic · agentelic.com · Ampersand Box</title>
+<meta name="description" content="Spec-driven agent builder — you write the specification, it generates and runs the agent. Elixir/OTP with a Phoenix API and an MCP server. Part of the…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/agentelic.com/README.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agentelic">
+<meta property="og:description" content="Spec-driven agent builder — you write the specification, it generates and runs the agent. Elixir/OTP with a Phoenix API and an MCP server. Part of the…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/agentelic.com/README.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Agentelic","name":"Agentelic","description":"Spec-driven agent builder — you write the specification, it generates and runs the agent. Elixir/OTP with a Phoenix API and an MCP server. Part of the…","url":"https://docs.ampersandboxdesign.com/agentelic.com/README.md/","identifier":"bagaaieraj3if2ucfobh5ybb4kb5a557uqkbqbeyxfsecyxllvmomtrwwivka","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"agentelic.com","url":"https://docs.ampersandboxdesign.com/agentelic.com/"},"articleSection":"agentelic.com","hasPart":[{"@type":"WebPageElement","name":"Status, honestly"},{"@type":"WebPageElement","name":"Routes"},{"@type":"WebPageElement","name":"Quick start"},{"@type":"WebPageElement","name":"The specification is authoritative, and superseded in part"},{"@type":"WebPageElement","name":"A standing direction that affects this repository"},{"@type":"WebPageElement","name":"The portfolio nav"},{"@type":"WebPageElement","name":"Conventions"},{"@type":"WebPageElement","name":"Related"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"agentelic.com","item":"https://docs.ampersandboxdesign.com/agentelic.com/"},{"@type":"ListItem","position":3,"name":"README.md","item":"https://docs.ampersandboxdesign.com/agentelic.com/README.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">agentelic.com</span>
+<span class="path">agentelic.com/README.md</span>
+
+</div></div>
+<div class="lead">Spec-driven agent builder — you write the specification, it generates and runs the agent. Elixir/OTP with a Phoenix API and an MCP server. Part of the ComputeDriven world.</div>
+<div class="prose"><h1 id="blk-50969">Agentelic</h1>
+<p>Spec-driven agent builder — you write the specification, it generates and runs the agent. Elixir/OTP with a Phoenix API and an MCP server. Part of the <a href="https://computedriven.com" target="_blank" rel="noopener">ComputeDriven</a> world.</p>
+<p><strong>Written 2026-08-16.</strong> This repository had no README before that date. Every figure below was measured that day with the command beside it.</p>
+<h3 id="blk-50972">Status, honestly</h3>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Version</td><td><code>0.1.0</code> (<code>mix.exs</code>, app <code>:agentelic</code>)</td></tr><tr><td>Tests</td><td><strong>66 passing, 0 failures</strong> — <code>mix test</code></td></tr><tr><td>Marketing page</td><td><strong>live</strong> — <code>https://agentelic.com</code> answers 200</td></tr><tr><td>Application</td><td><strong>live on Fly</strong> as app <code>agentelic</code>, <code>PHX_HOST=app.agentelic.com</code>, region <code>iad</code></td></tr><tr><td>Evidence rung</td><td><code>live_deployed</code></td></tr></tbody></table>
+<p><strong>`GET https://app.agentelic.com/` returns 404, and that is the app answering, not the app being down.</strong> The body is <code>{&quot;errors&quot;:{&quot;detail&quot;:&quot;Not Found&quot;}}</code> — Phoenix, routing correctly. <code>lib/agentelic_web/router.ex</code> declares <strong>POST routes only</strong>, so every GET 404s by design. The check that actually tells you it is up:</p>
+<pre data-lang="bash"><code>curl<span class="t-flag"> -s</span><span class="t-flag"> -o</span> /dev/null<span class="t-flag"> -w</span> <span class="t-string">'%{http_code}\n'</span><span class="t-flag"> -X</span> POST \
+ <span class="t-flag"> -H</span> <span class="t-string">'content-type: application/json'</span> \
+ <span class="t-flag"> -d</span> <span class="t-string">'{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;method&quot;:&quot;tools/list&quot;}'</span> \
+  https://app.agentelic.com/mcp        <span class="t-comment"># -&gt; 200</span></code></pre>
+<p>This is written down because a 404 on the root of a deployed service is exactly the shape of evidence that gets misread as a dead deployment.</p>
+<h3 id="blk-50989">Routes</h3>
+<pre><code>POST /mcp                      MCP server — tools/list, tools/call
+POST /api/pipeline/trigger     run a pipeline
+POST /api/pipeline/github      GitHub webhook</code></pre>
+<h3 id="blk-50991">Quick start</h3>
+<pre data-lang="bash"><code>mix deps.get
+mix compile<span class="t-flag"> --warnings-as-errors</span>
+mix test                       <span class="t-comment"># 66 tests</span>
+mix format<span class="t-flag"> --check-formatted</span>
+mix phx.server                 <span class="t-comment"># local, port from config</span></code></pre>
+<p>Deploy is <code>fly deploy</code> against <code>fly.toml</code> (app <code>agentelic</code>, <code>iad</code>, internal port 8080, <code>force_https</code>).</p>
+<h3 id="blk-50994">The specification is authoritative, and superseded in part</h3>
+<p><code>docs/spec/README.md</code> is the product specification and drives implementation — <strong>read it before changing behaviour.</strong> It carries a supersession banner added 2026-08-15, and the banner is the important part:</p>
+<ul><li><p><strong>Superseded:</strong> everything specifying Supabase tables, RLS policies, Supabase</p></li></ul>
+<p>Auth or <code>amp.profiles</code> identity. The shared-Supabase data layer was abandoned by ruling on <strong>2026-07-30</strong>, replaced by <code>studbook</code> — which is a spec with no implementation and is blocked on an unruled confidentiality question. <strong>Do not build against studbook yet.</strong></p>
+<ul><li><p><strong>Not superseded:</strong> the product, API, UX and protocol design, which is most of</p></li></ul>
+<p>the document. Read it normally.</p>
+<p>The spec was <strong>not rewritten</strong>, deliberately. It is a dated design record, and rewriting it would fabricate a review nobody performed.</p>
+<h3 id="blk-51005">A standing direction that affects this repository</h3>
+<p>Ruled 2026-08-15: <strong>compute moves into the ComputeDriven OS, and the Fly.io apps become storage or nothing.</strong> This app is one of them. It is not being torn down — <strong>nothing is torn down before its OS-side replacement runs locally</strong> — but do not plan new Fly-shaped work here without checking <code>STACK_HUB.md</code> in the workspace first.</p>
+<h3 id="blk-51007">The portfolio nav</h3>
+<p><code>amp-nav.js</code> is a <strong>deployed copy</strong>. The source is <code>ampersand-nav/src/amp-nav.js</code>, fanned out by <code>sync-nav.sh</code>. Edits here are lost on the next sync.</p>
+<h3 id="blk-51009">Conventions</h3>
+<ul><li><p><code>mix format</code>, warnings-as-errors.</p></li><li><p>Never commit secrets.</p></li><li><p><code>old_scrap/</code> is historical and not authoritative.</p></li></ul>
+<h3 id="blk-51017">Related</h3>
+<ul><li><p><a href="https://computedriven.com" target="_blank" rel="noopener">computedriven.com</a> — the discipline this is built under</p></li><li><p><a href="https://ampersandboxdesign.com" target="_blank" rel="noopener">ampersandboxdesign.com</a> — the [&amp;] Protocol it composes under</p></li></ul></div>
+<p class="src"><a href="/#/agentelic.com/README.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-50972" class="lvl2">Status, honestly</a><a href="#blk-50989" class="lvl2">Routes</a><a href="#blk-50991" class="lvl2">Quick start</a><a href="#blk-50994" class="lvl2">The specification is authoritative, and superseded in part</a><a href="#blk-51005" class="lvl2">A standing direction that affects this repository</a><a href="#blk-51007" class="lvl2">The portfolio nav</a><a href="#blk-51009" class="lvl2">Conventions</a><a href="#blk-51017" class="lvl2">Related</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/agentelic.com/AGENTS.md/">Agentelic — Agent Interface</a><a href="/agentelic.com/CLAUDE.md/">Agentelic — Enterprise Agent Builder</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaieraj3if2ucfobh5ybb4kb5a557uqkbqbeyxfsecyxllvmomtrwwivka</div></div></div>
+</div></div>
+</body></html>

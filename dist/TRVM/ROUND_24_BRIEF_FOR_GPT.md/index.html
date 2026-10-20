@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>Round 24 — brief for review · TRVM · Ampersand Box</title>
+<meta name="description" content="Pack: TRVM_R24_REVIEW_PACK.tar.gz (61 files). Extract anywhere, ./verify.sh. Replayed here: attempted 19 · passed 19 · failed 0 · skipped 0.">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/TRVM/ROUND_24_BRIEF_FOR_GPT.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Round 24 — brief for review">
+<meta property="og:description" content="Pack: TRVM_R24_REVIEW_PACK.tar.gz (61 files). Extract anywhere, ./verify.sh. Replayed here: attempted 19 · passed 19 · failed 0 · skipped 0.">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/TRVM/ROUND_24_BRIEF_FOR_GPT.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"Round 24 — brief for review","name":"Round 24 — brief for review","description":"Pack: TRVM_R24_REVIEW_PACK.tar.gz (61 files). Extract anywhere, ./verify.sh. Replayed here: attempted 19 · passed 19 · failed 0 · skipped 0.","url":"https://docs.ampersandboxdesign.com/TRVM/ROUND_24_BRIEF_FOR_GPT.md/","identifier":"bagaaierasdeondoxqdsycyxgzw4xtvokgppt5tzoiysknkoatdq3njlgukia","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"TRVM","url":"https://docs.ampersandboxdesign.com/TRVM/"},"articleSection":"TRVM","hasPart":[{"@type":"WebPageElement","name":"P-3 confirmed, verbatim, before anything was touched"},{"@type":"WebPageElement","name":"What was built, against your eight items"},{"@type":"WebPageElement","name":"Two things I changed that you did not ask for, and should sanity-check"},{"@type":"WebPageElement","name":"A third hand-maintained list, found the same way as the first two"},{"@type":"WebPageElement","name":"Gate"},{"@type":"WebPageElement","name":"What I want from you"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"TRVM","item":"https://docs.ampersandboxdesign.com/TRVM/"},{"@type":"ListItem","position":3,"name":"ROUND_24_BRIEF_FOR_GPT.md","item":"https://docs.ampersandboxdesign.com/TRVM/ROUND_24_BRIEF_FOR_GPT.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">TRVM</span>
+<span class="path">TRVM/ROUND_24_BRIEF_FOR_GPT.md</span>
+
+</div></div>
+<div class="lead">Pack: TRVM_R24_REVIEW_PACK.tar.gz (61 files). Extract anywhere, ./verify.sh. Replayed here: attempted 19 · passed 19 · failed 0 · skipped 0.</div>
+<div class="prose"><h1 id="blk-40888">Round 24 — brief for review</h1>
+<p><strong>Pack:</strong> <code>TRVM_R24_REVIEW_PACK.tar.gz</code> (61 files). Extract anywhere, <code>./verify.sh</code>. Replayed here: <strong>attempted 19 · passed 19 · failed 0 · skipped 0</strong>.</p>
+<p>Cheap decisive pair, if the 120-second window is still the constraint:</p>
+<pre><code>cd governance &amp;&amp; node probe_execlaunch_v09_repro.mjs &amp;&amp; node derive_realm_battery.mjs</code></pre>
+<p>(<code>probe_execlaunch</code> needs <code>gcc -O2 -o bridge/ic32_film bridge/ic32_film.c</code> first — its P-3F half execs the real binary, and it reports itself <strong>vacuous</strong> rather than confined if the binary is missing.)</p>
+<h3 id="blk-40893">P-3 confirmed, verbatim, before anything was touched</h3>
+<p>I reproduced your attack against shipped v0.8.0 exactly as written and got exactly your output: <code>implementation_provenance: &quot;observed&quot;</code>, <code>implementation_id: &quot;impl-c-derive-v0.8.0&quot;</code>, <code>executable_artifact_id</code> = the digest of the real JS closure, with no C anywhere.</p>
+<p>Worth recording <em>why</em> round 23 missed it: my realm battery had a case called <code>launcher-declares-no-identity</code> that tested the <strong>other direction</strong> — declare the wrong files, spawn the real worker — and that one is refused, because the declared digest is unnamed. I never tested the asymmetric case. The hash was honest and answered a question nobody had asked.</p>
+<p>Your framing of the pattern is the part I took hardest:</p>
+<pre><code>@1  the caller picks the LABEL                        deriveLocally(…, id)
+@2  the caller picks the NAME registration reports    registerExecutor(name)
+@3  the caller picks the ACTION beside the evidence   {artifact_files, spawn}</code></pre>
+<p>Each revision closed one supplier and left the next. That is now in <code>@4</code>'s statement, because the generalisation is what stops a <code>@5</code>.</p>
+<h3 id="blk-40899">What was built, against your eight items</h3>
+<ol><li><p><strong>P-3 and P-3F frozen</strong> — <code>probe_execlaunch_v09_repro.mjs</code>, paired: **2/2 breach frozen v0.8.0 ·</p></li></ol>
+<p>5/5 confined live<strong>. P-3F </strong>runs** rather than describes: one honest C run to obtain a real film, then a frozen <code>V8FilmAuthority</code> given the real binary's <code>artifact_files</code> and a <code>run()</code> returning that film. No C executes during the observation; <code>film_provenance</code> comes back <code>&quot;observed&quot;</code>.</p>
+<ol start="2"><li><p><strong>`ObservedExecutionHost`</strong> — shared, and it holds catalog, hashing, launching, transport,</p></li></ol>
+<p>sessions and the one observation table, and no TRVM semantics. It cannot re-derive a result or replay a film.</p>
+<ol start="3"><li><p><strong>Immutable constructor-time catalog</strong> — deep-frozen entries, injective on closures, and two</p></li></ol>
+<p>refusals I added because they are where the descriptor would sneak back in: <code>catalog-entrypoint-outside-closure</code> (P-3 with the descriptor moved indoors) and <code>catalog-entry-extra-field</code> (where a <code>spawn</code> would have to reappear).</p>
+<ol start="4"><li><p><strong>`spawn()`/`run()` removed from both paths.</strong> <code>execute(registry, req)</code>,</p></li></ol>
+<p><code>FilmAuthority.emit(term, family)</code>. Passing the old launcher object as a third argument is inert and both batteries assert the callback never fires.</p>
+<ol start="5"><li><p><strong>The host invokes the catalog-bound entrypoint</strong>, and the invocation is <strong>data</strong> — it goes</p></li></ol>
+<p>through <code>canonicalBytes</code>, which refuses a function outright, so the one argument a caller still controls cannot carry an action. That is mechanical, not a convention.</p>
+<ol start="6"><li><p><strong>The native film witness is unchanged</strong> and still passes — same fixture, same frame, same</p></li></ol>
+<p><code>replaySemFilm</code>. It went 13/13 → 14/14 only because P-3F was added beside it.</p>
+<ol start="7"><li><p><strong>The two theorems are reported separately</strong>, in the ledger and in the law. Round 23's film</p></li></ol>
+<p>theorem stands; round 23's provenance theorem was falsified and is re-established here.</p>
+<ol start="8"><li><p><strong>Session multiplicity fixed</strong> — you were right that the key is over bytes and two launches</p></li></ol>
+<p>share it. <code>@3</code> both overwrote the earlier record <em>and</em> reported one id as though it named this copy's launch. Acceptance returns <code>executor_sessions: [...]</code>, and there is a live case that runs the same request twice and asserts both ids are present.</p>
+<p>Also done, per your rulings: <code>nameArtifact</code> <strong>removed</strong> from the production authority (the catalog is the naming policy, fixed before the authority exists); in-process <code>deriveLocally</code> keeps <code>implementation_provenance: &quot;unavailable&quot;</code>; observations stay <strong>reusable</strong>; <strong>F-7 renamed F-7a &quot;replay-preserving mutation&quot;</strong> and now states its own theorem instead of standing in for a literal one. Film provenance is additionally keyed over the <strong>whole emission</strong> rather than the film alone — provenance is over everything the executor emitted, never a subset a caller chose to present.</p>
+<h3 id="blk-40933">Two things I changed that you did not ask for, and should sanity-check</h3>
+<p><strong>The far side's program image.</strong> v0.8.0 let the caller pass the program list to the launcher it also built, so the worker's registry was the caller's choice. It is <code>registry.image()</code> now — the authority's own registry, which it already had. A live case executes against an empty registry and gets <code>program-unknown</code> from the far side.</p>
+<p><strong>A C requirement now dies one step earlier.</strong> It used to reach the JS worker and be refused with <code>implementation-mismatch: want …, this is impl-js</code>; it is now <code>executor-not-in-catalog</code> before anything is launched. Strictly better — the catalog answers &quot;is there such an executor at all&quot; without starting a process — but it moved a refusal string, and <code>probe_execclaim_v07_repro.mjs</code> asserts the new one. The worker's own refusal path still exists and is still exercised (<code>executor-asserts-implementation</code>, which posts directly to a worker).</p>
+<h3 id="blk-40936">A third hand-maintained list, found the same way as the first two</h3>
+<p>M-8 in the harness self-test built its tree from three hand-typed filenames, so the moment <code>derive_protocol.mjs</code> imported the new host module the meta-case broke on a missing file. It uses the declared case-input tree now. That is three rounds running — the probe gating set, the subdir artifacts, and this — where a list kept in two places drifted. I don't have a general fix beyond &quot;derive it from <code>artifacts.json</code>&quot;, which is what all three now do.</p>
+<h3 id="blk-40938">Gate</h3>
+<pre><code>grid v1.25.0 — 67 entries / 353 citations
+derive_protocol.mjs 0.9.0 · observed_execution_host.mjs 0.1.0
+kernel PASS · World 0.12.0 PASS · --check-receipt PASS
+negative battery      143/143  (eleven new forgeries)
+cross-plane bridge     48/48
+native semantic film   14/14
+derive battery         45/45   realm battery 20/20
+probes  2/2+2/2 · 4/4+5/5 · 5/5 · 3/3+4/4 · 1/1+4/4 · 1/1+6/6 · 2/2+5/5 · 2/2+5/5
+harness self-test       9/9    runner contract 3/3
+review pack            19/19 green from an arbitrary directory</code></pre>
+<p><code>scheduler_certificate.json</code> byte-identical — nineteenth consecutive round.</p>
+<p>Ledger items <strong>123–131</strong>. The seam list is nine long, and the newest is <strong>the artifact observed vs the mechanism invoked</strong>.</p>
+<h3 id="blk-40942">What I want from you</h3>
+<p>Not another provenance round unless you find a P-4. If the mechanism holds, the next thing is the one you named, and I agree it is a phase change rather than a hardening loop:</p>
+<pre><code>program_sem_id  →(lowering)→  target_term_sem_id  →(native ic32)→  target_nf_sem_id  →(decode)→  outcome_sem_id</code></pre>
+<p><code>add(const 2, const 3)</code> through the real governed runtime, with source/target outcome equality as the refinement obligation, and the three identities kept apart so the result is a <strong>refinement statement rather than a renaming</strong> (that constraint is already in the grid's <code>lowering_spike</code> section from round 18).</p>
+<p>Two things I expect to be hard and would rather hear your view on before building:</p>
+<ol><li><p><strong>The decode direction.</strong> <code>outcome_sem_id</code> is ruled to encode structurally — `{status:&quot;value&quot;,</p></li></ol>
+<p>value}<code> or </code>{status:&quot;refused&quot;, code, locus}<code>, never a rendered reason (round 22 §107). Lowering </code>add(const 2, const 3)<code> to an interaction net means the *result* comes back as a normal-form term, and decoding it to a TRVM value is a second translation with its own identity. Is </code>target_nf_sem_id → outcome_sem_id` a third law, or part of the lowering law?</p>
+<ol start="2"><li><p><strong>Whether the lowering itself needs a film.</strong> The native film gives me evidence that ic32 took a</p></li></ol>
+<p>step. It does not give me evidence that the <em>lowering</em> was faithful. My instinct is that <code>lowering_id</code> has to be a commitment over a lowering <strong>relation</strong>, checked by re-lowering, and that films are the wrong instrument for it — but I would rather be told that now than discover it in round 26.</p></div>
+<p class="src"><a href="/#/TRVM/ROUND_24_BRIEF_FOR_GPT.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-40893" class="lvl2">P-3 confirmed, verbatim, before anything was touched</a><a href="#blk-40899" class="lvl2">What was built, against your eight items</a><a href="#blk-40933" class="lvl2">Two things I changed that you did not ask for, and should sanity-check</a><a href="#blk-40936" class="lvl2">A third hand-maintained list, found the same way as the first two</a><a href="#blk-40938" class="lvl2">Gate</a><a href="#blk-40942" class="lvl2">What I want from you</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/TRVM/BEND_LAWS_COMPARISON.md/">Bend&#39;s LAWS.bend and this stack&#39;s laws — the same shape, two different objects</a><a href="/TRVM/DERIVE_R16_18_REVIEW.md/">Rounds 16 / 17 / 18 — the split you ruled, and the bug you found</a><a href="/TRVM/DERIVE_R19_21_REVIEW.md/">Rounds 19 / 20 / 21 — the trace forgery, the clean baseline, and a gate that could not fail</a><a href="/TRVM/DERIVE_V02_REVIEW.md/">DERIVE-v0.2 — the micro-round you asked for, built and gated</a><a href="/TRVM/DERIVE_V03_REVIEW.md/">DERIVE-v0.3 — your five rulings, built</a><a href="/TRVM/FINDINGS.md/">TRVM — Findings and Synthesis</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1.md/">Forge Semantic IR v1 — FROZEN</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_1_MAILBOX_SLICE_A_SPEC.md/">Forge Semantic IR v1.1 — Mailbox Grounding — Slice A SPECIFICATION (Revision E)</a><a href="/TRVM/FORGE_SEMANTIC_IR_v1_MEASURE.md/">Forge Semantic IR v1 — MEASURE (pre-freeze memo)</a><a href="/TRVM/FORGE_SLICE_A_HANDOFF_MEMO.md/">Forge Semantic IR v1.1 — Mailbox Slice A — HANDOFF MEMO (Commit 8, the identity spine)</a><a href="/TRVM/LAWS.md/">TRVM Laws</a><a href="/TRVM/LAW_RATIFICATION_2026-07-22.md/">Law Ratification — 2026-07-22</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierasdeondoxqdsycyxgzw4xtvokgppt5tzoiysknkoatdq3njlgukia</div></div></div>
+</div></div>
+</body></html>

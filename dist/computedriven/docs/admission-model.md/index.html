@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>R0.4.7 atomic lifecycle admission — written before the mechanism · computedriven · Ampersand Box</title>
+<meta name="description" content="Invariant from the R0.4.6 review:">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/admission-model.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R0.4.7 atomic lifecycle admission — written before the mechanism">
+<meta property="og:description" content="Invariant from the R0.4.6 review:">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/admission-model.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"R0.4.7 atomic lifecycle admission — written before the mechanism","name":"R0.4.7 atomic lifecycle admission — written before the mechanism","description":"Invariant from the R0.4.6 review:","url":"https://docs.ampersandboxdesign.com/computedriven/docs/admission-model.md/","identifier":"bagaaierap2blend3ztmmkajzy7xukepmbxqxt2jso7c34fu72sti5r5tgjba","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"The hole"},{"@type":"WebPageElement","name":"Closure: the linear token is admission, and every mutation consumes it"},{"@type":"WebPageElement","name":"Operational fencing (form 3)"},{"@type":"WebPageElement","name":"Who holds the admission"},{"@type":"WebPageElement","name":"Boundary (unchanged)"},{"@type":"WebPageElement","name":"Falsifiers (the review's eight)"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"admission-model.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/admission-model.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/admission-model.md</span>
+
+</div></div>
+<div class="lead">Invariant from the R0.4.6 review:</div>
+<div class="prose"><h1 id="blk-58548">R0.4.7 atomic lifecycle admission — written before the mechanism</h1>
+<p>Invariant from the R0.4.6 review:</p>
+<blockquote><p><strong>No authority-bearing lifecycle transition may take effect without consuming the current lifecycle admission capability that makes that transition current.</strong></p></blockquote>
+<h3 id="blk-58552">The hole</h3>
+<p>&lt;!-- historical --&gt; R0.4.6 serialized <em>evidence</em> (linear head, no rollback) but not <em>operational mutation</em>: capability transitions (<code>attach</code>, <code>detach</code>, <code>finalize_loss</code>, <code>reopen</code>) ran independently, minted a Copy event, and the head was advanced later by a separate <code>append</code>. In the gap the head lagged reality, and three forks followed:</p>
+<ol><li><p><code>detach()</code> produced Vacant(1) before its receipt was appended; the</p></li></ol>
+<p>warden finalized A@0 against the still-current head; <code>reopen</code> produced a second Vacant(1). Two carriers attached at generation 1.</p>
+<ol start="2"><li><p>Vacant(1) consumed to attach B before B's record was appended; the</p></li></ol>
+<p>head still said vacant; <code>reopen</code> minted another Vacant(1). B and C.</p>
+<ol start="3"><li><p>After accepted finality of A@0 and attachment of B@1, the stale</p></li></ol>
+<p><code>LocusAttachment(A,0)</code> value still existed and could <code>detach()</code> into yet another Vacant(1). Evidence said A was fenced; A was not <em>operationally</em> fenced. &lt;!-- /historical --&gt;</p>
+<h3 id="blk-58566">Closure: the linear token is admission, and every mutation consumes it</h3>
+<p><code>LifecycleHead</code> is renamed <code>LifecycleAdmission</code>: it is no longer knowledge with a linear identity, it is the single serialization point that makes a mutation current. <code>LifecycleState</code> remains descriptive knowledge.</p>
+<pre><code>Vacant + Admission ──attach(c)──► Attachment + AttachRecord + Admission'
+Attachment + Admission ──detach()──► Vacant + DetachReceipt + Admission'
+Warden(&amp;) + Admission ──finalize_loss──► LossFinalization + Vacant + Admission'</code></pre>
+<ul><li><p>Each transition CONSUMES the admission and returns the successor; the</p></li></ul>
+<p>evidence record it emits <em>describes an already-serialized transition</em> (records stay Copy; they are no longer the later operation that makes a completed mutation current).</p>
+<ul><li><p>Every failure path returns the un-consumed capability AND the</p></li></ul>
+<p>un-consumed admission with the error, so a retry cannot mint duplicates and a wrong call never destroys linear state. &lt;!-- historical --&gt;</p>
+<ul><li><p>The R0.4.6 <code>append</code> and <code>reopen_after_closure</code> are DELETED: finality</p></li></ul>
+<p>now materializes the successor vacancy atomically with the admission advance, so no second mint path for a vacancy exists, and the warden's <code>min_generation</code> fence became unnecessary. &lt;!-- /historical --&gt;</p>
+<ul><li><p><code>suspend</code>/<code>recover_attachment</code> do not change lifecycle state; recovery</p></li></ul>
+<p>is judged against <code>&amp;Admission</code> (borrowed) exactly as in R0.4.6.</p>
+<ul><li><p>Public <code>replay_lifecycle</code>/<code>audit_replay</code> over slices remain</p></li></ul>
+<p>descriptive; a <code>LifecycleState</code> cannot be passed where an admission is required (type error).</p>
+<h3 id="blk-58589">Operational fencing (form 3)</h3>
+<p>A stale <code>LocusAttachment</code> may remain representable, but every mutation requires the current admission, which now records Attached(B,1) or Vacant(1): the stale value's <code>detach</code> fails (<code>WrongGeneration</code> / <code>WrongCarrier</code>) and hands the stale value back, powerless; its <code>suspend()</code> custody cannot recover (<code>CustodyMismatch</code>). stale capability + no current admission = powerless.</p>
+<h3 id="blk-58591">Who holds the admission</h3>
+<p>The admission is the controller-side serialization point; carriers hold capability values. Orderly attach/detach need the carrier's value AND the admission; finality needs the warden AND the admission and no carrier cooperation — so a physically lost carrier (its attachment value gone) can still be finalized by the admission holder. Admission hand-off between parties is an explicit move in the one-process model.</p>
+<h3 id="blk-58593">Boundary (unchanged)</h3>
+<p>One-process safe-Rust model. No consensus/leases; no durable crash recovery (a persisted admission is bytes); trusted-root lineage forks remain outside the claim (Locus-birth uniqueness is World-level).</p>
+<h3 id="blk-58595">Falsifiers (the review's eight)</h3>
+<ol><li><p>detach-then-competing-finality cannot yield two usable vacancies.</p></li><li><p>consuming a vacancy to attach B leaves no path to a C at that</p></li></ol>
+<p>generation, with no separate persistence step involved.</p>
+<ol start="3"><li><p>post-finality stale Attachment(A,N) cannot detach or create a successor.</p></li><li><p>stale vacancy/attachment values without the admission cannot mutate</p></li></ol>
+<p>(runtime + type-level: no admission-free transition exists).</p>
+<ol start="5"><li><p>one admission admits exactly one mutation (reuse → E0382).</p></li><li><p>failure paths return linear state; retry succeeds without duplicates.</p></li><li><p>all R0.4.1–R0.4.6 falsifiers remain green.</p></li><li><p>replay is descriptive; a <code>LifecycleState</code> is not an admission.</p></li></ol></div>
+<p class="src"><a href="/#/computedriven/docs/admission-model.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-58552" class="lvl2">The hole</a><a href="#blk-58566" class="lvl2">Closure: the linear token is admission, and every mutation consumes it</a><a href="#blk-58589" class="lvl2">Operational fencing (form 3)</a><a href="#blk-58591" class="lvl2">Who holds the admission</a><a href="#blk-58593" class="lvl2">Boundary (unchanged)</a><a href="#blk-58595" class="lvl2">Falsifiers (the review&#39;s eight)</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a><a href="/computedriven/docs/fcb-stage0-review-2026-09-16.md/">ComputeDriven competitive benchmark — Codex stage-0 review and Fable stage-0.1 assignment</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaierap2blend3ztmmkajzy7xukepmbxqxt2jso7c34fu72sti5r5tgjba</div></div></div>
+</div></div>
+</body></html>

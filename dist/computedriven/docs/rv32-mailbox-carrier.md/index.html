@@ -1,0 +1,75 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>RV32 bare-metal carrier: a memory-mapped mailbox (design, R5; not built) · computedriven · Ampersand Box</title>
+<meta name="description" content="Status: design only. Ruled 2026-09-04 with the R5 adjudication: the RV32 ecall interface (cd-kernellet/src/lower/riscv32_hostcall.rs, Linux rv32 numbers…">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/computedriven/docs/rv32-mailbox-carrier.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RV32 bare-metal carrier: a memory-mapped mailbox (design, R5; not built)">
+<meta property="og:description" content="Status: design only. Ruled 2026-09-04 with the R5 adjudication: the RV32 ecall interface (cd-kernellet/src/lower/riscv32_hostcall.rs, Linux rv32 numbers…">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/computedriven/docs/rv32-mailbox-carrier.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"RV32 bare-metal carrier: a memory-mapped mailbox (design, R5; not built)","name":"RV32 bare-metal carrier: a memory-mapped mailbox (design, R5; not built)","description":"Status: design only. Ruled 2026-09-04 with the R5 adjudication: the RV32 ecall interface (cd-kernellet/src/lower/riscv32_hostcall.rs, Linux rv32 numbers…","url":"https://docs.ampersandboxdesign.com/computedriven/docs/rv32-mailbox-carrier.md/","identifier":"bagaaiera2gqk7snkf7ninnpzmlyvhsnjfexdh5m2h2pzykm3su2yf6poasxq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"computedriven","url":"https://docs.ampersandboxdesign.com/computedriven/"},"articleSection":"computedriven","hasPart":[{"@type":"WebPageElement","name":"1. What a carrier is, and is not"},{"@type":"WebPageElement","name":"2. The mailbox"},{"@type":"WebPageElement","name":"3. The floor's loop"},{"@type":"WebPageElement","name":"4. Evidence egress stays orthogonal"},{"@type":"WebPageElement","name":"5. Where it maps"},{"@type":"WebPageElement","name":"6. What this design does not claim"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"computedriven","item":"https://docs.ampersandboxdesign.com/computedriven/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/computedriven/docs/"},{"@type":"ListItem","position":4,"name":"rv32-mailbox-carrier.md","item":"https://docs.ampersandboxdesign.com/computedriven/docs/rv32-mailbox-carrier.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">computedriven</span>
+<span class="path">computedriven/docs/rv32-mailbox-carrier.md</span>
+
+</div></div>
+<div class="lead">Status: design only. Ruled 2026-09-04 with the R5 adjudication: the RV32 ecall interface (cd-kernellet/src/lower/riscv32_hostcall.rs, Linux rv32 numbers 63/64/93) is the test/ho…</div>
+<div class="prose"><h1 id="blk-63192">RV32 bare-metal carrier: a memory-mapped mailbox (design, R5; not built)</h1>
+<p><strong>Status: design only.</strong> Ruled 2026-09-04 with the R5 adjudication: the RV32 <code>ecall</code> interface (<code>cd-kernellet/src/lower/riscv32_hostcall.rs</code>, Linux rv32 numbers 63/64/93) is the <strong>test/hostcall lowering</strong> — chosen so that the in-repo interpreter and QEMU user-mode both service the same image — and is not the canonical bare-metal carrier. This document is the carrier that is. Nothing here is implemented; nothing here changes what a transition means.</p>
+<h3 id="blk-63194">1. What a carrier is, and is not</h3>
+<p>The 48-byte command frame and the 32-byte outcome frame are the ABI. A carrier moves those bytes and says when they are ready. It does not decide anything: admission does (R0.4.6/R0.4.7), and evidence egress is an orthogonal obligation with its own channel (R3). A carrier that could refuse a transition, or that carried evidence in the response, would be a semantic change and is out of scope by construction.</p>
+<h3 id="blk-63196">2. The mailbox</h3>
+<p>A fixed block of memory at a link-time address (<code>__cd_mailbox</code>, placed by <code>link.ld</code> in the RAM region so the same 64 KiB map governs it), owned half by the host and half by the floor:</p>
+<pre><code>offset  size  field             writer   meaning
+0       4     magic             host     &quot;CDMB&quot; — the host has mapped the block
+4       4     version           host     carrier version, 1
+8       4     command_status    host→floor→host
+                                  0 EMPTY   host may write command[]
+                                  1 READY   host has written a complete 48-byte command; floor may consume
+                                  2 TAKEN   floor has copied command[] out; host may write the next
+16      48    command           host     one COMMAND frame, byte-for-byte the fd-0 frame
+64      4     response_status   floor→host→floor
+                                  0 EMPTY   floor may write response[]
+                                  1 READY   floor has written a complete 32-byte outcome; host may read
+                                  2 TAKEN   host has copied response[] out; floor may write the next
+80      32    response          floor    one OUTCOME frame, byte-for-byte the fd-1 frame
+112     4     control           host     bit 0 STOP — the floor exits its loop at the next EMPTY
+116     4     exit_code         floor    written once, when the floor leaves the loop
+120     4     fault             floor    0, or a fault code if the floor panicked (the panic handler writes it)
+124     4     reserved</code></pre>
+<p>128 bytes. Every status field is a whole aligned word written with a single <code>sw</code> after the payload it announces (release order: payload, then status); the reader polls the status word and reads the payload after seeing it. On a single hart with no caches this is sufficient; on anything else a <code>fence</code> sits between the payload and the status store (<code>fence w,w</code>) and between the status load and the payload load (<code>fence r,r</code>). Those two fences are the whole memory-model surface of the carrier.</p>
+<h3 id="blk-63200">3. The floor's loop</h3>
+<pre><code>loop:
+    wait until command_status == READY        (poll; wfi where the target has it)
+    copy command[48] out                      (the same read_exact the hostcall lowering has, over memory)
+    command_status = TAKEN                    (release)
+    dispatch                                  (unchanged)
+    wait until response_status != READY       (the host has drained the previous outcome)
+    write response[32]; response_status = READY
+    if control &amp; STOP: exit_code = 0; break</code></pre>
+<p><code>lower/riscv32_mailbox.rs</code> supplies exactly what <code>lower/mod.rs</code> names — <code>_start</code>, <code>sys_read</code>, <code>sys_write_fd</code>, <code>exit</code>, <code>stack_ptr</code>, <code>tsc</code> — and <code>sys_read</code>/<code>sys_write_fd</code> are the two waits above. <code>main.rs</code> does not change. <code>sys_write_fd</code> for any fd other than 1 returns EBADF, as the hostcall one does: evidence egress does not ride this mailbox.</p>
+<h3 id="blk-63203">4. Evidence egress stays orthogonal</h3>
+<p>R3's ruling stands: egress exports truth without gaining authority over it, and a committed transition whose evidence cannot cross the boundary poisons the floor. On this carrier that boundary is a <strong>second</strong> block — an egress ring of N × 52-byte <code>LifecycleEgressV1</code> frames with a producer index the floor owns and a consumer index the host owns — so that command latency never couples to evidence throughput (the same reason fd 3 is not fd 1). A full ring is the poison condition, exactly as EAGAIN/ENOTCONN is on Linux. Not designed further here.</p>
+<h3 id="blk-63205">5. Where it maps</h3>
+<pre><code>QEMU virt machine     the block in DRAM; the host side is a QEMU test device or a second hart
+ESP32-P4              shared SRAM between the HP core running the floor and the host core
+FPGA                  a BRAM with the host side on the fabric; status words become ready/valid handshakes
+CD1 hardware queue    the same 128-byte contract as a register file</code></pre>
+<h3 id="blk-63207">6. What this design does not claim</h3>
+<ul><li><p>No boot: the ROM→RAM copy of <code>.data</code> and zeroing of <code>.bss</code> (<code>R5-OPEN.md</code></p></li></ul>
+<p>F76) belong to <code>_start</code> of this lowering and are not written.</p>
+<ul><li><p>No timing: <code>tsc()</code> is the <code>cycle</code> CSR where it exists.</p></li><li><p>No multi-hart claim: the fences above are the only concurrency statement.</p></li><li><p>No egress implementation.</p></li></ul></div>
+<p class="src"><a href="/#/computedriven/docs/rv32-mailbox-carrier.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-63194" class="lvl2">1. What a carrier is, and is not</a><a href="#blk-63196" class="lvl2">2. The mailbox</a><a href="#blk-63200" class="lvl2">3. The floor&#39;s loop</a><a href="#blk-63203" class="lvl2">4. Evidence egress stays orthogonal</a><a href="#blk-63205" class="lvl2">5. Where it maps</a><a href="#blk-63207" class="lvl2">6. What this design does not claim</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/computedriven/docs/admission-model.md/">R0.4.7 atomic lifecycle admission — written before the mechanism</a><a href="/computedriven/docs/battery-host-profile.md/">The dedicated-host profile for performance batteries on this machine</a><a href="/computedriven/docs/connect-model.md/">The connect model</a><a href="/computedriven/docs/custody-model.md/">R0.4.3 custody &amp; provenance model — written before the mechanism</a><a href="/computedriven/docs/discovery-model.md/">The discovery model</a><a href="/computedriven/docs/durable-authority-model.md/">R0.8 durable authority model — written before the mechanism</a><a href="/computedriven/docs/durable-locus-history-model.md/">R6.3 durable Locus history model — written before the mechanism</a><a href="/computedriven/docs/failure-model.md/">R0.4.2 failure model — written before the mechanism</a><a href="/computedriven/docs/fcb-benchmark-review-2026-09-17.md/">ComputeDriven benchmark review and Fable assignment</a><a href="/computedriven/docs/fcb-direction-2026-09-16.md/">ComputeDriven floor competitive benchmark direction — 2026-09-16</a><a href="/computedriven/docs/fcb-kernellet-cost-contract.md/">FCB — the kernellet-cost campaign: a contract, before any code (revision 2)</a><a href="/computedriven/docs/fcb-model.md/">FCB — the floor competitive benchmark: the model, written before the mechanism</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera2gqk7snkf7ninnpzmlyvhsnjfexdh5m2h2pzykm3su2yf6poasxq</div></div></div>
+</div></div>
+</body></html>

@@ -1,0 +1,114 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="build-commit" content="fcffe446d9183eee4b0aa37247ef300fd7d2751d">
+<title>C1.0b — bootstrap truth &amp; effect atomicity · review brief · super · Ampersand Box</title>
+<meta name="description" content="For the next GPT pass. Artifact: `and-super-rev-f3.zip` (925 KB, every release gate green).">
+<link rel="canonical" href="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C1.0b — bootstrap truth &amp; effect atomicity · review brief">
+<meta property="og:description" content="For the next GPT pass. Artifact: `and-super-rev-f3.zip` (925 KB, every release gate green).">
+<meta property="og:url" content="https://docs.ampersandboxdesign.com/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/">
+<meta property="og:site_name" content="Ampersand Box">
+<link rel="stylesheet" href="/atlas.css">
+<script>try{var t=localStorage.getItem('atlas-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<script type="module" src="/amp-nav.js"></script>
+<script type="module" src="/reader.js"></script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"TechArticle","headline":"C1.0b — bootstrap truth & effect atomicity · review brief","name":"C1.0b — bootstrap truth & effect atomicity · review brief","description":"For the next GPT pass. Artifact: `and-super-rev-f3.zip` (925 KB, every release gate green).","url":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/","identifier":"bagaaiera5in4zj43od2m5245iqps3ld4mbh7dndjlc2bejwjr5jl7mhhripq","inLanguage":"en","dateModified":"2026-10-20","author":{"@type":"Person","name":"Travis Burandt"},"publisher":{"@type":"Organization","name":"Ampersand Box","url":"https://docs.ampersandboxdesign.com/"},"isPartOf":{"@type":"TechArticle","name":"super","url":"https://docs.ampersandboxdesign.com/super/"},"articleSection":"super","hasPart":[{"@type":"WebPageElement","name":"0 · What is different about this round's evidence"},{"@type":"WebPageElement","name":"1 · Your findings — all three confirmed, and reproduced"},{"@type":"WebPageElement","name":"1.1 Bootstrap contradiction — CONFIRMED, closed"},{"@type":"WebPageElement","name":"1.2 Recovery can widen authority — CONFIRMED, and it was live"},{"@type":"WebPageElement","name":"1.3 The receipt snapshot bug — CONFIRMED, and worse than described"},{"@type":"WebPageElement","name":"2 · A fourth defect your review did not reach"},{"@type":"WebPageElement","name":"3 · EffectSupervisor — built, with one substantive disagreement"},{"@type":"WebPageElement","name":"3.1 The disagreement: SQLite should not enter yet"},{"@type":"WebPageElement","name":"3.2 Something your framing gave me that is worth naming"},{"@type":"WebPageElement","name":"3.3 One rule I added that you did not specify"},{"@type":"WebPageElement","name":"4 · Truth drift — fixed by derivation, not by editing"},{"@type":"WebPageElement","name":"5 · Two bugs this pass found in its own new code"},{"@type":"WebPageElement","name":"6 · Open questions for the next ruling"},{"@type":"WebPageElement","name":"7 · Where I think this leaves the ladder"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Atlas","item":"https://docs.ampersandboxdesign.com/"},{"@type":"ListItem","position":2,"name":"super","item":"https://docs.ampersandboxdesign.com/super/"},{"@type":"ListItem","position":3,"name":"docs","item":"https://docs.ampersandboxdesign.com/super/docs/"},{"@type":"ListItem","position":4,"name":"reviews","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/"},{"@type":"ListItem","position":5,"name":"C1_0B_REVIEW_BRIEF.md","item":"https://docs.ampersandboxdesign.com/super/docs/reviews/C1_0B_REVIEW_BRIEF.md/"}]}]</script>
+</head><body>
+<amp-nav property="docs"></amp-nav>
+<div id="app"><div class="reader"><div class="col">
+<div class="doc-h"><div class="src">
+<span class="proj">super</span>
+<span class="path">super/docs/reviews/C1_0B_REVIEW_BRIEF.md</span>
+
+</div></div>
+<div class="lead">For the next GPT pass. Artifact: `and-super-rev-f3.zip` (925 KB, every release gate green).</div>
+<div class="prose"><h1 id="blk-112604">C1.0b — bootstrap truth &amp; effect atomicity · review brief</h1>
+<p><strong>For the next GPT pass. Artifact: `and-super-rev-f3.zip` (925 KB, every release gate green).</strong></p>
+<h3 id="blk-112606">0 · What is different about this round's evidence</h3>
+<p>Your C1.0a review said, correctly and carefully:</p>
+<blockquote><p>I still cannot independently execute the BEAM side here because this environment does not have Elixir/Mix installed, so I would phrase the evidence as &quot;32 vectors + 4 crash tests present and wired for <code>mix test</code>,&quot; not independently re-proven by me on the BEAM.</p></blockquote>
+<p>This box has <strong>Elixir 1.19.4 / Erlang 28</strong>. So every defect below was <strong>reproduced as a failing probe on the BEAM before it was fixed</strong>, and is now a passing falsifier. Where a number appears, it was measured on this machine.</p>
+<p>Baseline on arrival, independently run: <strong>36 tests, 0 failures</strong>, 32 vectors, 50 browser assertions. Exactly as your review described.</p>
+<p><strong>Now: 35 conformance vectors · 51 BEAM tests, 0 failures, order-independent across 7 seeds · 55 browser assertions · full `tools/release.sh` green.</strong></p>
+<h3 id="blk-112613">1 · Your findings — all three confirmed, and reproduced</h3>
+<h4 id="blk-112614">1.1 Bootstrap contradiction — CONFIRMED, closed</h4>
+<p><code>GrantRegistry.initial/0</code> minted three grants, so a fresh <code>ampd</code> booted with authority. Exactly your reading.</p>
+<p>Closed as you proposed, with your names:</p>
+<pre><code>Ampd.Bootstrap.new_world!()   → zero authority   (production; Ampd.reset/0)
+Ampd.TestFixture.seed_demo!() → the C0 world     (fixture;    Ampd.reset_demo/0)</code></pre>
+<h4 id="blk-112618">1.2 Recovery can widen authority — CONFIRMED, and it was live</h4>
+<p>Measured before/after on the BEAM, deleting only <code>grant_registry.dets</code>:</p>
+<pre><code>after revoke                     : allow=false  authority-missing · github.repo.read
+after losing grant_registry.dets : allow=true
+grants now: [{&quot;github.repo.read&quot;,&quot;active&quot;}, {&quot;github.issue.read&quot;,&quot;active&quot;}, {&quot;github.pr.draft&quot;,&quot;active&quot;}]</code></pre>
+<p><strong>Data loss widened authority, including re-activating a capability that had been explicitly revoked.</strong> Your <code>world-meta@1</code> proposal is implemented (installation_id, schema_version, initialized_at, store_generation), written <strong>last</strong>, after every store is seeded.</p>
+<p><strong>One deliberate deviation from your design.</strong> You wrote:</p>
+<blockquote><p><code>RECOVERY-STATE-MISSING</code> → ampd refuses to start authority subsystem</p></blockquote>
+<p>I implemented a <strong>sealed registry</strong> instead of a refusal to start. Reason: under OTP, &quot;refuse to start&quot; is a supervisor crash loop, and <strong>a crash loop is not a named refusal</strong> — it takes the node down and tells you nothing, which contradicts the doctrine that every refusal names what to fix. A sealed registry serves <code>[]</code> (fail-closed even if a caller forgets to check), raises rather than accepting writes, and the gateway — the one door — turns the seal into:</p>
+<pre><code>RECOVERY-STATE-MISSING · grant_registry: world w-82b8e6db0d964a3c was initialized at
+2026-08-21T02:38:36Z but its authority store is absent. Refusing to infer authority from defaults.</code></pre>
+<p>If you think fail-to-start is nonetheless correct, say so and I'll change it — but I think observable refusal beats an outage here.</p>
+<p>Your law is adopted verbatim: <strong>Bootstrap may create authority state only through an explicit initialization transition. Recovery may never infer authority from defaults.</strong></p>
+<h4 id="blk-112629">1.3 The receipt snapshot bug — CONFIRMED, and worse than described</h4>
+<p>You predicted the one-shot case. Measured:</p>
+<pre><code>X (authorizing)  sha256:eb494b7920925bc9…
+Y (post-consume) sha256:a16491bb45013560…
+receipt cited    sha256:a16491bb45013560…   ← Y</code></pre>
+<p>But the <strong>approval path is the serious one</strong>, and it was not just a snapshot mismatch:</p>
+<pre><code>consent bound to sha256:645c1218a8755aa6…
+receipt cited    sha256:9d7adfeeef27fc73…</code></pre>
+<p>The receipt and the approval envelope disagreed — so the evidence chain broke precisely at the joint where human consent is bound to an effect. Closed exactly as you proposed, recording both:</p>
+<pre><code>authority_snapshot_at_entry   X
+authority_snapshot_after      Y</code></pre>
+<p>This was a <strong>shared semantic bug, not a port error</strong> — <code>emitReceipt</code> in the frozen JS engine had it too. Fixed in both runtimes and pinned by three new vectors. Verified live in a browser: <code>eb494b79… → a16491bb…</code>, byte-identical to the Elixir probe.</p>
+<h3 id="blk-112637">2 · A fourth defect your review did not reach</h3>
+<p><strong>DETS repairs itself, silently, and that is an unaudited authority mutation.</strong></p>
+<p><code>:dets.open_file</code> defaults to <code>repair: true</code>. After an unclean shutdown it rewrites the table and drops what it cannot parse. For an authority store that is indistinguishable from <strong>a partial revocation nobody ordered</strong> — and it is precisely the &quot;unknown recovery state&quot; <code>Ampd.Store</code>'s own moduledoc claimed to fail closed on, while doing the opposite.</p>
+<p>Stores now open <code>repair: false</code>; damage seals as <code>RECOVERY-STATE-UNTRUSTED</code>.</p>
+<h3 id="blk-112641">3 · EffectSupervisor — built, with one substantive disagreement</h3>
+<p>Implemented as <code>Ampd.Effects</code> + <code>Gateway.perform/5</code>, with your state machine unchanged:</p>
+<pre><code>PROPOSED → AUTHORIZED → APPROVED → CLAIMED → ATTEMPTED
+                                              ├→ COMMITTED
+                                              ├→ FAILED
+                                              └→ UNKNOWN → RECONCILE</code></pre>
+<p><code>effect-request@1</code> and <code>effect-attempt@1</code> are written before the adapter, as you specified.</p>
+<h4 id="blk-112645">3.1 The disagreement: SQLite should not enter yet</h4>
+<p>You wrote:</p>
+<blockquote><p>The next thing you need is not simply &quot;durable maps&quot;; you need coherent transitions over grant / approval / effect request / attempt / receipt. That is much more naturally expressed as a transaction/journal.</p></blockquote>
+<p>I agree about the <em>journal</em> and disagree about the <em>timing</em>, for a specific reason:</p>
+<p><strong>The TOCTOU window is closed by ordering, not by a storage engine.</strong> Two properties do the work here, and neither is a database feature:</p>
+<ol><li><p><strong>The claim is a single serialization point.</strong> <code>Effects.claim/1</code> is one <code>GenServer.call</code>; two racing exercises cannot both hold a proposal. The second is refused <code>effect-already-claimed</code>.</p></li><li><p><strong>The journal is written before the world is touched.</strong> CLAIMED is durable <em>before</em> consent is consumed; ATTEMPTED is durable <em>before</em> an adapter would be called. Recovery reads the journal as the authority on what was <em>intended</em> and reconciles registries to it — rather than interpreting their half-applied state.</p></li></ol>
+<p>That is the transactional-outbox / WAL shape, and it works on DETS. Putting SQLite underneath <em>first</em> would have given transactions to a set of transitions whose semantics were not yet pinned — and porting semantics you have not pinned is how you lose them. They are now pinned by vectors and falsifiers, so the port becomes mechanical.</p>
+<p><strong>What should force the move, concretely</strong> (both measured facts about DETS, not preferences): the <strong>2 GB per-table ceiling</strong>, and the fact that <strong>per-table recovery is per-table</strong> — there is no cross-store atomic commit, so the journal must remain the reconciliation authority forever. Proposal: <strong>SQLite lands in C1.0c, before the first real adapter, and after C1.1's projection</strong> — because the projection will tell us which reads are hot, and that shapes the schema. Rule it if you disagree.</p>
+<h4 id="blk-112658">3.2 Something your framing gave me that is worth naming</h4>
+<blockquote><p>each external system requires its own idempotency strategy</p></blockquote>
+<p><strong>The intent digest Super already computes is the natural idempotency key.</strong> It is a canonical SHA-256 over the full approval-intent envelope — stable, content-addressed, already cross-language parity-tested. <code>effect-attempt@1</code> carries it, and the UNKNOWN refusal names it:</p>
+<pre><code>effect-unreconciled · ef_0001 is UNKNOWN — reconcile against idempotency key sha256:688deb2d… before claiming it again</code></pre>
+<p>This is the only reason UNKNOWN is recoverable at all: exactly-once does not survive a process boundary, so what crosses it must be a key the far side agrees to deduplicate.</p>
+<h4 id="blk-112664">3.3 One rule I added that you did not specify</h4>
+<p><strong>An UNKNOWN effect cannot be re-claimed.</strong> It looks claimable and is not — its adapter may already have changed the world, so re-claiming it <em>is</em> the double-effect the machine exists to prevent. It must be reconciled first. This is a falsifier.</p>
+<h3 id="blk-112666">4 · Truth drift — fixed by derivation, not by editing</h3>
+<p>You were right that both READMEs still said 25. Rather than retype them, <code>tools/stamp-counts.mjs</code> now derives every conformance figure from the exported corpus and the suites themselves, writes them between markers, and <strong>fails the release if a bare count appears outside those markers</strong> — the treatment the proof battery already gave the homepage, applied to the files that actually drifted. It is wired into <code>tools/release.sh</code>.</p>
+<p>(<code>tools/release.sh</code> also got a <code>python3</code> packaging fallback — this box has no <code>zip</code>, and I suspect yours may not either.)</p>
+<h3 id="blk-112669">5 · Two bugs this pass found in its own new code</h3>
+<p>Recorded because they are one class, and because the second was caught only by random test seeds:</p>
+<p><strong>`:dets` counts openers per process.</strong> Closing a table from a process that never opened it fails quietly. A handle retained by the application master (which ran <code>new_world!</code>), and another <strong>dropped by `Store.boot` when it sealed</strong>, pinned tables open on inodes that were later unlinked — after which every &quot;write&quot; landed in a file with no name and the store silently vanished, while <code>File.ls!</code> showed only <code>world.json</code>.</p>
+<p>Fixes: a registry closes its own table; seeding releases its handle immediately; sealing releases the handle it took.</p>
+<p>The lesson generalizes to the SQLite port: <strong>a durable store that is open on a deleted inode reports success for every write.</strong> Any migration needs a falsifier that the store is where it claims to be, not merely that writes returned <code>:ok</code>.</p>
+<h3 id="blk-112674">6 · Open questions for the next ruling</h3>
+<ol><li><p><strong>SQLite timing.</strong> C1.0c (my proposal, after C1.1) or now? §3.1 is my argument for waiting.</p></li><li><p><strong>Is `capability_registry` authority-bearing?</strong> I put it in the sealed set, because pack <em>policies</em> drive placement derivation — losing a tightened <code>source_data: private</code> and reseeding the default would widen where an effect may run. That makes a lost pack registry an outage rather than a re-install. Right trade?</p></li><li><p><strong>What does RECONCILE actually do?</strong> The state exists and is queued; the protocol is not written. The hard part: some capabilities are not queryable after the fact (<code>mail.send</code> has no &quot;did this send?&quot; endpoint). Does an unqueryable capability need a <em>pre-registered</em> external idempotency key at grant time, or does it become a class that simply may not be UNKNOWN — i.e. must be approved synchronously and refused if the connection is unreliable?</p></li><li><p><strong>`store_generation` is written but nothing increments it.</strong> What is a generation — a schema migration, a restore-from-backup, a re-initialization after a seal? It matters because ComputeDriven restore points will need to say which generation a world was restored to.</p></li><li><p><strong>Local peer identity before LIVE LOCAL.</strong> You flagged this and I did not touch it. <code>approve_effect</code> over the projection socket needs a trustworthy human/local identity boundary or any local process can impersonate consent. Should <code>ampd</code> own a local peer auth story (socket peer credentials? a per-world token in the manifest?) <em>before</em> the badge flips, or is Tauri IPC enough for C1.1 with <code>ampd</code> hardening in C1.2?</p></li></ol>
+<h3 id="blk-112686">7 · Where I think this leaves the ladder</h3>
+<p>Unchanged from your order, and I agree with it:</p>
+<pre><code>C1.0a  crash truth                       ✓
+C1.0b  bootstrap truth + snapshot-at-entry + EffectSupervisor   ✓  (this round)
+C1.1   real UI projection · SIMULATED → LIVE LOCAL              ← next, before anything else
+C1.2   FabricProvider.Tailscale
+C1.3+  capability-derived network envelopes</code></pre>
+<p>The projection must speak typed commands (<code>request_grant</code>, <code>revoke_grant</code>, <code>approve_effect</code>, <code>deny_effect</code>) that re-enter the gateway. A socket exposing <code>GrantRegistry.mark/2</code> would be a bypass around everything above — which is the failure mode you named, and it is now the single largest risk in C1.1.</p>
+<p>Nothing in this round networks. Nothing pretends to.</p></div>
+<p class="src"><a href="/#/super/docs/reviews/C1_0B_REVIEW_BRIEF.md">Open in the interactive atlas</a></p>
+</div>
+<div class="rail"><div class="card toc-card"><div class="lab">on this page</div><nav class="toc"><a href="#blk-112606" class="lvl2">0 · What is different about this round&#39;s evidence</a><a href="#blk-112613" class="lvl2">1 · Your findings — all three confirmed, and reproduced</a><a href="#blk-112614" class="lvl3">1.1 Bootstrap contradiction — CONFIRMED, closed</a><a href="#blk-112618" class="lvl3">1.2 Recovery can widen authority — CONFIRMED, and it was live</a><a href="#blk-112629" class="lvl3">1.3 The receipt snapshot bug — CONFIRMED, and worse than described</a><a href="#blk-112637" class="lvl2">2 · A fourth defect your review did not reach</a><a href="#blk-112641" class="lvl2">3 · EffectSupervisor — built, with one substantive disagreement</a><a href="#blk-112645" class="lvl3">3.1 The disagreement: SQLite should not enter yet</a><a href="#blk-112658" class="lvl3">3.2 Something your framing gave me that is worth naming</a><a href="#blk-112664" class="lvl3">3.3 One rule I added that you did not specify</a><a href="#blk-112666" class="lvl2">4 · Truth drift — fixed by derivation, not by editing</a><a href="#blk-112669" class="lvl2">5 · Two bugs this pass found in its own new code</a><a href="#blk-112674" class="lvl2">6 · Open questions for the next ruling</a><a href="#blk-112686" class="lvl2">7 · Where I think this leaves the ladder</a></nav></div><div class="card"><div class="lab">in this folder</div><a href="/super/docs/reviews/C1_0B1_REVIEW_BRIEF.md/">C1.0b.1 — authority linearization · review brief</a><a href="/super/docs/reviews/C1_1B_REVIEW_BRIEF.md/">C1.1 · the three corrections — the channel is a descriptor now</a><a href="/super/docs/reviews/C1_1C_REVIEW_BRIEF.md/">C1.1 · F.8 — every descriptor is close-on-exec, and evidence paging is lossless</a><a href="/super/docs/reviews/C1_1_0_REVIEW_BRIEF.md/">C1.1.0 — projection boundary correctness · review brief</a><a href="/super/docs/reviews/C1_1_1_REVIEW_BRIEF.md/">C1.1.1 — identity and projection · review brief</a><a href="/super/docs/reviews/C1_1_2_REVIEW_BRIEF.md/">C1.1.2 — the transport&#39;s acceptance battery, before the transport</a><a href="/super/docs/reviews/C1_1_8_1_REVIEW_BRIEF.md/">F.8.1 — the world survives quitting, and a descriptor leak neither of us predicted</a><a href="/super/docs/reviews/C1_1_8_2_1_REVIEW_BRIEF.md/">F.8.2.1 — the fourth exit, and a baseline that had already absorbed it</a><a href="/super/docs/reviews/C1_1_8_2_2_REVIEW_BRIEF.md/">F.8.2.2 — a channel handoff is a transaction</a><a href="/super/docs/reviews/C1_1_8_2_3_REVIEW_BRIEF.md/">F.8.2.3 — refusal is terminal, and no channel outlives its world</a><a href="/super/docs/reviews/C1_1_8_2_4_REVIEW_BRIEF.md/">F.8.2.4 — world incarnation, and the one primitive both bugs were missing</a><a href="/super/docs/reviews/C1_1_8_2_5_REVIEW_BRIEF.md/">F.8.2.5 — generation is a fence, and the narrowing was never a product decision</a></div><div class="card"><div class="lab">content id · CIDv1</div><div class="cid">bagaaiera5in4zj43od2m5245iqps3ld4mbh7dndjlc2bejwjr5jl7mhhripq</div></div></div>
+</div></div>
+</body></html>
